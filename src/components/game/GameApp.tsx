@@ -21,6 +21,7 @@ import { proBowlSite, roman, superBowlNumber, seasonLeaders } from "@/lib/game";
 import { PrimetimeShow } from "./PrimetimeShow";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
+import { DepthField } from "./DepthField";
 
 function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
   const c = teamColors(id);
@@ -196,8 +197,35 @@ function Office() {
         </div>
         <PhaseAction />
       </div>
+      <InjuryReport />
       <PrimetimeShow />
     </div>
+  );
+}
+
+function InjuryReport() {
+  const save = useGameStore((s) => s.save)!;
+  const hurt = rosterOf(save, save.userTeamId).filter((p) => p.injuredWeeks > 0);
+  return (
+    <section className="rounded-xl border border-line bg-surface p-4">
+      <p className="text-xs tracking-[0.25em] text-muted">INJURY REPORT</p>
+      {hurt.length === 0 ? (
+        <p className="mt-2 text-sm text-muted">Training room is quiet. Next man stays on the bench.</p>
+      ) : (
+        <ul className="mt-2 space-y-1 text-sm">
+          {hurt.map((p) => (
+            <li key={p.id} className="flex justify-between gap-3">
+              <span>
+                {playerName(p)} <span className="text-muted">{p.pos}</span>
+              </span>
+              <span className="tabular text-brick">
+                {p.injuryName ?? "hurt"} · {p.injuredWeeks}w
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -253,6 +281,7 @@ function Depth() {
   const groups = depthChart(save, save.userTeamId);
   return (
     <div className="space-y-8">
+      <DepthField />
       {groups.map((g) => (
         <section key={g.label}>
           <h3 className="mb-3 text-sm tracking-[0.2em] text-muted">{g.label}</h3>

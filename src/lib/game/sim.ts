@@ -256,7 +256,7 @@ function sideFromDrives(
         const rec = pickRec(save, off);
         if (rec) {
           bumpBox(box, rec.id, { rec: 1, recYds: Math.round(res.yds * 0.7), recTd: 1 });
-          if (highlights.length < 4) {
+          if (highlights.length < 8) {
             highlights.push(
               rec.ratings.speed >= 88
                 ? `${playerName(rec)} takes it the distance. He could go all the way.`
@@ -266,7 +266,7 @@ function sideFromDrives(
         }
       } else {
         rushTd += 1;
-        if (off.rb && highlights.length < 4) {
+        if (off.rb && highlights.length < 8) {
           highlights.push(`${playerName(off.rb)} north-south, ${res.yds} yards worth of hurt. Touchdown.`);
         }
       }
@@ -280,8 +280,13 @@ function sideFromDrives(
       }
     } else if (res.kind === "int") {
       ints += 1;
+      const thief = def.db[0] ?? def.lb[0];
+      if (thief && highlights.length < 8) {
+        highlights.push(`${playerName(thief)} jumps the route. Ballgame if they close it.`);
+      }
     } else if (res.kind === "fumble") {
       if (off.rb) bumpBox(box, off.rb.id, { ff: 1 });
+      if (off.rb && highlights.length < 8) highlights.push(`${playerName(off.rb)} coughs it up. The pigskin is live.`);
     } else if (res.kind === "safety") {
       pts += 0;
     } else {

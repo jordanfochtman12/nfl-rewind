@@ -58,6 +58,14 @@ export const COORDINATORS_1966: CoachSeed[] = [
   { id: "rush-oc", name: "Clive Rush", teamId: "nyj", yearAvail: 1963, offense: 80, defense: 70 },
   { id: "patera-dc", name: "Jack Patera", teamId: "ram", yearAvail: 1966, offense: 66, defense: 84 },
   { id: "skorich-oc", name: "Nick Skorich", teamId: "cle", yearAvail: 1964, offense: 80, defense: 70 },
+  { id: "gillman-dc", name: "Chuck Noll", teamId: "sdg", yearAvail: 1966, offense: 70, defense: 88 },
+  { id: "stram-oc", name: "Bill Walsh", teamId: "kan", yearAvail: 1966, offense: 84, defense: 66 },
+  { id: "lombardi-oc", name: "Bob Schnelker", teamId: "gnb", yearAvail: 1964, offense: 82, defense: 64 },
+  { id: "halas-dc", name: "George Allen", teamId: "chi", yearAvail: 1962, offense: 68, defense: 90 },
+  { id: "landry-oc", name: "Ermal Allen", teamId: "dal", yearAvail: 1962, offense: 80, defense: 74 },
+  { id: "shula-dc", name: "Bill Arnsparger", teamId: "clt", yearAvail: 1964, offense: 66, defense: 88 },
+  { id: "rauch-oc", name: "John Madden", teamId: "rai", yearAvail: 1967, offense: 82, defense: 74 },
+  { id: "austin-dc", name: "Bud Carson", teamId: "pit", yearAvail: 1966, offense: 64, defense: 80 },
 ];
 
 export const LATER_COACHES: CoachSeed[] = [
