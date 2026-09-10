@@ -1,6 +1,7 @@
 import { currentDraftTeam, displayName, formatHt, playerName, rosterOf } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
+import { FilmStill } from "./Art";
 
 function Meter({ label, value }: { label: string; value: number }) {
   return (
@@ -40,8 +41,9 @@ export function DraftNight() {
 
   return (
     <div className="space-y-4">
-      <section className="overflow-hidden rounded-xl border border-brass/30 bg-studio">
-        <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5">
+      <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
+        <FilmStill still="draft" veil="full" />
+        <div className="relative flex flex-wrap items-center justify-between gap-4 px-5 py-5">
           <div>
             <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} NFL DRAFT</p>
             <h2 className="font-display text-4xl sm:text-5xl">

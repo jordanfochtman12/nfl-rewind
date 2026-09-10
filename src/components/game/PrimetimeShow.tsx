@@ -1,24 +1,29 @@
 import { displayName, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
+import { FilmStill } from "./Art";
 
 export function PrimetimeShow() {
   const save = useGameStore((s) => s.save)!;
   const show = save.primetime;
   if (!show || show.year !== save.year) {
     return (
-      <section className="overflow-hidden rounded-xl border border-brass/25 bg-studio p-6">
+      <section className="relative overflow-hidden rounded-xl border border-brass/25 bg-studio p-6">
+        <FilmStill still="primetime" veil="full" />
+        <div className="relative">
         <p className="font-display text-xs tracking-[0.4em] text-brass">NFL · THE WEEK IN REVIEW</p>
         <h2 className="mt-2 font-display text-4xl tracking-[0.14em] text-brass">PRIMETIME</h2>
         <p className="mt-3 max-w-xl text-muted">
           Sim a Sunday. The crawl lights up, packages roll, and one play freezes the frame. Every score. One show.
         </p>
+        </div>
       </section>
     );
   }
   const feature = show.recaps[0];
   return (
-    <section className="overflow-hidden rounded-xl border border-brass/35 bg-studio">
+    <section className="relative overflow-hidden rounded-xl border border-brass/35 bg-studio">
+      <FilmStill still="primetime" veil="full" />
       <header className="relative overflow-hidden border-b border-brass/25 px-5 py-5">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(196,165,116,0.12),transparent_55%)]" />
         <div className="relative flex flex-wrap items-end justify-between gap-3">
@@ -34,9 +39,10 @@ export function PrimetimeShow() {
 
       <p className="border-b border-brass/15 px-5 py-3 text-sm leading-relaxed text-paper">{show.open}</p>
 
-      <div className="flex gap-6 overflow-x-auto border-b border-brass/20 bg-black/50 px-5 py-2.5">
-        {show.recaps.map((r) => (
-          <div key={`${r.awayId}-${r.homeId}-tick`} className="flex shrink-0 items-center gap-2 text-xs tracking-wide">
+      <div className="overflow-hidden border-b border-brass/20 bg-black/50 py-2.5">
+        <div className="ticker flex w-max gap-6 px-5">
+        {show.recaps.concat(show.recaps).map((r, i) => (
+          <div key={`${r.awayId}-${r.homeId}-tick-${i}`} className="flex shrink-0 items-center gap-2 text-xs tracking-wide">
             <Logo id={r.awayId} size={18} />
             <span className="tabular text-paper">{r.awayScore}</span>
             <span className="text-subtle">@</span>
@@ -44,6 +50,7 @@ export function PrimetimeShow() {
             <Logo id={r.homeId} size={18} />
           </div>
         ))}
+        </div>
       </div>
 
       {feature && (

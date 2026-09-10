@@ -1,6 +1,7 @@
 import { displayName, playerName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
+import { FilmStill } from "./Art";
 
 export function SuperBowlNight() {
   const save = useGameStore((s) => s.save)!;
@@ -14,7 +15,8 @@ export function SuperBowlNight() {
   const n = superBowlNumber(save.year);
   const winner = g.played ? (g.homeScore >= g.awayScore ? home : away) : undefined;
   return (
-    <article className="overflow-hidden rounded-xl border border-brass/40 bg-studio">
+    <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
+      <FilmStill still="superbowl" veil="bottom" />
       <div className="relative border-b border-brass/25 px-6 py-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(196,165,116,0.14),transparent_60%)]" />
         <div className="relative">

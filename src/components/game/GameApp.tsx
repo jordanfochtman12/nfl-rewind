@@ -22,6 +22,7 @@ import { PrimetimeShow } from "./PrimetimeShow";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { DepthField } from "./DepthField";
+import { FilmStill } from "./Art";
 
 function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
   const c = teamColors(id);
@@ -77,13 +78,15 @@ function TitleScreen() {
     a.click();
   };
   return (
-    <main className="relative mx-auto flex min-h-dvh max-w-3xl flex-col justify-center gap-8 px-5 py-12">
-      <p className="font-display text-xs tracking-[0.35em] text-muted">START IN 1966 · SUPER BOWL I ERA</p>
-      <h1 className="font-display text-5xl leading-none text-fg sm:text-7xl">
+    <main className="relative isolate min-h-dvh overflow-hidden">
+      <FilmStill still="title" video="/art/title.mp4" veil="left" />
+      <div className="relative mx-auto flex min-h-dvh max-w-3xl flex-col justify-center gap-8 px-5 py-12">
+      <p className="font-display text-xs tracking-[0.4em] text-brass">START IN 1966 · SUPER BOWL I ERA</p>
+      <h1 className="font-display text-6xl leading-[0.9] text-fg sm:text-8xl">
         NFL
-        <span className="block text-accent">Rewind</span>
+        <span className="block text-brass">Rewind</span>
       </h1>
-      <p className="max-w-lg text-lg text-muted">
+      <p className="max-w-lg text-lg text-paper">
         You are the GM. Draft the real classes, hire the staff, survive Sunday. Rewrite football history from Super Bowl I through 2027.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -109,7 +112,8 @@ function TitleScreen() {
           }}
         />
       </div>
-      <p className="text-sm text-subtle">AFL / NFL · named veterans · no player photographs</p>
+      <p className="text-sm text-muted">AFL / NFL · named veterans · no player photographs</p>
+      </div>
     </main>
   );
 }
@@ -127,7 +131,7 @@ function TeamSelect() {
             key={id}
             type="button"
             onClick={() => newGame(id)}
-            className="flex min-h-14 items-center gap-3 rounded-lg border border-line bg-surface px-3 text-left hover:bg-surface-2"
+            className="flex min-h-14 items-center gap-3 rounded-lg border border-line bg-surface/90 px-3 text-left backdrop-blur-sm hover:bg-surface-2"
           >
             <Logo id={id} size={44} />
             <span>
@@ -140,13 +144,19 @@ function TeamSelect() {
     </section>
   );
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-5 py-10">
+    <main className="relative isolate min-h-dvh overflow-hidden">
+      <FilmStill still="office" veil="full" />
+      <div className="relative mx-auto max-w-4xl space-y-8 px-5 py-10">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl">Choose your club</h1>
+        <div>
+          <p className="font-display text-xs tracking-[0.35em] text-brass">1966 MEDIA GUIDE</p>
+          <h1 className="text-3xl">Choose your club</h1>
+        </div>
         <Btn onClick={() => setScreen("title")}>Back</Btn>
       </div>
       <Group title="National Football League" ids={nfl} />
       <Group title="American Football League" ids={afl} />
+      </div>
     </main>
   );
 }
