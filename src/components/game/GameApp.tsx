@@ -13,6 +13,7 @@ import {
   standingRows,
   teamColors,
   teamPayroll,
+  logoSrc,
   type Player,
   type TeamId,
 } from "@/lib/game";
@@ -25,10 +26,11 @@ import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 
 function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
+  const year = useGameStore((s) => s.save?.year ?? 1966);
   const c = teamColors(id);
   return (
     <img
-      src={`/logos/${id}.svg`}
+      src={logoSrc(year, id)}
       alt=""
       width={size}
       height={size}
@@ -658,7 +660,7 @@ function PlayShell() {
   return (
     <div className="min-h-dvh bg-bg">
       <header className="sticky top-0 z-10 border-b border-line bg-bg/95 px-4 py-3 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Logo id={save.userTeamId} size={32} />
             <div>
@@ -673,7 +675,7 @@ function PlayShell() {
             <Btn onClick={resign}>Title</Btn>
           </div>
         </div>
-        <nav className="mx-auto mt-3 flex max-w-5xl gap-1 overflow-x-auto">
+        <nav className="mx-auto mt-3 flex max-w-6xl gap-1 overflow-x-auto">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -688,7 +690,7 @@ function PlayShell() {
           ))}
         </nav>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-6">
         {event ? <EventPane /> : null}
         {showDraft && tab !== "standings" && tab !== "history" ? <DraftNight /> : null}
         {!event && !showDraft && tab === "office" && <Office />}

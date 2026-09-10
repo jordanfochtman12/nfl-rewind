@@ -29,6 +29,7 @@ export {
   teamAbbr,
   teamColors,
   TEAM_META,
+  logoSrc,
 } from "./teams.ts";
 
 export { blankState, hydrateSave, cloneSave } from "./save.ts";
@@ -45,7 +46,7 @@ export {
   createSuperBowl,
   playoffWeekLabel,
 } from "./playoffs.ts";
-export { buildDraftBoard, makeDraftPick, autoDraftRest, currentDraftTeam, draftOrder } from "./draft.ts";
+export { buildDraftBoard, makeDraftPick, autoDraftRest, currentDraftTeam, draftOrder, simUntilUserPick } from "./draft.ts";
 export { applyYearExpansion, userExpansionPick } from "./expansion.ts";
 export { playerName, rosterOf, starters, hasKit, pruneRoster, trimRoster } from "./players.ts";
 export { hasFullKit } from "./ratings.ts";

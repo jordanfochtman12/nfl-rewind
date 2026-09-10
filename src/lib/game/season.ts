@@ -3,7 +3,7 @@ import { activeTeamIds, roman, superBowlNumber } from "./teams.ts";
 import { cloneSave, resetSeasonRecord } from "./save.ts";
 import { rebuildSchedule, gamesInWeek, maxWeek } from "./schedule.ts";
 import { clampSeasonStats, simGame } from "./sim.ts";
-import { autoDraftRest, buildDraftBoard, currentDraftTeam, makeDraftPick } from "./draft.ts";
+import { autoDraftRest, buildDraftBoard, currentDraftTeam, makeDraftPick, simUntilUserPick } from "./draft.ts";
 import { applyYearExpansion } from "./expansion.ts";
 import {
   cpuInSeasonMoves,
@@ -170,6 +170,11 @@ export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave 
       if (auto) {
         autoDraftRest(s);
         s.phase = "freeAgency";
+        break;
+      }
+      if (opts.simToUser) {
+        simUntilUserPick(s);
+        if (s.draftPickIndex >= s.draftBoard.length) s.phase = "freeAgency";
         break;
       }
       const team = currentDraftTeam(s);

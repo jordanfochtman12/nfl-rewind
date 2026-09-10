@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
 <rect width="64" height="64" rx="8" fill="#e31837"/>
-<path d="M32 8 L36 24 L52 18 L40 32 L56 40 L38 40 L40 56 L32 42 L24 56 L26 40 L8 40 L24 32 L12 18 L28 24 Z" fill="#ffb81c"/>
+<path d="M32 6 L38 26 L58 20 L42 34 L56 50 L36 42 L32 58 L28 42 L8 50 L22 34 L6 20 L26 26 Z" fill="#ffb81c"/>
+<text x="32" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#e31837">KC</text>
 </svg>

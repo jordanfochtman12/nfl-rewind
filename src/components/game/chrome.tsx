@@ -1,10 +1,10 @@
-import { teamColors, type TeamId } from "@/lib/game";
+import { logoSrc, teamColors, type TeamId } from "@/lib/game";
 
-export function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
+export function Logo({ id, size = 36, year = 1966 }: { id: TeamId; size?: number; year?: number }) {
   const c = teamColors(id);
   return (
     <img
-      src={`/logos/${id}.svg`}
+      src={logoSrc(year, id)}
       alt=""
       width={size}
       height={size}

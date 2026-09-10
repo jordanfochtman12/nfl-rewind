@@ -165,6 +165,14 @@ export function autoDraftRest(save: DynastySave): void {
   }
 }
 
+export function simUntilUserPick(save: DynastySave): void {
+  for (let i = 0; i < 500; i++) {
+    const team = currentDraftTeam(save);
+    if (!team || team === save.userTeamId) return;
+    if (!makeDraftPick(save)) return;
+  }
+}
+
 export function currentDraftTeam(save: DynastySave): TeamId | undefined {
   const order = draftOrder(save);
   if (save.draftPickIndex >= save.draftBoard.length) return undefined;

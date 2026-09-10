@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
 <rect width="64" height="64" rx="8" fill="#0085ca"/>
-<circle cx="32" cy="32" r="18" fill="#101820"/>
-<text x="32" y="38" text-anchor="middle" font-family="Oswald,sans-serif" font-size="12" fill="#0085ca">CAR</text>
+<path d="M16 44 L24 20 L40 16 L50 28 L48 44 L32 52 Z" fill="#bfc0bf"/>
+<circle cx="28" cy="28" r="2.4" fill="#0085ca"/>
 </svg>

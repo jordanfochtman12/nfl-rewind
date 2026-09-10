@@ -4,6 +4,7 @@ import {
   advance,
   createNewGame,
   hydrateSave,
+  type AdvanceOpts,
   type DynastySave,
   type TeamId,
 } from "@/lib/game/index.ts";
@@ -20,7 +21,7 @@ interface GameStore {
   setTab: (t: Tab) => void;
   newGame: (teamId: TeamId) => void;
   continueGame: () => void;
-  step: (opts?: { userPickPlayerId?: string; auto?: boolean }) => void;
+  step: (opts?: AdvanceOpts) => void;
   simWeek: () => void;
   exportJson: () => string;
   importJson: (raw: string) => void;

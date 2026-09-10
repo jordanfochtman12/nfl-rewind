@@ -379,3 +379,13 @@ export function roman(n: number): string {
   }
   return out;
 }
+
+/** Period-accurate mark. Defaults to the 1966 identity. */
+export function logoSrc(year: number, id: TeamId): string {
+  if (id === "oti" && year >= 1999) return "/logos/oti-titans.svg";
+  if (id === "nwe" && year >= 1993) return "/logos/nwe-modern.svg";
+  if (id === "den" && year >= 1997) return "/logos/den-modern.svg";
+  if (id === "was" && year >= 2022) return "/logos/was-cmd.svg";
+  if (id === "was" && year >= 2020) return "/logos/was-wft.svg";
+  return `/logos/${id}.svg`;
+}

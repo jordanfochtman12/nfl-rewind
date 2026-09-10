@@ -473,4 +473,6 @@ export interface CreateGameOpts {
 export interface AdvanceOpts {
   auto?: boolean;
   userPickPlayerId?: string;
+  /** CPU picks until the user is on the clock (or the draft ends). */
+  simToUser?: boolean;
 }
