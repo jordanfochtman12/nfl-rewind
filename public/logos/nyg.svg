@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+<rect width="64" height="64" rx="8" fill="#0b2265"/>
+<text x="32" y="30" text-anchor="middle" font-family="Oswald,sans-serif" font-size="16" fill="#a71930">NY</text>
+<rect x="16" y="36" width="32" height="3" fill="#a71930"/>
+<text x="32" y="52" text-anchor="middle" font-family="Oswald,sans-serif" font-size="9" fill="#ffffff">GIANTS</text>
+</svg>

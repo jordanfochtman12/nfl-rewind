@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+<rect width="64" height="64" rx="8" fill="#d50a0a"/>
+<path d="M12 44 L32 12 L52 44 Z" fill="#34302b"/>
+<text x="32" y="42" text-anchor="middle" font-family="Oswald,sans-serif" font-size="10" fill="#ffffff">TB</text>
+</svg>
