@@ -1,0 +1,7 @@
+export type TeamId = 'atl' | 'ram' | 'pit' | 'phi' | 'dal' | 'was' | 'min' | 'crd' | 'gnb' | 'nyg' | 'sfo' | 'chi' | 'cle' | 'clt' | 'det' | 'mia' | 'den' | 'oti' | 'nwe' | 'buf' | 'nyj' | 'rai' | 'sdg' | 'kan' | 'nor' | 'cin' | 'tam' | 'sea' | 'car' | 'jax' | 'rav' | 'htx'
+
+export interface Ratings { throwPow:number; throwAcc:number; throwAwr:number; speed:number; accel:number; agi:number; str:number; truck:number; elu:number; btk:number; catch:number; cit:number; rel:number; rrt:number; passBlk:number; runBlk:number; tak:number; prs:number; cov:number; pur:number; kickPow:number; kickAcc:number; stamina:number; inj:number; awareness:number }
+export interface Player { id:string; name:string; pos:string; team:TeamId|null; draftYear:number; age:number; ratings:Ratings; stats:Record<string,number>; retired?:number }
+export interface Coach { name:string; team:TeamId; yearAvail:number }
+export interface Team { id:TeamId; name:string; city:string; conference:string; division:string; activeFrom:number; activeTo?:number; coach?:Coach; roster:string[]; wins:number; losses:number }
+export interface GameState { saveVersion:number; year:number; week:number; phase:'title'|'preseason'|'regular'|'playoffs'|'superBowl'|'awards'|'proBowl'|'retirement'|'draft'|'freeAgency'|'expansion'|'history'; userTeam:TeamId|null; teams:Record<TeamId,Team>; players:Record<string,Player>; draftBoard:string[]; schedule:string[]; history:{ bowls:string[]; hof:string[]; honor:string[] }; headlines:string[] }
