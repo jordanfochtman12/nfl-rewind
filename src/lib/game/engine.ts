@@ -1,11 +1,12 @@
 import { BASE_1966, expansionSpecs, conferenceOf, divisionOf, gamesInSeason, locationOf } from './era'
 import { draft1966, makePlayer, named1966 } from './data'
+import { gamesForYear, scheduleForYear } from './schedules'
 import type { GameState, Team, TeamId } from './types'
 export const SAVE_VERSION=2
 function seeded(seed:number){const x=Math.sin(seed*12.9898)*43758.5453;return x-Math.floor(x)}
-function rebuildSchedule(s:GameState){const ids=Object.keys(s.teams) as TeamId[];s.schedule=[];for(let w=1;w<=gamesInSeason(s.year);w++){for(let i=0;i<ids.length;i+=2){const home=ids[i],away=ids[(i+w+i)%ids.length];if(home!==away)s.schedule.push(`${w}:${away}@${home}`)}}}
+function rebuildSchedule(s:GameState){s.schedule=scheduleForYear(s.year)}
 function teamPower(s:GameState,id:TeamId){const roster=s.teams[id]?.roster??[];return roster.slice(0,22).reduce((n,p)=>n+(s.players[p]?.ratings.awareness??60),0)/Math.max(1,Math.min(22,roster.length))}
-function playWeek(s:GameState){const ids=Object.keys(s.teams) as TeamId[];ids.forEach((id,i)=>{const opp=ids[(i+s.week)%ids.length];if(id>=opp)return;const home=teamPower(s,id)+seeded(s.year*100+s.week+i)*18,away=teamPower(s,opp)+seeded(s.year*80+s.week+i)*18;const winner=home>=away?id:opp;s.teams[winner].wins++;s.teams[winner].losses=Math.max(0,s.teams[winner].losses);s.teams[winner===id?opp:id].losses++});s.headlines=[`${s.year} Week ${s.week}: ${ids[(s.week*3)%ids.length].toUpperCase()} controls the national conversation.`,`The wire reports a competitive Sunday across the ${conferenceOf(s.year,s.userTeam??ids[0])}.`]}
+function playWeek(s:GameState){const games=gamesForYear(s.year).filter(game=>game.week===s.week);games.forEach((game,index)=>{const home=teamPower(s,game.home)+seeded(s.year*100+s.week+index)*18,away=teamPower(s,game.away)+seeded(s.year*80+s.week+index)*18;const winner=home>=away?game.home:game.away;s.teams[winner].wins++;s.teams[winner===game.home?game.away:game.home].losses++});s.headlines=[`${s.year} Week ${s.week}: ${games.length} games played from the historical schedule.`,`The wire reports a competitive Sunday across the ${conferenceOf(s.year,s.userTeam??'gnb')}.`]}
 function champion(s:GameState){return (Object.values(s.teams).sort((a,b)=>b.wins-a.wins)[0]??Object.values(s.teams)[0])}
 const names:Record<string,string>={atl:'Falcons',ram:'Rams',pit:'Steelers',phi:'Eagles',dal:'Cowboys',was:'Redskins',min:'Vikings',crd:'Cardinals',gnb:'Packers',nyg:'Giants',sfo:'49ers',chi:'Bears',cle:'Browns',clt:'Colts',det:'Lions',mia:'Dolphins',den:'Broncos',oti:'Oilers',nwe:'Patriots',buf:'Bills',nyj:'Jets',rai:'Raiders',sdg:'Chargers',kan:'Chiefs',nor:'Saints',cin:'Bengals',tam:'Buccaneers',sea:'Seahawks',car:'Panthers',jax:'Jaguars',rav:'Ravens',htx:'Texans'}
 export function teamFor(year:number,id:TeamId):Team{ return {id,name:names[id],city:locationOf(year,id),conference:conferenceOf(year,id),division:divisionOf(year,id),activeFrom:year,roster:[],wins:0,losses:0} }
