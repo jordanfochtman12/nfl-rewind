@@ -52,6 +52,7 @@ export { playerName, rosterOf, starters, hasKit, pruneRoster, trimRoster } from 
 export { hasFullKit } from "./ratings.ts";
 export { eraProfile } from "./era.ts";
 export { expansionForYear, EXPANSION_SPECS } from "./data/expansions.ts";
+export { DRAFT_CLASSES, draftSeedsFor } from "./data/draftClasses.ts";
 export { superBowlSite, proBowlSite } from "./data/bowlSites.ts";
 
 export { formatMoney, salaryCapFor, teamPayroll } from "./salary.ts";

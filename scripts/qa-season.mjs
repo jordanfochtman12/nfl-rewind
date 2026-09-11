@@ -46,6 +46,24 @@ assert(
   "Nobis-class names on the board",
 );
 
+assert(names.filter(Boolean).length >= 24, `1966 board has 24+ named (got ${names.filter(Boolean).length})`);
+assert(
+  Object.values(save.players).filter((p) => p.historical).length >= 280,
+  `280+ historical named players at 1966 start (got ${Object.values(save.players).filter((p) => p.historical).length})`,
+);
+for (const y of [1967, 1969, 1971, 1975, 1983, 1985, 1989, 1998, 2000, 2017, 2024]) {
+  const cls = g.draftSeedsFor(y);
+  assert(cls.length >= 8, `${y} class has 8+ named (got ${cls.length})`);
+}
+assert(g.draftSeedsFor(1967).some((s) => s.l === "Page"), "1967 has Alan Page");
+assert(g.draftSeedsFor(1975).some((s) => s.l === "Payton"), "1975 has Walter Payton");
+assert(g.draftSeedsFor(1983).some((s) => s.l === "Marino"), "1983 has Dan Marino");
+assert(g.draftSeedsFor(2000).some((s) => s.l === "Brady"), "2000 has Tom Brady");
+assert(g.draftSeedsFor(2017).some((s) => s.l === "Mahomes"), "2017 has Patrick Mahomes");
+for (let y = 1966; y <= 2025; y++) {
+  assert((g.DRAFT_CLASSES[y] || []).length > 0, `named class for ${y}`);
+}
+
 const after = g.simToSuperBowl(save);
 assert(after.superBowl?.played, "Super Bowl I played");
 const champs = g.leagueChampions(after);
