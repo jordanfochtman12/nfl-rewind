@@ -3,6 +3,7 @@ import { eraProfile } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { conferenceOf, divisionKey, locationOf } from "./teams.ts";
 import { playerName, rosterOf, starters, yearStats } from "./players.ts";
+import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -25,6 +26,17 @@ export interface TeamUnits {
   offRun: number;
   defPass: number;
   defRun: number;
+  kit: {
+    cmp: number;
+    sack: number;
+    int: number;
+    fum: number;
+    td: number;
+    fg: number;
+    scramble: number;
+    clutch: number;
+    inj: number;
+  };
 }
 
 export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
@@ -78,7 +90,23 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   if (scheme === "westcoast") offPass += 2;
   if (team?.defScheme === "cover-2") defPass += 2.5;
   if (team?.defScheme === "3-4") defRun += 2;
-  return { qb, rb, fb, wr, te, ol, dl, lb, db, k, p, offPass, offRun, defPass, defRun };
+  const skill = [qb, rb, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
+  offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
+  offRun += kitBoost(rb, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
+  defPass += db.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + dl.reduce((n, p) => n + kitBoost(p, "defPass"), 0);
+  defRun += dl.reduce((n, p) => n + kitBoost(p, "defRun"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defRun"), 0);
+  const kit = {
+    cmp: kitBoost(qb, "cmp") + wr.reduce((n, p) => n + kitBoost(p, "cmp"), 0),
+    sack: kitBoost(qb, "sack") + ol.reduce((n, p) => n + kitBoost(p, "sack"), 0) + dl.reduce((n, p) => n + kitBoost(p, "sack"), 0),
+    int: kitBoost(qb, "int") + db.reduce((n, p) => n + kitBoost(p, "int"), 0),
+    fum: kitBoost(rb, "fum") + kitBoost(qb, "fum") + wr.reduce((n, p) => n + kitBoost(p, "fum"), 0),
+    td: kitBoost(qb, "td") + kitBoost(rb, "td") + wr.reduce((n, p) => n + kitBoost(p, "td"), 0),
+    fg: kitBoost(k, "fg"),
+    scramble: kitBoost(qb, "scramble"),
+    clutch: skill.reduce((n, p) => n + kitBoost(p, "clutch"), 0),
+    inj: skill.reduce((n, p) => n + kitBoost(p, "inj"), 0),
+  };
+  return { qb, rb, fb, wr, te, ol, dl, lb, db, k, p, offPass, offRun, defPass, defRun, kit };
 }
 
 function dist(save: DynastySave, weights: number[]): number {
@@ -158,7 +186,7 @@ function pickRec(save: DynastySave, off: TeamUnits): Player | undefined {
   return pool[
     dist(
       save,
-      pool.map((p) => p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.35),
+      pool.map((p) => (p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.35) * kitShare(p, "recShare")),
     )
   ];
 }
@@ -170,28 +198,32 @@ function driveResult(
   era: ReturnType<typeof eraProfile>,
   trail: number,
   wx: Wx,
+  qi: number,
 ): { kind: "td" | "fg" | "punt" | "int" | "fumble" | "safety"; pass: boolean; yds: number } {
-  const edge = (off.offPass + off.offRun - def.defPass - def.defRun) / 2;
+  const clutch = (trail > 0 || qi === 3) ? off.kit.clutch : 0;
+  const edge = (off.offPass + off.offRun - def.defPass - def.defRun) / 2 + clutch;
   let passW = era.passAtt / (era.passAtt + era.rushAtt);
   if (trail >= 8) passW += 0.14;
   if (trail <= -10) passW -= 0.1;
   if (wx === "snow" || wx === "rain") passW -= 0.08;
   if (wx === "wind") passW -= 0.04;
+  if (off.kit.scramble > 8) passW += 0.02;
   passW = clamp(passW, 0.28, 0.72);
   const pass = rand(save) < passW;
   const unit = pass ? off.offPass - def.defPass : off.offRun - def.defRun;
-  const success = 1 / (1 + Math.exp(-(unit + edge * 0.25) / 16));
-  let tdP = 0.14 + success * 0.16;
-  let fgP = 0.12 + success * 0.12;
-  let toP = 0.06 + (1 - success) * 0.07 + era.intRate * (pass ? 1.4 : 0.4);
+  const success = 1 / (1 + Math.exp(-(unit + edge * 0.25 + clutch) / 16));
+  let tdP = 0.14 + success * 0.16 + off.kit.td;
+  let fgP = 0.12 + success * 0.12 + off.kit.fg * 0.4;
+  let toP = 0.06 + (1 - success) * 0.07 + era.intRate * (pass ? 1.4 : 0.4) + (pass ? off.kit.int + def.kit.int : off.kit.fum);
   if (wx === "snow") {
     tdP *= 0.85;
     toP += 0.03;
   }
   if (wx === "wind") fgP *= 0.75;
   const r = rand(save);
-  if (r < toP * 0.55) return { kind: "int", pass: true, yds: randInt(save, 8, 38) };
-  if (r < toP) return { kind: "fumble", pass, yds: randInt(save, 6, 28) };
+  const intBand = Math.max(0.01, toP * 0.55 + (pass ? off.kit.int * 0.5 : 0));
+  if (r < intBand) return { kind: "int", pass: true, yds: randInt(save, 8, 38) };
+  if (r < toP + Math.max(0, off.kit.fum)) return { kind: "fumble", pass, yds: randInt(save, 6, 28) };
   if (r < toP + tdP) return { kind: "td", pass, yds: randInt(save, 55, 82) };
   if (r < toP + tdP + fgP) return { kind: "fg", pass, yds: randInt(save, 32, 58) };
   if (r < 0.015) return { kind: "safety", pass: false, yds: 0 };
@@ -229,11 +261,11 @@ function sideFromDrives(
 
   for (let d = 0; d < drives; d++) {
     const qi = Math.min(3, Math.floor((d / Math.max(1, drives)) * 4));
-    const res = driveResult(save, off, def, era, trailFn() - pts, wx);
+    const res = driveResult(save, off, def, era, trailFn() - pts, wx, qi);
     const plays = randInt(save, 3, 8);
     if (res.pass) {
       const att = Math.max(1, Math.round(plays * 0.7));
-      const cmp = Math.max(0, Math.round(att * clamp(era.cmpPct + (off.offPass - def.defPass) / 400, 0.38, 0.7)));
+      const cmp = Math.max(0, Math.round(att * clamp(era.cmpPct + (off.offPass - def.defPass) / 400 + off.kit.cmp, 0.38, 0.72)));
       passAtt += att;
       passCmp += cmp;
       passYds += res.yds;
@@ -242,7 +274,7 @@ function sideFromDrives(
       rushAtt += att;
       rushYds += res.yds;
     }
-    if (rand(save) < era.sackRate) sacks += 1;
+    if (rand(save) < clamp(era.sackRate + off.kit.sack, 0.02, 0.16)) sacks += 1;
 
     if (res.kind === "td") {
       const xp = rand(save) < 0.94;
@@ -272,7 +304,7 @@ function sideFromDrives(
       }
     } else if (res.kind === "fg") {
       fgAtt += 1;
-      const make = rand(save) < clamp((off.k?.ratings.kickAcc ?? 70) / 100 - (wx === "wind" || wx === "snow" ? 0.12 : 0), 0.55, 0.95);
+      const make = rand(save) < clamp((off.k?.ratings.kickAcc ?? 70) / 100 + off.kit.fg - (wx === "wind" || wx === "snow" ? 0.12 : 0), 0.55, 0.96);
       if (make) {
         fgMade += 1;
         pts += 3;
@@ -282,11 +314,24 @@ function sideFromDrives(
       ints += 1;
       const thief = def.db[0] ?? def.lb[0];
       if (thief && highlights.length < 8) {
-        highlights.push(`${playerName(thief)} jumps the route. Ballgame if they close it.`);
+        highlights.push(
+          kitBoost(thief, "intShare") > 0
+            ? `${playerName(thief)} is a ball hawk. That's his football.`
+            : `${playerName(thief)} jumps the route. Ballgame if they close it.`,
+        );
+      }
+      if (off.qb && kitBoost(off.qb, "int") > 0 && highlights.length < 8) {
+        highlights.push(`${playerName(off.qb)} threw it anyway. The gunslinger tax.`);
       }
     } else if (res.kind === "fumble") {
       if (off.rb) bumpBox(box, off.rb.id, { ff: 1 });
-      if (off.rb && highlights.length < 8) highlights.push(`${playerName(off.rb)} coughs it up. The pigskin is live.`);
+      if (off.rb && highlights.length < 8) {
+        highlights.push(
+          kitBoost(off.rb, "fum") > 0
+            ? `${playerName(off.rb)} puts it on the carpet. The fumbler label sticks.`
+            : `${playerName(off.rb)} coughs it up. The pigskin is live.`,
+        );
+      }
     } else if (res.kind === "safety") {
       pts += 0;
     } else {
@@ -303,14 +348,14 @@ function sideFromDrives(
       passTd,
       passInt: ints,
       sacksThrown: sacks,
-      rushAtt: Math.round(rushAtt * 0.08),
-      rushYds: Math.round(rushYds * 0.06),
+      rushAtt: Math.round(rushAtt * (0.08 + Math.max(0, off.kit.scramble) / 200)),
+      rushYds: Math.round(rushYds * (0.06 + Math.max(0, off.kit.scramble) / 180)),
     });
   }
   if (off.rb) {
     bumpBox(box, off.rb.id, {
-      rushAtt: Math.round(rushAtt * (off.fb ? 0.62 : 0.78)),
-      rushYds: Math.round(rushYds * (off.fb ? 0.6 : 0.76)),
+      rushAtt: Math.round(rushAtt * (off.fb ? 0.62 : 0.78) * (off.rb ? kitShare(off.rb, "rushShare") : 1)),
+      rushYds: Math.round(rushYds * (off.fb ? 0.6 : 0.76) * (off.rb ? kitShare(off.rb, "rushShare") : 1)),
       rushTd: Math.max(0, rushTd - (off.fb && rushTd > 1 ? 1 : 0)),
       rec: Math.max(0, Math.round(passCmp * 0.12)),
       recYds: Math.round(passYds * 0.08),
@@ -327,7 +372,7 @@ function sideFromDrives(
   let recLeft = Math.max(0, passCmp - Math.round(passCmp * 0.12));
   let ydsLeft = Math.max(0, passYds - Math.round(passYds * 0.08));
   let tdLeft = passTd;
-  const wts = recTargets.map((p) => p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.4);
+  const wts = recTargets.map((p) => (p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.4) * kitShare(p, "recShare"));
   const wsum = Math.max(1, wts.reduce((a, b) => a + b, 0));
   for (let i = 0; i < recTargets.length; i++) {
     const share = wts[i]! / wsum;
@@ -351,7 +396,7 @@ function defBox(save: DynastySave, def: TeamUnits, sacks: number, ints: number):
     if (!rushers.length) break;
     const idx = dist(
       save,
-      rushers.map((p) => p.ratings.prs),
+      rushers.map((p) => p.ratings.prs * kitShare(p, "sackShare")),
     );
     const p = rushers[idx]!;
     bumpBox(box, p.id, { sacks: 1, tackles: randInt(save, 1, 4) });
@@ -361,7 +406,7 @@ function defBox(save: DynastySave, def: TeamUnits, sacks: number, ints: number):
     if (!dbs.length) break;
     const idx = dist(
       save,
-      dbs.map((p) => p.ratings.cov + p.ratings.catch * 0.3),
+      dbs.map((p) => (p.ratings.cov + p.ratings.catch * 0.3) * kitShare(p, "intShare")),
     );
     bumpBox(box, dbs[idx]!.id, { ints: 1, tackles: randInt(save, 1, 4) });
   }
@@ -465,9 +510,15 @@ function rollInjuries(save: DynastySave, teamId: TeamId): void {
   const eraHit = save.year <= 1979 ? 0.032 : save.year <= 1999 ? 0.024 : 0.02;
   for (const p of rosterOf(save, teamId)) {
     if (p.injuredWeeks > 0) continue;
-    const chance = eraHit * ((100 - p.ratings.inj) / 55);
+    const injMult = kitInjMult(p);
+    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult;
     if (rand(save) > chance) continue;
-    const weeks = p.ratings.inj >= 88 ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);
+    const durable = p.ratings.inj >= 88 || injMult <= 0.8;
+    const weeks = durable
+      ? randInt(save, 1, 2)
+      : p.ratings.inj >= 70
+        ? randInt(save, 1, 5)
+        : randInt(save, 2, 8);
     p.injuredWeeks = weeks;
     p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
   }

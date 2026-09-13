@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -213,6 +213,8 @@ export interface Player {
   contractYears: number;
   salary: number;
   abilities: string[];
+  /** Style flags that change the sim (Clutch, Gunslinger, Glass, …). */
+  traits: string[];
   injuredWeeks: number;
   injuryName?: string;
   stats: Record<number, SeasonStats>;

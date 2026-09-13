@@ -56,7 +56,7 @@ export { DRAFT_CLASSES, draftSeedsFor } from "./data/draftClasses.ts";
 export { superBowlSite, proBowlSite } from "./data/bowlSites.ts";
 
 export { formatMoney, salaryCapFor, teamPayroll } from "./salary.ts";
-export { abilitiesFrom, abilityLine } from "./abilities.ts";
+export { abilitiesFrom, abilityLine, assignKit, kitBoost, kitDef, kitImpactLine, kitInjMult, ABILITY_DEFS, TRAIT_DEFS } from "./abilities.ts";
 export { buildPrimetime, depthChart } from "./primetime.ts";
 export { draftStyleOf } from "./staff.ts";
 

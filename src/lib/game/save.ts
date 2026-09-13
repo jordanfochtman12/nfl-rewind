@@ -6,6 +6,7 @@ import {
   type TeamId,
   type TeamState,
 } from "./types.ts";
+import { assignKit } from "./abilities.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -153,8 +154,16 @@ export function hydrateSave(raw: unknown): DynastySave {
   for (const pl of Object.values(out.players)) {
     pl.salary = pl.salary ?? 0;
     pl.abilities = pl.abilities ?? [];
+    pl.traits = pl.traits ?? [];
     pl.career = pl.career ?? [];
     pl.injuredWeeks = pl.injuredWeeks ?? 0;
+    if (pl.ratings) {
+      const kit = assignKit(pl.pos, pl.ratings, pl.firstName, pl.lastName);
+      const ab = new Set([...(pl.abilities ?? []), ...kit.abilities]);
+      const tr = new Set([...(pl.traits ?? []), ...kit.traits]);
+      pl.abilities = [...ab].slice(0, 4);
+      pl.traits = [...tr].slice(0, 3);
+    }
   }
   for (const c of Object.values(out.coaches)) {
     c.role = c.role ?? "HC";

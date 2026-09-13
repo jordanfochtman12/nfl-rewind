@@ -11,6 +11,7 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
+import { KitChips } from "./KitChips";
 
 function Meter({ label, value }: { label: string; value: number }) {
   return (
@@ -41,6 +42,7 @@ export function DraftNight() {
   const step = useGameStore((s) => s.step);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(8);
+  const [scoutId, setScoutId] = useState<string | null>(null);
 
   const order = useMemo(() => draftOrder(save), [save.year, save.draftPickIndex, save.phase]);
   const teamsN = order.length || 24;
@@ -53,6 +55,7 @@ export function DraftNight() {
   const taken = save.draftBoard.filter((p) => p.taken);
   const last = taken[taken.length - 1];
   const lastPlayer = last ? save.players[last.playerId] : undefined;
+  const scout = scoutId ? save.players[scoutId] : board[0] ? save.players[board[0].playerId] : undefined;
   const isUser = save.phase === "draft" && onClock === save.userTeamId;
   const cpuUp = save.phase === "draft" && !!onClock && onClock !== save.userTeamId;
   const done = save.phase !== "draft" || !onClock;
@@ -131,6 +134,9 @@ export function DraftNight() {
                     {lastPlayer.pos} · {lastPlayer.college} · {formatHt(lastPlayer.heightIn)} · {lastPlayer.weight} lbs ·{" "}
                     {lastPlayer.forty?.toFixed(2)} forty
                   </p>
+                  <div className="mt-1">
+                    <KitChips player={lastPlayer} compact />
+                  </div>
                 </div>
               </div>
             </div>
@@ -173,19 +179,27 @@ export function DraftNight() {
             const p = save.players[pr.playerId];
             if (!p) return null;
             return (
-              <li key={pr.playerId} className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 py-3">
-                <div className="min-w-0">
+              <li
+                key={pr.playerId}
+                className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-3 ${
+                  scout?.id === p.id ? "border-brass bg-brass/10" : "border-line bg-surface"
+                }`}
+              >
+                <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setScoutId(p.id)}>
                   <p className="font-display text-lg">
                     {i + 1}. {playerName(p)}
                   </p>
                   <p className="text-sm text-muted">
                     {p.pos} · {p.college ?? "campus"} · {p.ovr} OVR · {formatHt(p.heightIn)}/{p.weight} · {p.forty?.toFixed(2)}
                   </p>
+                  <div className="mt-1.5">
+                    <KitChips player={p} compact />
+                  </div>
                   <div className="mt-2 grid max-w-sm grid-cols-2 gap-2">
                     <Meter label="Speed" value={p.ratings.speed} />
                     <Meter label="Awareness" value={p.ratings.awareness} />
                   </div>
-                </div>
+                </button>
                 {isUser && (
                   <Btn kind={i === 0 ? "primary" : "ghost"} onClick={() => step({ userPickPlayerId: p.id })}>
                     Draft
@@ -196,6 +210,21 @@ export function DraftNight() {
           })}
         </ol>
         <aside className="space-y-4">
+          {scout && (
+            <div className="rounded-xl border border-brass/30 bg-surface p-4">
+              <p className="mb-1 text-xs tracking-[0.25em] text-brass">Scout report</p>
+              <p className="font-display text-2xl">{playerName(scout)}</p>
+              <p className="text-sm text-muted">
+                {scout.pos} · {scout.college ?? "campus"} · {scout.ovr} OVR
+              </p>
+              <p className="mt-2 text-xs text-muted">
+                Abilities and traits change the sim — completions, sacks, carries, injuries, the fourth quarter.
+              </p>
+              <div className="mt-3">
+                <KitChips player={scout} showDesc />
+              </div>
+            </div>
+          )}
           <div className="rounded-xl border border-line bg-surface p-4">
             <p className="mb-3 text-xs tracking-[0.25em] text-muted">Cards turned</p>
             <ul className="space-y-2">

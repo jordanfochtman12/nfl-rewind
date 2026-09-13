@@ -63,6 +63,27 @@ assert(g.draftSeedsFor(2017).some((s) => s.l === "Mahomes"), "2017 has Patrick M
 for (let y = 1966; y <= 2025; y++) {
   assert((g.DRAFT_CLASSES[y] || []).length > 0, `named class for ${y}`);
 }
+assert(g.draftSeedsFor(1966).length >= 50, `1966 named board 50+ (got ${g.draftSeedsFor(1966).length})`);
+assert(g.draftSeedsFor(1980).length >= 18, `1980 class 18+ (got ${g.draftSeedsFor(1980).length})`);
+assert(g.draftSeedsFor(2025).length >= 18, `2025 class 18+ (got ${g.draftSeedsFor(2025).length})`);
+
+const namath = Object.values(save.players).find((p) => p.lastName === "Namath" && p.firstName === "Joe");
+assert(namath, "Joe Namath is on a 1966 roster");
+assert(namath.abilities.includes("Broadway Joe"), `Namath has Broadway Joe (got ${namath.abilities.join(", ")})`);
+assert(namath.traits.includes("Gunslinger"), `Namath is a Gunslinger (got ${namath.traits.join(", ")})`);
+const starr = Object.values(save.players).find((p) => p.lastName === "Starr");
+assert(starr?.abilities?.length && starr?.traits?.length, "Starr has abilities and traits");
+const sayers = Object.values(save.players).find((p) => p.lastName === "Sayers");
+assert(sayers?.abilities?.includes("Kansas Comet"), "Sayers is the Kansas Comet");
+
+const rostered = Object.values(save.players).filter((p) => p.teamId !== "retired" && p.teamId !== "hof");
+const missingKit = rostered.filter((p) => !(p.abilities && p.abilities.length) || !(p.traits && p.traits.length));
+assert(missingKit.length === 0, `every player has abilities and traits (missing ${missingKit.length})`);
+assert(g.kitBoost(namath, "offPass") > 0, "Broadway Joe / Cannon boost the passing unit");
+const iron = rostered.find((p) => (p.abilities ?? []).includes("Iron") || (p.traits ?? []).includes("Iron man"));
+assert(iron && g.kitInjMult(iron) < 1, `${iron ? iron.lastName : "Iron"} stays healthier (${iron ? g.kitInjMult(iron) : "none"})`);
+const glass = rostered.find((p) => (p.traits ?? []).includes("Glass"));
+assert(!glass || g.kitInjMult(glass) > 1, "Glass misses more time");
 
 const after = g.simToSuperBowl(save);
 assert(after.superBowl?.played, "Super Bowl I played");

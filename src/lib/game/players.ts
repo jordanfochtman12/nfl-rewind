@@ -4,7 +4,7 @@ import { deriveOvr, ratingsFromOvr, hasFullKit } from "./ratings.ts";
 import { eraCollege, eraName, jerseyFor } from "./names.ts";
 import { jitter, randInt } from "./rng.ts";
 import { VETERANS_1966, type VetSeed } from "./data/veterans1966.ts";
-import { abilitiesFrom } from "./abilities.ts";
+import { assignKit } from "./abilities.ts";
 import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
 
@@ -97,6 +97,7 @@ export function makePlayer(
 ): Player {
   const ratings = ratingsFromOvr(opts.pos, opts.ovr, (base) => jitter(save, base, 6));
   const ovr = deriveOvr(opts.pos, ratings);
+  const kit = assignKit(opts.pos, ratings, opts.firstName, opts.lastName);
   const id =
     opts.id ??
     (opts.historical
@@ -124,7 +125,8 @@ export function makePlayer(
     peakOvr: ovr,
     contractYears: randInt(save, 1, 4),
     salary: salaryFor(save.year, ovr, opts.age),
-    abilities: abilitiesFrom(opts.pos, ratings),
+    abilities: kit.abilities,
+    traits: kit.traits,
     injuredWeeks: 0,
     stats: {},
     career: [],

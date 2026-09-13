@@ -24,6 +24,7 @@ import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
+import { KitChips } from "./KitChips";
 
 function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
   const year = useGameStore((s) => s.save?.year ?? 1966);
@@ -251,7 +252,7 @@ function Roster() {
       <table className="w-full min-w-[860px] text-left text-sm">
         <thead className="bg-surface-2 text-xs tracking-wider text-muted">
           <tr>
-            {["#", "Player", "Pos", "OVR", "Age", "Abilities", "Sal", "Status"].map((h) => (
+            {["#", "Player", "Pos", "OVR", "Age", "Kit", "Sal", "Status"].map((h) => (
               <th key={h} className="px-3 py-2 font-medium">
                 {h}
               </th>
@@ -269,7 +270,9 @@ function Roster() {
               <td className="px-3 py-2">{p.pos}</td>
               <td className="tabular px-3 py-2">{p.ovr}</td>
               <td className="tabular px-3 py-2">{p.age}</td>
-              <td className="px-3 py-2 text-xs text-muted">{p.abilities?.join(" · ") || "—"}</td>
+              <td className="px-3 py-2">
+                <KitChips player={p} compact />
+              </td>
               <td className="tabular px-3 py-2 text-muted">{formatMoney(p.salary ?? 0, save.year)}</td>
               <td className="px-3 py-2 text-xs">
                 {p.injuredWeeks > 0 ? (
@@ -303,10 +306,13 @@ function Depth() {
                 <p className="text-xs tracking-widest text-muted">{row.pos}</p>
                 <ol className="mt-1 space-y-1">
                   {row.players.map((p, i) => (
-                    <li key={p.id} className="flex justify-between text-sm">
-                      <span>
+                    <li key={p.id} className="flex justify-between gap-2 text-sm">
+                      <span className="min-w-0">
                         {i + 1}. {playerName(p)}
                         {p.injuredWeeks > 0 ? <span className="ml-2 text-brick">out</span> : null}
+                        <span className="mt-0.5 block">
+                          <KitChips player={p} compact />
+                        </span>
                       </span>
                       <span className="tabular text-muted">{p.ovr}</span>
                     </li>

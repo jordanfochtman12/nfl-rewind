@@ -1,4 +1,6 @@
 import type { Pos } from "../types.ts";
+import { DRAFT_EXTRA } from "./draftClassesExtra.ts";
+import { DRAFT_MORE } from "./draftClassesMore.ts";
 
 export interface DraftSeed {
   f: string;
@@ -975,6 +977,6 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
 };
 
 export function draftSeedsFor(year: number): DraftSeed[] {
-  return DRAFT_CLASSES[year] ?? [];
+  return [...(DRAFT_CLASSES[year] ?? []), ...(DRAFT_EXTRA[year] ?? []), ...(DRAFT_MORE[year] ?? [])];
 }
 

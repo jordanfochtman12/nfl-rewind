@@ -4,6 +4,7 @@ import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
 import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf } from "./players.ts";
 import { eraCollege, jerseyFor } from "./names.ts";
 import { randInt } from "./rng.ts";
+import { kitBoost } from "./abilities.ts";
 import { addNews, addTx } from "./news.ts";
 import { winPct } from "./standings.ts";
 
@@ -67,6 +68,9 @@ export function buildDraftBoard(save: DynastySave): void {
   const total = teams.length * rounds;
   const named = draftSeedsFor(save.year);
   const used = new Set<string>();
+  for (const pl of Object.values(save.players)) {
+    if (pl.historical) used.add(`${pl.firstName}|${pl.lastName}|${pl.pos}`);
+  }
   const board: Prospect[] = [];
   let slot = 1;
   for (const s of named) {
@@ -118,6 +122,8 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
     if (style === "defense" && ["DE", "DT", "OLB", "MLB", "CB", "S"].includes(pl.pos)) score += 7;
     if (style === "qb" && pl.pos === "QB" && (qb?.ovr ?? 50) < 80) score += 14;
     if (style === "bpa") score = pl.ovr * 1.15 + need * 0.12;
+    score += kitBoost(pl, "offPass") + kitBoost(pl, "offRun") + kitBoost(pl, "defPass") + kitBoost(pl, "defRun");
+    score += (pl.abilities?.length ?? 0) * 0.35 + (pl.traits?.length ?? 0) * 0.25;
     if (score > bestScore) {
       bestScore = score;
       best = pr;
