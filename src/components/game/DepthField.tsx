@@ -13,6 +13,7 @@ function slot(saveTeam: Player[], pos: Pos, n = 0): Player | undefined {
 }
 
 function Chip({ p, label }: { p?: Player; label: string }) {
+  const openProfile = useGameStore((s) => s.openProfile);
   if (!p) {
     return (
       <div className="min-w-[72px] rounded-md border border-white/15 bg-black/30 px-2 py-1 text-center text-[10px] text-white/50">
@@ -22,7 +23,9 @@ function Chip({ p, label }: { p?: Player; label: string }) {
   }
   const hurt = p.injuredWeeks > 0;
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => openProfile(p.id)}
       className={`min-w-[84px] rounded-md border px-2 py-1 text-center ${
         hurt ? "border-brick/70 bg-brick/40" : "border-white/20 bg-black/45"
       }`}
@@ -33,7 +36,7 @@ function Chip({ p, label }: { p?: Player; label: string }) {
         {p.ovr}
         {hurt ? " · OUT" : ""}
       </p>
-    </div>
+    </button>
   );
 }
 

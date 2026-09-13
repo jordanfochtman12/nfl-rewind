@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 6;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -215,6 +215,8 @@ export interface Player {
   abilities: string[];
   /** Style flags that change the sim (Clutch, Gunslinger, Glass, …). */
   traits: string[];
+  /** Build prototype (cannon, thumper, burner…). Overall is derived from ratings. */
+  arch?: string;
   injuredWeeks: number;
   injuryName?: string;
   stats: Record<number, SeasonStats>;

@@ -3,6 +3,7 @@ import { activeTeamIds } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
 import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf } from "./players.ts";
 import { eraCollege, jerseyFor } from "./names.ts";
+import { lookupCollege } from "./data/colleges.ts";
 import { randInt } from "./rng.ts";
 import { kitBoost } from "./abilities.ts";
 import { addNews, addTx } from "./news.ts";
@@ -56,9 +57,14 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
     age: randInt(save, 21, 23),
     historical: true,
     generated: false,
-    college: s.c ?? eraCollege(save),
+    college: s.c ?? lookupCollege(s.f, s.l) ?? eraCollege(save),
     draftYear: save.year,
     draftRound: s.r ?? round,
+    arch: s.arch,
+    heightIn: s.ht,
+    weight: s.wt,
+    forty: s.fy,
+    rt: s.rt,
   });
 }
 

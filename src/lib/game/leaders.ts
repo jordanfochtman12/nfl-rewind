@@ -99,8 +99,17 @@ export function careerTotals(p: Player): SeasonStats {
     acc.sacks += s.sacks;
     acc.ints += s.ints;
     acc.tackles += s.tackles;
+    acc.ff += s.ff ?? 0;
+    acc.sacksThrown += s.sacksThrown ?? 0;
+    acc.fgAtt += s.fgAtt ?? 0;
     acc.fgMade += s.fgMade;
+    acc.xpAtt += s.xpAtt ?? 0;
     acc.xpMade += s.xpMade;
+    acc.punts += s.punts ?? 0;
+    acc.puntYds += s.puntYds ?? 0;
+    acc.krYds += s.krYds ?? 0;
+    acc.prYds += s.prYds ?? 0;
+
   }
   return acc;
 }

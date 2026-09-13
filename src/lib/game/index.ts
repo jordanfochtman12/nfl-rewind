@@ -8,6 +8,7 @@ export type {
   Player,
   Phase,
   Pos,
+  SeasonStats,
   TeamId,
   TeamState,
 } from "./types.ts";
@@ -49,7 +50,7 @@ export {
 export { buildDraftBoard, makeDraftPick, autoDraftRest, currentDraftTeam, draftOrder, simUntilUserPick } from "./draft.ts";
 export { applyYearExpansion, userExpansionPick } from "./expansion.ts";
 export { playerName, rosterOf, starters, hasKit, pruneRoster, trimRoster } from "./players.ts";
-export { hasFullKit } from "./ratings.ts";
+export { hasFullKit, isPrimary, primaryKeys } from "./ratings.ts";
 export { eraProfile } from "./era.ts";
 export { expansionForYear, EXPANSION_SPECS } from "./data/expansions.ts";
 export { DRAFT_CLASSES, draftSeedsFor } from "./data/draftClasses.ts";
@@ -57,8 +58,32 @@ export { superBowlSite, proBowlSite } from "./data/bowlSites.ts";
 
 export { formatMoney, salaryCapFor, teamPayroll } from "./salary.ts";
 export { abilitiesFrom, abilityLine, assignKit, kitBoost, kitDef, kitImpactLine, kitInjMult, ABILITY_DEFS, TRAIT_DEFS } from "./abilities.ts";
+export { lookupProfile, ratingsFromProfile, SCOUT_KEYS, RATING_GROUPS, ARCH_LABEL, inferArch } from "./profiles.ts";
+export type { Arch } from "./profiles.ts";
 export { buildPrimetime, depthChart } from "./primetime.ts";
 export { draftStyleOf } from "./staff.ts";
 
 export { formatHt } from "./development.ts";
 export { seasonLeaders, careerTotals } from "./leaders.ts";
+export { lookupCollege } from "./data/colleges.ts";
+export {
+  statCols,
+  statGroup,
+  seasonLog,
+  careerOf,
+  draftLine,
+  passerRating,
+  pct,
+  avg,
+  scoring,
+  hasSeasonWork,
+  colsForFamily,
+  familyOfPos,
+  familiesOf,
+  familiesAcross,
+  careerHeadlines,
+  seasonLabel,
+  FAMILY_LABEL,
+  type StatCol,
+  type StatFamily,
+} from "./statsView.ts";

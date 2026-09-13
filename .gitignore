@@ -21,3 +21,5 @@ coverage
 attachments
 .project_id
 .node_modules.lock
+__pycache__/
+*.pyc

@@ -86,7 +86,7 @@ Era caps (1966–70 especially):
 
 Seed 1966 veterans from real 1966 rosters (Starr, Unitas, Namath, Sayers, Butkus, Dawson, Alworth, Nitschke, etc.). Exclude 1966 draftees from the veteran file so they appear on the draft board.
 
-Draft catalogs: real 1966 through at least 1979 classes. Later classes 1980–2027 as complete as possible. Fill incomplete rounds with generated prospects that still have full attribute kits.
+Draft catalogs: real 1966–2026 classes ingested from Wikipedia (1966–1979) and nflverse/PFR (1980–2026). Rebuild with `python3 scripts/ingest-draft-classes.py`. Hand-tuned stars in `draftClasses.ts` / `starProfiles.ts` win on overall and locked attributes. Fill leftover slots with generated prospects that still have full attribute kits.
 
 **No player photographs.**
 

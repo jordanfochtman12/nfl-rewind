@@ -7,6 +7,8 @@ import {
   type TeamState,
 } from "./types.ts";
 import { assignKit } from "./abilities.ts";
+import { lookupCollege } from "./data/colleges.ts";
+import { seedPriorCareer } from "./data/careerPrior.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -157,6 +159,18 @@ export function hydrateSave(raw: unknown): DynastySave {
     pl.traits = pl.traits ?? [];
     pl.career = pl.career ?? [];
     pl.injuredWeeks = pl.injuredWeeks ?? 0;
+    if (!pl.college) pl.college = lookupCollege(pl.firstName, pl.lastName);
+    if (pl.historical && pl.yearsPro > 0) {
+      const through = (out.startingYear ?? STARTING_YEAR) - 1;
+      const debut = pl.draftYear ?? (out.startingYear ?? STARTING_YEAR) - pl.yearsPro;
+      if (debut <= through) {
+        const prior = seedPriorCareer(pl, through);
+        if (prior.length) {
+          const sim = pl.career.filter((s) => s.year >= (out.startingYear ?? STARTING_YEAR));
+          pl.career = [...prior, ...sim];
+        }
+      }
+    }
     if (pl.ratings) {
       const kit = assignKit(pl.pos, pl.ratings, pl.firstName, pl.lastName);
       const ab = new Set([...(pl.abilities ?? []), ...kit.abilities]);

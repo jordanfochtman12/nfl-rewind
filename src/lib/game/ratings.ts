@@ -2,7 +2,7 @@ import type { Pos, RatingKey, Ratings } from "./types.ts";
 import { RATING_KEYS } from "./types.ts";
 import { clamp } from "./rng.ts";
 
-const WEIGHTS: Record<Pos, Partial<Record<RatingKey, number>>> = {
+export const WEIGHTS: Record<Pos, Partial<Record<RatingKey, number>>> = {
   QB: {
     throwAcc: 0.22,
     throwAwr: 0.18,
@@ -169,7 +169,7 @@ const WEIGHTS: Record<Pos, Partial<Record<RatingKey, number>>> = {
   P: { kickPow: 0.4, kickAcc: 0.32, awareness: 0.12, stamina: 0.08, inj: 0.08 },
 };
 
-const POS_BASE: Record<Pos, Partial<Ratings>> = {
+export const POS_BASE: Record<Pos, Partial<Ratings>> = {
   QB: { throwPow: 72, throwAcc: 74, throwAwr: 70, rel: 68, awareness: 72 },
   RB: { speed: 82, accel: 80, elu: 74, btk: 70, truck: 68 },
   FB: { str: 78, truck: 76, runBlk: 74, passBlk: 68 },
@@ -208,6 +208,16 @@ export function deriveOvr(pos: Pos, ratings: Ratings): number {
   return clamp(Math.round(sum / tw), 1, 99);
 }
 
+export function primaryKeys(pos: Pos): RatingKey[] {
+  return (Object.entries(WEIGHTS[pos]) as [RatingKey, number][])
+    .filter(([, w]) => (w ?? 0) >= 0.08)
+    .map(([k]) => k);
+}
+
+export function isPrimary(pos: Pos, key: RatingKey): boolean {
+  return (WEIGHTS[pos][key] ?? 0) >= 0.08;
+}
+
 export function ratingsFromOvr(
   pos: Pos,
   ovr: number,
@@ -220,7 +230,6 @@ export function ratingsFromOvr(
     const b = base[k] ?? 50;
     r[k] = clamp(jitterFn(b * scale, k), 25, 99);
   }
-  // Nudge primary weights toward target ovr
   for (let i = 0; i < 6; i++) {
     const got = deriveOvr(pos, r);
     const delta = ovr - got;

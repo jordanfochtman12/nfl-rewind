@@ -1,20 +1,24 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   ACTIVE_1966,
+  activeTeamIds,
   depthChart,
   displayName,
   formatMoney,
   gamesForTeam,
+  hasSeasonWork,
   locationOf,
   nicknameOf,
   originalLeague,
-  playerName,
   rosterOf,
   standingRows,
+  statCols,
+  statGroup,
   teamColors,
   teamPayroll,
   logoSrc,
   type Player,
+  type Pos,
   type TeamId,
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
@@ -25,6 +29,7 @@ import { SuperBowlNight } from "./SuperBowlNight";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips } from "./KitChips";
+import { PlayerLink, PlayerProfile } from "./PlayerProfile";
 
 function Logo({ id, size = 36 }: { id: TeamId; size?: number }) {
   const year = useGameStore((s) => s.save?.year ?? 1966);
@@ -229,7 +234,7 @@ function InjuryReport() {
           {hurt.map((p) => (
             <li key={p.id} className="flex justify-between gap-3">
               <span>
-                {playerName(p)} <span className="text-muted">{p.pos}</span>
+                <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
               </span>
               <span className="tabular text-brick">
                 {p.injuryName ?? "hurt"} · {p.injuredWeeks}w
@@ -252,7 +257,7 @@ function Roster() {
       <table className="w-full min-w-[860px] text-left text-sm">
         <thead className="bg-surface-2 text-xs tracking-wider text-muted">
           <tr>
-            {["#", "Player", "Pos", "OVR", "Age", "Kit", "Sal", "Status"].map((h) => (
+            {["#", "Player", "Pos", "College", "OVR", "Age", "Kit", "Sal", "Status"].map((h) => (
               <th key={h} className="px-3 py-2 font-medium">
                 {h}
               </th>
@@ -264,10 +269,11 @@ function Roster() {
             <tr key={p.id} className="border-t border-line">
               <td className="tabular px-3 py-2 text-muted">{p.jersey}</td>
               <td className="px-3 py-2">
-                {playerName(p)}
+                <PlayerLink player={p} className="font-display text-base" />
                 {p.historical ? "" : <span className="ml-2 text-xs text-subtle">camp</span>}
               </td>
               <td className="px-3 py-2">{p.pos}</td>
+              <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
               <td className="tabular px-3 py-2">{p.ovr}</td>
               <td className="tabular px-3 py-2">{p.age}</td>
               <td className="px-3 py-2">
@@ -308,8 +314,9 @@ function Depth() {
                   {row.players.map((p, i) => (
                     <li key={p.id} className="flex justify-between gap-2 text-sm">
                       <span className="min-w-0">
-                        {i + 1}. {playerName(p)}
+                        {i + 1}. <PlayerLink player={p} className="inline min-h-0" />
                         {p.injuredWeeks > 0 ? <span className="ml-2 text-brick">out</span> : null}
+                        <span className="mt-0.5 block text-xs text-muted">{p.college ?? ""}</span>
                         <span className="mt-0.5 block">
                           <KitChips player={p} compact />
                         </span>
@@ -453,38 +460,192 @@ function Schedule() {
 
 function Stats() {
   const save = useGameStore((s) => s.save)!;
-  const players: Player[] = Object.values(save.players).filter((p) => p.stats[save.year]);
-  const rows = players
-    .map((p) => ({ p, s: p.stats[save.year]! }))
-    .sort((a, b) => b.s.passYds + b.s.rushYds + b.s.recYds - (a.s.passYds + a.s.rushYds + a.s.recYds))
-    .slice(0, 48);
+  const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
+  const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
+  const teams = activeTeamIds(save.year);
+
+  const inPos = (p: Player) => {
+    if (posFilter === "ALL") return true;
+    if (posFilter === "OL") return ["LT", "LG", "C", "RG", "RT"].includes(p.pos);
+    if (posFilter === "DL") return p.pos === "DE" || p.pos === "DT";
+    if (posFilter === "LB") return p.pos === "OLB" || p.pos === "MLB";
+    if (posFilter === "DB") return p.pos === "CB" || p.pos === "S";
+    return p.pos === posFilter;
+  };
+
+  const allRows = Object.values(save.players)
+    .filter((p) => {
+      const s = p.stats[save.year];
+      if (!hasSeasonWork(s)) return false;
+      if (!inPos(p)) return false;
+      if (teamFilter === "mine") return p.teamId === save.userTeamId;
+      if (teamFilter !== "ALL") return p.teamId === teamFilter;
+      return true;
+    })
+    .map((p) => ({ p, s: p.stats[save.year]! }));
+
+  const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>) => {
+    const score = (s: (typeof rows)[number]["s"]) =>
+      group === "pass"
+        ? s.passYds
+        : group === "rush"
+          ? s.rushYds
+          : group === "rec"
+            ? s.recYds
+            : group === "k"
+              ? s.fgMade * 3 + s.xpMade
+              : group === "p"
+                ? s.puntYds
+                : s.tackles + s.sacks * 4 + s.ints * 5;
+    return rows.slice().sort((a, b) => score(b.s) - score(a.s)).slice(0, 40);
+  };
+
+  const filters: (Pos | "ALL" | "OL" | "DL" | "LB" | "DB")[] = [
+    "ALL",
+    "QB",
+    "RB",
+    "WR",
+    "TE",
+    "OL",
+    "DL",
+    "LB",
+    "DB",
+    "K",
+    "P",
+  ];
+
+  const samplePos = (pos: Pos | "ALL" | "OL" | "DL" | "LB" | "DB"): Pos => {
+    if (pos === "ALL") return "QB";
+    if (pos === "OL") return "C";
+    if (pos === "DL") return "DE";
+    if (pos === "LB") return "MLB";
+    if (pos === "DB") return "CB";
+    return pos;
+  };
+
+  const boards =
+    posFilter === "ALL"
+      ? (
+          [
+            ["Passing", "QB" as const, allRows.filter((r) => r.p.pos === "QB")],
+            ["Rushing", "RB" as const, allRows.filter((r) => r.p.pos === "RB" || r.p.pos === "FB")],
+            ["Receiving", "WR" as const, allRows.filter((r) => r.p.pos === "WR" || r.p.pos === "TE")],
+            ["Defense", "MLB" as const, allRows.filter((r) => ["DE", "DT", "OLB", "MLB", "CB", "S"].includes(r.p.pos))],
+            ["Kicking", "K" as const, allRows.filter((r) => r.p.pos === "K")],
+            ["Punting", "P" as const, allRows.filter((r) => r.p.pos === "P")],
+          ] as const
+        ).map(([title, pos, rows]) => ({ title, pos, rows: sortRows([...rows], statGroup(pos)) }))
+      : [
+          {
+            title: String(posFilter),
+            pos: allRows[0]?.p.pos ?? samplePos(posFilter),
+            rows: sortRows(allRows, statGroup(allRows[0]?.p.pos ?? samplePos(posFilter))),
+          },
+        ];
+
   return (
-    <div className="overflow-x-auto rounded-xl border border-line">
-      <table className="w-full min-w-[720px] text-left text-sm">
-        <thead className="bg-surface-2 text-xs text-muted">
-          <tr>
-            {["Player", "Team", "Pass", "Rush", "Rec", "TD", "INT", "Sacks"].map((h) => (
-              <th key={h} className="px-3 py-2 font-medium">
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(({ p, s }) => (
-            <tr key={p.id} className="border-t border-line">
-              <td className="px-3 py-2">{playerName(p)}</td>
-              <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
-              <td className="tabular px-3 py-2">{s.passYds}</td>
-              <td className="tabular px-3 py-2">{s.rushYds}</td>
-              <td className="tabular px-3 py-2">{s.rec}</td>
-              <td className="tabular px-3 py-2">{s.passTd + s.rushTd + s.recTd}</td>
-              <td className="tabular px-3 py-2">{s.passInt}</td>
-              <td className="tabular px-3 py-2">{s.sacks}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-2">
+        {filters.map((pos) => (
+          <button
+            key={pos}
+            type="button"
+            onClick={() => setPosFilter(pos)}
+            className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
+              posFilter === pos ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+            }`}
+          >
+            {pos}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setTeamFilter("ALL")}
+          className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
+            teamFilter === "ALL" ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+          }`}
+        >
+          League
+        </button>
+        <button
+          type="button"
+          onClick={() => setTeamFilter("mine")}
+          className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
+            teamFilter === "mine" ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+          }`}
+        >
+          My club
+        </button>
+        {teams.map((id) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTeamFilter(id)}
+            className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
+              teamFilter === id ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+            }`}
+          >
+            {locationOf(save.year, id)}
+          </button>
+        ))}
+      </div>
+      {boards.map((board) => {
+        const cols = statCols(board.pos);
+        return (
+          <section key={board.title}>
+            {posFilter === "ALL" && <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{board.title}</h3>}
+            <div className="overflow-x-auto rounded-xl border border-line">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="bg-surface-2 text-xs text-muted">
+                  <tr>
+                    <th className="px-3 py-2 font-medium">Player</th>
+                    <th className="px-3 py-2 font-medium">Pos</th>
+                    <th className="px-3 py-2 font-medium">Team</th>
+                    <th className="px-3 py-2 font-medium">College</th>
+                    {cols.map((c) => (
+                      <th key={c.key} className="px-3 py-2 font-medium">
+                        {c.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {board.rows.map(({ p, s }) => {
+                    const rowCols = statCols(p.pos);
+                    return (
+                      <tr key={p.id} className="border-t border-line">
+                        <td className="px-3 py-2">
+                          <PlayerLink player={p} />
+                        </td>
+                        <td className="px-3 py-2">{p.pos}</td>
+                        <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
+                        <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
+                        {cols.map((c) => {
+                          const match = rowCols.find((x) => x.key === c.key) ?? cols.find((x) => x.key === c.key);
+                          return (
+                            <td key={c.key} className="tabular px-3 py-2">
+                              {match?.of ? match.of(s) : "—"}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                  {!board.rows.length && (
+                    <tr>
+                      <td className="px-3 py-4 text-muted" colSpan={4 + cols.length}>
+                        Play a Sunday — stats land after the whistle.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -510,7 +671,15 @@ function History() {
               <ol className="mt-2 space-y-1 text-sm">
                 {rows.slice(0, 5).map((r, i) => (
                   <li key={r.playerId} className="flex justify-between gap-2">
-                    <span>{i + 1}. {r.name} <span className="text-muted">{r.pos}</span></span>
+                    <span>
+                      {i + 1}.{" "}
+                      {save.players[r.playerId] ? (
+                        <PlayerLink player={save.players[r.playerId]!} className="inline min-h-0" />
+                      ) : (
+                        r.name
+                      )}{" "}
+                      <span className="text-muted">{r.pos}</span>
+                    </span>
                     <span className="tabular">{r.value}</span>
                   </li>
                 ))}
@@ -543,7 +712,12 @@ function History() {
         <ul className="space-y-2">
           {save.history.hof.map((h) => (
             <li key={h.playerId} className="text-sm">
-              {h.year}: {save.players[h.playerId] ? playerName(save.players[h.playerId]!) : h.playerId} — {h.blurb}
+              {h.year}: {save.players[h.playerId] ? (
+                <PlayerLink player={save.players[h.playerId]!} className="inline min-h-0" />
+              ) : (
+                h.playerId
+              )}{" "}
+              — {h.blurb}
             </li>
           ))}
           {!save.history.hof.length && <p className="text-muted">No class yet. Five-year wait after retirement.</p>}
@@ -575,7 +749,11 @@ function EventPane() {
   }
   if (save.phase === "awards" && save.awards) {
     const a = save.awards;
-    const name = (id?: string) => (id && save.players[id] ? playerName(save.players[id]!) : "—");
+    const name = (id?: string) => {
+      const p = id ? save.players[id] : undefined;
+      if (!p) return "—";
+      return <PlayerLink player={p} className="inline min-h-0" />;
+    };
     return (
       <article className="space-y-3 rounded-xl border border-line bg-surface p-5">
         <h2 className="text-3xl">{save.year} Awards</h2>
@@ -596,7 +774,13 @@ function EventPane() {
             const p = save.players[id];
             return (
               <li key={id}>
-                {p ? `${playerName(p)}, ${p.pos}, age ${p.age}` : id}
+                {p ? (
+                  <>
+                    <PlayerLink player={p} className="inline min-h-0" />, {p.pos}, age {p.age}
+                  </>
+                ) : (
+                  id
+                )}
               </li>
             );
           })}
@@ -613,7 +797,7 @@ function EventPane() {
         <ul>
           {save.pendingHof.map((id) => {
             const p = save.players[id];
-            return <li key={id}>{p ? playerName(p) : id}</li>;
+            return <li key={id}>{p ? <PlayerLink player={p} className="inline min-h-0" /> : id}</li>;
           })}
           {!save.pendingHof.length && <p className="text-muted">Canton waits.</p>}
         </ul>
@@ -698,7 +882,7 @@ function PlayShell() {
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">
         {event ? <EventPane /> : null}
-        {showDraft && tab !== "standings" && tab !== "history" ? <DraftNight /> : null}
+        {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {!event && !showDraft && tab === "office" && <Office />}
         {!event && tab === "roster" && <Roster />}
         {!event && tab === "depth" && <Depth />}
@@ -708,6 +892,7 @@ function PlayShell() {
         {!event && tab === "stats" && <Stats />}
         {!event && tab === "draft" && !showDraft && <DraftNight />}
         {!event && tab === "history" && <History />}
+        <PlayerProfile />
       </main>
     </div>
   );

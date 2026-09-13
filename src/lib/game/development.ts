@@ -1,6 +1,6 @@
 import type { DynastySave, Player, Pos } from "./types.ts";
-import { deriveOvr, ratingsFromOvr } from "./ratings.ts";
 import { rand, randInt } from "./rng.ts";
+import { applyAgeDelta } from "./profiles.ts";
 
 const PEAK: Record<Pos, number> = {
   QB: 30,
@@ -44,7 +44,12 @@ const CLIFF: Record<Pos, number> = {
   P: 40,
 };
 
-export function measurables(pos: Pos, ovr: number, speed: number): { heightIn: number; weight: number; forty: number } {
+export function measurables(
+  pos: Pos,
+  ovr: number,
+  speed: number,
+  salt = 0,
+): { heightIn: number; weight: number; forty: number } {
   const base: Record<Pos, [number, number]> = {
     QB: [75, 215],
     RB: [71, 210],
@@ -66,8 +71,11 @@ export function measurables(pos: Pos, ovr: number, speed: number): { heightIn: n
     P: [73, 195],
   };
   const [h, w] = base[pos];
-  const forty = Math.round((5.15 - speed / 90) * 100) / 100;
-  return { heightIn: h + (ovr >= 88 ? 1 : 0), weight: w, forty: Math.max(4.28, Math.min(5.2, forty)) };
+  const heightIn = h + ((salt % 5) - 2) + (ovr >= 90 ? 1 : 0);
+  const weight = w + (((salt >>> 3) % 25) - 12) + (ovr >= 88 ? 4 : 0);
+  const fortyRaw = 5.18 - speed / 88 - ((salt >>> 8) % 7) * 0.01;
+  const forty = Math.round(Math.max(4.26, Math.min(5.28, fortyRaw)) * 100) / 100;
+  return { heightIn, weight, forty };
 }
 
 export function agePlayer(save: DynastySave, p: Player): void {
@@ -84,10 +92,7 @@ export function agePlayer(save: DynastySave, p: Player): void {
   else if (p.age >= peak + 2 && rand(save) < 0.55) delta = -1;
   if (p.pos === "RB" && p.age >= 29) delta = Math.min(delta, -1);
   if (delta !== 0) {
-    p.ovr = Math.max(40, Math.min(99, p.ovr + delta));
-    const jitter = (base: number, _key: import("./types.ts").RatingKey) => Math.max(25, Math.min(99, base + delta));
-    p.ratings = ratingsFromOvr(p.pos, p.ovr, jitter);
-    p.ovr = deriveOvr(p.pos, p.ratings);
+    applyAgeDelta(p, delta);
   }
   p.peakOvr = Math.max(p.peakOvr, p.ovr);
 }

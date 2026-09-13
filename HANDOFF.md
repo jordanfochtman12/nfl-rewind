@@ -29,7 +29,7 @@ Product contract: [`AGENTS.project.md`](AGENTS.project.md). Sandbox/platform con
 | Git | **Saved:** https://github.com/jordanfochtman12/nfl-rewind |
 | `npx tsc --noEmit` | **Green** |
 | Preview / `startup.sh` | **Written.** Must listen `0.0.0.0:8080`. |
-| Later draft classes 1980–2027 | Partial stars only. Marked `TODO_INGEST` |
+| Later draft classes 1980–2027 | **Done.** Wikipedia 1966–79 + nflverse 1980–2026 ingest. 1966 board 288/288 named. Kits (arch/ht/wt/rt) on almost every prospect. `scripts/ingest-draft-classes.py` rebuilds `draftClassesIngest.ts`. |
 | User GM (cut/sign/trade UI) | **Not built** — CPU auto-picks |
 | Play-by-play | **Not wanted** — statistical team/player sim only |
 

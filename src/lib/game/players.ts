@@ -1,10 +1,14 @@
-import type { DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
+import type { DynastySave, Player, Pos, Ratings, SeasonStats, TeamId } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
-import { deriveOvr, ratingsFromOvr, hasFullKit } from "./ratings.ts";
+import { deriveOvr, hasFullKit } from "./ratings.ts";
 import { eraCollege, eraName, jerseyFor } from "./names.ts";
 import { jitter, randInt } from "./rng.ts";
 import { VETERANS_1966, type VetSeed } from "./data/veterans1966.ts";
 import { assignKit } from "./abilities.ts";
+import { lookupProfile, nameKey, nameSalt, nameVariance, ratingsFromProfile, type Arch } from "./profiles.ts";
+import { STAR_PROFILES } from "./data/starProfiles.ts";
+import { lookupCollege } from "./data/colleges.ts";
+import { seedPriorCareer } from "./data/careerPrior.ts";
 import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
 
@@ -93,9 +97,22 @@ export function makePlayer(
     draftYear?: number;
     draftRound?: number;
     id?: string;
+    arch?: Arch;
+    heightIn?: number;
+    weight?: number;
+    forty?: number;
+    rt?: Partial<Ratings>;
   },
 ): Player {
-  const ratings = ratingsFromOvr(opts.pos, opts.ovr, (base) => jitter(save, base, 6));
+  const prof = lookupProfile(opts.pos, opts.firstName, opts.lastName);
+  const star = STAR_PROFILES[nameKey(opts.firstName, opts.lastName)];
+  const arch = star?.arch ?? opts.arch ?? prof.arch;
+  const extra = { ...opts.rt, ...prof.rt };
+  const hasLock = Object.keys(extra).length > 0;
+  const jitterFn = opts.historical
+    ? nameVariance(opts.firstName, opts.lastName, hasLock ? 1 : 2)
+    : (n: number) => jitter(save, n, hasLock ? 1 : 2);
+  const ratings = ratingsFromProfile(opts.pos, opts.ovr, arch, extra, jitterFn);
   const ovr = deriveOvr(opts.pos, ratings);
   const kit = assignKit(opts.pos, ratings, opts.firstName, opts.lastName);
   const id =
@@ -105,6 +122,7 @@ export function makePlayer(
       : nextPlayerId(save, "g"));
   let finalId = id;
   if (save.players[finalId]) finalId = nextPlayerId(save, opts.historical ? "h" : "g");
+  const salt = nameSalt(opts.firstName, opts.lastName);
   const p: Player = {
     id: finalId,
     firstName: opts.firstName,
@@ -116,7 +134,7 @@ export function makePlayer(
     age: opts.age,
     yearsPro: Math.max(0, opts.age - 22),
     jersey: opts.jersey ?? 0,
-    college: opts.college,
+    college: opts.college ?? lookupCollege(opts.firstName, opts.lastName),
     historical: opts.historical,
     generated: opts.generated,
     draftYear: opts.draftYear,
@@ -127,10 +145,14 @@ export function makePlayer(
     salary: salaryFor(save.year, ovr, opts.age),
     abilities: kit.abilities,
     traits: kit.traits,
+    arch,
     injuredWeeks: 0,
     stats: {},
     career: [],
-    ...measurables(opts.pos, ovr, ratings.speed),
+    ...measurables(opts.pos, ovr, ratings.speed, salt),
+    ...(star?.ht || opts.heightIn || prof.ht ? { heightIn: star?.ht ?? opts.heightIn ?? prof.ht } : {}),
+    ...(star?.wt || opts.weight || prof.wt ? { weight: star?.wt ?? opts.weight ?? prof.wt } : {}),
+    ...(star?.fy || opts.forty || prof.fy ? { forty: star?.fy ?? opts.forty ?? prof.fy } : {}),
   };
   save.players[p.id] = p;
   return p;
@@ -236,9 +258,10 @@ export function seedVeterans(save: DynastySave): void {
       age: v.a,
       historical: true,
       generated: false,
-      college: v.c,
+      college: v.c ?? lookupCollege(v.f, v.l),
       jersey,
     });
+    if (p.yearsPro > 0) p.career = seedPriorCareer(p, save.year - 1);
     addToRoster(save, v.t, p.id);
   }
 }

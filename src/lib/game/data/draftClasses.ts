@@ -1,6 +1,14 @@
-import type { Pos } from "../types.ts";
+import type { Pos, Ratings } from "../types.ts";
+import type { Arch } from "../profiles.ts";
 import { DRAFT_EXTRA } from "./draftClassesExtra.ts";
 import { DRAFT_MORE } from "./draftClassesMore.ts";
+import { DRAFT_FILL } from "./draftClassesFill.ts";
+import { DRAFT_DEEP } from "./draftClassesDeep.ts";
+import { DRAFT_MODERN } from "./draftClassesModern.ts";
+import { DRAFT_MODERN_LATE } from "./draftClassesModernLate.ts";
+import { DRAFT_2000S } from "./draftClasses2000s.ts";
+import { DRAFT_2010S } from "./draftClasses2010s.ts";
+import { DRAFT_INGEST } from "./draftClassesIngest.ts";
 
 export interface DraftSeed {
   f: string;
@@ -10,6 +18,14 @@ export interface DraftSeed {
   o: number;
   /** Historical round if known. */
   r?: number;
+  arch?: Arch;
+  ht?: number;
+  wt?: number;
+  fy?: number;
+  /** Locked attribute kit. Overall is derived from these, not copied onto every rating. */
+  rt?: Partial<Ratings>;
+  /** Career-backed overall from real NFL production. Wins merge over round heuristics. */
+  src?: "career";
 }
 
 /** Real named classes. Incomplete rounds filled at runtime. */
@@ -977,6 +993,51 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
 };
 
 export function draftSeedsFor(year: number): DraftSeed[] {
-  return [...(DRAFT_CLASSES[year] ?? []), ...(DRAFT_EXTRA[year] ?? []), ...(DRAFT_MORE[year] ?? [])];
+  const rows: DraftSeed[] = [
+    ...(DRAFT_CLASSES[year] ?? []),
+    ...(DRAFT_EXTRA[year] ?? []),
+    ...(DRAFT_MORE[year] ?? []),
+    ...(DRAFT_FILL[year] ?? []),
+    ...(DRAFT_DEEP[year] ?? []),
+    ...(DRAFT_MODERN[year] ?? []),
+    ...(DRAFT_MODERN_LATE[year] ?? []),
+    ...(DRAFT_2000S[year] ?? []),
+    ...(DRAFT_2010S[year] ?? []),
+    ...(DRAFT_INGEST[year] ?? []),
+  ];
+  const by = new Map<string, DraftSeed>();
+  for (const s of rows) {
+    const key = `${s.f}|${s.l}`.toLowerCase();
+    const prev = by.get(key);
+    if (!prev) {
+      by.set(key, { ...s, rt: s.rt ? { ...s.rt } : undefined });
+      continue;
+    }
+    const laterCareer = s.src === "career";
+    const keepCareer = prev.src === "career" && !laterCareer;
+    by.set(key, {
+      f: prev.f,
+      l: prev.l,
+      p: prev.p,
+      c: prev.c || s.c,
+      o: laterCareer ? s.o : prev.o,
+      r: prev.r && prev.r > 0 ? prev.r : s.r,
+      arch: laterCareer ? (s.arch ?? prev.arch) : (prev.arch ?? s.arch),
+      ht: laterCareer ? (s.ht ?? prev.ht) : (prev.ht ?? s.ht),
+      wt: laterCareer ? (s.wt ?? prev.wt) : (prev.wt ?? s.wt),
+      fy: laterCareer ? (s.fy ?? prev.fy) : (prev.fy ?? s.fy),
+      rt: laterCareer ? { ...(prev.rt ?? {}), ...(s.rt ?? {}) } : { ...(s.rt ?? {}), ...(prev.rt ?? {}) },
+      src: laterCareer || keepCareer ? "career" : prev.src ?? s.src,
+    });
+  }
+  const out = [...by.values()];
+  out.sort((a, b) => {
+    const ra = a.r && a.r > 0 ? a.r : 99;
+    const rb = b.r && b.r > 0 ? b.r : 99;
+    if (ra !== rb) return ra - rb;
+    if (b.o !== a.o) return b.o - a.o;
+    return a.l.localeCompare(b.l);
+  });
+  return out;
 }
 

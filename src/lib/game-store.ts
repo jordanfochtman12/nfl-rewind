@@ -16,9 +16,12 @@ interface GameStore {
   save: DynastySave | null;
   screen: Screen;
   tab: Tab;
+  profileId: string | null;
   pendingTeam: TeamId | null;
   setScreen: (s: Screen) => void;
   setTab: (t: Tab) => void;
+  openProfile: (id: string) => void;
+  closeProfile: () => void;
   newGame: (teamId: TeamId) => void;
   continueGame: () => void;
   step: (opts?: AdvanceOpts) => void;
@@ -34,12 +37,15 @@ export const useGameStore = create<GameStore>()(
       save: null,
       screen: "title",
       tab: "office",
+      profileId: null,
       pendingTeam: null,
       setScreen: (screen) => set({ screen }),
       setTab: (tab) => set({ tab }),
+      openProfile: (profileId) => set({ profileId }),
+      closeProfile: () => set({ profileId: null }),
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
-        set({ save, screen: "play", tab: "draft" });
+        set({ save, screen: "play", tab: "draft", profileId: null });
       },
       continueGame: () => {
         const { save } = get();
@@ -63,7 +69,7 @@ export const useGameStore = create<GameStore>()(
         const save = hydrateSave(JSON.parse(raw));
         set({ save, screen: "play" });
       },
-      resign: () => set({ screen: "title" }),
+      resign: () => set({ screen: "title", profileId: null }),
     }),
     { name: "nfl-rewind-dynasty" },
   ),

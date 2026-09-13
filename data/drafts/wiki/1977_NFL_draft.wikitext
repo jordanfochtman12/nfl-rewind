@@ -1,0 +1,613 @@
+{{Short description|National Football League draft}}
+{{Use American English|date=July 2026}}
+{{Use mdy dates|date=August 2023}}
+{{Infobox sports draft
+| name          = 1977 NFL draft
+| logo          = 
+| logosize      = 
+| logoalt       = 
+| image         = Roosevelt Hotel.jpg
+| imagesize     = 
+| alt           = 
+| caption       = Roosevelt Hotel (location of the draft), photographed in 2008
+| date          = May 3–4, 1977
+| time          = 
+| location      = [[The Roosevelt Hotel (Manhattan)|Roosevelt Hotel]]<br/>in [[New York City]], New York
+| network       = 
+| sponsor       = 
+| league        = [[National Football League|NFL]]
+| mr_irrelevant = Jim Kelleher, RB<br/>[[1977 Minnesota Vikings season|Minnesota Vikings]]
+| first         = [[Ricky Bell (running back)|Ricky Bell]], RB<br/>[[1977 Tampa Bay Buccaneers season|Tampa Bay Buccaneers]]
+| first_round   =
+| fewnum        = 6
+| fewest        = [[1977 Washington Redskins season|Washington Redskins]]
+| mostnum       = 18
+| most          = [[1977 Cincinnati Bengals season|Cincinnati Bengals]]<br>[[1977 Pittsburgh Steelers season|Pittsburgh Steelers]]
+| overall       = 335
+| rounds        = 12
+| hofnum        = {{ Collapsible list
+| title = 3
+| 1 = RB [[Tony Dorsett]]
+| 2 = DT [[Joe Klecko]]
+| 3 = S [[Tony Dungy]]
+ }}
+| prev          = [[1976 NFL draft|1976]]
+| next          = [[1978 NFL draft|1978]]  
+}}
+The '''1977 NFL draft''' was the procedure by which [[National Football League]] teams selected amateur [[college football]] players. It is officially known as the [[NFL annual player selection meeting|NFL Annual Player Selection Meeting.]] The [[NFL draft|draft]] was held May 3–4, [[1977 NFL season|1977]], at the [[The Roosevelt Hotel (Manhattan)|Roosevelt Hotel]] in [[New York City]], New York.<ref>{{cite web |url=http://www.footballgeography.com/nfl-draft-sites/ |title=NFL Draft Locations |author=<!--Staff writer(s); no by-line.--> |date=October 2, 2014 |website=FootballGeography.com |access-date=October 23, 2014 |archive-url=https://web.archive.org/web/20150905090250/http://www.footballgeography.com/nfl-draft-sites/ |archive-date=September 5, 2015 |url-status=dead }}</ref><ref>{{cite news |last1=Salomone |first1=Dan |title=NFL Draft headed to Chicago in 2015 |url=http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756 |access-date=June 3, 2015 |publisher=[[New York Giants]] |work=Giants.com |date=October 2, 2014 |archive-url=https://web.archive.org/web/20150930065327/http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756 |archive-date=September 30, 2015 |url-status=dead }}</ref> The league also held its first [[NFL draft#Supplemental draft|supplemental draft]], which took place after the regular draft and before the regular season.
+
+This was the first draft in the [[common draft]] era (since [[1967 NFL/AFL draft|1967]]) with twelve rounds, five rounds fewer than the previous decade. The draft had twelve rounds until reduced to eight in [[1993 NFL draft|1993]] and seven the [[1994 NFL draft|following year]], where it has remains<!-- through [[2025 NFL draft|2025]]-->.
+
+The draft began with commissioner [[Pete Rozelle]] dedicating a moment of silence to [[1976 California Golden Bears football team|California]] quarterback [[Joe Roth (American football)|Joe Roth]], one of the most electric passers in [[1976 NCAA Division I football season|college football]]. Eligible for this draft, he died in February from skin cancer at the age of 21.
+
+With the [[List of first overall National Football League Draft picks|first overall pick]] of the draft, the [[1977 Tampa Bay Buccaneers season|Tampa Bay Buccaneers]] selected [[1976 USC Trojans football team|USC]] running back [[Ricky Bell (running back)|Ricky Bell]]. Next was [[Heisman Trophy]] winner [[Tony Dorsett]] of [[College football national championships in NCAA Division I FBS|national champion]] [[1976 Pittsburgh Panthers football team|Pittsburgh]], taken by the [[1977 Dallas Cowboys season|Dallas Cowboys]].
+
+==Player selections==
+{|
+|-
+|style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;"|
+|= [[Pro Bowl]]er <ref name="Pro Bowler note"/>||
+|style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em;"|
+|= [[Pro Football Hall of Fame|Hall of Fame]]r
+|}
+
+{| border=0 cellspacing="0" cellpadding="8"
+|-
+|{{NFLDraft-TOC |numberofrounds=12|center=yes}}
+{|style="margin: 0.75em 0 0 0.5em;"
+|-
+|  style="background:#d9e9f9; border:1px solid #aaa; width:2em; text-align:center;"| *
+| = compensatory selection ||
+|-
+|  style="background:#faecc8; border:1px solid #aaa; width:2em; text-align:center;"| †
+| = [[Pro Bowl]]er<ref name="Pro Bowler note">Players are identified as a Pro Bowler if they were selected for the Pro Bowl at any time in their career.</ref>
+|-
+| style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em; text-align:center;"| ‡
+|= [[Pro Football Hall of Fame|Hall of Fame]]r<ref name="HOF note">Players are identified as a Hall of Famer if they have been inducted into the Pro Football Hall of Fame.</ref>
+|}
+| cellspacing="2"|
+{{AmFootball position key modern}}
+|}
+{{clear}}
+<!--
+
+-->
+
+===Round 1–10===
+{{NFLDraft-header}}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=1 | firstpickinround=yes |team=Tampa Bay Buccaneers |first=Ricky |last=Bell |dab=Ricky Bell (running back) |position=Running back |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=2 |team=Dallas Cowboys |first=Tony |last=Dorsett |position=Running back |collegeyear=1976 |college=University of Pittsburgh |collegeteam=Pittsburgh Panthers |collegelink=Pittsburgh | probowl=yes | hof=yes |cfb page exists=yes |note=from [[1977 Seattle Seahawks season|Seattle]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=3 |team=Cincinnati Bengals |first=Eddie |last=Edwards | dab=Eddie Edwards (American football) |position=Defensive end |collegeyear=1976 |college=University of Miami |collegeteam=Miami Hurricanes |collegelink=Miami (FL) |probowl=yes |cfb page exists=yes |note=from [[1977 Buffalo Bills season|Buffalo]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=4 |team=New York Jets |first=Marvin |last=Powell |position=Offensive tackle |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=5 |team=New York Giants |first=Gary |last=Jeter |position=Defensive tackle |collegeyear=1976 |college=University of Southern California  |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=6 |team=Atlanta Falcons |first=Warren |last=Bryant | dab=Warren Bryant (American football) |position=Offensive tackle |collegeyear=1976 |college=University of Kentucky |collegeteam=Kentucky Wildcats |collegelink=Kentucky |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=7 |team=New Orleans Saints |first=Joe |last=Campbell | dab=Joe Campbell (American football, born 1955) |position=Defensive end |collegeyear=1976 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=8 |team=Cincinnati Bengals |first=Wilson |last=Whitley |position=Defensive tackle |collegeyear=1976 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note=from [[1977 Philadelphia Eagles season|Philadelphia]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=9 |team=Green Bay Packers |first=Mike |last=Butler | dab=Mike Butler (American football) |position=Defensive end |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=10 |team=Kansas City Chiefs |first=Gary |last=Green | dab=Gary Green (American football) |position=Cornerback |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=11 |team=Houston Oilers |first=Morris |last=Towns |position=Offensive tackle |collegeyear=1976 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=12 |team=Buffalo Bills |first=Phil |last=Dokes |position=Defensive tackle |collegeyear=1976 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note=from [[1977 Detroit Lions season|Detroit]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=13 |team=Miami Dolphins |first=A. J. |last=Duhe |position=Defensive end |collegeyear=1976 |college=Louisiana State University |collegeteam=LSU Tigers |collegelink=LSU | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=14 |team=Seattle Seahawks |first=Steve |last=August |position=Offensive tackle |collegeyear=1976 |college=University of Tulsa |collegeteam=Tulsa Golden Hurricane |collegelink=Tulsa |cfb page exists=yes |note=from [[1977 San Diego Chargers season|San Diego]] through Dallas }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=15 |team=Chicago Bears |first=Ted |last=Albrecht |position=Offensive tackle |collegeyear=1976 |college=University of California, Berkeley |collegeteam=California Golden Bears |collegelink=California |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=16 |team=New England Patriots |first=Raymond |last=Clayborn |position=Cornerback |collegeyear=1976 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas | probowl=yes |cfb page exists=yes |note=from [[San Francisco 49ers|San Francisco]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=17 |team=Cleveland Browns |first=Robert |last=Jackson | dab=Robert Jackson (linebacker) |position=Linebacker |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=18 |team=Denver Broncos |first=Steve |last=Schindler |position=Guard |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=19 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Steve |last=Pisarkiewicz |position=Quarterback |collegeyear=1976 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note=from [[1977 Washington Redskins season|Washington]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=20 |team=Atlanta Falcons |first=Wilson |last=Faumuina |position=Defensive tackle |collegeyear=1976 |college=San Jose State University |collegeteam=San Jose State Spartans |collegelink=San Jose State |cfb page exists=yes |note=from St. Louis }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=21 |team=Pittsburgh Steelers |first=Robin |last=Cole |position=Linebacker |collegeyear=1976 |college=University of New Mexico |collegeteam=New Mexico Lobos |collegelink=New Mexico | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=22 |team=Cincinnati Bengals |first=Mike |last=Cobb |position=Tight end |collegeyear=1976 |college=Michigan State University |collegeteam=Michigan State Spartans |collegelink=Michigan State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=23 |team=Los Angeles Rams |first=Bob |last=Brudzinski |position=Linebacker |collegeyear=1976 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=24 |team=San Diego Chargers |first=Bob |last=Rush |dab=Bob Rush (American football) |position=Center |collegeyear=1976 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note=from Dallas }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=25 |team=New England Patriots |first=Stanley |last=Morgan |position=Wide receiver |collegeyear=1976 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=26 |team=Baltimore Colts |first=Randy |last=Burke |position=Wide receiver |collegeyear=1976 |college=University of Kentucky |collegeteam=Kentucky Wildcats |collegelink=Kentucky |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=27 |team=Minnesota Vikings |first=Tommy |last=Kramer |position=Quarterback |collegeyear=1976 |college=Rice University |collegeteam=Rice Owls |collegelink=Rice | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=1 |picknum=28 |team=Green Bay Packers |first=Ezra |last=Johnson |position=Defensive end |collegeyear=1976 |college=Morris Brown College |collegeteam=Morris Brown Wolverines |collegelink=Morris Brown |cfb page exists=no |note=from [[1977 Oakland Raiders season|Oakland]] }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |firstpickinround=yes |picknum=29 |team=Tampa Bay Buccaneers |first=Dave |last=Lewis | dab=Dave Lewis (linebacker) |position=Linebacker |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=30 |team=Seattle Seahawks |first=Tom |last=Lynch | dab=Tom Lynch (American football) |position=Offensive tackle |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=31 |team=Los Angeles Rams |first=Nolan |last=Cromwell |position=Safety |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas | probowl=yes |cfb page exists=yes |note=from Buffalo through Seattle via Dallas }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=32 |team=New York Giants |first=Johnny |last=Perkins |position=Wide receiver |collegeyear=1976 |college=Abilene Christian University |collegeteam=Abilene Christian Wildcats |collegelink=Abilene Christian |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=33 |team=New York Jets |first=Wesley |last=Walker |position=Wide receiver |collegeyear=1976 |college=University of California, Berkeley |collegeteam=California Golden Bears |collegelink=California | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=34 |team=New Orleans Saints |first=Mike |last=Fultz |position=Defensive tackle |collegeyear=1976 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=35 |team=Oakland Raiders |first=Mike |last=Davis | dab=Mike Davis (defensive back, born 1956) |position=Safety |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=36 |team=Atlanta Falcons |first=R. C. |last=Thielemann |position=Guard |collegeyear=1976 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=37 |team=Kansas City Chiefs |first=Tony |last=Reed |position=Running back |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=38 |team=Houston Oilers |first=George |last=Reihner |position=Guard |collegeyear=1976 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=39 |team=Green Bay Packers |first=Greg |last=Koch |position=Offensive tackle |collegeyear=1976 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=40 |team=Miami Dolphins |first=Bob |last=Baumhower |position=Defensive tackle |collegeyear=1976 |college=University of Alabama |collegeteam=Alabama Crimson Tide |collegelink=Alabama | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=41 |team=Seattle Seahawks |first=Terry |last=Beeson |position=Linebacker |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note=from San Diego via Dallas }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=42 |team=Detroit Lions |first=Walt |last=Williams | dab=Walt Williams (American football) |position=Cornerback |collegeyear=1976 |college=New Mexico State University |collegeteam=New Mexico State Aggies |collegelink=New Mexico State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=43 |team=Chicago Bears |first=Mike |last=Spivey | dab=Mike Spivey (American football) |position=Defensive Back |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=44 |team=New England Patriots |first=Horace |last=Ivory |position=Running back |collegeyear=1976 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=45 |team=Denver Broncos |first=Rob |last=Lytle |position=Running back |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=46 |team=Cleveland Browns |first=Tom |last=Skladany |position=Punter |collegeyear=1976 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=47 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=George |last=Franklin |position=Running back |collegeyear=1976 |college=Texas A&M University-Kingsville |collegeteam=Texas A&M–Kingsville Javelinas |collegelink=Texas A&I |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=48 |team=Pittsburgh Steelers |first=Sidney |last=Thornton |position=Running back |collegeyear=1976 |college=Northwestern State University |collegeteam=Northwestern State Demons |collegelink=Northwestern State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=49 |team=Cincinnati Bengals |first=Pete |last=Johnson | dab=Pete Johnson (American football, born 1954) |position=Running back |collegeyear=1976 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=50 |team=Los Angeles Rams |first=Billy |last=Waddy |position=Running back |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=51 |team=Seattle Seahawks |first=Peter |last=Cronan |position=Linebacker |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=52 |team=New England Patriots |first=Don |last=Hasselbeck |position=Tight end |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=53 |team=Baltimore Colts |first=Mike |last=Ozdowski |position=Defensive end |collegeyear=1976 |college=University of Virginia |collegeteam=Virginia Cavaliers |collegelink=Virginia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=54 |team=Dallas Cowboys |first=Glenn |last=Carano |position=Quarterback |collegeyear=1976 |college=University of Nevada, Las Vegas |collegeteam=UNLV Rebels |collegelink=UNLV |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=55 |team=Minnesota Vikings |first=Dennis |last=Swilley |position=Guard |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=2 |picknum=56 |team=Oakland Raiders |first=Ted |last=McKnight |position=Running back |collegeyear=1976 |college=University of Minnesota Duluth |collegeteam=Minnesota Duluth Bulldogs |collegelink=Minnesota-Duluth |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |firstpickinround=yes|picknum=57 |team=Tampa Bay Buccaneers |first=Charles |last=Hannah | dab=Charley Hannah |position=Defensive End |collegeyear=1976 |college=University of Alabama |collegeteam=Alabama Crimson Tide |collegelink=Alabama |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=58 |team=Seattle Seahawks |first=Dennis |last=Boyd | dab=Dennis Boyd (American football) |position=Defensive End |collegeyear=1976 |college=Oregon State University |collegeteam=Oregon State Beavers |collegelink=Oregon State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=59 |team=Buffalo Bills |first=Curtis |last=Brown | dab=Curtis Brown (running back, born 1954) |position=Running back |collegeyear=1976 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=60 |team=Pittsburgh Steelers |first=Tom |last=Beasley |position=Defensive Tackle |collegeyear=1976 |college=Virginia Polytechnic Institute and State University |collegeteam=Virginia Tech Gobblers |collegelink=Virginia Tech |cfb page exists=yes |note=from N. J. Jets }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=61 |team=Chicago Bears |first=Robin |last=Earl |position=Tight end |collegeyear=1976 |college=University of Washington |collegeteam=Washington Huskies |collegelink=Washington |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=62 |team=Dallas Cowboys |first=Tony |last=Hill | dab=Tony Hill (wide receiver) |position=Wide receiver |collegeyear=1976 |college=Stanford University |collegeteam=Stanford Cardinals |collegelink=Stanford | probowl=yes |cfb page exists=yes |note=from Philadelphia}}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=63 |team=Atlanta Falcons |first=Edgar |last=Fields |position=Defensive Tackle |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=64 |team=New Orleans Saints |first=Robert |last=Watts |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=65 |team=San Francisco 49ers |first=Elmo |last=Boyd |position=Wide Receiver |collegeyear=1976 |college=Eastern Kentucky University |collegeteam=Eastern Kentucky Colonels |collegelink=Eastern Kentucky |cfb page exists=no |note=from Houston}}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=66 |team=Houston Oilers |first=Tim |last=Wilson | dab=Tim Wilson (American football) |position=Running back |collegeyear=1976 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=67 |team=Kansas City Chiefs |first=Thomas |last=Howard | dab=Thomas Howard Sr. |position=Linebacker |collegeyear=1976 |college=Texas Tech University |collegeteam=Texas Tech Red Raiders |collegelink=Texas Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=68 |team=Los Angeles Rams |first=Ed |last=Fulton | dab=Ed Fulton (American football) |position=Guard |collegeyear=1976 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note=from San Diego }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=69 |team=Detroit Lions |first=Rick |last=Kane |position=Running back |collegeyear=1976 |college=San Jose State University |collegeteam=San Jose State Spartans |collegelink=San Jose State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=70 |team=Houston Oilers |first=Jimmie |last=Giles |position=Tight end |collegeyear=1976 |college=Alcorn State University |collegeteam=Alcorn State Braves |collegelink=Alcorn State | probowl=yes |cfb page exists=yes |note=from Miami }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=71 |team=Miami Dolphins |first=Mike |last=Watson |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=Miami University |collegeteam=Miami Redskins |collegelink=Miami (OH) |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=72 |team=New York Jets |first=Tank |last=Marshall |position=Defensive end |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=73 |team=Buffalo Bills |first=John |last=Kimbrough | dab=John Kimbrough (wide receiver) |position=Wide receiver |collegeyear=1976 |college=St. Cloud State University |collegeteam=St. Cloud State Huskies |collegelink=St. Cloud State |cfb page exists=no |note=from Cleveland }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=74 |team=Green Bay Packers |first=Rick |last=Scribner |playerpageexists=no |position=Guard |collegeyear=1976 |college=Idaho State University |collegeteam=Idaho State Bengals |collegelink=Idaho State |cfb page exists=yes |note=from Denver }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=75 |team=Pittsburgh Steelers |first=Jim |last=Smith | dab=Jim Smith (wide receiver) |position=Wide receiver |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=76 |team=Cincinnati Bengals |first=Mike |last=Voight |position=Running Back |collegeyear=1976 |college=University of North Carolina |collegeteam=North Carolina Tar Heels |collegelink=North Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=77 |team=San Diego Chargers |first=Keith |last=King | dab=Linden King |position=Defensive back |collegeyear=1976 |college=Colorado State University |collegeteam=Colorado State Rams |collegelink=Colorado State |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=78 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Kurt |last=Allerman |position=Linebacker |collegeyear=1976 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=79 |team=Los Angeles Rams |first=Wendell |last=Tyler |position=Running Back |collegeyear=1976 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=80 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Terdell |last=Middleton |position=Running back |collegeyear=1976 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State | probowl=yes |cfb page exists=yes |note=from Baltimore }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=81 |team=Dallas Cowboys |first=Val |last=Belcher |position=Guard |collegeyear=1976 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=82 |team=New England Patriots |first=Sidney |last=Brown |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=83 |team=Minnesota Vikings |first=Tom |last=Hannon |position=Safety |collegeyear=1976 |college=Michigan State University |collegeteam=Michigan State Spartans |collegelink=Michigan State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=3 |picknum=84 |team=Houston Oilers |first=Rob |last=Carpenter | dab=Rob Carpenter (running back) |position=Running back |collegeyear=1976 |college=Miami University |collegeteam=Miami Redskins |collegelink=Miami (OH) |cfb page exists=yes |note=from Oakland via Buffalo }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |firstpickinround=yes|picknum=85 |team=Cincinnati Bengals |first=Rick |last=Walker |position=Tight End |collegeyear=1976 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note=from Tampa Bay }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=86 |team=Buffalo Bills |first=Jimmy |last=Dean |playerpageexists=no |position=Defensive tackle |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=87 |team=Seattle Seahawks |first=John |last=Yarno |position=Center |collegeyear=1976 |college=University of Idaho |collegeteam=Idaho Vandals |collegelink=Idaho |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=88 |team=New York Giants |first=Mike |last=Vaughan |position=Offensive tackle |collegeyear=1976 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=89 |team=New York Jets |first=Scott |last=Dierking |position=Running back |collegeyear=1976 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=90 |team=Atlanta Falcons |first=Allan |last=Leavitt |position=Kicker |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=91 |team=Los Angeles Rams |first=Vince |last=Ferragamo |position=Quarterback |collegeyear=1976 |college=University of Nebraska-Lincoln |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note=from New Orleans }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=92 |team=Kansas City Chiefs |first=Mark |last=Bailey | dab=Mark Bailey (American football) |position=Running back |collegeyear=1976 |college=California State University, Long Beach |collegeteam=Long Beach State 49ers |collegelink=Long Beach State |cfb page exists=yes |note=from Philadelphia }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=93 |team=Pittsburgh Steelers |first=Ted |last=Petersen |position=Center |collegeyear=1976 |college=Eastern Illinois University |collegeteam=Eastern Illinois Panthers |collegelink=Eastern Illinois |cfb page exists=yes |note=from Green Bay }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=94 |team=Kansas City Chiefs |first=Andre |last=Samuels | dab=Tony Samuels |position=Tight end |collegeyear=1976 |college=Bethune–Cookman University |collegeteam=Bethune–Cookman Wildcats |collegelink=Bethune–Cookman |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=95 |team=Kansas City Chiefs |first=Darius |last=Helton |position=Guard |collegeyear=1976 |college=North Carolina Central University |collegeteam=North Carolina Central Eagles |collegelink=North Carolina Central |cfb page exists=yes |note=from Houston }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=96 |team=Detroit Lions |first=Luther |last=Blue |position=Wide receiver |collegeyear=1976 |college=Iowa State University |collegeteam=Iowa State Cyclones |collegelink=Iowa State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=97 |team=Washington Redskins |first=Duncan |last=McColl |position=Defensive End |collegeyear=1976 |college=Stanford University |collegeteam=Stanford Cardinals |collegelink=Stanford |cfb page exists=yes |note=from Miami }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=98 |team=Houston Oilers |first=Warren |last=Anderson | dab=Warren Anderson (American football) |position=Wide Receiver |collegeyear=1976 |college=West Virginia State University |collegeteam=West Virginia State Yellow Jackets |collegelink=West Virginia State |cfb page exists=no |note=from Miami via San Diego }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=99 |team=Pittsburgh Steelers |first=Laverne |last=Smith |position=Running back |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=100 |team=San Francisco 49ers |first=Stan |last=Black |position=Defensive back |collegeyear=1976 |college=Mississippi State University |collegeteam=Mississippi State Bulldogs |collegelink=Mississippi State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=101 |team=Denver Broncos |first=Billy |last=Bryan |position=Center |collegeyear=1976 |college=Duke University |collegeteam=Duke Blue Devils |collegelink=Duke |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=102 |team=Cleveland Browns |first=Oliver |last=Davis | dab=Oliver Davis (American football) |position=Cornerback |collegeyear=1976 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=103 |team=Cincinnati Bengals |first=Mike |last=Wilson| dab=Mike Wilson (offensive lineman) |position=Offensive tackle |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=104 |team=Kansas City Chiefs |first=Eric |last=Harris | dab=Eric Harris (gridiron football) |position=Cornerback |collegeyear=1976 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=105 |team=Cincinnati Bengals |first=Jerry |last=Anderson | dab=Jerry Anderson (safety) |position=safety |collegeyear=1976 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=106 |team=Pittsburgh Steelers |first=Dan |last=Audick |position=Guard |collegeyear=1976 |college=University of Hawaii |collegeteam=Hawaii Rainbow Warriors |collegelink=Hawaii |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=107 |team=Los Angeles Rams |first=Earl |last=Jones |playerpageexists=no |position=Defensive End |collegeyear=1976 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=108 |team=Dallas Cowboys |first=Guy |last=Brown |position=Linebacker |collegeyear=1976 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=109 |team=New England Patriots |first=Gerald |last=Skinner |position=Offensive tackle |collegeyear=1976 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=110 |team=Cleveland Browns |first=Robert |last=Sims | dab=Mickey Sims |position=Defensive Tackle |collegeyear=1976 |college=South Carolina State University |collegeteam=South Carolina State Bulldogs |collegelink=South Carolina State |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=111 |team=Seattle Seahawks |first=Larry |last=Seivers |position=Wide receiver |collegeyear=1976 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note=from Minnesota }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=4 |picknum=112 |team=Oakland Raiders |first=Mickey |last=Marvin |position=Guard |collegeyear=1976 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |firstpickinround=yes|picknum=113 |team=Miami Dolphins |first=Mike |last=Michel |position=Kicker |collegeyear=1976 |college=Stanford University |collegeteam=Stanford Cardinals |collegelink=Stanford |cfb page exists=yes |note=from Tampa Bay }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=114 |team=Detroit Lions |first=Ron |last=Crosby |position=Linebacker |collegeyear=1976 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note=from Seattle }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=115 |team=Buffalo Bills |first=Fred |last=Besana |position=Quarterback |collegeyear=1976 |college=University of California, Berkeley |collegeteam=California Golden Bears |collegelink=California |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=116 |team=New York Jets |first=Perry |last=Griggs |position=Wide receiver |collegeyear=1976 |college=Troy University |collegeteam=Troy State Trojans |collegelink=Troy State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=117 |team=New York Giants |first=Randy |last=Dean |position=Quarterback |collegeyear=1976 |college=Northwestern University |collegeteam=Northwestern Wildcats |collegelink=Northwestern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=118 |team=New Orleans Saints |first=Dave |last=LaFary |position=Offensive tackle |collegeyear=1976 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=119 |team=Philadelphia Eagles |first=Skip |last=Sharp |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=120 |team=Atlanta Falcons |first=Shelton |last=Diggs |position=Wide receiver |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=121 |team=Pittsburgh Steelers |first=Cliff |last=Stoudt |position=Quarterback |collegeyear=1976 |college=Youngstown State University |collegeteam=Youngstown State Penguins |collegelink=Youngstown State |cfb page exists=no |note=from Kansas City }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=122 |team=Green Bay Packers |first=Nate |last=Simpson |position=Running Back |collegeyear=1976 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=123 |team=Miami Dolphins |first=Leroy |last=Harris | dab=Leroy Harris (running back) |position=Running back |collegeyear=1976 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=124 |team=San Diego Chargers |first=Clarence |last=Williams | dab=Clarence Williams (running back, born 1955) |position=Running back |collegeyear=1976 |college=University of South Carolina |collegeteam=South Carolina Gamecocks |collegelink=South Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=125 |team=Pittsburgh Steelers |first=Steve |last=Courson |position=Guard |collegeyear=1976 |college=University of South Carolina |collegeteam=South Carolina Gamecocks |collegelink=South Carolina |cfb page exists=yes |note=from Detroit }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=126 |team=Oakland Raiders |first=Lester |last=Hayes |position=Cornerback |collegeyear=1976 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M | probowl=yes |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=127 |team=Buffalo Bills |first=Neil |last=O'Donoghue |position=Kicker |collegeyear=1976 |college=Auburn University |collegeteam=Auburn Tigers |collegelink=Auburn |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=128 |team=San Diego Chargers |first=Cliff |last=Olander |position=Quarterback |collegeyear=1976 |college=New Mexico State University |collegeteam=New Mexico State Aggies |collegelink=New Mexico State |cfb page exists=yes |note=from Cleveland }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=129 |team=New York Jets |first=Gary |last=Gregory |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor |cfb page exists=yes |note=from Denver }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=130 |team=Los Angeles Rams |first=Donnie |last=Hickman |position=Guard |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=131 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Ernest |last=Lee |playerpageexists=no |position=Defensive Tackle |collegeyear=1976 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=132 |team=Pittsburgh Steelers |first=Dennis |last=Winston |position=Linebacker |collegeyear=1976 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=133 |team=Cincinnati Bengals |first=Ray |last=Phillips | dab=Ray Phillips (American football) |position=Linebacker |collegeyear=1976 |college=University of Nebraska-Lincoln |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=134 |team=Los Angeles Rams |first=Jeff |last=Williams | dab=Jeff Williams (offensive lineman) |position=Guard |collegeyear=1976 |college=University of Rhode Island |collegeteam=Rhode Island Rams |collegelink=Rhode Island |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=135 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Andy |last=Spiva |position=Linebacker |collegeyear=1976 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note=from New England }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=136 |team=New Orleans Saints |first=Dave |last=Hubbard |position=Offensive tackle |collegeyear=1976 |college=Brigham Young University |collegeteam=BYU Cougars |collegelink=BYU |cfb page exists=yes |note=from Baltimore }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=137 |team=Dallas Cowboys |first=Andy |last=Frederick |position=Offensive tackle |collegeyear=1976 |college=University of New Mexico |collegeteam=New Mexico Lobos |collegelink=New Mexico |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=138 |team=Minnesota Vikings |first=Ken |last=Moore |playerpageexists=no |position=Tight end |collegeyear=1976 |college=Northern Illinois University |collegeteam=Northern Illinois Huskies |collegelink=Northern Illinois |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=5 |picknum=139 |team=Oakland Raiders |first=Jeff |last=Barnes |position=Linebacker |collegeyear=1976 |college=University of California, Berkeley |collegeteam=California Golden Bears |collegelink=California |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |firstpickinround=yes|picknum=140 |team=Chicago Bears |first=Vince |last=Evans |position=Quarterback |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=from Tampa Bay }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=141 |team=San Francisco 49ers |first=Mike |last=Burns | dab=Mike Burns (American football) |position=Safety |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=from Buffalo }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=142 |team=Seattle Seahawks |first=Tony |last=Benjamin |position=Running back |collegeyear=1976 |college=Duke University |collegeteam=Duke Blue Devils |collegelink=Duke |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=143 |team=New York Giants |first=Bob |last=Jordan |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=144 |team=New York Jets |first=Joe |last=Klecko |position=Defensive Tackle |collegeyear=1976 |college=Temple University |collegeteam=Temple Owls |collegelink=Temple | probowl=yes | hof=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=145 |team=Philadelphia Eagles |first=Kevin |last=Russell |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=146 |team=San Diego Chargers |first=Dave |last=Lindstrom |position=Defensive End |collegeyear=1976 |college=Boston University |collegeteam=Boston University Terriers |collegelink=Boston University |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=147 |team=New Orleans Saints |first=Cliff |last=Parsley |position=Punter |collegeyear=1976 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=148 |team=Houston Oilers |first=Gary |last=Woolford |position=Cornerback |collegeyear=1976 |college=Florida State University |collegeteam=Florida State Seminoles |collegelink=Florida State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=149 |team=Green Bay Packers |first=Tim |last=Moresco |position=Defensive Back |collegeyear=1976 |college=Syracuse University |collegeteam=Syracuse Orangemen |collegelink=Syracuse |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=150 |team=Kansas City Chiefs |first=Rick |last=Burleson |playerpageexists=no |position=Defensive End |collegeyear=1976 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=151 |team=San Diego Chargers |first=Larry |last=Barnes | dab=Larry Barnes (running back) |position=Running back |collegeyear=1976 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=152 |team=San Diego Chargers |first=Pete |last=Shaw | dab=Pete Shaw (American football) |position=Safety |collegeyear=1976 |college=Northwestern University |collegeteam=Northwestern Wildcats |collegelink=Northwestern |cfb page exists=yes |note=from Detroit }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=153 |team=New York Giants |first=Emery |last=Moorehead |position=Wide receiver |collegeyear=1976 |college=University of Colorado at Boulder |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note=from Miami }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=154 |team=Philadelphia Eagles |first=Wilbert |last=Montgomery |position=Running back |collegeyear=1976 |college=Abilene Christian University |collegeteam=Abilene Christian Wildcats |collegelink=Abilene Christian | probowl=yes |cfb page exists=no |note=from Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=155 |team=San Francisco 49ers |first=Jim |last=Harlan |position=Center |collegeyear=1976 |college=Howard Payne University |collegeteam=Howard Payne Yellow Jackets |collegelink=Howard Payne |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=156 |team=Los Angeles Rams |first=Art |last=Best |position=Running back |collegeyear=1976 |college=Kent State University |collegeteam=Kent State Golden Flashes |collegelink=Kent State |cfb page exists=yes |note=from Denver }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=157 |team=Buffalo Bills |first=Ron |last=Pruitt |playerpageexists=no |position=Defensive End |collegeyear=1976 |college=University of Nebraska-Lincoln |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note=from Cleveland }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=158 |team=Philadelphia Eagles |first=Mark |last=Mitchell |playerpageexists=no |position=Defensive back |collegeyear=1976 |college=Tulane University |collegeteam=Tulane Green Wave |collegelink=Tulane |cfb page exists=yes |note=from St. Louis via Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=159 |team=Pittsburgh Steelers |first=Paul |last=Harris | dab=Paul Harris (American football) |position=Linebacker |collegeyear=1976 |college=University of Alabama |collegeteam=Alabama Crimson Tide |collegelink=Alabama |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=160 |team=Cincinnati Bengals |first=Tommy |last=Duniven |position=Quarterback |collegeyear=1976 |college=Texas Tech University |collegeteam=Texas Tech Red Raiders |collegelink=Texas Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=161 |team=Atlanta Falcons |first=Keith |last=Jenkins |playerpageexists=no |position=Defensive back |collegeyear=1976 |college=University of Cincinnati |collegeteam=Cincinnati Bearcats |collegelink=Cincinnati |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=162 |team=New Orleans Saints |first=Tom |last=Schick |playerpageexists=no |position=Guard |collegeyear=1976 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=163 |team=Baltimore Colts |first=Calvin |last=O'Neal |position=Linebacker |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=164 |team=Dallas Cowboys |first=Jim |last=Cooper | dab=Jim Cooper (American football) |position=Offensive tackle |collegeyear=1976 |college=Temple University |collegeteam=Temple Owls |collegelink=Temple |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=165 |team=Houston Oilers |first=David |last=Carter | dab=David Carter (offensive lineman) |position=Center |collegeyear=1976 |college=Western Kentucky University |collegeteam=Western Kentucky Hilltoppers |collegelink=Western Kentucky |cfb page exists=yes |note=from New England }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=166 |team=Detroit Lions |first=Reggie |last=Pinkney |position=Defensive back |collegeyear=1976 |college=East Carolina University |collegeteam=East Carolina Pirates |collegelink=East Carolina |cfb page exists=yes |note=from Minnesota via New England }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=6 |picknum=167 |team=Kansas City Chiefs |first=Andre |last=Herrera |playerpageexists=no |position=Running Back |collegeyear=1976 |college=Southern Illinois University |collegeteam=Southern Illinois Salukis |collegelink=Southern Illinois |cfb page exists=yes |note=from Oakland via Tampa Bay thorough Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |firstpickinround=yes |picknum=168 |team=New York Jets |first=Charles |last=White | dab=Charlie White (American football) |position=Running back |collegeyear=1976 |college=Bethune-Cookman University |collegeteam=Bethune-Cookman Wildcats |collegelink=Bethune-Cookman |cfb page exists=no |note=from Tampa Bay }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=169 |team=Seattle Seahawks |first=David |last=Sims | dab=David Sims (running back) |position=Running back |collegeyear=1976 |college=Georgia Institute of Technology |collegeteam=Georgia Tech Yellow Jackets |collegelink=Georgia Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=170 |team=Buffalo Bills |first=Mike |last=Nelms |position=Defensive back |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=171 |team=New York Jets |first=Bob |last=Grupp |position=Defensive Back |collegeyear=1976 |college=Duke University |collegeteam=Duke Blue Devils |collegelink=Duke | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=172 |team=Green Bay Packers |first=Derrel |last=Gofourth |position=Center |collegeyear=1976 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=173 |team=Cleveland Browns |first=Ken |last=Randle |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=from Atlanta }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=174 |team=New Orleans Saints |first=Greg |last=Boykin |position=Running back |collegeyear=1976 |college=Northwestern University |collegeteam=Northwestern Wildcats |collegelink=Northwestern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=175 |team=Philadelphia Eagles |first=Charlie |last=Johnson | dab=Charlie Johnson (defensive tackle) |position=Defensive Tackle |collegeyear=1976 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=176 |team=Green Bay Packers |first=Rell |last=Tipton |playerpageexists=no |position=Guard |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=177 |team=Kansas City Chiefs |first=Chris |last=Golub |position=Defensive Back |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=178 |team=New York Giants |first=Al |last=Dixon |position=Tight end |collegeyear=1976 |college=Iowa State University |collegeteam=Iowa State Cyclones |collegelink=Iowa State |cfb page exists=yes |note=from Houston }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=179 |team=Detroit Lions |first=Tim |last=Black |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=180 |team=Miami Dolphins |first=Bruce |last=Herron |position=Linebacker |collegeyear=1976 |college=University of New Mexico |collegeteam=New Mexico Lobos |collegelink=New Mexico |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=181 |team=San Diego Chargers |first=Ron |last=Bush |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=182 |team=Chicago Bears |first=Gerald |last=Butler | dab=Gerald Butler (American football) |position=Wide receiver |collegeyear=1976 |college=Nicholls State University |collegeteam=Nicholls State Colonels |collegelink=Nicholls State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=183 |team=San Francisco 49ers |first=Jim Van |last=Wagner |position=Running back |collegeyear=1976 |college=Michigan Technological University |collegeteam=Michigan Tech Huskies |collegelink=Michigan Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=184 |team=Cleveland Browns |first=Blane |last=Smith |position=Tight end |collegeyear=1976 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=185 |team=Denver Broncos |first=Larry |last=Swider |position=Punter |collegeyear=1976 |college=University of Pittsburgh |collegeteam=Pittsburgh Panthers |collegelink=Pittsburgh |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=186 |team=Pittsburgh Steelers |first=Randy |last=Frisch |playerpageexists=no |position=Defensive Tackle |collegeyear=1976 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=187 |team=Cincinnati Bengals |first=Louis |last=Breeden |position=Cornerback |collegeyear=1976 |college=North Carolina Central University |collegeteam=North Carolina Central Eagles |collegelink=North Carolina Central |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=188 |team=Cleveland Browns |first=Bob |last=Lingenfelter |position=Offensive tackle |collegeyear=1976 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note=from St. Louis }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=189 |team=Washington Redskins |first=Reggie |last=Haynes |position=Tight end |collegeyear=1976 |college=University of Nevada, Las Vegas |collegeteam=UNLV Rebels |collegelink=UNLV |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=190 |team=Oakland Raiders |first=Rich |last=Martini |position=Wide receiver |collegeyear=1976 |college=University of California, Davis |collegeteam=UC Davis Aggies |collegelink=UC Davis |cfb page exists=yes |note=from Washington via Houston thorough N. Y. Giants}}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=191 |team=Dallas Cowboys |first=Dave |last=Stalls |position=Defensive Tackle |collegeyear=1976 |college=University of Northern Colorado |collegeteam=Northern Colorado Bears |collegelink=Northern Colorado |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=192 |team=New England Patriots |first=Ken |last=Smith |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=University of Arkansas at Pine Bluff |collegeteam=Arkansas–Pine Bluff Golden Lions |collegelink=Arkansas–Pine Bluff |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=193 |team=Baltimore Colts |first=Blanchard |last=Carter |position=Offensive tackle |collegeyear=1976 |college=University of Nevada, Las Vegas |collegeteam=UNLV Rebels |collegelink=UNLV |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=194 |team=Cincinnati Bengals |first=Jim |last=Corbett | dab=Jim Corbett (American football) |position=Tight end |collegeyear=1976 |college=University of Pittsburgh |collegeteam=Pittsburgh Panthers |collegelink=Pittsburgh |cfb page exists=yes |note=from Minnesota }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=7 |picknum=195 |team=New York Jets |first=Kevin |last=Long | dab=Kevin Long (running back) |position=Running back |collegeyear=1976 |college=University of South Carolina |collegeteam=South Carolina Gamecocks |collegelink=South Carolina |cfb page exists=yes |note=from Oakland }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |firstpickinround=yes |picknum=196 |team=Tampa Bay Buccaneers |first=Randy |last=Hedberg |position=Quarterback |collegeyear=1976 |college=Minot State University |collegeteam=Minot State Beavers |collegelink=Minot State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=197 |team=Buffalo Bills |first=Greg |last=Morton |position=Defensive Tackle |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=198 |team=Houston Oilers |first=Steve |last=Davis |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note=from Seattle }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=199 |team=New York Giants |first=Bill |last=Rice |playerpageexists=no |position=Defensive Tackle |collegeyear=1976 |college=Brigham Young University |collegeteam=BYU Cougars |collegelink=BYU |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=200 |team=New York Jets |first=Dan |last=Alexander | dab=Dan Alexander (offensive lineman) |position=Defensive Tackle |collegeyear=1976 |college=Louisiana State University |collegeteam=LSU Tigers |collegelink=LSU |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=201 |team=New Orleans Saints |first=Jimmy |last=Stewart | dab=Jimmy Stewart (defensive back) |position=Defensive back |collegeyear=1976 |college=University of Tulsa |collegeteam=Tulsa Golden Hurricane |collegelink=Tulsa |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=202 |team=Philadelphia Eagles |first=Cleveland |last=Franklin |position=Running back |collegeyear=1976 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=203 |team=Atlanta Falcons |first=Walter |last=Packer |position=Wide Receiver |collegeyear=1976 |college=Mississippi State University |collegeteam=Mississippi State Bulldogs |collegelink=Mississippi State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=204 |team=Kansas City Chiefs |first=Ron |last=Olsonoski |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=University of St. Thomas (Minnesota) |collegeteam=St. Thomas (Minnesota) Tommies |collegelink=St. Thomas (Minnesota) |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=205 |team=Houston Oilers |first=Eddie |last=Foster | dab=Eddie Foster (American football) |position=Wide receiver |collegeyear=1976 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=206 |team=Green Bay Packers |first=David |last=Whitehurst |position=Quarterback |collegeyear=1976 |college=Furman University |collegeteam=Furman Paladins |collegelink=Furman |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=207 |team=Miami Dolphins |first=Horace |last=Perkins |position=Defensive Back |collegeyear=1976 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=208 |team=Dallas Cowboys |first=Al |last=Cleveland |playerpageexists=no |position=Defensive End |collegeyear=1976 |college=University of the Pacific (United States) |collegeteam=Pacific Tigers |collegelink=Pacific |cfb page exists=yes |note=from San Diego }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=209 |team=Detroit Lions |first=Mark |last=Griffin |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of North Carolina |collegeteam=North Carolina Tar Heels |collegelink=North Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=210 |team=New York Jets |first=Ed |last=Thompson |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=211 |team=New York Giants |first=Otis |last=Rodgers |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=Iowa State University |collegeteam=Iowa State Cyclones |collegelink=Iowa State |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=212 |team=Denver Broncos |first=Calvin |last=Culliver |playerpageexists=no |position=Running back |collegeyear=1976 |college=University of Alabama |collegeteam=Alabama Crimson Tide |collegelink=Alabama |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=213 |team=Cleveland Browns |first=Bill |last=Armstrong |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=Wake Forest University |collegeteam=Wake Forest Demon Deacons |collegelink=Wake Forest |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=214 |team=Cincinnati Bengals |first=Jose |last=St. Victor |playerpageexists=no |position=Guard |collegeyear=1976 |college=Syracuse University |collegeteam=Syracuse Orangemen |collegelink=Syracuse |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=215 |team=Kansas City Chiefs |first=Waddell |last=Smith |position=Wide Receiver |collegeyear=1976 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=216 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Eric |last=Williams | dab=Eric Williams (linebacker) |position=Linebacker |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=217 |team=Pittsburgh Steelers |first=Phil |last=August |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=University of Miami |collegeteam=Miami Hurricanes |collegelink=Miami (FL) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=218 |team=Los Angeles Rams |first=Rod |last=Bockwoldt |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=Weber State University |collegeteam=Weber State Wildcats |collegelink=Weber State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=219 |team=New England Patriots |first=Brad |last=Benson |position=Guard |collegeyear=1976 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=220 |team=Baltimore Colts |first=Ken |last=Helms |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=221 |team=Dallas Cowboys |first=Fred |last=Williams | dab=Fred Williams (running back) |position=Running back |collegeyear=1976 |college=Arizona State University |collegeteam=Arizona State Sun Devils |collegelink=Arizona State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=222 |team=Minnesota Vikings |first=Clint |last=Strozier |playerpageexists=no |position=Defensive Back |collegeyear=1976 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=8 |picknum=223 |team=Oakland Raiders |first=Terry |last=Robiskie |position=Running Back |collegeyear=1976 |college=Louisiana State University |collegeteam=LSU Tigers |collegelink=LSU |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |firstpickinround=yes |picknum=224 |team=Tampa Bay Buccaneers |first=Bryon |last=Hemingway |playerpageexists=yes |position=Linebacker |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=225 |team=Seattle Seahawks |first=George |last=Adzick |playerpageexists=no |position=Defensive back |collegeyear=1976 |college=University of Minnesota |collegeteam=Minnesota Golden Gophers |collegelink=Minnesota |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=226 |team=Kansas City Chiefs |first=Derrick |last=Glanton |playerpageexists=no |position=Defensive end |collegeyear=1976 |college=Bishop College |collegeteam=Bishop Tigers |collegelink=Bishop |cfb page exists=no |note=from Buffalo }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=227 |team=New York Jets |first=Matt |last=Robinson | dab=Matt Robinson (American football) |position=Quarterback |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=228 |team=New York Giants |first=Ken |last=Mullins |playerpageexists=no |position=Defensive end |collegeyear=1976 |college=Florida A&M University |collegeteam=Florida A&M Rattlers |collegelink=Florida A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=229 |team=Philadelphia Eagles |first=T. J. |last=Humphreys |playerpageexists=no |position=Guard |collegeyear=1976 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=230 |team=Atlanta Falcons |first=John |last=Maxwell |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=231 |team=New Orleans Saints |first=Dave |last=Knowles |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=Indiana University |collegeteam=Indiana Hoosiers |collegelink=Indiana |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=232 |team=Houston Oilers |first=Bill |last=Currier |position=Safety |collegeyear=1976 |college=University of South Carolina |collegeteam=South Carolina Gamecocks |collegelink=South Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=233 |team=Green Bay Packers |first=Joel |last=Mullins |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=234 |team=Kansas City Chiefs |first=Dave |last=Green |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of New Mexico |collegeteam=New Mexico Lobos |collegelink=New Mexico |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=235 |team=San Diego Chargers |first=Gene |last=Washington | dab=Gene Washington (American football, born 1953) |position=Wide receiver |collegeyear=1976 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=236 |team=Detroit Lions |first=Steve |last=Mathieson |playerpageexists=no |position=Quarterback |collegeyear=1976 |college=Florida State University |collegeteam=Florida State Seminoles |collegelink=Florida State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=237 |team=Miami Dolphins |first=Robert |last=Turner | dab=Robert Turner (running back) |position=Running back |collegeyear=1976 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=238 |team=Chicago Bears |first=Nick |last=Buonamici |playerpageexists=no |position=Defensive tackle |collegeyear=1976 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=239 |team=San Francisco 49ers |first=David |last=Posey |position=Kicker |collegeyear=1976 |college=University of Florida |collegeteam=Florida Gators |collegelink=Florida |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=240 |team=Cleveland Browns |first=Daryl |last=Brown |playerpageexists=no |position=Defensive back |collegeyear=1976 |college=Tufts University |collegeteam=Tufts Jumbos |collegelink=Tufts |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=241 |team=Denver Broncos |first=Charles |last=Jackson | dab=Charles Jackson (linebacker) |position=Defensive tackle |collegeyear=1976 |college=University of Washington |collegeteam=Washington Huskies |collegelink=Washington |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=242 |team=Atlanta Falcons |first=Robert |last=Speer |playerpageexists=no |position=Defensive end |collegeyear=1976 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=243 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Johnny |last=Jackson | dab=Johnnie Jackson (defensive tackle) |position=Defensive tackle |collegeyear=1976 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=244 |team=Pittsburgh Steelers |first=Roosevelt |last=Kelly |playerpageexists=no |position=Tight end |collegeyear=1976 |college=Eastern Kentucky University |collegeteam=Eastern Kentucky Colonels |collegelink=Eastern Kentucky |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=245 |team=Cincinnati Bengals |first=Willie |last=Zachary |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=Central State University |collegeteam=Central State Marauders |collegelink=Central State (OH) |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=246 |team=Washington Redskins |first=Mike |last=Northington |playerpageexists=no |position=Running back |collegeyear=1976 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=247 |team=Baltimore Colts |first=Glen |last=Capriola |playerpageexists=no |position=Running back |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=248 |team=Dallas Cowboys |first=Mark |last=Cantrell |playerpageexists=no |position=Center |collegeyear=1976 |college=University of North Carolina |collegeteam=North Carolina Tar Heels |collegelink=North Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=249 |team=New England Patriots |first=Jerry |last=Vogele |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=250 |team=Minnesota Vikings |first=Scott |last=Studwell |position=Linebacker |collegeyear=1976 |college=University of Illinois |collegeteam=Illinois Fighting Illini |collegelink=Illinois | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=9 |picknum=251 |team=Tampa Bay Buccaneers |first=Larry |last=Mucker |position=Wide receiver |collegeyear=1976 |college=Arizona State University |collegeteam=Arizona State Sun Devils |collegelink=Arizona State |cfb page exists=yes |note=from Oakland }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |firstpickinround=yes |picknum=252 |team=Tampa Bay Buccaneers |first=Robert |last=Morgan |playerpageexists=no |position=Running back |collegeyear=1976 |college=University of Florida |collegeteam=Florida Gators |collegelink=Florida |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=253 |team=Pittsburgh Steelers |first=Alvin |last=Cowans |playerpageexists=no |position=Defensive back |collegeyear=1976 |college=University of Florida |collegeteam=Florida Gators |collegelink=Florida |cfb page exists=yes |note=from Buffalo }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=254 |team=Seattle Seahawks |first=Sam |last=Adkins | dab=Sam Adkins (American football) |position=Quarterback |collegeyear=1976 |college=Wichita State University |collegeteam=Wichita State Shockers |collegelink=Wichita State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=255 |team=New York Giants |first=Mike |last=Jones |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=University of Minnesota |collegeteam=Minnesota Golden Gophers |collegelink=Minnesota |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=256 |team=New York Jets |first=John |last=Hennessy | dab=John Hennessy (American football) |position=Defensive end |collegeyear=1976 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=257 |team=Atlanta Falcons |first=Billy |last=Ryckman |position=Wide receiver |collegeyear=1976 |college=Louisiana Tech University |collegeteam=Louisiana Tech Bulldogs |collegelink=Louisiana Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=258 |team=New Orleans Saints |first=Rafael |last=Septién |position=Kicker |collegeyear=1976 |college=University of Southwestern Louisiana |collegeteam=Southwestern Louisiana Ragin' Cajuns |collegelink=Southwestern Louisiana | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=259 |team=Philadelphia Eagles |first=John |last=Mastronardo |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=Villanova University |collegeteam=Villanova Wildcats |collegelink=Villanova |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=260 |team=Green Bay Packers |first=Jim |last=Culbreath |position=Running back |collegeyear=1976 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=261 |team=Kansas City Chiefs |first=Mark |last=Vitali |playerpageexists=no |position=Quarterback |collegeyear=1976 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=262 |team=Houston Oilers |first=Harvey |last=Hull |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=Mississippi State University |collegeteam=Mississippi State Bulldogs |collegelink=Mississippi State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=263 |team=Detroit Lions |first=Gary |last=Anderson | dab=Gary Anderson (offensive lineman) |position=Guard |collegeyear=1976 |college=Stanford University |collegeteam=Stanford Cardinals |collegelink=Stanford |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=264 |team=Miami Dolphins |first=Mark |last=Carter |playerpageexists=no |position=Tight end |collegeyear=1976 |college=Eastern Michigan University |collegeteam=Eastern Michigan Hurons |collegelink=Eastern Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=265 |team=San Diego Chargers |first=Curtis |last=Townsend |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=266 |team=Chicago Bears |first=Dennis |last=Breckner |playerpageexists=no |position=Defensive end |collegeyear=1976 |college=University of Miami |collegeteam=Miami Hurricanes |collegelink=Miami (FL) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=267 |team=Tampa Bay Buccaneers |first=Aaron |last=Ball |playerpageexists=no |position=Linebacker |collegeyear=1976 |college=California State University, Fullerton |collegeteam=Cal State Fullerton Titans |collegelink=Cal State Fullerton |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=268 |team=Denver Broncos |first=Oren |last=Middlebrook |position=Wide receiver |collegeyear=1976 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=269 |team=Cleveland Browns |first=Tom |last=Burkett |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of North Carolina |collegeteam=North Carolina Tar Heels |collegelink=North Carolina |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=270 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Jim |last=LeJay |playerpageexists=no |position=Wide receiver |collegeyear=1976 |college=San Jose State University |collegeteam=San Jose State Spartans |collegelink=San Jose State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=271 |team=Pittsburgh Steelers |first=Dave |last=LaCrosse |position=Linebacker |collegeyear=1976 |college=Wake Forest University |collegeteam=Wake Forest Demon Deacons |collegelink=Wake Forest |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=272 |team=Cincinnati Bengals |first=Bob |last=Bialik |playerpageexists=no |position=Punter |collegeyear=1976 |college=Hillsdale College |collegeteam=Hillsdale Chargers |collegelink=Hillsdale |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=273 |team=Washington Redskins |first=James |last=Sykes | dab=James Sykes (Canadian football) |position=Running back |collegeyear=1976 |college=Rice University |collegeteam=Rice Owls |collegelink=Rice |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=274 |team=Los Angeles Rams |first=Don |last=Peterson |playerpageexists=no |position=Tight end |collegeyear=1976 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=275 |team=Dallas Cowboys |first=Steve |last=DeBerg |position=Quarterback |collegeyear=1976 |college=San Jose State University |collegeteam=San Jose State Spartans |collegelink=San Jose State | probowl=no |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=276 |team=New England Patriots |first=John |last=Rasmussen |playerpageexists=no |position=Offensive tackle |collegeyear=1976 |college=University of Wisconsin |collegeteam=Wisconsin Badgers |collegelink=Wisconsin |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=277 |team=Baltimore Colts |first=Ron |last=Baker | dab=Ron Baker (American football) |position=Guard |collegeyear=1976 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=278 |team=Minnesota Vikings |first=Dan |last=Beaver |playerpageexists=no |position=Kicker |collegeyear=1976 |college=University of Illinois |collegeteam=Illinois Fighting Illini |collegelink=Illinois |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1977 |numberofrounds=12 |round=10 |picknum=279 |team=New England Patriots |first=Giles |last=Alexander |playerpageexists=no |position=Defensive end |collegeyear=1976 |college=University of Tulsa | collegeteam=Tulsa Golden Hurricane | collegelink=Tulsa |cfb page exists=yes |note=from Oakland }}
+{{NFLDraft-footer}}
+
+===Round 11===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=42% style="background:#A8BDEC;"|NFL team !!width=15% style="background:#A8BDEC;"|Player !!width=16% style="background:#A8BDEC;"|Position !!width=20% style="background:#A8BDEC;"|College
+|-
+|align=center|280||Tampa Bay Buccaneers||Sammy Strock||Tight End||University of Alabama
+|-
+|align=center|281||Tampa Bay Buccaneers||John Bafia||Quarterback||Boston College
+|-
+|align=center|282||Buffalo Bills||Nate Jackson||Running back||Tennessee State
+|-
+|align=center|283||Philadelphia Eagles||[[Rocco Moore]]||Tackle||Western Michigan
+|-
+|align=center|284||New York Giants||Bill Helms||Tight end||San Diego State
+|-
+|align=center|285||New Orleans Saints||[[John Blain (Canadian football)|John Blain]]||Tackle||San Jose State
+|-
+|align=center|286||Philadelphia Eagles||Mike Cordova||Quarterback||Stanford
+|-
+|align=center|287||Atlanta Falcons||[[Dave Farmer]]||Running back||USC
+|-
+|align=center|288||Kansas City Chiefs||Maurice Mitchell||Wide receiver||Northern Michigan
+|-
+|align=center|289||Houston Oilers||[[Al Romano]]||Linebacker||Pittsburgh
+|-
+|align=center|290||Green Bay Packers||[[Terry Randolph]]||Defensive back||American International
+|-
+|align=center|291||Miami Dolphins||[[John Alexander (defensive end)|John Alexander]]||Defensive end||Rutgers
+|-
+|align=center|292||Cincinnati Bengals||[[Joel Parrish]]||Guard||Georgia
+|-
+|align=center|293||Detroit Lions||[[Tony Daykin]]||Linebacker||Georgia Tech
+|-
+|align=center|294||Chicago Bears||[[Connie Zelencik]]||Center||Purdue
+|-
+|align=center|295||San Francisco 49ers||[[Brian Billick]]||Tight end||Brigham Young
+|-
+|align=center|296||Cleveland Browns||Charles Nash||Wide receiver||Arizona
+|-
+|align=center|297||Denver Broncos||Phil Heck||Linebacker||California
+|-
+|align=center|298||Pittsburgh Steelers||[[Lou West]]||Defensive back||Cincinnati
+|-
+|align=center|299||Cincinnati Bengals||[[Carl Allen (cornerback)|Carl Allen]]||Defensive back||Southern Mississippi
+|-
+|align=center|300||Washington Redskins||[[Don Harris (American football)|Don Harris]]||Defensive back||Rutgers
+|-
+|align=center|301||St. Louis Cardinals||Greg Lee||Defensive back||Western Illinois
+|-
+|align=center|302||Los Angeles Rams||[[Carson Long]]||Kicker||Pittsburgh
+|-
+|align=center|303||New England Patriots||[[Ray Costict]]||Linebacker||Mississippi State
+|-
+|align=center|304||Baltimore Colts||Brian Ruff||Linebacker||The Citadel
+|-
+|align=center|305||Dallas Cowboys||Don Wardlow||Tight end||Washington
+|-
+|align=center|306||Minnesota Vikings||[[Keith Hartwig]]||Wide receiver||Arizona
+|-
+|align=center|307||New York Jets||[[Dave Butterfield]]||Defensive back||Nebraska
+|}
+
+===Round 12===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=42% style="background:#A8BDEC;"|NFL team !!width=15% style="background:#A8BDEC;"|Player !!width=16% style="background:#A8BDEC;"|Position !!width=20% style="background:#A8BDEC;"|College
+|-
+|align=center|308||Tampa Bay Buccaneers||Chip Sheffield||Wide receiver||Lenoir-Rhyne
+|-
+|align=center|309||Buffalo Bills||[[Charles Romes]]||Defensive back||North Carolina Central
+|-
+|align=center|310||Pittsburgh Steelers||Jimmy Stephens||Tight end||Florida
+|-
+|align=center|311||New York Giants||Elmo Simmons||Running back||Texas-Arlington
+|-
+|align=center|312||New York Jets||Phil Gargis||Running back||Auburn
+|-
+|align=center|313||New York Jets||Dave Conrad||Tackle||Maryland
+|-
+|align=center|314||St. Louis Cardinals||[[Don Parrish]]||Defensive end||Pittsburgh
+|-
+|align=center|315||New Orleans Saints||[[Oakley Dalton]]||Defensive tackle||Jackson State
+|-
+|align=center|316||Houston Oilers||[[Ove Johansson]]||Kicker||Abilene Christian
+|-
+|align=center|317||Oakland Raiders||bgcolor="#faecc8"|[[Rod Martin]]||Linebacker||USC
+|-
+|align=center|318||Kansas City Chiefs||Ray Burks||Linebacker||UCLA
+|-
+|align=center|319||San Diego Chargers||Jim Stansik||Tight end||Eastern Michigan
+|-
+|align=center|320||Minnesota Vikings||Adam Dzierdzik||Corner Back||Ohio State
+|-
+|align=center|321||Miami Dolphins||[[Terry Anderson (American football)|Terry Anderson]]||Wide receiver||Bethune-Cookman
+|-
+|align=center|322||Chicago Bears||[[Kyle Ecke]]||Wide Receiver||Jackson State
+|-
+|align=center|323||San Francisco 49ers||Stephen Aragon||Guard||North Dakota
+|-
+|align=center|324||Denver Broncos||Ethan Ranney||Tight end||Western Illinois
+|-
+|align=center|325||Chicago Bears||Anthony Dzierdzik||Center||Georgia Tech
+|-
+|align=center|326||Cincinnati Bengals||Ethan Venderveen||Wide receiver||Morehouse (GA)
+|-
+|align=center|327||Washington Redskins||Justin Venderveen||Defensive end||Missouri
+|-
+|align=center|328||St. Louis Cardinals||Elliot Ecke||Linebacker||Texas
+|-
+|align=center|329||Seattle Seahawks||Charlie Kirk||Defensive tackle||Tulsa
+|-
+|align=center|330||Los Angeles Rams||Benedict Fernzi||Wide Reciaver||Illinois
+|-
+|align=center|331||Baltimore Colts||Bill Deutsch||Running Back||North Dakota
+|-
+|align=center|332||Dallas Cowboys||[[Greg Peters (American football)|Greg Peters]]||Guard||California
+|-
+|align=center|333||New England Patriots||[[Dave Preston (football)|Dave Preston]]||Running back||Bowling Green
+|-
+|align=center|334||Oakland Raiders||bgcolor="#faecc8"|[[Rolf Benirschke]]||Kicker||California-Davis
+|-
+|align=center|335 <ref name="Mr. Irrelevant note">This last selection is commonly referred to as [[Mr. Irrelevant]].</ref><ref>{{Cite web |last=Rhodes |first=Maddie |date=February 8, 2024 |title=Meet Jim Kelleher: Former CU Buff, NFL’s second ‘Mr. Irrelevant’ |url=https://kdvr.com/sports/meet-jim-kelleher-former-cu-buff-nfls-second-mr-irrelevant/ |url-status=live |access-date=November 19, 2025 |website=KDVR.com}}</ref>||Minnesota Vikings||Jim Kelleher||Running Back||Colorado
+|}
+{|
+|-
+|style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;"|
+|= Pro Bowler <ref name="Pro Bowler note"/>||
+|style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em;"|
+|= Hall of Famer
+|}
+
+==Supplemental draft==
+{{NFLDraft-header}}
+{{NFLDraft-row| draftyear=1977 |round=4 | picknum=| team=Seattle Seahawks | first=Al | last=Hunter | dab=Al Hunter (American football) | position=Running back | collegeyear=1976 | college=University of Notre Dame | collegeteam=Notre Dame Fighting Irish | collegelink=Notre Dame |note= |cfb page exists=yes }}
+{{NFLDraft-footer}}
+
+==Notable undrafted players==
+{| border=0 cellspacing="0" cellpadding="8"
+|-
+| style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;" align=center| <sup>†</sup>
+| = [[Pro Bowl]]er<ref name="Pro Bowler note"/>
+| style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em; text-align:center;"| ‡
+|= [[Pro Football Hall of Fame|Hall of Fame]]r<ref name="HOF note"/>
+|}
+
+{{NFLDraft-header | undrafted=yes }}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Atlanta Falcons | first=June | last=Jones | position=Quarterback | collegeyear=1976 | college=Portland State University | collegeteam=Portland State Vikings | collegelink=Portland State | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Atlanta Falcons | first=Secdrick | last=McIntyre | position=Running back | collegeyear=1976 | college=Auburn University | collegeteam=Auburn Tigers | collegelink=Auburn | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Baltimore Colts | first=Wade | last=Griffin | dab= | position=Offensive tackle | collegeyear=1976 | college=University of Mississippi | collegeteam=Ole Miss Rebels | collegelink=Mississippi | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Buffalo Bills | first=Shane | last=Nelson | dab=Shane Nelson (American football) | position=Linebacker | collegeyear=1976 | college=Baylor University | collegeteam=Baylor Bears | collegelink=Baylor | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Chicago Bears | first=Fred | last=Dean | dab=Fred Dean (offensive lineman) | position=Guard | collegeyear=1976 | college=Texas Southern University | collegeteam=Texas Southern Tigers | collegelink=Texas Southern | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Chicago Bears | first=Len | last=Walterscheid | position=Safety | collegeyear=1976 | college=Southern Utah University | collegeteam=Southern Utah Thunderbirds | collegelink=Southern Utah | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Cleveland Browns| first=Ricky | last=Jones | dab=Ricky Jones (American football) | position=Linebacker | collegeyear=1976 | college=Tuskegee University | collegeteam=Tuskegee Golden Tigers | collegelink=Tuskegee | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Larry | last=Brinson | dab= | position=Running back | collegeyear=1976 | college=University of Florida | collegeteam=Florida Gators | collegelink=Florida | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Bruce | last=Huther | dab= | position=Linebacker | collegeyear=1976 | college=University of New Hampshire | collegeteam=New Hampshire Wildcats | collegelink=New Hampshire | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Fred | last=Rayhle | dab= | position=Tight end | collegeyear=1976 | college=University of Tennessee at Chattanooga | collegeteam=Chattanooga Moccasins | collegelink=Chattanooga | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Bucky | last=Dilts | dab= | position=Punter | collegeyear=1976 | college=University of Georgia | collegeteam=Georgia Bulldogs | collegelink=Georgia | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Ron | last=Egloff | dab= | position=Tight end | collegeyear=1976 | college=University of Wisconsin–Madison | collegeteam=Wisconsin Badgers | collegelink=Wisconsin | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Rob | last=Nairne | dab= | position=Linebacker | collegeyear=1976 | college=Oregon State University | collegeteam=Oregon State Beavers | collegelink=Oregon State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Houston Oilers | first=Ken | last=Kennard | position=Defensive tackle | collegeyear=1976 |college=Angelo State University | collegeteam=Angelo State Rams | collegelink=Angelo State | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Houston Oilers | first=Guido | last=Merkens | position=Quarterback | collegeyear=1976 |college=Sam Houston State University | collegeteam=Sam Houston State Bearkats | collegelink=Sam Houston State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Kansas City Chiefs | first=Ed | last=Beckman | dab= | position=Tight end | collegeyear=1976 | college=Florida State University | collegeteam=Florida State Seminoles | collegelink=Florida State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Kansas City Chiefs | first=Ricky | last=Wesson | dab= | position=Cornerback | collegeyear=1976 | college=Southern Methodist University | collegeteam=SMU Mustangs | collegelink=SMU | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Los Angeles Rams | first=Glen | last=Walker | dab= | position=Punter | collegeyear=1976 | college=University of Southern California | collegeteam=USC Trojans | collegelink=USC | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Miami Dolphins | first=Charles | last=Cornelius | dab=Charles Cornelius (gridiron football) | position=Cornerback | collegeyear=1976 | college=Bethune-Cookman University | collegeteam=Bethune–Cookman Wildcats | collegelink=Bethune–Cookman | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New England Patriots | first=Tim | last=Mazzetti | dab= | position=Kicker | collegeyear=1976 | college=University of Pennsylvania | collegeteam=Penn Quakers | collegelink=Penn | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New Orleans Saints | first=Rich | last=Mauti | position=Wide receiver | collegeyear=1976 | college=Penn State University | collegeteam=Penn State Nittany Lions | collegelink=Penn State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New York Giants | first=Nick | last=Giaquinto | dab= | position=Running back | collegeyear=1976 | college=University of Connecticut | collegeteam=UConn Huskies | collegelink=UConn | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New York Giants | first=Frank | last=Marion | dab=Frank Marion (American football) | position=Linebacker | collegeyear=1976 | college=Florida A&M University | collegeteam=Florida A&M Rattlers | collegelink=Florida A&M | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New York Jets | first=Bruce | last=Harper | position=Running back | collegeyear=1976 | college=Kutztown University of Pennsylvania | collegeteam=Kutztown Golden Bears | collegelink=Kutztown | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=New York Jets | first=Bob | last=Raba | position=Tight end | collegeyear=1976 | college=University of Maryland | collegeteam=Maryland Terrapins | collegelink=Maryland | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Oakland Raiders | first=Lon | last=Boyett | position=Tight end | collegeyear=1976 | college=California State University, Northridge | collegeteam=Cal State Northridge Matadors | collegelink=Cal State Northridge | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Oakland Raiders | first=Randy | last=McClanahan | position=Linebacker | collegeyear=1976 | college=University of Southwestern Louisiana | collegeteam=Southwestern Louisiana Ragin' Cajuns | collegelink=Southwestern Louisiana | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Philadelphia Eagles | first=James | last=Reed | dab=James Reed (linebacker) | position=Linebacker | collegeyear=1976 | college=University of California, Berkeley | collegeteam=California Golden Bears | collegelink=California | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | hof=yes | first=Tony | last=Dungy | dab= | position=Safety | collegeyear=1976 | college=University of Minnesota | collegeteam=Minnesota Golden Gophers | collegelink=Minnesota | probowl=no |note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=San Francisco 49ers | first=Mike | last=Baldassin | dab= | position=Linebacker | collegeyear=1976 | college=University of Washington | collegeteam=Washington Huskies | collegelink=Washington | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Seattle Seahawks | first=Doug | last=Long | dab=Doug Long (American football) | position=Defensive back | collegeyear=1976 | college=Whitworth University | collegeteam=Whitworth Pirates | collegelink=Whitworth | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Seattle Seahawks | first=Cornell | last=Webster | position=Cornerback | collegeyear=1976 | college=University of Tulsa | collegeteam=Tulsa Golden Hurricane | collegelink=Tulsa | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Tampa Bay Buccaneers | first=Cecil | last=Johnson | dab= | position=Linebacker | collegeyear=1976 | college=University of Pittsburgh | collegeteam=Pittsburgh Panthers | collegelink=Pittsburgh | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Tampa Bay Buccaneers | first=Dana | last=Nafziger | dab= | position=Linebacker | collegeyear=1976 | college= California Polytechnic State University, San Luis Obispo | collegeteam=Cal Poly Mustangs | collegelink=Cal Poly | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Tampa Bay Buccaneers | first=Jack | last=Wender | dab= | position=Running back | collegeyear=1976 | college=Fresno State University | collegeteam=Fresno State Bulldogs | collegelink=Fresno State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Washington Redskins | first=Clarence | last=Harmon | dab=Clarence Harmon (American football) | position=Running back | collegeyear=1976 | college=Mississippi State University | collegeteam=Mississippi State Bulldogs | collegelink=Mississippi State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1977 | undrafted=yes | round= | picknum= | team=Washington Redskins | first=Mark | last=Murphy | dab=Mark Murphy (American football executive) | position=Safety | collegeyear=1976 | college=Colgate University | collegeteam=Colgate Red Raiders | collegelink=Colgate | probowl=yes | note= | cfb page exists=yes}}
+
+{{NFLDraft-footer}}
+
+==Hall of Famers==
+*[[Tony Dorsett]], running back from Pittsburgh, taken 1st round 2nd overall by Dallas Cowboys
+:Inducted: Professional Football Hall of Fame class of 1994.<ref name="1990s hof note">List of 1990s Hall of Fame Inductee's at profootballhof.com  <sup>{{cite web|title=Pro Football Hall of Fame |url=http://www.profootballhof.com/hof/years.html#1990s |access-date=October 11, 2008 |archive-url=https://web.archive.org/web/20080731024937/http://www.profootballhof.com/hof/years.html |archive-date=July 31, 2008 |url-status=dead }}</sup></ref>
+*[[Tony Dungy]], safety from Minnesota, undrafted and signed by Pittsburgh Steelers
+:Inducted: For his Head Coaching achievements Professional Football Hall of Fame class of 2016.
+*[[Joe Klecko]], defensive tackle from Temple, taken 6th round 144th overall by New York Jets
+:Inducted: Professional Football Hall of Fame Class of 2023. 
+
+==References==
+<references/>
+
+==External links==
+* [http://www.nfl.com/draft/history/fulldraft?season=1977 NFL.com – 1977 Draft]
+* {{usurped|1=[https://web.archive.org/web/20080327011003/http://www.databasefootball.com/draft/draftyear.htm?yr=1977&lg=NFL databaseFootball.com – 1977 Draft]}}
+* [http://www.profootballhof.com/history/general/draft/1977.jsp Pro Football Hall of Fame]
+* [https://www.pro-football-reference.com/years/1977/draft.htm 1977 NFL Draft Listing] at [[Pro Football Reference]]
+
+{{NFL drafts}}
+{{1977 NFL season by team}}
+
+{{DEFAULTSORT:1977 Nfl Draft}}
+[[Category:NFL draft]]
+[[Category:1977 in American football|NFL Draft]]
+[[Category:1977 NFL season|Draft]]
+[[Category:1977 in sports in New York City|NFL Draft]]
+[[Category:May 1977 sports events in the United States|NFL Draft]]
+[[Category:American football in New York City]]
+[[Category:1970s in Manhattan]]
+[[Category:Sporting events in New York City]]
+[[Category:Sports in Manhattan]]

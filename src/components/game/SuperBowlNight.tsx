@@ -1,7 +1,8 @@
-import { displayName, playerName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
+import { displayName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
+import { PlayerLink } from "./PlayerProfile";
 
 export function SuperBowlNight() {
   const save = useGameStore((s) => s.save)!;
@@ -92,7 +93,14 @@ export function SuperBowlNight() {
           <div>
             <p className="text-[11px] tracking-[0.35em] text-brass">VINCE LOMBARDI TROPHY · MOST VALUABLE PLAYER</p>
             <p className="mt-1 font-display text-3xl text-paper">
-              {playerName(mvp)} · {mvp.pos} · #{mvp.jersey}
+              {mvp ? (
+                <>
+                  <PlayerLink player={mvp} className="inline min-h-0 font-display text-3xl text-paper" /> · {mvp.pos} · #
+                  {mvp.jersey}
+                </>
+              ) : (
+                "MVP"
+              )}
             </p>
           </div>
         )}

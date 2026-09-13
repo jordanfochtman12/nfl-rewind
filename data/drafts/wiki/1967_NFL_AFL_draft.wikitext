@@ -1,0 +1,1181 @@
+{{Short description|National Football League draft}}
+{{Use American English|date=July 2026}}
+{{Use mdy dates|date=August 2023}}
+{{Infobox sports draft
+| name          = 1967 NFL/AFL draft
+| logo          = 
+| logosize      = 
+| logoalt       = 
+| image         = USA-NYC-The Peninsula.JPG
+| imagesize     = 
+| alt           = 
+| caption       = The former Gotham Hotel (draft location), photographed in 2013
+| date          = March 14–15, 1967
+| time          = 10 am EST
+| location      = [[Gotham Hotel]]<br/>in [[New York City]]
+| network       = 
+| sponsor       = 
+| league        = [[National Football League|NFL]], [[American Football League|AFL]]
+| first         = [[Bubba Smith]], DT<br/>[[1967 Baltimore Colts season|Baltimore Colts]]
+| first_round   =
+| fewnum        = 11
+| fewest        = [[1967 Los Angeles Rams season|Los Angeles Rams]]
+| mostnum       = 36
+| most          = [[1967 New Orleans Saints season|New Orleans Saints]]
+| overall       = 445
+| rounds        = 17
+| hofnum        = {{ Collapsible list
+| title = 10
+| 1 = QB [[Bob Griese]]
+| 3 = DT [[Alan Page]]
+| 4 = OG [[Gene Upshaw]]
+| 2 = RB [[Floyd Little]]
+| 5 = CB [[Lem Barney]]
+| 6 = LB [[Willie Lanier]]
+| 7 = OT [[Rayfield Wright]]
+| 8 = DB [[Ken Houston]]
+| 9 = K [[Jan Stenerud]]
+| 10 = OT [[Larry Little]]
+}}
+| prev          = [[1966 NFL draft|1966 (NFL)]] '' or '' [[1966 American Football League draft|1966 (AFL)]]
+| next          = [[1968 NFL/AFL draft|1968]]  
+}}
+The '''1967 NFL/AFL draft''' was conducted March 14–15, 1967, at the [[Gotham Hotel]] in [[New York City]].<ref>{{cite web |url=http://www.footballgeography.com/nfl-draft-sites/ |title=NFL Draft Locations |date=October 2, 2014 |website=www.footballgeography.com |access-date=October 23, 2014 |archive-url=https://web.archive.org/web/20150905090250/http://www.footballgeography.com/nfl-draft-sites/ |archive-date=September 5, 2015 |url-status=dead }}</ref><ref>{{cite news|last1=Salomone|first1=Dan|title=NFL Draft headed to Chicago in 2015|url=http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756|access-date=June 3, 2015|publisher=[[New York Giants]]|work=Giants.com|date=October 2, 2014|archive-url=https://web.archive.org/web/20150930065327/http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756|archive-date=September 30, 2015|url-status=dead}}</ref><ref name=cpfr>{{cite news |url=https://news.google.com/newspapers?id=4GAqAAAAIBAJ&sjid=1U4EAAAAIBAJ&pg=7180%2C2711601 |newspaper=Milwaukee Sentinel |agency=Associated Press |title=Colts pick 1st in grid draft today |date=March 14, 1967 |page=2, part 2 }}</ref> It was the first [[common draft]] between the [[National Football League]] (NFL) and the [[American Football League]] (AFL), part of the [[AFL–NFL merger]] agreement of June 1966.
+
+This draft was delayed as new guidelines were established; [[Redshirt (college sports)|redshirt]] (or "future") players were no longer eligible.<ref name=pgdbt>{{cite news |url=https://news.google.com/newspapers?id=06dVAAAAIBAJ&sjid=-uADAAAAIBAJ&pg=2739%2C2556011 |newspaper=Eugene Register-Guard |location=Oregon |agency=UPI |title=Pro grid draft begins Tuesday |date=March 13, 1967 |page=2B }}</ref> It began on a Tuesday in mid-March (first five rounds); the previous two years the leagues held their separate drafts on the final Saturday of November, immediately following the college football regular season.
+
+The [[1967 NFL expansion draft|expansion]] [[1967 New Orleans Saints season|New Orleans Saints]] initially had the [[List of first overall National Football League Draft picks|first overall pick]]; a&nbsp;week before the draft, they traded it to the [[1967 Baltimore Colts season|Baltimore Colts]],<ref name=bccuozz>{{cite news |url=https://news.google.com/newspapers?id=zadVAAAAIBAJ&sjid=-uADAAAAIBAJ&pg=7017%2C1249187 |work=Eugene Register-Guard |location=Oregon |agency=Associated Press |title=Baltimore Colts deal Cuozzo to Saints |date=March 7, 1967 |page=2B}}</ref> who selected defensive end [[Bubba Smith]] of [[1966 Michigan State Spartans football team|Michigan&nbsp;State]].<ref name=cpsm>{{cite news |url=https://news.google.com/newspapers?id=1KdVAAAAIBAJ&sjid=-uADAAAAIBAJ&pg=6828%2C2702871 |work=Eugene Register-Guard |location=Oregon |agency=Associated Press |title=Colts pick Smith as No. 1 draft choice |date=March 14, 1967 |page=2B}}</ref>
+
+==Player selections==
+{|
+|-
+|style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;"|
+|= [[Pro Bowl]]<ref name="Pro Bowler note">Players are identified as a Pro Bowler if they were selected for the Pro-Bowl at any time in their career.</ref>||
+|style="background-color:lightsteelblue; border:1px solid #aaaaaa; width:2em;"|
+|= [[American Football League All-Star game|AFL All-Star]]<ref name="All-Star note">Players are identified as an All-Star if they were selected for the All-Star team at any time in their career.</ref>||
+|style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em;"|
+|= [[Pro Football Hall of Fame|Hall of Fame]]
+|}
+
+===Round 1===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|1||[[1967 Baltimore Colts season|Baltimore Colts]] NFL (from New Orleans)||bgcolor="#faecc8"|[[Bubba Smith]]||[[Defensive tackle]]||[[1966 Michigan State Spartans football team|Michigan State]]
+|-
+|align=center|2||[[1967 Minnesota Vikings season|Minnesota Vikings]] NFL (from New York Giants) ||[[Clinton Jones (American football)|Clint Jones]]||[[Running back]]||Michigan State
+|-
+|align=center|3||[[1967 San Francisco 49ers season|San Francisco 49ers]] NFL (from Atlanta) ||[[Steve Spurrier]]<ref name="Heisman note">Steve Spurrier, [[1966 in sports|1966]] [[Heisman Trophy]] winner <sup>{{cite web|title=Heisman Trophy |url=http://www.heisman.com/winners/s-spurrier66.php |access-date=August 13, 2013 |url-status=dead |archive-url=https://web.archive.org/web/20131004235839/http://www.heisman.com/winners/s-spurrier66.php |archive-date=October 4, 2013 }} </sup></ref>
+||[[Quarterback]]||[[1966 Florida Gators football team|Florida]]
+|-
+|align=center|4||[[1967 Miami Dolphins season|Miami Dolphins]] AFL||bgcolor=#FFCC00|[[Bob Griese]]||Quarterback||[[1966 Purdue Boilermakers football team|Purdue]]
+|-
+|align=center|5||[[1967 Houston Oilers season|Houston Oilers]] AFL||bgcolor=lightsteelblue|[[George Webster (American football)|George Webster]]<ref name="George Webster note">George Webster member of the [[American Football League All-Time Team]].</ref>||[[Linebacker]]||Michigan State
+|-
+|align=center|6||[[1967 Denver Broncos season|Denver Broncos]] AFL||bgcolor=#FFCC00|[[Floyd Little]]||[[Halfback (American football)|Halfback]]||[[1966 Syracuse Orangemen football team|Syracuse]]
+|-
+|align=center|7||[[1967 Detroit Lions season|Detroit Lions]] NFL||bgcolor="#faecc8"|[[Mel Farr]]||Running back||[[1966 UCLA Bruins football team|UCLA]]
+|-
+|align=center|8||Minnesota Vikings NFL||bgcolor="#faecc8"|[[Gene Washington (American football, born 1944)|Gene Washington]]||[[Wide receiver]]||Michigan State
+|-
+|align=center|9||[[1967 Green Bay Packers season|Green Bay Packers]] NFL (from Pittsburgh) ||[[Bob Hyland]]||[[Guard (American football)|Offensive guard]]||[[1966 Boston College Eagles football team|Boston College]]
+|-
+|align=center|10||[[1967 Chicago Bears season|Chicago Bears]] NFL||[[Loyd Phillips]]||[[Defensive end]]||[[1966 Arkansas Razorbacks football team|Arkansas]]
+|-
+|align=center|11||San Francisco 49ers NFL||[[Cas Banaszek]]||[[Tackle (gridiron football position)|Tackle]]||[[1966 Northwestern Wildcats football team|Northwestern]]
+|-
+|align=center|12||[[1967 New York Jets season|New York Jets]] AFL||[[Paul Seiler]]||Offensive guard||[[1966 Notre Dame Fighting Irish football team|Notre Dame]]
+|-
+|align=center|13||[[1967 Washington Redskins season|Washington Redskins]] NFL||[[Ray McDonald (running back)|Ray McDonald]]||Running back||[[1966 Idaho Vandals football team|Idaho]]
+|-
+|align=center|14||[[1967 San Diego Chargers season|San Diego Chargers]] AFL||[[Ron Billingsley]]||Defensive tackle||[[1966 Wyoming Cowboys football team|Wyoming]]
+|-
+|align=center|15||Minnesota Vikings NFL (from Los Angeles)||bgcolor="#FFCC00"|[[Alan Page]]||Defensive tackle||Notre Dame
+|-
+|align=center|16||[[1967 St. Louis Cardinals (NFL) season|St. Louis Cardinals]] NFL||[[Dave Williams (wide receiver)|Dave Williams]]||Wide receiver||[[1966 Washington Huskies football team|Washington]]
+|-
+|align=center|17||[[1967 Oakland Raiders season|Oakland Raiders]] AFL||bgcolor=#FFCC00|[[Gene Upshaw]]||Offensive guard||[[Texas A&M–Kingsville Javelinas football|Texas A&I]]
+|-
+|align=center|18||[[1967 Cleveland Browns season|Cleveland Browns]] NFL||[[Bob Matheson]]||Linebacker||[[1966 Duke Blue Devils football team|Duke]]
+|-
+|align=center|19||[[1967 Philadelphia Eagles season|Philadelphia Eagles]] NFL||[[Harry Jones (American football)|Harry Jones]]||Running back||Arkansas
+|-
+|align=center|20||Baltimore Colts NFL||[[Jim Detwiler]]||Running back||Michigan
+|-
+|align=center|21||[[1967 Boston Patriots season|Boston Patriots]] AFL||[[John Charles (American football)|John Charles]]||[[Defensive back]]||Purdue
+|-
+|align=center|22||[[1967 Buffalo Bills season|Buffalo Bills]] AFL||[[John Pitts (American football)|John Pitts]]||Defensive back||[[1966 Arizona State Sun Devils football team|Arizona State]]
+|-
+|align=center|23||Houston Oilers AFL||[[Tom Regner]]||Offensive guard||Notre Dame
+|-
+|align=center|24||[[1967 Kansas City Chiefs season|Kansas City Chiefs]] AFL||[[Gene Trosch]]||Defensive tackle||[[1966 Miami Hurricanes football team|Miami (FL)]]
+|-
+|align=center|25||Green Bay Packers NFL||[[Don Horn]]||Quarterback||[[1966 San Diego State Aztecs football team|San Diego State]]
+|-
+|align=center|26||New Orleans Saints NFL||[[Leslie Kelley]]||[[Fullback (gridiron football)|Fullback]]||[[1966 Alabama Crimson Tide football team|Alabama]]
+|}
+
+===Round 2===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|27||New Orleans Saints||[[Bo Burris]]||Defensive back||Houston
+|-
+|align=center|28||Minnesota Vikings (from New York Giants)||bgcolor="#faecc8"|[[Bob Grim (American football)|Bob Grim]]||Running back||Oregon State
+|-
+|align=center|29||Miami Dolphins||[[Jim Riley (American football)|Jim Riley]]||Defensive end||Oklahoma
+|-
+|align=center|30||Houston Oilers||[[Bob Davis (quarterback)|Bob Davis]]||Quarterback||Virginia
+|-
+|align=center|31||Atlanta Falcons||[[Leo Carroll (American football)|Leo Carroll]]||Defensive end||San Diego State
+|-
+|align=center|32||Denver Broncos||[[Tom Beer]]||Tight end||Houston
+|-
+|align=center|33||Los Angeles Rams||bgcolor="#faecc8"|[[Willie Ellison]]||Running back||Texas Southern
+|-
+|align=center|34||Detroit Lions||bgcolor="#FFCC00"|[[Lem Barney]]||Cornerback||[[Jackson State University|Jackson State]]
+|-
+|align=center|35||Pittsburgh Steelers||[[Don Shy]]||Running back||San Diego State
+|-
+|align=center|36||Chicago Bears||[[Bob Jones (wide receiver)|Bob Jones]]||Defensive back||San Diego State
+|-
+|align=center|37||New York Jets||Rich Sheron||Tight end||Washington State
+|-
+|align=center|38||Washington Redskins||[[Spain Musgrove]]||Defensive tackle||Utah State
+|-
+|align=center|39||San Francisco 49ers||Tom Holzer||Tackle||Louisville
+|-
+|align=center|40||San Diego Chargers||Ron McCall||Linebacker||Weber State
+|-
+|align=center|41||Green Bay Packers||[[Dave Dunaway]]||Wide receiver||Duke
+|-
+|align=center|42||Buffalo Bills||[[Jim LeMoine]]||Tight end||Utah State
+|-
+|align=center|43||St. Louis Cardinals||[[Bob Rowe (American football)|Bob Rowe]]||Defensive end||Western Michigan
+|-
+|align=center|44||Philadelphia Eagles||John Brooks||Guard||Kent State
+|-
+|align=center|45||Baltimore Colts||bgcolor="#faecc8"|[[Rick Volk]]||Defensive back||[[Michigan Wolverines football|Michigan]]
+|-
+|align=center|46||Cleveland Browns||[[Larry Conjar]]||Running back||Notre Dame
+|-
+|align=center|47||Kansas City Chiefs||bgcolor=lightsteelblue|[[Jim Lynch]]||Linebacker||Notre Dame
+|-
+|align=center|48||San Diego Chargers||[[Bob Howard (American football)|Bob Howard]]||Defensive back||San Diego State
+|-
+|align=center|49||Houston Oilers||Roy Hopkins||Running back||Texas Southern
+|-
+|align=center|50||Kansas City Chiefs||bgcolor="#FFCC00"|[[Willie Lanier]]||Linebacker||Morgan State
+|-
+|align=center|51||Green Bay Packers||[[Jim Flanigan, Sr.|Jim Flanigan]]||Linebacker||Pittsburgh
+|-
+|align=center|52||New Orleans Saints||bgcolor="#faecc8"|[[John Gilliam]]||Wide receiver||South Carolina State
+|-
+|align=center|53||New Orleans Saints||bgcolor="#faecc8"|[[Dave Rowe (American football)|Dave Rowe]]||Tackle||Penn State
+|}
+
+===Round 3===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|54||Baltimore Colts||[[Norman Davis (American football)|Norman Davis]]||Tackle||Grambling
+|-
+|align=center|55||Cleveland Browns||[[Don Cockroft]]||Kicker||Adams State
+|-
+|align=center|56||Houston Oilers||[[Larry Carwell]]||Defensive back||Iowa State
+|-
+|align=center|57||Atlanta Falcons||[[Jimmy Jordan (running back)|Jimmy Jordan]]||Running back||Florida
+|-
+|align=center|58||Denver Broncos||bgcolor=lightsteelblue|[[Mike Current]]||Tackle||Ohio State
+|-
+|align=center|59||Denver Broncos||bgcolor=lightsteelblue|[[George Goeddeke]]||Center||Notre Dame
+|-
+|align=center|60||Detroit Lions||bgcolor="#faecc8"|[[Paul Naumoff]]||Linebacker||Tennessee
+|-
+|align=center|61||Minnesota Vikings||[[Earl Denny]]||Wide receiver||Missouri
+|-
+|align=center|62||San Francisco 49ers||[[Frank Nunley]]||Linebacker||Michigan
+|-
+|align=center|63||Chicago Bears||[[Garry Lyle]]||Running back||George Washington
+|-
+|align=center|64||Washington Redskins||Curg Belcher||Defensive back||Brigham Young
+|-
+|align=center|65||San Francisco 49ers||[[Bill Tucker (American football)|Bill Tucker]]||Running back||[[Tennessee State Tigers football|Tennessee State]]
+|-
+|align=center|66||New York Jets||Dennis Randall||Defensive end||Oklahoma State
+|-
+|align=center|67||San Diego Chargers||[[Harold Akin]]||Tackle||Oklahoma State
+|-
+|align=center|68||Philadelphia Eagles||Harry Wilson||Running back||Nebraska
+|-
+|align=center|69||St. Louis Cardinals||Vidal Carlin||Quarterback||North Texas State
+|-
+|align=center|70||Buffalo Bills||Tom Rhoads||Defensive end||Notre Dame
+|-
+|align=center|71||Baltimore Colts||Leon Ward||Linebacker||Oklahoma State
+|-
+|align=center|72||Cleveland Browns||[[Eppie Barney]]||Wide receiver||Iowa State
+|-
+|align=center|73||Pittsburgh Steelers||bgcolor="#faecc8"|[[Rocky Freitas|Rockne "Rocky" Freitas]]||Center||Oregon State
+|-
+|align=center|74||New York Jets||Henry King||Defensive back||Utah State
+|-
+|align=center|75||Oakland Raiders||Bill Fairband||Linebacker||Colorado
+|-
+|align=center|76||Dallas Cowboys||[[Phil Clark (American football)|Phil Clark]]||Defensive back||Northwestern
+|-
+|align=center|77||Kansas City Chiefs||[[Billy Masters (American football)|Billy Masters]]||Tight end||LSU
+|-
+|align=center|78||Green Bay Packers||[[John Rowser]]||Defensive back||Michigan
+|-
+|align=center|79||New Orleans Saints||[[Del Williams]]||Center||Florida State
+|-
+|align=center|80||New Orleans Saints||Ben Hart||Running back||Oklahoma
+|}
+
+===Round 4===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|81||New Orleans Saints||bgcolor="#faecc8"|[[Ron Widby]]||Kicker||Tennessee
+|-
+|align=center|82||New York Giants||Louis Thompson||Defensive tackle||Alabama
+|-
+|align=center|83||Cleveland Browns||[[Carl Ward]]||Running back||Michigan
+|-
+|align=center|84||Miami Dolphins||Bob Greenlee||Tackle||Yale
+|-
+|align=center|85||Denver Broncos||[[Carl Cunningham]]||Defensive end||Houston
+|-
+|align=center|86||Houston Oilers||[[Carel Stith]]||Tackle||Nebraska
+|-
+|align=center|87||Minnesota Vikings||[[Al Coleman|Alvin Coleman]]||Defensive back||Tennessee State
+|-
+|align=center|88||Detroit Lions||[[Lew Kamanu]]||Defensive end||Weber State
+|-
+|align=center|89||Pittsburgh Steelers||[[Ray May]]||Linebacker||USC
+|-
+|align=center|90||Chicago Bears||[[Al Dodd]]||Defensive back||N.W. Louisiana
+|-
+|align=center|91||San Francisco 49ers||[[Wayne Trimble]]||Defensive back||Alabama
+|-
+|align=center|92||New York Jets||Julian Gray||Defensive back||Grambling
+|-
+|align=center|93||Green Bay Packers||[[Travis Williams (running back)|Travis Williams]]||Running back||Arizona State
+|-
+|align=center|94||San Diego Chargers||bgcolor=lightsteelblue|[[Dickie Post]]||Running back||Houston
+|-
+|align=center|95||Chicago Bears||[[Tom Greenlee]]||Defensive back||Washington
+|-
+|align=center|96||Oakland Raiders||James Roy Jackson||Wide receiver||Oklahoma
+|-
+|align=center|97||St. Louis Cardinals||Mike Barnes||Defensive back||Arlington State
+|-
+|align=center|98||Cleveland Browns||[[Joe Taffoni]]||Tackle||Tennessee-Martin
+|-
+|align=center|99||Philadelphia Eagles||[[Chuck Hughes]]||Wide receiver||Texas Western
+|-
+|align=center|100||Baltimore Colts||[[Charlie Stukes]]||Running back||Maryland State
+|-
+|align=center|101||Boston Patriots||[[Ed Philpott]]||Defensive end||Miami (OH)
+|-
+|align=center|102||Buffalo Bills||[[Gary Bugenhagen]]||Tackle||Syracuse
+|-
+|align=center|103||Dallas Cowboys||Curtis Marker||Guard||Northern Michigan
+|-
+|align=center|104||Kansas City Chiefs||Ron Zwernemann||Guard||East Texas State
+|-
+|align=center|105||St. Louis Cardinals||[[Andy Bowling]]||Linebacker||Virginia Tech
+|-
+|align=center|106||New Orleans Saints||[[Bill Carr (American football player)|Bill Carr]]||Center||Florida
+|-
+|align=center|107||New Orleans Saints||Tom Stangle||Tackle||Dayton
+|}
+
+===Round 5===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|108||New Orleans Saints||[[Don McCall]]||Running back||USC
+|-
+|align=center|109||New York Giants||[[Dave Lewis (punter)|Dave Lewis]]||Running back||Stanford
+|-
+|align=center|110||Denver Broncos||[[Fran Lynch]]||Running back||Hofstra
+|-
+|align=center|111||Houston Oilers||Peter Johns||Defensive back||Tulane
+|-
+|align=center|112||Atlanta Falcons||Bill Delaney||Tight end||American International
+|-
+|align=center|113||Denver Broncos||[[John Huard]]||Linebacker||Maine
+|-
+|align=center|114||Philadelphia Eagles||Bob Van Pelt||Center||Indiana
+|-
+|align=center|115||Minnesota Vikings||Ken Last||Wide receiver||Minnesota
+|-
+|align=center|116||Green Bay Packers||Dwight Hood||Defensive tackle||Baylor
+|-
+|align=center|117||New York Jets||Louis Jackson||Defensive back||Grambling
+|-
+|align=center|118||Houston Oilers||[[Willie Parker (defensive tackle)|Willie Parker]]||Defensive tackle||Arkansas AM&N
+|-
+|align=center|119||Chicago Bears||[[Bruce Alford Jr.|Bruce Alford]]||Kicker||Texas Christian
+|-
+|align=center|120||Atlanta Falcons||[[Randy Matson]]||Defensive tackle||Texas A&M
+|-
+|align=center|121||San Diego Chargers||[[Bernie Erickson|Bernard Erickson]]||Linebacker||Abilene Christian
+|-
+|align=center|122||Los Angeles Rams||[[Nate Shaw]]||Defensive back||USC
+|-
+|align=center|123||St. Louis Cardinals||[[Jamie Rivers (American football)|Jamie Rivers]]||Tight end||Bowling Green
+|-
+|align=center|124||Oakland Raiders||Gerald Warfield||Running back||Mississippi
+|-
+|align=center|125||Philadelphia Eagles||[[Dick Absher]]||Tight end||Maryland
+|-
+|align=center|126||Baltimore Colts||[[Ron Porter]]||Linebacker||Idaho
+|-
+|align=center|127||Houston Oilers||bgcolor="#faecc8"|[[Zeke Moore (American football)|Zeke Moore]]||Defensive back||Lincoln
+|-
+|align=center|128||Boston Patriots||Melvin Witt||Defensive end||Arlington State
+|-
+|align=center|129||Miami Dolphins||[[Gary Tucker]]||Running back||Chattanooga
+|-
+|align=center|130||Green Bay Packers||Richard Tate||Defensive back||Utah
+|-
+|align=center|131||Oakland Raiders||[[Mike Hibler]]||Linebacker||Stanford
+|-
+|align=center|132||Green Bay Packers||[[Jay Bachman]]||Center||Cincinnati
+|-
+|align=center|133||New Orleans Saints||[[John Douglas (defensive back)|John Douglas]]||Defensive back||Texas Southern
+|}
+
+===Round 6===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|134||New Orleans Saints||[[George Harvey (American football)|George Harvey]]||Guard||Kansas
+|-
+|align=center|135||Washington Redskins||[[Don Bandy]]||Tackle||Tulsa
+|-
+|align=center|136||Houston Oilers||[[Pete Barnes]]||Linebacker||Southern
+|-
+|align=center|137||Baltimore Colts||Terry Southall||Quarterback||Baylor
+|-
+|align=center|138||Miami Dolphins||Bud Norris||Tight end||Washington State
+|-
+|align=center|139||Denver Broncos||Neal Sweeney||Wide receiver||Tulsa
+|-
+|align=center|140||Pittsburgh Steelers||[[Mike Haggerty]]||Tackle||Miami (FL)
+|-
+|align=center|141||Detroit Lions||Tim Jones||Quarterback||Weber State
+|-
+|align=center|142||Chicago Bears||[[Virgil Carter]]||Quarterback||[[Brigham Young University Cougars football|Brigham Young]]
+|-
+|align=center|143||Chicago Bears||[[Doug Kriewald]]||Guard||W. Texas State
+|-
+|align=center|144||Detroit Lions||[[John McCambridge]]||Defensive end||Northwestern
+|-
+|align=center|145||San Francisco 49ers||[[Doug Cunningham (American football)|Doug Cunningham]]||Running back||Mississippi
+|-
+|align=center|146||New York Jets||[[Jeff Richardson (American football)|Jeff Richardson]]||Defensive end||Michigan State
+|-
+|align=center|147||San Diego Chargers||Nate Johns||Wide receiver||San Diego State
+|-
+|align=center|148||Atlanta Falcons||Eugene Snipes||Running back||Elizabeth City
+|-
+|align=center|149||Buffalo Bills||Bill Wilderson||Defensive end||Texas Western
+|-
+|align=center|150||St. Louis Cardinals||Mike Campbell||Running back||Lenoir-Rhyne
+|-
+|align=center|151||Atlanta Falcons||[[Martine Bercher]]||Defensive back||Arkansas
+|-
+|align=center|152||Cleveland Browns||[[John Demarie]]||Defensive end||LSU
+|-
+|align=center|153||Philadelphia Eagles||Bob Hughes||Defensive end||Jackson State
+|-
+|align=center|154||Boston Patriots||Ron Medlen||Defensive end||Southern Methodist
+|-
+|align=center|155||Oakland Raiders||[[Rick Egloff]]||Quarterback||Wyoming
+|-
+|align=center|156||Kansas City Chiefs||[[Noland Smith]]||Running back||Tennessee State
+|-
+|align=center|157||Dallas Cowboys||[[Sims Stokes]]||Wide receiver||Northern Arizona
+|-
+|align=center|158||Green Bay Packers||Steward Williams||Running back||Bowling Green
+|-
+|align=center|159||New Orleans Saints||[[Bo Wood]]||Linebacker||North Carolina
+|}
+
+===Round 7===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|160||New Orleans Saints||Gary Hertzog||Guard||[[Willamette Bearcats|Willamette]]
+|-
+|align=center|161||Green Bay Packers||Bob Ziolkowski||Tackle||Iowa
+|-
+|align=center|162||Atlanta Falcons||[[Corey Colehour]]||Quarterback||North Dakota
+|-
+|align=center|163||Miami Dolphins||[[Larry Seiple]]||Running back||[[Kentucky Wildcats football|Kentucky]]
+|-
+|align=center|164||Houston Oilers||[[Ed Carrington]]||Wide receiver||Virginia
+|-
+|align=center|165||Denver Broncos||[[Frank Richter (American football)|Frank Richter]]||Guard||Georgia
+|-
+|align=center|166||Detroit Lions||Ted Tuinstra||Tackle||Iowa State
+|-
+|align=center|167||Minnesota Vikings||bgcolor="#faecc8"|[[Bobby Bryant]]||Defensive back||South Carolina
+|-
+|align=center|168||Washington Redskins||Bruce Matte||Quarterback||Miami (OH)
+|-
+|align=center|169||Chicago Bears||John Truitt||Wide receiver||Indiana State
+|-
+|align=center|170||San Francisco 49ers||[[Milt Jackson (American football)|Milt Jackson]]||Defensive back||Tulsa
+|-
+|align=center|171||New York Jets||bgcolor="#faecc8"|[[John Elliott (defensive lineman)|John Elliott]]||Guard||Texas
+|-
+|align=center|172||Washington Redskins||[[John Love (American football)|John Love]]||Wide receiver||North Texas State
+|-
+|align=center|173||San Diego Chargers||David Conway||Kicker||Texas
+|-
+|align=center|174||Philadelphia Eagles||John Williams||Defensive back||San Diego State
+|-
+|align=center|175||St. Louis Cardinals||Joe Randall||Kicker||Brown
+|-
+|align=center|176||Oakland Raiders||Ron Lewellen||Defensive tackle||Tennessee-Martin
+|-
+|align=center|177||Cleveland Browns||Bill House||Tackle||Youngstown State
+|-
+|align=center|178||Philadelphia Eagles||Bob Crenshaw||Guard||New Mexico State
+|-
+|align=center|179||Baltimore Colts||Bob Rein||Wide receiver||Ohio State
+|-
+|align=center|180||Boston Patriots||[[Bobby Leo]]||Running back||Harvard
+|-
+|align=center|181||Buffalo Bills||[[George Gaiser]]||Tackle||Southern Methodist
+|-
+|align=center|182||Dallas Cowboys||bgcolor="#FFCC00"|[[Rayfield Wright]]||Tackle||Ft. Valley State
+|-
+|align=center|183||Kansas City Chiefs||Dick Erickson||Center||[[Wisconsin-Stout Blue Devils football|Wisconsin-Stout]]
+|-
+|align=center|184||Green Bay Packers||Bill Powell||Linebacker||Missouri
+|-
+|align=center|185||New Orleans Saints||Bob McKelvey||Running back||Northwestern
+|}
+
+===Round 8===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|186||New Orleans Saints||Sam Harris||Tight end||Colorado
+|-
+|align=center|187||New York Giants||[[Scott Eaton (American football)|Scott Eaton]]||Defensive back||Oregon State
+|-
+|align=center|188||Oakland Raiders||[[Estes Banks]]||Running back||Colorado
+|-
+|align=center|189||Houston Oilers||John Brunson||Running back||Benedict
+|-
+|align=center|190||Washington Redskins||[[Larry Hendershot]]||Guard||Arizona State
+|-
+|align=center|191||Denver Broncos||Tom Cassese||Wide receiver||C.W. Post
+|-
+|align=center|192||Pittsburgh Steelers||[[John Foruria]]||Quarterback||Idaho
+|-
+|align=center|193||St. Louis Cardinals||Mike Gold||Tackle||Utah State
+|-
+|align=center|194||Pittsburgh Steelers||Mike Barnes||Tackle||Purdue
+|-
+|align=center|195||Chicago Bears||Roger Murphy||Wide receiver||Northwestern
+|-
+|align=center|196||New York Jets||Gene Bledsoe||Guard||Texas
+|-
+|align=center|197||Minnesota Vikings||[[John Beasley (American football)|John Beasley]]||Wide receiver||California
+|-
+|align=center|198||San Francisco 49ers||Walter Johnson||Linebacker||Tuskegee
+|-
+|align=center|199||San Diego Chargers||John Mills||Wide receiver||Tennessee
+|-
+|align=center|200||Chicago Bears||[[Jerry Griffin]]||Linebacker||Southern Methodist
+|-
+|align=center|201||Houston Oilers||[[Sharon Washington]]||Wide receiver||N.E. Missouri
+|-
+|align=center|202||Baltimore Colts||Lee Anderson||Tackle||Bishop
+|-
+|align=center|203||Philadelphia Eagles||Don Klacking||Running back||Wyoming
+|-
+|align=center|204||Baltimore Colts||[[Cornelius Johnson (offensive lineman)|Cornelius Johnson]]||Linebacker||Virginia Union
+|-
+|align=center|205||Cleveland Browns||Bill Devrow||Defensive back||Southern Mississippi
+|-
+|align=center|206||Boston Patriots||Tom Fussell||Defensive tackle||LSU
+|-
+|align=center|207||Buffalo Bills||Tommy Luke||Defensive back||Mississippi
+|-
+|align=center|208||Dallas Cowboys||Steve Laub||Quarterback||Illinois Wesleyan
+|-
+|align=center|209||Kansas City Chiefs||Tom Altemeier||Tackle||Luther
+|-
+|align=center|210||Green Bay Packers||Clarence Miles||Defensive tackle||Trinity (TX)
+|-
+|align=center|211||New Orleans Saints||Barry Siler||Linebacker||Albion
+|}
+
+===Round 9===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|212||New Orleans Saints||Tim Lavens||Tight end||Idaho
+|-
+|align=center|213||New York Giants||[[Fred Freeman]]||Tackle||Mississippi Valley
+|-
+|align=center|214||Houston Oilers||bgcolor="#FFCC00"|[[Ken Houston]]||Defensive back||Prairie View
+|-
+|align=center|215||Atlanta Falcons||Bob Moten||Wide receiver||Bishop
+|-
+|align=center|216||Miami Dolphins||[[John Richardson (American football)|John Richardson]]||Defensive tackle||UCLA
+|-
+|align=center|217||Denver Broncos||James Summers||Defensive back||Michigan State
+|-
+|align=center|218||Detroit Lions||[[Mike Weger]]||Defensive back||Bowling Green
+|-
+|align=center|219||Minnesota Vikings||Bill Morris||Guard||Holy Cross
+|-
+|align=center|220||Pittsburgh Steelers||Paul Otis||Defensive tackle||Houston
+|-
+|align=center|221||Chicago Bears||Greg Cass||Center||Washington
+|-
+|align=center|222||Washington Redskins||[[Pete Larson (American football)|Pete Larson]]||Running back||Cornell
+|-
+|align=center|223||San Francisco 49ers||[[Bob Briggs (American football)|Bob Briggs]]||Tackle||Heidelberg
+|-
+|align=center|224||New York Jets||Ray Scott||Defensive end||Prairie View
+|-
+|align=center|225||San Diego Chargers||Steve Newell||Wide receiver||Long Beach State
+|-
+|align=center|226||Los Angeles Rams||[[Tommie Smith]]||Running back||San Jose State
+|-
+|align=center|227||St. Louis Cardinals||Ted Wheeler||Tight end||W. Texas State
+|-
+|align=center|228||Oakland Raiders||Mark DeVilling||Linebacker||Muskingum
+|-
+|align=center|229||Baltimore Colts||Ron Kirkland||Running back||Nebraska
+|-
+|align=center|230||Cleveland Browns||[[Cecil Dowdy]]||Linebacker||Alabama
+|-
+|align=center|231||Philadelphia Eagles||Harold Stancell||Defensive back||Tennessee
+|-
+|align=center|232||Boston Patriots||Charlie Thornhill||Defensive back||Michigan State
+|-
+|align=center|233||Buffalo Bills||Gerald Seither||Wide receiver||Kent State
+|-
+|align=center|234||Dallas Cowboys||Byron Morgan||Defensive back||Findlay
+|-
+|align=center|235||Kansas City Chiefs||Ed Pope||Defensive tackle||Jackson State
+|-
+|align=center|236||Green Bay Packers||Harlan Reed||Tight end||Mississippi State
+|-
+|align=center|237||New Orleans Saints||Eugene Ross||Defensive back||Oklahoma
+|}
+
+===Round 10===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|238||New Orleans Saints||[[Charlie Brown (running back)|Charlie Brown]]||Wide receiver||Missouri
+|-
+|align=center|239||New York Giants||[[Richard Stebbins|Dick Stebbins]]||Wide receiver||Grambling
+|-
+|align=center|240||Atlanta Falcons||Dick Schafroth||Tackle||Iowa State
+|-
+|align=center|241||Miami Dolphins||[[Tom Beier]]||Defensive back||Miami (FL)
+|-
+|align=center|242||Houston Oilers||bgcolor=lightsteelblue|[[Woody Campbell (American football)|Woodrow Campbell]]||Running back||Northwestern
+|-
+|align=center|243||Denver Broncos||Paul Krause||Quarterback||Dubuque
+|-
+|align=center|244||Minnesota Vikings||[[Pete Tatman]]||Running back||Nebraska
+|-
+|align=center|245||Detroit Lions||Jerry Hayhoe||Guard||USC
+|-
+|align=center|246||Pittsburgh Steelers||Bill Wilsey||Linebacker||Fresno State
+|-
+|align=center|247||Washington Redskins||Tim Houlton||Defensive tackle||St. Norbert
+|-
+|align=center|248||San Francisco 49ers||bgcolor="#faecc8"|[[Chip Myers|Phil "Chip" Myers]]||Wide receiver||Northwestern Oklahoma State
+|-
+|align=center|249||New York Jets||Raymond Brown||Defensive back||Alcorn A&M
+|-
+|align=center|250||Washington Redskins||Bruce Sullivan||Defensive back||Illinois
+|-
+|align=center|251||San Diego Chargers||Torre Ossmo||Tackle||Western Michigan
+|-
+|align=center|252||Los Angeles Rams||Leon Moore||Defensive back||Tennessee State
+|-
+|align=center|253||Oakland Raiders||[[Richard Sligh]]||Tackle||North Carolina College
+|-
+|align=center|254||St. Louis Cardinals||Lavern Barrs||Defensive back||Furman
+|-
+|align=center|255||Cleveland Browns||[[Jim Copeland (American football)|Jim Copeland]]||Guard||Virginia
+|-
+|align=center|256||Philadelphia Eagles||Maurice Bates||Defensive end||Northern (SD)
+|-
+|align=center|257||Boston Patriots||John Runnels||Linebacker||Penn State
+|-
+|align=center|258||Baltimore Colts||Leigh Gilbert||Tight end||Northern Illinois
+|-
+|align=center|259||Buffalo Bills||Tom Croft||Defensive back||Louisiana Tech
+|-
+|align=center|260||Dallas Cowboys||Eugens Bowens||Running back||Tennessee State
+|-
+|align=center|261||Houston Oilers||Tim Sheehan||Center||Stanford
+|-
+|align=center|262||Green Bay Packers||Bill Shear||Kicker||Cortland State
+|-
+|align=center|263||New Orleans Saints||Roosevelt Robertson||Wide receiver||North Carolina Central
+|}
+
+===Round 11===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|264||New Orleans Saints||Jim Benson||Guard||Florida
+|-
+|align=center|265||New York Giants||[[Pete Pifer]]||Running back||Oregon State
+|-
+|align=center|266||Miami Dolphins||[[Jack Pyburn (offensive lineman)|Jack Pyburn]]||Tackle||Texas A&M
+|-
+|align=center|267||Houston Oilers||Harold Decker||Defensive end||Kalamazoo
+|-
+|align=center|268||Atlanta Falcons||John Walker||Linebacker||Jackson State
+|-
+|align=center|269||Denver Broncos||[[Lou Andrus]]||Defensive end||Brigham Young
+|-
+|align=center|270||Detroit Lions||Ray Shirley||Tackle||Arizona State
+|-
+|align=center|271||Minnesota Vikings||Bob Trygstad||Defensive tackle||Washington State
+|-
+|align=center|272||Pittsburgh Steelers||Jim Whitcomb||Wide receiver||Emporia State
+|-
+|align=center|273||Chicago Bears||Earl Mayo||Running back||Morgan State
+|-
+|align=center|274||New York Jets||Herb Slattery||Guard||Delaware
+|-
+|align=center|275||Washington Redskins||Bill Brown||Center||Texas Western
+|-
+|align=center|276||San Francisco 49ers||Ken Carmann||Defensive tackle||Kearney (Neb.)
+|-
+|align=center|277||San Diego Chargers||Carroll Jarvis||Running back||Virginia
+|-
+|align=center|278||Los Angeles Rams||Frank Horak||Defensive back||Texas Christian
+|-
+|align=center|279||St. Louis Cardinals||Ed Marcontell||Guard||Lamar Tech
+|-
+|align=center|280||Oakland Raiders||[[Duane Benson]]||Linebacker||Hamline
+|-
+|align=center|281||Philadelphia Eagles||Omar Parker||Guard||Washington
+|-
+|align=center|282||Cleveland Browns||Bill Sabatino||Defensive end||Colorado
+|-
+|align=center|283||Boston Patriots||bgcolor=lightsteelblue|[[Leroy Mitchell]]||Wide receiver||Texas Southern
+|-
+|align=center|284||Buffalo Bills||Paul Tomich||Tackle||Drake
+|-
+|align=center|285||Dallas Cowboys||[[Pat Riley]]||Wide receiver||Kentucky ''(never played college football, was a basketball player)''<ref name="Mihoces">{{cite news|last=Mihoces |first=Gary |title=NFL seeks best players on the court or mat |url=http://usatoday30.usatoday.com/sports/football/2005draft/2005-04-20-no-college-experience_x.htm |access-date=October 28, 2013 |newspaper=[[USA Today]] |date=April 20, 2005 |archive-url=https://web.archive.org/web/20131029210147/http://usatoday30.usatoday.com/sports/football/2005draft/2005-04-20-no-college-experience_x.htm |archive-date=October 29, 2013 |url-status=live }}</ref>
+|-
+|align=center|286||Kansas City Chiefs||Bill Braswell||Guard||Auburn
+|-
+|align=center|287||Green Bay Packers||Dave Bennett||Quarterback||Springfield
+|-
+|align=center|288||New Orleans Saints||Bernard Corbin||Defensive back||Alabama A&M
+|-
+|align=center|290||Baltimore Colts||Herman Reed||Tackle||St. Augustine
+|}
+
+===Round 12===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|289||New Orleans Saints||Ronnie Pack||Guard||Texas Tech
+|-
+|align=center|291||New York Giants||Bob Shortal||Linebacker||Dayton
+|-
+|align=center|292||Buffalo Bills||Ernie Ames||Defensive tackle||Kent State
+|-
+|align=center|293||Atlanta Falcons||Bill Gentry||Linebacker||North Carolina St
+|-ate
+|align=center|294||Miami Dolphins||Stan Juk||Linebacker||South Carolina
+|-
+|align=center|295||Miami Dolphins||Jim Whitaker||Defensive back||Missouri
+|-
+|align=center|296||Minnesota Vikings||Fred Cremer||Guard||St. John's (MN)
+|-
+|align=center|297||Detroit Lions||Eric Watts||Defensive back||San Jose State
+|-
+|align=center|298||Baltimore Colts||[[Preston Pearson]]||Defensive back||Illinois ''(never played college football, was a basketball player)''<ref name="Mihoces"/>
+|-
+|align=center|299||Chicago Bears||Bruce Green||Wide receiver||Midland (Neb.)
+|-
+|align=center|300||Washington Redskins||Ron Sepic||Wide receiver||Ohio State
+|-
+|align=center|301||San Francisco 49ers||James Hall||Linebacker||Tuskegee
+|-
+|align=center|302||New York Jets||[[Randy Rasmussen (American football, born 1945)|Randy Rasmussen]]||Guard||Kearney (Neb.)
+|-
+|align=center|303||Kansas City Chiefs||Dick Kolowski||Center||Lake Forest
+|-
+|align=center|304||Los Angeles Rams||Pat Badjek||Linebacker||Franklin (Ind.)
+|-
+|align=center|305||St. Louis Cardinals||Steve Dundas||Wide receiver||Pomona
+|-
+|align=center|306||Oakland Raiders||[[Bob Kruse]]||Guard||Wayne State
+|-
+|align=center|307||Baltimore Colts||J.B. Christian||Guard||Oklahoma State
+|-
+|align=center|308||Cleveland Browns||Charles Fowler||Tackle||Houston
+|-
+|align=center|309||Philadelphia Eagles||Ben Monroe||Quarterback||New Mexico
+|-
+|align=center|310||Boston Patriots||Dave Davis||Tackle||Harvard
+|-
+|align=center|311||Buffalo Bills||Bob Bonner||Defensive tackle||Southern
+|-
+|align=center|312||Dallas Cowboys||[[Harold Deters]]||Kicker||North Carolina State
+|-
+|align=center|313||Kansas City Chiefs||Kent Lashley||Wide receiver||N.E. Oklahoma State
+|-
+|align=center|314||Green Bay Packers||[[Mike Bass]]||Defensive back||Michigan
+|-
+|align=center|315||New Orleans Saints||John Robinson||Wide receiver||Tennessee State
+|}
+
+===Round 13===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|316||New Orleans Saints||[[Bill Stetz]]||Linebacker||Boston College
+|-
+|align=center|317||Atlanta Falcons||Sandor Szabo||Kicker||Ithaca
+|-
+|align=center|318||Buffalo Bills||Howard Finley||Defensive back||Tennessee State
+|-
+|align=center|319||Buffalo Bills||[[George Carter (basketball)|George Carter]]||Running back||St. Bonaventure
+|-
+|align=center|320||New York Giants||Tom Stidham||Kicker||Oklahoma
+|-
+|align=center|321||Denver Broncos||Dennis Furjanic||Defensive back||Houston
+|-
+|align=center|322||Detroit Lions||Lamar Wright||Guard||Georgia Tech
+|-
+|align=center|323||Minnesota Vikings||Charles Hardt||Defensive back||Tulsa
+|-
+|align=center|324||Pittsburgh Steelers||Jim Homan||Guard||USC
+|-
+|align=center|325||San Francisco 49ers||[[Richard Gibbs (Canadian football)|Rich Gibbs]]||Defensive back||Iowa
+|-
+|align=center|326||Chicago Bears||Kaye Carstens||Defensive back||Nebraska
+|-
+|align=center|327||New York Jets||[[Jack Emmer]]||Wide receiver||Rutgers
+|-
+|align=center|328||Washington Redskins||Robert Rodwell||Linebacker||Eastern Michigan
+|-
+|align=center|329||San Diego Chargers||Leon Carr||Defensive back||Prairie View
+|-
+|align=center|330||Los Angeles Rams||John Erisman||Wide receiver||Miami (OH)
+|-
+|align=center|331||St. Louis Cardinals||[[Bobby Duncum Sr.|Bob Duncum]]||Tackle||W. Texas State
+|-
+|align=center|332||Oakland Raiders||Len Kleinpeter||Wide receiver||Southwestern Louisiana
+|-
+|align=center|333||Cleveland Browns||[[Billy Andrews]]||Linebacker||Southeastern Louisiana
+|-
+|align=center|334||Philadelphia Eagles||Bill Downes||Defensive tackle||Louisville
+|-
+|align=center|335||Baltimore Colts||Marc Allen||Defensive end||W. Texas State
+|-
+|align=center|336||Boston Patriots||[[Ray Ilg]]||Linebacker||Colgate
+|-
+|align=center|337||Buffalo Bills||Randy Wheeler||Running back||Georgia
+|-
+|align=center|338||Dallas Cowboys||Al Kerkian||Defensive end||Akron
+|-
+|align=center|339||Kansas City Chiefs||Linwood Simmons||Running back||Edward Waters
+|-
+|align=center|340||Green Bay Packers||Keith Brown||Wide receiver||Central Missouri
+|-
+|align=center|341||New Orleans Saints||Gary Grossnickle||Defensive back||Missouri
+|}
+
+===Round 14===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|342||New Orleans Saints||[[Jim Hester]]||Tight end||North Dakota
+|-
+|align=center|343||New York Giants||Bill Bates||Kicker||Missouri
+|-
+|align=center|344||Miami Dolphins||Charles Stikes||Defensive back||Kent State
+|-
+|align=center|345||Houston Oilers||Henry Hailstock||Guard||Lincoln
+|-
+|align=center|346||Atlanta Falcons||Tom Bryan||Running back||Auburn
+|-
+|align=center|347||Denver Broncos||Tom Francisco||Running back||Virginia Tech
+|-
+|align=center|348||Minnesota Vikings||[[Jim Hargrove (American football)|James Hargrove]]||Linebacker||Howard Payne
+|-
+|align=center|349||Detroit Lions||Cleveland Robinson||Defensive end||South Carolina State
+|-
+|align=center|350||Pittsburgh Steelers||[[Chet Anderson]]||Tight end||Minnesota
+|-
+|align=center|351||Chicago Bears||Lynn Nesbitt||Guard||Wake Forest
+|-
+|align=center|352||New York Jets||[[Michael Stromberg|Mike Stromberg]]||Linebacker||Temple
+|-
+|align=center|353||Washington Redskins||Andy Socha||Running back||Marshall
+|-
+|align=center|354||San Francisco 49ers||Dalton Leblanc||Wide receiver||N.E. Louisiana
+|-
+|align=center|355||San Diego Chargers||[[Martin Baccaglio]]||Defensive tackle||San Jose State
+|-
+|align=center|356||Los Angeles Rams||Walt Richardson||Defensive tackle||Fresno State
+|-
+|align=center|357||St. Louis Cardinals||[[Bo Hickey]]||Running back||Maryland
+|-
+|align=center|358||Philadelphia Eagles||Dick Kenney||Kicker||Michigan State
+|-
+|align=center|359||Baltimore Colts||Pat Conley||Linebacker||Purdue
+|-
+|align=center|360||Cleveland Browns||Floyd Rogers||Tackle||Clemson
+|-
+|align=center|361||Boston Patriots||Bobby Beaird||Defensive back||Auburn
+|-
+|align=center|362||Buffalo Bills||Vern Moore||Running back||Central State (OK)
+|-
+|align=center|363||Oakland Raiders||Casey Boyett||Wide receiver||Brigham Young
+|-
+|align=center|364||Dallas Cowboys||Tommy Boyd||Guard||Tarleton State
+|-
+|align=center|365||Kansas City Chiefs||John Bishop||Defensive tackle||Delta State
+|-
+|align=center|366||Green Bay Packers||[[Claudis James]]||Running back||Jackson State
+|-
+|align=center|367||New Orleans Saints||[[George Stetter]]||Defensive back||Virginia
+|}
+
+===Round 15===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|368||New Orleans Saints||[[John J. Snow, Jr.|John Snow]]||Tackle||Wake Forest
+|-
+|align=center|369||New York Giants||Tom Reale||Tackle||Southern Connecticut
+|-
+|align=center|370||Houston Oilers||Marvin McQueen||Linebacker||Mississippi
+|-
+|align=center|371||Atlanta Falcons||Al Nicholas||Running back||Sacramento State
+|-
+|align=center|372||Miami Dolphins||Jake Ferro||Linebacker||Youngstown State
+|-
+|align=center|373||Denver Broncos||Don Smith||Guard||Florida A&M
+|-
+|align=center|374||Detroit Lions||Sam Burke||Defensive back||Georgia Tech
+|-
+|align=center|375||Minnesota Vikings||Jimmy Shea||Defensive back||Eastern New Mexico
+|-
+|align=center|376||Pittsburgh Steelers||Mike Love||Running back||Abilene Christian
+|-
+|align=center|377||Chicago Bears||Terry Oakes||Defensive end||San Francisco State
+|-
+|align=center|378||Washington Redskins||[[Ed Breding]]||Guard||Texas A&M
+|-
+|align=center|379||San Francisco 49ers||Clarence Spencer||Wide receiver||Louisville
+|-
+|align=center|380||New York Jets||Jack Schweberger||Wide receiver||Vermont
+|-
+|align=center|381||San Diego Chargers||Craig Scoggins||Wide receiver||San Diego State
+|-
+|align=center|382||Los Angeles Rams||Steve Bunker||Tight end||Oregon
+|-
+|align=center|383||St. Louis Cardinals||Bill Wosilius||Linebacker||Syracuse
+|-
+|align=center|384||Oakland Raiders||Ben Woodson||Running back||Utah
+|-
+|align=center|385||Baltimore Colts||[[Bob Wade (basketball coach)|Bob Wade]]||Defensive back||Morgan State
+|-
+|align=center|386||Cleveland Browns||Dennis Williamson||Defensive back||Whitewater
+|-
+|align=center|387||Philadelphia Eagles||David Poche||Tackle||McNeese
+|-
+|align=center|388||Boston Patriots||Tom Folliard||Linebacker||Mississippi State
+|-
+|align=center|389||Buffalo Bills||Grant Martinsen||Defensive back||Utah State
+|-
+|align=center|390||Dallas Cowboys||Leavie David||Defensive back||Edward Waters
+|-
+|align=center|391||Kansas City Chiefs||Dennis Caponi||Running back||Xavier
+|-
+|align=center|392||Green Bay Packers||Jim Schneider||Defensive tackle||Colgate
+|-
+|align=center|393||New Orleans Saints||Darrell Johnson||Running back||Lamar Tech
+|}
+
+===Round 16===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|394||New Orleans Saints||Marcus Rhoden||Wide receiver||Mississippi State
+|-
+|align=center|395||New York Giants||[[Bill Seman]]||Guard||N.E. Missouri
+|-
+|align=center|396||Atlanta Falcons||Larry Chester||Defensive back||Allen
+|-
+|align=center|397||Miami Dolphins||Maurice Calhoun||Running back||Central (Ohio)
+|-
+|align=center|398||Houston Oilers||Rex Keeling||Wide receiver||Samford (Ala)
+|-
+|align=center|399||Denver Broncos||[[Jack Lentz]]||Quarterback||Holy Cross
+|-
+|align=center|400||Minnesota Vikings||Gene Beard||Defensive back||Virginia Union
+|-
+|align=center|401||Detroit Lions||[[Jerry Zawadzkas]]||Tight end||Columbia
+|-
+|align=center|402||Pittsburgh Steelers||Bill Smith||Center||Oregon
+|-
+|align=center|403||Chicago Bears||Bill Rogers||Defensive back||Weber State
+|-
+|align=center|404||San Francisco 49ers||Bart Templeman||Center||Eastern Montana
+|-
+|align=center|405||New York Jets||Doug Archibald||Defensive back||Tennessee
+|-
+|align=center|406||Washington Redskins||Alfredo Avila ||Defensive back||Sul Ross
+|-
+|align=center|407||San Diego Chargers||Mark Waitte||Tackle||South Carolina
+|-
+|align=center|408||Los Angeles Rams||Allen Sack||Linebacker||Notre Dame
+|-
+|align=center|409||Oakland Raiders||Don Bruce||Guard||Virginia Tech
+|-
+|align=center|410||St. Louis Cardinals||[[Phil Spiller]]||Defensive back||Los Angeles State
+|-
+|align=center|411||Cleveland Browns||Don Williams||Wide receiver||Akron
+|-
+|align=center|412||Philadelphia Eagles||Lynn Baker||Defensive back||Colorado
+|-
+|align=center|413||Baltimore Colts||[[Don Alley]]||Wide receiver||Adams State
+|-
+|align=center|414||Boston Patriots||Keith Freeman||Running back||Southern Connecticut
+|-
+|align=center|415||Buffalo Bills||Mike Irwin||Running back||Penn State
+|-
+|align=center|416||Dallas Cowboys||[[Paul Brothers (Canadian football)|Paul Brothers]]||Quarterback||Oregon State
+|-
+|align=center|417||Kansas City Chiefs||Charles Noggle||Running back||North Carolina State
+|-
+|align=center|418||Green Bay Packers||Fred Cassidy||Running back||Miami (FL)
+|-
+|align=center|419||New Orleans Saints||[[Bruce Cortez]]||Defensive back||Parsons
+|}
+
+===Round 17===
+<!-- The Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC;" width=7%|Pick # !!width=40% style="background:#A8BDEC;"|NFL team !!width=20% style="background:#A8BDEC;"|Player !!width=13% style="background:#A8BDEC;"|Position !!style="background:#A8BDEC;"|College
+|-
+|align=center|420||New Orleans Saints||[[Danny Abramowicz]]||Flanker||Xavier
+|-
+|align=center|421||New York Giants||Micheal Brennan||Running back||Rutgers
+|-
+|align=center|422||Miami Dolphins||Mario Cordoves||Tackle||Miami (FL)
+|-
+|align=center|423||Houston Oilers||Larry Lee||Wide receiver||Texas A&M
+|-
+|align=center|424||Atlanta Falcons||Bill Buckner||Quarterback||Delta State
+|-
+|align=center|425||Denver Broncos||Patrick Yale||Tackle||Colorado State
+|-
+|align=center|426||Detroit Lions||Ken Ramsey||Defensive tackle||Northwestern
+|-
+|align=center|427||Minnesota Vikings||Todd Vandal||Defensive back||North Dakota State
+|-
+|align=center|428||Pittsburgh Steelers||Mike Davenport||Running back||Wyoming
+|-
+|align=center|429||Chicago Bears||Jack Myers||Linebacker||Western Colorado
+|-
+|align=center|430||New York Jets||Bob Biletnikoff||Quarterback||University of Miami
+|-
+|align=center|431||Washington Redskins||Lyle Baucom||Tackle||San Francisco State
+|-
+|align=center|432||San Francisco 49ers||[[Danny Talbott]]||Quarterback||North Carolina
+|-
+|align=center|433||San Diego Chargers||John Gibbs||Running back||South Carolina State
+|-
+|align=center|434||Los Angeles Rams||Bill Barnes||Center||Washington
+|-
+|align=center|435||St. Louis Cardinals||Terry Bacigalupo||Defensive end||Oklahoma State
+|-
+|align=center|436||Oakland Raiders||Mike Cullin||Defensive end||Slippery Rock
+|-
+|align=center|437||Philadelphia Eagles||[[George Catavolos]]||Defensive back||Purdue
+|-
+|align=center|438||New Orleans Saints||Billy Bob Stewart||Linebacker||Southern Methodist
+|-
+|align=center|439||Cleveland Browns||[[Ben Davis (American football)|Ben Davis]]||Defensive back||Defiance
+|-
+|align=center|440||Boston Patriots||Bobby Nichols||Tight end||Boston University
+|-
+|align=center|441||Buffalo Bills||Grover Smith||Running back||Fort Valley State
+|-
+|align=center|442||Dallas Cowboys||George Adams||Linebacker||Morehead State
+|-
+|align=center|443||Kansas City Chiefs||[[Dave Lattin]]||Wide receiver||Texas Western
+|-
+|align=center|444||Green Bay Packers||Jeff Elias||Tight end||Kansas
+|-
+|align=center|445<ref name="Mr. Irrelevant note">This last selection is commonly referred to as [[Mr. Irrelevant]].</ref> ||New Orleans Saints||[[Jimmy Walker (basketball, born 1944)|Jimmy Walker]]<ref name="Jimmy Walker note">Jimmy Walker was the top pick in the [[1967 NBA draft]], and logically pursued an NBA career. Walker played nine solid seasons in the NBA.</ref>||Wide receiver||Providence
+|}
+
+{|
+|-
+|style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;"|
+|= Pro Bowler <ref name="Pro Bowler note"/>||
+|style="background-color:lightsteelblue; border:1px solid #aaaaaa; width:2em;"|
+|= AFL All-Star <ref name="All-Star note"/>||
+|style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em;"|
+|= Hall of Famer
+|}
+
+==Hall of Famers==
+* [[Ken Houston]], defensive back from Prairie View A&M, taken 9th round 214th overall by AFL's Houston Oilers
+:Inducted: Professional Football Hall of Fame class of 1986.<ref name="1980s hof note">List of 1980s Hall of Fame Inductee's at profootballhof.com  <sup>{{cite web|title=Pro Football Hall of Fame |url=http://www.profootballhof.com/hof/years.html#1980s |access-date=October 7, 2008 |archive-url=https://web.archive.org/web/20080731024937/http://www.profootballhof.com/hof/years.html |archive-date=July 31, 2008 |url-status=dead }}</sup></ref>
+* [[Willie Lanier]], middle linebacker from Morgan State, taken 2nd round 50th overall by AFL's Kansas City Chiefs
+:Inducted: Professional Football Hall of Fame class of 1986.<ref name="1980s hof note"/>
+* [[Gene Upshaw]], offensive guard from Texas A&I, taken 1st round 17th overall by AFL's Oakland Raiders
+:Inducted: Professional Football Hall of Fame class of 1987.<ref name="1980s hof note" />
+* [[Alan Page]], defensive end from Notre Dame, taken 1st round 15th overall by Minnesota Vikings, who converted him to defensive tackle
+:Inducted: Professional Football Hall of Fame class of 1988.<ref name="1980s hof note" />
+* [[Bob Griese]], quarterback from Purdue, taken 1st round 4th overall by AFL's Miami Dolphins
+:Inducted: Professional Football Hall of Fame class of 1990.<ref name="1990s hof note">List of 1990s Hall of Fame Inductee's at profootballhof.com  <sup>{{cite web|title=Pro Football Hall of Fame |url=http://www.profootballhof.com/hof/years.html#1990s |access-date=October 7, 2008 |archive-url=https://web.archive.org/web/20080731024937/http://www.profootballhof.com/hof/years.html |archive-date=July 31, 2008 |url-status=dead }}</sup></ref>
+* [[Jan Stenerud]], placekicker from Montana State, undrafted and signed by AFL's Kansas City Chiefs
+:Inducted: Professional Football Hall of Fame class of 1991.<ref name="1990s hof note"/>
+* [[Lem Barney]], defensive back from Jackson State, taken 2nd round 34th overall by Detroit Lions
+:Inducted: Professional Football Hall of Fame class of 1992.<ref name="1990s hof note" />
+* [[Larry Little]], offensive tackle from Bethune-Cookman, undrafted and signed by AFL's San Diego Chargers
+:Inducted: Professional Football Hall of Fame class of 1993.<ref name="1990s hof note"/>
+* [[Rayfield Wright]], offensive tackle from Fort Valley State, taken 7th round 182nd overall by Dallas Cowboys
+:Inducted: Professional Football Hall of Fame class of 2006.<ref name="2000s hof note">List of 2000s Hall of Fame Inductee's at profootballhof.com  <sup>{{cite web|title=Pro Football Hall of Fame |url=http://www.profootballhof.com/hof/years.html#2000s |access-date=October 7, 2008 |archive-url=https://web.archive.org/web/20080731024937/http://www.profootballhof.com/hof/years.html |archive-date=July 31, 2008 |url-status=dead }}</sup></ref>
+* [[Floyd Little]], running back from Syracuse University, taken 1st round 6th overall by Denver Broncos
+:Inducted: Professional Football Hall of Fame class of 2010.<ref name="2010 hof class">Pro Football Hall of Fame Class of 2010 announced  <sup>{{cite web|title= Pro Football Hall of Fame |url=http://www.profootballhof.com/enshrinement/2010/2/6/pro-football-hall-of-fame-class-of-2010-announced/ |access-date=February 7, 2010| archive-url= https://web.archive.org/web/20100207130557/http://www.profootballhof.com/enshrinement/2010/2/6/pro-football-hall-of-fame-class-of-2010-announced/| archive-date= February 7, 2010 | url-status= live |date=February 6, 2010}}</sup></ref>
+
+==Notable undrafted players==
+{| border=0 cellspacing="0" cellpadding="8"
+|-
+| style="background-color:#faecc8; border:1px solid #aaaaaa; width:2em;" align=center| <sup>†</sup>
+| = [[Pro Bowl]]er<ref name="Pro Bowler note"/>
+| style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em; text-align:center;"|‡
+|= [[Pro Football Hall of Fame|Hall of Fame]]r<ref name="HOF note">Players are identified as a Hall of Famer if they have been inducted into the Pro Football Hall of Fame.</ref>
+|}
+{{NFLDraft-header | undrafted=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Baltimore Colts | first=Ross | last=Gwinn | dab= | position=Guard | collegeyear=1966 | college=Northwestern State University | collegeteam=Northwestern State Demons | collegelink=Northwestern State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Baltimore Colts | first=Phil | last=Sobocinski | dab= | position=Center | collegeyear=1966 | college=University of Wisconsin–Madison | collegeteam=Wisconsin Badgers | collegelink=Wisconsin | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Coy | last=Bacon | dab= | position=Defensive tackle | collegeyear=1966 | college=Jackson State University | collegeteam=Jackson State Tigers | collegelink=Jackson State | probowl=yes | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Ron | last=East | dab= | position=Defensive tackle | collegeyear=1966 | college=Montana State University | collegeteam=Montana State Fighting Bobcats | collegelink=Montana State | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Mac | last=Percival | dab= | position=Kicker | collegeyear=1966 | college=Texas Tech University | collegeteam=Texas Tech Red Raiders | collegelink=Texas Tech | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Errol | last=Mann | dab= | position=Kicker | collegeyear=1966 | college=University of North Dakota | collegeteam=North Dakota Fighting Sioux | collegelink=North Dakota | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Chip | last=Myrtle | dab= | position=Linebacker | collegeyear=1966 | college=University of Maryland, College Park | collegeteam=Maryland Terrapins | collegelink=Maryland | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Houston Oilers | first=Alvin | last=Reed | dab= | position=Tight end | collegeyear=1966 | college=Prairie View A&M University | collegeteam=Prairie View A&M Panthers | collegelink=Prairie View A&M | probowl=yes | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Kansas City Chiefs | first=Jan | last=Stenerud | dab= | position=Kicker | collegeyear=1966 | college=Montana State University | collegeteam=Montana State Fighting Bobcats | collegelink=Montana State | hof=yes | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Los Angeles Rams | first=Jeff | last=Jordan | dab=Jeff Jordan (running back) | position=Running back | collegeyear=1966 | college=University of Washington | collegeteam=Washington Huskies | collegelink=Washington | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=New Orleans Saints | first=Tom | last=McNeill | dab= | position=Punter | collegeyear=1966 | college=Stephen F. Austin University | collegeteam=Stephen F. Austin Lumberjacks | collegelink=Stephen F. Austin | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=New Orleans Saints | first=Elijah | last=Nevett | dab= | position=Cornerback | collegeyear=1966 | college=Clark Atlanta University | collegeteam=Clark Atlanta Panthers | collegelink=Clark Atlanta | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=New York Giants | first=Andy | last=Gross | dab=Andy Gross (American football) | position=Guard | collegeyear=1966 | college=Auburn University | collegeteam=Auburn Tigers | collegelink=Auburn | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=New York Jets | first=Randy | last=Beverly | dab= | position=Cornerback | collegeyear=1966 | college=Colorado State University | collegeteam=Colorado State Rams | collegelink=Colorado State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=New York Jets | first=John | last=Matlock | dab= | position=Center | collegeyear=1966 | college=University of Miami | collegeteam=Miami Hurricanes | collegelink=Miami | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | first=Sam | last=Davis | dab=Sam Davis (American football) | position=Offensive guard | collegeyear=1966 | college=Allen University | collegeteam=Allen Yellow Jackets | collegelink=Allen | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) | first=Cid | last=Edwards | dab= | position=Running back | collegeyear=1966 | college=Tennessee State University | collegeteam=Tennessee State Tigers | collegelink=Tennessee State | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=San Diego Chargers | first=Larry | last=Little | dab= | position=Offensive tackle | collegeyear=1966 | college=Bethune-Cookman University | collegeteam=Bethune-Cookman Wildcats | collegelink=Bethune-Cookman | hof=yes | note= | cfb page exists=no}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=San Diego Chargers | first=Jeff | last=Staggs | dab= | position=Linebacker | collegeyear=1966 | college=San Diego State University | collegeteam=San Diego State Aztecs | collegelink=San Diego State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=San Diego Chargers | first=Kay | last=Stephenson | dab= | position=Quarterback | collegeyear=1966 | college=University of Florida | collegeteam=Florida Gators | collegelink=Florida | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1967 | undrafted=yes | round= | picknum= | team=San Francisco 49ers | first=Dave | last=Olerich | dab= | position=Linebacker | collegeyear=1966 | college=University of San Francisco | collegeteam=San Francisco Dons | collegelink=San Francisco | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-footer}}
+
+==See also==
+* [[1967 NFL expansion draft]]
+
+==References==
+{{reflist|2}}
+
+==External links==
+* [http://www.nfl.com/draft/history/fulldraft?season=1967 NFL.com – 1967 Draft] {{Webarchive|url=https://web.archive.org/web/20190201013421/http://www.nfl.com/draft/history/fulldraft?season=1967 |date=2019-02-01 }}
+* {{usurped|1=[https://web.archive.org/web/20080327012727/http://www.databasefootball.com/draft/draftyear.htm?yr=1967&lg=NFL databaseFootball.com – 1967 Draft]}}
+* [http://www.profootballhof.com/history/general/draft/1967.jsp Pro Football Hall of Fame] {{Webarchive|url=https://web.archive.org/web/20090304235235/http://www.profootballhof.com/history/general/draft/1967.jsp |date=2009-03-04 }}
+* [https://www.pro-football-reference.com/years/1967/draft.htm 1967 NFL Draft Listing] at [[Pro Football Reference]]
+
+{{NFL Drafts}}
+{{American Football League Drafts}}
+{{1967 NFL season by team}}
+{{1967 AFL season by team}}
+
+{{DEFAULTSORT:1967 Nfl Draft}}
+[[Category:NFL draft]]
+[[Category:1967 NFL season|Draft]]
+[[Category:1967 American Football League season|Draft NFL]]
+[[Category:1967 in sports in New York City|NFL Draft]]
+[[Category:American football in New York City]]
+[[Category:1960s in Manhattan]]
+[[Category:Sporting events in New York City]]
+[[Category:March 1967 sports events in the United States|NFL Draft]]

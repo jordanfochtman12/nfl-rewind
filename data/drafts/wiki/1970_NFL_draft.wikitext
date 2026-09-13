@@ -1,0 +1,794 @@
+{{Short description|Sports season drafting}}
+{{Use American English|date=July 2026}}
+{{Use mdy dates|date=August 2023}}
+{{Infobox sports draft
+| name          = 1970 NFL draft
+| logo          = 
+| logosize      = 
+| logoalt       = 
+| image         = 
+| imagesize     = 
+| alt           = 
+| caption       = 
+| date          = January 27–28, 1970
+| time          = 
+| location      = [[Belmont Plaza Hotel]]<br/>[[New York City, NY]]
+| network       = 
+| sponsor       = 
+| league        = [[National Football League|NFL]]
+| mr_irrelevant = Rayford Jenkins, DB<br/>[[1970 Kansas City Chiefs season|Kansas City Chiefs]]
+| first         = [[Terry Bradshaw]], QB<br/>[[1970 Pittsburgh Steelers season|Pittsburgh Steelers]]
+| first_round   =
+| fewnum        = 13
+| fewest        = [[1970 New York Giants season|New York Giants]]
+| mostnum       = 22
+| most          = [[1970 Atlanta Falcons season|Atlanta Falcons]],<br/>[[1970 St. Louis Cardinals (NFL) season|St. Louis Cardinals]]
+| overall       = 442
+| rounds        = 17
+| hofnum        = {{ Collapsible list
+| title = 4
+| 1 = QB [[Terry Bradshaw]]
+| 2  = CB [[Mel Blount]]
+| 3 = OL [[Jim Langer]]
+| 4 = S [[Cliff Harris]]
+}}
+| prev          = [[1969 NFL/AFL draft|1969 (NFL/AFL)]]
+| next          = [[1971 NFL draft|1971]]
+}}
+The '''1970 NFL draft''' was the 35th [[National Football League draft]] and the first of the league's modern era, following the merger of the [[National Football League]] with the [[American Football League]]. It was held on January 27–28, 1970, at the [[Belmont Plaza Hotel]] in [[New York City]], New York.<ref>{{cite web |url=http://www.footballgeography.com/nfl-draft-sites/ |title=NFL Draft Locations |date=October 2, 2014 |website=FootballGeography.com |access-date=October 23, 2014 |archive-url=https://web.archive.org/web/20150905090250/http://www.footballgeography.com/nfl-draft-sites/ |archive-date=September 5, 2015 |url-status=dead }}</ref><ref>{{cite news |last1=Salomone |first1=Dan |title=NFL Draft headed to Chicago in 2015 |url=http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756 |access-date=June 3, 2015 |publisher=[[New York Giants]] |work=Giants.com |date=October 2, 2014 |archive-url=https://web.archive.org/web/20150930065327/http://www.giants.com/news-and-blogs/article-1/NFL-Draft-headed-to-Chicago-in-2015/3ac322b1-3b4c-4a16-aba7-6e08d31b1756 |archive-date=September 30, 2015 |url-status=dead }}</ref>
+
+The [[List of first overall National Football League Draft picks|first overall pick]] of the draft was quarterback [[Terry Bradshaw]] from [[Louisiana Tech University]], who was taken by the [[1970 Pittsburgh Steelers season|Pittsburgh Steelers]] (after winning a coin flip with the [[Chicago Bears]], who had the same record as Pittsburgh). Bradshaw was one of two future [[Pro Football Hall of Fame]] inductees drafted by the Steelers; the other being [[Mel Blount]] from [[Southern University]] in Round 3.
+
+The last remaining active player from the 1970 draft class was kicker [[Mark Moseley]], who played his final NFL game in the [[1986 NFL season|1986 season]], although he was absent in [[1973 NFL season|1973]].
+
+==Player selections==
+{| border=0 cellspacing="0" cellpadding="8"
+|-
+|{{NFLDraft-TOC |numberofrounds=17|center=yes}}
+{|style="margin: 0.75em 0 0 0.5em;"
+|-
+|  style="background:#d9e9f9; border:1px solid #aaa; width:2em; text-align:center;"| *
+| = compensatory selection ||
+|-
+|  style="background:#faecc8; border:1px solid #aaa; width:2em; text-align:center;"| †
+| = [[Pro Bowl]]er<ref name="Pro Bowler note">Players are identified as a Pro Bowler if they were selected for the Pro Bowl at any time in their career.</ref>
+|-
+| style="background-color:#FFCC00; border:1px solid #aaaaaa; width:2em; text-align:center;"| ‡
+|= [[Pro Football Hall of Fame|Hall of Fame]]r<ref name="HOF note">Players are identified as a Hall of Famer if they have been inducted into the Pro Football Hall of Fame.</ref>
+|}
+| cellspacing="2"|
+{{AmFootball position key modern}}
+|}
+{{clear}}
+<!--
+
+-->
+
+===Round 1–12===
+{{NFLDraft-header}}
+{{NFLDraft-row| draftyear=1970 | numberofrounds=17 | round=1 | picknum=1 | firstpickinround=yes | team=Pittsburgh Steelers | first=Terry | last=Bradshaw | position=Quarterback | collegeyear=1969 | college=Louisiana Tech University |collegeteam=Louisiana Tech Bulldogs |collegelink=Louisiana Tech |probowl=yes |hof=yes|note= | cfb page exists=yes}}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=2 |team=Green Bay Packers |first=Mike |last=McCoy | dab=Mike McCoy (defensive tackle) |position=Defensive tackle |collegeyear=1969 |college=University of Notre Dame |collegeteam=Notre Dame Fighting Irish |collegelink=Notre Dame |cfb page exists=yes | note=from [[1970 Chicago Bears season|Chicago]]}}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=3 |team=Cleveland Browns |first=Mike |last=Phipps |position=Quarterback |collegeyear=1969 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes | note=from [[1970 Miami Dolphins season|Miami]]}}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=4 |team=Boston Patriots |first=Phil |last=Olsen | dab=Phil Olsen (American football) |position=Defensive tackle |collegeyear=1969 |college=Utah State University |collegeteam=Utah State Aggies |collegelink=Utah State |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=5 |team=Buffalo Bills |first=Al |last=Cowlings |position=Linebacker |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=6 |team=Philadelphia Eagles |first=Steve |last=Zabel |position=Tight end |position2=Linebacker |collegeyear=1969 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=7 |team=Cincinnati Bengals |first=Mike |last=Reid | dab=Mike Reid (singer) |position=Defensive tackle |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State | probowl=yes |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=8 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Larry |last=Stegent |position=Running back |collegeyear=1969 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=9 |team=San Francisco 49ers |first=Cedrick |last=Hardman |position=Defensive end |collegeyear=1969 |college=North Texas State University |collegeteam=North Texas State Mean Green |collegelink=North Texas State | probowl=yes |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=10 |team=New Orleans Saints |first=Ken |last=Burrough |position=Wide receiver |collegeyear=1969 |college=Texas Southern University |collegeteam=Texas Southern Tigers |collegelink=Texas Southern | probowl=yes |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=11 |team=Denver Broncos |first=Bobby |last=Anderson | dab=Bobby Anderson (American football) |position=Running back |collegeyear=1969 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=12 |team=Atlanta Falcons |first=John |last=Small | dab=John Small (American football) |position=Linebacker |collegeyear=1969 |college=The Citadel |collegeteam=The Citadel Bulldogs |collegelink=The Citadel |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=13 |team=New York Giants |first=Jim |last=Files |position=Linebacker |collegeyear=1969 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=14 |team=Houston Oilers |first=Doug |last=Wilkerson |position=Guard |collegeyear=1969 |college=North Carolina Central University |collegeteam=North Carolina Central Eagles |collegelink=North Carolina Central | probowl=yes |cfb page exists=no | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=15 |team=San Diego Chargers |first=Walker |last=Gillette |position=Wide receiver |collegeyear=1969 |college=University of Richmond |collegeteam=Richmond Spiders |collegelink=Richmond |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=16 |team=Green Bay Packers |first=Rich |last=McGeorge |position=Tight end |collegeyear=1969 |college=Elon University |collegeteam=Elon Phoenix |collegelink=Elon |cfb page exists=no | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=17 |team=San Francisco 49ers |first=Bruce |last=Taylor | dab=Bruce Taylor (American football) |position=Cornerback |collegeyear=1969 |college=Boston University |collegeteam=Boston University Terriers |collegelink=Boston University | probowl=yes |cfb page exists=yes | note=from [[1970 Washington Redskins season|Washington]] }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=18 |team=Baltimore Colts |first=Norm |last=Bulaich |position=Running back |collegeyear=1969 |college=Texas Christian University |collegeteam=TCU Horned Frogs |collegelink=TCU | probowl=yes |cfb page exists=yes }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=19 |team=Detroit Lions |first=Steve |last=Owens | dab=Steve Owens (American football) |position=Running back |collegeyear=1969 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma | probowl=yes |cfb page exists=yes | note=[[Heisman Trophy]] winner<ref>{{cite web |title=Heisman Trophy |url=http://www.heisman.com/winners/s-owens69.php |access-date=August 14, 2013 |archive-url=https://web.archive.org/web/20131005003225/http://www.heisman.com/winners/s-owens69.php |archive-date=October 5, 2013 |url-status=dead }}</ref> }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=20 |team=New York Jets |first=Steve |last=Tannen | dab=Steve Tannen (American football) |position=Defensive back |collegeyear=1969 |college=University of Florida |collegeteam=Florida Gators |collegelink=Florida |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=21 |team=Cleveland Browns |first=Bob |last=McKay |position=Offensive Tackle |collegeyear=1969 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=22 |team=Los Angeles Rams |first=Jack |last=Reynolds | dab=Jack Reynolds (American football) |position=Linebacker |collegeyear=1969 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=23 |team=Dallas Cowboys |first=Duane |last=Thomas |position=Running back |collegeyear=1969 |college=West Texas A&M University |collegeteam=West Texas A&M Buffaloes |collegelink=West Texas A&M |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=24 |team=Oakland Raiders |first=Raymond |last=Chester |position=Tight end |collegeyear=1969 |college=Morgan State University |collegeteam=Morgan State Bears |collegelink=Morgan State | probowl=yes |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=25 |team=Minnesota Vikings |first=John |last=Ward | dab=John Ward (American football, born 1948) |position=Offensive Tackle |collegeyear=1969 |college=Oklahoma State University |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=1 |picknum=26 |team=Kansas City Chiefs |first=Sid |last=Smith | dab=Sid Smith (offensive lineman) |position=Offensive Tackle |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes | note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=27 |firstpickinround=yes |team=Dallas Cowboys |first=Bob |last=Asher | dab=Bob Asher (American football) |position=Offensive Tackle |collegeyear=1969 |college=Vanderbilt University |collegeteam=Vanderbilt Commodores |collegelink=Vanderbilt |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=28 |team=Pittsburgh Steelers |first=Ronnie |last=Shanklin |position=Wide receiver |collegeyear=1969 |college=North Texas State University |collegeteam=North Texas State Mean Green |collegelink=North Texas State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=29 |team=Miami Dolphins |first=Jim |last=Mandich |position=Tight end |collegeyear=1969 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=30 |team=Buffalo Bills |first=Dennis |last=Shaw |position=Quarterback |collegeyear=1969 |college=San Diego State University |collegeteam=San Diego State Aztecs |collegelink=San Diego State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=31 |team=Houston Oilers |first=Leo |last=Brooks |dab=Leo Brooks (American football) |position=Defensive tackle |collegeyear=1969 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas | probowl=yes |cfb page exists=yes |note=from Boston }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=32 |team=Cincinnati Bengals |first=Ron |last=Carpenter | dab=Ron Carpenter (defensive lineman) |position=Defensive tackle |collegeyear=1969 |college=North Carolina State University |collegeteam=NC State Wolfpack |collegelink=NC State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=33 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Jim |last=Corrigall |position=Defensive tackle |collegeyear=1969 |college=Kent State University |collegeteam=Kent State Golden Flashes |collegelink=Kent State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=34 |team=Philadelphia Eagles |first=Ray |last=Jones | dab=Ray Jones (American football) |position=Cornerback |collegeyear=1969 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=35 |team=Los Angeles Rams |first=Donnie |last=Williams | dab=Donnie Williams (American football) |position=Wide receiver |collegeyear=1969 |college=Prairie View A&M University |collegeteam=Prairie View A&M Panthers |collegelink=Prairie View A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=36 |team=Cleveland Browns |first=Joe |last=Jones | dab=Joe Jones (defensive end) |position=Defensive end |collegeyear=1969 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note=from New Orleans }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=37 |team=Denver Broncos |first=Alden |last=Roche |position=Defensive end |collegeyear=1969 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=38 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Chuck |last=Hutchison |position=Guard |collegeyear=1969 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=39 |team=Atlanta Falcons |first=Art |last=Malone | dab=Art Malone (American football) |position=Running back |collegeyear=1969 |college=Arizona State University |collegeteam=Arizona State Sun Devils |collegelink=Arizona State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=40 |team=Houston Oilers |first=Bill |last=Dusenbery |position=Running back |collegeyear=1969 |college=Johnson C. Smith University |collegeteam=Johnson C. Smith Bulls |collegelink=Johnson C. Smith |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=41 |team=Green Bay Packers |first=Al |last=Matthews | dab=Al Matthews (American football) |position=Safety |collegeyear=1969 |college=Texas A&M University–Kingsville |collegeteam=Texas A&M–Kingsville Javelinas |collegelink=Texas A&I |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=42 |team=San Diego Chargers |first=Tom |last=Williams | dab=Tom Williams (defensive lineman) |position=Defensive tackle |collegeyear=1969 |college=University of California, Davis |collegeteam=UC Davis Aggies |collegelink=UC Davis |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=43 |team=Washington Redskins |first=Bill |last=Brundige |position=Defensive tackle |collegeyear=1969 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=44 |team=Baltimore Colts |first=Jim |last=Bailey | dab=Jim Bailey (American football) |position=Defensive tackle |collegeyear=1969 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=45 |team=Detroit Lions |first=Ray |last=Parson |position=Offensive tackle |collegeyear=1969 |college=University of Minnesota |collegeteam=Minnesota Golden Gophers |collegelink=Minnesota |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=46 |team=New York Jets |first=Rich |last=Caster |position=Wide receiver |collegeyear=1969 |college=Jackson State University |collegeteam=Jackson State Tigers |collegelink=Jackson State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=47 |team=Cleveland Browns |first=Jerry |last=Sherk |position=Defensive tackle |collegeyear=1969 |college=Oklahoma State University |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=48 |team=San Francisco 49ers |first=John |last=Isenbarger |position=Running back |collegeyear=1969 |college=Indiana University |collegeteam=Indiana Hoosiers |collegelink=Indiana |cfb page exists=yes |note=from Los Angeles via Philadelphia }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=49 |team=Dallas Cowboys |first=Margene |last=Adkins |position=Wide receiver |collegeyear=1969 |college=Trinity Valley Community College |collegeteam=Trinity Valley Cardinals |collegelink=Trinity Valley |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=50 |team=Oakland Raiders |first=Ted |last=Koy |position=Tight end |collegeyear=1969 |college=University of Texas |collegeteam=Texas Longhorns |collegelink=Texas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=51 |team=Minnesota Vikings |first=Bill |last=Cappleman |position=Quarterback |collegeyear=1969 |college=Florida State University |collegeteam=Florida State Seminoles |collegelink=Florida State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=2 |picknum=52 |team=Kansas City Chiefs |first=Clyde |last=Werner |position=Linebacker |collegeyear=1969 |college=University of Washington |collegeteam=Washington Huskies |collegelink=Washington |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=53 |firstpickinround=yes |team=Pittsburgh Steelers |first=Mel |last=Blount |position=Cornerback |collegeyear=1969 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern | probowl=yes | hof=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=54 |team=Chicago Bears |first=George |last=Farmer | dab=George Farmer (wide receiver, born 1948) |position=Wide receiver |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=55 |team=Miami Dolphins |first=Tim |last=Foley | dab=Tim Foley (defensive back) |position=Cornerback |collegeyear=1969 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=56 |team=Boston Patriots |first=Mike |last=Ballou |position=Linebacker |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=57 |team=Buffalo Bills |first=Jim |last=Reilly | dab=Jim Reilly (American football) |position=Guard |collegeyear=1969 |college=University of Notre Dame |collegeteam=Notre Dame Fighting Irish |collegelink=Notre Dame |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=58 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Charlie |last=Pittman |position=Running back |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=59 |team=Philadelphia Eagles |first=Lee |last=Bouggess |position=Running back |collegeyear=1969 |college=University of Louisville |collegeteam=Louisville Cardinals |collegelink=Louisville |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=60 |team=Cincinnati Bengals |first=Chip |last=Bennett |position=Linebacker |collegeyear=1969 |college=Abilene Christian University |collegeteam=Abilene Christian Wildcats |collegelink=Abilene Christian |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=61 |team=Kansas City Chiefs |first=Billy Bob |last=Barnett |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note=from San Francisco }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=62 |team=New Orleans Saints |first=Clovis |last=Swinney |position=Defensive end |collegeyear=1969 |college=Arkansas State University |collegeteam=Arkansas State Indians |collegelink=Arkansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=63 |team=Denver Broncos |first=John |last=Kohler |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of South Dakota |collegeteam=South Dakota Coyotes |collegelink=South Dakota |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=64 |team=Atlanta Falcons |first=Andy |last=Maurer |position=Guard |collegeyear=1969 |college=University of Oregon |collegeteam=Oregon Ducks |collegelink=Oregon |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=65 |team=Atlanta Falcons |first=Todd |last=Snyder | dab=Todd Snyder (American football) |position=Wide receiver |collegeyear=1969 |college=Ohio University |collegeteam=Ohio Bobcats |collegelink=Ohio |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=66 |team=Dallas Cowboys |first=Charlie |last=Waters |position=Safety |collegeyear=1969 |college=Clemson University |collegeteam=Clemson Tigers |collegelink=Clemson | probowl=yes |cfb page exists=yes |note=from Houston via Cleveland }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=67 |team=Buffalo Bills |first=Glenn |last=Alexander |position=Defensive back |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note=from San Diego }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=68 |team=Green Bay Packers |first=Jim |last=Carter | dab=Jim Carter (American football) |position=Linebacker |collegeyear=1969 |college=University of Minnesota |collegeteam=Minnesota Golden Gophers |collegelink=Minnesota | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=69 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Eric |last=Harris |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=70 |team=Baltimore Colts |first=Jim |last=O'Brien | dab=Jim O'Brien (American football) |position=Kicker |position2=Wide Receiver |collegeyear=1969 |college=University of Cincinnati |collegeteam=Cincinnati Bearcats |collegelink=Cincinnati |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=71 |team=Detroit Lions |first=Jim |last=Mitchell | dab=Jim Mitchell (defensive lineman) |position=Defensive end |collegeyear=1969 |college=Virginia State University |collegeteam=Virginia State Trojans |collegelink=Virginia State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=72 |team=New York Jets |first=Dennis |last=Onkotz |position=Linebacker |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=73 |team=Dallas Cowboys |first=Steve |last=Kiner |position=Linebacker |collegeyear=1969 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note=from Cleveland }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=74 |team=Baltimore Colts |first=Ara |last=Person |position=Tight end |collegeyear=1969 |college=Morgan State University |collegeteam=Morgan State Bears |collegelink=Morgan State |cfb page exists=no |note=from Los Angeles via Philadelphia }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=75 |team=Dallas Cowboys |first=Denton |last=Fox |position=Defensive back |collegeyear=1969 |college=Texas Tech University |collegeteam=Texas Tech Red Raiders |collegelink=Texas Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=76 |team=Oakland Raiders |first=Gerald |last=Irons |position=Defensive end |collegeyear=1969 |college=University of Maryland Eastern Shore |collegeteam=Maryland State Hawks |collegelink=Maryland State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=77 |team=Minnesota Vikings |first=Chuck |last=Burgoon |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=North Park University | collegeteam=North Park Vikings | collegelink=North Park |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=3 |picknum=78 |team=Kansas City Chiefs |first=David |last=Hadley | dab=David Hadley (American football) |position=Defensive back |collegeyear=1969 |college=Alcorn State University |collegeteam=Alcorn A&M Braves |collegelink=Alcorn A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=79 |firstpickinround=yes |team=Chicago Bears |first=Lynn |last=Larson |position=Offensive Tackle |collegeyear=1969 |college=Kansas State University |collegeteam=Kansas State Wildcats |collegelink=Kansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=80 |team=Pittsburgh Steelers |first=Ed |last=George |position=Offensive Tackle |collegeyear=1969 |college=Wake Forest University |collegeteam=Wake Forest Demon Deacons |collegelink=Wake Forest |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=81 |team=Miami Dolphins |first=Curtis |last=Johnson | dab=Curtis Johnson (cornerback) |position=Cornerback |collegeyear=1969 |college=University of Toledo |collegeteam=Toledo Rockets |collegelink=Toledo |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=82 |team=Buffalo Bills |first=Jerome |last=Gantt |position=Defensive end |collegeyear=1969 |college=North Carolina Central University |collegeteam=North Carolina Central Eagles |collegelink=North Carolina Central |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=83 |team=Boston Patriots |first=Eddie |last=Ray |position=Defensive back |collegeyear=1969 |college=Louisiana State University |collegeteam=LSU Tigers |collegelink=LSU |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=84 |team=Atlanta Falcons |first=Paul |last=Reed |playerpageexists=no |position=Offensive Tackle |collegeyear=1969 |college=Johnson C. Smith University | collegeteam=Johnson C. Smith Golden Bulls | collegelink=Johnson C. Smith |cfb page exists=no |note=from Philadelphia }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=85 |team=Cincinnati Bengals |first=Joe |last=Stevens |playerpageexists=no |position=Guard |collegeyear=1969 |college=Jackson State University | collegeteam=Jackson State Tigers | collegelink=Jackson State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=86 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Greg |last=Lens |position=Defensive tackle |collegeyear=1969 |college=Trinity University |collegeteam=Trinity Tigers |collegelink=Trinity |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=87 |team=San Francisco 49ers |first=Vic |last=Washington |position=Wide receiver |collegeyear=1969 |college=University of Wyoming |collegeteam=Wyoming Cowboys |collegelink=Wyoming | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=88 |team=New Orleans Saints |first=Delles |last=Howell |position=Cornerback |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=89 |team=Denver Broncos |first=Jerry |last=Hendren |position=Wide receiver |collegeyear=1969 |college=University of Idaho |collegeteam=Idaho Vandals |collegelink=Idaho |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=90 |team=Pittsburgh Steelers |first=Jim |last=Evenson |position=Running back |collegeyear=1969 |college=University of Oregon |collegeteam=Oregon Ducks |collegelink=Oregon |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=91 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Don |last=Parish | dab=Don Parish (American football) |position=Linebacker |collegeyear=1969 |college=Stanford University |collegeteam=Stanford Indians |collegelink=Stanford |cfb page exists=yes |note=from Atlanta }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=92 |team=Houston Oilers |first=Spike |last=Jones | dab=Spike Jones (American football) |position=Punter |collegeyear=1969 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=93 |team=Green Bay Packers |first=Ken |last=Ellis | dab=Ken Ellis (American football) |position=Wide receiver |collegeyear=1969 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=94 |team=San Diego Chargers |first=Bill |last=Maddox |playerpageexists=no |position=Tight end |collegeyear=1969 |college=Syracuse University | collegeteam=Syracuse Orangemen | collegelink=Syracuse |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=95 |team=Baltimore Colts |first=Steve |last=Smear |position=Defensive tackle |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=96 |team=Green Bay Packers |first=Skip |last=Butler |position=Kicker |collegeyear=1969 |college=University of Texas at Arlington |collegeteam=Texas–Arlington Rebels |collegelink=Texas–Arlington |cfb page exists=yes |note=from Baltimore }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=97 |team=New York Giants |first=Wes |last=Grant |position=Defensive end |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note=from Detroit }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=98 |team=New York Jets |first=John |last=Ebersole | dab=John Ebersole (American football) |position=Linebacker |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=99 |team=Cleveland Browns |first=Ricky |last=Stevenson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Arizona | collegeteam=Arizona Wildcats | collegelink=Arizona |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=100 |team=Chicago Bears |first=Ross |last=Brupbacher |position=Linebacker |collegeyear=1969 |college=Texas A&M University | collegeteam=Texas A&M Aggies | collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=101 |team=Dallas Cowboys |first=John |last=Fitzgerald | dab=John Fitzgerald (center) |position=Offensive tackle |collegeyear=1969 |college=Boston College | collegeteam=Boston College Eagles | collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=102 |team=Oakland Raiders |first=Tony |last=Cline |position=Linebacker |collegeyear=1969 |college=University of Miami | collegeteam=Miami Hurricanes | collegelink=Miami (FL) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=103 |team=Washington Redskins |first=Paul |last=Laaveg |position=Offensive tackle |collegeyear=1969 |college=University of Iowa | collegeteam=Iowa Hawkeyes | collegelink=Iowa |cfb page exists=yes |note=from Minnesota via Los Angeles and New Orleans }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=4 |picknum=104 |team=Cincinnati Bengals |first=Billie |last=Hayes |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=San Diego State University | collegeteam=San Diego State Aztecs | collegelink=San Diego State |cfb page exists=yes |note=from Kansas City }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=105 |firstpickinround=yes |team=Pittsburgh Steelers |first=Jon |last=Staggers |position=Wide receiver |collegeyear=1969 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=106 |team=New Orleans Saints |first=Glenn |last=Cannon |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Mississippi |collegeteam=Ole Miss Rebels |collegelink=Ole Miss |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=107 |team=Boston Patriots |first=Bob |last=Olson |position=Linebacker |collegeyear=1969 |college=University of Notre Dame |collegeteam=Notre Dame Fighting Irish |collegelink=Notre Dame |cfb page exists=yes |note=from Miami }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=108 |team=New York Jets |first=Clifford |last=McClain | dab=Cliff McClain |position=Running back |collegeyear=1969 |college=South Carolina State University |collegeteam=South Carolina State Bulldogs |collegelink=South Carolina State |cfb page exists=no |note=from Boston }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=109 |team=Buffalo Bills |first=Steve |last=Starnes |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=University of Tampa |collegeteam=Tampa Spartans |collegelink=Tampa |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=110 |team=Houston Oilers |first=Ron |last=Saul |position=Guard |collegeyear=1969 |college=Michigan State University |collegeteam=Michigan State Spartans |collegelink=Michigan State |cfb page exists=yes |note=from Cincinnati via N. Y. Jets}}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=111 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Tom |last=Lloyd |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Bowling Green State University |collegeteam=Bowling Green Falcons |collegelink=Bowling Green |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=112 |team=Atlanta Falcons |first=Bruce |last=Van Ness |position=Running back |collegeyear=1969 |college=Rutgers University |collegeteam=Rutgers Scarlet Knights |collegelink=Rutgers |cfb page exists=yes |note=from Philadelphia via N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=113 |team=San Francisco 49ers |first=Gary |last=McArthur |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=114 |team=Washington Redskins |first=Manny |last=Sistrunk |position=Defensive tackle |collegeyear=1969 |college=University of Arkansas at Pine Bluff |collegeteam=Arkansas AM&N Golden Lions |collegelink=Arkansas AM&N |cfb page exists=yes |note=from New Orleans }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=115 |team=Denver Broncos |first=Bill |last=McKoy |position=Linebacker |collegeyear=1969 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=116 |team=Atlanta Falcons |first=Ken |last=Mendenhall |position=Center |collegeyear=1969 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=117 |team=New York Giants |first=Claude |last=Brumfield |playerpageexists=no |position=Guard |collegeyear=1969 |college=Tennessee State University |collegeteam=Tennessee State Tigers |collegelink=Tennessee State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=118 |team=Houston Oilers |first=Ed |last=Duley |playerpageexists=no |position=Defensive tackle |collegeyear=1969 |college=Northern Arizona University |collegeteam=Northern Arizona Lumberjacks |collegelink=Northern Arizona |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=119 |team=San Diego Chargers |first=Pettus |last=Farrar |playerpageexists=no |position=Running back |collegeyear=1969 |college=Norfolk State University |collegeteam=Norfolk State Spartans |collegelink=Norfolk State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=120 |team=Green Bay Packers |first=Cecil |last=Pryor |position=Defensive end |collegeyear=1969 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=121 |team=Washington Redskins |first=Danny |last=Pierce | dab=Danny Pierce (American football) |position=Running back |collegeyear=1969 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=122 |team=Baltimore Colts |first=Billy |last=Newsome |position=Defensive end |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=123 |team=Detroit Lions |first=Bob |last=Parker |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=124 |team=New York Jets |first=Gary |last=Arthur |position=Tight end |collegeyear=1969 |college=Miami University |collegeteam=Miami Redskins |collegelink=Miami (OH) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=125 |team=Cleveland Browns |first=Steve |last=Engel | dab=Steve Engel (American football) |position=Running back |collegeyear=1969 |college=University of Colorado |collegeteam=Colorado Buffaloes |collegelink=Colorado |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=126 |team=New Orleans Saints |first=Steve |last=Ramsey | dab=Steve Ramsey (American football) |position=Quarterback |collegeyear=1969 |college=University of North Texas |collegeteam=North Texas State Mean Green |collegelink=North Texas State |cfb page exists=yes |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=127 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Barry |last=Pierson | playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Michigan |collegeteam=Michigan Wolverines |collegelink=Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=128 |team=Oakland Raiders |first=Art |last=Laster |position=Offensive tackle |collegeyear=1969 |college=University of Maryland Eastern Shore |collegeteam=Maryland State Hawks |collegelink=Maryland State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=129 |team=Minnesota Vikings |first=Greg |last=Jones | dab=Greg Jones (running back, born 1948) |position=Running back |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=5 |picknum=130 |team=Kansas City Chiefs |first=Mike |last=Oriard |position=Center |collegeyear=1969 |college=University of Notre Dame |collegeteam=Notre Dame Fighting Irish |collegelink=Notre Dame |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=131 |firstpickinround=yes |team=Pittsburgh Steelers |first=Manuel |last=Barrera |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=Kansas State University |collegeteam=Kansas State Wildcats |collegelink=Kansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=132 |team=Miami Dolphins |first=Dave |last=Campbell |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=Auburn University |collegeteam=Auburn Tigers |collegelink=Auburn |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=133 |team=Chicago Bears |first=Bob |last=Cutburth |playerpageexists=no |position=Quarterback |collegeyear=1969 |college=Oklahoma State University–Stillwater |collegeteam=Oklahoma State Cowboys |collegelink=Oklahoma State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=134 |team=Buffalo Bills |first=Ken |last=Edwards |playerpageexists=no |position=Running back |collegeyear=1969 |college=Virginia Polytechnic Institute and State University |collegeteam=VPI Gobblers |collegelink=Virginia Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=135 |team=Buffalo Bills |first=Grant |last=Guthrie |position=Kicker |collegeyear=1969 |college=Florida State University |collegeteam=Florida State Seminoles |collegelink=Florida State |cfb page exists=yes |note=from Boston }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=136 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=James |last=Manuel |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Toledo |collegeteam=Toledo Rockets |collegelink=Toledo |cfb page exists=yes |note=from Philadelphia }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=137 |team=Cincinnati Bengals |first=Sandy |last=Durko |position=Safety |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=138 |team=San Francisco 49ers |first=Rusty |last=Clark |position=Quarterback |collegeyear=1969 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=139 |team=Chicago Bears |first=Jeff |last=Curchin |position=Offensive tackle |collegeyear=1969 |college=Florida State University |collegeteam=Florida State Seminoles |collegelink=Florida State |cfb page exists=yes |note=from St. Louis }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=140 |team=New Orleans Saints |first=Mel |last=Easley |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Oregon State University |collegeteam=Oregon State Beavers |collegelink=Oregon State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=141 |team=Denver Broncos |first=John |last=Mosier | dab=John Mosier (American football) |position=Tight end |collegeyear=1969 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=142 |team=New York Giants |first=Duane |last=Miller |position=Wide receiver |collegeyear=1969 |college=Drake University |collegeteam=Drake Bulldogs |collegelink=Drake |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=143 |team=Atlanta Falcons |first=Mack |last=Herron |position=Running back |collegeyear=1969 |college=Kansas State University |collegeteam=Kansas State Wildcats |collegelink=Kansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=144 |team=Houston Oilers |first=Benny |last=Johnson | dab=Benny Johnson (American football) |position=Cornerback |collegeyear=1969 |college=Johnson C. Smith University | collegeteam=Johnson C. Smith Golden Bulls | collegelink=Johnson C. Smith |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=145 |team=Green Bay Packers |first=Ervin |last=Hunt |position=Defensive back |collegeyear=1969 |college=California State University, Fresno |collegeteam=Fresno State Bulldogs |collegelink=Fresno State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=146 |team=San Diego Chargers |first=Billy |last=Parks |position=Wide receiver |collegeyear=1969 |college=California State University, Long Beach |collegeteam=Long Beach State 49ers |collegelink=Long Beach State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=147 |team=Atlanta Falcons |first=Jade |last=Butcher |playerpageexists=no |position=Wide receiver |collegeyear=1969 |college=Indiana University |collegeteam=Indiana Hoosiers |collegelink=Indiana |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=148 |team=Baltimore Colts |first=Ron |last=Gardin |position=Cornerback |collegeyear=1969 |college=University of Arizona |collegeteam=Arizona Wildcats |collegelink=Arizona |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=149 |team=Detroit Lions |first=Tony |last=Terry | dab=Tony Terry (American football) |position=Defensive tackle |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=150 |team=New York Jets |first=Terry |last=Stewart |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=151 |team=Cleveland Browns |first=Mike |last=Cilek |playerpageexists=no |position=Quarterback |collegeyear=1969 |college=University of Iowa |collegeteam=Iowa Hawkeyes |collegelink=Iowa |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=152 |team=Atlanta Falcons |first=Randy |last=Marshall |position=Defensive end |collegeyear=1969 |college=Linfield College |collegeteam=Linfield Wildcats |collegelink=Linfield |cfb page exists=no |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=153 |team=Dallas Cowboys |first=Pat |last=Toomay |position=Defensive end |collegeyear=1969 |college=Vanderbilt University |collegeteam=Vanderbilt Commodores |collegelink=Vanderbilt |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=154 |team=Oakland Raiders |first=Alvin |last=Wyatt |position=Cornerback |collegeyear=1969 |college=Bethune–Cookman University |collegeteam=Bethune–Cookman Wildcats |collegelink=Bethune–Cookman |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=155 |team=Pittsburgh Steelers |first=Clarence |last=Kegler |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=South Carolina State University |collegeteam=South Carolina State Bulldogs |collegelink=South Carolina State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=6 |picknum=156 |team=Kansas City Chiefs |first=Robert |last=Hews |dab=Bob Hews |position=Offensive tackle |collegeyear=1969 |college=Princeton University |collegeteam=Princeton Tigers |collegelink=Princeton |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=157 |firstpickinround=yes |team=Pittsburgh Steelers |first=Danny |last=Griffin |playerpageexists=no |position=Running back |collegeyear=1969 |college=University of Texas at Arlington |collegeteam=Texas–Arlington Mavericks |collegelink=Texas–Arlington |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=158 |team=Philadelphia Eagles |first=Terry |last=Brennan |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Notre Dame |collegeteam=Notre Dame Fighting Irish |collegelink=Notre Dame |cfb page exists=yes |note=from Chicago }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=159 |team=Miami Dolphins |first=Jake |last=Scott |position=Safety |collegeyear=1969 |college=University of Georgia |collegeteam=Georgia Bulldogs |collegelink=Georgia | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=160 |team=Boston Patriots |first=Odell |last=Lawson |position=Running back |collegeyear=1969 |college=Langston University |collegeteam=Langston Lions |collegelink=Langston |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=161 |team=Buffalo Bills |first=Wayne |last=Fowler |position=Offensive tackle |collegeyear=1969 |college=University of Richmond |collegeteam=Richmond Spiders |collegelink=Richmond |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=162 |team=Los Angeles Rams |first=Ted |last=Provost |position=Cornerback |collegeyear=1969 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=163 |team=Cincinnati Bengals |first=Lemar |last=Parrish |position= Cornerback |collegeyear=1969 |college=Lincoln University of Missouri |collegeteam=Lincoln Blue Tigers |collegelink=Lincoln | probowl=yes |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=164 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Jim |last=McFarland |position=Tight end |collegeyear=1969 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=165 |team=San Francisco 49ers |first=Jim |last=Strong | dab=Jim Strong (running back) |position=Running back |collegeyear=1969 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=166 |team=New Orleans Saints |first=Lon |last=Woodard |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=San Diego State University |collegeteam=San Diego State Aztecs |collegelink=San Diego State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=167 |team=Denver Broncos |first=Randy |last=Montgomery |position=Cornerback |collegeyear=1969 |college=Weber State University |collegeteam=Weber State Wildcats |collegelink=Weber State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=168 |team=Los Angeles Rams |first=Bill |last=Nelson | dab=Bill Nelson (American football) |position=Defensive tackle |collegeyear=1969 |college=Oregon State University |collegeteam=Oregon State Beavers |collegelink=Oregon State |cfb page exists=yes |note=from Atlanta }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=169 |team=Atlanta Falcons |first=Gary |last=Orcutt |playerpageexists=no |position=Wide receiver |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=170 |team=Houston Oilers |first=Charles |last=Olson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Concordia College (Minnesota) |collegeteam=Concordia Cobbers |collegelink=Concordia (Moorhead) |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=171 |team=San Diego Chargers |first=Jim |last=Fabish |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Texas at El Paso |collegeteam=UTEP Miners |collegelink=UTEP |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=172 |team=Green Bay Packers |first=Cleo |last=Walker |position=Center |collegeyear=1969 |college=University of Louisville |collegeteam=Louisville Cardinals |collegelink=Louisville |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=173 |team=Washington Redskins |first=Roland |last=Merritt |playerpageexists=no |position=Wide receiver |collegeyear=1969 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=174 |team=Baltimore Colts |first=Gordon |last=Slade |position=Quarterback |collegeyear=1969 |college=Davidson College |collegeteam=Davidson Wildcats |collegelink=Davidson |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=175 |team=Detroit Lions |first=Ken |last=Geddes |position=Linebacker |collegeyear=1969 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=176 |team=New York Jets |first=James |last=Williams |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Virginia State University |collegeteam=Virginia State Trojans |collegelink=Virginia State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=177 |team=Cleveland Browns |first=Craig |last=Wycinsky |position=Guard |collegeyear=1969 |college=Michigan State University |collegeteam=Michigan State Spartans |collegelink=Michigan State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=178 |team=Washington Redskins |first=James |last=Harris | dab=Jimmy Harris (cornerback) |position=Cornerback |collegeyear=1969 |college=Howard Payne University |collegeteam=Howard Payne Yellow Jackets |collegelink=Howard Payne |cfb page exists=no |note=from Los Angeles }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=179 |team=Dallas Cowboys |first=Don |last=Abbey |position=Linebacker |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=180 |team=Oakland Raiders |first=Steve |last=Svitak |position=Linebacker |collegeyear=1969 |college=Boise State University |collegeteam=Boise State Broncos |collegelink=Boise State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=181 |team=Minnesota Vikings |first=Hap |last=Farber |position=Linebacker |collegeyear=1969 |college=University of Mississippi |collegeteam=Ole Miss Rebels |collegelink=Ole Miss |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=7 |picknum=182 |team=Kansas City Chiefs |first=Clyde |last=Glosson |position=Wide receiver |collegeyear=1969 |college=University of Texas at El Paso |collegeteam=UTEP Miners |collegelink=UTEP |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=183 |firstpickinround=yes |team=Chicago Bears |first=Dana |last=Stephenson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=184 |team=Pittsburgh Steelers |first=Dave |last=Smith | dab=Dave Smith (wide receiver) |position=Wide receiver |collegeyear=1969 |college=Indiana University of Pennsylvania |collegeteam=IUP Crimson Hawks |collegelink=IUP |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=185 |team=Miami Dolphins |first=Narvel |last=Chavers |playerpageexists=no |position=Running back |collegeyear=1969 |college=Jackson State University |collegeteam=Jackson State Tigers |collegelink=Jackson State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=186 |team=Buffalo Bills |first=Richard |last=Cheek |position=Offensive tackle |collegeyear=1969 |college=Auburn University |collegeteam=Auburn Tigers |collegelink=Auburn |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=187 |team=New York Jets |first=Jack |last=Porter |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Oklahoma |collegeteam=Oklahoma Sooners |collegelink=Oklahoma |cfb page exists=yes |note=from Boston }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=188 |team=Cincinnati Bengals |first=Bill |last=Trout |playerpageexists=no |position=Defensive tackle |collegeyear=1969 |college=University of Miami |collegeteam=Miami Hurricanes |collegelink=Miami (FL) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=189 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Tom |last=Banks | dab=Tom Banks (American football) |position=Center |collegeyear=1969 |college=Auburn University |collegeteam=Auburn Tigers |collegelink=Auburn | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=190 |team=Philadelphia Eagles |first=Ira |last=Gordon |position=Offensive tackle |collegeyear=1969 |college=Kansas State University |collegeteam=Kansas State Wildcats |collegelink=Kansas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=191 |team=San Francisco 49ers |first=Carter |last=Campbell |position=Linebacker |collegeyear=1969 |college=Weber State University |collegeteam=Weber State Wildcats |collegelink=Weber State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=192 |team=New Orleans Saints |first=Lawrence |last=Estes | dab=Larry Estes |position=Defensive end |collegeyear=1969 |college=Alcorn State University |collegeteam=Alcorn A&M Braves |collegelink=Alcorn A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=193 |team=Kansas City Chiefs |first=Fred |last=Barry |position=Defensive back |collegeyear=1969 |college=Boston University |collegeteam=Boston University Terriers |collegelink=Boston University |cfb page exists=yes |note=from Denver }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=194 |team=Atlanta Falcons |first=Larry |last=Brewer |playerpageexists=no |position=Tight end |collegeyear=1969 |college=Louisiana Tech University |collegeteam=Louisiana Tech Bulldogs |collegelink=Louisiana Tech |cfb page exists=yes |note=from N. Y. Giants }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=195 |team=Atlanta Falcons |first=Seth |last=Miller|dab=Seth Miller (American football) |position=Safety |collegeyear=1969 |college=Arizona State University |collegeteam=Arizona State Sun Devils |collegelink=Arizona State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=196 |team=Houston Oilers |first=Mike |last=McClish |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Wisconsin |collegeteam=Wisconsin Badgers |collegelink=Wisconsin |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=197 |team=Green Bay Packers |first=Tim |last=Mjos |playerpageexists=no |position=Running back |collegeyear=1969 |college=North Dakota State University |collegeteam=North Dakota State Bison |collegelink=North Dakota State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=198 |team=San Diego Chargers |first=Wayne |last=Clark | dab=Wayne Clark (quarterback) |position=Quarterback |collegeyear=1969 |college=United States International University |collegeteam=United States International Gulls |collegelink=United States International |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=199 |team=Baltimore Colts |first=Bob |last=Bouley |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Boston College |collegeteam=Boston College Eagles |collegelink=Boston College |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=200 |team=Washington Redskins |first=Paul |last=Johnson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Penn State University |collegeteam=Penn State Nittany Lions |collegelink=Penn State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=201 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Mike |last=Holmgren |position=Quarterback |collegeyear=1969 |college=University of Southern California |collegeteam=USC Trojans |collegelink=USC |cfb page exists=yes |note=from Detroit }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=202 |team=New York Jets |first=Mark |last=Lomas |position=Defensive end |collegeyear=1969 |college=Northern Arizona University | collegeteam=Northern Arizona Lumberjacks | collegelink=Northern Arizona |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=203 |team=Cleveland Browns |first=Honester |last=Davidson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Bowling Green State University |collegeteam=Bowling Green Falcons |collegelink=Bowling Green |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=204 |team=Los Angeles Rams |first=Rich |last=Saul |position=Linebacker |collegeyear=1969 |college=Michigan State University |collegeteam=Michigan State Spartans |collegelink=Michigan State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=205 |team=Dallas Cowboys |first=Jerry |last=Dossey |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=206 |team=Oakland Raiders |first=Mike |last=Wynn |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=207 |team=Minnesota Vikings |first=Mike |last=Carroll |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=8 |picknum=208 |team=Denver Broncos |first=Louis |last=Porter | dab=Lew Porter (gridiron football) |position=Running back |collegeyear=1969 |college=Southern University |collegeteam=Southern Jaguars |collegelink=Southern |cfb page exists=yes |note=from Kansas City }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=209 |firstpickinround=yes |team=Pittsburgh Steelers |first=Carl |last=Crennel |position=Linebacker |collegeyear=1969 |college=West Virginia University |collegeteam=West Virginia Mountaineers |collegelink=West Virginia |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=210 |team=Chicago Bears |first=Linzy |last=Cole |position=Wide receiver |collegeyear=1969 |college=Texas Christian University |collegeteam=TCU Horned Frogs |collegelink=TCU |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=211 |team=Miami Dolphins |first=Hubert |last=Ginn | dab=Hubie Ginn |position=Running back |collegeyear=1969 |college=Florida A&M University |collegeteam=Florida A&M Rattlers |collegelink=Florida A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=212 |team=Boston Patriots |first=Dennis |last=Wirgowski |position=Defensive end |collegeyear=1969 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=213 |team=Buffalo Bills |first=Bill |last=Bridges | dab=Bill Bridges (American football) |position=Guard |collegeyear=1969 |college=University of Houston |collegeteam=Houston Cougars |collegelink=Houston |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=214 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Paul |last=White | dab=Paul White (running back) |position=Running back |collegeyear=1969 |college=University of Texas at El Paso |collegeteam=UTEP Miners |collegelink=UTEP |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=215 |team=Philadelphia Eagles |first=David |last=King |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=Stephen F. Austin University |collegeteam=Stephen F. Austin Lumberjacks |collegelink=Stephen F. Austin |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=216 |team=Cincinnati Bengals |first=Bill |last=Bolden |playerpageexists=no |position=Running back |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=217 |team=San Francisco 49ers |first=Preston |last=Riley |position=Wide receiver |collegeyear=1969 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=218 |team=New Orleans Saints |first=Jim |last=Otis |position=Running back |collegeyear=1969 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=219 |team=Denver Broncos |first=David |last=Washington | dab=Dave Washington |position=Linebacker |collegeyear=1969 |college=Alcorn State University |collegeteam=Alcorn A&M Braves |collegelink=Alcorn A&M | probowl=yes |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=220 |team=Atlanta Falcons |first=Roy |last=Robinson |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Montana |collegeteam=Montana Grizzlies |collegelink=Montana |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=221 |team=New York Giants |first=Pat |last=Hughes | dab=Pat Hughes (American football) |position=Center |collegeyear=1969 |college=Boston University |collegeteam=Boston University Terriers |collegelink=Boston University |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=222 |team=Houston Oilers |first=Charlie |last=Blossom |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=Texas Southern University |collegeteam=Texas Southern Tigers |collegelink=Texas Southern |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=223 |team=San Diego Chargers |first=Chris |last=Fletcher |position=Cornerback |collegeyear=1969 |college=Temple University |collegeteam=Temple Owls |collegelink=Temple |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=224 |team=Green Bay Packers |first=Bob |last=Reinhard |playerpageexists=no |position=Guard |collegeyear=1969 |college=Stanford University |collegeteam=Stanford Indians |collegelink=Stanford |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=225 |team=Washington Redskins |first=Ralph |last=Sonntag |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Maryland, College Park |collegeteam=Maryland Terrapins |collegelink=Maryland |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=226 |team=Baltimore Colts |first=Barney |last=Harris |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Texas A&M University |collegeteam=Texas A&M Aggies |collegelink=Texas A&M |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=227 |team=Detroit Lions |first=Herman |last=Weaver |position=Punter |collegeyear=1969 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=228 |team=New York Jets |first=Eddie |last=Bell | dab=Eddie Bell (wide receiver) |position=Wide receiver |collegeyear=1969 |college=Idaho State University |collegeteam=Idaho State Bengals |collegelink=Idaho State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=229 |team=Cleveland Browns |first=Geoff |last=Brown |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=University of Pittsburgh |collegeteam=Pittsburgh Panthers |collegelink=Pittsburgh |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=230 |team=Los Angeles Rams |first=David |last=Graham |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=New Mexico Highlands University |collegeteam=New Mexico Highlands Cowboys |collegelink=New Mexico Highlands |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=231 |team=Dallas Cowboys |first=Zenon |last=Andrusyshyn |position=Kicker |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=232 |team=Oakland Raiders |first=Ike |last=Hill |position=Defensive back |collegeyear=1969 |college=Catawba College |collegeteam=Catawba Indians |collegelink=Catawba |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=233 |team=Minnesota Vikings |first=George |last=Morrow |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=University of Mississippi |collegeteam=Ole Miss Rebels |collegelink=Ole Miss |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=9 |picknum=234 |team=Kansas City Chiefs |first=Charley |last=Evans |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Texas Tech University |collegeteam=Texas Tech Red Raiders |collegelink=Texas Tech |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=235 |firstpickinround=yes |team=Chicago Bears |first=Glen |last=Holloway |position=Guard |collegeyear=1969 |college=North Texas State University |collegeteam=North Texas State Mean Green |collegelink=North Texas State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=236 |team=Pittsburgh Steelers |first=Isaiah |last=Brown |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Stanford University |collegeteam=Stanford Indians |collegelink=Stanford |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=237 |team=Miami Dolphins |first=Dick |last=Nittenger |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Tampa | collegeteam=Tampa Spartans | collegelink=Tampa |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=238 |team=Buffalo Bills |first=Willie |last=Dixon |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Albany State University |collegeteam=Albany State Golden Rams |collegelink=Albany State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=239 |team=Boston Patriots |first=Henry |last=Brown | dab=Henry Brown (American football) |position=Kicker |collegeyear=1969 |college=University of Missouri |collegeteam=Missouri Tigers |collegelink=Missouri |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=240 |team=Philadelphia Eagles |first=Steve |last=Jaggard |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Memphis |collegeteam=Memphis State Tigers |collegelink=Memphis State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=241 |team=Cincinnati Bengals |first=Nick |last=Roman |position=Linebacker |collegeyear=1969 |college=Ohio State University |collegeteam=Ohio State Buckeyes |collegelink=Ohio State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=242 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Tony |last=Plummer |position=Safety |collegeyear=1969 |college=University of the Pacific (United States) |collegeteam=Pacific Tigers |collegelink=Pacific |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=243 |team=San Francisco 49ers |first=Larry |last=Schreiber |position=Running back |collegeyear=1969 |college=Tennessee Tech University |collegeteam=Tennessee Tech Golden Eagles |collegelink=Tennessee Tech |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=244 |team=New Orleans Saints |first=Jim |last=Brumfield |position=Running back |collegeyear=1969 |college=Indiana State University |collegeteam=Indiana State Sycamores |collegelink=Indiana State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=245 |team=New York Giants |first=Matt |last=Fortier |playerpageexists=no |position=Defensive end |collegeyear=1969 |college=Fairmont State University |collegeteam=Fairmont State Fighting Falcons |collegelink=Fairmont State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=246 |team=Atlanta Falcons |first=Jim |last=Hatcher |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=247 |team=Denver Broncos |first=Maurice |last=Fullerton |playerpageexists=no |position=Defensive tackle |collegeyear=1969 |college=Tuskegee University |collegeteam=Tuskegee Golden Tigers |collegelink=Tuskegee |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=248 |team=Green Bay Packers |first=Russ |last=Melby |position=Defensive tackle |collegeyear=1969 |college=Weber State University |collegeteam=Weber State Wildcats |collegelink=Weber State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=249 |team=Houston Oilers |first=Joe |last=Dawkins |position=Running back |collegeyear=1969 |college=University of Wisconsin |collegeteam=Wisconsin Badgers |collegelink=Wisconsin |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=250 |team=San Diego Chargers |first=Mac |last=Steen |position=Guard |collegeyear=1969 |college=University of Florida |collegeteam=Florida Gators |collegelink=Florida |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=251 |team=Green Bay Packers |first=Frank |last=Patrick | dab=Frank Patrick (quarterback) |position=Tight end |collegeyear=1969 |college=University of Nebraska |collegeteam=Nebraska Cornhuskers |collegelink=Nebraska |cfb page exists=yes |note=from Washington }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=252 |team=Baltimore Colts |first=Dick |last=Palmer | dab=Dick Palmer (American football) |position=Linebacker |collegeyear=1969 |college=University of Kentucky |collegeteam=Kentucky Wildcats |collegelink=Kentucky |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=253 |team=Detroit Lions |first=Bruce |last=Maxwell |position=Running back |collegeyear=1969 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |playerpageexists=no |note= |cfb page exists=yes}}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=254 |team=New York Jets |first=Cleve |last=Dickerson |playerpageexists=no |position=Running back |collegeyear=1969 |college=Miami University |collegeteam=Miami Redskins |collegelink=Miami (OH) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=255 |team=Cleveland Browns |first=Bill |last=Yanchar |position=Defensive tackle |collegeyear=1969 |college=Purdue University |collegeteam=Purdue Boilermakers |collegelink=Purdue |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=256 |team=Los Angeles Rams |first=Vince |last=Opalsky |playerpageexists=no |position=Running back |collegeyear=1969 |college=University of Miami |collegeteam=Miami Hurricanes |collegelink=Miami (FL) |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=257 |team=Dallas Cowboys |first=Pete |last=Athas |position=Safety |collegeyear=1969 |college=University of Tennessee |collegeteam=Tennessee Volunteers |collegelink=Tennessee |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=258 |team=Oakland Raiders |first=Gordon |last=Bosserman |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of California, Los Angeles |collegeteam=UCLA Bruins |collegelink=UCLA |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=259 |team=Minnesota Vikings |first=Stu |last=Voigt |position=Tight end |collegeyear=1969 |college=University of Wisconsin |collegeteam=Wisconsin Badgers |collegelink=Wisconsin |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=10 |picknum=260 |team=Kansas City Chiefs |first=Bob |last=Stankovich |playerpageexists=no |position=Guard |collegeyear=1969 |college=University of Arkansas |collegeteam=Arkansas Razorbacks |collegelink=Arkansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=261 |firstpickinround=yes |team=Pittsburgh Steelers |first=Calvin |last=Hunt | dab=Calvin Hunt (American football) |position=Center |collegeyear=1969 |college=Baylor University |collegeteam=Baylor Bears |collegelink=Baylor |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=262 |team=Chicago Bears |first=Ted |last=Rose |playerpageexists=no |position=Tight end |collegeyear=1969 |college=Northern Michigan University |collegeteam=Northern Michigan Wildcats |collegelink=Northern Michigan |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=263 |team=Miami Dolphins |first=Brownie |last=Wheless |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Rice University |collegeteam=Rice Owls |collegelink=Rice |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=264 |team=Boston Patriots |first=Dennis |last=Bramlett |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=University of Texas at El Paso |collegeteam=UTEP Miners |collegelink=UTEP |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=265 |team=Buffalo Bills |first=Terry |last=Williams |playerpageexists=no |position=Running back |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=266 |team=Cincinnati Bengals |first=Samuel |last=Wallace |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=267 |team=St. Louis Cardinals | teamdab=St. Louis Cardinals (NFL) |first=Mike |last=Siwek |position=Defensive tackle |collegeyear=1969 |college=Western Michigan University |collegeteam=Western Michigan Broncos |collegelink=Western Michigan |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=268 |team=Philadelphia Eagles |first=Bill |last=Walik |position=Defensive back |collegeyear=1969 |college=Villanova University |collegeteam=Villanova Wildcats |collegelink=Villanova |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=269 |team=San Francisco 49ers |first=Danny |last=Crockett |playerpageexists=no |position=Wide receiver |collegeyear=1969 |college=University of Toledo |collegeteam=Toledo Rockets |collegelink=Toledo |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=270 |team=New Orleans Saints |first=Gary |last=Klahr |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=University of Arizona |collegeteam=Arizona Wildcats |collegelink=Arizona |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=271 |team=Denver Broncos |first=Cleve |last=Bryant |position=Defensive back |collegeyear=1969 |college=Ohio University |collegeteam=Ohio Bobcats |collegelink=Ohio |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=272 |team=Atlanta Falcons |first=Mike |last=Brunson |position=Running back |collegeyear=1969 |college=Arizona State University |collegeteam=Arizona State Sun Devils |collegelink=Arizona State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=273 |team=New York Giants |first=Alan |last=Pitcaithley |playerpageexists=no |position=Running back |collegeyear=1969 |college=University of Oregon |collegeteam=Oregon Ducks |collegelink=Oregon |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=274 |team=Houston Oilers |first=Robert |last=Morris |playerpageexists=no |position=Center |collegeyear=1969 |college=Duke University |collegeteam=Duke Blue Devils |collegelink=Duke |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=275 |team=San Diego Chargers |first=Jack |last=Protz |position=Linebacker |collegeyear=1969 |college=Syracuse University | collegeteam=Syracuse Orangemen | collegelink=Syracuse |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=276 |team=Green Bay Packers |first=Dan |last=Hook |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=Humboldt State University |collegeteam=Humboldt State Lumberjacks |collegelink=Humboldt State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=277 |team=Washington Redskins |first=Mack |last=Alston |position=Tight end |collegeyear=1969 |college=University of Maryland Eastern Shore |collegeteam=Maryland State Hawks |collegelink=Maryland State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=278 |team=Baltimore Colts |first=George |last=Edwards |playerpageexists=no |position=Running back |collegeyear=1969 |college=Fairmont State University |collegeteam=Fairmont State Fighting Falcons |collegelink=Fairmont State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=279 |team=Detroit Lions |first=Roger |last=Laird |playerpageexists=no |position=Defensive back |collegeyear=1969 |college=Kentucky State University |collegeteam=Kentucky State Thorobreds |collegelink=Kentucky State |cfb page exists=no |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=280 |team=New York Jets |first=Earlie |last=Thomas |position=Cornerback |collegeyear=1969 |college=Colorado State University |collegeteam=Colorado State Rams |collegelink=Colorado State |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=281 |team=Cleveland Browns |first=Gene |last=Benner |playerpageexists=no |position=Wide receiver |collegeyear=1969 |college=University of Maine |collegeteam=Maine Black Bears |collegelink=Maine |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=282 |team=Los Angeles Rams |first=David |last=Bookert |playerpageexists=no |position=Running back |collegeyear=1969 |college=University of New Mexico |collegeteam=New Mexico Lobos |collegelink=New Mexico |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=283 |team=Dallas Cowboys |first=Ivan |last=Southerland |playerpageexists=no |position=Offensive tackle |collegeyear=1969 |college=Clemson University |collegeteam=Clemson Tigers |collegelink=Clemson |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=284 |team=Oakland Raiders |first=Emery |last=Hicks |playerpageexists=no |position=Linebacker |collegeyear=1969 |college=University of Kansas |collegeteam=Kansas Jayhawks |collegelink=Kansas |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=285 |team=Kansas City Chiefs |first=Bill |last=O'Neal |playerpageexists=no |position=Running back |collegeyear=1969 |college=Grambling State University |collegeteam=Grambling Tigers |collegelink=Grambling |cfb page exists=yes |note= }}
+{{NFLDraft-row |draftyear=1970 |numberofrounds=17 |round=11 |picknum=286 |team=Minnesota Vikings |first=Godfrey |last=Zaunbrecher |position=Center |collegeyear=1969 |college=Louisiana State University |collegeteam=LSU Tigers |collegelink=LSU |cfb page exists=yes |note= }}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=287|firstpickinround=yes |team=Chicago Bears|first=Butch|last=Davis|playerpageexists=no|position=Defensive back|collegeyear=1969|college=University of Missouri|collegeteam=Missouri Tigers|collegelink=Missouri|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=288|team=Pittsburgh Steelers|first=Rick|last=Sharp|position=Defensive tackle|collegeyear=1969|college=University of Washington|collegeteam=Washington Huskies|collegelink=Washington|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=289|team=Miami Dolphins|first=Mike|last=Kolen|position=Linebacker|collegeyear=1969|college=Auburn University|collegeteam=Auburn Tigers|collegelink=Auburn|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=290|team=Buffalo Bills|first=Dave|last=Simpson|playerpageexists=no|position=Tackle|collegeyear=1969|college=Drake University|collegeteam=Drake Bulldogs|collegelink=Drake|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=291|team=Boston Patriots|first=Greg|last=Roero|playerpageexists=no|position=Defensive tackle|collegeyear=1969|college=New Mexico Highlands University|collegeteam=New Mexico Highlands Cowboys|collegelink=New Mexico Highlands|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=292|team=St. Louis Cardinals|teamdab=St. Louis Cardinals (NFL)|first=Charles|last=Collins|playerpageexists=no|position=Wide receiver|collegeyear=1969|college=Kansas State University|collegeteam=Kansas State Wildcats|collegelink=Kansas State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=293|team=Philadelphia Eagles|first=Robert|last=Jones|playerpageexists=no|position=Defensive tackle|collegeyear=1969|college=Grambling State University|collegeteam=Grambling Tigers|collegelink=Grambling|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=294|team=Cincinnati Bengals|first=Thomas|last=Truesdell|playerpageexists=no|position=Defensive end|collegeyear=1969|college=Ohio Wesleyan University|collegeteam=Ohio Wesleyan Battling Bishops|collegelink=Ohio Wesleyan|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=295|team=San Francisco 49ers|first=Bill|last=Tant|playerpageexists=no|position=Tackle|collegeyear=1969|college=University of Dayton|collegeteam=Dayton Flyers|collegelink=Dayton|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=296|team=New Orleans Saints|first=Willie|last=Davenport|position=Defensive back|collegeyear=1969|college=Southern University|collegeteam=Southern Jaguars|collegelink=Southern|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=297|team=Denver Broncos|first=Greg|last=Jones|playerpageexists=no|position=Running back|collegeyear=1969|college=University of Wisconsin–Whitewater|collegeteam=Whitewater State Warhawks|collegelink=Whitewater State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=298|team=New York Giants|first=Larry|last=Nels|playerpageexists=no|position=Linebacker|collegeyear=1969|college=University of Wyoming|collegeteam=Wyoming Cowboys|collegelink=Wyoming|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=299|team=Atlanta Falcons|first=Lonnie|last=Holton|playerpageexists=no|position=Running back|collegeyear=1969|college=Northern Michigan University|collegeteam=Northern Michigan Wildcats|collegelink=Northern Michigan|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=300|team=Houston Oilers|first=Richard|last=Dawkins|playerpageexists=no|position=Tight end|collegeyear=1969|college=Johnson C. Smith University|collegeteam=Johnson C. Smith Golden Bulls|collegelink=Johnson C. Smith|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=301|team=Green Bay Packers|first=Frank|last=Foreman|playerpageexists=no|position=Wide receiver|collegeyear=1969|college=Michigan State University|collegeteam=Michigan State Spartans|collegelink=Michigan State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=302|team=San Diego Chargers|first=Howard|last=Gravelle|playerpageexists=no|position=Tight end|collegeyear=1969|college=University of California, Davis|collegeteam=UC Davis Aggies|collegelink=UC Davis|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=303|team=Washington Redskins|first=James|last=Kates|playerpageexists=no|position=Linebacker|collegeyear=1969|college=Pennsylvania State University|collegeteam=Penn State Nittany Lions|collegelink=Penn State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=304|team=Baltimore Colts|first=Don|last=Burrell|playerpageexists=no|position=Wide receiver|collegeyear=1969|college=Angelo State University|collegeteam=Angelo State Rams|collegelink=Angelo State|cfb page exists=no|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=305|team=Detroit Lions|first=Emanuel|last=Murrell|playerpageexists=no|position=Defensive back|collegeyear=1969|college=California Polytechnic State University, San Luis Obispo|collegeteam=Cal Poly Mustangs|collegelink=Cal Poly|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=306|team=New York Jets|first=Bill|last=Pierson|playerpageexists=no|position=Center|collegeyear=1969|college=San Diego State University|collegeteam=San Diego State Aztecs|collegelink=San Diego State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=307|team=Cleveland Browns|first=Jerry Don|last=Sanders|position=Kicker|collegeyear=1969|college=Texas Tech University|collegeteam=Texas Tech Red Raiders|collegelink=Texas Tech|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=308|team=Los Angeles Rams|first=Larry|last=Arnold|playerpageexists=no|position=Quarterback|collegeyear=1969|college=University of Hawaii|collegeteam=Hawaii Rainbows|collegelink=Hawaii|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=309|team=Dallas Cowboys|first=Joe|last=Williams|dab=Joe Williams (running back, born 1947)|position=Running back|collegeyear=1969|college=University of Wyoming|collegeteam=Wyoming Cowboys|collegelink=Wyoming|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=310|team=Oakland Raiders|first=Gary|last=DeLoach|playerpageexists=no|position=Guard|collegeyear=1969|college=University of California, Davis|collegeteam=UC Davis Aggies|collegelink=UC Davis|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=311|team=Minnesota Vikings|first=James|last=Holland|playerpageexists=no|position=Defensive back|collegeyear=1969|college=Jackson State University|collegeteam=Jackson State Tigers|collegelink=Jackson State|cfb page exists=yes|note=}}
+{{NFLDraft-row|draftyear=1970|numberofrounds=17|round=12|picknum=312|team=Kansas City Chiefs|first=Rodney|last=Fedorchak|playerpageexists=no|position=Guard|collegeyear=1969|college=University of Pittsburgh|collegeteam=Pittsburgh Panthers|collegelink=Pittsburgh|cfb page exists=yes|note=}}
+{{NFLDraft-footer}}
+
+===Round 13===
+<!-- Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+<!-- PLEASE RESEARCH YOUR PLAYER WIKILINKS AND AVOID DISAMBIGUATION AND INCORRECT LINKS -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC" width=7%|Pick # !!width=40% style="background:#A8BDEC"|NFL team !!width=20% style="background:#A8BDEC"|Player !!width=13% style="background:#A8BDEC"|Position !!style="background:#A8BDEC"|College
+|-
+|align=center|313||Pittsburgh Steelers||Billy Main||Running back||Oregon State
+|-
+|align=center|314||Chicago Bears||[[Jimmy Gunn]]||Linebacker||USC
+|-
+|align=center|315||Miami Dolphins||Dave Buddington||Running back||Springfield (Mass.)
+|-
+|align=center|316||Boston Patriots||Ronnie Shelly||Defensive back||Troy State
+|-
+|align=center|317||Buffalo Bills||Steve Schroeder||Kicker||Pacific
+|-
+|align=center|318||Philadelphia Eagles||[[Dick Stevens|Richard Stevens]]||Offensive tackle||Baylor
+|-
+|align=center|319||Cincinnati Bengals||[[Paul Dunn (running back)|Paul Dunn]]||Wide receiver||U.S. International
+|-
+|align=center|320||St. Louis Cardinals||Jack Thomas||Guard||Mississippi State
+|-
+|align=center|321||San Francisco 49ers||Jim Vanderslice||Linebacker||Texas Christian
+|-
+|align=center|322||New Orleans Saints||Ralph Miller||Tight end||Alabama State
+|-
+|align=center|323||Denver Broncos||Jim McKoy||Defensive back||Parsons (Iowa)
+|-
+|align=center|324||Atlanta Falcons||Rich Stepanek||Defensive tackle||Iowa
+|-
+|align=center|325||New York Giants||[[Gary Inskeep]]||Tackle||[[Wisconsin–Stout Blue Devils football|Wisconsin–Stout]]
+|-
+|align=center|326||Houston Oilers||[[Jess Lewis]]||Linebacker||Oregon State
+|-
+|align=center|327||San Diego Chargers||Bernard Bradley||Defensive back||Utah State
+|-
+|align=center|328||Green Bay Packers||[[Dave Smith (running back)|Dave Smith]]||Running back||Utah
+|-
+|align=center|329||Washington Redskins||Joe Patterson||Tackle||Lawrence
+|-
+|align=center|330||Baltimore Colts||Dave Polak||Linebacker||Bowling Green
+|-
+|align=center|331||Detroit Lions||Dave Haverdick||Defensive tackle||Morehead State
+|-
+|align=center|332||New York Jets||Walter Groth||Defensive tackle||Baylor
+|-
+|align=center|333||Cleveland Browns||Larry Roberts||Running back||Central Missouri State
+|-
+|align=center|334||Los Angeles Rams||Melvin Jones||Wide receiver||Florida A&M
+|-
+|align=center|335||Dallas Cowboys||[[Mark Washington (cornerback)|Mark Washington]]||Cornerback||Morgan State
+|-
+|align=center|336||Oakland Raiders||[[Don Highsmith]]||Running back||Michigan State
+|-
+|align=center|337||Minnesota Vikings||Robert Pearce||Defensive back||Stephen F. Austin
+|-
+|align=center|338||Kansas City Chiefs||Troy Patridge||Defensive end||Texas-Arlington
+|}
+
+===Round 14===
+<!-- Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+<!-- PLEASE RESEARCH YOUR PLAYER WIKILINKS AND AVOID DISAMBIGUATION AND INCORRECT LINKS -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC" width=7%|Pick # !!width=40% style="background:#A8BDEC"|NFL team !!width=20% style="background:#A8BDEC"|Player !!width=13% style="background:#A8BDEC"|Position !!style="background:#A8BDEC"|College
+|-
+|align=center|339||Chicago Bears||Jim Morgan||Wide receiver||Henderson State
+|-
+|align=center|340||Pittsburgh Steelers||[[Bert Askson]]||Linebacker||Texas Southern
+|-
+|align=center|341||Miami Dolphins||Gary Brackett||Guard||Holy Cross
+|-
+|align=center|342||Buffalo Bills||William Costen||Tackle||Morris Brown
+|-
+|align=center|343||Boston Patriots||Garvie Craw||Running back||Michigan
+|-
+|align=center|344||Cincinnati Bengals||Joe Johnson||Wide receiver||Johnson C. Smith
+|-
+|align=center|345||St. Louis Cardinals||Ray Groth||Wide receiver||Utah
+|-
+|align=center|346||Philadelphia Eagles||bgcolor="#faecc8"|[[Mark Moseley]]||[[Placekicker|Kicker]]||[[Stephen F. Austin State University|Stephen F. Austin]]
+|-
+|align=center|347||San Francisco 49ers||Jack King||Guard||Clemson
+|-
+|align=center|348||New Orleans Saints||[[Doug Sutherland (American football)|Doug Sutherland]]||Defensive end||Wisconsin–Superior
+|-
+|align=center|349||Denver Broncos||Jeff Slipp||Linebacker||Brigham Young
+|-
+|align=center|350||New York Giants||[[Rodney Brand]]||Center||Arkansas
+|-
+|align=center|351||Atlanta Falcons||[[Charles F. Wald|Chuck Wald]]||Wide receiver||North Dakota State
+|-
+|align=center|352||Houston Oilers||Claire Rasmussen||Guard||Wisconsin–Oshkosh
+|-
+|align=center|353||Green Bay Packers||Bob Lints||Guard||Eastern Michigan
+|-
+|align=center|354||San Diego Chargers||[[Tyrone Caldwell]]||Defensive tackle||South Carolina State
+|-
+|align=center|355||Washington Redskins||Tony Moro||Running back||Dayton
+|-
+|align=center|356||Baltimore Colts||[[Tom Curtis (American football)|Tom Curtis]]||Defensive back||Michigan
+|-
+|align=center|357||Detroit Lions||[[Charlie Brown (wide receiver, born 1948)|Charlie Brown]]||Wide receiver||Northern Arizona
+|-
+|align=center|358||New York Jets||[[John Little (American football)|John Little]]||Linebacker||Oklahoma State
+|-
+|align=center|359||Cleveland Browns||Jim Tharpe||Linebacker||Lincoln (MO)
+|-
+|align=center|360||Los Angeles Rams||[[Bob Geddes]]||Linebacker||UCLA
+|-
+|align=center|361||Dallas Cowboys||Julian Martin||Wide receiver||North Carolina Central
+|-
+|align=center|362||Oakland Raiders||Don Riley||Kicker||Auburn
+|-
+|align=center|363||Minnesota Vikings||[[Tommy Spinks]]||Wide receiver||Louisiana Tech
+|-
+|align=center|364||Kansas City Chiefs||Glenn Dumont||Running back||American International
+|}
+
+===Round 15===
+<!-- Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+<!-- PLEASE RESEARCH YOUR PLAYER WIKILINKS AND AVOID DISAMBIGUATION AND INCORRECT LINKS -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC" width=7%|Pick # !!width=40% style="background:#A8BDEC"|NFL team !!width=20% style="background:#A8BDEC"|Player !!width=13% style="background:#A8BDEC"|Position !!style="background:#A8BDEC"|College
+|-
+|align=center|365||Pittsburgh Steelers||Glen Keppy||Defensive tackle||Wisconsin–Platteville
+|-
+|align=center|366||Chicago Bears||Phil Abraira||Defensive back||Florida State
+|-
+|align=center|367||Miami Dolphins||Pat Hauser||Wide receiver||East Tennessee State
+|-
+|align=center|368||Boston Patriots||[[Kent Schoolfield]]||Wide receiver||Florida A&M
+|-
+|align=center|369||Buffalo Bills||Dave Farris||Tight end||Central Michigan
+|-
+|align=center|370||St. Louis Cardinals||Ron Wilson||Wide receiver||Western Illinois
+|-
+|align=center|371||Philadelphia Eagles||[[John Carlos]]||Wide receiver||San Jose State
+|-
+|align=center|372||Cincinnati Bengals||Marvin Weeks||Defensive back||Alcorn A&M
+|-
+|align=center|373||San Francisco 49ers||Dave Delsignore||Wide receiver||Youngstown State
+|-
+|align=center|374||New Orleans Saints||Jim Vest||Defensive end||[[1969 Washington State Cougars football team|Washington State]]
+|-
+|align=center|375||Denver Broncos||Maher Barakat||Kicker||South Dakota Tech
+|-
+|align=center|376||Atlanta Falcons||Keith Mauney||Defensive back||Princeton
+|-
+|align=center|377||New York Giants||Warren Muir||Running back||South Carolina
+|-
+|align=center|378||Houston Oilers||David Sharp||Tackle||Stanford
+|-
+|align=center|379||San Diego Chargers||Eugene Childs||Running back||Texas-El Paso
+|-
+|align=center|380||Green Bay Packers||[[Mike Carter (American football)|Mike Carter]]||Wide receiver||Sacramento State
+|-
+|align=center|381||Washington Redskins||Vic Lewandowski||Center||Holy Cross
+|-
+|align=center|382||Baltimore Colts||Phillip Gary||Defensive end||Kentucky State
+|-
+|align=center|383||Detroit Lions||Bob Haney||Tackle||Idaho
+|-
+|align=center|384||New York Jets||[[Tom Bayless]]||Defensive tackle||Purdue
+|-
+|align=center|385||Cleveland Browns||Guy Homoly||Defensive back||Illinois State
+|-
+|align=center|386||Los Angeles Rams||Dag Azam||Guard||West Texas State
+|-
+|align=center|387||Dallas Cowboys||Ken DeLong||Tight end||Tennessee
+|-
+|align=center|388||Oakland Raiders||Fred Moore||Wide receiver||Washington State
+|-
+|align=center|389||Minnesota Vikings||Bennie Francis||Defensive end||Chadron St. (Neb.)
+|-
+|align=center|390||Kansas City Chiefs||[[Bob Liggett]]||Defensive tackle||Nebraska
+|}
+
+===Round 16===
+<!-- Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+<!-- PLEASE RESEARCH YOUR PLAYER WIKILINKS AND AVOID DISAMBIGUATION AND INCORRECT LINKS -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC" width=7%|Pick # !!width=40% style="background:#A8BDEC"|NFL team !!width=20% style="background:#A8BDEC"|Player !!width=13% style="background:#A8BDEC"|Position !!style="background:#A8BDEC"|College
+|-
+|align=center|391||Chicago Bears||Robert Helterbran||Guard||North Texas State
+|-
+|align=center|392||Pittsburgh Steelers||Frank Yanossy||Defensive tackle||Tennessee
+|-
+|align=center|393||Miami Dolphins||Charles Williams||Guard||Tennessee State
+|-
+|align=center|394||Buffalo Bills||Larry Davis||Wide receiver||Rice
+|-
+|align=center|395||Boston Patriots||Otis McDaniel||Defensive end||Tuskegee
+|-
+|align=center|396||Philadelphia Eagles||[[Tuufuli Uperesa]]||Tackle||Montana
+|-
+|align=center|397||Cincinnati Bengals||[[Larry Ely]]||Linebacker||Iowa
+|-
+|align=center|398||St. Louis Cardinals||Gary Fowler||Running back||California
+|-
+|align=center|399||San Francisco 49ers||Scott Perkins||Defensive back||Livingstone (N.C.)
+|-
+|align=center|400||New Orleans Saints||Cliff Gasper||Defensive tackle||Grambling
+|-
+|align=center|401||Denver Broncos||Bob Stewart||Quarterback||Northern Arizona
+|-
+|align=center|402||New York Giants||Vic Nolting||Defensive back||Xavier
+|-
+|align=center|403||Atlanta Falcons||Steve Parnell||Wide receiver||Massachusetts
+|-
+|align=center|404||Houston Oilers||Chris Myers||Wide receiver||Kenyon
+|-
+|align=center|405||Green Bay Packers||Jim Heacock||Defensive back||Muskingum
+|-
+|align=center|406||San Diego Chargers||Mike Green||Running back||Nebraska
+|-
+|align=center|407||Washington Redskins||Steve Bushore||Wide receiver||Emporia State
+|-
+|align=center|408||Baltimore Colts||[[Jack Maitland]]||Running back||Williams
+|-
+|align=center|409||Detroit Lions||Jerry Todd||Defensive back||Memphis State
+|-
+|align=center|410||New York Jets||Claude Herard||Defensive tackle||Mississippi
+|-
+|align=center|411||Cleveland Browns||John Redebaugh||Tight end||[[Bemidji State Beavers football|Bemidji State]]
+|-
+|align=center|412||Los Angeles Rams||Roland Reichardt||Kicker||West Texas State
+|-
+|align=center|413||Dallas Cowboys||Seabern Hill||Defensive back||Arizona State
+|-
+|align=center|414||Oakland Raiders||[[Tim Roth (Canadian football)|Tim Roth]]||Defensive back||South Dakota State
+|-
+|align=center|415||Minnesota Vikings||Bruce Cerone||Wide receiver||Emporia State
+|-
+|align=center|416||Kansas City Chiefs||Randy Ross||Linebacker||Kansas State
+|}
+
+===Round 17===
+<!-- Team names, player positions, and college names should only be linked the first time they appear in the entire page -->
+<!-- PLEASE RESEARCH YOUR PLAYER WIKILINKS AND AVOID DISAMBIGUATION AND INCORRECT LINKS -->
+{|class="wikitable sortable sortable" style="width: 100%"
+|-
+!style="background:#A8BDEC" width=7%|Pick # !!width=40% style="background:#A8BDEC"|NFL team !!width=20% style="background:#A8BDEC"|Player !!width=13% style="background:#A8BDEC"|Position !!style="background:#A8BDEC"|College
+|-
+|align=center|417||Pittsburgh Steelers||Harry Key||Tight end||Mississippi Valley State
+|-
+|align=center|418||Chicago Bears||Joe Brunson||Defensive tackle||Furman
+|-
+|align=center|419||Miami Dolphins||George Myles||Defensive tackle||Morris Brown
+|-
+|align=center|420||Boston Patriots||Joe Killingsworth||Wide receiver||Oklahoma
+|-
+|align=center|421||Buffalo Bills||[[George Bevan]]||Linebacker||LSU
+|-
+|align=center|422||Cincinnati Bengals||Richard Smith||Running back||Washington State
+|-
+|align=center|423||St. Louis Cardinals||Cliff Powell||Linebacker||Arkansas
+|-
+|align=center|424||Philadelphia Eagles||Mike Sizelove||Tight end||Idaho
+|-
+|align=center|425||San Francisco 49ers||Mike Culton||Punter||LaVerne
+|-
+|align=center|426||New Orleans Saints||Doug Wyatt||Defensive back||Tulsa
+|-
+|align=center|427||Denver Broncos||Frank Kalfoss||Kicker||Montana State
+|-
+|align=center|428||Atlanta Falcons||[[Bill Bell (American football)|Bill Bell]]||Kicker||Kansas
+|-
+|align=center|429||New York Giants||Walter Breaux||Defensive tackle||Grambling
+|-
+|align=center|430||Houston Oilers||[[Julian Fagan]]||Punter||Mississippi
+|-
+|align=center|431||San Diego Chargers||David Sanks||Guard||Louisville
+|-
+|align=center|432||Green Bay Packers||[[Larry Krause]]||Running back||St. Norbert
+|-
+|align=center|433||Washington Redskins||Earl Maxfield||Defensive tackle||Baylor
+|-
+|align=center|434||Baltimore Colts||Alvin Pearman||Wide receiver||Colgate
+|-
+|align=center|435||Detroit Lions||Jim Marshall||Defensive tackle||Centenary
+|-
+|align=center|436||New York Jets||Dick Beard||Running back||Kentucky
+|-
+|align=center|437||Cleveland Browns||Charles Tabb||Running back||McMurry
+|-
+|align=center|438||Los Angeles Rams||Don Crenshaw||Defensive back||USC
+|-
+|align=center|439||Dallas Cowboys||Glenn Patterson||Center||Nebraska
+|-
+|align=center|440||Oakland Raiders||Eric Stolberg||Wide receiver||Indiana
+|-
+|align=center|441||Minnesota Vikings||Brian Healy||Defensive back||Michigan
+|-
+|align=center|442||Kansas City Chiefs||Rayford Jenkins||Defensive back||Alcorn A&M
+|}
+
+==Notable undrafted players==
+{| border=0 cellspacing="0" cellpadding="8"
+|-
+|style="background-color:#faecc8;border:1px solid #aaaaaa;width:2em;text-align:center"| <sup>†</sup>
+| [[Pro Bowl]]er{{efn|name=ProBowl|Players are identified as a Pro Bowler if they were selected for the Pro Bowl at any time in their career.}}
+|style="background-color:#FFCC00;border:1px solid #aaaaaa;width:2em;text-align:center"| ‡
+| [[Pro Football Hall of Fame|Hall of Fame]]r{{efn|name=ProBowl}}
+|}
+
+{{NFLDraft-header | undrafted=yes }}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Atlanta Falcons | first=Sonny | last=Campbell | dab= | position=Running back | collegeyear=1969 | college=Northern Arizona University | collegeteam=Northern Arizona Lumberjacks | collegelink=Northern Arizona | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1970 | undrafted=yes | round= | picknum= | team=Atlanta Falcons | first=Mike | last=Lewis | dab=Mike Lewis (American football) | position=Defensive tackle | collegeyear=1969 | college=University of Arkansas at Pine Bluff | collegeteam=Arkansas–Pine Bluff Golden Lions | collegelink=Arkansas AM&N | probowl=no |note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Buffalo Bills | first=Al | last=Andrews | dab= | position=Linebacker | collegeyear=1969 | college=New Mexico State University | collegeteam=New Mexico State Aggies | collegelink=New Mexico State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Buffalo Bills | first=Tommy | last=Pharr | dab= | position=Defensive back | collegeyear=1969 | college=Mississippi State University | collegeteam=Mississippi State Bulldogs | collegelink=Mississippi State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1970 | undrafted=yes | round= | picknum= | team=Cincinnati Bengals | first=Jim | last=Del Gaizo | dab= | position=Quarterback | collegeyear=1969 | college=University of Tampa | collegeteam=Tampa Spartans | collegelink=Tampa | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Cincinnati Bengals | first=Doug | last=Dressler | dab= | position=Running back | collegeyear=1969 | college=California State University, Chico | collegeteam=Chico State Wildcats | collegelink=Chico State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1970 | undrafted=yes | round= | picknum= | team=Cincinnati Bengals | first=Mike | last=Kelly | dab=Mike Kelly (gridiron football, born 1948) | position=Tight end | collegeyear=1969 | college=Davidson College | collegeteam=Davidson Wildcats | collegelink=Davidson | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Cleveland Browns | first=Jim | last=Langer | dab= | position=Center | collegeyear=1969 | college=South Dakota State University | collegeteam=South Dakota State Jackrabbits | collegelink=South Dakota State | probowl=no |hof=yes| note=| cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Cliff | last=Harris | position=Safety |collegeyear=1969 |college=Ouachita Baptist University | collegeteam=Ouachita Baptist Tigers | collegelink=Ouachita Baptist | probowl=yes | hof=yes | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Ken | last=Johnson | dab=Ken Johnson (defensive end, born 1947) | position=Offensive tackle | collegeyear=1969 | college=Indiana University Bloomington | collegeteam=Indiana Hoosiers | collegelink=Indiana | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Dallas Cowboys | first=Doug | last=Mooers | position=Defensive end | collegeyear=1969 | college=Whittier College | collegeteam=Whittier Poets | collegelink=Whittier | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Houston Oilers | first=Claude | last=Harvey | dab= | position=Linebacker | collegeyear=1969 | college=Prairie View A&M University | collegeteam=Prairie View A&M Panthers | collegelink=Prairie View A&M | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Los Angeles Rams | first=Sam | last=Adams | dab=Sam Adams Sr. | position=Guard | collegeyear=1969 | college=Prairie View A&M University | collegeteam=Prairie View A&M Panthers | collegelink=Prairie View A&M | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Los Angeles Rams | first=Otis | last=Sistrunk | dab= | position=Defensive end | collegeyear=1969 | college=University of Mars | semipro= West Allis Racers | collegelink= | probowl=yes | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Los Angeles Rams | first=Creston | last=Whitaker | dab= | position=Wide receiver | collegeyear=1969 | college=University of North Texas | collegeteam=North Texas Mean Green | collegelink=North Texas | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Miami Dolphins | first=Doug | last=Swift | dab= | position=Linebacker | collegeyear=1969 | college=Amherst College | collegeteam=Amherst Mammoths | collegelink=Amherst | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=New England Patriots | first=Dan | last=Kecman | dab= | position=Linebacker | collegeyear=1969 | college=Maryland | collegeteam=Maryland Terrapins | collegelink=Maryland | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=New York Giants | first=Ed | last=Baker | dab=Ed Baker (quarterback) | position=Quarterback | collegeyear=1969 | college=Lafayette College | collegeteam=Lafayette Leopards | collegelink=Lafayette | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=New York Giants | first=Joe | last=Green | dab=Joe Green (American football) | position=Safety | collegeyear=1969 | college=Bowling Green State University | collegeteam=Bowling Green Falcons | collegelink=Bowling Green | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Oakland Raiders | first=Carl | last=Weathers | dab= | position=Linebacker | collegeyear=1969 | college=San Diego State University | collegeteam=San Diego State Aztecs | collegelink=San Diego State | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Philadelphia Eagles | first=Rick | last=Arrington | dab= | position=Quarterback | collegeyear=1969 | college=University of Tulsa | collegeteam=Tulsa Golden Hurricane | collegelink=Tulsa | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Philadelphia Eagles | first=Carl | last=Gersbach | dab= | position=Linebacker | collegeyear=1969 | college=West Chester University | collegeteam=West Chester State Golden Rams | collegelink=West Chester State | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Philadelphia Eagles | first=Jim | last=Thrower | dab= | position=Defensive back | collegeyear=1969 | college=Texas A&M University–Commerce | collegeteam=Texas A&M–Commerce Lions | collegelink=Texas A&M–Commerce | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | first=Dennis | last=Hughes | dab=Dennis Hughes (American football) | position=Tight end | collegeyear=1969 | college=University of Georgia | collegeteam=Georgia Bulldogs | collegelink=Georgia | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | first=Dave | last=Kalina | dab= | position=Wide receiver | collegeyear=1969 | college=University of Miami | collegeteam=Miami Hurricanes | collegelink=Miami (FL) | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | first=Bob | last=Leahy | dab=Bob Leahy (American football) | position=Quarterback | collegeyear=1969 | college=Emporia State University | collegeteam=Emporia State Hornets | collegelink=Emporia State | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Pittsburgh Steelers | first=Ron | last=McBride | dab=Ron McBride (running back) | position=Running back | collegeyear=1969 | college=University of Missouri | collegeteam=Missouri Tigers | collegelink=Missouri | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=San Diego Chargers | first=Harris | last=Jones | dab= | position=Guard | collegeyear=1969 | college=Johnson C. Smith University | collegeteam=Johnson C. Smith Golden Bulls | collegelink=Johnson C. Smith | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Washington Redskins | first=Terry | last=Hermeling | dab= | position=Offensive tackle | collegeyear=1969 | college=University of Nevada, Reno | collegeteam=Nevada Wolf Pack | collegelink=Nevada | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Washington Redskins | first=Jon | last=Jaqua | dab= | position=Safety | collegeyear=1969 | college=Lewis & Clark College | collegeteam=Lewis & Clark Pioneers | collegelink=Lewis & Clark | conference=[[Northwest Conference|PNWC]] | probowl=no | note= | cfb page exists=no}}
+
+{{NFLDraft-row | draftyear=1970 | undrafted=yes | round= | picknum= | team=Washington Redskins | first=Rusty | last=Tillman | dab= | position=Linebacker | collegeyear=1969 | college=Northern Arizona University | collegeteam=Northern Arizona Lumberjacks | collegelink=Northern Arizona | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-row| draftyear=1975 | undrafted=yes | round= | picknum= | team=Denver Broncos | first=Jack | last=Dolbin | position=Wide receiver | collegeyear=1974 | college=Wake Forest University | collegeteam=Wake Forest Demon Deacons | collegelink=Wake Forest | probowl=no | note= | cfb page exists=yes}}
+
+{{NFLDraft-footer}}
+
+==Hall of Famers==
+* [[Terry Bradshaw]], quarterback from Louisiana Tech, taken 1st round 1st overall by Pittsburgh Steelers
+:Inducted: Professional Football Hall of Fame class of 1989.<ref name="1980s hof note">{{cite web|title=Pro Football Hall of Fame |url=http://www.profootballhof.com/hof/years.html#1980s |access-date=October 7, 2008 |archive-url=https://web.archive.org/web/20080731024937/http://www.profootballhof.com/hof/years.html |archive-date=July 31, 2008 |url-status=dead }}</ref>
+* [[Mel Blount]], cornerback from Southern, taken 3rd round 53rd overall by Pittsburgh Steelers
+:Inducted: Professional Football Hall of Fame class of 1989.<ref name="1980s hof note" />
+* [[Jim Langer]], offensive lineman from South Dakota State, undrafted and signed by Miami Dolphins
+:Inducted: Professional Football Hall of Fame class of 1987.<ref name="1980s hof note" />
+* [[Cliff Harris]], safety from Ouachita Baptist College, undrafted and signed by Dallas Cowboys
+:Inducted: Professional Football Hall of Fame class of 2020.<ref>{{cite news |author=Clarence Hill Jr.|title=Former Dallas Cowboys safety Cliff Harris elected to Hall of Fame |url=https://www.star-telegram.com/sports/nfl/dallas-cowboys/article239306183.html|website=star-telegram.com |date=January 15, 2020 |access-date=May 22, 2021}}</ref>
+
+==Notes==
+{{notelist}}
+
+==References==
+{{reflist}}
+
+==External links==
+* [http://www.nfl.com/draft/history/fulldraft?season=1970 NFL.com – 1970 Draft] {{Webarchive|url=https://web.archive.org/web/20181108025748/http://www.nfl.com/draft/history/fulldraft?season=1970 |date=2018-11-08 }}
+* {{usurped|1=[https://web.archive.org/web/20080327013832/http://www.databasefootball.com/draft/draftyear.htm?yr=1970&lg=NFL databaseFootball.com – 1970 Draft]}}
+* [http://www.profootballhof.com/history/general/draft/1970.jsp Pro Football Hall of Fame]
+* [https://www.pro-football-reference.com/years/1970/draft.htm 1970 NFL Draft Listing] at [[Pro Football Reference]]
+
+{{NFL drafts}}
+{{1970 NFL season by team}}
+
+{{DEFAULTSORT:1970 Nfl Draft}}
+[[Category:NFL draft]]
+[[Category:1970 in American football|NFL Draft]]
+[[Category:1970 NFL season|Draft]]
+[[Category:1970 in sports in New York City|NFL Draft]]
+[[Category:January 1970 sports events in the United States|NFL Draft]]
+[[Category:American football in New York City]]
+[[Category:1970s in Manhattan]]
+[[Category:Sporting events in New York City]]
+[[Category:Sports in Manhattan]]
