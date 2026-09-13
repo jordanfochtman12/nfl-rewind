@@ -1,4 +1,12 @@
-import type { Coach, CoachRole, DefScheme, DynastySave, OffScheme, TeamId } from "./types.ts";
+import type {
+  Coach,
+  CoachRole,
+  DefScheme,
+  DynastySave,
+  GmResult,
+  OffScheme,
+  TeamId,
+} from "./types.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
 import { COORDINATORS_1966, LATER_COACHES, type CoachSeed } from "./data/coaches.ts";
 import { addNews } from "./news.ts";
@@ -140,6 +148,108 @@ export function draftStyleOf(id: TeamId): import("./types.ts").DraftStyle {
   return map[id] ?? "need";
 }
 
+export function availableCoaches(save: DynastySave, role?: CoachRole): Coach[] {
+  return Object.values(save.coaches).filter((c) => {
+    if (c.yearAvail > save.year + 1) return false;
+    if (c.teamId) {
+      const t = save.teams[c.teamId];
+      const sitting = t && (t.coachId === c.id || t.ocId === c.id || t.dcId === c.id);
+      if (sitting) return false;
+    }
+    if (role && c.role !== role && c.role !== "HC") return false;
+    return true;
+  });
+}
+
+export function fireCoach(save: DynastySave, teamId: TeamId, role: CoachRole): GmResult {
+  const t = save.teams[teamId];
+  if (!t) return { ok: false, reason: "No club." };
+  const id = role === "HC" ? t.coachId : role === "OC" ? t.ocId : t.dcId;
+  if (!id) return { ok: false, reason: "The chair is already empty." };
+  const c = save.coaches[id];
+  if (c) {
+    c.teamId = null;
+    c.yearsOnJob = 0;
+  }
+  if (role === "HC") t.coachId = null;
+  else if (role === "OC") t.ocId = null;
+  else t.dcId = null;
+  addNews(save, {
+    kind: "headline",
+    headline: `${displayName(save.year, teamId)} fire ${c?.name ?? "their coach"}`,
+    body: `${role} is vacant. The building is loud.`,
+    teamIds: [teamId],
+    playerIds: [],
+  });
+  save.carousel = save.carousel ?? [];
+  save.carousel.push({
+    year: save.year,
+    teamId,
+    fired: c?.name,
+    hired: "vacant",
+    role,
+    note: `${displayName(save.year, teamId)} fire ${c?.name ?? role}.`,
+  });
+  return { ok: true };
+}
+
+export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, role: CoachRole): GmResult {
+  const t = save.teams[teamId];
+  if (!t) return { ok: false, reason: "No club." };
+  let c = save.coaches[coachId];
+  if (!c) return { ok: false, reason: "That coach is not in the pool." };
+  if (c.teamId && c.teamId !== teamId) return { ok: false, reason: "He already has a job." };
+  const prevId = role === "HC" ? t.coachId : role === "OC" ? t.ocId : t.dcId;
+  if (prevId && prevId !== coachId) {
+    const prev = save.coaches[prevId];
+    if (prev) {
+      prev.teamId = null;
+      prev.yearsOnJob = 0;
+    }
+  }
+  c.role = role;
+  c.teamId = teamId;
+  c.yearsOnJob = 1;
+  if (role === "HC") {
+    t.coachId = c.id;
+    t.offScheme = c.offScheme;
+    t.defScheme = c.defScheme;
+  } else if (role === "OC") t.ocId = c.id;
+  else t.dcId = c.id;
+  addNews(save, {
+    kind: "headline",
+    headline: `${c.name} hired as ${role} in ${displayName(save.year, teamId)}`,
+    body: `${c.offScheme} / ${c.defScheme}. Offense ${c.offense}, defense ${c.defense}.`,
+    teamIds: [teamId],
+    playerIds: [],
+  });
+  save.carousel = save.carousel ?? [];
+  save.carousel.push({
+    year: save.year,
+    teamId,
+    hired: c.name,
+    role,
+    note: `${displayName(save.year, teamId)} hire ${c.name} (${role}).`,
+  });
+  return { ok: true };
+}
+
+export function setTeamScheme(
+  save: DynastySave,
+  teamId: TeamId,
+  patch: { offScheme?: OffScheme; defScheme?: DefScheme; draftStyle?: import("./types.ts").DraftStyle },
+): GmResult {
+  const t = save.teams[teamId];
+  if (!t) return { ok: false, reason: "No club." };
+  if (patch.offScheme) t.offScheme = patch.offScheme;
+  if (patch.defScheme) t.defScheme = patch.defScheme;
+  if (patch.draftStyle) t.draftStyle = patch.draftStyle;
+  const hc = t.coachId ? save.coaches[t.coachId] : undefined;
+  if (hc && patch.offScheme) hc.offScheme = patch.offScheme;
+  if (hc && patch.defScheme) hc.defScheme = patch.defScheme;
+  return { ok: true };
+}
+
 export function runCoachingCarousel(save: DynastySave): void {
   save.carousel = save.carousel ?? [];
   for (const id of activeTeamIds(save.year)) {
@@ -160,18 +270,22 @@ export function runCoachingCarousel(save: DynastySave): void {
         hc.teamId = null;
         hc.yearsOnJob = 0;
       }
-      const hired = hireHeadCoach(save, id);
+      const hired = autoHireHeadCoach(save, id);
       save.carousel.push({
         year: save.year,
         teamId: id,
         fired,
         hired: hired.name,
         role: "HC",
-        note: fired ? `${displayName(save.year, id)} fire ${fired}; hire ${hired.name}.` : `${displayName(save.year, id)} hire ${hired.name}.`,
+        note: fired
+          ? `${displayName(save.year, id)} fire ${fired}; hire ${hired.name}.`
+          : `${displayName(save.year, id)} hire ${hired.name}.`,
       });
       addNews(save, {
         kind: "headline",
-        headline: fired ? `${fired} out in ${displayName(save.year, id)}` : `${hired.name} takes over ${displayName(save.year, id)}`,
+        headline: fired
+          ? `${fired} out in ${displayName(save.year, id)}`
+          : `${hired.name} takes over ${displayName(save.year, id)}`,
         body: fired
           ? `After ${t.wins}-${t.losses}, the club turns the page. ${hired.name} (${hired.offScheme} / ${hired.defScheme}) is the new head coach.`
           : `${hired.name} is in.`,
@@ -182,7 +296,7 @@ export function runCoachingCarousel(save: DynastySave): void {
   }
 }
 
-function hireHeadCoach(save: DynastySave, teamId: TeamId): Coach {
+function autoHireHeadCoach(save: DynastySave, teamId: TeamId): Coach {
   const available = LATER_COACHES.filter((s) => s.yearAvail <= save.year + 1).filter((s) => {
     const existing = save.coaches[s.id];
     return !existing || !existing.teamId;
@@ -219,7 +333,6 @@ function hireHeadCoach(save: DynastySave, teamId: TeamId): Coach {
   return coach;
 }
 
-
 export function ensureStaff(save: DynastySave): void {
   for (const id of activeTeamIds(save.year)) {
     const t = save.teams[id];
@@ -237,5 +350,6 @@ export function ensureStaff(save: DynastySave): void {
       save.coaches[dc.id] = dc;
       t.dcId = dc.id;
     }
+    if (!t.coachId) autoHireHeadCoach(save, id);
   }
 }

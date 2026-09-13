@@ -1,4 +1,4 @@
-import type { DynastySave, NewsItem, Phase, TeamId } from "./types.ts";
+import type { DynastySave, NewsItem, Phase, TeamId, TxKind } from "./types.ts";
 
 export function addNews(
   save: DynastySave,
@@ -24,7 +24,7 @@ export function addNews(
 
 export function addTx(
   save: DynastySave,
-  kind: "draft" | "cut" | "sign" | "expansion" | "trade" | "retire",
+  kind: TxKind,
   playerId: string,
   from: string,
   to: string,

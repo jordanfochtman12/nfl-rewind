@@ -1,13 +1,15 @@
-import type { DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
-import { activeTeamIds } from "./teams.ts";
+import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
+import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
-import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf } from "./players.ts";
+import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth } from "./players.ts";
 import { eraCollege, jerseyFor } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { randInt } from "./rng.ts";
 import { kitBoost } from "./abilities.ts";
 import { addNews, addTx } from "./news.ts";
 import { winPct } from "./standings.ts";
+import { applyScout, visibleOvr } from "./scout.ts";
+import { salaryFor } from "./salary.ts";
 
 function roundsFor(year: number): number {
   if (year <= 1976) return 12;
@@ -15,8 +17,19 @@ function roundsFor(year: number): number {
   return 7;
 }
 
-export function draftOrder(save: DynastySave): TeamId[] {
-  const teams = activeTeamIds(save.year);
+export function sessionOf(save: DynastySave): DraftSession {
+  if (save.draftSession) return save.draftSession;
+  return save.year === 1966 ? "nfl" : "common";
+}
+
+export function sessionTeams(year: number, session: DraftSession): TeamId[] {
+  const all = activeTeamIds(year);
+  if (session === "nfl") return all.filter((t) => originalLeague(t) === "NFL");
+  if (session === "afl") return all.filter((t) => originalLeague(t) === "AFL");
+  return all;
+}
+
+export function standingOrder(save: DynastySave, teams: TeamId[]): TeamId[] {
   const bornThisYear = teams.filter((t) => {
     const born: Partial<Record<TeamId, number>> = {
       atl: 1966,
@@ -39,7 +52,7 @@ export function draftOrder(save: DynastySave): TeamId[] {
       const pa = winPct(save.teams[a]!);
       const pb = winPct(save.teams[b]!);
       if (pa !== pb) return pa - pb;
-      return (save.teams[a]!.pf - save.teams[a]!.pa) - (save.teams[b]!.pf - save.teams[b]!.pa);
+      return save.teams[a]!.pf - save.teams[a]!.pa - (save.teams[b]!.pf - save.teams[b]!.pa);
     });
   if (save.year === 1966 && teams.includes("atl")) {
     return ["atl", ...teams.filter((t) => t !== "atl")];
@@ -47,8 +60,90 @@ export function draftOrder(save: DynastySave): TeamId[] {
   return [...bornThisYear, ...rest];
 }
 
+export function allPicks(save: DynastySave): DraftPickAsset[] {
+  const out: DraftPickAsset[] = [];
+  for (const t of Object.values(save.teams)) {
+    for (const p of t.picks ?? []) out.push(p);
+  }
+  return out;
+}
+
+export function issuePicks(save: DynastySave, year: number, teamId: TeamId): void {
+  const t = save.teams[teamId];
+  if (!t) return;
+  t.picks = t.picks ?? [];
+  const rounds = roundsFor(year);
+  const existing = new Set(allPicks(save).map((p) => p.id));
+  for (let r = 1; r <= rounds; r++) {
+    const id = `${year}-r${r}-${teamId}`;
+    if (existing.has(id) || t.picks.some((p) => p.id === id)) continue;
+    t.picks.push({ id, year, round: r, orig: teamId, owner: teamId });
+  }
+}
+
+export function ensureSeasonPicks(save: DynastySave): void {
+  for (const id of activeTeamIds(save.year)) {
+    issuePicks(save, save.year, id);
+    issuePicks(save, save.year + 1, id);
+    issuePicks(save, save.year + 2, id);
+  }
+}
+
+export function findPick(save: DynastySave, year: number, round: number, orig: TeamId): DraftPickAsset | undefined {
+  for (const t of Object.values(save.teams)) {
+    const hit = (t.picks ?? []).find((p) => p.year === year && p.round === round && p.orig === orig && !p.used);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+export function transferPick(save: DynastySave, pickId: string, to: TeamId): boolean {
+  const dest = save.teams[to];
+  if (!dest) return false;
+  dest.picks = dest.picks ?? [];
+  for (const t of Object.values(save.teams)) {
+    const i = (t.picks ?? []).findIndex((p) => p.id === pickId && !p.used);
+    if (i < 0) continue;
+    const [asset] = t.picks.splice(i, 1);
+    if (!asset) return false;
+    asset.owner = to;
+    dest.picks.push(asset);
+    return true;
+  }
+  return false;
+}
+
+export function pickValue(save: DynastySave, pickId: string): number {
+  const asset = allPicks(save).find((p) => p.id === pickId);
+  if (!asset) return 0;
+  const roundVal = [0, 38, 22, 14, 9, 6, 4, 3, 2, 1.5, 1.2, 1, 0.8][asset.round] ?? 0.6;
+  const yearTax = asset.year > save.year ? 0.82 : 1;
+  return roundVal * yearTax * 2.2;
+}
+
+export function draftQueue(save: DynastySave): DraftPickAsset[] {
+  ensureSeasonPicks(save);
+  const session = sessionOf(save);
+  const teams = sessionTeams(save.year, session);
+  const order = standingOrder(save, teams);
+  const rounds = roundsFor(save.year);
+  const q: DraftPickAsset[] = [];
+  for (let r = 1; r <= rounds; r++) {
+    for (const orig of order) {
+      const asset = findPick(save, save.year, r, orig);
+      if (asset) q.push(asset);
+    }
+  }
+  return q;
+}
+
+/** Team order for the current session (round 1 orig clubs). Used by UI. */
+export function draftOrder(save: DynastySave): TeamId[] {
+  return standingOrder(save, sessionTeams(save.year, sessionOf(save)));
+}
+
 function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
-  return makePlayer(save, {
+  const p = makePlayer(save, {
     firstName: s.f,
     lastName: s.l,
     pos: s.p,
@@ -66,12 +161,15 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
     forty: s.fy,
     rt: s.rt,
   });
+  return p;
 }
 
 export function buildDraftBoard(save: DynastySave): void {
-  const teams = activeTeamIds(save.year);
-  const rounds = roundsFor(save.year);
-  const total = teams.length * rounds;
+  const session = sessionOf(save);
+  save.draftSession = session;
+  ensureSeasonPicks(save);
+  const queue = draftQueue(save);
+  const total = queue.length;
   const named = draftSeedsFor(save.year);
   const used = new Set<string>();
   for (const pl of Object.values(save.players)) {
@@ -85,19 +183,41 @@ export function buildDraftBoard(save: DynastySave): void {
     if (used.has(key)) continue;
     used.add(key);
     const p = seedToPlayer(save, s, s.r ?? 1);
-    board.push({ playerId: p.id, slot, taken: false });
+    board.push({ playerId: p.id, slot, taken: false, league: session });
     slot += 1;
   }
-  const posCycle: Pos[] = ["QB", "RB", "WR", "TE", "LT", "DE", "DT", "OLB", "MLB", "CB", "S", "G" as Pos];
-  const realPos: Pos[] = ["QB", "RB", "WR", "TE", "LT", "LG", "C", "RG", "RT", "DE", "DT", "OLB", "MLB", "CB", "S", "K", "P", "FB"];
+  const realPos: Pos[] = [
+    "QB",
+    "RB",
+    "WR",
+    "TE",
+    "LT",
+    "LG",
+    "C",
+    "RG",
+    "RT",
+    "DE",
+    "DT",
+    "OLB",
+    "MLB",
+    "CB",
+    "S",
+    "K",
+    "P",
+    "FB",
+  ];
+  const teamsN = Math.max(1, sessionTeams(save.year, session).length);
   while (board.length < total) {
     const pos = realPos[board.length % realPos.length]!;
-    void posCycle;
-    const ovr = 78 - Math.floor(board.length / teams.length) * 3 - randInt(save, 0, 8);
+    const roundGuess = Math.floor(board.length / teamsN) + 1;
+    const ovr = 78 - Math.floor(board.length / teamsN) * 3 - randInt(save, 0, 8);
     const p = generatePlayer(save, pos, "fa", Math.max(48, ovr), randInt(save, 21, 23));
     p.draftYear = save.year;
+    p.draftRound = roundGuess;
     p.historical = false;
-    board.push({ playerId: p.id, slot, taken: false });
+    p.yearsPro = 0;
+    applyScout(save, p);
+    board.push({ playerId: p.id, slot, taken: false, league: session });
     slot += 1;
   }
   save.draftBoard = board;
@@ -107,29 +227,34 @@ export function buildDraftBoard(save: DynastySave): void {
 function needScore(save: DynastySave, teamId: TeamId, pos: Pos): number {
   const have = rosterOf(save, teamId).filter((p) => p.pos === pos);
   const best = have[0]?.ovr ?? 40;
-  return (80 - best) + Math.max(0, 2 - have.length) * 8;
+  return 80 - best + Math.max(0, 2 - have.length) * 8;
 }
 
 export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | undefined {
   const open = save.draftBoard.filter((p) => !p.taken);
   if (!open.length) return undefined;
   const style = save.teams[teamId]?.draftStyle ?? "need";
-  const qb = rosterOf(save, teamId).filter((p) => p.pos === "QB").sort((a, b) => b.ovr - a.ovr)[0];
+  const qb = rosterOf(save, teamId)
+    .filter((p) => p.pos === "QB")
+    .sort((a, b) => b.ovr - a.ovr)[0];
   let best = open[0]!;
   let bestScore = -1;
   const window = style === "bpa" ? 12 : 28;
   for (const pr of open.slice(0, window)) {
     const pl = save.players[pr.playerId];
     if (!pl) continue;
+    const grade = visibleOvr(pl);
     const need = needScore(save, teamId, pl.pos);
-    let score = pl.ovr + need * (style === "need" ? 0.72 : 0.28);
-    if (style === "speed") score += (pl.ratings.speed - 70) * 0.22;
+    let score = grade + need * (style === "need" ? 0.72 : 0.28);
+    if (style === "speed") score += ((pl.revealed ? pl.ratings.speed : grade) - 70) * 0.22;
     if (style === "trench" && ["LT", "LG", "C", "RG", "RT", "DE", "DT"].includes(pl.pos)) score += 8;
     if (style === "defense" && ["DE", "DT", "OLB", "MLB", "CB", "S"].includes(pl.pos)) score += 7;
     if (style === "qb" && pl.pos === "QB" && (qb?.ovr ?? 50) < 80) score += 14;
-    if (style === "bpa") score = pl.ovr * 1.15 + need * 0.12;
-    score += kitBoost(pl, "offPass") + kitBoost(pl, "offRun") + kitBoost(pl, "defPass") + kitBoost(pl, "defRun");
-    score += (pl.abilities?.length ?? 0) * 0.35 + (pl.traits?.length ?? 0) * 0.25;
+    if (style === "bpa") score = grade * 1.15 + need * 0.12;
+    if (pl.revealed) {
+      score += kitBoost(pl, "offPass") + kitBoost(pl, "offRun") + kitBoost(pl, "defPass") + kitBoost(pl, "defRun");
+      score += (pl.abilities?.length ?? 0) * 0.35 + (pl.traits?.length ?? 0) * 0.25;
+    }
     if (score > bestScore) {
       bestScore = score;
       best = pr;
@@ -138,30 +263,41 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
   return best;
 }
 
+export function currentDraftTeam(save: DynastySave): TeamId | undefined {
+  const queue = draftQueue(save);
+  if (save.draftPickIndex >= queue.length) return undefined;
+  return queue[save.draftPickIndex]?.owner;
+}
+
 export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
-  const order = draftOrder(save);
-  const total = save.draftBoard.length;
+  const queue = draftQueue(save);
+  const total = Math.min(save.draftBoard.length, queue.length);
   if (save.draftPickIndex >= total) return false;
-  const teamId = order[save.draftPickIndex % order.length]!;
-  const round = Math.floor(save.draftPickIndex / order.length) + 1;
+  const slot = queue[save.draftPickIndex]!;
+  const teamId = slot.owner;
+  const round = slot.round;
   let prospect = playerId ? save.draftBoard.find((p) => p.playerId === playerId && !p.taken) : undefined;
   if (!prospect) prospect = bestAvailable(save, teamId);
   if (!prospect) return false;
   prospect.taken = true;
   prospect.takenBy = teamId;
+  slot.used = true;
   const p = save.players[prospect.playerId];
   if (p) {
     p.draftYear = save.year;
     p.draftRound = round;
     p.draftPick = save.draftPickIndex + 1;
     p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
+    p.salary = salaryFor(save.year, p.ovr, p.age);
+    p.contractYears = round <= 2 ? 4 : round <= 4 ? 3 : 2;
     addToRoster(save, teamId, p.id);
+    syncDepth(save, teamId);
     addTx(save, "draft", p.id, "draft", teamId, `Round ${round} pick ${save.draftPickIndex + 1}`);
     if (round <= 2) {
       addNews(save, {
         kind: "transaction",
         headline: `${teamId.toUpperCase()} selects ${playerName(p)}`,
-        body: `Round ${round}: ${p.pos}, ${p.college ?? "campus"}.`,
+        body: `Round ${round}: ${p.pos}, ${p.college ?? "campus"}. Scout grade ${visibleOvr(p)}.`,
         teamIds: [teamId],
         playerIds: [p.id],
       });
@@ -171,22 +307,43 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
   return save.draftPickIndex < total;
 }
 
+export function maybeStartAflDraft(save: DynastySave): boolean {
+  if (save.year !== 1966) return false;
+  if (sessionOf(save) !== "nfl") return false;
+  const queue = draftQueue(save);
+  if (save.draftPickIndex < Math.min(save.draftBoard.length, queue.length) && currentDraftTeam(save)) return false;
+  save.draftSession = "afl";
+  buildDraftBoard(save);
+  save.draftPickIndex = 0;
+  return true;
+}
+
 export function autoDraftRest(save: DynastySave): void {
-  while (makeDraftPick(save)) {
-    /* cpu */
+  for (let guard = 0; guard < 1200; guard++) {
+    if (makeDraftPick(save)) continue;
+    if (maybeStartAflDraft(save)) continue;
+    break;
   }
 }
 
 export function simUntilUserPick(save: DynastySave): void {
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i < 800; i++) {
     const team = currentDraftTeam(save);
-    if (!team || team === save.userTeamId) return;
-    if (!makeDraftPick(save)) return;
+    if (!team) {
+      if (maybeStartAflDraft(save)) continue;
+      return;
+    }
+    if (team === save.userTeamId) return;
+    if (!makeDraftPick(save)) {
+      if (maybeStartAflDraft(save)) continue;
+      return;
+    }
   }
 }
 
-export function currentDraftTeam(save: DynastySave): TeamId | undefined {
-  const order = draftOrder(save);
-  if (save.draftPickIndex >= save.draftBoard.length) return undefined;
-  return order[save.draftPickIndex % order.length];
+export function sessionLabel(save: DynastySave): string {
+  const s = sessionOf(save);
+  if (s === "nfl") return "NFL Draft";
+  if (s === "afl") return "AFL Draft";
+  return "Common Draft";
 }

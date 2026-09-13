@@ -2,12 +2,18 @@ import { useMemo, useRef, useState } from "react";
 import {
   ACTIVE_1966,
   activeTeamIds,
+  availableCoaches,
+  cutPlayer,
   depthChart,
+  deskFire,
+  deskHire,
+  deskScheme,
   displayName,
   formatMoney,
   gamesForTeam,
   hasSeasonWork,
   locationOf,
+  moveDepth,
   nicknameOf,
   originalLeague,
   rosterOf,
@@ -17,11 +23,13 @@ import {
   teamColors,
   teamPayroll,
   logoSrc,
+  visibleOvr,
   type Player,
   type Pos,
   type TeamId,
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
+import { MarketDesk } from "./MarketDesk";
 import { proBowlSite, roman, superBowlNumber, seasonLeaders } from "@/lib/game";
 import { PrimetimeShow } from "./PrimetimeShow";
 import { DraftNight } from "./DraftNight";
@@ -174,7 +182,7 @@ function PhaseAction() {
   if (!save) return null;
   const label: Record<string, string> = {
     draft: "Stay on the clock / auto rest",
-    freeAgency: "Run free agency",
+    freeAgency: "Close free agency",
     expansion: "Complete expansion",
     preseason: "Kick off the regular season",
     regular: "Sim this Sunday",
@@ -185,8 +193,13 @@ function PhaseAction() {
     retirement: "Continue",
     hof: "Next season",
   };
+  const onClick = () => {
+    if (save.phase === "draft") step({ auto: false });
+    else if (save.phase === "freeAgency") step({ closeFa: true });
+    else step({ auto: true });
+  };
   return (
-    <Btn kind="primary" onClick={() => step({ auto: save.phase !== "draft" })}>
+    <Btn kind="primary" onClick={onClick}>
       {label[save.phase] ?? "Continue"}
     </Btn>
   );
@@ -216,6 +229,14 @@ function Office() {
         <PhaseAction />
       </div>
       <InjuryReport />
+      {save.phase === "freeAgency" && (
+        <section className="rounded-xl border border-brass/40 bg-surface p-4">
+          <p className="text-xs tracking-[0.25em] text-brass">FREE AGENCY</p>
+          <p className="mt-1 text-sm text-muted">
+            The market is open. Sign veterans on the Market tab, then close free agency from the office.
+          </p>
+        </section>
+      )}
       <PrimetimeShow />
     </div>
   );
@@ -249,15 +270,19 @@ function InjuryReport() {
 
 function Roster() {
   const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const lastDeskNote = useGameStore((s) => s.lastDeskNote);
   const rows = rosterOf(save, save.userTeamId)
     .slice()
-    .sort((a, b) => b.ovr - a.ovr);
+    .sort((a, b) => visibleOvr(b) - visibleOvr(a));
   return (
-    <div className="overflow-x-auto rounded-xl border border-line">
-      <table className="w-full min-w-[860px] text-left text-sm">
+    <div className="space-y-3">
+      {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
+      <div className="overflow-x-auto rounded-xl border border-line">
+      <table className="w-full min-w-[960px] text-left text-sm">
         <thead className="bg-surface-2 text-xs tracking-wider text-muted">
           <tr>
-            {["#", "Player", "Pos", "College", "OVR", "Age", "Kit", "Sal", "Status"].map((h) => (
+            {["#", "Player", "Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Status", ""].map((h) => (
               <th key={h} className="px-3 py-2 font-medium">
                 {h}
               </th>
@@ -274,8 +299,11 @@ function Roster() {
               </td>
               <td className="px-3 py-2">{p.pos}</td>
               <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
-              <td className="tabular px-3 py-2">{p.ovr}</td>
+              <td className="tabular px-3 py-2">
+                {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
+              </td>
               <td className="tabular px-3 py-2">{p.age}</td>
+              <td className="tabular px-3 py-2 text-muted">{p.contractYears}</td>
               <td className="px-3 py-2">
                 <KitChips player={p} compact />
               </td>
@@ -289,19 +317,38 @@ function Roster() {
                   <span className="text-accent">active</span>
                 )}
               </td>
+              <td className="px-3 py-2">
+                <Btn
+                  kind="brick"
+                  className="min-h-9 px-3 text-xs"
+                  onClick={() =>
+                    desk((s) => {
+                      const r = cutPlayer(s, s.userTeamId, p.id);
+                      return r.ok ? `Cut ${p.firstName} ${p.lastName}.` : r.reason;
+                    })
+                  }
+                >
+                  Cut
+                </Btn>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
 
 function Depth() {
   const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
   const groups = depthChart(save, save.userTeamId);
   return (
     <div className="space-y-8">
+      <p className="text-sm text-muted">
+        This order is what Sunday uses. Injured players skip. Move names up and down — the next man is actually next.
+      </p>
       <DepthField />
       {groups.map((g) => (
         <section key={g.label}>
@@ -312,7 +359,7 @@ function Depth() {
                 <p className="text-xs tracking-widest text-muted">{row.pos}</p>
                 <ol className="mt-1 space-y-1">
                   {row.players.map((p, i) => (
-                    <li key={p.id} className="flex justify-between gap-2 text-sm">
+                    <li key={p.id} className="flex items-center justify-between gap-2 text-sm">
                       <span className="min-w-0">
                         {i + 1}. <PlayerLink player={p} className="inline min-h-0" />
                         {p.injuredWeeks > 0 ? <span className="ml-2 text-brick">out</span> : null}
@@ -321,7 +368,25 @@ function Depth() {
                           <KitChips player={p} compact />
                         </span>
                       </span>
-                      <span className="tabular text-muted">{p.ovr}</span>
+                      <span className="flex items-center gap-1">
+                        <span className="tabular text-muted">{p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}</span>
+                        <button
+                          type="button"
+                          className="min-h-11 min-w-11 text-muted hover:text-fg"
+                          aria-label="Move up"
+                          onClick={() => desk((s) => void moveDepth(s, s.userTeamId, row.pos, p.id, -1))}
+                        >
+                          Up
+                        </button>
+                        <button
+                          type="button"
+                          className="min-h-11 min-w-11 text-xs tracking-widest text-muted hover:text-fg"
+                          aria-label="Move down"
+                          onClick={() => desk((s) => void moveDepth(s, s.userTeamId, row.pos, p.id, 1))}
+                        >
+                          Down
+                        </button>
+                      </span>
                     </li>
                   ))}
                   {!row.players.length && <li className="text-subtle">empty</li>}
@@ -337,17 +402,54 @@ function Depth() {
 
 function Staff() {
   const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const lastDeskNote = useGameStore((s) => s.lastDeskNote);
   const t = save.teams[save.userTeamId];
-  const row = (role: string, id: string | null) => {
+  const pool = availableCoaches(save);
+  const row = (role: "HC" | "OC" | "DC", id: string | null) => {
     const c = id ? save.coaches[id] : undefined;
     return (
       <article className="rounded-xl border border-line bg-surface p-4">
-        <p className="text-xs tracking-[0.2em] text-muted">{role}</p>
+        <p className="text-xs tracking-[0.2em] text-muted">{role === "HC" ? "Head coach" : role === "OC" ? "Offensive coordinator" : "Defensive coordinator"}</p>
         <h3 className="text-2xl">{c?.name ?? "Vacant"}</h3>
         {c && (
           <p className="text-sm text-muted">
             Off {c.offense} · Def {c.defense} · {c.offScheme} / {c.defScheme} · year {c.yearsOnJob} on the job
           </p>
+        )}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {c && (
+            <Btn kind="brick" onClick={() => desk((s) => {
+              const r = deskFire(s, s.userTeamId, role);
+              return r.ok ? `Fired ${c.name}.` : r.reason;
+            })}>
+              Fire
+            </Btn>
+          )}
+        </div>
+        {pool.length > 0 && (
+          <label className="mt-3 block text-sm text-muted">
+            Hire
+            <select
+              className="mt-1 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+              defaultValue=""
+              onChange={(e) => {
+                const coachId = e.target.value;
+                if (!coachId) return;
+                desk((s) => {
+                  const r = deskHire(s, s.userTeamId, coachId, role);
+                  return r.ok ? "Hired." : r.reason;
+                });
+              }}
+            >
+              <option value="">Choose a coach</option>
+              {pool.slice(0, 24).map((cch) => (
+                <option key={cch.id} value={cch.id}>
+                  {cch.name} · {cch.offScheme}/{cch.defScheme}
+                </option>
+              ))}
+            </select>
+          </label>
         )}
       </article>
     );
@@ -355,13 +457,58 @@ function Staff() {
   const carousel = (save.carousel ?? []).filter((m) => m.year >= save.year - 1);
   return (
     <div className="space-y-6">
+      {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
       <p className="text-sm text-muted">
-        Draft style: <span className="uppercase">{t.draftStyle}</span>. Clubs pick by need, speed, trenches, or best player available.
+        Scheme and draft style change how the club plays and how the war room picks. Fire a man, hire another, live with it on Sunday.
       </p>
       <div className="grid gap-3 sm:grid-cols-3">
-        {row("Head coach", t.coachId)}
-        {row("Offensive coordinator", t.ocId)}
-        {row("Defensive coordinator", t.dcId)}
+        <label className="rounded-xl border border-line bg-surface p-4 text-sm">
+          <span className="text-xs tracking-[0.2em] text-muted">Offense</span>
+          <select
+            className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            value={t.offScheme}
+            onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { offScheme: e.target.value as typeof t.offScheme }))}
+          >
+            {["smashmouth", "vertical", "westcoast", "multiple"].map((x) => (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="rounded-xl border border-line bg-surface p-4 text-sm">
+          <span className="text-xs tracking-[0.2em] text-muted">Defense</span>
+          <select
+            className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            value={t.defScheme}
+            onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { defScheme: e.target.value as typeof t.defScheme }))}
+          >
+            {["4-3", "3-4", "wide-9", "cover-2"].map((x) => (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="rounded-xl border border-line bg-surface p-4 text-sm">
+          <span className="text-xs tracking-[0.2em] text-muted">Draft style</span>
+          <select
+            className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            value={t.draftStyle}
+            onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { draftStyle: e.target.value as typeof t.draftStyle }))}
+          >
+            {["bpa", "need", "speed", "trench", "defense", "qb"].map((x) => (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {row("HC", t.coachId)}
+        {row("OC", t.ocId)}
+        {row("DC", t.dcId)}
       </div>
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Coaching carousel</h3>
@@ -442,6 +589,8 @@ function Schedule() {
             <span className="text-sm text-muted">Wk {g.week}</span>
             <span className="inline-flex items-center gap-2">
               {home ? "vs" : "@"} <Logo id={opp} size={24} /> {displayName(save.year, opp)}
+              {g.rivalry ? <span className="text-[10px] tracking-widest text-brass">RIVALRY</span> : null}
+              {g.night ? <span className="text-[10px] tracking-widest text-brass">MNF</span> : null}
             </span>
             <span className="tabular">{g.played ? `${g.homeScore}–${g.awayScore}` : "—"}</span>
           </li>
@@ -690,6 +839,26 @@ function History() {
         </div>
       </section>
       <section>
+        <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Awards</h3>
+        {save.history.awards.length === 0 && <p className="text-muted">No trophies yet. Play a season.</p>}
+        <ul className="space-y-2">
+          {save.history.awards.slice().reverse().slice(0, 12).map((a) => {
+            const nm = (id?: string) => {
+              const p = id ? save.players[id] : undefined;
+              return p ? `${p.firstName} ${p.lastName}` : "—";
+            };
+            return (
+              <li key={a.year} className="rounded-lg border border-line bg-surface p-3 text-sm">
+                <p className="font-display text-base">{a.year}</p>
+                <p className="text-muted">
+                  MVP {nm(a.mvp)} · OPOY {nm(a.offPoy)} · DPOY {nm(a.defPoy)} · CPOTY {nm(a.cpoty)}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+      <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Super Bowls</h3>
         {save.history.superBowls.length === 0 && (
           <p className="text-muted">The almanac is empty. Super Bowl I has not been played.</p>
@@ -761,6 +930,8 @@ function EventPane() {
         <p>Offensive: {name(a.offPoy)}</p>
         <p>Defensive: {name(a.defPoy)}</p>
         <p>Off. Rookie: {name(a.oroy)}</p>
+        <p>Def. Rookie: {name(a.droy)}</p>
+        <p>Comeback: {name(a.cpoty)}</p>
         <PhaseAction />
       </article>
     );
@@ -825,6 +996,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "roster", label: "Roster" },
   { id: "depth", label: "Depth" },
   { id: "staff", label: "Staff" },
+  { id: "market", label: "Market" },
   { id: "standings", label: "Standings" },
   { id: "schedule", label: "Schedule" },
   { id: "stats", label: "Stats" },
@@ -887,6 +1059,7 @@ function PlayShell() {
         {!event && tab === "roster" && <Roster />}
         {!event && tab === "depth" && <Depth />}
         {!event && tab === "staff" && <Staff />}
+        {!event && tab === "market" && <MarketDesk />}
         {!event && tab === "standings" && <Standings />}
         {!event && tab === "schedule" && <Schedule />}
         {!event && tab === "stats" && <Stats />}

@@ -2,6 +2,40 @@ import type { DynastySave, GameResult, TeamId } from "./types.ts";
 import { activeTeamIds, conferenceOf, gamesInSeason } from "./teams.ts";
 import { rand, shuffle } from "./rng.ts";
 
+export const RIVALRIES: [TeamId, TeamId][] = [
+  ["gnb", "chi"],
+  ["gnb", "det"],
+  ["gnb", "min"],
+  ["chi", "det"],
+  ["chi", "min"],
+  ["min", "det"],
+  ["dal", "was"],
+  ["dal", "nyg"],
+  ["dal", "phi"],
+  ["nyg", "phi"],
+  ["nyg", "was"],
+  ["phi", "was"],
+  ["rai", "kan"],
+  ["rai", "den"],
+  ["rai", "sdg"],
+  ["kan", "den"],
+  ["pit", "cle"],
+  ["pit", "oti"],
+  ["cle", "cin"],
+  ["sfo", "ram"],
+  ["sfo", "crd"],
+  ["nyj", "nwe"],
+  ["nyj", "buf"],
+  ["buf", "mia"],
+  ["mia", "nwe"],
+  ["clt", "nwe"],
+  ["ram", "crd"],
+];
+
+export function isRivalry(a: TeamId, b: TeamId): boolean {
+  return RIVALRIES.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+}
+
 /** Circle method. Odd n uses a bye slot so every club still plays n-1 unique opponents. */
 function circlePairings(teams: TeamId[]): [TeamId, TeamId][] {
   const n = teams.length;
@@ -73,6 +107,30 @@ function buildMatchups(save: DynastySave, teams: TeamId[], gamesNeeded: number):
   return pairs;
 }
 
+function tagAlmanac(games: GameResult[], year: number): void {
+  for (const g of games) {
+    const home = g.homeId as TeamId;
+    const away = g.awayId as TeamId;
+    if (isRivalry(home, away)) g.rivalry = true;
+  }
+  if (year < 1970) return;
+  const byWeek = new Map<number, GameResult[]>();
+  for (const g of games) {
+    const list = byWeek.get(g.week) ?? [];
+    list.push(g);
+    byWeek.set(g.week, list);
+  }
+  for (const weekGames of byWeek.values()) {
+    const ranked = weekGames.slice().sort((a, b) => {
+      const ra = a.rivalry ? 1 : 0;
+      const rb = b.rivalry ? 1 : 0;
+      if (ra !== rb) return rb - ra;
+      return a.id.localeCompare(b.id);
+    });
+    if (ranked[0]) ranked[0].night = true;
+  }
+}
+
 function assignWeeks(save: DynastySave, matchups: [TeamId, TeamId][], year: number): GameResult[] {
   const remaining = matchups.slice();
   const games: GameResult[] = [];
@@ -97,6 +155,7 @@ function assignWeeks(save: DynastySave, matchups: [TeamId, TeamId][], year: numb
         homeScore: 0,
         awayScore: 0,
         played: false,
+        rivalry: isRivalry(a, b),
       });
       placed += 1;
     }
@@ -115,6 +174,7 @@ function assignWeeks(save: DynastySave, matchups: [TeamId, TeamId][], year: numb
             homeScore: 0,
             awayScore: 0,
             played: false,
+            rivalry: isRivalry(last[0], last[1]),
           });
         }
         stuck = 0;
@@ -125,6 +185,7 @@ function assignWeeks(save: DynastySave, matchups: [TeamId, TeamId][], year: numb
       week += 1;
     }
   }
+  tagAlmanac(games, year);
   return games;
 }
 

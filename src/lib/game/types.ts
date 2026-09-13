@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -82,6 +82,8 @@ export type Phase =
   | "proBowl"
   | "retirement"
   | "hof";
+
+export type DraftSession = "nfl" | "afl" | "common";
 
 export type Pos =
   | "QB"
@@ -194,6 +196,15 @@ export interface Player {
   teamId: TeamId | "fa" | "retired" | "hof";
   ratings: Ratings;
   ovr: number;
+  /** Noisy pre-draft / unrevealed grade. Sim always uses `ovr`. */
+  scoutOvr: number;
+  /** Developmental ceiling. */
+  potential: number;
+  morale: number;
+  /** True kit is hidden until snaps / years. */
+  revealed: boolean;
+  /** Games with a box-score line. */
+  snaps: number;
   age: number;
   yearsPro: number;
   jersey: number;
@@ -244,6 +255,15 @@ export interface Coach {
   careerLosses: number;
 }
 
+export interface DraftPickAsset {
+  id: string;
+  year: number;
+  round: number;
+  orig: TeamId;
+  owner: TeamId;
+  used?: boolean;
+}
+
 export interface TeamState {
   id: TeamId;
   active: boolean;
@@ -255,6 +275,9 @@ export interface TeamState {
   draftStyle: DraftStyle;
   payroll: number;
   roster: string[];
+  /** Ordered player ids per position. Sim reads this, not raw ovr sort. */
+  depth: Partial<Record<Pos, string[]>>;
+  picks: DraftPickAsset[];
   wins: number;
   losses: number;
   ties: number;
@@ -312,6 +335,8 @@ export interface GameResult {
   homeQ?: [number, number, number, number];
   awayQ?: [number, number, number, number];
   attendance?: number;
+  rivalry?: boolean;
+  night?: boolean;
 }
 
 export interface NewsItem {
@@ -326,11 +351,13 @@ export interface NewsItem {
   playerIds: string[];
 }
 
+export type TxKind = "draft" | "cut" | "sign" | "expansion" | "trade" | "retire" | "waive" | "claim";
+
 export interface Transaction {
   id: string;
   year: number;
   week: number;
-  kind: "draft" | "cut" | "sign" | "expansion" | "trade" | "retire";
+  kind: TxKind;
   playerId: string;
   from: string;
   to: string;
@@ -342,6 +369,14 @@ export interface Prospect {
   slot: number;
   taken: boolean;
   takenBy?: TeamId;
+  league?: DraftSession;
+}
+
+export interface WaiverWire {
+  playerId: string;
+  from: TeamId;
+  week: number;
+  year: number;
 }
 
 export interface ExpansionPickState {
@@ -428,6 +463,7 @@ export interface DynastySave {
   history: Almanac;
   draftBoard: Prospect[];
   draftPickIndex: number;
+  draftSession: DraftSession;
   expansion?: ExpansionPickState;
   nextPlayerSeq: number;
   nextNewsSeq: number;
@@ -437,6 +473,9 @@ export interface DynastySave {
   primetime?: PrimetimeShow;
   salaryCap: number | null;
   carousel: CarouselMove[];
+  waiverOrder: TeamId[];
+  waivers: WaiverWire[];
+  faOpened: boolean;
 }
 
 export interface PrimetimeRecap {
@@ -479,4 +518,16 @@ export interface AdvanceOpts {
   userPickPlayerId?: string;
   /** CPU picks until the user is on the clock (or the draft ends). */
   simToUser?: boolean;
+  /** Close the FA market and kick off the season. */
+  closeFa?: boolean;
+}
+
+export interface TradePiece {
+  playerId?: string;
+  pickId?: string;
+}
+
+export interface GmResult {
+  ok: boolean;
+  reason?: string;
 }

@@ -9,6 +9,9 @@ export function KitChips({
   showDesc?: boolean;
   compact?: boolean;
 }) {
+  if (!player.revealed) {
+    return <span className="text-xs tracking-wide text-subtle">Unconfirmed kit</span>;
+  }
   const abilities = player.abilities ?? [];
   const traits = player.traits ?? [];
   if (!abilities.length && !traits.length) {
@@ -42,7 +45,7 @@ export function KitChips({
           <span
             key={name}
             title={kitImpactLine(name)}
-            className={`rounded-sm border border-line text-muted ${compact ? "px-1 py-0.5 text-[10px]" : "px-1.5 py-0.5 text-[11px]"} tracking-wide`}
+            className={`rounded-sm bg-paper/10 text-paper ${compact ? "px-1 py-0.5 text-[10px]" : "px-1.5 py-0.5 text-[11px]"} tracking-wide`}
           >
             {name}
           </span>

@@ -1,4 +1,5 @@
 import type { DynastySave, Player, TeamId } from "./types.ts";
+import { rand, randInt } from "./rng.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
 export function starScale(year: number): number {
@@ -47,12 +48,49 @@ export function teamPayroll(save: DynastySave, teamId: TeamId): number {
   return ids.reduce((s, id) => s + (save.players[id]?.salary ?? 0), 0);
 }
 
-export function refreshContracts(save: DynastySave): void {
+function resignInPlace(save: DynastySave, p: Player): void {
+  p.salary = salaryFor(save.year, p.ovr, p.age);
+  p.contractYears = p.age >= 33 ? 1 : randInt(save, 1, 3);
+}
+
+/** Rozelle-rule era: stars stay put. 1994+ true UFA. Never rewrite live deals. */
+function expireContract(save: DynastySave, p: Player): void {
+  if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") return;
+  const from = p.teamId;
+  if (save.year < 1994) {
+    const leave = p.ovr < 74 ? rand(save) < 0.18 : rand(save) < 0.06;
+    if (!leave) {
+      resignInPlace(save, p);
+      return;
+    }
+  }
+  const team = save.teams[from];
+  if (team) {
+    team.roster = team.roster.filter((id) => id !== p.id);
+    if (team.depth) {
+      for (const pos of Object.keys(team.depth) as (keyof typeof team.depth)[]) {
+        team.depth[pos] = (team.depth[pos] ?? []).filter((id) => id !== p.id);
+      }
+    }
+  }
+  p.teamId = "fa";
+}
+
+export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): void {
   save.salaryCap = salaryCapFor(save.year);
-  for (const p of Object.values(save.players) as Player[]) {
-    if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") continue;
-    p.salary = salaryFor(save.year, p.ovr, p.age);
-    p.contractYears = Math.max(1, p.contractYears ?? 1);
+  if (opts?.init) {
+    for (const p of Object.values(save.players) as Player[]) {
+      if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") continue;
+      p.salary = salaryFor(save.year, p.ovr, p.age);
+      p.contractYears = Math.max(1, p.contractYears ?? randInt(save, 1, 4));
+    }
+  } else {
+    for (const p of Object.values(save.players) as Player[]) {
+      if (p.teamId === "retired" || p.teamId === "hof") continue;
+      if (p.teamId === "fa") continue;
+      p.contractYears = (p.contractYears ?? 1) - 1;
+      if (p.contractYears <= 0) expireContract(save, p);
+    }
   }
   for (const t of Object.values(save.teams)) {
     t.payroll = teamPayroll(save, t.id);

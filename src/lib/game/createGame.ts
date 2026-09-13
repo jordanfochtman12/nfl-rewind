@@ -2,9 +2,9 @@ import type { CreateGameOpts, DynastySave, TeamId } from "./types.ts";
 import { STARTING_YEAR } from "./types.ts";
 import { ACTIVE_1966 } from "./types.ts";
 import { blankState } from "./save.ts";
-import { fillRoster, seedVeterans } from "./players.ts";
+import { fillRoster, seedVeterans, syncDepth } from "./players.ts";
 import { rebuildSchedule } from "./schedule.ts";
-import { buildDraftBoard } from "./draft.ts";
+import { buildDraftBoard, ensureSeasonPicks } from "./draft.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
 import { addNews } from "./news.ts";
 import { setLabel } from "./season.ts";
@@ -17,7 +17,7 @@ function seedCoaches(save: DynastySave): void {
     save.coaches[c.id] = {
       id: c.id,
       name: c.name,
-      teamId: c.teamId,
+      teamId: c.teamId && c.yearAvail <= save.year ? c.teamId : null,
       yearAvail: c.yearAvail,
       offense: c.offense,
       defense: c.defense,
@@ -49,7 +49,10 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   seedStaff(save);
   seedVeterans(save);
   for (const id of ACTIVE_1966) fillRoster(save, id);
-  refreshContracts(save);
+  for (const id of ACTIVE_1966) syncDepth(save, id);
+  refreshContracts(save, { init: true });
+  save.draftSession = startingYear === 1966 ? "nfl" : "common";
+  ensureSeasonPicks(save);
   buildDraftBoard(save);
   rebuildSchedule(save);
   save.phase = "draft";

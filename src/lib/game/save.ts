@@ -9,6 +9,8 @@ import {
 import { assignKit } from "./abilities.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { seedPriorCareer } from "./data/careerPrior.ts";
+import { applyScout } from "./scout.ts";
+import { SKILL_POSITIONS } from "./types.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -22,6 +24,8 @@ export function emptyTeam(id: TeamId, active: boolean): TeamState {
     draftStyle: "need",
     payroll: 0,
     roster: [],
+    depth: {},
+    picks: [],
     wins: 0,
     losses: 0,
     ties: 0,
@@ -82,6 +86,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     },
     draftBoard: [],
     draftPickIndex: 0,
+    draftSession: startingYear === 1966 ? "nfl" : "common",
     nextPlayerSeq: 1000,
     nextNewsSeq: 1,
     pendingRetirees: [],
@@ -89,6 +94,9 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     lastPow: {},
     salaryCap: null,
     carousel: [],
+    waiverOrder: [],
+    waivers: [],
+    faOpened: false,
   };
 }
 
@@ -102,6 +110,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     if (!teams[id]) teams[id] = emptyTeam(id, false);
     const t = teams[id];
     t.roster = t.roster ?? [];
+    t.depth = t.depth ?? {};
+    t.picks = t.picks ?? [];
     t.wins = t.wins ?? 0;
     t.losses = t.losses ?? 0;
     t.ties = t.ties ?? 0;
@@ -152,6 +162,10 @@ export function hydrateSave(raw: unknown): DynastySave {
     primetime: r.primetime,
     userTeamId,
     startingYear,
+    draftSession: r.draftSession ?? (outYear(r, startingYear) === 1966 ? "nfl" : "common"),
+    waiverOrder: r.waiverOrder ?? [],
+    waivers: r.waivers ?? [],
+    faOpened: r.faOpened ?? false,
   };
   for (const pl of Object.values(out.players)) {
     pl.salary = pl.salary ?? 0;
@@ -159,6 +173,14 @@ export function hydrateSave(raw: unknown): DynastySave {
     pl.traits = pl.traits ?? [];
     pl.career = pl.career ?? [];
     pl.injuredWeeks = pl.injuredWeeks ?? 0;
+    pl.snaps = pl.snaps ?? 0;
+    pl.morale = pl.morale ?? 70;
+    pl.potential = pl.potential ?? Math.min(99, (pl.ovr ?? 60) + 2);
+    pl.scoutOvr = pl.scoutOvr ?? pl.ovr;
+    if (pl.revealed == null) {
+      const prospect = pl.draftYear === out.year && pl.yearsPro <= 0 && out.phase === "draft";
+      pl.revealed = !prospect;
+    }
     if (!pl.college) pl.college = lookupCollege(pl.firstName, pl.lastName);
     if (pl.historical && pl.yearsPro > 0) {
       const through = (out.startingYear ?? STARTING_YEAR) - 1;
@@ -178,6 +200,21 @@ export function hydrateSave(raw: unknown): DynastySave {
       pl.abilities = [...ab].slice(0, 4);
       pl.traits = [...tr].slice(0, 3);
     }
+    if (pl.scoutOvr == null || pl.potential == null) applyScout(out, pl);
+  }
+  for (const t of Object.values(out.teams)) {
+    if (!t.depth || !Object.keys(t.depth).length) {
+      t.depth = {};
+      for (const pos of SKILL_POSITIONS) {
+        const ids = t.roster
+          .map((id) => out.players[id])
+          .filter((p) => p && p.pos === pos)
+          .sort((a, b) => (b?.ovr ?? 0) - (a?.ovr ?? 0))
+          .map((p) => p!.id);
+        if (ids.length) t.depth[pos] = ids;
+      }
+    }
+    t.picks = t.picks ?? [];
   }
   for (const c of Object.values(out.coaches)) {
     c.role = c.role ?? "HC";
@@ -188,6 +225,10 @@ export function hydrateSave(raw: unknown): DynastySave {
     c.careerLosses = c.careerLosses ?? 0;
   }
   return out;
+}
+
+function outYear(r: Partial<DynastySave>, fallback: number): number {
+  return r.year ?? fallback;
 }
 
 export function cloneSave(save: DynastySave): DynastySave {

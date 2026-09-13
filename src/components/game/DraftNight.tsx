@@ -8,6 +8,10 @@ import {
   playerName,
   rosterOf,
   SCOUT_KEYS,
+  sessionLabel,
+  visibleOvr,
+  visibleRatings,
+  scoutLetter,
   type Player,
   type Pos,
   type TeamId,
@@ -159,7 +163,7 @@ export function DraftNight() {
         <div className="relative space-y-4 px-5 py-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} NFL DRAFT</p>
+              <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} {sessionLabel(save).toUpperCase()}</p>
               <h2 className="font-display text-4xl sm:text-5xl">
                 Round {rnd}
                 <span className="ml-3 text-brass">Pick {pickInRound}</span>
@@ -198,7 +202,7 @@ export function DraftNight() {
                   </p>
                   <p className="text-sm text-muted">
                     {lastPlayer.pos} · {archLabel(lastPlayer)} · {lastPlayer.college} · {measLine(lastPlayer)} ·{" "}
-                    {lastPlayer.ovr} OVR
+                    {lastPlayer.revealed ? `${lastPlayer.ovr} OVR` : `Scout ${visibleOvr(lastPlayer)}`}
                   </p>
                   <div className="mt-1">
                     <KitChips player={lastPlayer} compact />
@@ -281,7 +285,7 @@ export function DraftNight() {
                     </span>
                   </p>
                   <p className="text-sm text-muted">
-                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.ovr} OVR · Rd {p.draftRound ?? "—"} ·{" "}
+                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
                   <div className="mt-1.5">
@@ -289,7 +293,7 @@ export function DraftNight() {
                   </div>
                   <div className="mt-2 grid max-w-lg grid-cols-2 gap-2 sm:grid-cols-4">
                     {keys.map((k) => (
-                      <Meter key={k.key} label={k.label} value={p.ratings[k.key]} />
+                      <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]} />
                     ))}
                   </div>
                 </button>
@@ -327,15 +331,17 @@ export function DraftNight() {
               <p className="text-sm text-muted">
                 {scout.pos} · {archLabel(scout)} · {scout.college ?? "campus"}
               </p>
-              <p className="mt-1 font-display text-3xl tabular text-brass">{scout.ovr}</p>
-              <p className="text-xs tracking-widest text-muted">OVERALL — derived from the kit, not copied onto it</p>
+              <p className="mt-1 font-display text-3xl tabular text-brass">{visibleOvr(scout)}</p>
+              <p className="text-xs tracking-widest text-muted">
+                {scout.revealed ? "OVERALL — derived from the kit" : `SCOUT GRADE · ${scoutLetter(visibleOvr(scout))} — true kit sealed`}
+              </p>
               <p className="mt-2 text-sm text-muted">{measLine(scout)}</p>
               <div className="mt-3">
                 <KitChips player={scout} showDesc />
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 {scoutKeys(scout).map((k) => (
-                  <Meter key={k.key} label={k.label} value={scout.ratings[k.key]} />
+                  <Meter key={k.key} label={k.label} value={visibleRatings(scout)[k.key]} />
                 ))}
               </div>
               <div className="mt-4 flex flex-wrap gap-2">

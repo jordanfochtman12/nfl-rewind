@@ -1,4 +1,4 @@
-import type { AwardsResult, DynastySave, Player, TeamId } from "./types.ts";
+import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { HOF_WAIT_YEARS } from "./types.ts";
 import { activeTeamIds, conferenceOf, displayName, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
@@ -34,22 +34,81 @@ function defScore(p: Player, year: number): number {
   return s.sacks * 4 + s.ints * 5 + s.tackles * 0.4 + p.ovr * 0.15;
 }
 
+function yearScore(p: Player, year: number): number {
+  return offScore(p, year) + defScore(p, year);
+}
+
+const ALLPRO_SLOTS: [Pos, number][] = [
+  ["QB", 1],
+  ["RB", 2],
+  ["WR", 2],
+  ["TE", 1],
+  ["LT", 1],
+  ["LG", 1],
+  ["C", 1],
+  ["RG", 1],
+  ["RT", 1],
+  ["DE", 2],
+  ["DT", 2],
+  ["OLB", 2],
+  ["MLB", 1],
+  ["CB", 2],
+  ["S", 2],
+  ["K", 1],
+];
+
+function allProIds(players: Player[], year: number): string[] {
+  const ids: string[] = [];
+  for (const [pos, n] of ALLPRO_SLOTS) {
+    const pool = players
+      .filter((p) => p.pos === pos)
+      .sort((a, b) => yearScore(b, year) + b.ovr * 0.2 - (yearScore(a, year) + a.ovr * 0.2));
+    for (const p of pool.slice(0, n)) ids.push(p.id);
+  }
+  return ids;
+}
+
 export function resolveAwards(save: DynastySave): AwardsResult {
   const year = save.year;
   const players = seasonList(save);
   const off = players.slice().sort((a, b) => offScore(b, year) - offScore(a, year));
   const def = players.slice().sort((a, b) => defScore(b, year) - defScore(a, year));
   const rookies = players.filter((p) => p.draftYear === year);
+  const offRook = rookies
+    .slice()
+    .sort((a, b) => offScore(b, year) + defScore(b, year) - (offScore(a, year) + defScore(a, year)));
+  const defRook = rookies.slice().sort((a, b) => defScore(b, year) - defScore(a, year));
+  const mvpPool = [...off.slice(0, 8), ...def.slice(0, 4)];
+  mvpPool.sort((a, b) => yearScore(b, year) - yearScore(a, year));
+
+  let cpoty: Player | undefined;
+  let bestJump = -999;
+  for (const p of players) {
+    const prev = yearScore(p, year - 1);
+    const now = yearScore(p, year);
+    if (now < 12) continue;
+    const jump = now - prev;
+    if (jump > bestJump) {
+      bestJump = jump;
+      cpoty = p;
+    }
+  }
+  if (cpoty && mvpPool[0] && cpoty.id === mvpPool[0].id) {
+    const second = players
+      .filter((p) => p.id !== cpoty!.id)
+      .sort((a, b) => yearScore(b, year) - yearScore(b, year - 1) - (yearScore(a, year) - yearScore(a, year - 1)))[0];
+    cpoty = second ?? cpoty;
+  }
+
   const awards: AwardsResult = {
     year,
-    mvp: off[0]?.id,
+    mvp: mvpPool[0]?.id,
     offPoy: off[0]?.id,
     defPoy: def[0]?.id,
-    oroy: rookies.sort((a, b) => offScore(b, year) + defScore(b, year) - (offScore(a, year) + defScore(a, year)))[0]
-      ?.id,
-    droy: rookies.sort((a, b) => defScore(b, year) - defScore(a, year))[0]?.id,
-    cpoty: players.filter((p) => p.pos === "QB").sort((a, b) => offScore(b, year) - offScore(a, year))[1]?.id,
-    allPro: [...off.slice(0, 8), ...def.slice(0, 8)].map((p) => p.id),
+    oroy: offRook[0]?.id,
+    droy: defRook[0]?.id,
+    cpoty: cpoty?.id,
+    allPro: allProIds(players, year),
   };
   save.awards = awards;
   save.history.awards.push(awards);
@@ -61,6 +120,15 @@ export function resolveAwards(save: DynastySave): AwardsResult {
       body: `The writers land on ${playerName(mvp)} (${mvp.pos}, ${String(mvp.teamId).toUpperCase()}).`,
       teamIds: mvp.teamId !== "fa" && mvp.teamId !== "retired" && mvp.teamId !== "hof" ? [mvp.teamId] : [],
       playerIds: [mvp.id],
+    });
+  }
+  if (cpoty) {
+    addNews(save, {
+      kind: "award",
+      headline: `Comeback Player: ${playerName(cpoty)}`,
+      body: `Biggest year-over-year jump in the building — not a consolation prize.`,
+      teamIds: cpoty.teamId !== "fa" && cpoty.teamId !== "retired" && cpoty.teamId !== "hof" ? [cpoty.teamId] : [],
+      playerIds: [cpoty.id],
     });
   }
   return awards;
@@ -139,7 +207,12 @@ export function resolveRetirement(save: DynastySave): void {
       year: save.year,
       teamId: (teamId === "fa" || teamId === "retired" || teamId === "hof" ? save.userTeamId : teamId) as TeamId,
       seasons,
-      blurb: (() => { const c = careerTotals(p); return `${playerName(p)} hangs them up after ${seasons} seasons. Peak ${p.peakOvr}. Career: ${c.passYds? c.passYds+" pass yds":""} ${c.rushYds? c.rushYds+" rush":""} ${c.rec? c.rec+" rec":""}`.replace(/ +/g," ").trim(); })(),
+      blurb: (() => {
+        const c = careerTotals(p);
+        return `${playerName(p)} hangs them up after ${seasons} seasons. Peak ${p.peakOvr}. Career: ${c.passYds ? c.passYds + " pass yds" : ""} ${c.rushYds ? c.rushYds + " rush" : ""} ${c.rec ? c.rec + " rec" : ""}`
+          .replace(/ +/g, " ")
+          .trim();
+      })(),
     };
     save.history.retirements.push(rec);
     if (p.historical || p.peakOvr >= 84 || p.userTied) {
@@ -233,21 +306,26 @@ export function weekPrimetime(save: DynastySave): void {
   save.weekNews = [];
   const weekGames = save.schedule.filter((g) => g.week === save.week && g.played);
   if (!weekGames.length) return;
+  const night = weekGames.find((g) => g.night);
   const blow = [...weekGames].sort(
     (a, b) => Math.abs(b.homeScore - b.awayScore) - Math.abs(a.homeScore - a.awayScore),
   )[0];
-  if (blow) {
-    const w = blow.homeScore >= blow.awayScore ? blow.homeId : blow.awayId;
-    const l = w === blow.homeId ? blow.awayId : blow.homeId;
+  const featured = night ?? blow;
+  if (featured) {
+    const w = featured.homeScore >= featured.awayScore ? featured.homeId : featured.awayId;
+    const l = w === featured.homeId ? featured.awayId : featured.homeId;
     addNews(save, {
       kind: "headline",
-      headline: `${displayName(save.year, w as TeamId)} ${Math.max(blow.homeScore, blow.awayScore)}, ${displayName(save.year, l as TeamId)} ${Math.min(blow.homeScore, blow.awayScore)}`,
-      body:
-        Math.abs(blow.homeScore - blow.awayScore) >= 17
-          ? "A rout that will sit in the Monday papers."
-          : "One-possession theater until the last two minutes.",
+      headline: `${displayName(save.year, w as TeamId)} ${Math.max(featured.homeScore, featured.awayScore)}, ${displayName(save.year, l as TeamId)} ${Math.min(featured.homeScore, featured.awayScore)}`,
+      body: featured.night
+        ? "Monday night. The country watched."
+        : featured.rivalry
+          ? "A rivalry game that will sit in the Monday papers."
+          : Math.abs(featured.homeScore - featured.awayScore) >= 17
+            ? "A rout that will sit in the Monday papers."
+            : "One-possession theater until the last two minutes.",
       teamIds: [w as TeamId, l as TeamId],
-      playerIds: blow.mvpPlayerId ? [blow.mvpPlayerId] : [],
+      playerIds: featured.mvpPlayerId ? [featured.mvpPlayerId] : [],
     });
   }
   const confs = save.year < 1970 ? (["NFL", "AFL"] as const) : (["AFC", "NFC"] as const);
@@ -281,7 +359,7 @@ export function weekPrimetime(save: DynastySave): void {
     addNews(save, {
       kind: "injury",
       headline: `${playerName(injured)} week-to-week`,
-      body: `The ${displayName(save.year, save.userTeamId)} list him with a ${injured.pos} injury.`,
+      body: `The ${displayName(save.year, save.userTeamId)} list him with a ${injured.injuryName ?? injured.pos} injury.`,
       teamIds: [save.userTeamId],
       playerIds: [injured.id],
     });
@@ -301,7 +379,7 @@ export function weekPrimetime(save: DynastySave): void {
 }
 
 export function cpuInSeasonMoves(save: DynastySave): void {
-  if (rand(save) > 0.12) return;
+  if (rand(save) > 0.18) return;
   const teams = activeTeamIds(save.year).filter((t) => t !== save.userTeamId);
   if (!teams.length) return;
   const teamId = teams[randInt(save, 0, teams.length - 1)]!;
@@ -310,11 +388,12 @@ export function cpuInSeasonMoves(save: DynastySave): void {
   if (!cut || cut.ovr > 62) return;
   save.teams[teamId].roster = save.teams[teamId].roster.filter((id) => id !== cut.id);
   cut.teamId = "fa";
+  save.waivers.push({ playerId: cut.id, from: teamId, week: save.week, year: save.year });
   generatePlayer(save, cut.pos, teamId, randInt(save, 54, 66));
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, teamId)} churn the bottom of the roster`,
-    body: `${playerName(cut)} is released.`,
+    body: `${playerName(cut)} is waived.`,
     teamIds: [teamId],
     playerIds: [cut.id],
   });

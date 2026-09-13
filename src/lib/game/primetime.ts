@@ -1,12 +1,12 @@
 import type { DynastySave, PrimetimeRecap, TeamId } from "./types.ts";
 import { displayName, gamesInSeason } from "./teams.ts";
 import { gamesInWeek } from "./schedule.ts";
-import { playerName, rosterOf } from "./players.ts";
+import { depthAt, playerName } from "./players.ts";
 
-function drama(g: { homeScore: number; awayScore: number }): number {
+function drama(g: { homeScore: number; awayScore: number; rivalry?: boolean; night?: boolean }): number {
   const margin = Math.abs(g.homeScore - g.awayScore);
   const total = g.homeScore + g.awayScore;
-  return total * 1.6 - margin * 4 + (margin === 0 ? 20 : 0);
+  return total * 1.6 - margin * 4 + (margin === 0 ? 20 : 0) + (g.rivalry ? 12 : 0) + (g.night ? 8 : 0);
 }
 
 const OPENS = [
@@ -28,7 +28,9 @@ export function buildPrimetime(save: DynastySave): void {
     const loser = hs >= as ? away : home;
     const wx = g.weather && g.weather !== "clear" ? ` ${g.weather[0]!.toUpperCase()}${g.weather.slice(1)} on the ground.` : "";
     let line: string;
-    if (margin === 0) line = `${away} and ${home} play to a ${as}-${hs} deadlock.${wx}`;
+    if (g.night) line = `Monday night: ${winner} ${Math.max(hs, as)}-${Math.min(hs, as)} ${loser}.${wx}`;
+    else if (g.rivalry && margin <= 7) line = `Rivalry night — ${winner} edge ${loser}, ${Math.max(hs, as)}-${Math.min(hs, as)}.${wx}`;
+    else if (margin === 0) line = `${away} and ${home} play to a ${as}-${hs} deadlock.${wx}`;
     else if (margin <= 3) line = `Hold the phone — ${winner} steal it ${Math.max(hs, as)}-${Math.min(hs, as)}. One score. One heartbeat.${wx}`;
     else if (margin >= 21) line = `${winner} put ${loser} in the rear-view, ${Math.max(hs, as)}-${Math.min(hs, as)}. Someone call a cab.${wx}`;
     else line = `${winner} handle ${loser}, ${Math.max(hs, as)}-${Math.min(hs, as)}.${wx}`;
@@ -88,10 +90,7 @@ export function depthChart(save: DynastySave, teamId: TeamId) {
     label: g.label,
     rows: g.pos.map((pos) => ({
       pos,
-      players: rosterOf(save, teamId)
-        .filter((p) => p.pos === pos)
-        .sort((a, b) => b.ovr - a.ovr)
-        .slice(0, 4),
+      players: depthAt(save, teamId, pos).slice(0, 4),
     })),
   }));
 }

@@ -11,6 +11,7 @@ import { lookupCollege } from "./data/colleges.ts";
 import { seedPriorCareer } from "./data/careerPrior.ts";
 import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
+import { applyScout } from "./scout.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -131,8 +132,13 @@ export function makePlayer(
     teamId: opts.teamId,
     ratings,
     ovr,
+    scoutOvr: ovr,
+    potential: ovr,
+    morale: 72,
+    revealed: true,
+    snaps: 0,
     age: opts.age,
-    yearsPro: Math.max(0, opts.age - 22),
+    yearsPro: opts.draftYear === save.year ? 0 : Math.max(0, opts.age - 22),
     jersey: opts.jersey ?? 0,
     college: opts.college ?? lookupCollege(opts.firstName, opts.lastName),
     historical: opts.historical,
@@ -154,6 +160,7 @@ export function makePlayer(
     ...(star?.wt || opts.weight || prof.wt ? { weight: star?.wt ?? opts.weight ?? prof.wt } : {}),
     ...(star?.fy || opts.forty || prof.fy ? { forty: star?.fy ?? opts.forty ?? prof.fy } : {}),
   };
+  applyScout(save, p);
   save.players[p.id] = p;
   return p;
 }
@@ -167,17 +174,24 @@ export function addToRoster(save: DynastySave, teamId: TeamId, playerId: string)
     p.teamId = teamId;
     if (teamId === save.userTeamId) p.userTied = true;
   }
+  syncDepth(save, teamId);
 }
 
 export function removeFromRoster(save: DynastySave, teamId: TeamId, playerId: string): void {
   const team = save.teams[teamId];
   if (!team) return;
   team.roster = team.roster.filter((id) => id !== playerId);
+  if (team.depth) {
+    for (const pos of Object.keys(team.depth) as Pos[]) {
+      team.depth[pos] = (team.depth[pos] ?? []).filter((id) => id !== playerId);
+    }
+  }
 }
 
 export function movePlayer(save: DynastySave, playerId: string, to: TeamId | "fa"): void {
   const p = save.players[playerId];
   if (!p) return;
+  const from = p.teamId;
   if (p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof") {
     removeFromRoster(save, p.teamId, playerId);
   }
@@ -186,6 +200,7 @@ export function movePlayer(save: DynastySave, playerId: string, to: TeamId | "fa
   } else {
     addToRoster(save, to, playerId);
   }
+  if (from !== "fa" && from !== "retired" && from !== "hof") syncDepth(save, from);
 }
 
 export function pruneRoster(save: DynastySave, teamId: TeamId): void {
@@ -205,11 +220,60 @@ export function rosterOf(save: DynastySave, teamId: TeamId): Player[] {
     .filter((p): p is Player => !!p && p.teamId === teamId);
 }
 
+/** Depth-aware starters. Injured skip. Empty depth falls back to ovr. */
 export function starters(save: DynastySave, teamId: TeamId, pos: Pos, n = 1): Player[] {
-  return rosterOf(save, teamId)
-    .filter((p) => p.pos === pos && p.injuredWeeks <= 0)
-    .sort((a, b) => b.ovr - a.ovr)
-    .slice(0, n);
+  const team = save.teams[teamId];
+  const roster = rosterOf(save, teamId).filter((p) => p.pos === pos);
+  const healthy = roster.filter((p) => p.injuredWeeks <= 0);
+  const order = team?.depth?.[pos] ?? [];
+  const seen = new Set<string>();
+  const out: Player[] = [];
+  for (const id of order) {
+    const p = healthy.find((x) => x.id === id);
+    if (p && !seen.has(p.id)) {
+      out.push(p);
+      seen.add(p.id);
+    }
+    if (out.length >= n) return out;
+  }
+  const rest = healthy.filter((p) => !seen.has(p.id)).sort((a, b) => b.ovr - a.ovr);
+  for (const p of rest) {
+    out.push(p);
+    if (out.length >= n) break;
+  }
+  return out.slice(0, n);
+}
+
+export function depthAt(save: DynastySave, teamId: TeamId, pos: Pos): Player[] {
+  const team = save.teams[teamId];
+  const roster = rosterOf(save, teamId).filter((p) => p.pos === pos);
+  const order = team?.depth?.[pos] ?? [];
+  const seen = new Set<string>();
+  const out: Player[] = [];
+  for (const id of order) {
+    const p = roster.find((x) => x.id === id);
+    if (p && !seen.has(p.id)) {
+      out.push(p);
+      seen.add(p.id);
+    }
+  }
+  for (const p of roster.sort((a, b) => b.ovr - a.ovr)) {
+    if (!seen.has(p.id)) out.push(p);
+  }
+  return out;
+}
+
+export function syncDepth(save: DynastySave, teamId: TeamId): void {
+  const team = save.teams[teamId];
+  if (!team) return;
+  team.depth = team.depth ?? {};
+  const roster = rosterOf(save, teamId);
+  for (const [pos] of DEPTH_CHART) {
+    const have = roster.filter((p) => p.pos === pos).sort((a, b) => b.ovr - a.ovr);
+    const prev = (team.depth[pos] ?? []).filter((id) => have.some((p) => p.id === id));
+    const missing = have.filter((p) => !prev.includes(p.id)).map((p) => p.id);
+    team.depth[pos] = [...prev, ...missing];
+  }
 }
 
 export function usedJerseys(save: DynastySave, teamId: TeamId): Set<number> {
@@ -284,6 +348,7 @@ export function fillRoster(save: DynastySave, teamId: TeamId): void {
     generatePlayer(save, pos, teamId, randInt(save, 48, 64));
   }
   trimRoster(save, teamId);
+  syncDepth(save, teamId);
 }
 
 export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): void {
@@ -301,6 +366,7 @@ export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGE
   for (const p of roster) {
     if (!keep.has(p.id)) movePlayer(save, p.id, "fa");
   }
+  syncDepth(save, teamId);
 }
 
 export function yearStats(p: Player, year: number, teamId: TeamId): SeasonStats {

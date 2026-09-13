@@ -17,6 +17,9 @@ import {
   seasonLabel,
   seasonLog,
   teamColors,
+  visibleOvr,
+  visibleRatings,
+  scoutLetter,
   type Player,
   type SeasonStats,
   type StatCol,
@@ -168,6 +171,8 @@ export function PlayerProfile() {
   const career = careerOf(p);
   const log = seasonLog(p).filter(hasSeasonWork);
   const keys = SCOUT_KEYS[p.pos] ?? SCOUT_KEYS.WR;
+  const shown = visibleRatings(p);
+  const shownOvr = visibleOvr(p);
   const club =
     p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof"
       ? p.teamId === "hof"
@@ -209,7 +214,7 @@ export function PlayerProfile() {
                 <Logo id={p.teamId} size={22} year={save.year} />
               )}
               <span>{club}</span>
-              <span>· {p.ovr} OVR</span>
+              <span>· {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`}</span>
             </p>
           </div>
           <Btn onClick={closeProfile} className="shrink-0">
@@ -236,6 +241,10 @@ export function PlayerProfile() {
                 <dd>
                   {p.contractYears} yr · {formatMoney(p.salary ?? 0, save.year)}
                 </dd>
+                <dt className="text-muted">Potential</dt>
+                <dd className="tabular">{p.revealed ? p.potential : "—"}</dd>
+                <dt className="text-muted">Morale</dt>
+                <dd className="tabular">{p.morale ?? "—"}</dd>
                 <dt className="text-muted">Status</dt>
                 <dd>
                   <Status p={p} />
@@ -248,8 +257,10 @@ export function PlayerProfile() {
                 <KitChips player={p} showDesc />
               </div>
               <p className="mt-3 text-xs text-subtle">
-                {p.historical ? "Named historical player." : "Camp / generated body."} Overall is derived from the
-                attribute kit.
+                {p.historical ? "Named historical player." : "Camp / generated body."}{" "}
+                {p.revealed
+                  ? "Overall is derived from the attribute kit."
+                  : "Scouts have a grade. The true kit is sealed until he plays."}
               </p>
             </div>
           </section>
@@ -288,10 +299,14 @@ export function PlayerProfile() {
           />
 
           <section className="rounded-lg border border-brass/30 bg-surface p-4">
-            <p className="mb-3 text-xs tracking-[0.25em] text-brass">Attributes — derived overall {p.ovr}</p>
+            <p className="mb-3 text-xs tracking-[0.25em] text-brass">
+              {p.revealed
+                ? `Attributes — derived overall ${p.ovr}`
+                : `Scout attributes — grade ${shownOvr} · ${scoutLetter(shownOvr)}`}
+            </p>
             <div className="grid grid-cols-2 gap-3">
               {keys.map((k) => (
-                <Meter key={k.key} label={k.label} value={p.ratings[k.key]} />
+                <Meter key={k.key} label={k.label} value={shown[k.key]} />
               ))}
             </div>
           </section>
