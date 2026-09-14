@@ -103,8 +103,17 @@ export function DraftNight() {
   const overall = save.draftPickIndex + 1;
   const openAll = save.draftBoard.filter((p) => !p.taken);
   const taken = save.draftBoard.filter((p) => p.taken);
-  const last = taken[taken.length - 1];
-  const lastPlayer = last ? save.players[last.playerId] : undefined;
+  // draftBoard order is big-board rank, not pick order — find the actual most recent
+  // pick via Player.draftPick (set authoritatively in makeDraftPick), not array position.
+  let last: (typeof taken)[number] | undefined;
+  let lastPlayer: Player | undefined;
+  for (const pr of taken) {
+    const pl = save.players[pr.playerId];
+    if (pl?.draftPick != null && (!lastPlayer || (lastPlayer.draftPick ?? -1) < pl.draftPick)) {
+      last = pr;
+      lastPlayer = pl;
+    }
+  }
   const namedLeft = openAll.filter((pr) => save.players[pr.playerId]?.historical).length;
 
   const board = useMemo(() => {
@@ -188,11 +197,38 @@ export function DraftNight() {
             )}
           </div>
 
-          {last && lastPlayer && !isUser && (
+          <div className="-mx-1 overflow-x-auto pb-1">
+            <p className="mb-2 text-[11px] tracking-[0.35em] text-brass">ROUND {rnd} · THE BOARD</p>
+            <ol className="flex gap-2">
+              {order.map((id, i) => {
+                const overallPickNo = (rnd - 1) * teamsN + i + 1;
+                const takenPick = taken.find((pr) => save.players[pr.playerId]?.draftPick === overallPickNo);
+                const takenPlayer = takenPick ? save.players[takenPick.playerId] : undefined;
+                const mine = id === save.userTeamId;
+                const onNow = i === pickInRound - 1 && !done;
+                return (
+                  <li
+                    key={`${id}-${i}`}
+                    className={`flex w-20 shrink-0 flex-col items-center gap-1 rounded-md border p-2 text-center ${
+                      onNow ? "border-brass bg-brass/15" : takenPlayer ? "border-line bg-surface-2" : "border-line bg-surface"
+                    } ${mine ? "ring-1 ring-accent" : ""}`}
+                  >
+                    <Logo id={id as TeamId} size={28} year={save.year} />
+                    <span className="text-[10px] text-muted">#{i + 1}</span>
+                    <span className="w-full truncate text-[10px] text-fg">
+                      {takenPlayer ? playerName(takenPlayer).split(" ").slice(-1)[0] : onNow ? "on the clock" : "—"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          {last && lastPlayer && (
             <div className="rounded-lg border border-brass/25 bg-black/55 px-4 py-4">
               <p className="text-[11px] tracking-[0.4em] text-brass">THE PICK IS IN</p>
               <p className="mt-1 font-display text-lg text-paper">
-                With the {last.slot} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
+                With the {lastPlayer.draftPick ?? last.slot} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 {last.takenBy && <Logo id={last.takenBy} size={48} year={save.year} />}
@@ -357,7 +393,11 @@ export function DraftNight() {
           <div className="rounded-xl border border-line bg-surface p-4">
             <p className="mb-3 text-xs tracking-[0.25em] text-muted">Cards turned</p>
             <ul className="space-y-2">
-              {taken.slice(-12).reverse().map((pr) => {
+              {taken
+                .slice()
+                .sort((a, b) => (save.players[b.playerId]?.draftPick ?? -1) - (save.players[a.playerId]?.draftPick ?? -1))
+                .slice(0, 12)
+                .map((pr) => {
                 const p = save.players[pr.playerId];
                 return (
                   <li key={pr.playerId} className="flex items-center gap-2 text-sm">
@@ -377,28 +417,6 @@ export function DraftNight() {
               })}
               {!taken.length && <li className="text-muted">Waiting on the first card.</li>}
             </ul>
-          </div>
-          <div className="rounded-xl border border-line bg-surface p-4">
-            <p className="mb-2 text-xs tracking-[0.25em] text-muted">This round</p>
-            <ol className="grid grid-cols-4 gap-2">
-              {order.map((id, i) => {
-                const overallPick = (rnd - 1) * teamsN + i;
-                const card = save.draftBoard[overallPick];
-                const takenNow = card?.taken;
-                const mine = id === save.userTeamId;
-                return (
-                  <li
-                    key={`${id}-${i}`}
-                    className={`flex flex-col items-center gap-1 rounded-md border p-1.5 ${
-                      i === pickInRound - 1 && !done ? "border-brass bg-brass/15" : "border-line"
-                    } ${mine ? "ring-1 ring-accent" : ""}`}
-                  >
-                    <Logo id={id as TeamId} size={28} year={save.year} />
-                    <span className="text-[10px] text-muted">{takenNow ? "in" : i + 1}</span>
-                  </li>
-                );
-              })}
-            </ol>
           </div>
         </aside>
       </div>
