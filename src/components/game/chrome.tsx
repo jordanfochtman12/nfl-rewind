@@ -47,12 +47,7 @@ export function ClubDesk({
 }
 
 export function ClubRibbon() {
-  return (
-    <div className="flex h-1 w-full" aria-hidden>
-      <div className="w-[72%] bg-club" />
-      <div className="flex-1 bg-club-2" />
-    </div>
-  );
+  return <div className="chrome-bar w-full" aria-hidden />;
 }
 
 export function ClubHash({
@@ -83,11 +78,14 @@ export function Btn({
   className?: string;
 }) {
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium tracking-wide transition-colors disabled:opacity-40";
+    "chrome-bevel inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-sm font-semibold uppercase italic tracking-wide transition-all active:translate-y-px disabled:opacity-40 disabled:active:translate-y-0";
   const map = {
-    primary: "bg-accent text-accent-fg hover:bg-accent/90",
-    ghost: "border border-line bg-surface text-fg hover:bg-surface-2",
-    brick: "bg-brick text-fg hover:bg-brick/90",
+    primary:
+      "bg-gradient-to-b from-club to-[color-mix(in_srgb,var(--color-club)_70%,black)] text-club-fg hover:brightness-110",
+    ghost:
+      "bg-gradient-to-b from-surface-2 to-surface text-fg hover:from-[color-mix(in_srgb,var(--color-surface-2)_130%,white)] hover:to-surface-2",
+    brick:
+      "bg-gradient-to-b from-brick to-[color-mix(in_srgb,var(--color-brick)_70%,black)] text-fg hover:brightness-110",
   };
   return (
     <button type="button" disabled={disabled} onClick={onClick} className={`${base} ${map[kind]} ${className}`}>

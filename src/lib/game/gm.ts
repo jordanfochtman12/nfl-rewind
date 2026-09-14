@@ -13,15 +13,16 @@ import type {
   TradePiece,
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
-import { addToRoster, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
 import { jerseyFor } from "./names.ts";
-import { transferPick, pickValue } from "./draft.ts";
+import { allPicks, transferPick, pickValue } from "./draft.ts";
 import { fireCoach, hireCoach, setTeamScheme, schemeFitPos } from "./staff.ts";
 import { rand, randInt } from "./rng.ts";
 import { visibleOvr } from "./scout.ts";
+import { winPct } from "./standings.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
 
@@ -85,6 +86,49 @@ export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, o
   return ok();
 }
 
+export function placeOnIR(save: DynastySave, teamId: TeamId, playerId: string): GmResult {
+  const p = save.players[playerId];
+  if (!onClub(p, teamId)) return fail("That player is not on this roster.");
+  if (p.injuredWeeks <= 0) return fail("He is healthy — nothing to put on IR.");
+  if (p.onIR) return fail("Already on IR.");
+  p.onIR = true;
+  addTx(save, "ir", p.id, teamId, teamId, `Placed ${playerName(p)} on injured reserve`);
+  addNews(save, {
+    kind: "transaction",
+    headline: `${displayName(save.year, teamId)} place ${playerName(p)} on IR`,
+    body: `${p.pos}, ${p.injuryName ?? "hurt"} · ${p.injuredWeeks}w. Opens a roster spot.`,
+    teamIds: [teamId],
+    playerIds: [p.id],
+  });
+  return ok();
+}
+
+/** 2012+: NFL/NFLPA first allowed a player to return from IR mid-season. Before that, IR was season-ending. */
+export function canReturnFromIR(year: number): boolean {
+  return year >= 2012;
+}
+
+export function activateFromIR(save: DynastySave, teamId: TeamId, playerId: string): GmResult {
+  const p = save.players[playerId];
+  if (!onClub(p, teamId)) return fail("That player is not on this roster.");
+  if (!p.onIR) return fail("He is not on IR.");
+  if (!canReturnFromIR(save.year)) return fail("IR is season-ending in this era — he's done for the year.");
+  if (p.injuredWeeks > 0) return fail("Still hurt — not eligible to activate yet.");
+  if (activeRosterOf(save, teamId).length >= ROSTER_TARGET + 8) {
+    return fail("Roster's full. Cut someone before you activate him.");
+  }
+  p.onIR = false;
+  addTx(save, "activate", p.id, teamId, teamId, `Activated ${playerName(p)} off IR`);
+  addNews(save, {
+    kind: "transaction",
+    headline: `${displayName(save.year, teamId)} activate ${playerName(p)} off IR`,
+    body: `${p.pos} is back on the 53.`,
+    teamIds: [teamId],
+    playerIds: [p.id],
+  });
+  return ok();
+}
+
 export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, years?: number): GmResult {
   const p = save.players[playerId];
   if (!p) return fail("No such player.");
@@ -92,7 +136,7 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
   if (save.waivers.some((w) => w.playerId === playerId)) {
     return fail("He is on waivers — claim him instead.");
   }
-  if (rosterOf(save, teamId).length >= ROSTER_TARGET + 8) return fail("Roster is full.");
+  if (activeRosterOf(save, teamId).length >= ROSTER_TARGET + 8) return fail("Roster is full.");
   const salary = salaryFor(save.year, p.ovr, p.age);
   if (!canAfford(save, teamId, salary)) return fail("Over the cap.");
   if (save.year < 1994 && p.historical && p.yearsPro >= 4 && p.ovr >= 84) {
@@ -184,6 +228,37 @@ export function tradeValue(save: DynastySave, piece: TradePiece): number {
   return 0;
 }
 
+/** Pre-1994: no true free agency, and clubs don't deal away proven stars. Real trades in this era are role players. */
+export function rozelleLock(save: DynastySave, p: Player): boolean {
+  return save.year < 1994 && p.historical && p.yearsPro >= 4 && p.ovr >= 84;
+}
+
+/** Deadline week closes the book on trades league-wide until the next league year opens. */
+export function tradeWindowOpen(save: DynastySave): boolean {
+  return !(save.deadline?.year === save.year && save.deadline.resolved);
+}
+
+function tradePlayers(save: DynastySave, pieces: TradePiece[]): Player[] {
+  return pieces
+    .filter((x) => x.playerId)
+    .map((x) => save.players[x.playerId!])
+    .filter((p): p is Player => !!p);
+}
+
+function fitsRosterAfterTrade(save: DynastySave, teamId: TeamId, outIds: string[], inCount: number): boolean {
+  const current = activeRosterOf(save, teamId).length;
+  return current - outIds.length + inCount <= ROSTER_TARGET + 8;
+}
+
+function fitsCapAfterTrade(save: DynastySave, teamId: TeamId, outgoing: Player[], incoming: Player[]): boolean {
+  const cap = save.salaryCap ?? salaryCapFor(save.year);
+  if (cap == null) return true;
+  const outSalary = outgoing.reduce((n, p) => n + (p.salary ?? 0), 0);
+  const inSalary = incoming.reduce((n, p) => n + (p.salary ?? 0), 0);
+  const newPayroll = teamPayroll(save, teamId) - outSalary + inSalary;
+  return newPayroll <= cap * 1.02;
+}
+
 export function executeTrade(
   save: DynastySave,
   sideA: TeamId,
@@ -194,10 +269,30 @@ export function executeTrade(
 ): GmResult {
   if (sideA === sideB) return fail("Cannot trade with yourself.");
   if (!give.length || !get.length) return fail("Both sides must send something.");
+  if (!tradeWindowOpen(save)) return fail("The trade deadline has passed. No deals until next league year.");
+  const givePlayers = tradePlayers(save, give);
+  const getPlayers = tradePlayers(save, get);
+  for (const p of [...givePlayers, ...getPlayers]) {
+    if (rozelleLock(save, p)) {
+      return fail(`${playerName(p)} is a Rozelle-rule era star — clubs don't move players like that.`);
+    }
+  }
   const valA = give.reduce((n, x) => n + tradeValue(save, x), 0);
   const valB = get.reduce((n, x) => n + tradeValue(save, x), 0);
   if (!opts?.force && valB < valA * 0.82) {
     return fail("The other club hung up. Offer more.");
+  }
+  if (!fitsRosterAfterTrade(save, sideA, givePlayers.map((p) => p.id), getPlayers.length)) {
+    return fail(`${displayName(save.year, sideA)} would be over the 53-man limit. Cut someone first.`);
+  }
+  if (!fitsRosterAfterTrade(save, sideB, getPlayers.map((p) => p.id), givePlayers.length)) {
+    return fail(`${displayName(save.year, sideB)} would be over the 53-man limit.`);
+  }
+  if (!fitsCapAfterTrade(save, sideA, givePlayers, getPlayers)) {
+    return fail(`${displayName(save.year, sideA)} can't fit that under the cap.`);
+  }
+  if (!fitsCapAfterTrade(save, sideB, getPlayers, givePlayers)) {
+    return fail(`${displayName(save.year, sideB)} can't fit that under the cap.`);
   }
   for (const piece of give) {
     const r = movePiece(save, sideA, sideB, piece);
@@ -298,7 +393,7 @@ export function deskHoles(
   const out: { pos: Pos; need: number; have: number; healthy: number }[] = [];
   for (const [pos, need] of DEPTH_CHART) {
     const have = roster.filter((p) => p.pos === pos);
-    const healthy = have.filter((p) => p.injuredWeeks <= 0);
+    const healthy = have.filter((p) => p.injuredWeeks <= 0 && !p.onIR);
     if (healthy.length < need || have.length < need) {
       out.push({ pos, need, have: have.length, healthy: healthy.length });
     }
@@ -306,9 +401,61 @@ export function deskHoles(
   return out;
 }
 
+/** Win% once there's a real sample; early in a season (or in the offseason) roster talent stands in for it. */
+function contendScore(save: DynastySave, teamId: TeamId): number {
+  const t = save.teams[teamId];
+  if (!t) return 0.5;
+  const g = t.wins + t.losses + t.ties;
+  if (g >= 3) return winPct(t);
+  const roster = rosterOf(save, teamId);
+  if (!roster.length) return 0.5;
+  const avgOvr = roster.reduce((n, p) => n + p.ovr, 0) / roster.length;
+  return Math.max(0, Math.min(1, (avgOvr - 60) / 25));
+}
+
+/** A future (next-year) day-two pick — what a buyer actually parts with for a rental veteran. */
+function tradeablePick(save: DynastySave, teamId: TeamId): string | undefined {
+  const picks = allPicks(save).filter(
+    (p) => p.owner === teamId && !p.used && p.round >= 2 && p.round <= 4 && p.year > save.year,
+  );
+  picks.sort((a, b) => a.round - b.round || a.year - b.year);
+  return picks[0]?.id;
+}
+
+/** Contenders send picks for a proven vet at a real hole; rebuilders sell surplus vets for picks. Real deadline dynamics. */
+function dealerTrade(save: DynastySave, ids: TeamId[]): boolean {
+  const ranked = ids.map((id) => ({ id, score: contendScore(save, id) }));
+  const buyers = ranked.filter((r) => r.score >= 0.58).map((r) => r.id);
+  const sellers = ranked.filter((r) => r.score <= 0.42).map((r) => r.id);
+  if (!buyers.length || !sellers.length) return false;
+  const buyer = buyers[randInt(save, 0, buyers.length - 1)]!;
+  const sellerPool = sellers.filter((id) => id !== buyer);
+  if (!sellerPool.length) return false;
+  const seller = sellerPool[randInt(save, 0, sellerPool.length - 1)]!;
+
+  const holes = deskHoles(save, buyer).map((h) => h.pos);
+  if (!holes.length) return false;
+  const target = holes
+    .flatMap((pos) =>
+      rosterOf(save, seller).filter(
+        (p) => p.pos === pos && p.injuredWeeks <= 0 && p.ovr >= 68 && !rozelleLock(save, p),
+      ),
+    )
+    .sort((a, b) => b.ovr - a.ovr)[0];
+  if (!target) return false;
+  // The seller keeps at least one body at that spot — this is a sale, not a fire sale.
+  const remaining = rosterOf(save, seller).filter((p) => p.pos === target.pos && p.id !== target.id);
+  if (!remaining.length) return false;
+
+  const pickId = tradeablePick(save, buyer);
+  if (!pickId) return false;
+  return executeTrade(save, buyer, seller, [{ pickId }], [{ playerId: target.id }], { force: true }).ok;
+}
+
 export function cpuTrades(save: DynastySave): void {
   const teams = Object.values(save.teams).filter((t) => t.active && t.id !== save.userTeamId);
   if (teams.length < 2) return;
+  if (rand(save) < 0.6 && dealerTrade(save, teams.map((t) => t.id))) return;
   const a = teams[randInt(save, 0, teams.length - 1)]!;
   let b = teams[randInt(save, 0, teams.length - 1)]!;
   if (a.id === b.id) b = teams.find((t) => t.id !== a.id) ?? b;

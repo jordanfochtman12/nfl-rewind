@@ -155,7 +155,7 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 6. **Duplicate veteran names** in `veterans1966.ts` (Blanda QB+K, Cappelletti WR+K). `seedVeterans` skips `team:first:last` duplicates — kickers who were also skill players may lack K ratings. Acceptable short-term; split dual-pos later.
 7. **Zustand persist** of a full dynasty may blow localStorage. If the UI hangs on Continue, partialize or compress. Export/import JSON is the real save.
 8. **Do not replace `AGENTS.md`.** Game rules live in `AGENTS.project.md`.
-9. **Brand lock:** ink `#0c0d0b`, cream `#ebe4d4`, field `#3f6b4e`, brick `#8f3d32`. No gold/purple gradients, no neon Madden, no player headshots.
+9. **Brand lock (updated):** the old muted-almanac palette (ink `#0c0d0b`, cream `#ebe4d4`, field `#3f6b4e`) is retired by owner request in favor of a bold broadcast-package look — deep navy/carbon `#05070c` base, hot orange/gold accents (`#ff5a1f` / `#ffc93c`), glossy chrome-bevel buttons and nav (`.chrome-bevel`, `.chrome-bar`, `.broadcast-panel` utilities in `styles.css`), condensed italic display type. Still **no player headshots** — that rule stands. Original artwork only: never embed real ESPN/2K trademarked logos, wordmarks, or UI chrome verbatim — the "cinematic broadcast" reference is a style/genre, not assets to copy.
 10. **Node QA import:** `scripts/qa-*.mjs` re-spawn with `--experimental-strip-types` then `import("../src/lib/game/index.ts")`. Do not convert the engine to a React package.
 11. **CPU will not fire/hire the user’s HC** unless `cpuOnly`. Coordinators still auto-fill if vacant. User HC retirement (age) is allowed — the chair stays empty until they hire.
 12. **Do not add playerHof / coach retirement as a new auto phase** — they already run inside retirement / hof. A new phase stalls `qa-expansions`.
@@ -164,9 +164,47 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Injured reserve as a desk decision (not only a report). Waiver morning as a phase. Contract year / tenders once the cap exists (1994+).
+1. Waiver morning as a phase. Contract year / tenders once the cap exists (1994+).
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
+
+## Update (broadcast UI pass 3 — presentation upgrade)
+
+- **`GameNight.tsx` scorebug rebuild.** The game-result screen (the actual "gameplay" screen) had a plain score readout. Replaced with a real broadcast scorebug: each side gets a `clubInk`-derived gradient block (team primary → black, contrast-safe `onPrimary` text) with logo + score, a center chrome divider carrying the quarter-by-quarter mini-table and FINAL/UPCOMING chip, and a `PRIMETIME` badge next to the week label when `game.night` is true. Team-stat comparisons (total yards, time of possession, first downs, turnovers) are now paired `StatBar` components — a two-color proportional bar, team-colored, instead of a plain "12 / 9" text pair. MVP got its own spotlight row instead of living inside the stat grid.
+- **`GradeCard.tsx` rebuild.** The letter grade is now a glowing chrome-bevel badge (color + text-shadow keyed to the letter: brass for A, green for B, chrome for C, brick below) with a `chrome-bar` header strip, instead of a plain oversized letter. Stat lines moved from a bare list to individual bordered rows.
+- **`SuperBowlNight.tsx`**: team identity now flows through — winner's score gets a colored glow, the "World champions" line gets a chrome-bevel chip with a team-color text-shadow (kept the text itself on `--color-fg` after finding Packers-green-as-direct-fill was too low-contrast against black — glow only, never fill, for readability against a photo backdrop).
+- **Real bug found and fixed**: `SuperBowlNight.tsx` was the only `FilmStill`-backed event screen structured as multiple sibling content blocks instead of one wrapping div. `FilmStill` is `position: absolute`, so CSS paints positioned elements after static ones regardless of DOM order — the score grid and the champions/MVP/highlights section (both missing `relative`) were rendering **visually behind the stadium photo**, effectively invisible past the title block. Fixed by adding `relative` to both. Every other `FilmStill` screen already wraps its content in one `relative` div and was unaffected — audited all of them to confirm.
+- Reviewed `PrimetimeShow.tsx` (ticker/sportscast) and `WinterNights.tsx` (awards/Pro Bowl/retirement/HOF/carousel/relocation) — both already read as strong broadcast presentations (ticker crawl, ranked packages, freeze-frame closer, brass-highlighted "yours" cards on cinematic photo backdrops) from earlier passes; left as-is rather than churn working screens.
+
+## Update (broadcast UI pass 2 — global table/card treatment)
+
+Rather than hand-editing every screen, extended the broadcast look via compound CSS selectors in `styles.css` that target the class combos already used everywhere: `.border.border-line` (the flat card-wrapper pattern used ~26 places) gets a gradient panel + chrome rim, `table thead` gets a dark chrome gradient with a club-color underline glow, and `table tbody tr:hover` gets a highlight. These sit outside any `@layer` block so they win over Tailwind's utility layer regardless of specificity (same trick `.chrome-bevel`/`.chrome-bar` already used) — no JSX touched, and it reaches every table and card screen at once (Roster, Standings, Stats, Draft board, Depth chart, Schedule, MarketDesk, TeamRoster, FranchiseBook). Verified visually across Draft Night, Roster, Standings, Depth, Stats, and Retirement Night (generated a mid-sim save via the engine directly + imported it, to check event screens without clicking through a full season).
+
+## Update (real trade logic)
+
+`executeTrade` (`gm.ts`) previously only checked value fairness (receiving side ≥82% of value, bypassable with `force`). Added three hard gates that `force` does **not** bypass:
+
+- **Roster limit** — `fitsRosterAfterTrade`: neither side can end up over the 53-man active count (IR-parked players excluded, matching the IR desk-decision work). Fails with "would be over the 53-man limit."
+- **Salary cap** — `fitsCapAfterTrade`: 1994+, neither side's post-trade payroll can exceed the cap (same 1.02 grace `canAfford` uses). No cap pre-1994, matches `salaryCapFor`.
+- **Rozelle-rule lock** — `rozelleLock(save, p)` (moved here from `deadline.ts`, which now imports it): pre-1994, a historical player with 4+ years pro and 84+ ovr can't be in *any* trade, not just CPU-offered ones. Previously this was only enforced inside the deadline-night offer generator; the always-on Market tab had no such check.
+
+**Trade window**: `tradeWindowOpen(save)` returns false once `save.deadline.resolved` is true for the current year (set by `closeDeadline`), true again once the year rolls over (`save.deadline` is cleared each offseason). `executeTrade` rejects any trade — user or CPU — once the window is closed. `season.ts`'s weekly random CPU-CPU trade roll (`cpuTrades`, ~8%/week) now also checks `tradeWindowOpen` before firing, so CPU-CPU deals stop after the deadline too, not just user ones. `MarketDesk.tsx`'s trade desk is visually disabled (`pointer-events-none opacity-40` on the club picker, panels hidden) with a banner once the window closes.
+
+**Smarter CPU trade AI**: `cpuTrades` now rolls a 60% chance to try `dealerTrade` first — a buyer/seller model. `contendScore` reads current-season win% once there's a sample (3+ games), else roster average `ovr` as a proxy (so it works during the offseason/deadline-week CPU rounds too). Contenders (score ≥0.58) send a future 2nd–4th round pick (`tradeablePick`, next year's, not this year's already-drafted one) for a proven vet (68+ ovr, healthy, not Rozelle-locked) at a real roster hole (`deskHoles`) from a rebuilding club (score ≤0.42) — the seller keeps at least one body left at that position. Falls back to the old simple value/scheme-fit 1-for-1 swap when no buyer/seller pairing works, for variety.
+
+## Update (every player has a card, everywhere)
+
+Player cards (`PlayerLink` → `PlayerProfile` modal) were missing in two spots and there was no way to browse another club's full roster. Fixed:
+
+- `MarketDesk.tsx` trade desk: the "You send"/"You receive" checkbox lists now use `PlayerLink` (wrapped in a `<span onClick={(e) => e.preventDefault()}>` so clicking the name opens the card instead of also toggling the trade checkbox — nesting a button inside a `<label>` forwards clicks to the checkbox by default).
+- `GameApp.tsx` History → Awards section: MVP/OPOY/DPOY/CPOTY now render via `PlayerLink` instead of a plain name string.
+- New `TeamRoster.tsx` (`TeamRosterModal`): click any club in Standings (`openTeam(id)` in `game-store.ts`, new `viewTeamId` state) to open a read-only full-roster modal for that club, sorted by grade, every row clickable into `PlayerProfile`. Mounted once in `PlayShell` alongside `<PlayerProfile />`.
+
+## Update (injured reserve, SAVE_VERSION 15)
+
+Injured reserve is now a desk decision, not just the injury report. `Player.onIR` (default `false`) parks a hurt player off the 53-man count (`activeRosterOf` vs `rosterOf`) so the desk can sign or claim a replacement while he heals — `signPlayer`'s cap check, `deskHoles`, and `starters()`/`DepthField` all treat an IR player as unavailable for gameday. `gm.ts`: `placeOnIR` (requires `injuredWeeks > 0`, not already on IR) and `activateFromIR` (requires healed + roster room). **Era-gated to match real history**: IR was season-ending before 2012 — `canReturnFromIR(year)` returns `false` pre-2012, so `activateFromIR` fails with "season-ending in this era" and the UI hides the Activate button, only showing "out for the year." Wired into `InjuryReport` and the `Roster` table in `GameApp.tsx`, plus `PlayerProfile`'s status line.
+
+Also fixed two stale `qa-season.mjs` assertions unrelated to IR (were failing before this change): the "Bo Jackson does not hug overall on unused skills" check was reading the raw star-profile override (which correctly omits `throwAcc` since it's not a locked attribute) instead of the derived `Ratings` — now built via `g.ratingsFromProfile`, matching the Nobis assertion's pattern. And the hardcoded `SAVE_VERSION === 14` assertion is now `=== 15`.
 
 ---
 

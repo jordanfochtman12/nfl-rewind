@@ -1,8 +1,11 @@
 import { useMemo, useRef, useState } from "react";
 import {
   ACTIVE_1966,
+  activateFromIR,
+  activeRosterOf,
   activeTeamIds,
   availableCoaches,
+  canReturnFromIR,
   cutPlayer,
   depthChart,
   deskFire,
@@ -22,6 +25,8 @@ import {
   moveDepth,
   nicknameOf,
   originalLeague,
+  placeOnIR,
+  ROSTER_TARGET,
   rosterOf,
   saveByteLength,
   standingRows,
@@ -47,6 +52,7 @@ import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
 import { PlayerLink, PlayerProfile } from "./PlayerProfile";
+import { TeamRosterModal } from "./TeamRoster";
 import { ExpansionNight } from "./ExpansionNight";
 import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
@@ -140,7 +146,7 @@ function TeamSelect() {
             key={id}
             type="button"
             onClick={() => newGame(id)}
-            className="flex min-h-14 items-center gap-3 overflow-hidden rounded-lg border border-line bg-surface/90 px-3 text-left backdrop-blur-sm hover:bg-surface-2"
+            className="chrome-bevel flex min-h-14 items-center gap-3 overflow-hidden rounded-lg bg-gradient-to-b from-surface-2/95 to-surface/95 px-3 text-left backdrop-blur-sm transition-all hover:brightness-125"
           >
             <ClubHash id={id} year={1966} className="w-1.5 self-stretch rounded-sm" />
             <Logo id={id} size={44} year={1966} />
@@ -363,21 +369,62 @@ function LastSunday() {
 
 function InjuryReport() {
   const save = useGameStore((s) => s.save)!;
-  const hurt = rosterOf(save, save.userTeamId).filter((p) => p.injuredWeeks > 0);
+  const desk = useGameStore((s) => s.desk);
+  const hurt = rosterOf(save, save.userTeamId).filter((p) => p.injuredWeeks > 0 || p.onIR);
+  const cap = ROSTER_TARGET + 8;
+  const active = activeRosterOf(save, save.userTeamId).length;
+  const canReturn = canReturnFromIR(save.year);
   return (
     <section className="rounded-xl border border-line bg-surface p-4">
-      <p className="text-xs tracking-[0.25em] text-muted">INJURY REPORT</p>
+      <p className="text-xs tracking-[0.25em] text-muted">
+        INJURY REPORT <span className="text-subtle">· active roster {active}/{cap}</span>
+      </p>
       {hurt.length === 0 ? (
         <p className="mt-2 text-sm text-muted">Training room is quiet. Next man stays on the bench.</p>
       ) : (
         <ul className="mt-2 space-y-1 text-sm">
           {hurt.map((p) => (
-            <li key={p.id} className="flex justify-between gap-3">
+            <li key={p.id} className="flex items-center justify-between gap-3">
               <span>
                 <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
               </span>
-              <span className="tabular text-brick">
-                {p.injuryName ?? "hurt"} · {p.injuredWeeks}w
+              <span className="flex items-center gap-2">
+                <span className="tabular text-brick">
+                  {p.onIR ? "IR" : p.injuryName ?? "hurt"}
+                  {p.injuredWeeks > 0 ? ` · ${p.injuredWeeks}w` : p.onIR ? " · ready" : ""}
+                </span>
+                {p.onIR ? (
+                  canReturn ? (
+                    <Btn
+                      kind="ghost"
+                      className="min-h-8 px-3 text-xs"
+                      disabled={p.injuredWeeks > 0}
+                      onClick={() =>
+                        desk((s) => {
+                          const r = activateFromIR(s, s.userTeamId, p.id);
+                          return r.ok ? `Activated ${p.firstName} ${p.lastName} off IR.` : r.reason;
+                        })
+                      }
+                    >
+                      Activate
+                    </Btn>
+                  ) : (
+                    <span className="text-xs text-subtle">out for the year</span>
+                  )
+                ) : (
+                  <Btn
+                    kind="ghost"
+                    className="min-h-8 px-3 text-xs"
+                    onClick={() =>
+                      desk((s) => {
+                        const r = placeOnIR(s, s.userTeamId, p.id);
+                        return r.ok ? `Placed ${p.firstName} ${p.lastName} on IR.` : r.reason;
+                      })
+                    }
+                  >
+                    Place on IR
+                  </Btn>
+                )}
               </span>
             </li>
           ))}
@@ -428,27 +475,63 @@ function Roster() {
               </td>
               <td className="tabular px-3 py-2 text-muted">{formatMoney(p.salary ?? 0, save.year)}</td>
               <td className="px-3 py-2 text-xs">
-                {p.injuredWeeks > 0 ? (
+                {p.onIR ? (
+                  <span className="text-brick">
+                    IR{p.injuredWeeks > 0 ? ` · ${p.injuredWeeks}w` : " · ready"}
+                  </span>
+                ) : p.injuredWeeks > 0 ? (
                   <span className="text-brick">
                     {p.injuryName ?? "hurt"} · {p.injuredWeeks}w
                   </span>
                 ) : (
-                  <span className="text-accent">active</span>
+                  <span className="text-good">active</span>
                 )}
               </td>
               <td className="px-3 py-2">
-                <Btn
-                  kind="brick"
-                  className="min-h-9 px-3 text-xs"
-                  onClick={() =>
-                    desk((s) => {
-                      const r = cutPlayer(s, s.userTeamId, p.id);
-                      return r.ok ? `Cut ${p.firstName} ${p.lastName}.` : r.reason;
-                    })
-                  }
-                >
-                  Cut
-                </Btn>
+                <div className="flex flex-wrap gap-2">
+                  {p.onIR ? (
+                    canReturnFromIR(save.year) ? (
+                      <Btn
+                        kind="ghost"
+                        className="min-h-9 px-3 text-xs"
+                        disabled={p.injuredWeeks > 0}
+                        onClick={() =>
+                          desk((s) => {
+                            const r = activateFromIR(s, s.userTeamId, p.id);
+                            return r.ok ? `Activated ${p.firstName} ${p.lastName} off IR.` : r.reason;
+                          })
+                        }
+                      >
+                        Activate
+                      </Btn>
+                    ) : null
+                  ) : p.injuredWeeks > 0 ? (
+                    <Btn
+                      kind="ghost"
+                      className="min-h-9 px-3 text-xs"
+                      onClick={() =>
+                        desk((s) => {
+                          const r = placeOnIR(s, s.userTeamId, p.id);
+                          return r.ok ? `Placed ${p.firstName} ${p.lastName} on IR.` : r.reason;
+                        })
+                      }
+                    >
+                      IR
+                    </Btn>
+                  ) : null}
+                  <Btn
+                    kind="brick"
+                    className="min-h-9 px-3 text-xs"
+                    onClick={() =>
+                      desk((s) => {
+                        const r = cutPlayer(s, s.userTeamId, p.id);
+                        return r.ok ? `Cut ${p.firstName} ${p.lastName}.` : r.reason;
+                      })
+                    }
+                  >
+                    Cut
+                  </Btn>
+                </div>
               </td>
             </tr>
           ))}
@@ -701,6 +784,7 @@ function Staff() {
 
 function Standings() {
   const save = useGameStore((s) => s.save)!;
+  const openTeam = useGameStore((s) => s.openTeam);
   const rows = standingRows(save);
   return (
     <div className="space-y-8">
@@ -724,10 +808,11 @@ function Standings() {
                 {g.teams.map((t) => (
                   <tr
                     key={t.id}
-                    className={`border-t border-line ${t.id === save.userTeamId ? "bg-club/20" : ""}`}
+                    className={`cursor-pointer border-t border-line hover:bg-surface-2 ${t.id === save.userTeamId ? "bg-club/20" : ""}`}
+                    onClick={() => openTeam(t.id)}
                   >
                     <td className="px-3 py-2">
-                      <span className="inline-flex items-center gap-2">
+                      <span className="inline-flex items-center gap-2 hover:text-brass">
                         <ClubHash id={t.id} className="h-5 w-1 rounded-full" />
                         <Logo id={t.id} size={22} />
                         {displayName(save.year, t.id)}
@@ -1039,15 +1124,16 @@ function History() {
         {save.history.awards.length === 0 && <p className="text-muted">No trophies yet. Play a season.</p>}
         <ul className="space-y-2">
           {save.history.awards.slice().reverse().slice(0, 12).map((a) => {
-            const nm = (id?: string) => {
+            const Nm = ({ id }: { id?: string }) => {
               const p = id ? save.players[id] : undefined;
-              return p ? `${p.firstName} ${p.lastName}` : "—";
+              return p ? <PlayerLink player={p} className="inline min-h-0" /> : <span>—</span>;
             };
             return (
               <li key={a.year} className="rounded-lg border border-line bg-surface p-3 text-sm">
                 <p className="font-display text-base">{a.year}</p>
                 <p className="text-muted">
-                  MVP {nm(a.mvp)} · OPOY {nm(a.offPoy)} · DPOY {nm(a.defPoy)} · CPOTY {nm(a.cpoty)}
+                  MVP <Nm id={a.mvp} /> · OPOY <Nm id={a.offPoy} /> · DPOY <Nm id={a.defPoy} /> · CPOTY{" "}
+                  <Nm id={a.cpoty} />
                 </p>
               </li>
             );
@@ -1162,33 +1248,42 @@ function PlayShell() {
   return (
     <ClubDesk id={save.userTeamId} year={save.year} className="min-h-dvh bg-bg">
       <header
-        className="sticky top-0 z-10 border-b border-line backdrop-blur"
-        style={{ background: "color-mix(in srgb, var(--color-club) 14%, var(--color-bg))" }}
+        className="carbon sticky top-0 z-10 border-b border-line backdrop-blur"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in srgb, var(--color-club) 22%, var(--color-studio)), var(--color-studio) 70%)",
+        }}
       >
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
+          <div className="chrome-bevel flex items-center gap-3 rounded-md bg-black/30 px-3 py-1.5">
             <Logo id={save.userTeamId} size={32} />
             <div>
-              <p className="font-display text-sm leading-none">{displayName(save.year, save.userTeamId)}</p>
-              <p className="text-xs text-muted">{save.weekLabel}</p>
+              <p className="font-display text-sm italic leading-none tracking-wide text-fg">
+                {displayName(save.year, save.userTeamId)}
+              </p>
+              <p className="stat-glow text-xs text-club-2">{save.weekLabel}</p>
             </div>
           </div>
           <div className="flex gap-2">
             <Btn onClick={download} className="hidden sm:inline-flex">
               Export
             </Btn>
-            <Btn onClick={resign}>Title</Btn>
+            <Btn kind="primary" onClick={resign}>
+              Title
+            </Btn>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-3">
+        <nav className="mx-auto flex max-w-6xl gap-1.5 overflow-x-auto px-4 pb-3">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
-              className={`min-h-10 shrink-0 rounded-md px-3 text-sm ${
-                tab === t.id ? "bg-club text-club-fg" : "text-muted hover:text-fg"
+              className={`chrome-bevel min-h-10 shrink-0 rounded-md px-3 font-display text-sm font-semibold uppercase italic tracking-wide transition-all ${
+                tab === t.id
+                  ? "bg-gradient-to-b from-club to-[color-mix(in_srgb,var(--color-club)_70%,black)] text-club-fg"
+                  : "bg-black/25 text-muted hover:text-fg"
               }`}
             >
               {t.label}
@@ -1212,6 +1307,7 @@ function PlayShell() {
         {!event && tab === "draft" && !showDraft && <DraftNight />}
         {!event && tab === "history" && <History />}
         <PlayerProfile />
+        <TeamRosterModal />
       </main>
     </ClubDesk>
   );

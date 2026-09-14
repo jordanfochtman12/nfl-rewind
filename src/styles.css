@@ -1,24 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #090a08;
-  --color-surface: #131510;
-  --color-surface-2: #1b1e18;
-  --color-fg: #f0e8d6;
-  --color-muted: #9c9688;
-  --color-subtle: #6c685e;
-  --color-accent: #3f6b4e;
-  --color-accent-fg: #f0e8d6;
-  --color-line: #2c2e27;
-  --color-brick: #8f3d32;
-  --color-paper: #d6cdb8;
-  --color-brass: #c4a574;
-  --color-studio: #070709;
-  --color-club: #3f6b4e;
-  --color-club-2: #c4a574;
-  --color-club-fg: #f0e8d6;
+  --color-bg: #05070c;
+  --color-surface: #0e131d;
+  --color-surface-2: #161d2a;
+  --color-fg: #eef3fb;
+  --color-muted: #93a1b8;
+  --color-subtle: #5c6a82;
+  --color-accent: #ff5a1f;
+  --color-accent-fg: #0a0d14;
+  --color-good: #2de08a;
+  --color-line: #26314420;
+  --color-brick: #e0263c;
+  --color-paper: #d9e2f2;
+  --color-brass: #ffc93c;
+  --color-studio: #020306;
+  --color-chrome: #aebbd1;
+  --color-chrome-2: #4a566c;
+  --color-club: #ff5a1f;
+  --color-club-2: #ffc93c;
+  --color-club-fg: #0a0d14;
   --font-display: "Oswald", "Arial Narrow", sans-serif;
-  --font-body: "Source Serif 4", "Georgia", serif;
+  --font-body: "Inter", "Source Serif 4", "Georgia", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -34,7 +37,9 @@
   body {
     font-family: var(--font-body);
     min-height: 100dvh;
-    background: var(--color-bg);
+    background:
+      radial-gradient(ellipse 1200px 700px at 50% -10%, color-mix(in srgb, var(--color-club) 16%, transparent), transparent 60%),
+      var(--color-bg);
     color: var(--color-fg);
   }
   h1,
@@ -43,8 +48,9 @@
   h4 {
     font-family: var(--font-display);
     text-wrap: balance;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
+    font-style: italic;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -88,4 +94,105 @@
   .ticker {
     animation: none;
   }
+}
+
+/* --- broadcast-package chrome --- */
+
+/* Glossy metal bevel: a thin bright rim top-left, dark shadow bottom-right. */
+.chrome-bevel {
+  border: 1px solid color-mix(in srgb, var(--color-chrome) 45%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+    inset 0 -2px 4px color-mix(in srgb, black 45%, transparent),
+    0 1px 0 color-mix(in srgb, black 60%, transparent);
+}
+
+/* Angled score-bug panel: diagonal-cut leading edge like a broadcast lower-third. */
+.broadcast-panel {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-surface-2), var(--color-surface) 70%);
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px);
+}
+
+.broadcast-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px);
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-club) 90%, white 10%),
+    color-mix(in srgb, var(--color-club-2) 80%, transparent) 40%,
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Hot chrome divider bar used under headers / between sections. */
+.chrome-bar {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-club) 0%,
+    color-mix(in srgb, var(--color-club) 60%, var(--color-club-2) 40%) 45%,
+    var(--color-club-2) 55%,
+    color-mix(in srgb, var(--color-club-2) 40%, transparent) 100%
+  );
+  box-shadow: 0 0 14px color-mix(in srgb, var(--color-club) 55%, transparent);
+}
+
+/* Stat-bug numerals: glowing, italic, condensed. */
+.stat-glow {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--color-club) 60%, transparent);
+}
+
+.carbon {
+  background-image:
+    linear-gradient(135deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
+    linear-gradient(225deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
+    linear-gradient(45deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
+    linear-gradient(315deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%);
+  background-position:
+    10px 0,
+    10px 0,
+    0 0,
+    0 0;
+  background-size: 20px 20px;
+  background-repeat: repeat;
+}
+
+/* --- broadcast card/table pass (applies wherever the flat card/table pattern is already used) --- */
+
+/* Every full-bordered card ("rounded-xl/lg border border-line ...") gets a gradient panel + chrome rim,
+   instead of a flat fill. Scoped to the exact class combo so unrelated bordered elements are untouched. */
+.border.border-line {
+  border-color: color-mix(in srgb, var(--color-chrome) 22%, var(--color-line));
+  background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-surface-2) 85%, transparent), transparent 65%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 5%, transparent),
+    0 1px 0 color-mix(in srgb, black 40%, transparent);
+}
+
+/* Table headers: dark chrome strip with a hot club-color underline instead of a flat fill. */
+table thead {
+  position: relative;
+  background: linear-gradient(180deg, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2) 55%, black));
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--color-club) 55%, transparent);
+}
+
+/* Row hover + zebra separation for every data table. */
+table tbody tr {
+  transition: background-color 120ms ease;
+}
+table tbody tr:hover {
+  background-color: color-mix(in srgb, var(--color-surface-2) 55%, transparent);
 }

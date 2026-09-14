@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 14;
+export const SAVE_VERSION = 15;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -242,6 +242,8 @@ export interface Player {
   arch?: string;
   injuredWeeks: number;
   injuryName?: string;
+  /** Parked off the 53-man count by a desk decision; frees a roster spot while hurt. */
+  onIR: boolean;
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
 }
@@ -468,7 +470,7 @@ export interface NewsItem {
   playerIds: string[];
 }
 
-export type TxKind = "draft" | "cut" | "sign" | "expansion" | "trade" | "retire" | "waive" | "claim";
+export type TxKind = "draft" | "cut" | "sign" | "expansion" | "trade" | "retire" | "waive" | "claim" | "ir" | "activate";
 
 export interface Transaction {
   id: string;

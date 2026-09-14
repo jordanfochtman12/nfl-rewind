@@ -148,10 +148,11 @@ Coaches have attributes (offense, defense, leadership, development, evaluation),
 - Awards, Pro Bowl, retirement, Canton, the coaching carousel, and franchise relocations are winter **nights**, not captions.
 - Training camp is a cut-down week (CPU trims; the user roster is not auto-cut).
 - Sim this Sunday **stays** on the film until Continue — same as the Super Bowl.
-- Mid-season trade deadline is a week on the calendar (Rozelle-era copy before 1994).
+- Mid-season trade deadline is a week on the calendar (Rozelle-era copy before 1994). Trades (`executeTrade`) enforce: the 53-man limit on both sides, salary-cap fit on both sides (1994+), and the Rozelle-rule lock (pre-1994 real stars — historical, 4+ years pro, 84+ ovr — don't move) on every player in the deal, not just CPU-generated offers. The window itself closes league-wide once that year's deadline resolves (`tradeWindowOpen`) — the Market tab's trade desk is disabled and CPU-CPU trades stop firing until the next league year. CPU trade AI (`cpuTrades`) mostly runs a buyer/seller model first: contenders (by win% once there's a sample, else roster talent) send a future day-two pick for a proven vet at a real roster hole from a rebuilding club, falling back to a simple value/scheme-fit swap otherwise.
 - History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
 - History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
 - Free agency is a week with holes and a street list, not only a spreadsheet.
+- Injured reserve is a desk decision: placing a hurt player on IR opens his roster spot so you can sign/claim a replacement. Activating him back mid-season only works **2012+** (`canReturnFromIR`) — before that, real NFL IR was season-ending, so he's out for the year once placed.
 - Dynasty JSON lives in IndexedDB (`nfl-rewind`) with a localStorage fallback. `compactSave` strips prior-year film and trims the wire so a 1966–2027 file still loads.
 - Play through `END_YEAR` (2027). `gradeDynasty` writes a letter (A+–F) from rings, titles, career W-L, HOF, Team of Honor, drafted stars. History shows it live; it locks on phase `complete`.
 

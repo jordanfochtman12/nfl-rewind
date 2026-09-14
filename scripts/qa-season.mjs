@@ -186,7 +186,8 @@ const champ = g.lookupProfile("CB", "Champ", "Bailey");
 assert((champ.rt?.cov ?? 0) >= 94, `Champ coverage locked (got ${champ.rt?.cov})`);
 const bo = g.lookupProfile("RB", "Bo", "Jackson");
 assert((bo.rt?.speed ?? 0) >= 96, `Bo Jackson speed (got ${bo.rt?.speed})`);
-assert((bo.rt?.throwAcc ?? 99) < 50, `Bo does not hug overall on unused skills (throwAcc ${bo.rt?.throwAcc})`);
+const boRatings = g.ratingsFromProfile("RB", 92, bo.arch, bo.rt, (n) => n);
+assert(boRatings.throwAcc < 50, `Bo does not hug overall on unused skills (throwAcc ${boRatings.throwAcc})`);
 for (const y of [1980, 1985, 1989, 1996, 1998]) {
   const cls = g.draftSeedsFor(y);
   const fat = cls.filter((s) => kitN(s) >= 5).length;
@@ -244,7 +245,7 @@ assert(sayersCareer.rushYds >= 800, `Sayers 1965 rush yds on the card (got ${say
 const namathCareer = g.careerTotals(namath);
 assert(namathCareer.passYds >= 2500, `Namath 1965 pass yds on the card (got ${namathCareer.passYds})`);
 
-assert(g.SAVE_VERSION === 14, `SAVE_VERSION 14 (got ${g.SAVE_VERSION})`);
+assert(g.SAVE_VERSION === 15, `SAVE_VERSION 15 (got ${g.SAVE_VERSION})`);
 const lombardi = save.coaches.lombardi;
 assert(lombardi, "Vince Lombardi is on the 1966 staff");
 assert(lombardi.teamId === "gnb", "Lombardi coaches the Packers");

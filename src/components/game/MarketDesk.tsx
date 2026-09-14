@@ -9,6 +9,7 @@ import {
   playerName,
   rosterOf,
   signPlayer,
+  tradeWindowOpen,
   visibleOvr,
   type Player,
   type TeamId,
@@ -47,6 +48,7 @@ export function MarketDesk() {
     [save],
   );
   const clubs = Object.values(save.teams).filter((t) => t.active && t.id !== save.userTeamId);
+  const windowOpen = tradeWindowOpen(save);
   const theirPlayers = other ? rosterOf(save, other as TeamId) : [];
   const myPicks = (save.teams[save.userTeamId].picks ?? []).filter((p) => !p.used && p.year <= save.year + 2);
   const theirPicks = other
@@ -177,7 +179,12 @@ export function MarketDesk() {
 
       <section className="space-y-3">
         <h3 className="text-sm tracking-[0.2em] text-muted">Trade desk</h3>
-        <div className="flex flex-wrap gap-2">
+        {!windowOpen && (
+          <p className="rounded-lg border border-brick/40 bg-brick/10 p-3 text-sm text-brick">
+            The trade deadline has passed. No deals league-wide until next league year.
+          </p>
+        )}
+        <div className={`flex flex-wrap gap-2 ${windowOpen ? "" : "pointer-events-none opacity-40"}`}>
           {clubs.map((t) => (
             <button
               key={t.id}
@@ -195,7 +202,7 @@ export function MarketDesk() {
             </button>
           ))}
         </div>
-        {other && (
+        {other && windowOpen && (
           <div className="grid gap-4 lg:grid-cols-2">
             <article className="rounded-xl border border-line bg-surface p-3">
               <p className="text-xs tracking-[0.2em] text-muted">You send</p>
@@ -209,7 +216,10 @@ export function MarketDesk() {
                         onChange={() => toggle(give, p.id, setGive)}
                       />
                       <span>
-                        {playerName(p)} · {p.pos} · <Grade p={p} />
+                        <span onClick={(e) => e.preventDefault()}>
+                          <PlayerLink player={p} className="inline min-h-0" />
+                        </span>{" "}
+                        · {p.pos} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -242,7 +252,10 @@ export function MarketDesk() {
                         onChange={() => toggle(get, p.id, setGet)}
                       />
                       <span>
-                        {playerName(p)} · {p.pos} · <Grade p={p} />
+                        <span onClick={(e) => e.preventDefault()}>
+                          <PlayerLink player={p} className="inline min-h-0" />
+                        </span>{" "}
+                        · {p.pos} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -265,7 +278,7 @@ export function MarketDesk() {
             </article>
           </div>
         )}
-        {other && (
+        {other && windowOpen && (
           <Btn
             kind="primary"
             onClick={() =>

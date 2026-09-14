@@ -1,4 +1,4 @@
-import { displayName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
+import { clubInk, displayName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -15,6 +15,9 @@ export function SuperBowlNight() {
   const mvp = g.mvpPlayerId ? save.players[g.mvpPlayerId] : undefined;
   const n = superBowlNumber(save.year);
   const winner = g.played ? (g.homeScore >= g.awayScore ? home : away) : undefined;
+  const awayInk = clubInk(away, save.year);
+  const homeInk = clubInk(home, save.year);
+  const winnerInk = winner === home ? homeInk : awayInk;
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
       <FilmStill still="superbowl" veil="bottom" />
@@ -33,11 +36,22 @@ export function SuperBowlNight() {
         </div>
       </div>
 
-      <div className="grid gap-6 px-6 py-10 sm:grid-cols-3 sm:items-center">
+      <div className="relative grid gap-6 px-6 py-10 sm:grid-cols-3 sm:items-center">
         <div className="text-center">
           <Logo id={away} size={96} />
           <p className="mt-3 font-display text-2xl">{displayName(save.year, away)}</p>
-          {g.played && <p className="tabular font-display text-7xl">{g.awayScore}</p>}
+          {g.played && (
+            <p
+              className="stat-glow tabular font-display text-7xl"
+              style={
+                winner === away
+                  ? { textShadow: `0 0 26px color-mix(in srgb, ${awayInk.primary} 65%, transparent)` }
+                  : undefined
+              }
+            >
+              {g.awayScore}
+            </p>
+          )}
         </div>
         <div className="text-center">
           <p className="font-display tracking-[0.5em] text-brass">VS</p>
@@ -79,13 +93,27 @@ export function SuperBowlNight() {
         <div className="text-center">
           <Logo id={home} size={96} />
           <p className="mt-3 font-display text-2xl">{displayName(save.year, home)}</p>
-          {g.played && <p className="tabular font-display text-7xl">{g.homeScore}</p>}
+          {g.played && (
+            <p
+              className="stat-glow tabular font-display text-7xl"
+              style={
+                winner === home
+                  ? { textShadow: `0 0 26px color-mix(in srgb, ${homeInk.primary} 65%, transparent)` }
+                  : undefined
+              }
+            >
+              {g.homeScore}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-brass/20 px-6 py-6">
+      <div className="relative space-y-4 border-t border-brass/20 px-6 py-6">
         {g.played && winner && (
-          <p className="font-display text-2xl text-brass">
+          <p
+            className="chrome-bevel inline-block rounded-md bg-black/40 px-4 py-2 font-display text-2xl text-fg"
+            style={{ textShadow: `0 0 20px color-mix(in srgb, ${winnerInk.primary} 70%, transparent)` }}
+          >
             World champions — {displayName(save.year, winner)}
           </p>
         )}

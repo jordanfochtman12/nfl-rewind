@@ -3,7 +3,7 @@ import { useGameStore } from "@/lib/game-store";
 
 function slot(saveTeam: Player[], pos: Pos, n = 0): Player | undefined {
   return saveTeam
-    .filter((p) => p.pos === pos)
+    .filter((p) => p.pos === pos && !p.onIR)
     .sort((a, b) => {
       const ai = a.injuredWeeks > 0 ? 1 : 0;
       const bi = b.injuredWeeks > 0 ? 1 : 0;

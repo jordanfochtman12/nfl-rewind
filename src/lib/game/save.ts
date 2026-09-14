@@ -205,6 +205,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     pl.traits = pl.traits ?? [];
     pl.career = pl.career ?? [];
     pl.injuredWeeks = pl.injuredWeeks ?? 0;
+    pl.onIR = pl.onIR ?? false;
     pl.snaps = pl.snaps ?? 0;
     pl.morale = pl.morale ?? 70;
     pl.potential = pl.potential ?? Math.min(99, (pl.ovr ?? 60) + 2);

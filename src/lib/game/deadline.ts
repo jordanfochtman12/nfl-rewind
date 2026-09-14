@@ -2,7 +2,7 @@
 import type { DeadlineSession, DynastySave, Player, TeamId, TradeOffer, TradePiece } from "./types.ts";
 import { activeTeamIds, displayName, gamesInSeason } from "./teams.ts";
 import { playerName, rosterOf } from "./players.ts";
-import { cpuTrades, executeTrade, playerValue, tradeValue } from "./gm.ts";
+import { cpuTrades, executeTrade, playerValue, rozelleLock, tradeValue } from "./gm.ts";
 import { allPicks } from "./draft.ts";
 import { randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
@@ -28,10 +28,6 @@ export function offerLine(save: DynastySave, o: TradeOffer): string {
   const give = o.give.map((x) => pieceName(save, x)).join(", ");
   const get = o.get.map((x) => pieceName(save, x)).join(", ");
   return `${displayName(save.year, o.from)} send ${give} for ${get}`;
-}
-
-function rozelleLock(save: DynastySave, p: Player): boolean {
-  return save.year < 1994 && p.historical && p.yearsPro >= 4 && p.ovr >= 84;
 }
 
 function extraAt(save: DynastySave, teamId: TeamId): Player[] {

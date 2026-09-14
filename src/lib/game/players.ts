@@ -160,6 +160,7 @@ export function makePlayer(
     traits: kit.traits,
     arch,
     injuredWeeks: 0,
+    onIR: false,
     stats: {},
     career: [],
     ...measurables(opts.pos, ovr, ratings.speed, salt),
@@ -227,11 +228,16 @@ export function rosterOf(save: DynastySave, teamId: TeamId): Player[] {
     .filter((p): p is Player => !!p && p.teamId === teamId);
 }
 
+/** Roster minus anyone parked on IR — this is what counts against the 53-man cap. */
+export function activeRosterOf(save: DynastySave, teamId: TeamId): Player[] {
+  return rosterOf(save, teamId).filter((p) => !p.onIR);
+}
+
 /** Depth-aware starters. Injured skip. Empty depth falls back to ovr. */
 export function starters(save: DynastySave, teamId: TeamId, pos: Pos, n = 1): Player[] {
   const team = save.teams[teamId];
   const roster = rosterOf(save, teamId).filter((p) => p.pos === pos);
-  const healthy = roster.filter((p) => p.injuredWeeks <= 0);
+  const healthy = roster.filter((p) => p.injuredWeeks <= 0 && !p.onIR);
   const order = team?.depth?.[pos] ?? [];
   const seen = new Set<string>();
   const out: Player[] = [];

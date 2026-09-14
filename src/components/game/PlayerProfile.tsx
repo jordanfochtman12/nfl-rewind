@@ -61,6 +61,13 @@ function Status({ p }: { p: Player }) {
   if (p.teamId === "retired") return <span className="text-muted">Retired {p.retiredYear ?? ""}</span>;
   if (p.teamId === "hof") return <span className="text-brass">Hall of Fame {p.hofYear ?? ""}</span>;
   if (p.teamId === "fa") return <span className="text-muted">Free agent</span>;
+  if (p.onIR) {
+    return (
+      <span className="text-brick">
+        Injured reserve{p.injuredWeeks > 0 ? ` · ${p.injuredWeeks}w` : " · ready to activate"}
+      </span>
+    );
+  }
   if (p.injuredWeeks > 0) {
     return (
       <span className="text-brick">
@@ -68,7 +75,7 @@ function Status({ p }: { p: Player }) {
       </span>
     );
   }
-  return <span className="text-accent">Active</span>;
+  return <span className="text-good">Active</span>;
 }
 
 function StatTable({

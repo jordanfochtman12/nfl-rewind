@@ -80,7 +80,17 @@ export {
   transferPick,
 } from "./draft.ts";
 export { applyYearExpansion, userExpansionPick, closeExpansion, expansionOnClock, remainingExposed } from "./expansion.ts";
-export { playerName, rosterOf, starters, hasKit, pruneRoster, trimRoster, depthAt, syncDepth } from "./players.ts";
+export {
+  playerName,
+  rosterOf,
+  activeRosterOf,
+  starters,
+  hasKit,
+  pruneRoster,
+  trimRoster,
+  depthAt,
+  syncDepth,
+} from "./players.ts";
 export { hasFullKit, isPrimary, primaryKeys } from "./ratings.ts";
 export { eraProfile, xpKickYards, fourthGoBias, eraTargetWeights, dpiIsSpot, playoffBrake } from "./era.ts";
 export { expansionForYear, EXPANSION_SPECS } from "./data/expansions.ts";
@@ -136,6 +146,11 @@ export {
   deskPlan,
   freeAgents,
   deskHoles,
+  placeOnIR,
+  activateFromIR,
+  canReturnFromIR,
+  tradeWindowOpen,
+  rozelleLock,
 } from "./gm.ts";
 
 export { gradeDynasty, touchGrade } from "./grade.ts";

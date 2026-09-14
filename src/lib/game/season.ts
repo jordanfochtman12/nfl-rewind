@@ -45,7 +45,7 @@ import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuTrades, processWaivers, cpuSignNeeds } from "./gm.ts";
+import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen } from "./gm.ts";
 import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -180,7 +180,7 @@ function simThisWeek(save: DynastySave): void {
   const games = gamesInWeek(save, save.week);
   for (const g of games) simGame(save, g);
   cpuInSeasonMoves(save);
-  if (rand(save) < 0.08) cpuTrades(save);
+  if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
   weekPrimetime(save);
   buildPrimetime(save);
   save.waiverOrder = activeTeamIds(save.year)

@@ -30,6 +30,7 @@ interface GameStore {
   screen: Screen;
   tab: Tab;
   profileId: string | null;
+  viewTeamId: TeamId | null;
   pendingTeam: TeamId | null;
   lastDeskNote: string | null;
   hasHydrated: boolean;
@@ -37,6 +38,8 @@ interface GameStore {
   setTab: (t: Tab) => void;
   openProfile: (id: string) => void;
   closeProfile: () => void;
+  openTeam: (id: TeamId) => void;
+  closeTeam: () => void;
   newGame: (teamId: TeamId) => void;
   continueGame: () => void;
   step: (opts?: AdvanceOpts) => void;
@@ -70,6 +73,7 @@ export const useGameStore = create<GameStore>()(
       screen: "title",
       tab: "office",
       profileId: null,
+      viewTeamId: null,
       pendingTeam: null,
       lastDeskNote: null,
       hasHydrated: false,
@@ -77,9 +81,11 @@ export const useGameStore = create<GameStore>()(
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
       closeProfile: () => set({ profileId: null }),
+      openTeam: (viewTeamId) => set({ viewTeamId }),
+      closeTeam: () => set({ viewTeamId: null }),
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
-        set({ save, screen: "play", tab: "draft", profileId: null, lastDeskNote: null });
+        set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null });
       },
       continueGame: () => {
         const { save } = get();
@@ -113,7 +119,7 @@ export const useGameStore = create<GameStore>()(
         const save = hydrateSave(JSON.parse(raw));
         set({ save, screen: "play" });
       },
-      resign: () => set({ screen: "title", profileId: null }),
+      resign: () => set({ screen: "title", profileId: null, viewTeamId: null }),
     }),
     {
       name: "nfl-rewind-dynasty",
