@@ -754,9 +754,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       teamId: poss,
       q: driveQ,
       plays: drivePlays,
-      yards: driveYds,
+      yards: Math.round(driveYds),
       result,
-      startSpot: driveStart,
+      startSpot: Math.round(driveStart),
       label: `Q${driveQ} ${formatClock(clock)}`,
     });
     drivePlays = 0;
