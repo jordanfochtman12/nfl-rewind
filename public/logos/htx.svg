@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#03202f"/>
-<polygon points="32,10 38,26 56,26 42,36 48,54 32,44 16,54 22,36 8,26 26,26" fill="#a71930"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Houston Texans">
+<rect width="64" height="64" rx="10" fill="#03202f"/>
+<path fill="#a71930" d="M12 40 C16 18 30 12 40 16 C50 20 54 32 48 42 L40 54 L24 52 L16 56 Z"/>
+<path fill="#03202f" d="M30 30 C36 26 42 30 42 36 C40 40 34 40 32 36Z"/>
+<path fill="#a71930" d="M14 18 L4 10 L16 28 Z"/>
+<path fill="#a71930" d="M50 18 L60 10 L48 28 Z"/>
+<circle cx="36" cy="32" r="2" fill="#c4ced4"/>
 </svg>

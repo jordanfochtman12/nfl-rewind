@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tennessee Titans">
+<rect width="64" height="64" rx="10" fill="#0c2340"/>
+<circle cx="32" cy="32" r="24" fill="#4b92db"/>
+<circle cx="32" cy="32" r="20" fill="#0c2340"/>
+<path fill="#c8102e" d="M16 14 H48 L44 24 H36 V52 H28 V24 H20 Z"/>
+<path fill="#ffffff" d="M30 6 L32 11 L37 11 L33 14 L35 19 L30 16 L25 19 L27 14 L23 11 L28 11 Z"/>
+</svg>

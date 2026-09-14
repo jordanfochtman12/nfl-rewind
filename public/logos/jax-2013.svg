@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jacksonville Jaguars">
+<rect width="64" height="64" rx="10" fill="#006778"/>
+<path fill="#d7a22a" d="M6 40 C12 12 34 6 50 16 C58 22 60 36 50 46 L40 58 L20 54 L10 58 Z"/>
+<path fill="#000" d="M26 26 C38 18 48 26 48 36 C46 44 32 44 28 36Z"/>
+<path fill="#d7a22a" d="M48 14 L62 6 L56 24 Z"/>
+<circle cx="40" cy="28" r="2.6" fill="#000"/>
+<path fill="#000" d="M18 34 C28 28 40 32 42 42 C30 44 16 40 18 34Z"/>
+</svg>

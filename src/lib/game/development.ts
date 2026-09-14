@@ -2,6 +2,7 @@ import type { DynastySave, Player, Pos } from "./types.ts";
 import { rand, randInt } from "./rng.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { maybeReveal } from "./scout.ts";
+import { coachKitBoost } from "./coachKit.ts";
 
 const PEAK: Record<Pos, number> = {
   QB: 30,
@@ -93,10 +94,13 @@ export function agePlayer(save: DynastySave, p: Player): void {
   const peak = PEAK[p.pos];
   const cliff = CLIFF[p.pos];
   const pot = p.potential ?? p.ovr;
+  const team = p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? save.teams[p.teamId] : undefined;
+  const hc = team?.coachId ? save.coaches[team.coachId] : undefined;
+  const devBump = hc ? coachKitBoost(hc, "dev") + ((hc.development ?? 70) - 70) / 180 : 0;
   let delta = 0;
-  if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55) delta = randInt(save, 1, 2);
-  else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45) delta = randInt(save, 1, 2);
-  else if (p.age <= peak && starter && rand(save) < 0.28) delta = 1;
+  if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
+  else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45 + devBump * 0.5) delta = randInt(save, 1, 2);
+  else if (p.age <= peak && starter && rand(save) < 0.28 + devBump * 0.4) delta = 1;
   else if (p.age >= cliff) delta = -randInt(save, 2, 5);
   else if (p.age >= peak + 2 && rand(save) < 0.55) delta = -1;
   if (p.pos === "RB" && p.age >= 29) delta = Math.min(delta, -1);
@@ -107,21 +111,35 @@ export function agePlayer(save: DynastySave, p: Player): void {
 
   if (delta !== 0) applyAgeDelta(p, delta);
   p.peakOvr = Math.max(p.peakOvr, p.ovr);
+  const lead = hc ? ((hc.leadership ?? 70) - 70) / 20 + coachKitBoost(hc, "clutch") * 0.15 : 0;
   p.morale = starter
-    ? Math.min(99, (p.morale ?? 70) + 4)
+    ? Math.min(99, (p.morale ?? 70) + 4 + (lead > 0 ? 1 : 0))
     : Math.max(32, (p.morale ?? 70) - (gp === 0 ? 5 : 2));
   if (p.revealed) p.scoutOvr = p.ovr;
 }
 
 export function shouldRetire(save: DynastySave, p: Player): boolean {
+  if (p.pos === "K" || p.pos === "P") {
+    if (p.age >= 48) return true;
+    if (p.age >= 42 && p.ovr < 68 && rand(save) < 0.4) return true;
+    if (p.age >= 38 && p.ovr < 60) return true;
+    return false;
+  }
+  if (p.pos === "QB") {
+    if (p.age >= 44) return true;
+    if (p.age >= 39 && p.ovr < 78 && rand(save) < 0.35) return true;
+    if (p.age >= 37 && p.ovr < 72 && rand(save) < 0.4) return true;
+    return false;
+  }
   if (p.age >= 39) return true;
   if (p.pos === "RB" && p.age >= 32 && p.ovr < 76 && rand(save) < 0.45) return true;
-  if (p.pos === "QB" && p.age >= 37 && rand(save) < 0.28) return true;
   if (p.age >= 34 && p.ovr < 70 && rand(save) < 0.4) return true;
   if (p.age >= 31 && p.ovr < 64 && rand(save) < 0.22) return true;
   if ((p.morale ?? 70) < 28 && p.age >= 30 && rand(save) < 0.2) return true;
+  if (p.teamId === "fa" && p.age >= 32 && p.ovr < 68 && rand(save) < 0.25) return true;
   return false;
 }
+
 
 export function formatHt(inches?: number): string {
   if (!inches) return "—";

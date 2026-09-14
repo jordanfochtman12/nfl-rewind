@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#241773"/>
-<path d="M16 40 L30 14 L48 24 L50 44 L34 52 L20 46 Z" fill="#9e7c0c"/>
-<circle cx="38" cy="26" r="2.4" fill="#241773"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Baltimore Ravens">
+<rect width="64" height="64" rx="10" fill="#241773"/>
+<path fill="#c4ced4" d="M8 40 C14 12 38 8 52 22 C44 16 42 28 56 36 C44 34 36 46 44 56 C26 50 10 50 8 40Z"/>
+<path fill="#9b870c" d="M50 20 L62 28 L50 34 Z"/>
+<circle cx="34" cy="28" r="2.6" fill="#9b870c"/>
+<path fill="#241773" d="M22 36 C30 30 40 34 42 42 C32 42 22 40 22 36Z"/>
 </svg>

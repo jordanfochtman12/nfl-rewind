@@ -166,7 +166,7 @@ export function PlayerProfile() {
   if (!save || !p) return null;
 
   const teamId = p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? (p.teamId as TeamId) : save.userTeamId;
-  const colors = teamColors(teamId);
+  const colors = teamColors(teamId, save.year);
   const yearRow = p.stats[save.year];
   const career = careerOf(p);
   const log = seasonLog(p).filter(hasSeasonWork);

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cincinnati Bengals">
+<rect width="64" height="64" rx="10" fill="#000000"/>
+<path fill="#fb4f14" d="M8 40 C12 20 24 12 36 16 C48 20 54 32 48 42 L40 54 L22 52 L12 56 Z"/>
+<path fill="#000" d="M20 28 L24 48 M28 22 L32 50 M36 24 L38 48 M18 36 H42"/>
+<circle cx="40" cy="28" r="2.4" fill="#000"/>
+<path fill="#fb4f14" d="M44 18 L56 12 L50 26 Z"/>
+</svg>

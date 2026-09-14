@@ -1,18 +1,102 @@
-import type { BoxPlayer, DynastySave, GameResult, Player, TeamId } from "./types.ts";
-import { eraProfile } from "./era.ts";
+import type {
+  BoxPlayer,
+  DriveResult,
+  DriveSummary,
+  DynastySave,
+  Gameplan,
+  GameResult,
+  Player,
+  TeamId,
+} from "./types.ts";
+import {
+  clockStopFirstDown,
+  dpiIsSpot,
+  eraBigPlay,
+  eraProfile,
+  eraRb1Share,
+  eraTargetWeights,
+  fairCatchKickoff,
+  fgEraMod,
+  fourthGoBias,
+  hashFgMod,
+  huddleSeconds,
+  kickoffOobSpot,
+  kickoffRules,
+  kickoffTbRate,
+  otRules,
+  penaltyRates,
+  playoffBrake,
+  replayReview,
+  sneakBoost,
+  tenSecondRunoff,
+  tightCatchRule,
+  twoPointMakeP,
+  twoPointOk,
+  wantTwoPoint,
+  xpKickYards,
+  xpMakeBase,
+} from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
-import { conferenceOf, divisionKey, locationOf } from "./teams.ts";
+import { conferenceOf, divisionKey, originalLeague } from "./teams.ts";
 import { playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
+import { coachKitBoost } from "./coachKit.ts";
 import { maybeReveal } from "./scout.ts";
+import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueInfo, type Wx } from "./venues.ts";
+import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
   return ns.reduce((a, b) => a + b, 0) / ns.length;
 }
 
+function creditCoachWl(save: DynastySave, teamId: TeamId, result: "W" | "L" | "T"): void {
+  const id = save.teams[teamId]?.coachId;
+  const c = id ? save.coaches[id] : undefined;
+  if (!c) return;
+  if (result === "W") c.careerWins += 1;
+  else if (result === "L") c.careerLosses += 1;
+  else c.careerTies = (c.careerTies ?? 0) + 1;
+}
+
+function gauss(save: DynastySave): number {
+  return (rand(save) + rand(save) + rand(save) - 1.5) * 1.6;
+}
+
+function sampleYds(save: DynastySave, mu: number, sigma: number, lo: number, hi: number): number {
+  return clamp(Math.round(mu + gauss(save) * sigma), lo, hi);
+}
+
+export function formatClock(sec: number): string {
+  const s = Math.max(0, Math.floor(sec));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}:${r.toString().padStart(2, "0")}`;
+}
+
+export function defaultPlan(offScheme?: string): Gameplan {
+  if (offScheme === "smashmouth") return { attack: "run", fourth: "conservative", tempo: "chew", blitz: "rare", redZone: "power" };
+  if (offScheme === "vertical") return { attack: "pass", fourth: "normal", tempo: "hurry", blitz: "normal", redZone: "spread" };
+  if (offScheme === "westcoast") return { attack: "pass", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
+  return { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
+}
+
+export function planFor(save: DynastySave, teamId: TeamId): Gameplan {
+  const t = save.teams[teamId];
+  const base = defaultPlan(t?.offScheme);
+  if (!t?.plan) return base;
+  return {
+    attack: t.plan.attack,
+    fourth: t.plan.fourth,
+    tempo: t.plan.tempo,
+    blitz: t.plan.blitz ?? base.blitz,
+    redZone: t.plan.redZone ?? base.redZone,
+  };
+}
+
 export interface TeamUnits {
   qb?: Player;
+  qb2?: Player;
   rb?: Player;
   rb2?: Player;
   fb?: Player;
@@ -24,6 +108,7 @@ export interface TeamUnits {
   db: Player[];
   k?: Player;
   p?: Player;
+  returner?: Player;
   offPass: number;
   offRun: number;
   defPass: number;
@@ -38,11 +123,14 @@ export interface TeamUnits {
     scramble: number;
     clutch: number;
     inj: number;
+    pen: number;
   };
 }
 
 export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
-  const qb = starters(save, teamId, "QB", 1)[0];
+  const qbs = starters(save, teamId, "QB", 2);
+  const qb = qbs[0];
+  const qb2 = qbs[1];
   const rbs = starters(save, teamId, "RB", 2);
   const rb = rbs[0];
   const rb2 = rbs[1];
@@ -58,7 +146,7 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   ];
   const dl = [...starters(save, teamId, "DE", 2), ...starters(save, teamId, "DT", 2)];
   const lb = [...starters(save, teamId, "OLB", 2), ...starters(save, teamId, "MLB", 1)];
-  const db = [...starters(save, teamId, "CB", 2), ...starters(save, teamId, "S", 2)];
+  const db = [...starters(save, teamId, "CB", 3), ...starters(save, teamId, "S", 2)];
   const k = starters(save, teamId, "K", 1)[0];
   const p = starters(save, teamId, "P", 1)[0];
   const team = save.teams[teamId];
@@ -79,13 +167,14 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   const offIq = ((qb?.ratings.throwAwr ?? 50) + (qb?.ratings.awareness ?? 50) + (oc?.offense ?? coach?.offense ?? 70)) / 3;
   const defIq = ((lb[0]?.ratings.awareness ?? 50) + (dc?.defense ?? coach?.defense ?? 70)) / 2;
   let offPass =
-    (qb?.ratings.throwAcc ?? 50) * 0.32 +
-    (qb?.ratings.throwAwr ?? 50) * 0.18 +
+    (qb?.ratings.throwAcc ?? 50) * 0.3 +
+    (qb?.ratings.throwAwr ?? 50) * 0.16 +
     (qb?.ratings.throwPow ?? 50) * 0.1 +
+    (qb?.ratings.rel ?? 50) * 0.06 +
     recSkill * 0.18 +
     passBlk * 0.12 +
-    offIq * 0.1;
-  let offRun = rushSkill * 0.48 + runBlk * 0.32 + (rb?.ratings.awareness ?? 50) * 0.1 + offIq * 0.1;
+    offIq * 0.08;
+  let offRun = rushSkill * 0.46 + runBlk * 0.32 + (rb?.ratings.awareness ?? 50) * 0.1 + offIq * 0.12;
   let defPass = cov * 0.4 + passRush * 0.32 + defIq * 0.16 + tak * 0.12;
   let defRun = tak * 0.42 + avg(dl.map((x) => x.ratings.str)) * 0.22 + defIq * 0.2 + passRush * 0.16;
   const scheme = team?.offScheme;
@@ -94,11 +183,21 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   if (scheme === "westcoast") offPass += 2;
   if (team?.defScheme === "cover-2") defPass += 2.5;
   if (team?.defScheme === "3-4") defRun += 2;
-  const skill = [qb, rb, rb2, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
+  const skill = [qb, qb2, rb, rb2, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
   offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
   offRun += kitBoost(rb, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
   defPass += db.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + dl.reduce((n, p) => n + kitBoost(p, "defPass"), 0);
   defRun += dl.reduce((n, p) => n + kitBoost(p, "defRun"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defRun"), 0);
+  offPass += coachKitBoost(coach, "offPass") + coachKitBoost(oc, "offPass") + (coach?.offense ?? 70) * 0.02;
+  offRun += coachKitBoost(coach, "offRun") + coachKitBoost(oc, "offRun");
+  defPass += coachKitBoost(coach, "defPass") + coachKitBoost(dc, "defPass") + (coach?.defense ?? 70) * 0.02;
+  defRun += coachKitBoost(coach, "defRun") + coachKitBoost(dc, "defRun");
+  const cands = [...wr, rb, rb2, fb, ...db].filter((x): x is Player => !!x);
+  const returner = cands.slice().sort((a, b) => {
+    const as = a.ratings.speed + (a.traits?.includes("Return man") ? 12 : 0);
+    const bs = b.ratings.speed + (b.traits?.includes("Return man") ? 12 : 0);
+    return bs - as;
+  })[0];
   const kit = {
     cmp: kitBoost(qb, "cmp") + wr.reduce((n, p) => n + kitBoost(p, "cmp"), 0),
     sack: kitBoost(qb, "sack") + ol.reduce((n, p) => n + kitBoost(p, "sack"), 0) + dl.reduce((n, p) => n + kitBoost(p, "sack"), 0),
@@ -107,10 +206,11 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
     td: kitBoost(qb, "td") + kitBoost(rb, "td") + wr.reduce((n, p) => n + kitBoost(p, "td"), 0),
     fg: kitBoost(k, "fg"),
     scramble: kitBoost(qb, "scramble"),
-    clutch: skill.reduce((n, p) => n + kitBoost(p, "clutch"), 0),
+    clutch: skill.reduce((n, p) => n + kitBoost(p, "clutch"), 0) + coachKitBoost(coach, "clutch") + coachKitBoost(oc, "clutch") + coachKitBoost(dc, "clutch"),
     inj: skill.reduce((n, p) => n + kitBoost(p, "inj"), 0),
+    pen: coachKitBoost(coach, "pen") + coachKitBoost(oc, "pen") + coachKitBoost(dc, "pen"),
   };
-  return { qb, rb, rb2, fb, wr, te, ol, dl, lb, db, k, p, offPass, offRun, defPass, defRun, kit };
+  return { qb, qb2, rb, rb2, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass, offRun, defPass, defRun, kit };
 }
 
 function dist(save: DynastySave, weights: number[]): number {
@@ -124,12 +224,14 @@ function dist(save: DynastySave, weights: number[]): number {
 }
 
 function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number): void {
+  const era = eraProfile(year);
   for (const b of box) {
     const p = save.players[b.playerId];
     if (!p) continue;
     const s = yearStats(p, year, teamId);
     s.gp += 1;
     maybeReveal(p, 1);
+    p.snaps = (p.snaps ?? 0) + 1;
     s.passAtt += b.passAtt ?? 0;
     s.passCmp += b.passCmp ?? 0;
     s.passYds += b.passYds ?? 0;
@@ -152,388 +254,310 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.xpAtt += b.xpAtt ?? 0;
     s.punts += b.punts ?? 0;
     s.puntYds += b.puntYds ?? 0;
+    s.krYds += b.krYds ?? 0;
+    s.prYds += b.prYds ?? 0;
+    s.targets += b.targets ?? 0;
+    s.tfl += b.tfl ?? 0;
+    s.pd += b.pd ?? 0;
+    s.qbHits += b.qbHits ?? 0;
+    s.fr += b.fr ?? 0;
+    s.krTd += b.krTd ?? 0;
+    s.prTd += b.prTd ?? 0;
+    if (p.pos === "TE") s.rec = Math.min(s.rec, era.teRecCap);
+    else s.rec = Math.min(s.rec, era.recCap);
+    s.rushTd = Math.min(s.rushTd, era.rushTdCap);
+    s.passTd = Math.min(s.passTd, era.passTdCap);
+    s.passInt = Math.min(s.passInt, era.intCap);
+    s.sacks = Math.min(s.sacks, era.sackCap);
   }
 }
 
-type Wx = "clear" | "rain" | "wind" | "cold" | "snow";
-
-function pickWeather(save: DynastySave, loc: string): Wx {
-  const late = save.week >= 10;
-  const north = /Green Bay|Chicago|Cleveland|Buffalo|Boston|Minneapolis|Pittsburgh|New York|Denver|Kansas City/.test(
-    loc,
-  );
-  const r = rand(save);
-  if (late && north && r < 0.16) return "snow";
-  if (late && north && r < 0.34) return "cold";
-  if (r < 0.12) return "rain";
-  if (r < 0.2) return "wind";
-  return "clear";
-}
-
-function bumpBox(box: BoxPlayer[], id: string, patch: Partial<BoxPlayer>): void {
+function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPlayer>): void {
+  if (!id) return;
   let row = box.find((b) => b.playerId === id);
   if (!row) {
     row = { playerId: id };
     box.push(row);
   }
   for (const [k, v] of Object.entries(patch)) {
-    const key = k as keyof BoxPlayer;
     if (typeof v === "number") {
       const rec = row as unknown as Record<string, number>;
-      rec[String(key)] = (rec[String(key)] ?? 0) + v;
+      rec[k] = (rec[k] ?? 0) + v;
     }
   }
 }
 
-function pickRec(save: DynastySave, off: TeamUnits): Player | undefined {
-  const pool = [...off.wr, off.te, off.rb].filter((p): p is Player => !!p);
+function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number, redZone: boolean): Player | undefined {
+  const w = eraTargetWeights(year);
+  const slots: { p: Player | undefined; wt: number }[] = [
+    { p: off.wr[0], wt: w.wr1 * (deep ? 1.2 : 1) * (redZone ? 0.9 : 1) },
+    { p: off.wr[1], wt: w.wr2 },
+    { p: off.wr[2], wt: w.wr3 * (deep ? 0.65 : 1.15) },
+    { p: off.te, wt: w.te * (deep ? 0.55 : 1.15) * (redZone ? 1.35 : 1) },
+    { p: off.rb, wt: w.rb * (deep ? 0.3 : 1.25) * (redZone ? 0.7 : 1) },
+  ];
+  const pool = slots.filter((s): s is { p: Player; wt: number } => !!s.p);
   if (!pool.length) return undefined;
   return pool[
     dist(
       save,
-      pool.map((p) => (p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.35) * kitShare(p, "recShare")),
+      pool.map((s) => {
+        const yac = deep ? s.p.ratings.speed * 0.7 + s.p.ratings.cit * 0.5 : s.p.ratings.rrt * 0.6 + s.p.ratings.catch * 0.5;
+        return s.wt * (s.p.ratings.catch + yac) * kitShare(s.p, "recShare");
+      }),
     )
-  ];
+  ]!.p;
 }
 
-function driveResult(
+function pickRusher(save: DynastySave, off: TeamUnits, passingDown: boolean, year: number, goal: boolean): Player | undefined {
+  const rb1 = eraRb1Share(year);
+  const pool: { p: Player; w: number }[] = [];
+  if (off.rb) pool.push({ p: off.rb, w: (passingDown ? rb1 * 0.7 : rb1) * kitShare(off.rb, "rushShare") * (off.rb.ratings.stamina / 80) });
+  if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
+  if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? 0.22 : year <= 1995 ? 0.12 : 0.05 });
+  if (off.qb && (off.kit.scramble > 6 || goal)) pool.push({ p: off.qb, w: goal ? 0.08 + off.kit.scramble / 180 : 0.03 + off.kit.scramble / 220 });
+  if (!pool.length) return off.qb;
+  return pool[dist(save, pool.map((x) => x.w))]!.p;
+}
+
+function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean): Player | undefined {
+  const pool = pass ? [...def.db, ...def.lb, ...def.dl] : [...def.lb, ...def.dl, ...def.db];
+  if (!pool.length) return undefined;
+  return pool[dist(save, pool.map((p) => (p.ratings.tak + p.ratings.pur) * (pass ? p.ratings.cov / 80 : 1)))];
+}
+
+function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
+  const pool = [...def.dl, ...def.lb];
+  if (!pool.length) return undefined;
+  return pool[dist(save, pool.map((p) => p.ratings.prs * kitShare(p, "sackShare")))];
+}
+
+function pickThief(save: DynastySave, def: TeamUnits): Player | undefined {
+  const pool = [...def.db, ...def.lb];
+  if (!pool.length) return undefined;
+  return pool[dist(save, pool.map((p) => (p.ratings.cov + p.ratings.catch * 0.35 + p.ratings.awareness * 0.2) * kitShare(p, "intShare")))];
+}
+
+function fgRange(k: Player | undefined, year: number, altitude: number): number {
+  const pow = k?.ratings.kickPow ?? 70;
+  const air = altitude >= 4000 ? 4 : 0;
+  return Math.round((38 + (pow - 70) * 0.55 + air) * (year <= 1973 ? 0.92 : 1));
+}
+
+function fgMakeP(k: Player | undefined, distYds: number, wx: Wx, year: number, clutch: number, altitude: number): number {
+  const acc = k?.ratings.kickAcc ?? 70;
+  const pow = k?.ratings.kickPow ?? 70;
+  let p = 0.97 - Math.max(0, distYds - 28) * 0.018;
+  p += (acc - 74) / 220;
+  p += hashFgMod(year);
+  if (altitude >= 4000) p += 0.04;
+  if (distYds > 48) p -= (distYds - 48) * 0.03;
+  if (distYds > fgRange(k, year, altitude) + 2) p -= 0.25;
+  if (pow < 72 && distYds >= 45) p -= 0.12;
+  if (wx === "wind" || wx === "snow") p -= 0.12;
+  if (wx === "cold") p -= 0.05;
+  if (wx === "rain") p -= 0.04;
+  p *= fgEraMod(year);
+  p += clutch * 0.01;
+  return clamp(p, 0.16, 0.97);
+}
+
+type Call = "run" | "short" | "med" | "deep" | "screen" | "draw" | "pa" | "sneak" | "punt" | "fg" | "kneel" | "spike";
+
+function callPlay(
   save: DynastySave,
-  off: TeamUnits,
-  def: TeamUnits,
-  era: ReturnType<typeof eraProfile>,
+  year: number,
+  down: number,
+  togo: number,
+  spot: number,
   trail: number,
+  q: number,
+  clock: number,
+  eraPassW: number,
+  plan: Gameplan,
+  k: Player | undefined,
   wx: Wx,
-  qi: number,
-): { kind: "td" | "fg" | "punt" | "int" | "fumble" | "safety"; pass: boolean; yds: number } {
-  const clutch = trail > 0 || qi === 3 ? off.kit.clutch : 0;
-  const edge = (off.offPass + off.offRun - def.defPass - def.defRun) / 2 + clutch;
-  let passW = era.passAtt / (era.passAtt + era.rushAtt);
-  if (trail >= 8) passW += 0.14;
-  if (trail <= -10) passW -= 0.1;
+  toLeft: number,
+  lastRun: boolean,
+  scramble: number,
+  altitude: number,
+): Call {
+  const late = q >= 4 && clock <= 180;
+  const last = q >= 4 && clock <= 40;
+  const desperate = late && trail >= 3;
+  const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -7 && clock < 240)) && !desperate;
+  const twoMin = (q === 2 || q >= 4) && clock <= 120;
+  if (q >= 4 && trail <= -1 && clock <= 90 && spot > 35 && toLeft === 0 && down !== 4) {
+    if (clock <= 12 && down <= 2) return "kneel";
+    if (clock <= 40) return "kneel";
+  }
+  if (last && trail >= 1 && down <= 2 && clock <= 8) return "spike";
+  if (down === 4) {
+    const fgDist = 100 - spot + 17;
+    const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0);
+    const goP =
+      0.04 +
+      fourthGoBias(year) +
+      (plan.fourth === "aggressive" ? 0.14 : plan.fourth === "conservative" ? -0.1 : 0);
+    const short = togo <= 1;
+    const mid = spot >= 55 && spot < 70;
+    const go =
+      (plan.fourth === "aggressive" && togo <= 3 && spot >= 55) ||
+      (plan.fourth === "normal" && togo <= 1 && spot >= 60) ||
+      (desperate && spot >= 42 && togo <= 8) ||
+      spot >= 97 ||
+      (last && trail > 0 && spot >= 50) ||
+      (short && mid && rand(save) < clamp(goP, 0.02, 0.55)) ||
+      (togo <= 2 && spot >= 62 && rand(save) < clamp(goP, 0.02, 0.4));
+    if (go) {
+      if (spot >= 97 || togo <= 1) return scramble > 8 && rand(save) < 0.35 ? "sneak" : "run";
+      return togo >= 8 || spot < 70 ? (spot >= 55 ? "med" : "deep") : "run";
+    }
+    if (fgDist <= range + 4 && !(desperate && trail >= 8 && clock > 30 && spot < 55)) return "fg";
+    return "punt";
+  }
+  if (spot >= 99 && togo <= 1) return rand(save) < 0.55 ? "sneak" : "run";
+  if (spot >= 95 && plan.redZone === "power") return rand(save) < 0.72 ? "run" : "short";
+  let passW = eraPassW;
+  if (plan.attack === "pass") passW += 0.08;
+  if (plan.attack === "run") passW -= 0.09;
+  if (down === 3 && togo >= 6) passW += 0.22;
+  if (down === 3 && togo <= 2) passW -= 0.18;
+  if (down === 2 && togo <= 3) passW -= 0.08;
+  if (spot >= 80) passW -= 0.06;
+  if (spot >= 95) passW -= plan.redZone === "spread" ? 0.02 : 0.14;
+  if (trail >= 8) passW += 0.12;
+  if (trail <= -10 && !desperate) passW -= 0.1;
+  if (chew) passW -= 0.1;
   if (wx === "snow" || wx === "rain") passW -= 0.08;
   if (wx === "wind") passW -= 0.04;
-  if (off.kit.scramble > 8) passW += 0.02;
-  passW = clamp(passW, 0.28, 0.72);
-  const pass = rand(save) < passW;
-  const unit = pass ? off.offPass - def.defPass : off.offRun - def.defRun;
-  const success = 1 / (1 + Math.exp(-(unit + edge * 0.25 + clutch) / 16));
-  let tdP = 0.14 + success * 0.16 + off.kit.td;
-  let fgP = 0.12 + success * 0.12 + off.kit.fg * 0.4;
-  let toP = 0.06 + (1 - success) * 0.07 + era.intRate * (pass ? 1.4 : 0.4) + (pass ? off.kit.int + def.kit.int : off.kit.fum);
-  if (wx === "snow") {
-    tdP *= 0.85;
-    toP += 0.03;
+  if (desperate) passW += 0.18;
+  if (twoMin && trail >= 1) passW += 0.16;
+  passW = clamp(passW, 0.2, 0.8);
+  if (rand(save) > passW) {
+    if (down === 3 && togo >= 6 && rand(save) < 0.22) return "draw";
+    if (spot >= 99) return "sneak";
+    return "run";
   }
-  if (wx === "wind") fgP *= 0.75;
+  if (last && trail >= 3 && spot < 65) return "deep";
+  if (twoMin && trail >= 1 && togo >= 8) return rand(save) < 0.4 ? "deep" : "med";
+  if (down === 3 && togo >= 12) return rand(save) < 0.45 ? "deep" : "med";
+  if (spot >= 88) return rand(save) < 0.35 ? "screen" : "short";
+  if (lastRun && down <= 2 && togo >= 6 && rand(save) < 0.28) return "pa";
   const r = rand(save);
-  const intBand = Math.max(0.01, toP * 0.55 + (pass ? off.kit.int * 0.5 : 0));
-  if (r < intBand) return { kind: "int", pass: true, yds: randInt(save, 8, 38) };
-  if (r < toP + Math.max(0, off.kit.fum)) return { kind: "fumble", pass, yds: randInt(save, 6, 28) };
-  if (r < toP + tdP) return { kind: "td", pass, yds: randInt(save, 55, 82) };
-  if (r < toP + tdP + fgP) return { kind: "fg", pass, yds: randInt(save, 32, 58) };
-  if (r < 0.015) return { kind: "safety", pass: false, yds: 0 };
-  return { kind: "punt", pass, yds: randInt(save, 8, 36) };
+  if (r < 0.1) return "screen";
+  if (r < 0.48) return "short";
+  if (r < 0.82) return "med";
+  return "deep";
 }
 
-function sideFromDrives(
+function snapClock(
   save: DynastySave,
-  off: TeamUnits,
-  def: TeamUnits,
-  era: ReturnType<typeof eraProfile>,
-  trailFn: () => number,
-  wx: Wx,
-  drives: number,
-): { pts: number; box: BoxPlayer[]; ints: number; sacks: number; highlights: string[]; q: [number, number, number, number] } {
-  const box: BoxPlayer[] = [];
-  let pts = 0;
-  let ints = 0;
-  let sacks = 0;
-  const highlights: string[] = [];
-  const q: [number, number, number, number] = [0, 0, 0, 0];
-  let passAtt = 0;
-  let passCmp = 0;
-  let passYds = 0;
-  let passTd = 0;
-  let rushAtt = 0;
-  let rushYds = 0;
-  let rushTd = 0;
-  let fgAtt = 0;
-  let fgMade = 0;
-  let xpAtt = 0;
-  let xpMade = 0;
-  let punts = 0;
-  let puntYds = 0;
-
-  for (let d = 0; d < drives; d++) {
-    const qi = Math.min(3, Math.floor((d / Math.max(1, drives)) * 4));
-    const res = driveResult(save, off, def, era, trailFn() - pts, wx, qi);
-    const plays = randInt(save, 3, 8);
-    if (res.pass) {
-      const att = Math.max(1, Math.round(plays * 0.7));
-      const cmp = Math.max(0, Math.round(att * clamp(era.cmpPct + (off.offPass - def.defPass) / 400 + off.kit.cmp, 0.38, 0.72)));
-      passAtt += att;
-      passCmp += cmp;
-      passYds += res.yds;
-    } else {
-      const att = Math.max(2, Math.round(plays * 0.75));
-      rushAtt += att;
-      rushYds += res.yds;
-    }
-    if (rand(save) < clamp(era.sackRate + off.kit.sack, 0.02, 0.16)) sacks += 1;
-
-    if (res.kind === "td") {
-      const xp = rand(save) < 0.94;
-      const add = 6 + (xp ? 1 : 0);
-      pts += add;
-      q[qi] += add;
-      xpAtt += 1;
-      if (xp) xpMade += 1;
-      if (res.pass) {
-        passTd += 1;
-        const rec = pickRec(save, off);
-        if (rec) {
-          bumpBox(box, rec.id, { rec: 1, recYds: Math.round(res.yds * 0.7), recTd: 1 });
-          if (highlights.length < 8) {
-            highlights.push(
-              rec.ratings.speed >= 88
-                ? `${playerName(rec)} takes it the distance. He could go all the way.`
-                : `${off.qb ? playerName(off.qb) : "The quarterback"} hits ${playerName(rec)} — freeze-frame, sideline, six.`,
-            );
-          }
-        }
-      } else {
-        rushTd += 1;
-        if (off.rb && highlights.length < 8) {
-          highlights.push(`${playerName(off.rb)} north-south, ${res.yds} yards worth of hurt. Touchdown.`);
-        }
-      }
-    } else if (res.kind === "fg") {
-      fgAtt += 1;
-      const make = rand(save) < clamp((off.k?.ratings.kickAcc ?? 70) / 100 + off.kit.fg - (wx === "wind" || wx === "snow" ? 0.12 : 0), 0.55, 0.96);
-      if (make) {
-        fgMade += 1;
-        pts += 3;
-        q[qi] += 3;
-      }
-    } else if (res.kind === "int") {
-      ints += 1;
-      const thief = def.db[0] ?? def.lb[0];
-      if (thief && highlights.length < 8) {
-        highlights.push(
-          kitBoost(thief, "intShare") > 0
-            ? `${playerName(thief)} is a ball hawk. That's his football.`
-            : `${playerName(thief)} jumps the route. Ballgame if they close it.`,
-        );
-      }
-      if (off.qb && kitBoost(off.qb, "int") > 0 && highlights.length < 8) {
-        highlights.push(`${playerName(off.qb)} threw it anyway. The gunslinger tax.`);
-      }
-    } else if (res.kind === "fumble") {
-      if (off.rb) bumpBox(box, off.rb.id, { ff: 1 });
-      if (off.rb && highlights.length < 8) {
-        highlights.push(
-          kitBoost(off.rb, "fum") > 0
-            ? `${playerName(off.rb)} puts it on the carpet. The fumbler label sticks.`
-            : `${playerName(off.rb)} coughs it up. The pigskin is live.`,
-        );
-      }
-    } else if (res.kind === "safety") {
-      pts += 0;
-    } else {
-      punts += 1;
-      puntYds += randInt(save, 36, 52);
-    }
-  }
-
-  if (off.qb) {
-    bumpBox(box, off.qb.id, {
-      passAtt,
-      passCmp,
-      passYds,
-      passTd,
-      passInt: ints,
-      sacksThrown: sacks,
-      rushAtt: Math.round(rushAtt * (0.08 + Math.max(0, off.kit.scramble) / 200)),
-      rushYds: Math.round(rushYds * (0.06 + Math.max(0, off.kit.scramble) / 180)),
-    });
-  }
-  const rbShare = off.rb2 ? 0.72 : off.fb ? 0.62 : 0.78;
-  if (off.rb) {
-    bumpBox(box, off.rb.id, {
-      rushAtt: Math.round(rushAtt * rbShare * (off.rb ? kitShare(off.rb, "rushShare") : 1)),
-      rushYds: Math.round(rushYds * (rbShare - 0.02) * (off.rb ? kitShare(off.rb, "rushShare") : 1)),
-      rushTd: Math.max(0, rushTd - (off.rb2 || off.fb ? (rushTd > 1 ? 1 : 0) : 0)),
-      rec: Math.max(0, Math.round(passCmp * 0.12)),
-      recYds: Math.round(passYds * 0.08),
-    });
-  }
-  if (off.rb2 && rushAtt) {
-    bumpBox(box, off.rb2.id, {
-      rushAtt: Math.round(rushAtt * 0.18),
-      rushYds: Math.round(rushYds * 0.16),
-      rushTd: rushTd > 2 ? 1 : 0,
-    });
-  }
-  if (off.fb && rushAtt) {
-    bumpBox(box, off.fb.id, {
-      rushAtt: Math.round(rushAtt * 0.12),
-      rushYds: Math.round(rushYds * 0.1),
-      rushTd: rushTd > 1 && !off.rb2 ? 1 : 0,
-    });
-  }
-  const recTargets = [...off.wr, off.te].filter((p): p is Player => !!p);
-  let recLeft = Math.max(0, passCmp - Math.round(passCmp * 0.12));
-  let ydsLeft = Math.max(0, passYds - Math.round(passYds * 0.08));
-  let tdLeft = passTd;
-  const wts = recTargets.map((p) => (p.ratings.catch + p.ratings.rrt + p.ratings.speed * 0.4) * kitShare(p, "recShare"));
-  const wsum = Math.max(1, wts.reduce((a, b) => a + b, 0));
-  for (let i = 0; i < recTargets.length; i++) {
-    const share = wts[i]! / wsum;
-    const rec = i === recTargets.length - 1 ? recLeft : Math.round(recLeft * share);
-    const yds = i === recTargets.length - 1 ? ydsLeft : Math.round(ydsLeft * share);
-    const td = i === recTargets.length - 1 ? tdLeft : Math.min(tdLeft, Math.round(tdLeft * share));
-    recLeft -= rec;
-    ydsLeft -= yds;
-    tdLeft -= td;
-    bumpBox(box, recTargets[i]!.id, { rec: Math.max(0, rec), recYds: Math.max(0, yds), recTd: Math.max(0, td) });
-  }
-  if (off.k) bumpBox(box, off.k.id, { fgMade, fgAtt, xpMade, xpAtt });
-  if (off.p && punts) bumpBox(box, off.p.id, { punts, puntYds });
-  return { pts, box, ints, sacks, highlights, q };
+  plan: Gameplan,
+  year: number,
+  q: number,
+  clock: number,
+  trail: number,
+  complete: boolean,
+  oob: boolean,
+  firstDown: boolean,
+  spiked: boolean,
+): { used: number; stopped: boolean } {
+  const twoMin = (q === 2 || q >= 4) && clock <= 120;
+  const hurry = plan.tempo === "hurry" || (q >= 4 && trail >= 4 && clock <= 240);
+  const chew = plan.tempo === "chew" && trail <= 0 && !(q >= 4 && clock <= 180 && trail >= 1);
+  const stopFd = clockStopFirstDown(year) && firstDown;
+  const stopped = oob || !complete || spiked || stopFd || twoMin && oob;
+  if (spiked) return { used: 3, stopped: true };
+  if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 5, 8), stopped: true };
+  if (stopFd) return { used: randInt(save, 6, 9), stopped: true };
+  const [lo, hi] = huddleSeconds(year, hurry ? "hurry" : chew ? "chew" : "standard");
+  return { used: randInt(save, lo, hi), stopped: false };
 }
 
-function defBox(save: DynastySave, def: TeamUnits, sacks: number, ints: number): BoxPlayer[] {
-  const box: BoxPlayer[] = [];
-  const rushers = [...def.dl, ...def.lb];
-  for (let i = 0; i < sacks; i++) {
-    if (!rushers.length) break;
-    const idx = dist(
-      save,
-      rushers.map((p) => p.ratings.prs * kitShare(p, "sackShare")),
-    );
-    const p = rushers[idx]!;
-    bumpBox(box, p.id, { sacks: 1, tackles: randInt(save, 1, 4) });
-  }
-  const dbs = [...def.db, ...def.lb];
-  for (let i = 0; i < ints; i++) {
-    if (!dbs.length) break;
-    const idx = dist(
-      save,
-      dbs.map((p) => (p.ratings.cov + p.ratings.catch * 0.3) * kitShare(p, "intShare")),
-    );
-    bumpBox(box, dbs[idx]!.id, { ints: 1, tackles: randInt(save, 1, 4) });
-  }
-  for (const p of [...def.lb, ...def.dl, ...def.db].slice(0, 8)) {
-    bumpBox(box, p.id, { tackles: randInt(save, 2, 8) });
-  }
-  return box;
+const INJURIES = ["ankle", "knee", "shoulder", "ribs", "hamstring", "hip", "hand", "shaken up", "concussion", "foot", "groin", "wrist"];
+
+function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, turf: boolean): boolean {
+  if (!p || p.injuredWeeks > 0) return false;
+  const eraHit = save.year <= 1979 ? 0.0018 : save.year <= 1999 ? 0.0014 : 0.0012;
+  const wxHit = wx === "cold" || wx === "snow" ? 1.15 : 1;
+  const turfHit = turf && save.year >= 1970 && save.year <= 1999 ? 1.2 : turf ? 1.08 : 1;
+  const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit;
+  if (rand(save) > chance) return false;
+  const durable = p.ratings.inj >= 88 || kitInjMult(p) <= 0.8;
+  p.injuredWeeks = durable ? 1 : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
+  p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
+  return true;
 }
 
-export function simGame(save: DynastySave, game: GameResult): void {
-  if (game.played) return;
-  const year = save.year;
-  const era = eraProfile(year);
-  const homeId = game.homeId as TeamId;
-  const awayId = game.awayId as TeamId;
-  const loc = locationOf(year, homeId);
-  const wx = pickWeather(save, loc);
-  const homeU = teamUnits(save, homeId);
-  const awayU = teamUnits(save, awayId);
-  homeU.offPass += 2.2;
-  homeU.offRun += 1.8;
-  if (wx === "snow" || wx === "rain") {
-    homeU.offPass -= 3;
-    awayU.offPass -= 3;
-    homeU.offRun += 1;
-    awayU.offRun += 1;
-  }
-  const drives = 11 + randInt(save, 0, 3);
-  const homeOff = sideFromDrives(save, homeU, awayU, era, () => 0, wx, drives);
-  const awayOff = sideFromDrives(save, awayU, homeU, era, () => homeOff.pts, wx, drives);
-  let homeScore = homeOff.pts;
-  let awayScore = awayOff.pts;
-  if (homeScore === awayScore && rand(save) < 0.55) {
-    const ot = rand(save) < 0.5;
-    if (ot) homeScore += 3;
-    else awayScore += 3;
-  }
-  const homeDef = defBox(save, homeU, awayOff.sacks, awayOff.ints);
-  const awayDef = defBox(save, awayU, homeOff.sacks, homeOff.ints);
-  const boxHome = [...homeOff.box, ...homeDef];
-  const boxAway = [...awayOff.box, ...awayDef];
-  applyBox(save, homeId, boxHome, year);
-  applyBox(save, awayId, boxAway, year);
-  const homeMvp = boxHome.slice().sort((a, b) => (b.passYds ?? 0) + (b.rushYds ?? 0) + (b.recYds ?? 0) * 1.2 - ((a.passYds ?? 0) + (a.rushYds ?? 0) + (a.recYds ?? 0) * 1.2))[0];
-  const awayMvp = boxAway.slice().sort((a, b) => (b.passYds ?? 0) + (b.rushYds ?? 0) + (b.recYds ?? 0) * 1.2 - ((a.passYds ?? 0) + (a.rushYds ?? 0) + (a.recYds ?? 0) * 1.2))[0];
-  const mvp = homeScore >= awayScore ? homeMvp : awayMvp;
-  game.played = true;
-  game.homeScore = homeScore;
-  game.awayScore = awayScore;
-  game.boxHome = boxHome;
-  game.boxAway = boxAway;
-  game.weather = wx;
-  game.highlights = [...homeOff.highlights, ...awayOff.highlights].slice(0, 8);
-  game.homeQ = homeOff.q;
-  game.awayQ = awayOff.q;
-  game.mvpPlayerId = mvp?.playerId;
-  const ht = save.teams[homeId];
-  const at = save.teams[awayId];
-  if (!ht || !at) return;
-  ht.pf += game.homeScore;
-  ht.pa += game.awayScore;
-  at.pf += game.awayScore;
-  at.pa += game.homeScore;
-  const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
-  const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
-  if (game.homeScore > game.awayScore) {
-    ht.wins += 1;
-    at.losses += 1;
-    ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
-    at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
-    if (sameDiv) {
-      ht.divWins += 1;
-      at.divLosses += 1;
-    }
-    if (sameConf) {
-      ht.confWins += 1;
-      at.confLosses += 1;
-    }
-  } else if (game.awayScore > game.homeScore) {
-    at.wins += 1;
-    ht.losses += 1;
-    at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
-    ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
-    if (sameDiv) {
-      at.divWins += 1;
-      ht.divLosses += 1;
-    }
-    if (sameConf) {
-      at.confWins += 1;
-      ht.confLosses += 1;
-    }
-  } else {
-    ht.ties += 1;
-    at.ties += 1;
-  }
-  rollInjuries(save, homeId);
-  rollInjuries(save, awayId);
+function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number): number {
+  if (spot + yds < 100) return yds;
+  const dive = (year <= 1969 ? 0.32 : year <= 1977 ? 0.22 : 0.14) + (1 - brake) * 0.25;
+  if (rand(save) < clamp(dive, 0.1, 0.55)) return Math.max(1, 99 - spot);
+  return yds;
 }
 
-const INJURIES = ["ankle", "knee", "shoulder", "ribs", "hamstring", "hip", "hand", "shaken up", "concussion", "foot"];
+function deadBall(year: number, score: number): number {
+  let m = 1;
+  if (year <= 1969) m = 0.72;
+  else if (year <= 1977) m = 0.82;
+  else if (year <= 1989) m = 0.92;
+  if (year <= 1969 && score >= 21) m *= 0.78;
+  if (year <= 1969 && score >= 28) m *= 0.62;
+  if (year <= 1977 && score >= 35) m *= 0.7;
+  return m;
+}
+
+function homeTotYards(box: BoxPlayer[]): number {
+  let pass = 0;
+  let rush = 0;
+  for (const b of box) {
+    pass += b.passYds ?? 0;
+    rush += b.rushYds ?? 0;
+  }
+  return pass + rush;
+}
+
+function halfDist(spot: number, yds: number, againstOff: boolean): number {
+  const room = againstOff ? Math.max(1, spot) : Math.max(1, 100 - spot);
+  return Math.max(1, Math.min(yds, Math.floor(room / 2)));
+}
+
+function schemeEdge(offS: string | undefined, defS: string | undefined, pass: boolean): number {
+  if (offS === "vertical" && defS === "cover-2") return pass ? -2.4 : 0.5;
+  if (offS === "smashmouth" && defS === "3-4") return pass ? 0.4 : -1.4;
+  if (offS === "smashmouth" && defS === "4-3") return pass ? -0.2 : 1.2;
+  if (offS === "westcoast" && defS === "cover-2") return pass ? 1.7 : 0.2;
+  if (offS === "westcoast" && defS === "wide-9") return pass ? -0.9 : 0.5;
+  if (offS === "vertical" && defS === "wide-9") return pass ? 1.3 : -0.7;
+  return 0;
+}
+
+function qbCliff(save: DynastySave, teamId: TeamId, qb: Player | undefined): number {
+  if (!qb) return 0.02;
+  const hurt = rosterOf(save, teamId)
+    .filter((p) => p.pos === "QB" && p.injuredWeeks > 0)
+    .sort((a, b) => b.ovr - a.ovr)[0];
+  if (hurt && hurt.ovr - qb.ovr >= 8) return 0.035;
+  if (qb.yearsPro <= 0) return 0.012;
+  return 0;
+}
+
+function maybeOverturn(save: DynastySave, year: number): boolean {
+  if (!replayReview(year)) return false;
+  if (rand(save) > 0.09) return false;
+  return rand(save) < 0.28;
+}
 
 function rollInjuries(save: DynastySave, teamId: TeamId): void {
-  const eraHit = save.year <= 1979 ? 0.032 : save.year <= 1999 ? 0.024 : 0.02;
+  const eraHit = save.year <= 1979 ? 0.016 : save.year <= 1999 ? 0.013 : 0.011;
   for (const p of rosterOf(save, teamId)) {
     if (p.injuredWeeks > 0) continue;
     const injMult = kitInjMult(p);
     const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult;
     if (rand(save) > chance) continue;
     const durable = p.ratings.inj >= 88 || injMult <= 0.8;
-    const weeks = durable
-      ? randInt(save, 1, 2)
-      : p.ratings.inj >= 70
-        ? randInt(save, 1, 5)
-        : randInt(save, 2, 8);
+    const weeks = durable ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);
     p.injuredWeeks = weeks;
     p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
   }
@@ -554,4 +578,1255 @@ export function clampSeasonStats(save: DynastySave): void {
     const existing = p.career.find((c) => c.year === save.year);
     if (!existing) p.career.push({ ...s });
   }
+}
+
+export function simGame(save: DynastySave, game: GameResult): void {
+  if (game.played) return;
+  const year = save.year;
+  const era = eraProfile(year);
+  const homeId = game.homeId as TeamId;
+  const awayId = game.awayId as TeamId;
+  const bowl =
+    game.phase === "superBowl" ? superBowlSite(year) : game.phase === "proBowl" ? proBowlSite(year) : null;
+  const venue: VenueInfo = bowl ? bowlVenue(bowl.site, year) : venueOf(year, homeId);
+  const wx: Wx = pickWeather(year, save.week, venue.climate, venue.indoor, () => rand(save));
+  const homeU = teamUnits(save, homeId);
+  const awayU = teamUnits(save, awayId);
+  const neutral = !!bowl;
+  const playoff = game.phase === "playoffs" || game.phase === "superBowl";
+  const homeField = neutral ? 0 : 2.1 + (game.night ? 0.5 : 0) + (venue.altitude >= 4000 ? 0.6 : 0);
+  const noise = neutral ? 0 : crowdNoise(homeId, venue, !!game.night, year);
+  if (game.rivalry) {
+    homeU.offPass += 1.1;
+    homeU.offRun += 1.1;
+    awayU.offPass += 1.1;
+    awayU.offRun += 1.1;
+  }
+  if (wx === "snow" || wx === "rain") {
+    homeU.offPass -= 3.2;
+    awayU.offPass -= 3.2;
+    homeU.offRun += 1.2;
+    awayU.offRun += 1.2;
+  }
+  if (wx === "wind") {
+    homeU.offPass -= 1.6;
+    awayU.offPass -= 1.6;
+  }
+  if (venue.altitude >= 4000) {
+    homeU.offPass += 1.4;
+    awayU.offPass += 0.6;
+    awayU.offRun -= 0.8;
+  }
+
+  const ko = kickoffRules(year);
+  const eraPassW = era.passAtt / (era.passAtt + era.rushAtt);
+  const big = eraBigPlay(year) * playoffBrake(game.phase);
+  const pens = penaltyRates(year);
+  const homeBox: BoxPlayer[] = [];
+  const awayBox: BoxPlayer[] = [];
+  const drives: DriveSummary[] = [];
+  const highlights: string[] = [];
+  const hq: number[] = [0, 0, 0, 0];
+  const aq: number[] = [0, 0, 0, 0];
+  let homeScore = 0;
+  let awayScore = 0;
+  let homePoss = 0;
+  let awayPoss = 0;
+  let homeFd = 0;
+  let awayFd = 0;
+  let homePen = 0;
+  let awayPen = 0;
+  let homePenYds = 0;
+  let awayPenYds = 0;
+  let home3rd = 0;
+  let home3rdAtt = 0;
+  let away3rd = 0;
+  let away3rdAtt = 0;
+  let homeRz = 0;
+  let homeRzAtt = 0;
+  let awayRz = 0;
+  let awayRzAtt = 0;
+  let homeTo = 0;
+  let awayTo = 0;
+  let homeSafeties = 0;
+  let awaySafeties = 0;
+  let homeRushYds = 0;
+  let awayRushYds = 0;
+  let q = 1;
+  let clock = 900;
+  let warned = false;
+  let homeTO = 3;
+  let awayTO = 3;
+  let ot = false;
+  let modifiedFirst = true;
+  let modifiedGotScore = false;
+  const otRule = otRules(year, game.phase);
+  const units: Record<string, TeamUnits> = { [homeId]: homeU, [awayId]: awayU };
+  const boxOf = (id: TeamId) => (id === homeId ? homeBox : awayBox);
+  const planNow = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
+    const base = planFor(save, id);
+    if (qq >= 4 && trail >= 8 && ck <= 300) return { ...base, attack: "pass", fourth: "aggressive", tempo: "hurry" };
+    if (qq >= 4 && trail <= -8 && ck <= 240) return { ...base, attack: "run", fourth: "conservative", tempo: "chew" };
+    if (playoff && base.fourth === "aggressive" && trail > -3) return { ...base, fourth: "normal" };
+    if (year <= 1979 && base.tempo === "hurry") return { ...base, tempo: "standard" };
+    return base;
+  };
+
+  const note = (s: string) => {
+    if (highlights.length < 12) highlights.push(s);
+  };
+  const qi = () => (q <= 4 ? q - 1 : 4);
+  const addPts = (id: TeamId, n: number) => {
+    while (hq.length <= qi()) hq.push(0);
+    while (aq.length <= qi()) aq.push(0);
+    if (id === homeId) {
+      homeScore += n;
+      hq[qi()]! += n;
+    } else {
+      awayScore += n;
+      aq[qi()]! += n;
+    }
+  };
+  const trailOf = (id: TeamId) => (id === homeId ? awayScore - homeScore : homeScore - awayScore);
+  const live = (id: TeamId) => units[id]!;
+  const toOf = (id: TeamId) => (id === homeId ? homeTO : awayTO);
+  const spendTO = (id: TeamId) => {
+    if (id === homeId) homeTO = Math.max(0, homeTO - 1);
+    else awayTO = Math.max(0, awayTO - 1);
+  };
+  const addPoss = (id: TeamId, used: number) => {
+    if (id === homeId) homePoss += used;
+    else awayPoss += used;
+  };
+  const addFd = (id: TeamId) => {
+    if (id === homeId) homeFd += 1;
+    else awayFd += 1;
+  };
+  const addPen = (id: TeamId, yds: number) => {
+    if (id === homeId) {
+      homePen += 1;
+      homePenYds += yds;
+    } else {
+      awayPen += 1;
+      awayPenYds += yds;
+    }
+  };
+  const markTo = (offenseId: TeamId) => {
+    if (offenseId === homeId) homeTo += 1;
+    else awayTo += 1;
+  };
+  const markSafety = (scorer: TeamId) => {
+    if (scorer === homeId) homeSafeties += 1;
+    else awaySafeties += 1;
+  };
+  const mark3rd = (id: TeamId, converted: boolean) => {
+    if (id === homeId) {
+      home3rdAtt += 1;
+      if (converted) home3rd += 1;
+    } else {
+      away3rdAtt += 1;
+      if (converted) away3rd += 1;
+    }
+  };
+  const fatigue = (u: TeamUnits, qq: number, ck: number, id: TeamId) => {
+    const late = qq >= 4 || (qq === 3 && ck < 240);
+    const stam = avg([u.qb, u.rb, ...u.ol, ...u.dl].filter((x): x is Player => !!x).map((p) => p.ratings.stamina));
+    let m = 1 - ((100 - stam) / 420) * (late ? 1.5 : 0.35);
+    if (venue.altitude >= 4000 && id === awayId) m *= 0.93;
+    return m;
+  };
+
+  let poss = rand(save) < 0.5 ? homeId : awayId;
+  let spot = ko.tb;
+  let down = 1;
+  let togo = 10;
+  let drivePlays = 0;
+  let driveYds = 0;
+  let driveStart = spot;
+  let driveQ = 1;
+  let driveRz = false;
+  let lastRun = false;
+  let plays = 0;
+  let justScored = false;
+
+  const closeDrive = (result: DriveResult) => {
+    drives.push({
+      teamId: poss,
+      q: driveQ,
+      plays: drivePlays,
+      yards: driveYds,
+      result,
+      startSpot: driveStart,
+      label: `Q${driveQ} ${formatClock(clock)}`,
+    });
+    drivePlays = 0;
+    driveYds = 0;
+    driveRz = false;
+  };
+
+  const flipPoss = (newSpot: number) => {
+    poss = poss === homeId ? awayId : homeId;
+    spot = clamp(newSpot, 1, 99);
+    down = 1;
+    togo = 10;
+    driveStart = spot;
+    driveQ = q;
+    drivePlays = 0;
+    driveYds = 0;
+    driveRz = false;
+    lastRun = false;
+  };
+
+  const newSet = () => {
+    down = 1;
+    togo = Math.min(10, Math.max(1, 100 - spot));
+  };
+
+  const rebuild = (id: TeamId) => {
+    const next = teamUnits(save, id);
+    if (id === homeId && !neutral) {
+      next.offPass += homeField;
+      next.offRun += 1.6;
+    }
+    if (wx === "snow" || wx === "rain") {
+      next.offPass -= 3.2;
+      next.offRun += 1.2;
+    }
+    if (wx === "wind") next.offPass -= 1.6;
+    if (venue.altitude >= 4000 && id === awayId) {
+      next.offPass -= 0.8;
+      next.offRun -= 0.6;
+    }
+    units[id] = next;
+  };
+
+  const injure = (id: TeamId, p: Player | undefined) => {
+    if (!p) return;
+    if (!maybeInGameInjury(save, p, wx, venue.turf)) return;
+    note(`${playerName(p)} is down. ${p.injuryName}.`);
+    rebuild(id);
+    const u = live(id);
+    if (p.pos === "QB" && u.qb && u.qb.id !== p.id) {
+      note(`${playerName(u.qb)} is in at quarterback.`);
+    }
+  };
+
+  const tickClock = (id: TeamId, used: number) => {
+    addPoss(id, used);
+    clock = Math.max(0, clock - used);
+  };
+
+  const kickoffTo = (receiving: TeamId, onside: boolean, kind: "regular" | "free" = "regular") => {
+    const kicking = receiving === homeId ? awayId : homeId;
+    const ku = live(kicking);
+    const ru = live(receiving);
+    if (kind === "free") {
+      const boom = 48 + ((ku.k?.ratings.kickPow ?? 72) - 70) * 0.3 + sampleYds(save, 0, 4, -6, 8);
+      const land = clamp(20 + boom, 35, 75);
+      clock = Math.max(0, clock - 6);
+      poss = receiving;
+      spot = clamp(100 - land + sampleYds(save, 8, 4, 0, 16), 20, 55);
+      down = 1;
+      togo = 10;
+      driveStart = spot;
+      driveQ = q;
+      drivePlays = 0;
+      driveYds = 0;
+      driveRz = false;
+      return;
+    }
+    if (onside) {
+      const recover = rand(save) < 0.22 + ((ku.k?.ratings.kickAcc ?? 70) - 70) / 400;
+      clock = Math.max(0, clock - 6);
+      if (recover) {
+        poss = kicking;
+        spot = clamp(45 + sampleYds(save, 0, 4, -8, 8), 35, 55);
+        down = 1;
+        togo = 10;
+        driveStart = spot;
+        driveQ = q;
+        drivePlays = 0;
+        driveYds = 0;
+        driveRz = false;
+        note("Onside kick. They keep it.");
+        return;
+      }
+      poss = receiving;
+      spot = clamp(48 + sampleYds(save, 4, 6, -4, 16), 40, 70);
+      down = 1;
+      togo = 10;
+      driveStart = spot;
+      driveQ = q;
+      drivePlays = 0;
+      driveYds = 0;
+      driveRz = false;
+      return;
+    }
+    const hang = 58 + ((ku.k?.ratings.kickPow ?? 72) - 70) * 0.35 + (wx === "wind" ? -4 : 0) + (venue.altitude >= 4000 ? 3 : 0);
+    const tbChance = kickoffTbRate(year) + (fairCatchKickoff(year) ? 0.12 : 0);
+    if (rand(save) < 0.035) {
+      poss = receiving;
+      spot = kickoffOobSpot(year);
+      down = 1;
+      togo = 10;
+      driveStart = spot;
+      driveQ = q;
+      drivePlays = 0;
+      driveYds = 0;
+      driveRz = false;
+      note("Kickoff out of bounds.");
+      clock = Math.max(0, clock - 5);
+      return;
+    }
+    if (rand(save) < tbChance + Math.max(0, hang - 62) / 90) {
+      poss = receiving;
+      spot = ko.tb;
+      down = 1;
+      togo = 10;
+      driveStart = spot;
+      driveQ = q;
+      drivePlays = 0;
+      driveYds = 0;
+      driveRz = false;
+      return;
+    }
+    const ret = ru.returner;
+    if (fairCatchKickoff(year) && rand(save) < 0.32) {
+      poss = receiving;
+      spot = clamp(100 - Math.round(hang), 20, 40);
+      down = 1;
+      togo = 10;
+      driveStart = spot;
+      driveQ = q;
+      drivePlays = 0;
+      driveYds = 0;
+      driveRz = false;
+      return;
+    }
+    let yds = sampleYds(save, 20, 6, 4, 34);
+    const house = 0.007 * big * (ret ? ret.ratings.speed / 80 : 0.6) * (ret?.traits?.includes("Return man") ? 1.6 : 1);
+    if (rand(save) < house) yds = randInt(save, 88, 109);
+    else if (ret && rand(save) < 0.04 * big) yds += randInt(save, 12, 28);
+    if (ret) bumpBox(boxOf(receiving), ret.id, { krYds: Math.min(yds, 109) });
+    const land = clamp(100 - Math.round(hang) + yds, 1, 100);
+    if (land >= 100) {
+      addPts(receiving, 6);
+      if (ret) {
+        bumpBox(boxOf(receiving), ret.id, { krTd: 1 });
+        note(`${playerName(ret)} takes the kick back. House call.`);
+      }
+      extraPoint(receiving);
+      const trailNow = trailOf(kicking);
+      kickoffTo(kicking, q >= 4 && clock <= 180 && trailNow >= 1 && trailNow <= 8);
+      return;
+    }
+    poss = receiving;
+    spot = land;
+    down = 1;
+    togo = 10;
+    driveStart = spot;
+    driveQ = q;
+    drivePlays = 0;
+    driveYds = 0;
+    driveRz = false;
+  };
+
+  const extraPoint = (id: TeamId) => {
+    const u = live(id);
+    const trail = trailOf(id);
+    const afl = year <= 1969 && originalLeague(id) === "AFL";
+    const go2 = twoPointOk(year, id) && wantTwoPoint(year, trail, q, clock, afl);
+    if (go2) {
+      const ok = rand(save) < clamp(twoPointMakeP(year) + (u.offPass - 70) / 220 + u.kit.td, 0.28, 0.58);
+      if (ok) addPts(id, 2);
+      justScored = true;
+      return;
+    }
+    if (u.k) bumpBox(boxOf(id), u.k.id, { xpAtt: 1 });
+    const xpYds = xpKickYards(year);
+    const make = fgMakeP(u.k, xpYds, wx, year, 0, venue.altitude);
+    const block = rand(save) < 0.012 + (live(id === homeId ? awayId : homeId).defPass - 70) / 900;
+    const xp = !block && rand(save) < clamp(xpMakeBase(year) * (make / 0.9) + ((u.k?.ratings.kickAcc ?? 70) - 70) / 500 + u.kit.fg, 0.78, 0.99);
+    if (xp) {
+      addPts(id, 1);
+      if (u.k) bumpBox(boxOf(id), u.k.id, { xpMade: 1 });
+    } else if (block) {
+      note("The extra point is blocked.");
+    }
+    justScored = true;
+  };
+
+  kickoffTo(poss, false);
+
+  const scoreTd = (id: TeamId, how: string) => {
+    if (driveRz || spot >= 80) {
+      if (id === homeId) homeRz += 1;
+      else awayRz += 1;
+    }
+    addPts(id, 6);
+    note(how);
+    closeDrive("td");
+    extraPoint(id);
+    const defId = id === homeId ? awayId : homeId;
+    const trailK = trailOf(id);
+    const onside = q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8;
+    kickoffTo(defId, onside);
+  };
+
+  const tryTimeout = (id: TeamId, running: boolean) => {
+    if (!running) return;
+    if (toOf(id) <= 0) return;
+    const trail = trailOf(id);
+    const twoMin = (q === 2 || q >= 4) && clock <= 120;
+    if (twoMin && trail >= 1 && clock > 8) {
+      spendTO(id);
+    }
+  };
+
+  homeU.offPass += homeField;
+  homeU.offRun += neutral ? 0 : 1.6;
+
+  while (plays < 260) {
+    plays += 1;
+    if (q === 2 || q === 4) {
+      if (!warned && clock <= 120 && clock > 0) {
+        warned = true;
+        clock = 120;
+      }
+    }
+    if (clock <= 0) {
+      if (q === 1 || q === 3) {
+        q += 1;
+        clock = 900;
+        warned = q === 2 || q === 4 ? false : warned;
+        continue;
+      }
+      if (q === 2) {
+        q = 3;
+        clock = 900;
+        warned = false;
+        homeTO = 3;
+        awayTO = 3;
+        closeDrive("end");
+        kickoffTo(poss === homeId ? awayId : homeId, false);
+        continue;
+      }
+      if (q === 4 && !ot) {
+        if (homeScore !== awayScore) break;
+        if (otRule.kind === "none") break;
+        ot = true;
+        q = 5;
+        clock = otRule.seconds;
+        modifiedFirst = true;
+        modifiedGotScore = false;
+        closeDrive("end");
+        kickoffTo(rand(save) < 0.5 ? homeId : awayId, false);
+        continue;
+      }
+      if (q >= 5) {
+        if (homeScore !== awayScore) break;
+        if (game.phase === "regular" || game.phase === "preseason") break;
+        q += 1;
+        clock = 900;
+        modifiedFirst = false;
+        continue;
+      }
+      break;
+    }
+
+    const off = live(poss);
+    const defId = poss === homeId ? awayId : homeId;
+    const def = live(defId);
+    const trail = trailOf(poss);
+    const plan = planNow(poss, trail, q, clock);
+    const fat = fatigue(off, q, clock, poss);
+    const dfat = fatigue(def, q, clock, defId);
+    const clutch = (q >= 4 && (trail > 0 || clock < 180) ? off.kit.clutch : 0) * 0.35;
+    const was3rd = down === 3;
+    if (spot >= 80 && !driveRz) {
+      driveRz = true;
+      if (poss === homeId) homeRzAtt += 1;
+      else awayRzAtt += 1;
+    }
+
+    const offScore = poss === homeId ? homeScore : awayScore;
+    const brake = deadBall(year, offScore);
+    const garbage = q >= 4 && trail <= -17 && clock <= 360;
+    const prevent = garbage && trail <= -17;
+    const blitz =
+      (plan.blitz === "heavy" ? 0.18 : plan.blitz === "rare" ? 0.05 : 0.1) +
+      (down === 3 && togo >= 6 ? 0.08 : 0) +
+      (def.kit.sack > 0 ? 0.02 : 0);
+
+    const offU = poss === homeId ? homeU : awayU;
+    const disc = Math.max(0.55, 1 + (offU.kit.pen ?? 0));
+    const pre = pens.preSnap * disc + (poss === awayId && !neutral ? noise : 0);
+    if (rand(save) < pre) {
+      const yds = halfDist(spot, 5, true);
+      addPen(poss, yds);
+      spot = Math.max(1, spot - yds);
+      togo += yds;
+      driveYds -= yds;
+      clock = Math.max(0, clock - 4);
+      if (tenSecondRunoff(year) && (q === 2 || q >= 4) && clock <= 60 && clock > 10) clock = Math.max(0, clock - 10);
+      if (spot <= 0) {
+        addPts(defId, 2);
+        markSafety(defId);
+        closeDrive("safety");
+        kickoffTo(defId, false, "free");
+        if (ot) break;
+      }
+      continue;
+    }
+    if (rand(save) < pens.delay && plan.tempo === "hurry") {
+      addPen(poss, 5);
+      spot = Math.max(1, spot - 5);
+      togo += 5;
+      clock = Math.max(0, clock - 3);
+      continue;
+    }
+
+    let call = callPlay(
+      save,
+      year,
+      down,
+      togo,
+      spot,
+      trail,
+      q,
+      clock,
+      eraPassW + (garbage ? 0.12 : 0),
+      plan,
+      off.k,
+      wx,
+      toOf(poss),
+      lastRun,
+      off.kit.scramble,
+      venue.altitude,
+    );
+    if (call === "fg" && togo <= 2 && spot >= 58 && rand(save) < 0.014) {
+      note("Fake field goal.");
+      call = togo <= 1 ? "sneak" : "run";
+    }
+    if (call === "punt" && togo <= 3 && spot >= 40 && spot < 70 && rand(save) < 0.016) {
+      note("Fake punt. They keep it.");
+      call = "run";
+    }
+
+    if (call === "kneel") {
+      const used = Math.min(clock, 40);
+      tickClock(poss, used);
+      drivePlays += 1;
+      down += 1;
+      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: -1 });
+      lastRun = true;
+      if (down > 4 || clock <= 0) {
+        closeDrive("end");
+        break;
+      }
+      continue;
+    }
+    if (call === "spike") {
+      const used = snapClock(save, plan, year, q, clock, trail, false, false, false, true);
+      tickClock(poss, used.used);
+      drivePlays += 1;
+      down += 1;
+      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1 });
+      lastRun = false;
+      continue;
+    }
+
+    if (call === "fg") {
+      const fgDist = 100 - spot + 17;
+      if (off.k) bumpBox(boxOf(poss), off.k.id, { fgAtt: 1 });
+      if (q >= 4 && clock <= 28 && toOf(defId) > 0 && rand(save) < 0.55) {
+        spendTO(defId);
+      }
+      const blocked = rand(save) < 0.012 + (def.defRun - 72) / 800;
+      const make = !blocked && rand(save) < fgMakeP(off.k, fgDist, wx, year, clutch, venue.altitude) * (q >= 4 && clock <= 28 ? 0.97 : 1);
+      clock = Math.max(0, clock - 6);
+      drivePlays += 1;
+      lastRun = false;
+      if (blocked) {
+        note("The kick is blocked.");
+        const scoop = rand(save) < 0.12;
+        closeDrive("miss");
+        if (scoop) {
+          addPts(defId, 6);
+          note("Scoop and score off the block.");
+          extraPoint(defId);
+          kickoffTo(poss, false);
+        } else {
+          flipPoss(Math.max(20, 100 - (spot + 7)));
+        }
+        continue;
+      }
+      if (make) {
+        if (off.k) bumpBox(boxOf(poss), off.k.id, { fgMade: 1 });
+        addPts(poss, 3);
+        note(`${off.k ? playerName(off.k) : "The kicker"} from ${fgDist}. It's good.`);
+        closeDrive("fg");
+        if (ot && (otRule.kind === "sudden" || (otRule.kind === "modified" && !modifiedFirst && modifiedGotScore))) break;
+        if (ot && otRule.kind === "modified" && modifiedFirst) {
+          modifiedGotScore = true;
+          modifiedFirst = false;
+          kickoffTo(defId, false);
+          continue;
+        }
+        const trailK = trailOf(poss);
+        kickoffTo(defId, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8);
+      } else {
+        closeDrive("miss");
+        flipPoss(Math.max(20, 100 - (spot + 7)));
+      }
+      continue;
+    }
+
+    if (call === "punt") {
+      const boom = 40 + ((off.p?.ratings.kickPow ?? 72) - 70) * 0.45 + sampleYds(save, 0, 4, -8, 8) + (venue.altitude >= 4000 ? 3 : 0);
+      let raw = clamp(boom + (wx === "wind" ? -5 : 0), 28, 62);
+      if (spot >= 60 && (off.p?.ratings.kickAcc ?? 70) >= 74 && rand(save) < 0.35) {
+        raw = clamp(100 - spot - randInt(save, 4, 10), 28, 52);
+      }
+      if (off.p) bumpBox(boxOf(poss), off.p.id, { punts: 1, puntYds: raw });
+      clock = Math.max(0, clock - 7);
+      drivePlays += 1;
+      lastRun = false;
+      if (rand(save) < 0.008 + (def.defPass - 75) / 2000 + (spot <= 12 ? 0.012 : 0)) {
+        note("Blocked punt.");
+        closeDrive("punt");
+        if (spot <= 8) {
+          addPts(defId, 2);
+          markSafety(defId);
+          note("Blocked through the end zone. Safety.");
+          kickoffTo(defId, false, "free");
+          if (ot) break;
+          continue;
+        }
+        flipPoss(clamp(100 - (spot - 8), 1, 99));
+        continue;
+      }
+      const land = spot + raw;
+      if (land >= 100) {
+        closeDrive("punt");
+        flipPoss(ko.tb);
+      } else {
+        const ret = def.returner;
+        const fair = land >= 88 || (q >= 4 && trailOf(defId) <= -8);
+        if (fair && rand(save) < 0.7) {
+          closeDrive("punt");
+          flipPoss(clamp(100 - land, 1, 99));
+          continue;
+        }
+        let retYds = sampleYds(save, 7, 5, 0, 18);
+        const house = 0.006 * big * (ret ? ret.ratings.speed / 82 : 0.5) * (ret?.traits?.includes("Return man") ? 1.7 : 1);
+        if (rand(save) < house) retYds = randInt(save, 70, 95);
+        else if (ret && rand(save) < 0.035 * big) retYds += randInt(save, 8, 22);
+        if (ret) bumpBox(boxOf(defId), ret.id, { prYds: retYds });
+        if (rand(save) < 0.015 + (wx === "rain" || wx === "snow" ? 0.02 : 0)) {
+          note("Muffed punt.");
+          closeDrive("fumble");
+          if (rand(save) < 0.45) {
+            flipPoss(clamp(100 - land + 2, 1, 99));
+          } else {
+            spot = clamp(land - 2, 1, 99);
+            down = 1;
+            togo = 10;
+          }
+          continue;
+        }
+        closeDrive("punt");
+        const recvSpot = clamp(100 - land + retYds, 1, 100);
+        if (recvSpot >= 100 && ret) {
+          poss = defId;
+          addPts(defId, 6);
+          bumpBox(boxOf(defId), ret.id, { prTd: 1 });
+          note(`${playerName(ret)} down the sideline on the punt return.`);
+          extraPoint(defId);
+          kickoffTo(poss === homeId ? awayId : homeId, false);
+        } else {
+          flipPoss(recvSpot);
+        }
+      }
+      continue;
+    }
+
+    if (rand(save) < pens.hold * Math.max(0.55, 1 + (offU.kit.pen ?? 0))) {
+      const yds = halfDist(spot, 10, true);
+      addPen(poss, yds);
+      spot = Math.max(1, spot - yds);
+      togo += yds;
+      drivePlays += 1;
+      driveYds -= yds;
+      clock = Math.max(0, clock - 8);
+      lastRun = false;
+      if (spot <= 0) {
+        addPts(defId, 2);
+        markSafety(defId);
+        closeDrive("safety");
+        kickoffTo(defId, false, "free");
+        if (ot) break;
+      }
+      continue;
+    }
+
+    const pass = call !== "run" && call !== "draw" && call !== "sneak";
+    const pa = call === "pa";
+    const offClub = save.teams[poss];
+    const defClub = save.teams[defId];
+    const sch = schemeEdge(offClub?.offScheme, defClub?.defScheme, pass);
+    const openScript = drives.length <= 1 && drivePlays < 8 ? 1.15 : 0;
+    const wear =
+      q >= 4
+        ? ((poss === homeId ? homeRushYds : awayRushYds) > 110 ? 0.9 : 0) +
+          ((poss === homeId ? awayRushYds : homeRushYds) > 110 && pass ? 0.6 : 0)
+        : 0;
+    const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0);
+    const defP = (pass ? def.defPass : def.defRun) * dfat + (blitz && pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0);
+    const edge = offP - defP;
+
+    if (pass) {
+      const sackP = clamp(
+        era.sackRate +
+          (defP - off.offPass * fat) / 220 +
+          off.kit.sack +
+          (call === "deep" ? 0.02 : 0) +
+          (blitz && rand(save) < 0.5 ? 0.03 : -0.01) -
+          (pa ? 0.02 : 0) -
+          (off.qb?.ratings.rel ?? 70) / 900,
+        0.018,
+        0.16,
+      );
+      if (rand(save) < sackP) {
+        const scram = (off.qb?.ratings.agi ?? 50) / 400 + off.kit.scramble / 140;
+        if (off.kit.scramble > 6 && rand(save) < scram) {
+          const yds = sampleYds(save, 7 + (off.qb?.ratings.speed ?? 50) / 20, 4, 1, 28);
+          if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: yds });
+          const t = pickTackler(save, def, false);
+          if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
+          const used = snapClock(save, plan, year, q, clock, trail, true, rand(save) < 0.25, yds >= togo, false);
+          tickClock(poss, used.used);
+          drivePlays += 1;
+          driveYds += yds;
+          spot = clamp(spot + yds, 0, 100);
+          lastRun = true;
+          if (was3rd) mark3rd(poss, yds >= togo || spot >= 100);
+          if (spot >= 100) {
+            if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushTd: 1 });
+            scoreTd(poss, `${playerName(off.qb!)} keeps it and goes.`);
+            if (ot && otRule.kind !== "none") {
+              if (otRule.kind === "sudden" || !modifiedFirst) break;
+              modifiedGotScore = true;
+              modifiedFirst = false;
+            }
+            continue;
+          }
+          if (yds >= togo) {
+            addFd(poss);
+            newSet();
+          } else {
+            down += 1;
+            togo -= yds;
+            if (down > 4) {
+              closeDrive("downs");
+              flipPoss(100 - spot);
+            }
+          }
+          continue;
+        }
+        const loss = sampleYds(save, 7, 2, 4, 14);
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
+        const rusher = pickRusherDef(save, def);
+        if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
+        const used = snapClock(save, plan, year, q, clock, trail, true, false, false, false);
+        tickClock(poss, Math.max(used.used, 18));
+        drivePlays += 1;
+        driveYds -= loss;
+        spot = Math.max(0, spot - loss);
+        lastRun = false;
+        if (was3rd) mark3rd(poss, false);
+        if (spot <= 0) {
+          addPts(defId, 2);
+          markSafety(defId);
+          note("Safety. The pocket collapsed in the end zone.");
+          closeDrive("safety");
+          kickoffTo(defId, false, "free");
+          if (ot) break;
+          continue;
+        }
+        const fumP = 0.05 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.03 : 0);
+        if (rand(save) < fumP) {
+          if (rusher) bumpBox(boxOf(defId), rusher.id, { ff: 1 });
+          const lost = rand(save) < 0.52;
+          if (lost) {
+            if (rusher) bumpBox(boxOf(defId), rusher.id, { fr: 1 });
+            markTo(poss);
+            if (rand(save) < 0.06 * big) {
+              addPts(defId, 6);
+              note("Strip-sack, house.");
+              extraPoint(defId);
+              closeDrive("fumble");
+              kickoffTo(poss, false);
+              if (ot) break;
+              continue;
+            }
+            closeDrive("fumble");
+            flipPoss(100 - spot);
+          } else {
+            if (off.qb) bumpBox(boxOf(poss), off.qb.id, { fr: 1 });
+            down += 1;
+            togo += loss;
+            if (down > 4) {
+              closeDrive("downs");
+              flipPoss(100 - spot);
+            }
+          }
+          continue;
+        }
+        down += 1;
+        togo += loss;
+        if (down > 4) {
+          closeDrive("downs");
+          flipPoss(100 - spot);
+        }
+        continue;
+      }
+
+      if (rand(save) < pens.pi && (call === "deep" || call === "med")) {
+        const rec = pickRec(save, off, true, year, spot >= 80);
+        const raw = dpiIsSpot(year) && call === "deep" ? randInt(save, 15, 34) : 15;
+        const yds = halfDist(spot, raw, false);
+        addPen(defId, yds);
+        const thief = pickThief(save, def);
+        if (thief) bumpBox(boxOf(defId), thief.id, { pd: 1 });
+        spot = clamp(spot + yds, 1, 99);
+        driveYds += yds;
+        drivePlays += 1;
+        clock = Math.max(0, clock - 8);
+        addFd(poss);
+        newSet();
+        lastRun = false;
+        if (was3rd) mark3rd(poss, true);
+        if (rec) note(`Pass interference. ${playerName(rec)} would have had it.`);
+        continue;
+      }
+      if (rand(save) < pens.contact && year >= 1978) {
+        addPen(defId, 5);
+        spot = clamp(spot + 5, 1, 99);
+        driveYds += 5;
+        drivePlays += 1;
+        clock = Math.max(0, clock - 5);
+        addFd(poss);
+        newSet();
+        lastRun = false;
+        if (was3rd) mark3rd(poss, true);
+        continue;
+      }
+
+      const rec = pickRec(save, off, call === "deep" || call === "pa", year, spot >= 80);
+      const acc = (off.qb?.ratings.throwAcc ?? 60) + (rec ? (rec.ratings.catch + rec.ratings.rrt) / 2 : 50);
+      const cov = avg(def.db.map((p) => p.ratings.cov));
+      const hurryP = clamp(sackP * 1.7 + (blitz ? 0.06 : 0), 0.05, 0.32);
+      const hurried = rand(save) < hurryP;
+      if (hurried) {
+        const hitter = pickRusherDef(save, def);
+        if (hitter) bumpBox(boxOf(defId), hitter.id, { qbHits: 1 });
+      }
+      let cmpP =
+        era.cmpPct +
+        (acc - 140) / 280 +
+        off.kit.cmp +
+        edge / 280 -
+        (call === "deep" ? 0.16 : call === "med" ? 0.05 : call === "pa" ? 0.03 : 0) -
+        (hurried ? 0.08 : 0) -
+        (prevent ? -0.04 : 0);
+      if (call === "screen") cmpP += 0.12;
+      if (wx === "rain" || wx === "snow") cmpP -= 0.05;
+      if (wx === "wind" && call === "deep") cmpP -= 0.06;
+      if (year < 1978) cmpP -= Math.max(0, cov - 74) / 400;
+      if (was3rd && togo >= 7) cmpP -= 0.07;
+      if (spot >= 80) cmpP -= 0.04;
+      if (tightCatchRule(year) && (call === "deep" || call === "med")) cmpP -= 0.02;
+      if (rec && def.db[0]) {
+        const mismatch =
+          (rec.ratings.speed + rec.ratings.rrt) / 2 - (def.db[0].ratings.cov + def.db[0].ratings.speed) / 2;
+        cmpP += mismatch / 420;
+      }
+      cmpP = clamp(cmpP, 0.32, year <= 1969 ? 0.62 : 0.76);
+      let intP =
+        era.intRate *
+          (call === "deep" ? 1.85 : call === "med" ? 1.2 : call === "pa" ? 0.95 : call === "screen" ? 0.5 : 0.95) +
+        off.kit.int * 0.35 +
+        def.kit.int * 0.35;
+      intP += (70 - (off.qb?.ratings.throwAwr ?? 70)) / 380;
+      if (hurried) intP += 0.014;
+      if (wx === "rain") intP += 0.012;
+      if (wx === "wind" && call === "deep") intP += 0.008;
+      if (year <= 1969) intP += 0.008;
+      intP += qbCliff(save, poss, off.qb);
+      intP = clamp(intP, 0.018, 0.11);
+      const roll = rand(save);
+      if (rec) bumpBox(boxOf(poss), rec.id, { targets: 1 });
+      if (roll < intP) {
+        if (maybeOverturn(save, year)) {
+          note("The booth takes a look. Incomplete.");
+          if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1 });
+          const used = snapClock(save, plan, year, q, clock, trail, false, true, false, false);
+          tickClock(poss, used.used);
+          drivePlays += 1;
+          lastRun = false;
+          if (was3rd) mark3rd(poss, false);
+          down += 1;
+          if (down > 4) {
+            closeDrive("downs");
+            flipPoss(100 - spot);
+          }
+          continue;
+        }
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passInt: 1 });
+        const thief = pickThief(save, def);
+        if (thief) bumpBox(boxOf(defId), thief.id, { ints: 1, tackles: 1 });
+        const used = snapClock(save, plan, year, q, clock, trail, false, true, false, false);
+        tickClock(poss, used.used);
+        drivePlays += 1;
+        lastRun = false;
+        if (was3rd) mark3rd(poss, false);
+        markTo(poss);
+        const retYds = sampleYds(save, 8, 8, 0, 42);
+        const pickSix = rand(save) < 0.09 * big * ((thief?.ratings.speed ?? 70) / 85);
+        if (thief) note(`${playerName(thief)} jumps it.`);
+        if (pickSix && thief) {
+          addPts(defId, 6);
+          note(`${playerName(thief)} the other way. Pick-six.`);
+          closeDrive("int");
+          extraPoint(defId);
+          kickoffTo(poss, false);
+          if (ot) break;
+          continue;
+        }
+        closeDrive("int");
+        if (spot >= 98) flipPoss(20);
+        else flipPoss(clamp(100 - (spot + retYds), 1, 99));
+        continue;
+      }
+      if (roll < intP + (1 - cmpP)) {
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1 });
+        const t = pickTackler(save, def, true);
+        if (t && rand(save) < 0.45) bumpBox(boxOf(defId), t.id, { pd: 1 });
+        const used = snapClock(save, plan, year, q, clock, trail, false, true, false, false);
+        tickClock(poss, used.used);
+        drivePlays += 1;
+        lastRun = false;
+        if (was3rd) mark3rd(poss, false);
+        tryTimeout(poss, false);
+        down += 1;
+        if (down > 4) {
+          closeDrive("downs");
+          flipPoss(100 - spot);
+        }
+        continue;
+      }
+
+      const mu =
+        call === "deep" || call === "pa"
+          ? 20 + (off.qb?.ratings.throwPow ?? 70) / 22 + (pa ? 3 : 0)
+          : call === "med"
+            ? 12
+            : call === "screen"
+              ? 6
+              : 7;
+      const hi = call === "deep" || call === "pa" ? Math.round(48 * (0.75 + 0.25 * big)) : 22;
+      let yds = sampleYds(save, mu + edge / 25, call === "deep" ? 7 : 4, call === "deep" ? 11 : 2, hi);
+      if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) yds += randInt(save, 8, Math.round(28 * big + 6));
+      if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.45 ? 1 : 0)));
+      if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
+      yds = pinAtGoal(save, spot, yds, year, brake);
+      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
+      if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
+      const t = pickTackler(save, def, true);
+      if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
+      const sideline = call === "deep" || ((q === 2 || q >= 4) && clock <= 120 && trail >= 1);
+      const oob = rand(save) < (sideline ? 0.42 : 0.16);
+      const used = snapClock(save, plan, year, q, clock, trail, true, oob, yds >= togo, false);
+      tickClock(poss, used.used);
+      drivePlays += 1;
+      driveYds += yds;
+      spot = clamp(spot + yds, 0, 100);
+      lastRun = false;
+      if (was3rd) mark3rd(poss, yds >= togo || spot >= 100);
+      if (spot >= 100) {
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passTd: 1 });
+        if (rec) bumpBox(boxOf(poss), rec.id, { recTd: 1 });
+        const line = rec
+          ? rec.ratings.speed >= 88
+            ? `${playerName(rec)} takes it the distance.`
+            : `${off.qb ? playerName(off.qb) : "The quarterback"} hits ${playerName(rec)} — freeze-frame, six.`
+          : "Touchdown pass.";
+        scoreTd(poss, line);
+        if (ot && (otRule.kind === "sudden" || !modifiedFirst)) break;
+        if (ot && otRule.kind === "modified") {
+          modifiedGotScore = true;
+          modifiedFirst = false;
+        }
+        continue;
+      }
+      const fumP = 0.007 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.01 : 0);
+      if (rand(save) < fumP) {
+        if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
+        const lost = rand(save) < 0.5;
+        if (lost && maybeOverturn(save, year)) {
+          note("Replay. He was down.");
+        } else if (lost) {
+          if (t) bumpBox(boxOf(defId), t.id, { fr: 1 });
+          markTo(poss);
+          closeDrive("fumble");
+          if (spot >= 100) flipPoss(20);
+          else flipPoss(100 - spot);
+        }
+        continue;
+      }
+      if (yds >= togo) {
+        addFd(poss);
+        newSet();
+        tryTimeout(poss, !used.stopped && trail >= 1);
+      } else {
+        down += 1;
+        togo -= yds;
+        if (down > 4) {
+          closeDrive("downs");
+          flipPoss(100 - spot);
+        }
+      }
+      injure(poss, rec);
+      continue;
+    }
+
+    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak");
+    let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - 130) / 80;
+    if (call === "draw") mu += 0.8;
+    if (call === "sneak") mu = 0.7 + (off.ol[2]?.ratings.str ?? 70) / 80 + sneakBoost(year);
+    if (togo <= 1 && call !== "sneak") mu += 0.4;
+    if (spot >= 95) mu *= 0.5;
+    if (spot >= 80) mu *= 0.72;
+    if (spot >= 80 && plan.redZone === "power") mu += 0.25;
+    if (was3rd && togo >= 5) mu -= 0.7;
+    let yds = sampleYds(save, mu, call === "sneak" ? 1.2 : 3.0, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 12);
+    if (call !== "sneak" && rusher && rand(save) < ((rusher.ratings.speed / 1500) * big + kitBoost(rusher, "td") * 0.2) * brake) {
+      yds += randInt(save, 9, Math.round(32 * big + 6));
+    }
+    yds = pinAtGoal(save, spot, yds, year, brake);
+    if (rusher) {
+      bumpBox(boxOf(poss), rusher.id, { rushAtt: 1, rushYds: yds });
+      if (poss === homeId) homeRushYds += Math.max(0, yds);
+      else awayRushYds += Math.max(0, yds);
+    }
+    const t = pickTackler(save, def, false);
+    if (t) bumpBox(boxOf(defId), t.id, { tackles: 1, ...(yds < 0 ? { tfl: 1 } : {}) });
+    const oob = rand(save) < 0.1;
+    const used = snapClock(save, plan, year, q, clock, trail, true, oob, yds >= togo, false);
+    tickClock(poss, used.used);
+    drivePlays += 1;
+    driveYds += yds;
+    spot = clamp(spot + yds, 0, 100);
+    lastRun = true;
+    if (was3rd) mark3rd(poss, yds >= togo || spot >= 100);
+    if (spot >= 100) {
+      if (rusher) bumpBox(boxOf(poss), rusher.id, { rushTd: 1 });
+      scoreTd(poss, rusher ? `${playerName(rusher)} north-south. Touchdown.` : "Rushing touchdown.");
+      if (ot && (otRule.kind === "sudden" || !modifiedFirst)) break;
+      if (ot && otRule.kind === "modified") {
+        modifiedGotScore = true;
+        modifiedFirst = false;
+      }
+      continue;
+    }
+    if (spot <= 0) {
+      addPts(defId, 2);
+      markSafety(defId);
+      closeDrive("safety");
+      kickoffTo(defId, false, "free");
+      if (ot) break;
+      continue;
+    }
+    const fumP = 0.011 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.015 : 0) - (rusher ? rusher.ratings.btk / 2000 : 0);
+    if (rand(save) < fumP) {
+      if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
+      const lost = rand(save) < 0.48;
+      if (rusher) note(`${playerName(rusher)} coughs it up.`);
+      if (lost && maybeOverturn(save, year)) {
+        note("The replay booth says down by contact.");
+      } else if (lost) {
+        if (t) bumpBox(boxOf(defId), t.id, { fr: 1 });
+        markTo(poss);
+        if (rand(save) < 0.05 * big) {
+          addPts(defId, 6);
+          note("Fumble, the other way, six.");
+          extraPoint(defId);
+          closeDrive("fumble");
+          kickoffTo(poss, false);
+          if (ot) break;
+          continue;
+        }
+        closeDrive("fumble");
+        if (spot >= 100) flipPoss(20);
+        else flipPoss(100 - spot);
+      } else if (rusher) {
+        bumpBox(boxOf(poss), rusher.id, { fr: 1 });
+      }
+      continue;
+    }
+    if (yds >= togo) {
+      addFd(poss);
+      newSet();
+      tryTimeout(poss, !used.stopped && trail >= 1);
+    } else {
+      down += 1;
+      togo -= yds;
+      if (down > 4) {
+        closeDrive("downs");
+        flipPoss(100 - spot);
+      }
+    }
+    injure(poss, rusher);
+    if (off.qb && rusher?.id !== off.qb.id) injure(poss, off.qb);
+  }
+
+  if (homeScore === awayScore && (game.phase === "playoffs" || game.phase === "superBowl")) {
+    addPts(homeTotYards(homeBox) >= homeTotYards(awayBox) ? homeId : awayId, 3);
+    ot = true;
+  }
+
+  const padTackles = (box: BoxPlayer[], u: TeamUnits) => {
+    for (const p of [...u.lb, ...u.dl].slice(0, 5)) {
+      bumpBox(box, p.id, { tackles: randInt(save, 0, 3) });
+    }
+  };
+  padTackles(homeBox, homeU);
+  padTackles(awayBox, awayU);
+
+  applyBox(save, homeId, homeBox, year);
+  applyBox(save, awayId, awayBox, year);
+  const mvpSort = (b: BoxPlayer) =>
+    (b.passYds ?? 0) +
+    (b.rushYds ?? 0) * 1.1 +
+    (b.recYds ?? 0) * 1.2 +
+    (b.passTd ?? 0) * 40 +
+    (b.rushTd ?? 0) * 40 +
+    (b.recTd ?? 0) * 40 +
+    (b.ints ?? 0) * 35 +
+    (b.krTd ?? 0) * 50 +
+    (b.prTd ?? 0) * 50;
+  const homeMvp = homeBox.slice().sort((a, b) => mvpSort(b) - mvpSort(a))[0];
+  const awayMvp = awayBox.slice().sort((a, b) => mvpSort(b) - mvpSort(a))[0];
+  const mvp = homeScore >= awayScore ? homeMvp : awayMvp;
+  const ht = save.teams[homeId];
+  game.played = true;
+  game.homeScore = homeScore;
+  game.awayScore = awayScore;
+  game.boxHome = homeBox;
+  game.boxAway = awayBox;
+  game.weather = wx;
+  game.highlights = highlights.slice(0, 8);
+  game.homeQ = hq.slice(0, ot ? 5 : 4);
+  game.awayQ = aq.slice(0, ot ? 5 : 4);
+  while (game.homeQ.length < (ot ? 5 : 4)) game.homeQ.push(0);
+  while (game.awayQ.length < (ot ? 5 : 4)) game.awayQ.push(0);
+  game.mvpPlayerId = mvp?.playerId;
+  game.homePoss = homePoss;
+  game.awayPoss = awayPoss;
+  game.homeFd = homeFd;
+  game.awayFd = awayFd;
+  game.homeTot = homeTotYards(homeBox);
+  game.awayTot = homeTotYards(awayBox);
+  game.ot = ot;
+  game.drives = drives.slice(0, 32);
+  game.homePen = homePen;
+  game.awayPen = awayPen;
+  game.homePenYds = homePenYds;
+  game.awayPenYds = awayPenYds;
+  game.home3rd = home3rd;
+  game.home3rdAtt = home3rdAtt;
+  game.away3rd = away3rd;
+  game.away3rdAtt = away3rdAtt;
+  game.homeRz = homeRz;
+  game.homeRzAtt = homeRzAtt;
+  game.awayRz = awayRz;
+  game.awayRzAtt = awayRzAtt;
+  game.stadium = venue.stadium;
+  game.surface = venue.turf ? "turf" : "grass";
+  game.indoor = venue.indoor;
+  game.attendance = attendanceFor(year, venue, ht?.wins ?? 0, !!game.rivalry, !!game.night, () => rand(save));
+  game.homeTo = homeTo;
+  game.awayTo = awayTo;
+  game.homeSafeties = homeSafeties;
+  game.awaySafeties = awaySafeties;
+  game.neutral = neutral;
+  const filmBits = [
+    bowl ? `Neutral site · ${bowl.site}` : null,
+    wx !== "clear" ? wx : null,
+    !neutral && noise >= 0.018 ? "loud house" : null,
+    venue.altitude >= 4000 ? "thin air" : null,
+    playoff ? "playoff football" : null,
+    game.rivalry ? "divisional blood" : null,
+  ].filter(Boolean);
+  game.filmNote = filmBits.join(" · ") || undefined;
+
+  const at = save.teams[awayId];
+  if (!ht || !at) return;
+  ht.pf += game.homeScore;
+  ht.pa += game.awayScore;
+  at.pf += game.awayScore;
+  at.pa += game.homeScore;
+  const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
+  const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
+  if (game.homeScore > game.awayScore) {
+    ht.wins += 1;
+    at.losses += 1;
+    if (game.phase === "regular") {
+      ht.careerWins = (ht.careerWins ?? 0) + 1;
+      at.careerLosses = (at.careerLosses ?? 0) + 1;
+      creditCoachWl(save, homeId, "W");
+      creditCoachWl(save, awayId, "L");
+    }
+    ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
+    at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
+    if (sameDiv) {
+      ht.divWins += 1;
+      at.divLosses += 1;
+    }
+    if (sameConf) {
+      ht.confWins += 1;
+      at.confLosses += 1;
+    }
+  } else if (game.awayScore > game.homeScore) {
+    at.wins += 1;
+    ht.losses += 1;
+    if (game.phase === "regular") {
+      at.careerWins = (at.careerWins ?? 0) + 1;
+      ht.careerLosses = (ht.careerLosses ?? 0) + 1;
+      creditCoachWl(save, awayId, "W");
+      creditCoachWl(save, homeId, "L");
+    }
+    at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
+    ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
+    if (sameDiv) {
+      at.divWins += 1;
+      ht.divLosses += 1;
+    }
+    if (sameConf) {
+      at.confWins += 1;
+      ht.confLosses += 1;
+    }
+  } else {
+    ht.ties += 1;
+    at.ties += 1;
+    if (game.phase === "regular") {
+      ht.careerTies = (ht.careerTies ?? 0) + 1;
+      at.careerTies = (at.careerTies ?? 0) + 1;
+      creditCoachWl(save, homeId, "T");
+      creditCoachWl(save, awayId, "T");
+    }
+  }
+  rollInjuries(save, homeId);
+  rollInjuries(save, awayId);
 }

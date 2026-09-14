@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#002244"/>
-<path d="M14 44 L22 20 L32 16 L42 24 L50 18 L46 32 L52 46 L36 42 L32 54 L24 42 Z" fill="#fb4f14"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Denver Broncos">
+<rect width="64" height="64" rx="10" fill="#002244"/>
+<path fill="#fb4f14" d="M14 12 H36 C50 12 54 24 54 32 C54 44 46 52 34 52 H14 Z"/>
+<path fill="#002244" d="M22 20 H34 C42 20 44 26 44 32 C44 40 40 44 32 44 H22 Z"/>
+<path fill="#fb4f14" d="M8 40 L20 22 L30 18 L40 24 L50 16 L46 30 L54 44 L38 40 L32 54 L22 40 Z"/>
 </svg>

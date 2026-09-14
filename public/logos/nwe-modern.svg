@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#002244"/>
-<path d="M12 28 L32 12 L52 28 L44 28 L44 36 L20 36 L20 28 Z" fill="#ffffff"/>
-<ellipse cx="32" cy="46" rx="14" ry="8" fill="#c60c30"/>
-<path d="M24 46 H40" stroke="#ffffff" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="New England Patriots">
+<rect width="64" height="64" rx="10" fill="#002244"/>
+<g transform="scale(-1,1) translate(-64,0)">
+<path fill="#b0b7bc" d="M14 44 C16 20 28 10 40 14 C50 18 52 30 46 38 C54 32 56 40 48 46 L36 50 L22 48 Z"/>
+<path fill="#c60c30" d="M34 28 L50 24 L48 34 L36 34 Z"/>
+<path fill="#002244" d="M28 26 C32 24 36 26 36 30 C34 34 30 34 28 32Z"/>
+<path fill="#b0b7bc" d="M40 16 C50 8 58 18 50 28 C54 18 46 14 40 16Z"/>
+<path fill="none" stroke="#b0b7bc" stroke-width="1.4" d="M30 36 H44 M30 40 H42"/>
+</g>
 </svg>

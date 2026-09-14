@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#004c54"/>
-<path d="M8 40 Q32 8 56 40 Q32 28 8 40 Z" fill="#a5acaf"/>
-<path d="M18 38 Q32 16 46 38 Q32 30 18 38 Z" fill="#004c54"/>
-<circle cx="32" cy="26" r="3" fill="#a5acaf"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Philadelphia Eagles">
+<rect width="64" height="64" rx="10" fill="#004c54"/>
+<path fill="#a5acaf" d="M6 36 Q20 10 32 22 Q44 10 58 36 Q44 26 32 32 Q20 26 6 36Z"/>
+<path fill="#004c54" d="M18 32 Q32 18 46 32 Q32 28 18 32Z"/>
+<path fill="#a5acaf" d="M28 30 L32 14 L36 30 L32 28 Z"/>
+<circle cx="32" cy="24" r="2.4" fill="#a5acaf"/>
+<path fill="#a5acaf" d="M30 32 L32 48 L34 32 Z"/>
 </svg>

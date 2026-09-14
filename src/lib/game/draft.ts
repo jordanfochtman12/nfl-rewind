@@ -10,6 +10,8 @@ import { addNews, addTx } from "./news.ts";
 import { winPct } from "./standings.ts";
 import { applyScout, visibleOvr } from "./scout.ts";
 import { salaryFor } from "./salary.ts";
+import { coachKitBoost } from "./coachKit.ts";
+import { schemeFitPos } from "./staff.ts";
 
 function roundsFor(year: number): number {
   if (year <= 1976) return 12;
@@ -234,6 +236,9 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
   const open = save.draftBoard.filter((p) => !p.taken);
   if (!open.length) return undefined;
   const style = save.teams[teamId]?.draftStyle ?? "need";
+  const club = save.teams[teamId];
+  const hc = club?.coachId ? save.coaches[club.coachId] : undefined;
+  const evalN = (hc?.evaluation ?? 70) + coachKitBoost(hc, "eval") * 80;
   const qb = rosterOf(save, teamId)
     .filter((p) => p.pos === "QB")
     .sort((a, b) => b.ovr - a.ovr)[0];
@@ -243,7 +248,9 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
   for (const pr of open.slice(0, window)) {
     const pl = save.players[pr.playerId];
     if (!pl) continue;
-    const grade = visibleOvr(pl);
+    const scout = visibleOvr(pl);
+    const blend = Math.max(0, Math.min(0.7, (evalN - 60) / 80));
+    const grade = scout * (1 - blend) + pl.ovr * blend;
     const need = needScore(save, teamId, pl.pos);
     let score = grade + need * (style === "need" ? 0.72 : 0.28);
     if (style === "speed") score += ((pl.revealed ? pl.ratings.speed : grade) - 70) * 0.22;
@@ -251,6 +258,7 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
     if (style === "defense" && ["DE", "DT", "OLB", "MLB", "CB", "S"].includes(pl.pos)) score += 7;
     if (style === "qb" && pl.pos === "QB" && (qb?.ovr ?? 50) < 80) score += 14;
     if (style === "bpa") score = grade * 1.15 + need * 0.12;
+    score += schemeFitPos(pl.pos, club?.offScheme, club?.defScheme) * 0.35;
     if (pl.revealed) {
       score += kitBoost(pl, "offPass") + kitBoost(pl, "offRun") + kitBoost(pl, "defPass") + kitBoost(pl, "defRun");
       score += (pl.abilities?.length ?? 0) * 0.35 + (pl.traits?.length ?? 0) * 0.25;

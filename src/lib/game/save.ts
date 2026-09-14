@@ -3,6 +3,7 @@ import {
   STARTING_YEAR,
   TEAM_IDS,
   type DynastySave,
+  type SeasonStats,
   type TeamId,
   type TeamState,
 } from "./types.ts";
@@ -11,6 +12,7 @@ import { lookupCollege } from "./data/colleges.ts";
 import { seedPriorCareer } from "./data/careerPrior.ts";
 import { applyScout } from "./scout.ts";
 import { SKILL_POSITIONS } from "./types.ts";
+import { fillCoachFields } from "./staff.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -36,7 +38,21 @@ export function emptyTeam(id: TeamId, active: boolean): TeamState {
     confWins: 0,
     confLosses: 0,
     streak: "",
+    careerWins: 0,
+    careerLosses: 0,
+    careerTies: 0,
+    plan: { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" },
   };
+}
+
+function fillStatFields(s: SeasonStats): void {
+  s.targets = s.targets ?? 0;
+  s.tfl = s.tfl ?? 0;
+  s.pd = s.pd ?? 0;
+  s.qbHits = s.qbHits ?? 0;
+  s.fr = s.fr ?? 0;
+  s.krTd = s.krTd ?? 0;
+  s.prTd = s.prTd ?? 0;
 }
 
 export function resetSeasonRecord(t: TeamState): void {
@@ -83,6 +99,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
       teamOfHonor: {},
       awards: [],
       retirements: [],
+      seasons: [],
     },
     draftBoard: [],
     draftPickIndex: 0,
@@ -91,6 +108,8 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     nextNewsSeq: 1,
     pendingRetirees: [],
     pendingHof: [],
+    pendingCoachRetirees: [],
+    pendingCoachHof: [],
     lastPow: {},
     salaryCap: null,
     carousel: [],
@@ -122,6 +141,12 @@ export function hydrateSave(raw: unknown): DynastySave {
     t.confWins = t.confWins ?? 0;
     t.confLosses = t.confLosses ?? 0;
     t.streak = t.streak ?? "";
+    t.careerWins = t.careerWins ?? 0;
+    t.careerLosses = t.careerLosses ?? 0;
+    t.careerTies = t.careerTies ?? 0;
+    t.plan = t.plan ?? { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
+    t.plan.blitz = t.plan.blitz ?? "normal";
+    t.plan.redZone = t.plan.redZone ?? "balanced";
     t.active = t.active ?? false;
     t.ocId = t.ocId ?? null;
     t.dcId = t.dcId ?? null;
@@ -139,6 +164,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     teamOfHonor: r.history?.teamOfHonor ?? {},
     awards: r.history?.awards ?? [],
     retirements: r.history?.retirements ?? [],
+    seasons: r.history?.seasons ?? [],
+    grade: r.history?.grade,
   };
   const out: DynastySave = {
     ...base,
@@ -156,6 +183,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     draftBoard: r.draftBoard ?? [],
     pendingRetirees: r.pendingRetirees ?? [],
     pendingHof: r.pendingHof ?? [],
+    pendingCoachRetirees: r.pendingCoachRetirees ?? [],
+    pendingCoachHof: r.pendingCoachHof ?? [],
     lastPow: r.lastPow ?? {},
     salaryCap: r.salaryCap ?? null,
     carousel: r.carousel ?? [],
@@ -166,6 +195,9 @@ export function hydrateSave(raw: unknown): DynastySave {
     waiverOrder: r.waiverOrder ?? [],
     waivers: r.waivers ?? [],
     faOpened: r.faOpened ?? false,
+    weekFilm: r.weekFilm ?? false,
+    camp: r.camp,
+    deadline: r.deadline,
   };
   for (const pl of Object.values(out.players)) {
     pl.salary = pl.salary ?? 0;
@@ -177,6 +209,12 @@ export function hydrateSave(raw: unknown): DynastySave {
     pl.morale = pl.morale ?? 70;
     pl.potential = pl.potential ?? Math.min(99, (pl.ovr ?? 60) + 2);
     pl.scoutOvr = pl.scoutOvr ?? pl.ovr;
+    if (pl.stats) {
+      for (const s of Object.values(pl.stats)) fillStatFields(s);
+    }
+    if (pl.career) {
+      for (const s of pl.career) fillStatFields(s);
+    }
     if (pl.revealed == null) {
       const prospect = pl.draftYear === out.year && pl.yearsPro <= 0 && out.phase === "draft";
       pl.revealed = !prospect;
@@ -192,6 +230,9 @@ export function hydrateSave(raw: unknown): DynastySave {
           pl.career = [...prior, ...sim];
         }
       }
+    }
+    if (pl.career) {
+      for (const s of pl.career) fillStatFields(s);
     }
     if (pl.ratings) {
       const kit = assignKit(pl.pos, pl.ratings, pl.firstName, pl.lastName);
@@ -217,12 +258,13 @@ export function hydrateSave(raw: unknown): DynastySave {
     t.picks = t.picks ?? [];
   }
   for (const c of Object.values(out.coaches)) {
-    c.role = c.role ?? "HC";
-    c.offScheme = c.offScheme ?? "multiple";
-    c.defScheme = c.defScheme ?? "4-3";
-    c.yearsOnJob = c.yearsOnJob ?? 1;
-    c.careerWins = c.careerWins ?? 0;
-    c.careerLosses = c.careerLosses ?? 0;
+    fillCoachFields(c, out.year);
+  }
+  for (const h of out.history.hof) {
+    h.kind = h.kind ?? (h.coachId ? "coach" : "player");
+  }
+  for (const r of out.history.retirements) {
+    r.kind = r.kind ?? (r.coachId ? "coach" : "player");
   }
   return out;
 }

@@ -1,0 +1,104 @@
+/** Training camp: cuts, battles, and nicks. Engine-only. */
+import type { CampReport, DynastySave, Player, Pos, TeamId } from "./types.ts";
+import { ROSTER_TARGET } from "./types.ts";
+import { activeTeamIds, displayName } from "./teams.ts";
+import { DEPTH_CHART, movePlayer, playerName, rosterOf, syncDepth } from "./players.ts";
+import { rand, randInt } from "./rng.ts";
+import { addNews } from "./news.ts";
+
+const CAMP_BUGS = ["ankle", "hamstring", "shoulder", "groin", "knee", "wrist", "foot", "ribs"];
+
+function cpuTrim(save: DynastySave, teamId: TeamId): { playerId: string; teamId: TeamId }[] {
+  const roster = rosterOf(save, teamId).slice().sort((a, b) => b.ovr - a.ovr);
+  if (roster.length <= ROSTER_TARGET) return [];
+  const keep = new Set<string>();
+  for (const [pos, need] of DEPTH_CHART) {
+    for (const p of roster.filter((x) => x.pos === pos).slice(0, need)) keep.add(p.id);
+  }
+  for (const p of roster) {
+    if (keep.size >= ROSTER_TARGET) break;
+    keep.add(p.id);
+  }
+  const cuts: { playerId: string; teamId: TeamId }[] = [];
+  for (const p of roster) {
+    if (keep.has(p.id)) continue;
+    movePlayer(save, p.id, "fa");
+    cuts.push({ playerId: p.id, teamId });
+  }
+  syncDepth(save, teamId);
+  return cuts;
+}
+
+function nickPlayer(save: DynastySave, p: Player, weeks: number, name: string): void {
+  p.injuredWeeks = Math.max(p.injuredWeeks, weeks);
+  p.injuryName = name;
+}
+
+function battlesFor(save: DynastySave, teamId: TeamId): CampReport["battles"] {
+  const out: CampReport["battles"] = [];
+  for (const [pos] of DEPTH_CHART) {
+    const pool = rosterOf(save, teamId)
+      .filter((p) => p.pos === pos && p.injuredWeeks <= 0)
+      .sort((a, b) => b.ovr - a.ovr);
+    if (pool.length < 2) continue;
+    const a = pool[0]!;
+    const b = pool[1]!;
+    if (a.ovr - b.ovr > 4) continue;
+    const note =
+      a.ovr === b.ovr
+        ? `${playerName(a)} and ${playerName(b)} are even. The first snap in September is unclaimed.`
+        : `${playerName(b)} is close enough that ${pos} is a fight, not a listing.`;
+    out.push({ pos: pos as Pos, starterId: a.id, backupId: b.id, note });
+    if (out.length >= 4) break;
+  }
+  return out;
+}
+
+export function resolveCamp(save: DynastySave): CampReport {
+  if (save.camp?.year === save.year) return save.camp;
+  const cuts: CampReport["cuts"] = [];
+  const injuries: CampReport["injuries"] = [];
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    cuts.push(...cpuTrim(save, id));
+  }
+  const pool = Object.values(save.players).filter(
+    (p) =>
+      p.teamId !== "fa" &&
+      p.teamId !== "retired" &&
+      p.teamId !== "hof" &&
+      p.injuredWeeks <= 0 &&
+      p.ratings.inj < 86,
+  );
+  const nicks = 2 + randInt(save, 0, 3);
+  for (let i = 0; i < nicks && pool.length; i++) {
+    const idx = randInt(save, 0, pool.length - 1);
+    const p = pool.splice(idx, 1)[0];
+    if (!p || p.teamId === "fa") continue;
+    const weeks = rand(save) < 0.25 ? randInt(save, 3, 6) : randInt(save, 1, 3);
+    const name = CAMP_BUGS[randInt(save, 0, CAMP_BUGS.length - 1)]!;
+    nickPlayer(save, p, weeks, name);
+    injuries.push({ playerId: p.id, teamId: p.teamId as TeamId, weeks, name });
+  }
+  const battles = battlesFor(save, save.userTeamId);
+  const camp: CampReport = { year: save.year, cuts: cuts.slice(0, 18), injuries, battles };
+  save.camp = camp;
+  const ours = injuries.filter((x) => x.teamId === save.userTeamId);
+  addNews(save, {
+    kind: "headline",
+    headline: `${save.year} camp opens`,
+    body: ours.length
+      ? `${displayName(save.year, save.userTeamId)} already have names in the training room.`
+      : "Cuts, nicks, and one job per jersey. September is a count, not a feeling.",
+    teamIds: [save.userTeamId],
+    playerIds: ours.map((x) => x.playerId),
+  });
+  return camp;
+}
+
+export function campBubble(save: DynastySave, teamId: TeamId): Player[] {
+  const roster = rosterOf(save, teamId).slice().sort((a, b) => a.ovr - b.ovr);
+  const n = roster.length;
+  if (n <= ROSTER_TARGET) return roster.slice(0, 6);
+  return roster.slice(0, Math.min(12, n - ROSTER_TARGET + 4));
+}

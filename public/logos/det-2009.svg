@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Detroit Lions">
+<rect width="64" height="64" rx="10" fill="#0076b6"/>
+<path fill="#b0b7bc" d="M8 44 C10 18 26 8 42 14 C54 20 56 36 46 46 L36 56 L20 52 L12 56 Z"/>
+<path fill="#0076b6" d="M30 28 C38 22 46 28 46 36 C44 42 34 42 32 36Z"/>
+<path fill="#b0b7bc" d="M44 16 L58 8 L52 26 Z"/>
+<path fill="#b0b7bc" d="M22 44 C26 50 20 56 14 54"/>
+<circle cx="38" cy="30" r="2.2" fill="#0076b6"/>
+</svg>

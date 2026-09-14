@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#0c2340"/>
-<path d="M32 8 L40 48 H24 Z" fill="#c8102e"/>
-<rect x="18" y="48" width="28" height="6" fill="#c8102e"/>
-<rect x="30" y="14" width="4" height="34" fill="#ffffff"/>
-<path d="M22 28 H42 M20 36 H44" stroke="#ffffff" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tennessee Titans">
+<rect width="64" height="64" rx="10" fill="#0c2340"/>
+<circle cx="32" cy="32" r="24" fill="#0c2340" stroke="#4b92db" stroke-width="2"/>
+<path fill="#c8102e" d="M18 16 H46 L42 24 H36 V50 H28 V24 H22 Z"/>
+<path fill="#4b92db" d="M30 8 L32 13 L37 13 L33 16 L35 21 L30 18 L25 21 L27 16 L23 13 L28 13 Z"/>
+<path fill="#ffffff" d="M14 46 L16 51 L21 51 L17 54 L19 59 L14 56 L9 59 L11 54 L7 51 L12 51 Z"/>
+<path fill="#c8102e" d="M44 46 L46 51 L51 51 L47 54 L49 59 L44 56 L39 59 L41 54 L37 51 L42 51 Z"/>
 </svg>

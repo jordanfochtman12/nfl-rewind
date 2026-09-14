@@ -1,4 +1,4 @@
-import { kitImpactLine, type Player } from "@/lib/game";
+import { coachKitLine, kitImpactLine, type Coach, type Player } from "@/lib/game";
 
 export function KitChips({
   player,
@@ -51,6 +51,40 @@ export function KitChips({
           </span>
         ),
       )}
+    </div>
+  );
+}
+
+export function CoachChips({
+  coach,
+  compact = false,
+}: {
+  coach: Coach;
+  compact?: boolean;
+}) {
+  const abilities = coach.abilities ?? [];
+  const traits = coach.traits ?? [];
+  if (!abilities.length && !traits.length) return null;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {abilities.map((name) => (
+        <span
+          key={name}
+          title={coachKitLine(name)}
+          className={`rounded-sm bg-brass/15 text-brass ${compact ? "px-1 py-0.5 text-[10px]" : "px-1.5 py-0.5 text-[11px]"} tracking-wide`}
+        >
+          {name}
+        </span>
+      ))}
+      {traits.map((name) => (
+        <span
+          key={name}
+          title={coachKitLine(name)}
+          className={`rounded-sm bg-paper/10 text-paper ${compact ? "px-1 py-0.5 text-[10px]" : "px-1.5 py-0.5 text-[11px]"} tracking-wide`}
+        >
+          {name}
+        </span>
+      ))}
     </div>
   );
 }

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#0b162a"/>
-<path d="M20 14h16c12 0 16 7 16 18s-4 18-16 18H20V14z" fill="#c83803"/>
-<path d="M30 24h8c4 0 6 2.4 6 8s-2 8-6 8h-8V24z" fill="#0b162a"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Chicago Bears">
+<rect width="64" height="64" rx="10" fill="#0b162a"/>
+<path fill="#c83803" d="M46 16 H24 C12 16 8 26 8 32 C8 40 12 50 24 50 H46 V42 H26 C20 42 18 38 18 32 C18 26 20 22 26 22 H46 Z"/>
+<path fill="#0b162a" d="M46 22 H28 C22 22 20 26 20 32 C20 38 22 42 28 42 H46 V38 H30 C26 38 26 36 26 32 C26 28 26 26 30 26 H46 Z"/>
 </svg>

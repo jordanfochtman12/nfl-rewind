@@ -1,14 +1,16 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import {
   advance,
   cloneSave,
+  compactSave,
   createNewGame,
   hydrateSave,
   type AdvanceOpts,
   type DynastySave,
   type TeamId,
 } from "@/lib/game/index.ts";
+import { dynastyStorage } from "@/lib/save-idb.ts";
 
 export type Screen = "title" | "select" | "play";
 export type Tab =
@@ -30,6 +32,7 @@ interface GameStore {
   profileId: string | null;
   pendingTeam: TeamId | null;
   lastDeskNote: string | null;
+  hasHydrated: boolean;
   setScreen: (s: Screen) => void;
   setTab: (t: Tab) => void;
   openProfile: (id: string) => void;
@@ -44,6 +47,22 @@ interface GameStore {
   resign: () => void;
 }
 
+function persistStorage() {
+  return {
+    getItem: (name: string) => dynastyStorage.getItem(name),
+    removeItem: (name: string) => dynastyStorage.removeItem(name),
+    setItem: async (name: string, value: string) => {
+      try {
+        const parsed = JSON.parse(value) as { state?: { save?: DynastySave | null } };
+        if (parsed?.state?.save) parsed.state.save = compactSave(parsed.state.save);
+        await dynastyStorage.setItem(name, JSON.stringify(parsed));
+      } catch {
+        await dynastyStorage.setItem(name, value);
+      }
+    },
+  };
+}
+
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
@@ -53,6 +72,7 @@ export const useGameStore = create<GameStore>()(
       profileId: null,
       pendingTeam: null,
       lastDeskNote: null,
+      hasHydrated: false,
       setScreen: (screen) => set({ screen }),
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
@@ -74,6 +94,7 @@ export const useGameStore = create<GameStore>()(
         const { save } = get();
         if (!save) return;
         if (save.phase === "freeAgency") set({ save: advance(save, { closeFa: true }) });
+        else if (save.phase === "complete") return;
         else set({ save: advance(save, { auto: save.phase === "draft" }) });
       },
       desk: (fn) => {
@@ -85,7 +106,8 @@ export const useGameStore = create<GameStore>()(
       },
       exportJson: () => {
         const { save } = get();
-        return JSON.stringify(save, null, 2);
+        if (!save) return "null";
+        return JSON.stringify(compactSave(save), null, 2);
       },
       importJson: (raw) => {
         const save = hydrateSave(JSON.parse(raw));
@@ -93,6 +115,15 @@ export const useGameStore = create<GameStore>()(
       },
       resign: () => set({ screen: "title", profileId: null }),
     }),
-    { name: "nfl-rewind-dynasty" },
+    {
+      name: "nfl-rewind-dynasty",
+      storage: createJSONStorage(persistStorage),
+      partialize: (s) => ({ save: s.save }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.save) state.save = hydrateSave(state.save);
+        if (state) state.hasHydrated = true;
+        queueMicrotask(() => useGameStore.setState({ hasHydrated: true }));
+      },
+    },
   ),
 );

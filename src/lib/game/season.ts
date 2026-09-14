@@ -1,4 +1,5 @@
 import type { AdvanceOpts, DynastySave } from "./types.ts";
+import { END_YEAR } from "./types.ts";
 import { activeTeamIds, roman, superBowlNumber } from "./teams.ts";
 import { cloneSave, resetSeasonRecord } from "./save.ts";
 import { rebuildSchedule, gamesInWeek, maxWeek } from "./schedule.ts";
@@ -12,7 +13,12 @@ import {
   maybeStartAflDraft,
   simUntilUserPick,
 } from "./draft.ts";
-import { applyYearExpansion } from "./expansion.ts";
+import { applyYearExpansion, closeExpansion } from "./expansion.ts";
+import { compactSaveInPlace } from "./compact.ts";
+import { writeSeasonChapter } from "./almanac.ts";
+import { relocationsForYear } from "./data/relocations.ts";
+import { resolveCamp } from "./camp.ts";
+import { closeDeadline, deadlineWeek, openDeadline } from "./deadline.ts";
 import {
   cpuInSeasonMoves,
   gatherHof,
@@ -31,17 +37,18 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, generatePlayer, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { fillRoster, syncDepth } from "./players.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
 import { agePlayer } from "./development.ts";
 import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
-import { ensureStaff, runCoachingCarousel } from "./staff.ts";
+import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuTrades, processWaivers, signPlayer, freeAgents } from "./gm.ts";
+import { cpuTrades, processWaivers, cpuSignNeeds } from "./gm.ts";
 import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
+import { touchGrade } from "./grade.ts";
 
 export function setLabel(save: DynastySave): void {
   const y = save.year;
@@ -56,10 +63,13 @@ export function setLabel(save: DynastySave): void {
       save.weekLabel = expansionForYear(y)?.title ?? `${y} Expansion`;
       break;
     case "preseason":
-      save.weekLabel = `${y} Preseason`;
+      save.weekLabel = `${y} Training camp`;
       break;
     case "regular":
       save.weekLabel = `Week ${save.week}`;
+      break;
+    case "deadline":
+      save.weekLabel = save.year < 1994 ? `${y} Trading week` : `${y} Trade deadline`;
       break;
     case "playoffs":
       save.weekLabel = playoffWeekLabel(save);
@@ -79,6 +89,15 @@ export function setLabel(save: DynastySave): void {
     case "hof":
       save.weekLabel = "Hall of Fame";
       break;
+    case "carousel":
+      save.weekLabel = `${y} Coaching carousel`;
+      break;
+    case "relocation":
+      save.weekLabel = relocationsForYear(y)[0]?.title ?? `${y} Moving vans`;
+      break;
+    case "complete":
+      save.weekLabel = `${y} Dynasty complete`;
+      break;
   }
 }
 
@@ -87,37 +106,25 @@ function ageAndRegen(save: DynastySave): void {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     agePlayer(save, p);
   }
+  ageStaff(save);
 }
 
 function runCpuFreeAgency(save: DynastySave): void {
-  const pool = freeAgents(save).sort((a, b) => b.ovr - a.ovr);
+  cpuSignNeeds(save);
+}
+
+function fillCpuRosters(save: DynastySave): void {
   for (const id of activeTeamIds(save.year)) {
     if (id === save.userTeamId && !save.cpuOnly) continue;
-    const n = rosterOf(save, id).length;
-    const want = n < 44 ? 2 + (n < 40 ? 2 : 0) : rand(save) < 0.25 ? 1 : 0;
-    let signed = 0;
-    for (const p of pool) {
-      if (signed >= want) break;
-      if (p.teamId !== "fa") continue;
-      const have = rosterOf(save, id).filter((x) => x.pos === p.pos);
-      const best = have.sort((a, b) => b.ovr - a.ovr)[0];
-      if (best && best.ovr >= p.ovr - 1 && have.length >= 2) continue;
-      if (save.year < 1994 && p.ovr >= 84 && p.yearsPro >= 5 && rand(save) > 0.08) continue;
-      if (signPlayer(save, id, p.id).ok) signed += 1;
-    }
+    if (!save.teams[id]) continue;
+    fillRoster(save, id);
+    save.teams[id].payroll = teamPayroll(save, id);
+    syncDepth(save, id);
   }
 }
 
 function fillThinRosters(save: DynastySave): void {
-  for (const id of activeTeamIds(save.year)) {
-    const n = rosterOf(save, id).length;
-    if (n < 42) {
-      const pos = DEPTH_CHART[n % DEPTH_CHART.length]![0];
-      generatePlayer(save, pos, id, 55 + (n % 10));
-    }
-    syncDepth(save, id);
-    save.teams[id].payroll = teamPayroll(save, id);
-  }
+  fillCpuRosters(save);
 }
 
 function runFreeAgency(save: DynastySave): void {
@@ -141,6 +148,8 @@ function startRegular(save: DynastySave): void {
   save.waiverOrder = activeTeamIds(save.year).slice().sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!));
   save.phase = "regular";
   save.week = 1;
+  save.weekFilm = false;
+  save.deadline = undefined;
   save.playoffGames = [];
   save.superBowl = undefined;
   save.proBowl = undefined;
@@ -165,7 +174,7 @@ function tickInjuries(save: DynastySave): void {
   }
 }
 
-function simRegularWeek(save: DynastySave): void {
+function simThisWeek(save: DynastySave): void {
   tickInjuries(save);
   processWaivers(save);
   const games = gamesInWeek(save, save.week);
@@ -177,7 +186,17 @@ function simRegularWeek(save: DynastySave): void {
   save.waiverOrder = activeTeamIds(save.year)
     .slice()
     .sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!));
+  save.weekFilm = true;
+}
+
+function leaveRegularWeek(save: DynastySave): void {
+  save.weekFilm = false;
   const last = maxWeek(save);
+  if (save.week === deadlineWeek(save.year) && save.deadline?.year !== save.year) {
+    openDeadline(save);
+    save.phase = "deadline";
+    return;
+  }
   if (save.week >= last) {
     clampSeasonStats(save);
     seedPlayoffs(save);
@@ -188,21 +207,16 @@ function simRegularWeek(save: DynastySave): void {
   }
 }
 
-function finishOffseason(save: DynastySave): void {
-  runCoachingCarousel(save);
-  save.year += 1;
-  ageAndRegen(save);
-  applyYearExpansion(save);
-  ensureStaff(save);
-  for (const id of activeTeamIds(save.year)) {
-    if (save.teams[id]?.active || activeTeamIds(save.year).includes(id)) {
-      if (!save.teams[id]) continue;
-      save.teams[id].active = true;
-      fillRoster(save, id);
-    }
+export function weekIsInTheBooks(save: DynastySave): boolean {
+  if (save.phase === "regular") {
+    const games = gamesInWeek(save, save.week);
+    return games.length > 0 && games.every((g) => g.played);
   }
-  refreshContracts(save);
-  for (const id of activeTeamIds(save.year)) syncDepth(save, id);
+  if (save.phase === "playoffs") return !!save.weekFilm;
+  return false;
+}
+
+function openDraft(save: DynastySave): void {
   save.draftSession = save.year === 1966 ? "nfl" : "common";
   ensureSeasonPicks(save);
   buildDraftBoard(save);
@@ -211,6 +225,51 @@ function finishOffseason(save: DynastySave): void {
   save.draftPickIndex = 0;
   save.faOpened = false;
   save.waivers = [];
+}
+
+function finishOffseason(save: DynastySave): void {
+  save.year += 1;
+  compactSaveInPlace(save);
+  ageAndRegen(save);
+  const exp = expansionForYear(save.year);
+  applyYearExpansion(save);
+  ensureStaff(save);
+  fillCpuRosters(save);
+  refreshContracts(save);
+  fillCpuRosters(save);
+  for (const id of activeTeamIds(save.year)) syncDepth(save, id);
+  touchGrade(save);
+  const moves = relocationsForYear(save.year);
+  if (moves.length) {
+    save.phase = "relocation";
+    save.week = 0;
+    for (const m of moves) {
+      addNews(save, {
+        kind: "headline",
+        headline: m.title,
+        body: `${m.from} are now the ${m.to}. ${m.body}`,
+        teamIds: [m.teamId],
+        playerIds: [],
+      });
+    }
+    return;
+  }
+  if (exp && save.expansion) {
+    save.phase = "expansion";
+    save.week = 0;
+    return;
+  }
+  openDraft(save);
+}
+
+function closeRelocation(save: DynastySave): void {
+  const exp = expansionForYear(save.year);
+  if (exp && save.expansion) {
+    save.phase = "expansion";
+    save.week = 0;
+    return;
+  }
+  openDraft(save);
 }
 
 export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave {
@@ -268,23 +327,44 @@ export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave 
         runFreeAgency(s);
         s.faOpened = false;
         s.phase = "preseason";
+        resolveCamp(s);
       }
       break;
     case "expansion":
-      if (!s.expansion?.done) applyYearExpansion(s);
-      s.draftSession = s.year === 1966 ? "nfl" : "common";
-      buildDraftBoard(s);
-      s.phase = "draft";
-      s.draftPickIndex = 0;
+      closeExpansion(s);
+      openDraft(s);
       break;
     case "preseason":
+      if (!s.camp || s.camp.year !== s.year) {
+        resolveCamp(s);
+        if (!auto) break;
+      }
       startRegular(s);
       break;
-    case "regular":
-      simRegularWeek(s);
+    case "regular": {
+      const games = gamesInWeek(s, s.week);
+      const unplayed = games.some((g) => !g.played);
+      if (unplayed) {
+        simThisWeek(s);
+        if (!auto) break;
+      }
+      leaveRegularWeek(s);
       break;
-    case "playoffs":
-      simPlayoffWeek(s);
+    }
+    case "deadline":
+      closeDeadline(s);
+      break;
+    case "playoffs": {
+      if (!s.weekFilm) {
+        const before = s.playoffGames.filter((g) => g.played).length;
+        simPlayoffWeek(s);
+        const after = s.playoffGames.filter((g) => g.played).length;
+        if (after > before) {
+          s.weekFilm = true;
+          if (!auto) break;
+        }
+      }
+      s.weekFilm = false;
       if (playoffReadyForSuperBowl(s)) {
         createSuperBowl(s);
         s.phase = "superBowl";
@@ -295,19 +375,32 @@ export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave 
         s.week += 1;
       }
       break;
-    case "superBowl":
-      if (!s.superBowl?.played) resolveSuperBowl(s);
-      if (auto || s.superBowl?.played) s.phase = "awards";
+    }
+    case "superBowl": {
+      const unplayed = !!s.superBowl && !s.superBowl.played;
+      if (unplayed) resolveSuperBowl(s);
+      if (unplayed && !auto) break;
+      if (!s.awards) resolveAwards(s);
+      writeSeasonChapter(s);
+      s.phase = "awards";
       break;
+    }
     case "awards":
       if (!s.awards) resolveAwards(s);
+      writeSeasonChapter(s);
+      if (!s.proBowl?.played) {
+        resolveProBowl(s);
+        gatherRetirees(s);
+      }
       s.phase = "proBowl";
       break;
     case "proBowl":
       if (!s.proBowl?.played) {
         resolveProBowl(s);
         gatherRetirees(s);
+        if (!auto) break;
       }
+      if (!s.pendingRetirees.length) gatherRetirees(s);
       s.phase = "retirement";
       break;
     case "retirement":
@@ -317,7 +410,26 @@ export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave 
       break;
     case "hof":
       resolveHof(s);
+      if (s.year >= END_YEAR) {
+        s.phase = "complete";
+        const g = touchGrade(s);
+        g.final = true;
+        s.history.grade = g;
+      } else {
+        runCoachingCarousel(s);
+        s.phase = "carousel";
+        s.week = 0;
+      }
+      break;
+    case "carousel":
       finishOffseason(s);
+      break;
+    case "relocation":
+      closeRelocation(s);
+      break;
+    case "complete":
+      touchGrade(s);
+      if (s.history.grade) s.history.grade.final = true;
       break;
   }
   setLabel(s);
@@ -332,6 +444,7 @@ export function simUntil(
   let s = save;
   for (let i = 0; i < maxSteps; i++) {
     if (pred(s)) return s;
+    if (s.phase === "complete") return s;
     const next = advance(s, { auto: true });
     if (
       next.year === s.year &&
@@ -363,6 +476,9 @@ export function fastForwardToYear(save: DynastySave, year: number): DynastySave 
         (s.phase === "draft" ||
           s.phase === "freeAgency" ||
           s.phase === "expansion" ||
+          s.phase === "carousel" ||
+          s.phase === "relocation" ||
+          s.phase === "deadline" ||
           s.phase === "preseason" ||
           s.phase === "regular")),
   );

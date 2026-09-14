@@ -1,10 +1,13 @@
-import { logoSrc, teamColors, type TeamId } from "@/lib/game";
+import { clubInk, logoSrc, teamColors, type TeamId } from "@/lib/game";
+import { useGameStore } from "@/lib/game-store";
 
-export function Logo({ id, size = 36, year = 1966 }: { id: TeamId; size?: number; year?: number }) {
-  const c = teamColors(id);
+export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?: number }) {
+  const saveYear = useGameStore((s) => s.save?.year ?? 1966);
+  const y = year ?? saveYear;
+  const c = teamColors(id, y);
   return (
     <img
-      src={logoSrc(year, id)}
+      src={logoSrc(y, id)}
       alt=""
       width={size}
       height={size}
@@ -12,6 +15,58 @@ export function Logo({ id, size = 36, year = 1966 }: { id: TeamId; size?: number
       style={{ width: size, height: size, background: c.primary }}
     />
   );
+}
+
+/** Paints the year’s club ink onto CSS tokens so the desk, tabs, and ribbon follow the mark. */
+export function ClubDesk({
+  id,
+  year,
+  children,
+  className = "",
+}: {
+  id: TeamId;
+  year: number;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ink = clubInk(id, year);
+  return (
+    <div
+      className={className}
+      style={
+        {
+          "--color-club": ink.primary,
+          "--color-club-2": ink.secondary,
+          "--color-club-fg": ink.onPrimary,
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
+export function ClubRibbon() {
+  return (
+    <div className="flex h-1 w-full" aria-hidden>
+      <div className="w-[72%] bg-club" />
+      <div className="flex-1 bg-club-2" />
+    </div>
+  );
+}
+
+export function ClubHash({
+  id,
+  year,
+  className = "w-1 self-stretch rounded-full",
+}: {
+  id: TeamId;
+  year?: number;
+  className?: string;
+}) {
+  const saveYear = useGameStore((s) => s.save?.year ?? 1966);
+  const c = teamColors(id, year ?? saveYear);
+  return <span className={`inline-block shrink-0 ${className}`} style={{ background: c.primary }} aria-hidden />;
 }
 
 export function Btn({

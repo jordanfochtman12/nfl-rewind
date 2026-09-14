@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Miami Dolphins">
+<rect width="64" height="64" rx="10" fill="#008e97"/>
+<circle cx="44" cy="18" r="8" fill="#fc4c02"/>
+<path fill="#ffffff" d="M6 40 C18 24 34 22 50 32 C42 24 44 14 54 12 C46 18 48 28 56 36 C56 44 46 52 32 52 C16 52 8 48 6 40Z"/>
+<path fill="#008e97" d="M26 36 C32 32 42 32 48 38 C40 40 32 40 26 36Z"/>
+</svg>

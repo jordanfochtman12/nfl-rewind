@@ -22,15 +22,22 @@ Product contract: [`AGENTS.project.md`](AGENTS.project.md). Sandbox/platform con
 | Brand (`public/og.jpg`, `x-banner.jpg`, `favicon.svg`, `src/lib/og/site.json`) | **Done.** `x:game`, custom card. |
 | Game contract docs | **Done.** `AGENTS.project.md`, `docs/ERA.md`, `docs/EXPANSIONS.md` |
 | Engine types / teams / ratings / veterans / draft catalogs / coaches / bowl sites / expansion specs | **Written** |
-| Engine loop | **Working.** 1966 season sims to Super Bowl I. Expansions 1967→2002 create clubs with coaches and 45-man rosters. |
+| Engine loop | **Working.** 1966 season sims to Super Bowl I. Expansions 1967→2002 create clubs with coaches and 45-man rosters. User roster is **not** auto-filled after year one. CPU will not fire/hire the user’s HC. Camp trims CPU only. Sunday stays on the film. Trade deadline is a phase. |
+| Expansion night | **Done.** Phase `expansion` is a full event (exposed lists, picks, new roster). CPU auto-picks unless the user *is* the new club. |
+| Winter nights | **Done.** Awards, Pro Bowl (rosters), retirement (players + coaches), Canton (players + coaches), coaching carousel, relocations are event screens. Super Bowl stays after the play. |
+| Camp / Sunday / deadline | **Done.** Preseason is camp. Regular week stays until Continue. Mid-season `deadline` phase with incoming offers. |
+| Franchise book | **Done.** `history.seasons` year-by-year W-L, result, coach, draft class, honors. |
+| Dynasty grade | **Done.** `grade.ts` letter A+–F. Career W-L on regular-season only. Locks at `END_YEAR` 2027 (`phase: complete`). |
+| Staff / careers | **SAVE_VERSION 14.** Coaches have attributes, abilities, age, progression, retirement, firing, HOF. CPU staff + scheme draft + roster management. Player HOF is a production ballot. |
+| Saves | **SAVE_VERSION 14.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
 | QA scripts | **Green as of this handoff:** `qa-season` and `qa-expansions` exit 0. `tsc --noEmit` exit 0. |
-| UI (title, AFL/NFL team select, office, roster, standings, schedule, stats, draft, history, event panes) | **Scaffolded** in `src/components/game/GameApp.tsx` |
-| Team SVG logos `public/logos/{id}.svg` | **Geometric wordmarks written** (32 files). Can be upgraded. |
+| UI (title, AFL/NFL team select, office desk, roster, standings, schedule, stats, draft, history, expansion night, grade card) | **Playable** in `src/components/game/` |
+| Team SVG logos `public/logos/{id}.svg` | **Emblems evolve by year.** `src/lib/game/data/logos.ts` `LOGO_ERAS` — last matching `from` year, including returns (Chargers powder, Jets football). Desk chrome follows `clubInk` / `teamColors(id, year)` (header ribbon, tabs, nameplate). Stadiums year-correct in `venues.ts`. |
 | Git | **Saved:** https://github.com/jordanfochtman12/nfl-rewind |
 | `npx tsc --noEmit` | **Green** |
 | Preview / `startup.sh` | **Written.** Must listen `0.0.0.0:8080`. |
-| Later draft classes 1980–2027 | **Done.** Wikipedia 1966–79 + nflverse 1980–2026 ingest. 1966 board 288/288 named. Kits (arch/ht/wt/rt) on almost every prospect. `scripts/ingest-draft-classes.py` rebuilds `draftClassesIngest.ts`. |
-| User GM (cut/sign/trade UI) | **Not built** — CPU auto-picks |
+| Later draft classes 1980–2027 | **Done.** Wikipedia + PFR HTML 1966–79 + nflverse 1980–2026. Full locked kits (no thin clones). Pick-based ovr for unplayed rookies. 2026 named class. Star profiles cover OJ through Mendoza. `scripts/ingest-draft-classes.py` rebuilds `draftClassesIngest.ts`. |
+| User GM (cut/sign/trade UI) | **Built** (Market desk). CPU will not paper over user holes. |
 | Play-by-play | **Not wanted** — statistical team/player sim only |
 
 **Ship bar from the original spec (do not call it done until these pass):**
@@ -73,30 +80,40 @@ HANDOFF.md                this file
 docs/ERA.md               season length, divisions, playoff formats, stat caps, SB sites
 docs/EXPANSIONS.md        how each expansion MUST mutate rosters
 src/lib/game/             ENGINE (no React). Imports use `.ts` extensions for Node QA.
-  types.ts                SAVE_VERSION, TeamId, DynastySave, ratings keys
-  teams.ts                conferenceOf, divisionOf, locationOf, nicknameOf, activeTeamIds
+  types.ts                SAVE_VERSION=14, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
+  coachKit.ts             coach abilities / traits that feed the sim
+  hof.ts                  player + coach Hall of Fame ballot
+  staff.ts                seed / fire / hire / carousel / progression / retirement / CPU staff
+  grade.ts                gradeDynasty / touchGrade
+  compact.ts              compactSave / compactSaveInPlace (strip old film)
+  expansion.ts            applyYearExpansion, userExpansionPick, expansion night
+  gm.ts                   deskHoles, cpuSignNeeds — user roster is not CPU-filled
+  season.ts               fillCpuRosters skips user; expansion phase; camp; sunday stay; deadline; END_YEAR complete
+  save.ts                 hydrate career W-L + coach fields + history.grade
+  teams.ts                conferenceOf, divisionOf, locationOf, nicknameOf, activeTeamIds, teamColors, clubInk
   era.ts                  eraProfile (1966 passing volume ≠ 2020)
   ratings.ts              deriveOvr, ratingsFromOvr, hasFullKit
   players.ts              seedVeterans, fillRoster, generatePlayer, hasKit
-  save.ts                 blankState, hydrateSave
   createGame.ts           createNewGame({ userTeamId, startingYear, seed, cpuOnly })
   schedule.ts             rebuildSchedule — 14 games/team in 1966, AFL/NFL split
-  sim.ts                  statistical game; attributes feed results; era clamps
+  sim.ts                  statistical game; attributes feed results; era clamps; coach kits
   standings.ts            standingRows, winPct
   playoffs.ts             1966 two championships + SB; later brackets
-  draft.ts                buildDraftBoard, makeDraftPick, autoDraftRest
-  expansion.ts            applyYearExpansion (allocation / relocate / return)
+  draft.ts                buildDraftBoard, makeDraftPick, autoDraftRest (scheme + evaluator)
   events.ts               awards, Pro Bowl, retirement, HOF, primetime, CPU moves
-  season.ts               advance / simUntil / simToSuperBowl / fastForwardToYear
   news.ts                 addNews
   data/veterans1966.ts    named 1966 vets (no 1966 draftees)
   data/draftClasses.ts    1966+ named classes; incomplete years generated
-  data/coaches.ts         1966 + expansion coaches
+  data/coaches.ts         1966 + expansion + later coaches with born years and prior W-L
   data/bowlSites.ts       SB I Coliseum, Pro Bowl Honolulu 1980–2009
   data/expansions.ts      specs 1967/68/76/95/96/99/2002
   index.ts                public API
-src/lib/game-store.ts     Zustand persist `nfl-rewind-dynasty`
-src/components/game/GameApp.tsx   all UI screens (needs polish + logos)
+src/lib/save-idb.ts       IndexedDB blob store for 60-year files
+src/lib/game-store.ts     Zustand persist via IDB, compact on write
+src/components/game/GameApp.tsx   office desk, grade, title save line, Staff tab
+src/components/game/WinterNights.tsx  awards, retirement, Canton, carousel
+src/components/game/ExpansionNight.tsx  allocation event
+src/components/game/GradeCard.tsx report card
 src/routes/__root.tsx     title NFL Rewind, fonts, preview bridge
 src/routes/index.tsx      <GameApp />
 src/router.tsx            getRouter()
@@ -120,7 +137,7 @@ fastForwardToYear(save, year) // land on that calendar year in draft/FA/preseaso
 hydrateSave(json)
 ```
 
-Season phases: `draft → freeAgency → preseason → regular → playoffs → superBowl → awards → proBowl → retirement → hof` then year++, **expansion (if any)**, then draft.
+Season phases: `draft → freeAgency → preseason (camp) → regular → deadline (mid-season) → playoffs → superBowl → awards → proBowl → retirement → hof` then year++, **expansion (if any)**, then draft.
 
 Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `fillRoster` / `buildDraftBoard`, so Saints exist for the 1967 college draft.
 
@@ -140,21 +157,16 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 8. **Do not replace `AGENTS.md`.** Game rules live in `AGENTS.project.md`.
 9. **Brand lock:** ink `#0c0d0b`, cream `#ebe4d4`, field `#3f6b4e`, brick `#8f3d32`. No gold/purple gradients, no neon Madden, no player headshots.
 10. **Node QA import:** `scripts/qa-*.mjs` re-spawn with `--experimental-strip-types` then `import("../src/lib/game/index.ts")`. Do not convert the engine to a React package.
+11. **CPU will not fire/hire the user’s HC** unless `cpuOnly`. Coordinators still auto-fill if vacant. User HC retirement (age) is allowed — the chair stays empty until they hire.
+12. **Do not add playerHof / coach retirement as a new auto phase** — they already run inside retirement / hof. A new phase stalls `qa-expansions`.
 
 ---
 
 ## Next work (priority order)
 
-1. Make `tsc` + `qa-season` green. Fix real failures; don’t stub asserts.
-2. Generate logos. Wire `<img src={/logos/${id}.svg}>` (already in GameApp).
-3. `startup.sh` + `npm run dev` on 8080. Title → team select (AFL/NFL groups) → 1966 Packers/etc. → draft → sim one week.
-4. Green `qa-expansions`. If slow, that’s OK; if it hangs, fix `fastForwardToYear` / expansion.
-5. `git init` + commits (`feat(engine): 1966 createNewGame`, `feat(expansion): 1967 Saints`, …). Repo name **nfl-rewind**.
-6. Polish UI: draft when it’s the user pick (don’t auto unless clicked), Super Bowl event screen stays until Continue, week label never says “Playoffs” on Pro Bowl (`setLabel` in `season.ts`).
-7. User transactions (cut/sign) during the year. CPU already does light churn in `cpuInSeasonMoves`.
-8. Ingest real draft classes 1980–2027 (`TODO_INGEST` in `draftClasses.ts`). Prefer nflverse/PFR dumps in `data/`.
-9. Stats table: filter by team, sortable columns (UI stub sorts by yards only).
-10. GitHub: user wanted `gh repo create nfl-rewind --private --source=. --remote=origin --push`. Do not force-push. No secrets.
+1. Injured reserve as a desk decision (not only a report). Waiver morning as a phase. Contract year / tenders once the cap exists (1994+).
+2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
+3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
 
 ---
 
@@ -190,28 +202,8 @@ Local clone later: `npm i && npm run dev` plus the two QA scripts.
 Gemini / ChatGPT / phone chatbots **cannot see `/workspace`**. The copy-paste file is for a new **Grok Build** (or Cursor/Claude Code) session with the filesystem. If you paste it into Gemini it will ask you to dump error logs and source — that is expected and not useful.
 
 
+## Update (coaching + careers)
 
-## Update (realism pass)
+SAVE_VERSION 14. Coaches now have age, leadership / development / evaluation, abilities and traits that feed the sim, progression, regression, retirement, firing, and a Canton ballot. CPU clubs fire coordinators, hire historical names when they come available, draft to scheme, and cut/sign to fit. Players retire with era-true age cliffs (kickers and quarterbacks last; street veterans can walk away). Hall of Fame is a production ballot, not peak-ovr-only. CPU will not fire or hire the user’s HC.
 
-Shipped on top of the green QA baseline:
-- Depth charts, injuries (next-man-up), era salaries + 1994 cap, player abilities
-- HC / OC / DC staff + coaching carousel
-- Team draft styles (BPA, need, speed, trench, defense, QB)
-- Primetime studio recap after each Sunday
-- Draft theater (on the clock) and Super Bowl stage
-- Period-inspired geometric logos in `public/logos/`
-- Named draft stars added across 1966–2025 (still not a full PFR ingest)
-
-QA still required green after this pass.
-
-
-## Update (10x realism)
-
-- Drive-based sim: weather, home field, trailing-pass script, quarters, highlights, XP/punts/fumbles
-- Position peak/cliff aging and retirement with career totals
-- Primetime as a full week-in-review show (ticker + packages + play of the night)
-- Draft night: on the clock, commissioner line, height/weight/40
-- Super Bowl night: roman title, quarter board, MVP, attendance
-- League leaders on History
-- Denser named 1966 veterans
-QA: `qa-season` and `qa-expansions` still green.
+QA: `qa-season` asserts Lombardi kit + age, Halas is old, every 1966 club has HC/OC/DC with abilities, user HC is not auto-fired through Super Bowl I.

@@ -14,7 +14,7 @@ Single-player historical NFL dynasty GM simulator (Front Office Football + histo
 
 ## Season loop
 
-preseason → regular season weeks → playoffs → Super Bowl event → awards → Pro Bowl → retirement ceremony → Hall of Fame / Team of Honor → **expansion (if that year)** → draft → free agency → next season.
+preseason (camp) → regular season weeks → **trade deadline week** → playoffs → Super Bowl event → awards night → Pro Bowl night → retirement ceremony → Hall of Fame → **coaching carousel** → **relocation (if that year)** → **expansion (if that year)** → draft → free agency night → next season.
 
 Expansion runs **before** the college draft so new clubs exist for that year’s board (Saints 1967 allocation, then 1967 draft).
 
@@ -78,6 +78,17 @@ kickPow kickAcc stamina inj awareness
 
 Every rating must change play results. Do not hug overall.
 
+The game engine is a **situational drive sim**, not a box-score blender. Play calling, clock, penalties, turnovers, special teams, and venues must look like the year on the calendar:
+
+- 1966 is run-first, ~51% completions, ~5.5% INT, wide hashes, bump-and-run, almost never 4th-and-2.
+- Clock stops on first downs through 1973; 1978 chuck rule; 1994 two-point (AFL had it); 2015 extra point from 15 yards.
+- Fumbles are recovered ~50/50. Kick-return TDs are rare. Holding and DPI extend or kill drives. Half-distance to the goal. DPI is a spot foul from 1974.
+- Indoor stadiums kill weather. Denver is thin air (visitors tire). Loud houses (Kingdome, Arrowhead) false-start the visitors.
+- Super Bowl is a **neutral site** (SB I = Coliseum, not the “home” club’s yard). No home-field there.
+- Call sheet (attack / fourth / tempo / blitz / red zone) is live. Scheme vs scheme matters (vertical/cover-2, smashmouth/3-4).
+- Safety is a free kick from the 20. Kickoff out of bounds is the 40. Blocked punt in the end zone is a safety. End-zone INT is a touchback.
+- Playoff football tightens. Replay review 1999+. Tight catch rule 2010–17. Tush-push era sneaks 2022+.
+
 Era caps (1966–70 especially):
 
 - Passing volume and completion % much lower than 2020s.
@@ -113,18 +124,36 @@ CPU clubs make transactions during the year (not only the user).
 
 1966 starters must be historical: Lombardi GB, Stram KC, Shula Baltimore Colts, Ewbank NYJ, Gillman SD, Landry DAL, Halas CHI, etc. Expansion coaches as above. Later hires historical when `yearAvail` hits, else generated.
 
+Coaches have attributes (offense, defense, leadership, development, evaluation), abilities/traits that feed the sim, age, progression/regression, retirement, and a Hall of Fame ballot (3-year wait after they leave the sideline). CPU clubs fire/hire HC/OC/DC, draft to scheme, and manage roster holes. CPU will not fire or hire the user’s head coach. Players retire (kickers and quarterbacks last longer) and wait 5 years for Canton; the ballot is career production, not only peak overall.
+
 ## UI
 
 - Title: 1966–2027 (or STARTING_YEAR–end).
-- Team select grouped by AFL / NFL in 1966 (not AFC/NFC).
+- Team select grouped by AFL / NFL in 1966 (not AFC/NFC). Club emblems follow the real switch years in `logoSrc` / `LOGO_ERAS` (Pat Patriot → 1993 Elvis → 2000 flip; Oilers derrick until 1999; Chargers powder/navy including the 2007 and 2020 returns; Jets jet → football → NY → football again in 2019).
+- Desk chrome follows `teamColors(id, year)` / `clubInk`: header ribbon, active tab, office nameplate, standings hash. 1966 Packers are green and gold; 1966 Patriots are red; Chargers powder vs navy; Rams navy in St. Louis. Title screen stays field green until a club is chosen.
+- Stadiums are year-correct (Wrigley then Soldier, War Memorial then Rich, Kezar then Candlestick, Balboa then San Diego Stadium, Anaheim then SoFi).
 - Standings use `confLabel(year)` and era divisions.
 - Stats UI: filter by team, sortable columns.
 - Primetime: sportscast with rotating segments — AFL/NFL (or AFC/NFC) offensive player of the week, transactions, injuries, headlines. Do not repeat the same three lines every week.
 - Super Bowl and Pro Bowl are event screens with site, score, MVP, flavor.
-- Retirement ceremony and HOF induction are event screens, then written into History.
+- Retirement ceremony and HOF induction are event screens (players and coaches), then written into History.
 - Expansion week: show exposed lists, pick cap per club, new club’s building roster.
 - Week label must match phase (do not show “Playoffs” on Pro Bowl).
 - Title-screen buttons: Export dynasty JSON, Import dynasty JSON.
+
+## Desk, saves, grade
+
+- CPU clubs fill their own holes. **The user roster is not auto-filled after year one.** Cuts and skipped FA stay empty. The office desk reports holes. CPU will not fire or hire your head coach.
+- Expansion is a real event screen (exposed lists, pick cap, building roster), then the college draft.
+- Awards, Pro Bowl, retirement, Canton, the coaching carousel, and franchise relocations are winter **nights**, not captions.
+- Training camp is a cut-down week (CPU trims; the user roster is not auto-cut).
+- Sim this Sunday **stays** on the film until Continue — same as the Super Bowl.
+- Mid-season trade deadline is a week on the calendar (Rozelle-era copy before 1994).
+- History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
+- History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
+- Free agency is a week with holes and a street list, not only a spreadsheet.
+- Dynasty JSON lives in IndexedDB (`nfl-rewind`) with a localStorage fallback. `compactSave` strips prior-year film and trims the wire so a 1966–2027 file still loads.
+- Play through `END_YEAR` (2027). `gradeDynasty` writes a letter (A+–F) from rings, titles, career W-L, HOF, Team of Honor, drafted stars. History shows it live; it locks on phase `complete`.
 
 ## QA — do not ship without this
 

@@ -1,5 +1,4 @@
 import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts";
-import { HOF_WAIT_YEARS } from "./types.ts";
 import { activeTeamIds, conferenceOf, displayName, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { generatePlayer, playerName, rosterOf } from "./players.ts";
@@ -8,6 +7,18 @@ import { addNews } from "./news.ts";
 import { rand, randInt } from "./rng.ts";
 import { shouldRetire } from "./development.ts";
 import { careerTotals } from "./leaders.ts";
+import { touchGrade } from "./grade.ts";
+import { retireCoach, shouldRetireCoach } from "./staff.ts";
+import {
+  coachHofBlurb,
+  coachHofEligible,
+  coachHofScore,
+  lastCoachTeam,
+  lastTeamOf,
+  playerHofBlurb,
+  playerHofEligible,
+  playerHofScore,
+} from "./hof.ts";
 
 function seasonList(save: DynastySave): Player[] {
   return Object.values(save.players).filter((p) => p.teamId !== "retired" && p.teamId !== "hof" && p.stats[save.year]);
@@ -171,6 +182,10 @@ export function resolveProBowl(save: DynastySave): void {
     awayScore: bScore,
     played: true,
     mvpPlayerId: mvp?.id,
+    homeRoster: a.map((p) => p.id),
+    awayRoster: b.map((p) => p.id),
+    stadium: site.site,
+    neutral: true,
   };
   addNews(save, {
     kind: "headline",
@@ -184,10 +199,16 @@ export function resolveProBowl(save: DynastySave): void {
 export function gatherRetirees(save: DynastySave): string[] {
   const out: string[] = [];
   for (const p of Object.values(save.players)) {
-    if (p.teamId === "retired" || p.teamId === "hof" || p.teamId === "fa") continue;
+    if (p.teamId === "retired" || p.teamId === "hof") continue;
+    if (p.teamId === "fa" && p.age < 30) continue;
     if (shouldRetire(save, p)) out.push(p.id);
   }
-  save.pendingRetirees = out.slice(0, 18);
+  save.pendingRetirees = out.slice(0, 22);
+  const coaches: string[] = [];
+  for (const c of Object.values(save.coaches)) {
+    if (shouldRetireCoach(save, c)) coaches.push(c.id);
+  }
+  save.pendingCoachRetirees = coaches.slice(0, 8);
   return save.pendingRetirees;
 }
 
@@ -213,6 +234,7 @@ export function resolveRetirement(save: DynastySave): void {
           .replace(/ +/g, " ")
           .trim();
       })(),
+      kind: "player" as const,
     };
     save.history.retirements.push(rec);
     if (p.historical || p.peakOvr >= 84 || p.userTied) {
@@ -225,18 +247,19 @@ export function resolveRetirement(save: DynastySave): void {
       });
     }
   }
+  for (const id of save.pendingCoachRetirees ?? []) {
+    const c = save.coaches[id];
+    if (c) retireCoach(save, c);
+  }
 }
 
 export function gatherHof(save: DynastySave): string[] {
-  const year = save.year;
-  const eligible = Object.values(save.players).filter((p) => {
-    if (p.hofYear) return false;
-    if (!p.retiredYear) return false;
-    if (year + 1 < p.retiredYear + HOF_WAIT_YEARS) return false;
-    return p.peakOvr >= 86 || p.historical;
-  });
-  eligible.sort((a, b) => b.peakOvr - a.peakOvr);
+  const eligible = Object.values(save.players).filter((p) => playerHofEligible(save, p));
+  eligible.sort((a, b) => playerHofScore(save, b) - playerHofScore(save, a));
   save.pendingHof = eligible.slice(0, 5).map((p) => p.id);
+  const coaches = Object.values(save.coaches).filter((c) => coachHofEligible(save, c));
+  coaches.sort((a, b) => coachHofScore(b) - coachHofScore(a));
+  save.pendingCoachHof = coaches.slice(0, 2).map((c) => c.id);
   return save.pendingHof;
 }
 
@@ -247,9 +270,9 @@ export function resolveHof(save: DynastySave): void {
     if (!p) continue;
     p.hofYear = classYear;
     p.teamId = "hof";
-    const teamId = save.userTeamId;
-    const blurb = `${playerName(p)}, ${p.pos}. Canton opens the door for a peak ${p.peakOvr} talent.`;
-    save.history.hof.push({ playerId: p.id, year: classYear, teamId, blurb });
+    const teamId = lastTeamOf(save, p);
+    const blurb = playerHofBlurb(save, p);
+    save.history.hof.push({ playerId: p.id, year: classYear, teamId, blurb, kind: "player" });
     if (p.userTied) {
       const list = save.history.teamOfHonor[save.userTeamId] ?? [];
       if (!list.includes(p.id)) list.push(p.id);
@@ -261,6 +284,22 @@ export function resolveHof(save: DynastySave): void {
       body: blurb,
       teamIds: [teamId],
       playerIds: [p.id],
+    });
+  }
+  for (const id of save.pendingCoachHof ?? []) {
+    const c = save.coaches[id];
+    if (!c || c.hofYear) continue;
+    c.hofYear = classYear;
+    c.teamId = null;
+    const teamId = lastCoachTeam(save, c);
+    const blurb = coachHofBlurb(c);
+    save.history.hof.push({ coachId: c.id, year: classYear, teamId, blurb, kind: "coach" });
+    addNews(save, {
+      kind: "hof",
+      headline: `Hall of Fame: ${c.name}`,
+      body: blurb,
+      teamIds: [teamId],
+      playerIds: [],
     });
   }
 }
@@ -293,6 +332,14 @@ export function resolveSuperBowl(save: DynastySave): void {
     league: save.year < 1970 ? "Super Bowl" : "NFL",
     teamId: winner,
   });
+  const credit = (id: TeamId, won: boolean) => {
+    const hc = save.teams[id]?.coachId ? save.coaches[save.teams[id]!.coachId!] : undefined;
+    if (!hc) return;
+    hc.careerBowls = (hc.careerBowls ?? 0) + 1;
+    if (won) hc.careerTitles = (hc.careerTitles ?? 0) + 1;
+  };
+  credit(winner, true);
+  credit(winner === home ? away : home, false);
   addNews(save, {
     kind: "headline",
     headline: `${displayName(save.year, winner)} win Super Bowl ${roman(superBowlNumber(save.year))}`,
@@ -300,6 +347,7 @@ export function resolveSuperBowl(save: DynastySave): void {
     teamIds: [home, away],
     playerIds: mvp ? [mvp.id] : [],
   });
+  touchGrade(save);
 }
 
 export function weekPrimetime(save: DynastySave): void {

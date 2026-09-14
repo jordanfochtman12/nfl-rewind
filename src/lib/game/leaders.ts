@@ -44,6 +44,8 @@ export function seasonLeaders(save: DynastySave) {
     recYds: rows(save, (s) => s.recYds, "Rec yds"),
     sacks: rows(save, (s) => s.sacks, "Sacks"),
     ints: rows(save, (s) => s.ints, "INT"),
+    tfl: rows(save, (s) => s.tfl ?? 0, "TFL"),
+    pd: rows(save, (s) => s.pd ?? 0, "PD"),
     scoring: rows(save, (s) => s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade, "Pts"),
   };
 }
@@ -77,6 +79,13 @@ export function careerTotals(p: Player): SeasonStats {
     puntYds: 0,
     krYds: 0,
     prYds: 0,
+    targets: 0,
+    tfl: 0,
+    pd: 0,
+    qbHits: 0,
+    fr: 0,
+    krTd: 0,
+    prTd: 0,
   } as SeasonStats;
   const years = Object.values(p.stats);
   const extra = p.career ?? [];
@@ -109,6 +118,13 @@ export function careerTotals(p: Player): SeasonStats {
     acc.puntYds += s.puntYds ?? 0;
     acc.krYds += s.krYds ?? 0;
     acc.prYds += s.prYds ?? 0;
+    acc.targets += s.targets ?? 0;
+    acc.tfl += s.tfl ?? 0;
+    acc.pd += s.pd ?? 0;
+    acc.qbHits += s.qbHits ?? 0;
+    acc.fr += s.fr ?? 0;
+    acc.krTd += s.krTd ?? 0;
+    acc.prTd += s.prTd ?? 0;
 
   }
   return acc;

@@ -9,7 +9,9 @@ Sources:
 
 Overall and locked kits come from what the player actually did in the NFL
 (AV, Pro Bowls, production), not draft slot. Recent rookies with no career
-yet keep round-based overall so hand-tuned boards still apply.
+yet keep pick-based overall (1.01 is not the same 76 as 1.32) and a full
+locked kit so two same-overall players are not clones. 1966–79 pick lists
+come from Wikipedia plus PFR HTML so late-round names fill the board.
 
 Re-run: python3 scripts/ingest-draft-classes.py
 """
@@ -306,9 +308,93 @@ def meas_for(pos: str, year: int, name: str) -> tuple[int, int, float]:
     return ht, max(165, wt), fy
 
 
-def ovr_from_round(rnd: int, bump: int = 0) -> int:
-    table = {1: 76, 2: 72, 3: 70, 4: 68, 5: 66, 6: 64, 7: 62, 8: 60, 9: 58, 10: 56, 11: 54, 12: 52}
-    return clamp(table.get(rnd, 50) + bump, 48, 96)
+PRIMARY = {
+    "QB": ["throwAcc", "throwAwr", "throwPow", "awareness", "rel", "stamina", "inj"],
+    "RB": ["speed", "accel", "elu", "btk", "stamina", "inj", "agi"],
+    "FB": ["runBlk", "truck", "str", "btk", "awareness", "inj"],
+    "WR": ["catch", "speed", "rrt", "cit", "accel", "awareness"],
+    "TE": ["catch", "runBlk", "cit", "str", "awareness", "inj"],
+    "LT": ["passBlk", "runBlk", "str", "awareness", "inj", "stamina"],
+    "LG": ["runBlk", "passBlk", "str", "awareness", "inj", "stamina"],
+    "C": ["passBlk", "runBlk", "str", "awareness", "inj", "stamina"],
+    "RG": ["runBlk", "passBlk", "str", "awareness", "inj", "stamina"],
+    "RT": ["passBlk", "runBlk", "str", "awareness", "inj", "stamina"],
+    "DE": ["prs", "tak", "str", "pur", "inj"],
+    "DT": ["str", "tak", "prs", "inj", "stamina"],
+    "OLB": ["prs", "tak", "pur", "speed", "inj"],
+    "MLB": ["tak", "str", "awareness", "pur", "inj"],
+    "CB": ["cov", "speed", "agi", "awareness", "inj"],
+    "S": ["awareness", "cov", "tak", "speed", "inj"],
+    "K": ["kickPow", "kickAcc", "awareness", "inj"],
+    "P": ["kickPow", "kickAcc", "awareness", "inj"],
+}
+
+ARCH_BOOST = {
+    "cannon": {"throwPow": 10, "rel": 4},
+    "deadeye": {"throwAcc": 10, "throwAwr": 8},
+    "scrambler": {"speed": 10, "agi": 8},
+    "manager": {"throwAwr": 8, "awareness": 8, "throwPow": -4},
+    "dual": {"speed": 8, "throwPow": 6},
+    "elusive": {"elu": 10, "agi": 8, "truck": -6},
+    "power-back": {"truck": 10, "str": 8, "elu": -4},
+    "home-run": {"speed": 10, "accel": 8},
+    "receiving-back": {"catch": 8, "rrt": 6},
+    "burner": {"speed": 10, "accel": 8},
+    "possession": {"catch": 10, "rrt": 8, "speed": -4},
+    "contested": {"cit": 10, "catch": 4},
+    "slot": {"rrt": 10, "agi": 6},
+    "move-te": {"speed": 8, "catch": 8, "runBlk": -4},
+    "block-te": {"runBlk": 10, "str": 6, "speed": -4},
+    "pass-ol": {"passBlk": 10, "agi": 4},
+    "run-ol": {"runBlk": 10, "str": 6},
+    "anchor": {"str": 10, "passBlk": 6},
+    "edge": {"prs": 10, "speed": 6},
+    "two-gap": {"str": 10, "tak": 6, "prs": -4},
+    "finisher": {"tak": 8, "pur": 8},
+    "cover-lb": {"cov": 10, "speed": 6, "tak": -4},
+    "thumper": {"tak": 10, "str": 6, "cov": -4},
+    "blanket": {"cov": 10, "agi": 6},
+    "hawk": {"awareness": 8, "catch": 8},
+    "box-s": {"tak": 10, "str": 4, "cov": -4},
+    "leg": {"kickPow": 10},
+    "ice": {"kickAcc": 10, "awareness": 4},
+}
+
+
+def ovr_from_round(rnd: int, bump: int = 0, pick: int = 0, name: str = "") -> int:
+    table = {1: 76, 2: 72, 3: 70, 4: 67, 5: 64, 6: 62, 7: 60, 8: 58, 9: 56, 10: 54, 11: 52, 12: 50}
+    o = table.get(rnd, 50) + bump
+    if rnd == 1:
+        if 0 < pick <= 5:
+            o += 10
+        elif pick <= 12:
+            o += 7
+        elif pick <= 20:
+            o += 4
+        else:
+            o += 2
+    elif rnd == 2:
+        o += 3 if 0 < pick <= 48 else 1
+    jitter = (hash32(name) % 5) - 2 if name else 0
+    return clamp(o + jitter, 48, 92)
+
+
+def fill_full_kit(pos: str, arch: str, ovr: int, name: str, rt: dict[str, int]) -> dict[str, int]:
+    """Lock every primary so two 76-overall players are not the same kit.
+
+    Unused skills stay out of the catalog (file size) — ratingsFromProfile
+    already keeps them low. Primaries get independent hash jitter + arch boost.
+    """
+    primaries = PRIMARY.get(pos, [])
+    boost = ARCH_BOOST.get(arch, {})
+    h = hash32(name)
+    for i, k in enumerate(primaries):
+        if k in rt:
+            continue
+        jitter = ((h >> (i * 3)) % 11) - 5
+        v = int(48 + ovr * 0.38 + boost.get(k, 0) + jitter)
+        rt[k] = clamp(v, 42, 96)
+    return rt
 
 
 def _n(row: dict | None, *keys: str) -> float:
@@ -378,11 +464,11 @@ def career_complete(row: dict | None) -> bool:
     return established
 
 
-def ovr_from_career(row: dict | None, rnd: int, pos: str = "WR") -> int:
+def ovr_from_career(row: dict | None, rnd: int, pos: str = "WR", pick: int = 0, name: str = "") -> int:
     """Overall from what the player actually did in the NFL, not draft slot."""
     del pos
     if not row:
-        return ovr_from_round(rnd)
+        return ovr_from_round(rnd, pick=pick, name=name)
     av = _n(row, "w_av", "career_av")
     g = _n(row, "games", "g")
     pb = _n(row, "probowls", "pro_bowls")
@@ -396,8 +482,8 @@ def ovr_from_career(row: dict | None, rnd: int, pos: str = "WR") -> int:
     played = _played(row)
     if not played:
         if to >= 2024 or to == 0:
-            return ovr_from_round(rnd)
-        return clamp(ovr_from_round(rnd) - 14, 48, 68)
+            return ovr_from_round(rnd, pick=pick, name=name)
+        return clamp(ovr_from_round(rnd, pick=pick, name=name) - 14, 48, 68)
 
     if av >= 160:
         o = 96
@@ -470,12 +556,17 @@ def ovr_from_career(row: dict | None, rnd: int, pos: str = "WR") -> int:
     elif ints >= 30:
         o = max(o, 82)
     if to >= 2024 or to == 0:
-        o = max(o, ovr_from_round(rnd))
+        o = max(o, ovr_from_round(rnd, pick=pick, name=name))
     return clamp(int(round(o)), 48, 97)
 
 
 def ovr_from_csv(row: dict, rnd: int, pos: str = "WR") -> int:
-    return ovr_from_career(row, rnd, pos)
+    pick = 0
+    try:
+        pick = int(row.get("pick") or 0)
+    except ValueError:
+        pick = 0
+    return ovr_from_career(row, rnd, pos, pick=pick, name=row.get("pfr_player_name") or "")
 
 
 def arch_for(pos: str, name: str, row: dict | None = None) -> str:
@@ -560,8 +651,8 @@ def arch_for(pos: str, name: str, row: dict | None = None) -> str:
     return pool[hash32(name) % len(pool)]
 
 
-def rt_from_stats(pos: str, arch: str, ovr: int, row: dict | None) -> dict:
-    """Lock the kit to actual career production. Unused skills stay low via ratingsFromProfile."""
+def rt_from_stats(pos: str, arch: str, ovr: int, row: dict | None, name: str = "") -> dict:
+    """Lock the kit to actual career production. Always fill remaining primaries so two 76s are not clones."""
     rt: dict[str, int] = {}
     identity = {
         "cannon": ("throwPow", min(97, ovr + 10)),
@@ -596,7 +687,7 @@ def rt_from_stats(pos: str, arch: str, ovr: int, row: dict | None) -> dict:
         k, v = identity[arch]
         rt[k] = clamp(v, 40, 99)
     if not row or not _played(row):
-        return rt
+        return fill_full_kit(pos, arch, ovr, name, rt)
 
     g = max(_n(row, "games", "g"), 1)
     av = _n(row, "w_av", "career_av")
@@ -702,7 +793,8 @@ def rt_from_stats(pos: str, arch: str, ovr: int, row: dict | None) -> dict:
         rt["inj"] = clamp(int(70 + min(g, 280) / 8), 64, 96)
         rt.setdefault("throwAcc", 30)
         rt.setdefault("speed", 42)
-    return {k: clamp(int(v), 25, 99) for k, v in rt.items()}
+    filled = {k: clamp(int(v), 25, 99) for k, v in rt.items()}
+    return fill_full_kit(pos, arch, ovr, name, filled)
 
 
 def cell_map(row: str) -> dict[str, str]:
@@ -742,6 +834,14 @@ def parse_pfr_draft(html: str) -> list[dict]:
         if not spl:
             continue
         f_n, l_n = spl
+
+        def _int(s: str | None) -> int:
+            try:
+                return int(re.sub(r"\D", "", s or "") or "0")
+            except ValueError:
+                return 0
+
+        college = college_of(cm.get("college_id") or "")
         rec = {
             "player": name,
             "hof": "TRUE" if hof else "FALSE",
@@ -772,6 +872,11 @@ def parse_pfr_draft(html: str) -> list[dict]:
             "year_max": cm.get("year_max") or "",
             "f": f_n,
             "l": l_n,
+            "r": _int(cm.get("draft_round")),
+            "pick": _int(cm.get("draft_pick")),
+            "pos_raw": cm.get("pos") or "",
+            "college": college,
+            "c": college,
         }
         rows.append(rec)
     return rows
@@ -994,6 +1099,10 @@ def csv_picks() -> dict[int, list[dict]]:
             pos = map_pos(row.get("position") or "", f"{f_n} {l_n}", row.get("category") or "")
             if not pos:
                 continue
+            try:
+                pick = int(row.get("pick") or 0)
+            except ValueError:
+                pick = 0
             by[year].append(
                 {
                     "f": f_n,
@@ -1001,6 +1110,7 @@ def csv_picks() -> dict[int, list[dict]]:
                     "p": pos,
                     "c": college_of(row.get("college") or ""),
                     "r": rnd,
+                    "pick": pick,
                     "ovr": ovr_from_csv(row, rnd, pos),
                     "row": row,
                 }
@@ -1017,7 +1127,14 @@ def to_seed(year: int, rec: dict, bios: dict[str, dict[str, int]]) -> dict | Non
     if rnd <= 0 or rnd > 20:
         return None
     row = rec.get("row")
-    ovr = ovr_from_career(row, rnd, pos)
+    pick = 0
+    try:
+        pick = int(rec.get("pick") or 0)
+    except (TypeError, ValueError):
+        pick = 0
+    if not pick and row:
+        pick = int(_n(row, "pick", "draft_pick"))
+    ovr = ovr_from_career(row, rnd, pos, pick=pick, name=name)
     arch = arch_for(pos, name, row)
     ht, wt, fy = meas_for(pos, year, name)
     for key in name_keys_of(rec["f"], rec["l"]):
@@ -1026,7 +1143,7 @@ def to_seed(year: int, rec: dict, bios: dict[str, dict[str, int]]) -> dict | Non
             ht = bio["ht"]
             wt = bio["wt"]
             break
-    rt = rt_from_stats(pos, arch, ovr, row)
+    rt = rt_from_stats(pos, arch, ovr, row, name)
     seed = {
         "f": rec["f"][:24],
         "l": rec["l"][:28],
@@ -1120,6 +1237,32 @@ def main() -> None:
                 add(year, seed)
         print(f"  {year} {page}: {len(picks)} parsed, {hit} with career")
 
+    print("pfr 1966-1979 as pick source…")
+    seen_pfr: set[str] = set()
+    for path in sorted(PFR_DIR.glob("*.htm")):
+        if "afl" in path.name.lower():
+            continue
+        html = path.read_text(errors="replace")
+        if "data-stat" not in html:
+            continue
+        m = re.search(r"(19\d{2}|20\d{2})", path.name)
+        year = int(m.group(1)) if m else 0
+        if year < 1966 or year > 1979:
+            continue
+        sig = f"{year}:{path.stat().st_size}"
+        if sig in seen_pfr:
+            continue
+        seen_pfr.add(sig)
+        recs = parse_pfr_draft(html)
+        before = len(years[year])
+        for rec in recs:
+            rec["c"] = rec.get("college") or rec.get("c") or "campus"
+            rec["row"] = rec
+            seed = to_seed(year, rec, bios)
+            if seed:
+                add(year, seed)
+        print(f"  {year} {path.name}: {len(recs)} parsed, {len(years[year]) - before} new")
+
     print("nflverse 1980+…")
     for year, recs in csv_picks().items():
         for rec in recs:
@@ -1132,8 +1275,11 @@ def main() -> None:
     total = sum(len(v) for v in years.values())
     career_n = sum(1 for recs in years.values() for s in recs if s.get("src") == "career")
     print(f"wrote {OUT_PATH} ({total} named, {career_n} career-backed, {OUT_PATH.stat().st_size} bytes)")
-    for y in [1966, 1967, 1970, 1975, 1977, 1979, 1983, 1998, 2000, 2007, 2011, 2020, 2025]:
-        print(f"  {y}: {len(years.get(y, []))}")
+    for y in [1966, 1967, 1970, 1972, 1975, 1977, 1979, 1983, 1998, 2000, 2007, 2011, 2020, 2025, 2026]:
+        recs = years.get(y, [])
+        thin = sum(1 for s in recs if len(s.get("rt") or {}) <= 2)
+        fat = sum(1 for s in recs if len(s.get("rt") or {}) >= 8)
+        print(f"  {y}: {len(recs)} named  fat {fat}  thin {thin}")
 
 
 if __name__ == "__main__":

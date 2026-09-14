@@ -9,6 +9,7 @@ import { DRAFT_MODERN_LATE } from "./draftClassesModernLate.ts";
 import { DRAFT_2000S } from "./draftClasses2000s.ts";
 import { DRAFT_2010S } from "./draftClasses2010s.ts";
 import { DRAFT_INGEST } from "./draftClassesIngest.ts";
+import { STAR_PROFILES } from "./starProfiles.ts";
 
 export interface DraftSeed {
   f: string;
@@ -308,6 +309,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Joe", l: "Cribbs", p: "RB", c: "Auburn", o: 80, r: 2 },
     { f: "Ray", l: "Butler", p: "WR", c: "USC", o: 74, r: 4 },
     { f: "Mark", l: "Gastineau", p: "DE", c: "East Central", o: 84, r: 2 },
+    { f: "Keena", l: "Turner", p: "OLB", c: "Purdue", o: 80, r: 2 },
   ],
   1981: [
     { f: "George", l: "Rogers", p: "RB", c: "South Carolina", o: 84, r: 1 },
@@ -321,6 +323,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Howie", l: "Long", p: "DE", c: "Villanova", o: 90, r: 2 },
     { f: "Cris", l: "Collinsworth", p: "WR", c: "Florida", o: 82, r: 2 },
     { f: "Neil", l: "Lomax", p: "QB", c: "Portland State", o: 80, r: 2 },
+    { f: "Freeman", l: "McNeil", p: "RB", c: "UCLA", o: 84, r: 1 },
   ],
   1982: [
     { f: "Kenneth", l: "Sims", p: "DT", c: "Texas", o: 76, r: 1 },
@@ -333,6 +336,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Mike", l: "Munchak", p: "LG", c: "Penn State", o: 90, r: 1 },
     { f: "Andre", l: "Tippett", p: "OLB", c: "Iowa", o: 88, r: 2 },
     { f: "Chip", l: "Banks", p: "OLB", c: "USC", o: 82, r: 1 },
+    { f: "Luis", l: "Sharpe", p: "LT", c: "UCLA", o: 82, r: 1 },
+    { f: "Gary", l: "Anderson", p: "K", c: "Syracuse", o: 86, r: 7 },
   ],
   1983: [
     { f: "John", l: "Elway", p: "QB", c: "Stanford", o: 94, r: 1 },
@@ -351,6 +356,9 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Darrell", l: "Green", p: "CB", c: "Texas A&I", o: 92, r: 1 },
     { f: "Richard", l: "Dent", p: "DE", c: "Tennessee State", o: 88, r: 8 },
     { f: "Karl", l: "Mecklenburg", p: "OLB", c: "Minnesota", o: 84, r: 12 },
+    { f: "Roger", l: "Craig", p: "RB", c: "Nebraska", o: 86, r: 2 },
+    { f: "Joey", l: "Browner", p: "S", c: "USC", o: 86, r: 1 },
+    { f: "Dave", l: "Duerson", p: "S", c: "Notre Dame", o: 80, r: 3 },
   ],
   1984: [
     { f: "Irving", l: "Fryar", p: "WR", c: "Nebraska", o: 84, r: 1 },
@@ -363,6 +371,9 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Wilber", l: "Marshall", p: "OLB", c: "Florida", o: 86, r: 1 },
     { f: "Ron", l: "Rivera", p: "MLB", c: "California", o: 78, r: 2 },
     { f: "Boomer", l: "Esiason", p: "QB", c: "Maryland", o: 84, r: 2 },
+    { f: "Reggie", l: "White", p: "DE", c: "Tennessee", o: 96, r: 1 },
+    { f: "Steve", l: "Young", p: "QB", c: "BYU", o: 92, r: 1 },
+    { f: "Gary", l: "Zimmerman", p: "LT", c: "Oregon", o: 90, r: 1 },
   ],
   1985: [
     { f: "Bruce", l: "Smith", p: "DE", c: "Virginia Tech", o: 96, r: 1 },
@@ -375,6 +386,9 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Ron", l: "Holmes", p: "DE", c: "Washington", o: 76, r: 1 },
     { f: "Andre", l: "Reed", p: "WR", c: "Kutztown", o: 86, r: 4 },
     { f: "Kevin", l: "Greene", p: "OLB", c: "Auburn", o: 88, r: 5 },
+    { f: "Jay", l: "Novacek", p: "TE", c: "Wyoming", o: 84, r: 6 },
+    { f: "Jerry", l: "Gray", p: "CB", c: "Texas", o: 82, r: 1 },
+    { f: "Steve", l: "Tasker", p: "WR", c: "Northwestern", o: 76, r: 9 },
   ],
   1986: [
     { f: "Bo", l: "Jackson", p: "RB", c: "Auburn", o: 90, r: 1 },
@@ -387,6 +401,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Charles", l: "Haley", p: "OLB", c: "James Madison", o: 88, r: 4 },
     { f: "Randall", l: "Cunningham", p: "QB", c: "UNLV", o: 84, r: 2 },
     { f: "Tim", l: "McDonald", p: "S", c: "USC", o: 82, r: 2 },
+    { f: "Pat", l: "Swilling", p: "OLB", c: "Georgia Tech", o: 86, r: 2 },
   ],
   1987: [
     { f: "Vinny", l: "Testaverde", p: "QB", c: "Miami", o: 80, r: 1 },
@@ -400,6 +415,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Harris", l: "Barton", p: "RT", c: "North Carolina", o: 82, r: 1 },
     { f: "Christian", l: "Okoye", p: "RB", c: "Azusa Pacific", o: 82, r: 2 },
     { f: "Steve", l: "Beuerlein", p: "QB", c: "Notre Dame", o: 76, r: 4 },
+    { f: "Haywood", l: "Jeffires", p: "WR", c: "North Carolina State", o: 82, r: 1 },
+    { f: "Jerry", l: "Ball", p: "DT", c: "SMU", o: 82, r: 3 },
   ],
   1988: [
     { f: "Aundray", l: "Bruce", p: "OLB", c: "Auburn", o: 74, r: 1 },
@@ -412,6 +429,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Thurman", l: "Thomas", p: "RB", c: "Oklahoma State", o: 90, r: 2 },
     { f: "Eric", l: "Allen", p: "CB", c: "Arizona State", o: 86, r: 2 },
     { f: "Ken", l: "Norton", p: "MLB", c: "UCLA", o: 84, r: 2 },
+    { f: "Cris", l: "Carter", p: "WR", c: "Ohio State", o: 90, r: 4 },
+    { f: "Michael", l: "Dean Perry", p: "DT", c: "Clemson", o: 82, r: 2 },
   ],
   1989: [
     { f: "Troy", l: "Aikman", p: "QB", c: "UCLA", o: 90, r: 1 },
@@ -424,6 +443,9 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Steve", l: "Atwater", p: "S", c: "Arkansas", o: 88, r: 1 },
     { f: "Andre", l: "Rison", p: "WR", c: "Michigan State", o: 84, r: 1 },
     { f: "Don", l: "Beebe", p: "WR", c: "Chadron State", o: 76, r: 3 },
+    { f: "Steve", l: "Wisniewski", p: "LG", c: "Penn State", o: 88, r: 2 },
+    { f: "Carnell", l: "Lake", p: "S", c: "UCLA", o: 86, r: 2 },
+    { f: "Daryl", l: "Johnston", p: "FB", c: "Syracuse", o: 82, r: 2 },
   ],
   1990: [
     { f: "Jeff", l: "George", p: "QB", c: "Illinois", o: 78, r: 1 },
@@ -436,6 +458,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Richmond", l: "Webb", p: "LT", c: "Texas A&M", o: 86, r: 1 },
     { f: "Chris", l: "Singletary", p: "MLB", c: "Baylor", o: 70, r: 1 },
     { f: "Shannon", l: "Sharpe", p: "TE", c: "Savannah State", o: 88, r: 7 },
+    { f: "LeRoy", l: "Butler", p: "S", c: "Florida State", o: 88, r: 2 },
+    { f: "Rob", l: "Moore", p: "WR", c: "Syracuse", o: 82, r: 1 },
   ],
   1991: [
     { f: "Russell", l: "Maryland", p: "DT", c: "Miami", o: 80, r: 1 },
@@ -448,6 +472,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Aeneas", l: "Williams", p: "CB", c: "Southern", o: 88, r: 3 },
     { f: "Ricky", l: "Watters", p: "RB", c: "Notre Dame", o: 84, r: 2 },
     { f: "Leonard", l: "Russell", p: "RB", c: "Arizona State", o: 78, r: 1 },
+    { f: "Mo", l: "Lewis", p: "OLB", c: "Georgia", o: 82, r: 3 },
   ],
   1992: [
     { f: "Steve", l: "Emtman", p: "DT", c: "Washington", o: 78, r: 1 },
@@ -462,6 +487,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Jimmy", l: "Smith", p: "WR", c: "Jackson State", o: 84, r: 2 },
     { f: "Darren", l: "Woodson", p: "S", c: "Arizona State", o: 86, r: 2 },
     { f: "Marco", l: "Coleman", p: "OLB", c: "Georgia Tech", o: 78, r: 1 },
+    { f: "Dale", l: "Carter", p: "CB", c: "Tennessee", o: 82, r: 1 },
   ],
   1993: [
     { f: "Drew", l: "Bledsoe", p: "QB", c: "Washington State", o: 86, r: 1 },
@@ -474,6 +500,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Michael", l: "Strahan", p: "DE", c: "Texas Southern", o: 90, r: 2 },
     { f: "Wayne", l: "Gandy", p: "LT", c: "Auburn", o: 80, r: 1 },
     { f: "Garrison", l: "Hearst", p: "RB", c: "Georgia", o: 82, r: 1 },
+    { f: "Will", l: "Shields", p: "RG", c: "Nebraska", o: 90, r: 3 },
+    { f: "John", l: "Lynch", p: "S", c: "Stanford", o: 88, r: 3 },
   ],
   1994: [
     { f: "Dan", l: "Wilkinson", p: "DT", c: "Ohio State", o: 80, r: 1 },
@@ -486,6 +514,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Charles", l: "Johnson", p: "WR", c: "Colorado", o: 76, r: 1 },
     { f: "Darnay", l: "Scott", p: "WR", c: "San Diego State", o: 78, r: 2 },
     { f: "Jason", l: "Sehorn", p: "CB", c: "USC", o: 80, r: 2 },
+    { f: "Isaac", l: "Bruce", p: "WR", c: "Memphis", o: 88, r: 2 },
+    { f: "Larry", l: "Allen", p: "LG", c: "Sonoma State", o: 92, r: 2 },
   ],
   1995: [
     { f: "Ki-Jana", l: "Carter", p: "RB", c: "Penn State", o: 78, r: 1 },
@@ -499,6 +529,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Warren", l: "Sapp", p: "DT", c: "Miami", o: 92, r: 1 },
     { f: "Curtis", l: "Martin", p: "RB", c: "Pitt", o: 88, r: 3 },
     { f: "Terrell", l: "Davis", p: "RB", c: "Georgia", o: 86, r: 6 },
+    { f: "Ty", l: "Law", p: "CB", c: "Michigan", o: 90, r: 1 },
+    { f: "Lawyer", l: "Milloy", p: "S", c: "Washington", o: 84, r: 2 },
   ],
   1996: [
     { f: "Keyshawn", l: "Johnson", p: "WR", c: "USC", o: 84, r: 1 },
@@ -513,6 +545,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Eddie", l: "George", p: "RB", c: "Ohio State", o: 86, r: 1 },
     { f: "Terrell", l: "Owens", p: "WR", c: "Chattanooga", o: 90, r: 3 },
     { f: "Zach", l: "Thomas", p: "MLB", c: "Texas Tech", o: 88, r: 5 },
+    { f: "Muhsin", l: "Muhammad", p: "WR", c: "Michigan State", o: 82, r: 2 },
   ],
   1997: [
     { f: "Orlando", l: "Pace", p: "LT", c: "Ohio State", o: 92, r: 1 },
@@ -526,6 +559,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Tony", l: "Gonzalez", p: "TE", c: "California", o: 92, r: 1 },
     { f: "Jake", l: "Plummer", p: "QB", c: "Arizona State", o: 80, r: 2 },
     { f: "Corey", l: "Dillon", p: "RB", c: "Washington", o: 84, r: 2 },
+    { f: "Ronde", l: "Barber", p: "CB", c: "Virginia", o: 86, r: 3 },
+    { f: "Jason", l: "Taylor", p: "DE", c: "Akron", o: 88, r: 3 },
   ],
   1998: [
     { f: "Peyton", l: "Manning", p: "QB", c: "Tennessee", o: 96, r: 1 },
@@ -541,6 +576,7 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Takeo", l: "Spikes", p: "OLB", c: "Auburn", o: 84, r: 1 },
     { f: "Hines", l: "Ward", p: "WR", c: "Georgia", o: 86, r: 3 },
     { f: "Matt", l: "Hasselbeck", p: "QB", c: "Boston College", o: 84, r: 6 },
+    { f: "Olin", l: "Kreutz", p: "C", c: "Washington", o: 86, r: 3 },
   ],
   1999: [
     { f: "Tim", l: "Couch", p: "QB", c: "Kentucky", o: 74, r: 1 },
@@ -979,16 +1015,30 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Bo", l: "Nix", p: "QB", c: "Oregon", o: 82, r: 1 },
   ],
   2025: [
-    { f: "Cam", l: "Ward", p: "QB", c: "Miami", o: 84, r: 1 },
-    { f: "Travis", l: "Hunter", p: "CB", c: "Colorado", o: 88, r: 1 },
-    { f: "Abdul", l: "Carter", p: "OLB", c: "Penn State", o: 88, r: 1 },
-    { f: "Will", l: "Campbell", p: "LT", c: "LSU", o: 82, r: 1 },
-    { f: "Mason", l: "Graham", p: "DT", c: "Michigan", o: 86, r: 1 },
-    { f: "Ashton", l: "Jeanty", p: "RB", c: "Boise State", o: 88, r: 1 },
-    { f: "Tyler", l: "Warren", p: "TE", c: "Penn State", o: 84, r: 1 },
-    { f: "Tetairoa", l: "McMillan", p: "WR", c: "Arizona", o: 84, r: 1 },
-    { f: "Shedeur", l: "Sanders", p: "QB", c: "Colorado", o: 78, r: 1 },
-    { f: "Jalen", l: "Milroe", p: "QB", c: "Alabama", o: 76, r: 1 },
+    { f: "Cam", l: "Ward", p: "QB", c: "Miami", o: 84, r: 1, arch: "cannon", rt: { throwPow: 90, throwAcc: 84, throwAwr: 82, rel: 86, speed: 68, inj: 78 } },
+    { f: "Travis", l: "Hunter", p: "CB", c: "Colorado", o: 88, r: 1, arch: "blanket", rt: { cov: 92, speed: 90, agi: 90, catch: 86, awareness: 86, inj: 80 } },
+    { f: "Abdul", l: "Carter", p: "OLB", c: "Penn State", o: 88, r: 1, arch: "edge", rt: { prs: 92, speed: 88, accel: 90, tak: 84, inj: 80 } },
+    { f: "Will", l: "Campbell", p: "LT", c: "LSU", o: 82, r: 1, arch: "pass-ol", rt: { passBlk: 88, runBlk: 82, str: 84, awareness: 82, inj: 84 } },
+    { f: "Mason", l: "Graham", p: "DT", c: "Michigan", o: 86, r: 1, arch: "finisher", rt: { prs: 88, str: 90, tak: 86, inj: 84 } },
+    { f: "Ashton", l: "Jeanty", p: "RB", c: "Boise State", o: 88, r: 1, arch: "home-run", rt: { speed: 92, elu: 90, btk: 90, truck: 86, accel: 92, catch: 78, inj: 80 } },
+    { f: "Tyler", l: "Warren", p: "TE", c: "Penn State", o: 84, r: 1, arch: "move-te", rt: { catch: 88, rrt: 86, speed: 82, runBlk: 74, inj: 82 } },
+    { f: "Tetairoa", l: "McMillan", p: "WR", c: "Arizona", o: 84, r: 1, arch: "contested", rt: { cit: 90, catch: 86, speed: 86, rrt: 84 } },
+    { f: "Shedeur", l: "Sanders", p: "QB", c: "Colorado", o: 78, r: 1, arch: "deadeye", rt: { throwAcc: 88, throwAwr: 84, throwPow: 78, speed: 58, inj: 74 } },
+    { f: "Jalen", l: "Milroe", p: "QB", c: "Alabama", o: 76, r: 1, arch: "dual", rt: { throwPow: 86, throwAcc: 72, speed: 88, agi: 84, inj: 76 } },
+  ],
+  2026: [
+    { f: "Fernando", l: "Mendoza", p: "QB", c: "Indiana", o: 88, r: 1, arch: "deadeye", rt: { throwAcc: 92, throwAwr: 88, throwPow: 84, rel: 86, speed: 62, awareness: 86, inj: 80 } },
+    { f: "David", l: "Bailey", p: "OLB", c: "Texas Tech", o: 86, r: 1, arch: "edge", rt: { prs: 92, speed: 88, accel: 88, tak: 84, inj: 78 } },
+    { f: "Jeremiyah", l: "Love", p: "RB", c: "Notre Dame", o: 88, r: 1, arch: "home-run", rt: { speed: 94, accel: 92, elu: 88, btk: 86, catch: 80, inj: 80 } },
+    { f: "Carnell", l: "Tate", p: "WR", c: "Ohio State", o: 86, r: 1, arch: "contested", rt: { cit: 90, catch: 88, speed: 88, rrt: 84, inj: 80 } },
+    { f: "Arvell", l: "Reese", p: "MLB", c: "Ohio State", o: 86, r: 1, arch: "thumper", rt: { tak: 92, str: 88, awareness: 86, pur: 88, inj: 82 } },
+    { f: "Mansoor", l: "Delane", p: "CB", c: "LSU", o: 84, r: 1, arch: "blanket", rt: { cov: 90, speed: 88, agi: 88, awareness: 84, inj: 82 } },
+    { f: "Spencer", l: "Fano", p: "LT", c: "Utah", o: 86, r: 1, arch: "pass-ol", rt: { passBlk: 90, runBlk: 84, str: 88, awareness: 84, inj: 84 } },
+    { f: "Caleb", l: "Downs", p: "S", c: "Ohio State", o: 88, r: 1, arch: "hawk", rt: { awareness: 92, cov: 88, tak: 84, speed: 88, catch: 82, inj: 86 } },
+    { f: "Ty", l: "Simpson", p: "QB", c: "Alabama", o: 84, r: 1, arch: "cannon", rt: { throwPow: 92, throwAcc: 82, throwAwr: 80, speed: 68, inj: 78 } },
+    { f: "Rueben", l: "Bain", p: "DE", c: "Miami", o: 86, r: 1, arch: "edge", rt: { prs: 92, speed: 86, str: 86, tak: 84, inj: 80 } },
+    { f: "Peter", l: "Woods", p: "DT", c: "Clemson", o: 84, r: 1, arch: "finisher", rt: { prs: 88, str: 92, tak: 86, inj: 82 } },
+    { f: "Kadyn", l: "Proctor", p: "LT", c: "Alabama", o: 84, r: 1, arch: "anchor", rt: { str: 92, passBlk: 84, runBlk: 88, inj: 82 } },
   ],
 };
 
@@ -1022,15 +1072,24 @@ export function draftSeedsFor(year: number): DraftSeed[] {
       c: prev.c || s.c,
       o: laterCareer ? s.o : prev.o,
       r: prev.r && prev.r > 0 ? prev.r : s.r,
-      arch: laterCareer ? (s.arch ?? prev.arch) : (prev.arch ?? s.arch),
-      ht: laterCareer ? (s.ht ?? prev.ht) : (prev.ht ?? s.ht),
-      wt: laterCareer ? (s.wt ?? prev.wt) : (prev.wt ?? s.wt),
-      fy: laterCareer ? (s.fy ?? prev.fy) : (prev.fy ?? s.fy),
-      rt: laterCareer ? { ...(prev.rt ?? {}), ...(s.rt ?? {}) } : { ...(s.rt ?? {}), ...(prev.rt ?? {}) },
+      arch: prev.arch ?? s.arch,
+      ht: prev.ht ?? s.ht,
+      wt: prev.wt ?? s.wt,
+      fy: prev.fy ?? s.fy,
+      rt: { ...(s.rt ?? {}), ...(prev.rt ?? {}) },
       src: laterCareer || keepCareer ? "career" : prev.src ?? s.src,
     });
   }
   const out = [...by.values()];
+  for (const s of out) {
+    const star = STAR_PROFILES[`${s.f}|${s.l}`.toLowerCase().replace(/[.'']/g, "")];
+    if (!star) continue;
+    s.arch = star.arch ?? s.arch;
+    s.ht = star.ht ?? s.ht;
+    s.wt = star.wt ?? s.wt;
+    s.fy = star.fy ?? s.fy;
+    s.rt = { ...(s.rt ?? {}), ...(star.rt ?? {}) };
+  }
   out.sort((a, b) => {
     const ra = a.r && a.r > 0 ? a.r : 99;
     const rb = b.r && b.r > 0 ? b.r : 99;

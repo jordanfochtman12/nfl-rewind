@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#203731"/>
-<ellipse cx="32" cy="32" rx="22" ry="17" fill="none" stroke="#ffb612" stroke-width="3.2"/>
-<text x="32" y="40" text-anchor="middle" font-family="Georgia,Times,serif" font-size="26" font-weight="700" fill="#ffb612">G</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Green Bay Packers">
+<rect width="64" height="64" rx="10" fill="#203731"/>
+<ellipse cx="32" cy="32" rx="24" ry="19.5" fill="none" stroke="#ffb612" stroke-width="3.4"/>
+<path fill="#ffb612" d="M46.2 23.6c-3-5.8-9.2-9-16.4-9-10.6 0-18.2 7.6-18.2 17.4 0 9.8 7.8 17.6 18.6 17.6 6.8 0 13-3 16.2-8.4l-6.8-3.4c-2 3.2-5.6 5-9.4 5-6.6 0-11-4.6-11-10.8 0-6 4.4-10.6 10.8-10.6 3.6 0 6.8 1.6 8.6 4.2l7.6-2z"/>
+<rect x="31.5" y="30.2" width="15.2" height="4.4" rx="0.6" fill="#ffb612"/>
 </svg>

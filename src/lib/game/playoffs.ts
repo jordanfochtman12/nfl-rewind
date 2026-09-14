@@ -196,6 +196,8 @@ export function createSuperBowl(save: DynastySave): void {
     homeScore: 0,
     awayScore: 0,
     played: false,
+    stadium: site.site,
+    neutral: true,
   };
   addNews(save, {
     kind: "headline",

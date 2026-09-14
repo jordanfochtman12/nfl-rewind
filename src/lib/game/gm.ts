@@ -4,6 +4,7 @@ import type {
   DefScheme,
   DraftStyle,
   DynastySave,
+  Gameplan,
   GmResult,
   OffScheme,
   Player,
@@ -12,14 +13,14 @@ import type {
   TradePiece,
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
-import { addToRoster, movePlayer, playerName, rosterOf, syncDepth } from "./players.ts";
+import { addToRoster, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
-import { displayName } from "./teams.ts";
+import { activeTeamIds, displayName } from "./teams.ts";
 import { jerseyFor } from "./names.ts";
 import { transferPick, pickValue } from "./draft.ts";
-import { fireCoach, hireCoach, setTeamScheme } from "./staff.ts";
-import { randInt } from "./rng.ts";
+import { fireCoach, hireCoach, setTeamScheme, schemeFitPos } from "./staff.ts";
+import { rand, randInt } from "./rng.ts";
 import { visibleOvr } from "./scout.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
@@ -281,6 +282,30 @@ export function deskScheme(
   return setTeamScheme(save, teamId, patch);
 }
 
+export function deskPlan(save: DynastySave, teamId: TeamId, patch: Partial<Gameplan>): GmResult {
+  const t = save.teams[teamId];
+  if (!t) return { ok: false, reason: "No club." };
+  const base = t.plan ?? { attack: "balanced" as const, fourth: "normal" as const, tempo: "standard" as const, blitz: "normal" as const, redZone: "balanced" as const };
+  t.plan = { ...base, ...patch };
+  return { ok: true };
+}
+
+export function deskHoles(
+  save: DynastySave,
+  teamId: TeamId,
+): { pos: Pos; need: number; have: number; healthy: number }[] {
+  const roster = rosterOf(save, teamId);
+  const out: { pos: Pos; need: number; have: number; healthy: number }[] = [];
+  for (const [pos, need] of DEPTH_CHART) {
+    const have = roster.filter((p) => p.pos === pos);
+    const healthy = have.filter((p) => p.injuredWeeks <= 0);
+    if (healthy.length < need || have.length < need) {
+      out.push({ pos, need, have: have.length, healthy: healthy.length });
+    }
+  }
+  return out;
+}
+
 export function cpuTrades(save: DynastySave): void {
   const teams = Object.values(save.teams).filter((t) => t.active && t.id !== save.userTeamId);
   if (teams.length < 2) return;
@@ -297,5 +322,52 @@ export function cpuTrades(save: DynastySave): void {
         .sort((x, y) => x.ovr - y.ovr)[0]
     : undefined;
   if (!cheap || !target) return;
+  const fit = schemeFitPos(target.pos, a.offScheme, a.defScheme);
+  if (fit < 0 && rand(save) < 0.5) return;
   executeTrade(save, a.id, b.id, [{ playerId: cheap.id }], [{ playerId: target.id }], { force: true });
+}
+
+export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
+  if (teamId === save.userTeamId && !save.cpuOnly) return;
+  const t = save.teams[teamId];
+  if (!t?.active) return;
+  const roster = rosterOf(save, teamId);
+  if (roster.length > ROSTER_TARGET) {
+    const extras = roster
+      .filter((p) => !LAST_POS.includes(p.pos) || roster.filter((x) => x.pos === p.pos).length > 1)
+      .sort((a, b) => {
+        const fitA = a.ovr + schemeFitPos(a.pos, t.offScheme, t.defScheme) - (a.age >= 30 ? 4 : 0);
+        const fitB = b.ovr + schemeFitPos(b.pos, t.offScheme, t.defScheme) - (b.age >= 30 ? 4 : 0);
+        return fitA - fitB;
+      });
+    const cutN = Math.min(roster.length - ROSTER_TARGET, extras.length);
+    for (let i = 0; i < cutN; i++) {
+      const p = extras[i];
+      if (p) cutPlayer(save, teamId, p.id);
+    }
+  }
+}
+
+export function cpuSignNeeds(save: DynastySave): void {
+  const pool = freeAgents(save).slice().sort((a, b) => b.ovr - a.ovr);
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    const t = save.teams[id];
+    const n = rosterOf(save, id).length;
+    const want = n < 44 ? 2 + (n < 40 ? 2 : 0) : rand(save) < 0.28 ? 1 : 0;
+    let signed = 0;
+    const ranked = pool
+      .map((p) => ({ p, s: p.ovr + schemeFitPos(p.pos, t.offScheme, t.defScheme) }))
+      .sort((a, b) => b.s - a.s);
+    for (const { p } of ranked) {
+      if (signed >= want) break;
+      if (p.teamId !== "fa") continue;
+      const have = rosterOf(save, id).filter((x) => x.pos === p.pos);
+      const best = have.sort((a, b) => b.ovr - a.ovr)[0];
+      if (best && best.ovr >= p.ovr - 1 && have.length >= 2) continue;
+      if (save.year < 1994 && p.ovr >= 84 && p.yearsPro >= 5 && rand(save) > 0.08) continue;
+      if (signPlayer(save, id, p.id).ok) signed += 1;
+    }
+    cpuManageRoster(save, id);
+  }
 }

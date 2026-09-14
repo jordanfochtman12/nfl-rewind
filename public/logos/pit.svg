@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#101820"/>
-<circle cx="32" cy="32" r="19" fill="#ffb612"/>
-<circle cx="32" cy="22" r="5.2" fill="#c60c30"/>
-<circle cx="24.2" cy="36.5" r="5.2" fill="#00539b"/>
-<circle cx="39.8" cy="36.5" r="5.2" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pittsburgh Steelers">
+<rect width="64" height="64" rx="10" fill="#101820"/>
+<circle cx="32" cy="32" r="22" fill="#ffb612"/>
+<path fill="#c60c30" d="M32 11 L35.2 22.4 L47 24.6 L37.4 31.2 L40.6 43 L32 36.4 L23.4 43 L26.6 31.2 L17 24.6 L28.8 22.4 Z"/>
+<path fill="#ffb612" stroke="#101820" stroke-width="1.1" d="M22 28 L25.2 39.4 L37 41.6 L27.4 48.2 L30.6 60 L22 53.4 L13.4 60 L16.6 48.2 L7 41.6 L18.8 39.4 Z"/>
+<path fill="#003087" d="M42 28 L45.2 39.4 L57 41.6 L47.4 48.2 L50.6 60 L42 53.4 L33.4 60 L36.6 48.2 L27 41.6 L38.8 39.4 Z"/>
 </svg>

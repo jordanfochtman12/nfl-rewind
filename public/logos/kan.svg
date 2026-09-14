@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#e31837"/>
-<path d="M32 6 L38 26 L58 20 L42 34 L56 50 L36 42 L32 58 L28 42 L8 50 L22 34 L6 20 L26 26 Z" fill="#ffb81c"/>
-<text x="32" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#e31837">KC</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kansas City Chiefs">
+<rect width="64" height="64" rx="10" fill="#e31837"/>
+<path fill="#ffb81c" d="M32 6 L50 48 L32 42 L14 48 Z"/>
+<path fill="#e31837" d="M32 14 L44 44 L32 40 L20 44 Z"/>
+<text x="32" y="36" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="11" font-weight="800" fill="#ffffff">KC</text>
 </svg>

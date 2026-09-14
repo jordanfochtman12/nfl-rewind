@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#0080c6"/>
-<path d="M38 6 L16 34 H30 L24 58 L50 28 H36 Z" fill="#ffc20e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="San Diego Chargers">
+<rect width="64" height="64" rx="10" fill="#0080c6"/>
+<path fill="#ffffff" d="M40 4 L14 34 H30 L22 60 L54 26 H38 Z"/>
+<path fill="#ffc20e" d="M38 8 L18 34 H32 L26 54 L50 28 H36 Z"/>
 </svg>

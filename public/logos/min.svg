@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#4f2683"/>
-<path d="M14 40 Q18 16 32 18 Q46 16 50 40 L44 44 Q32 28 20 44 Z" fill="#ffc62f"/>
-<path d="M24 36 Q32 24 40 36 Q32 32 24 36 Z" fill="#4f2683"/>
-<path d="M8 22 L18 18 L16 30 Z" fill="#ffc62f"/>
-<path d="M56 22 L46 18 L48 30 Z" fill="#ffc62f"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Minnesota Vikings">
+<rect width="64" height="64" rx="10" fill="#4f2683"/>
+<path fill="#ffc62f" d="M18 44 C16 24 24 14 34 16 C42 18 46 26 44 36 C50 28 54 30 56 24 L52 40 C48 48 40 50 32 50 C22 50 18 46 18 44Z"/>
+<path fill="#4f2683" d="M30 28 C34 26 38 28 38 32 C36 36 32 36 30 34 C28 32 28 30 30 28Z"/>
+<path fill="#ffc62f" d="M12 22 L22 18 L18 30 Z"/>
+<path fill="#ffc62f" d="M46 14 L56 12 L50 24 Z"/>
+<path fill="#c60c30" d="M34 38 C36 40 34 44 30 44 C32 40 34 38 34 38Z"/>
 </svg>

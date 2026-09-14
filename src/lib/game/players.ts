@@ -63,6 +63,13 @@ export function emptyStats(year: number, teamId: TeamId | "two"): SeasonStats {
     puntYds: 0,
     krYds: 0,
     prYds: 0,
+    targets: 0,
+    tfl: 0,
+    pd: 0,
+    qbHits: 0,
+    fr: 0,
+    krTd: 0,
+    prTd: 0,
   };
 }
 
@@ -343,11 +350,17 @@ export function fillRoster(save: DynastySave, teamId: TeamId): void {
       slot += 1;
     }
   }
-  while (rosterOf(save, teamId).length < ROSTER_TARGET) {
+  let guard = 0;
+  while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 80) {
     const pos = DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
     generatePlayer(save, pos, teamId, randInt(save, 48, 64));
   }
   trimRoster(save, teamId);
+  guard = 0;
+  while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 40) {
+    const pos = DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
+    generatePlayer(save, pos, teamId, randInt(save, 48, 64));
+  }
   syncDepth(save, teamId);
 }
 

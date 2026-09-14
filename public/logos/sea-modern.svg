@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Seattle Seahawks">
+<rect width="64" height="64" rx="10" fill="#002244"/>
+<path fill="#69be28" d="M6 38 C14 10 38 6 54 22 C46 16 44 28 56 34 C44 32 36 44 44 54 C26 52 10 50 6 38Z"/>
+<path fill="#a5acaf" d="M26 26 C34 20 44 24 44 32 C42 38 34 38 30 34Z"/>
+<circle cx="38" cy="28" r="2.6" fill="#69be28"/>
+<path fill="#69be28" d="M50 18 L62 12 L56 28 Z"/>
+</svg>

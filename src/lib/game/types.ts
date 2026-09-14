@@ -1,10 +1,11 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 14;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
 export const HOF_WAIT_YEARS = 5;
+export const COACH_HOF_WAIT_YEARS = 3;
 
 export const TEAM_IDS = [
   "atl",
@@ -76,12 +77,16 @@ export type Phase =
   | "expansion"
   | "preseason"
   | "regular"
+  | "deadline"
   | "playoffs"
   | "superBowl"
   | "awards"
   | "proBowl"
   | "retirement"
-  | "hof";
+  | "hof"
+  | "carousel"
+  | "relocation"
+  | "complete";
 
 export type DraftSession = "nfl" | "afl" | "common";
 
@@ -186,6 +191,13 @@ export interface SeasonStats {
   puntYds: number;
   krYds: number;
   prYds: number;
+  targets: number;
+  tfl: number;
+  pd: number;
+  qbHits: number;
+  fr: number;
+  krTd: number;
+  prTd: number;
 }
 
 export interface Player {
@@ -234,6 +246,20 @@ export interface Player {
   career: SeasonStats[];
 }
 
+export type AttackDial = "run" | "balanced" | "pass";
+export type FourthDial = "conservative" | "normal" | "aggressive";
+export type TempoDial = "chew" | "standard" | "hurry";
+export type BlitzDial = "rare" | "normal" | "heavy";
+export type RedZoneDial = "power" | "balanced" | "spread";
+
+export interface Gameplan {
+  attack: AttackDial;
+  fourth: FourthDial;
+  tempo: TempoDial;
+  blitz: BlitzDial;
+  redZone: RedZoneDial;
+}
+
 export type CoachRole = "HC" | "OC" | "DC";
 export type OffScheme = "smashmouth" | "vertical" | "westcoast" | "multiple";
 export type DefScheme = "4-3" | "3-4" | "wide-9" | "cover-2";
@@ -253,7 +279,25 @@ export interface Coach {
   yearsOnJob: number;
   careerWins: number;
   careerLosses: number;
+  careerTies: number;
+  careerTitles: number;
+  careerBowls: number;
+  yearsCoaching: number;
+  age: number;
+  born?: number;
+  potential: number;
+  peakOffense: number;
+  peakDefense: number;
+  leadership: number;
+  development: number;
+  evaluation: number;
+  abilities: string[];
+  traits: string[];
+  firedCount: number;
+  retiredYear?: number;
+  hofYear?: number;
 }
+
 
 export interface DraftPickAsset {
   id: string;
@@ -288,6 +332,12 @@ export interface TeamState {
   confWins: number;
   confLosses: number;
   streak: string;
+  /** Regular-season record across the dynasty. Not reset in training camp. */
+  careerWins: number;
+  careerLosses: number;
+  careerTies: number;
+  /** Sunday call sheet. CPU derives from scheme if unset. */
+  plan?: Gameplan;
 }
 
 export interface BoxPlayer {
@@ -314,6 +364,37 @@ export interface BoxPlayer {
   puntYds?: number;
   sacksThrown?: number;
   ff?: number;
+  krYds?: number;
+  prYds?: number;
+  targets?: number;
+  tfl?: number;
+  pd?: number;
+  qbHits?: number;
+  fr?: number;
+  krTd?: number;
+  prTd?: number;
+}
+
+export type DriveResult =
+  | "td"
+  | "fg"
+  | "punt"
+  | "int"
+  | "fumble"
+  | "miss"
+  | "downs"
+  | "end"
+  | "safety"
+  | "ko-td";
+
+export interface DriveSummary {
+  teamId: TeamId;
+  q: number;
+  plays: number;
+  yards: number;
+  result: DriveResult;
+  startSpot: number;
+  label: string;
 }
 
 export interface GameResult {
@@ -332,11 +413,47 @@ export interface GameResult {
   boxAway?: BoxPlayer[];
   weather?: "clear" | "rain" | "wind" | "cold" | "snow";
   highlights?: string[];
-  homeQ?: [number, number, number, number];
-  awayQ?: [number, number, number, number];
+  homeQ?: number[];
+  awayQ?: number[];
   attendance?: number;
   rivalry?: boolean;
   night?: boolean;
+  /** Time of possession, seconds. */
+  homePoss?: number;
+  awayPoss?: number;
+  homeFd?: number;
+  awayFd?: number;
+  homeTot?: number;
+  awayTot?: number;
+  ot?: boolean;
+  drives?: DriveSummary[];
+  homePen?: number;
+  awayPen?: number;
+  homePenYds?: number;
+  awayPenYds?: number;
+  home3rd?: number;
+  home3rdAtt?: number;
+  away3rd?: number;
+  away3rdAtt?: number;
+  homeRz?: number;
+  homeRzAtt?: number;
+  awayRz?: number;
+  awayRzAtt?: number;
+  /** Pro Bowl / all-star rosters. */
+  homeRoster?: string[];
+  awayRoster?: string[];
+  stadium?: string;
+  surface?: "grass" | "turf";
+  indoor?: boolean;
+  /** Turnovers committed (INT + lost fumbles). */
+  homeTo?: number;
+  awayTo?: number;
+  homeSafeties?: number;
+  awaySafeties?: number;
+  /** One-line scouting note: crowd, site, matchup. */
+  filmNote?: string;
+  /** Super Bowl / Pro Bowl — no home crowd. */
+  neutral?: boolean;
 }
 
 export interface NewsItem {
@@ -415,18 +532,98 @@ export interface BowlAlmanacEntry {
 }
 
 export interface HofMember {
-  playerId: string;
+  playerId?: string;
+  coachId?: string;
   year: number;
   teamId: TeamId;
   blurb: string;
+  kind?: "player" | "coach";
 }
 
 export interface RetireeEvent {
-  playerId: string;
+  playerId?: string;
+  coachId?: string;
   year: number;
   teamId: TeamId;
   seasons: number;
   blurb: string;
+  kind?: "player" | "coach";
+}
+
+
+export interface DynastyGrade {
+  year: number;
+  final: boolean;
+  letter: string;
+  score: number;
+  seasons: number;
+  rings: number;
+  titles: number;
+  winningSeasons: number;
+  hof: number;
+  honor: number;
+  draftedStars: number;
+  wins: number;
+  losses: number;
+  ties: number;
+  blurb: string;
+  lines: { label: string; value: string; pts: number }[];
+}
+
+export interface SeasonChapter {
+  year: number;
+  teamId: TeamId;
+  wins: number;
+  losses: number;
+  ties: number;
+  pf: number;
+  pa: number;
+  coach?: string;
+  result: string;
+  drafted: { playerId: string; name: string; pos: Pos; round?: number }[];
+  honors: string[];
+}
+
+export interface CampBattle {
+  pos: Pos;
+  starterId: string;
+  backupId: string;
+  note: string;
+}
+
+export interface CampCut {
+  playerId: string;
+  teamId: TeamId;
+}
+
+export interface CampInjury {
+  playerId: string;
+  teamId: TeamId;
+  weeks: number;
+  name: string;
+}
+
+export interface CampReport {
+  year: number;
+  cuts: CampCut[];
+  injuries: CampInjury[];
+  battles: CampBattle[];
+}
+
+export interface TradeOffer {
+  id: string;
+  from: TeamId;
+  give: TradePiece[];
+  get: TradePiece[];
+  status: "open" | "accepted" | "declined";
+}
+
+export interface DeadlineSession {
+  year: number;
+  week: number;
+  offers: TradeOffer[];
+  cpuMoves: string[];
+  resolved: boolean;
 }
 
 export interface Almanac {
@@ -436,6 +633,8 @@ export interface Almanac {
   teamOfHonor: Record<string, string[]>;
   awards: AwardsResult[];
   retirements: RetireeEvent[];
+  seasons: SeasonChapter[];
+  grade?: DynastyGrade;
 }
 
 export interface DynastySave {
@@ -469,6 +668,8 @@ export interface DynastySave {
   nextNewsSeq: number;
   pendingRetirees: string[];
   pendingHof: string[];
+  pendingCoachRetirees: string[];
+  pendingCoachHof: string[];
   lastPow: { aflNfl?: string; afc?: string; nfc?: string };
   primetime?: PrimetimeShow;
   salaryCap: number | null;
@@ -476,6 +677,10 @@ export interface DynastySave {
   waiverOrder: TeamId[];
   waivers: WaiverWire[];
   faOpened: boolean;
+  /** Regular / playoff week just simmed; stay on the film until Continue. */
+  weekFilm?: boolean;
+  camp?: CampReport;
+  deadline?: DeadlineSession;
 }
 
 export interface PrimetimeRecap {

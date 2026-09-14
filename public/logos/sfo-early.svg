@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="San Francisco 49ers">
+<rect width="64" height="64" rx="10" fill="#aa0000"/>
+<ellipse cx="32" cy="32" rx="26" ry="16" fill="#b3995d"/>
+<ellipse cx="32" cy="32" rx="22" ry="12" fill="#aa0000"/>
+<text x="32" y="37" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="16" font-weight="800" fill="#b3995d">SF</text>
+</svg>

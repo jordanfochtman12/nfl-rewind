@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#aa0000"/>
-<text x="32" y="42" text-anchor="middle" font-family="Georgia,Times,serif" font-size="28" font-weight="700" fill="#b3995d">SF</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="San Francisco 49ers">
+<rect width="64" height="64" rx="10" fill="#aa0000"/>
+<ellipse cx="32" cy="32" rx="24" ry="20" fill="#aa0000" stroke="#b3995d" stroke-width="3"/>
+<text x="32" y="40" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="22" font-weight="800" fill="#b3995d" letter-spacing="-1">SF</text>
 </svg>

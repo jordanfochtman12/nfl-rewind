@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Los Angeles Rams">
+<rect width="64" height="64" rx="10" fill="#003594"/>
+<path fill="#ffd100" d="M8 16 L18 16 L32 48 L22 48 Z"/>
+<path fill="#ffd100" d="M28 16 C48 16 58 22 54 36 C50 48 36 50 28 42 L32 34 C36 40 46 38 46 30 C46 22 38 22 32 22 L28 48 H20 L28 16Z"/>
+</svg>

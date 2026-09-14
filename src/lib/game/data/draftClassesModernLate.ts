@@ -108,6 +108,8 @@ export const DRAFT_MODERN_LATE: Record<number, DraftSeed[]> = {
     s("Gilbert", "Brown", "DT", "Kansas", 80, 3, "two-gap", 74, 340, 5.2, { str: 94, tak: 84, prs: 70 }),
     s("Michael", "Barber", "WR", "Marshall", 74, 4, "possession"),
     s("Jason", "Elam", "K", "Hawaii", 86, 3, "leg", 71, 200, 4.9, { kickPow: 96, kickAcc: 88 }),
+    s("Will", "Shields", "RG", "Nebraska", 92, 3, "run-ol", 73, 304, 5.15, { runBlk: 94, passBlk: 90, str: 90, inj: 94 }),
+    s("John", "Lynch", "S", "Stanford", 90, 3, "box-s", 74, 220, 4.55, { tak: 94, str: 88, awareness: 90, cov: 82 }),
     s("John", "Randle", "DT", "Texas A&I", 90, 0, "finisher", 73, 278, 4.7, { prs: 96, accel: 90, str: 88, stamina: 92 }),
   ],
   1994: [
@@ -169,11 +171,13 @@ export const DRAFT_MODERN_LATE: Record<number, DraftSeed[]> = {
     s("Terry", "Glenn", "WR", "Ohio State", 82, 1, "burner", 71, 196, 4.4, { speed: 92, catch: 82 }),
     s("Lawrence", "Phillips", "RB", "Nebraska", 74, 1, "home-run", 72, 220, 4.45, { speed: 88, inj: 58 }),
     s("Lawyer", "Milloy", "S", "Washington", 86, 2, "box-s", 72, 210, 4.48, { tak: 88, cov: 84, awareness: 86 }),
-    s("Mushin", "Muhammad", "WR", "Michigan State", 82, 2, "contested", 74, 217, 4.53, { cit: 86, catch: 84 }),
+    s("Muhsin", "Muhammad", "WR", "Michigan State", 82, 2, "contested", 74, 217, 4.53, { cit: 86, catch: 84 }),
     s("Adam", "Vinatieri", "K", "South Dakota State", 88, 0, "ice", 72, 200, 4.9, { kickAcc: 94, kickPow: 86, awareness: 92 }),
     s("Jeff", "Hartings", "RG", "Penn State", 84, 1, "anchor", 75, 308, 5.15, { runBlk: 88, passBlk: 86, awareness: 86 }),
     s("Duce", "Staley", "RB", "South Carolina", 80, 3, "power-back", 71, 220, 4.55),
     s("Tiki", "Barber", "RB", "Virginia", 84, 2, "receiving-back", 70, 200, 4.45, { catch: 88, elu: 88, speed: 86, rrt: 82 }),
+    s("Terrell", "Owens", "WR", "Chattanooga", 90, 3, "contested", 75, 224, 4.45, { cit: 92, speed: 90, str: 86, catch: 86, inj: 74 }),
+    s("Brian", "Dawkins", "S", "Clemson", 90, 2, "hawk", 72, 210, 4.5, { awareness: 96, tak: 92, cov: 88, speed: 88, str: 86 }),
   ],
   1997: [
     s("Orlando", "Pace", "LT", "Ohio State", 96, 1, "pass-ol", 79, 325, 5.15, { passBlk: 98, runBlk: 90, str: 94, inj: 88 }),
@@ -239,5 +243,7 @@ export const DRAFT_MODERN_LATE: Record<number, DraftSeed[]> = {
     s("Mike", "Peterson", "OLB", "Florida", 82, 2, "cover-lb"),
     s("Al", "Wilson", "MLB", "Tennessee", 84, 1, "thumper", 72, 240, 4.55, { tak: 88, speed: 84 }),
     s("Patrick", "Kerney", "DE", "Virginia", 84, 1, "edge", 77, 265, 4.7, { prs: 88, speed: 80 }),
+    s("Daunte", "Culpepper", "QB", "Central Florida", 86, 1, "dual", 76, 260, 4.66, { throwPow: 92, throwAcc: 80, throwAwr: 80, speed: 78, str: 90, inj: 62 }),
+    s("Kurt", "Warner", "QB", "Northern Iowa", 88, 0, "deadeye", 74, 214, 4.9, { throwAcc: 96, throwAwr: 96, throwPow: 86, rel: 92, awareness: 96, inj: 68 }),
   ],
 };

@@ -31,6 +31,13 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
     puntYds: 0,
     krYds: 0,
     prYds: 0,
+    targets: 0,
+    tfl: 0,
+    pd: 0,
+    qbHits: 0,
+    fr: 0,
+    krTd: 0,
+    prTd: 0,
   };
 }
 
@@ -60,6 +67,13 @@ const ROW_KEYS: (keyof Omit<SeasonStats, "year" | "teamId">)[] = [
   "puntYds",
   "krYds",
   "prYds",
+  "targets",
+  "tfl",
+  "pd",
+  "qbHits",
+  "fr",
+  "krTd",
+  "prTd",
 ];
 
 function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
@@ -90,6 +104,13 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.puntYds = row.puntYds ?? 0;
   s.krYds = row.krYds ?? 0;
   s.prYds = row.prYds ?? 0;
+  s.targets = 0;
+  s.tfl = 0;
+  s.pd = 0;
+  s.qbHits = 0;
+  s.fr = 0;
+  s.krTd = 0;
+  s.prTd = 0;
   return s;
 }
 

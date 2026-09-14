@@ -92,6 +92,7 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Glen", "Collins", "DE", "Mississippi State", 72, 1, "edge"),
     s("Butch", "Woolfolk", "RB", "Michigan", 76, 1, "power-back", 73, 210, 4.52),
     s("Anthony", "Carter", "WR", "Michigan", 82, 12, "burner", 71, 168, 4.4, { speed: 94, catch: 84, rrt: 86 }),
+    s("Morten", "Andersen", "K", "Michigan State", 90, 4, "ice", 74, 217, 4.95, { kickAcc: 96, kickPow: 92, inj: 96 }),
     s("Joey", "Browner", "S", "USC", 86, 1, "box-s", 74, 221, 4.52, { tak: 90, cov: 84, str: 84 }),
   ],
   1983: [
@@ -130,6 +131,7 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Bill", "Maas", "DT", "Pitt", 78, 1, "two-gap", 77, 268, 4.95),
     s("Keith", "Browner", "OLB", "USC", 72, 2, "cover-lb"),
     s("Doug", "Flutie", "QB", "Boston College", 76, 11, "scrambler", 70, 180, 4.7, { throwAcc: 82, speed: 76, awareness: 88, throwPow: 72 }),
+    s("Warren", "Moon", "QB", "Washington", 90, 0, "cannon", 75, 212, 4.8, { throwPow: 94, throwAcc: 88, throwAwr: 90, awareness: 92, inj: 84 }),
     s("John", "Offerdahl", "MLB", "Western Michigan", 84, 2, "thumper", 74, 232, 4.68, { tak: 88, awareness: 88 }),
     s("Terry", "Orr", "TE", "Texas", 72, 10, "block-te"),
     s("Alvin", "Powell", "LG", "Winston-Salem", 72, 4, "run-ol"),
@@ -151,6 +153,7 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Ethan", "Horton", "RB", "North Carolina", 72, 1, "receiving-back"),
     s("Steve", "Smith", "RB", "Penn State", 74, 2, "power-back"),
     s("Ron", "Brown", "WR", "Arizona State", 76, 2, "burner", 71, 181, 4.28, { speed: 98, catch: 72 }),
+    s("Herschel", "Walker", "RB", "Georgia", 90, 5, "home-run", 73, 225, 4.35, { speed: 96, accel: 94, str: 94, truck: 90, stamina: 98, inj: 82 }),
     s("Keith", "McKeller", "TE", "Jacksonville State", 74, 9, "move-te"),
   ],
   1986: [
@@ -214,6 +217,7 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Paul", "Gruber", "LT", "Wisconsin", 86, 1, "pass-ol", 77, 292, 5.2, { passBlk: 90, inj: 92 }),
     s("Brad", "Muster", "FB", "Stanford", 78, 1, "receiving-back", 75, 231, 4.6),
     s("Ricky", "Proehl", "WR", "Wake Forest", 80, 3, "possession", 72, 190, 4.55, { catch: 86, rrt: 86 }),
+    s("Dermontti", "Dawson", "C", "Kentucky", 92, 2, "anchor", 74, 292, 5.0, { passBlk: 96, runBlk: 94, str: 90, agi: 84, awareness: 94 }),
   ],
   1989: [
     s("Troy", "Aikman", "QB", "UCLA", 92, 1, "deadeye", 76, 219, 4.82, { throwPow: 88, throwAcc: 92, throwAwr: 90, awareness: 90 }),

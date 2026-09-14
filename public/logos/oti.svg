@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#0072CE"/>
-<path d="M32 8 L40 48 H24 Z" fill="#c8102e"/>
-<rect x="18" y="48" width="28" height="6" fill="#c8102e"/>
-<rect x="30" y="14" width="4" height="34" fill="#ffffff"/>
-<path d="M22 28 H42 M20 36 H44" stroke="#ffffff" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Houston Oilers">
+<rect width="64" height="64" rx="10" fill="#0072ce"/>
+<path fill="#c8102e" d="M32 6 L44 46 H20 Z"/>
+<rect x="16" y="46" width="32" height="8" fill="#c8102e"/>
+<rect x="30" y="12" width="4" height="34" fill="#ffffff"/>
+<path stroke="#ffffff" stroke-width="2.2" d="M22 26 H42 M20 34 H44 M24 18 H40"/>
+<circle cx="32" cy="50" r="2" fill="#ffffff"/>
 </svg>
