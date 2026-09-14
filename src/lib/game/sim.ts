@@ -282,7 +282,7 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
   for (const [k, v] of Object.entries(patch)) {
     if (typeof v === "number") {
       const rec = row as unknown as Record<string, number>;
-      rec[k] = (rec[k] ?? 0) + v;
+      rec[k] = Math.round((rec[k] ?? 0) + v);
     }
   }
 }
