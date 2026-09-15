@@ -203,12 +203,15 @@ export function gatherRetirees(save: DynastySave): string[] {
     if (p.teamId === "fa" && p.age < 30) continue;
     if (shouldRetire(save, p)) out.push(p.id);
   }
-  save.pendingRetirees = out.slice(0, 22);
+  // Every eligible player actually retires (state change) - RetirementNight's own
+  // UI already truncates what it displays, so this list must not be capped here too,
+  // or eligible players silently never retire and keep aging in the player pool.
+  save.pendingRetirees = out;
   const coaches: string[] = [];
   for (const c of Object.values(save.coaches)) {
     if (shouldRetireCoach(save, c)) coaches.push(c.id);
   }
-  save.pendingCoachRetirees = coaches.slice(0, 8);
+  save.pendingCoachRetirees = coaches;
   return save.pendingRetirees;
 }
 
