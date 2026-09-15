@@ -45,9 +45,7 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Vernon", l: "Dean", p: "CB", c: "San Diego State", o: 74, r: 2 },
     { f: "Perry", l: "Harrington", p: "RB", c: "Jackson State", o: 72, r: 2 },
     { f: "Glen", l: "Young", p: "WR", c: "Mississippi State", o: 70, r: 3 },
-    { f: "Jim", l: "Jeffcoat", p: "DE", c: "Arizona State", o: 82, r: 1 },
     { f: "Eugene", l: "Marve", p: "MLB", c: "Saginaw Valley", o: 76, r: 3 },
-    { f: "Joey", l: "Browner", p: "S", c: "USC", o: 72, r: 1 },
   ],
   1983: [
     { f: "Roger", l: "Craig", p: "RB", c: "Nebraska", o: 86, r: 2 },

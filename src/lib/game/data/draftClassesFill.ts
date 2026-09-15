@@ -235,7 +235,6 @@ export const DRAFT_FILL: Record<number, DraftSeed[]> = {
     { f: "Karl", l: "Mecklenburg", p: "OLB", c: "Minnesota", o: 84, r: 12 },
     { f: "Roger", l: "Craig", p: "RB", c: "Nebraska", o: 86, r: 2 },
     { f: "Joey", l: "Browner", p: "S", c: "USC", o: 86, r: 1 },
-    { f: "Mark", l: "Bavaro", p: "TE", c: "Notre Dame", o: 84, r: 4 },
   ],
   1984: [
     { f: "Boomer", l: "Esiason", p: "QB", c: "Maryland", o: 84, r: 2 },

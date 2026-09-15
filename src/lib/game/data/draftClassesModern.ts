@@ -72,7 +72,6 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("David", "Galloway", "DT", "Florida", 76, 2, "two-gap"),
     s("Carlton", "Williamson", "S", "Pitt", 78, 3, "box-s"),
     s("Rich", "Campbell", "QB", "California", 70, 1, "cannon"),
-    s("James", "Brooks", "RB", "Auburn", 82, 1),
   ],
   1982: [
     s("Marcus", "Allen", "RB", "USC", 92, 1, "receiving-back", 74, 210, 4.58, { elu: 90, catch: 84, awareness: 92, speed: 84, btk: 86 }),
@@ -93,7 +92,6 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Butch", "Woolfolk", "RB", "Michigan", 76, 1, "power-back", 73, 210, 4.52),
     s("Anthony", "Carter", "WR", "Michigan", 82, 12, "burner", 71, 168, 4.4, { speed: 94, catch: 84, rrt: 86 }),
     s("Morten", "Andersen", "K", "Michigan State", 90, 4, "ice", 74, 217, 4.95, { kickAcc: 96, kickPow: 92, inj: 96 }),
-    s("Joey", "Browner", "S", "USC", 86, 1, "box-s", 74, 221, 4.52, { tak: 90, cov: 84, str: 84 }),
   ],
   1983: [
     s("John", "Elway", "QB", "Stanford", 94, 1, "cannon", 75, 215, 4.64, { throwPow: 98, throwAcc: 84, throwAwr: 86, speed: 78, agi: 76 }),
@@ -113,7 +111,7 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Billy", "Ray Smith", "OLB", "Arkansas", 78, 1, "cover-lb"),
     s("Terry", "Kinard", "S", "Clemson", 82, 1, "hawk", 73, 199, 4.5, { cov: 84, awareness: 84 }),
     s("Roger", "Craig", "RB", "Nebraska", 86, 2, "receiving-back", 72, 222, 4.5, { catch: 88, stamina: 92, elu: 84, speed: 84 }),
-    s("Joey", "Browner", "S", "USC", 86, 1, "box-s"),
+    s("Joey", "Browner", "S", "USC", 86, 1, "box-s", 74, 221, 4.52, { tak: 90, cov: 84, str: 84 }),
     s("Dave", "Rimington", "C", "Nebraska", 78, 1, "anchor", 75, 288, 5.2),
     s("Tim", "Lewis", "CB", "Pitt", 76, 1, "blanket"),
     s("Mike", "Rozier", "RB", "Nebraska", 78, 1, "power-back", 70, 198, 4.5),
@@ -132,7 +130,6 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Keith", "Browner", "OLB", "USC", 72, 2, "cover-lb"),
     s("Doug", "Flutie", "QB", "Boston College", 76, 11, "scrambler", 70, 180, 4.7, { throwAcc: 82, speed: 76, awareness: 88, throwPow: 72 }),
     s("Warren", "Moon", "QB", "Washington", 90, 0, "cannon", 75, 212, 4.8, { throwPow: 94, throwAcc: 88, throwAwr: 90, awareness: 92, inj: 84 }),
-    s("John", "Offerdahl", "MLB", "Western Michigan", 84, 2, "thumper", 74, 232, 4.68, { tak: 88, awareness: 88 }),
     s("Terry", "Orr", "TE", "Texas", 72, 10, "block-te"),
     s("Alvin", "Powell", "LG", "Winston-Salem", 72, 4, "run-ol"),
   ],
@@ -172,7 +169,6 @@ export const DRAFT_MODERN: Record<number, DraftSeed[]> = {
     s("Pat", "Swilling", "OLB", "Georgia Tech", 88, 3, "edge", 75, 242, 4.6, { prs: 92, speed: 86, accel: 88 }),
     s("Vestee", "Jackson", "CB", "Washington", 76, 2, "blanket"),
     s("Erik", "McMillan", "S", "Missouri", 78, 3, "hawk"),
-    s("Mark", "Bavaro", "TE", "Notre Dame", 86, 4, "block-te", 76, 245, 4.7, { cit: 90, catch: 84, runBlk: 86, str: 88 }),
   ],
   1987: [
     s("Rod", "Woodson", "CB", "Purdue", 94, 1, "hawk", 72, 200, 4.31, { cov: 94, speed: 96, agi: 92, tak: 84, catch: 82 }),

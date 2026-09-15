@@ -21,6 +21,7 @@ function s(
 /** Named 2000–2025 classes with archetypes, measurables, and locked attributes. */
 export const DRAFT_2000S: Record<number, DraftSeed[]> = {
   2000: [
+    s("Tom", "Brady", "QB", "Michigan", 88, 6, "deadeye", 76, 225, 5.28, { throwPow: 82, throwAcc: 95, throwAwr: 98, rel: 92, awareness: 99, inj: 90 }),
     s("Courtney", "Brown", "DE", "Penn State", 74, 1, "edge", 77, 271, 4.75),
     s("LaVar", "Arrington", "OLB", "Penn State", 82, 1, "edge", 75, 250, 4.48, { prs: 86, speed: 88, tak: 82 }),
     s("Chris", "Samuels", "LT", "Alabama", 88, 1, "pass-ol", 77, 314, 5.2, { passBlk: 92, runBlk: 86, inj: 78 }),
@@ -63,7 +64,6 @@ export const DRAFT_2000S: Record<number, DraftSeed[]> = {
     s("Laveranues", "Coles", "WR", "Florida State", 82, 3, "burner", 71, 199, 4.35, { speed: 94, catch: 82 }),
     s("Chad", "Johnson", "WR", "Oregon State", 86, 2, "burner", 73, 192, 4.42, { speed: 90, rrt: 88, catch: 84 }),
     s("Dominic", "Raiola", "C", "Nebraska", 82, 2, "anchor", 74, 295, 5.1, { awareness: 88, passBlk: 84 }),
-    s("Drew", "Brees", "QB", "Purdue", 92, 2),
   ],
   2002: [
     s("David", "Carr", "QB", "Fresno State", 74, 1, "cannon", 75, 226, 4.75, { throwPow: 86, throwAcc: 76, inj: 70 }),
@@ -85,7 +85,6 @@ export const DRAFT_2000S: Record<number, DraftSeed[]> = {
     s("LeCharles", "Bentley", "C", "Ohio State", 82, 2, "anchor"),
     s("Brian", "Westbrook", "RB", "Villanova", 86, 3, "receiving-back", 68, 200, 4.45, { catch: 88, elu: 90, speed: 86, agi: 92 }),
     s("David", "Garrard", "QB", "East Carolina", 80, 4, "dual", 74, 244, 4.65, { throwPow: 86, speed: 76, str: 84 }),
-    s("Anquan", "Boldin", "WR", "Florida State", 86, 2, "contested", 73, 220, 4.5, { cit: 90, catch: 90, str: 86, rrt: 84 }),
   ],
   2003: [
     s("Carson", "Palmer", "QB", "USC", 86, 1, "cannon", 77, 230, 4.75, { throwPow: 92, throwAcc: 86, throwAwr: 84, inj: 68 }),
@@ -106,7 +105,7 @@ export const DRAFT_2000S: Record<number, DraftSeed[]> = {
     s("Osi", "Umenyiora", "DE", "Troy", 86, 2, "edge", 75, 255, 4.55, { prs: 92, speed: 86, accel: 88 }),
     s("Lance", "Briggs", "OLB", "Arizona", 88, 3, "cover-lb", 73, 244, 4.55, { tak: 90, speed: 84, awareness: 88, cov: 82 }),
     s("Boss", "Bailey", "OLB", "Georgia", 76, 2, "cover-lb"),
-    s("Anquan", "Boldin", "WR", "Florida State", 86, 2),
+    s("Anquan", "Boldin", "WR", "Florida State", 86, 2, "contested", 73, 220, 4.5, { cit: 90, catch: 90, str: 86, rrt: 84 }),
   ],
   2004: [
     s("Eli", "Manning", "QB", "Ole Miss", 88, 1, "deadeye", 77, 218, 4.9, { throwAcc: 86, throwAwr: 90, throwPow: 84, awareness: 92, inj: 86 }),

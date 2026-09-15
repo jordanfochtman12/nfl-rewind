@@ -110,7 +110,6 @@ export const DRAFT_EXTRA: Record<number, DraftSeed[]> = {
     { f: "Jack", l: "Tatum", p: "S", c: "Ohio State", o: 88, r: 1 },
     { f: "Phil", l: "Villapiano", p: "OLB", c: "Bowling Green", o: 84, r: 2 },
     { f: "Joe", l: "Theismann", p: "QB", c: "Notre Dame", o: 76, r: 4 },
-    { f: "Lydell", l: "Mitchell", p: "RB", c: "Penn State", o: 80, r: 2 },
     { f: "Isiah", l: "Robertson", p: "OLB", c: "Southern", o: 82, r: 1 },
     { f: "Joe", l: "Ehrmann", p: "DT", c: "Syracuse", o: 78, r: 1 },
     { f: "Elmo", l: "Wright", p: "WR", c: "Houston", o: 74, r: 1 },
