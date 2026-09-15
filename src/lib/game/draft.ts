@@ -232,7 +232,7 @@ function needScore(save: DynastySave, teamId: TeamId, pos: Pos): number {
   return 80 - best + Math.max(0, 2 - have.length) * 8;
 }
 
-export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | undefined {
+export function bestAvailable(save: DynastySave, teamId: TeamId, round = 99): Prospect | undefined {
   const open = save.draftBoard.filter((p) => !p.taken);
   if (!open.length) return undefined;
   const style = save.teams[teamId]?.draftStyle ?? "need";
@@ -251,7 +251,11 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
     const scout = visibleOvr(pl);
     const blend = Math.max(0, Math.min(0.7, (evalN - 60) / 80));
     const grade = scout * (1 - blend) + pl.ovr * blend;
-    const need = needScore(save, teamId, pl.pos);
+    // A team with a weak kicker/punter isn't "in need" the way it would be at a
+    // real starter spot - that slot is trivially filled off the street after the
+    // draft, so raw urgency shouldn't drive up a specialist's pick value.
+    const isSpecialist = pl.pos === "K" || pl.pos === "P";
+    const need = needScore(save, teamId, pl.pos) * (isSpecialist ? 0.15 : 1);
     let score = grade + need * (style === "need" ? 0.72 : 0.28);
     if (style === "speed") score += ((pl.revealed ? pl.ratings.speed : grade) - 70) * 0.22;
     if (style === "trench" && ["LT", "LG", "C", "RG", "RT", "DE", "DT"].includes(pl.pos)) score += 8;
@@ -259,6 +263,11 @@ export function bestAvailable(save: DynastySave, teamId: TeamId): Prospect | und
     if (style === "qb" && pl.pos === "QB" && (qb?.ovr ?? 50) < 80) score += 14;
     if (style === "bpa") score = grade * 1.15 + need * 0.12;
     score += schemeFitPos(pl.pos, club?.offScheme, club?.defScheme) * 0.35;
+    // Real front offices almost never spend an early pick on a kicker or punter -
+    // the gap between a good and great one is tiny and the position is deep in
+    // free agency every year. Without this, a specialist with a hot grade and a
+    // team's "need" score behind him could out-score every other prospect.
+    if (pl.pos === "K" || pl.pos === "P") score -= Math.max(0, 20 - round * 2.5);
     if (pl.revealed) {
       score += kitBoost(pl, "offPass") + kitBoost(pl, "offRun") + kitBoost(pl, "defPass") + kitBoost(pl, "defRun");
       score += (pl.abilities?.length ?? 0) * 0.35 + (pl.traits?.length ?? 0) * 0.25;
@@ -285,7 +294,7 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
   const teamId = slot.owner;
   const round = slot.round;
   let prospect = playerId ? save.draftBoard.find((p) => p.playerId === playerId && !p.taken) : undefined;
-  if (!prospect) prospect = bestAvailable(save, teamId);
+  if (!prospect) prospect = bestAvailable(save, teamId, round);
   if (!prospect) return false;
   prospect.taken = true;
   prospect.takenBy = teamId;
