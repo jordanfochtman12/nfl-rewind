@@ -309,10 +309,33 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
   ]!.p;
 }
 
-function pickRusher(save: DynastySave, off: TeamUnits, passingDown: boolean, year: number, goal: boolean): Player | undefined {
+function pickRusher(
+  save: DynastySave,
+  off: TeamUnits,
+  passingDown: boolean,
+  year: number,
+  goal: boolean,
+  carriesSoFar?: (id: string) => number,
+): Player | undefined {
   const rb1 = eraRb1Share(year);
+  // A back who's already carried a heavy load this game gets spelled more -
+  // without this, a lead back's flat per-play weight can compound into an
+  // unrealistic 50+ carry game over enough plays.
+  const workloadDamp = (id: string | undefined) => {
+    if (!id || !carriesSoFar) return 1;
+    const n = carriesSoFar(id);
+    return n <= 22 ? 1 : Math.max(0.35, 1 - (n - 22) * 0.045);
+  };
   const pool: { p: Player; w: number }[] = [];
-  if (off.rb) pool.push({ p: off.rb, w: (passingDown ? rb1 * 0.7 : rb1) * kitShare(off.rb, "rushShare") * (off.rb.ratings.stamina / 80) });
+  if (off.rb)
+    pool.push({
+      p: off.rb,
+      w:
+        (passingDown ? rb1 * 0.7 : rb1) *
+        kitShare(off.rb, "rushShare") *
+        (off.rb.ratings.stamina / 80) *
+        workloadDamp(off.rb.id),
+    });
   if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
   if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? 0.22 : year <= 1995 ? 0.12 : 0.05 });
   if (off.qb && (off.kit.scramble > 6 || goal)) pool.push({ p: off.qb, w: goal ? 0.08 + off.kit.scramble / 180 : 0.03 + off.kit.scramble / 220 });
@@ -1601,7 +1624,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       continue;
     }
 
-    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak");
+    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak", (id) =>
+      boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
+    );
     let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - 130) / 80;
     if (call === "draw") mu += 0.8;
     if (call === "sneak") mu = 0.7 + (off.ol[2]?.ratings.str ?? 70) / 80 + sneakBoost(year);
