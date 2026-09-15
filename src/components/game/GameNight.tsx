@@ -84,7 +84,7 @@ function BoxTable({
         <table className="w-full min-w-[420px] text-left text-sm">
           <thead className="bg-surface-2 text-xs text-muted">
             <tr>
-              <th className="px-3 py-2 font-medium">Player</th>
+              <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
               {cols.map((c) => (
                 <th key={c} className="px-3 py-2 font-medium">
                   {c}
@@ -95,7 +95,7 @@ function BoxTable({
           <tbody>
             {rows.map((r, i) => (
               <tr key={i} className="border-t border-line">
-                <td className="px-3 py-2">{r.name}</td>
+                <td className="sticky left-0 z-10 bg-surface px-3 py-2">{r.name}</td>
                 {r.cells.map((c, j) => (
                   <td key={j} className="tabular px-3 py-2">
                     {c}
