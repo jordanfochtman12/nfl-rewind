@@ -555,7 +555,6 @@ export const VETERANS_1966: VetSeed[] = [
   { f: "Dick", l: "Westmoreland", p: "CB", t: "mia", a: 26, o: 70, n: 25, c: "North Carolina A&T" },
   { f: "Willie", l: "West", p: "S", t: "mia", a: 28, o: 68, n: 22 },
   { f: "Gene", l: "Mingo", p: "K", t: "mia", a: 30, o: 68, n: 21 },
-  { f: "Bill", l: "Nelson", p: "QB", t: "pit", a: 25, o: 72, n: 16 },
   { f: "John", l: "Nisby", p: "RG", t: "pit", a: 30, o: 74, n: 65 },
   { f: "Ray", l: "Mansfield", p: "C", t: "pit", a: 25, o: 76, n: 56 },
   { f: "Ben", l: "McGee", p: "DE", t: "pit", a: 27, o: 78, n: 76 },
