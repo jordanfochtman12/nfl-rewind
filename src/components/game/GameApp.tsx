@@ -446,10 +446,12 @@ function Roster() {
       {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
       <div className="overflow-x-auto rounded-xl border border-line">
       <table className="w-full min-w-[960px] text-left text-sm">
-        <thead className="bg-surface-2 text-xs tracking-wider text-muted">
+        <thead className="text-xs tracking-wider text-muted">
           <tr>
-            {["#", "Player", "Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Status", ""].map((h) => (
-              <th key={h} className="px-3 py-2 font-medium">
+            <th className="sticky left-0 z-10 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
+            <th className="sticky left-12 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
+            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Status", ""].map((h) => (
+              <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                 {h}
               </th>
             ))}
@@ -458,8 +460,8 @@ function Roster() {
         <tbody>
           {rows.map((p) => (
             <tr key={p.id} className="border-t border-line">
-              <td className="tabular px-3 py-2 text-muted">{p.jersey}</td>
-              <td className="px-3 py-2">
+              <td className="sticky left-0 z-10 w-12 bg-bg tabular px-3 py-2 text-muted">{p.jersey}</td>
+              <td className="sticky left-12 z-10 bg-bg px-3 py-2">
                 <PlayerLink player={p} className="font-display text-base" />
                 {p.historical ? "" : <span className="ml-2 text-xs text-subtle">camp</span>}
               </td>
@@ -1025,14 +1027,14 @@ function Stats() {
             {posFilter === "ALL" && <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{board.title}</h3>}
             <div className="overflow-x-auto rounded-xl border border-line">
               <table className="w-full min-w-[760px] text-left text-sm">
-                <thead className="bg-surface-2 text-xs text-muted">
+                <thead className="text-xs text-muted">
                   <tr>
-                    <th className="px-3 py-2 font-medium">Player</th>
-                    <th className="px-3 py-2 font-medium">Pos</th>
-                    <th className="px-3 py-2 font-medium">Team</th>
-                    <th className="px-3 py-2 font-medium">College</th>
+                    <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
+                    <th className="bg-surface-2 px-3 py-2 font-medium">Pos</th>
+                    <th className="bg-surface-2 px-3 py-2 font-medium">Team</th>
+                    <th className="bg-surface-2 px-3 py-2 font-medium">College</th>
                     {cols.map((c) => (
-                      <th key={c.key} className="px-3 py-2 font-medium">
+                      <th key={c.key} className="bg-surface-2 px-3 py-2 font-medium">
                         {c.label}
                       </th>
                     ))}
@@ -1043,7 +1045,7 @@ function Stats() {
                     const rowCols = statCols(p.pos);
                     return (
                       <tr key={p.id} className="border-t border-line">
-                        <td className="px-3 py-2">
+                        <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                           <PlayerLink player={p} />
                         </td>
                         <td className="px-3 py-2">{p.pos}</td>

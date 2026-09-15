@@ -63,12 +63,14 @@ export function TeamRosterModal() {
             ✕
           </button>
         </header>
-        <div className="overflow-y-auto">
+        <div className="overflow-auto">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="sticky top-0 bg-surface-2 text-xs tracking-wider text-muted">
+            <thead className="text-xs tracking-wider text-muted">
               <tr>
-                {["#", "Player", "Pos", "College", "Grade", "Age", "Kit", "Status"].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium">
+                <th className="sticky top-0 left-0 z-20 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
+                <th className="sticky top-0 left-12 z-20 bg-surface-2 px-3 py-2 font-medium">Player</th>
+                {["Pos", "College", "Grade", "Age", "Kit", "Status"].map((h) => (
+                  <th key={h} className="sticky top-0 z-10 bg-surface-2 px-3 py-2 font-medium">
                     {h}
                   </th>
                 ))}
@@ -77,8 +79,8 @@ export function TeamRosterModal() {
             <tbody>
               {rows.map((p) => (
                 <tr key={p.id} className="cursor-pointer border-t border-line hover:bg-surface-2" onClick={() => openProfile(p.id)}>
-                  <td className="tabular px-3 py-2 text-muted">{p.jersey}</td>
-                  <td className="px-3 py-2">
+                  <td className="sticky left-0 z-10 w-12 bg-bg tabular px-3 py-2 text-muted">{p.jersey}</td>
+                  <td className="sticky left-12 z-10 bg-bg px-3 py-2">
                     <PlayerLink player={p} className="font-display text-base" />
                   </td>
                   <td className="px-3 py-2">{p.pos}</td>

@@ -103,9 +103,9 @@ function StatTable({
       <table className="mt-2 w-full min-w-[520px] text-left text-sm">
         <thead className="text-xs tracking-wider text-muted">
           <tr>
-            <th className="px-3 py-2 font-medium">Year</th>
+            <th className="sticky left-0 z-10 bg-surface px-3 py-2 font-medium">Year</th>
             {cols.map((c) => (
-              <th key={c.key} className="px-3 py-2 font-medium">
+              <th key={c.key} className="bg-surface px-3 py-2 font-medium">
                 {c.label}
               </th>
             ))}
@@ -114,7 +114,7 @@ function StatTable({
         <tbody>
           {rows.map((r) => (
             <tr key={r.label} className="border-t border-line">
-              <td className="px-3 py-2 text-muted">{r.label}</td>
+              <td className="sticky left-0 z-10 bg-surface px-3 py-2 text-muted">{r.label}</td>
               {cols.map((c) => (
                 <td key={c.key} className="tabular px-3 py-2">
                   {c.of ? c.of(r.s) : "—"}

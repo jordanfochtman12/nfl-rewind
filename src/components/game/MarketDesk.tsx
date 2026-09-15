@@ -126,10 +126,11 @@ export function MarketDesk() {
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Free agents</h3>
         <div className="overflow-x-auto rounded-xl border border-line">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="bg-surface-2 text-xs tracking-wider text-muted">
+            <thead className="text-xs tracking-wider text-muted">
               <tr>
-                {["Player", "Pos", "Grade", "Age", "College", ""].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium">
+                <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
+                {["Pos", "Grade", "Age", "College", ""].map((h) => (
+                  <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                     {h}
                   </th>
                 ))}
@@ -138,7 +139,7 @@ export function MarketDesk() {
             <tbody>
               {fa.map((p) => (
                 <tr key={p.id} className="border-t border-line">
-                  <td className="px-3 py-2">
+                  <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                     <PlayerLink player={p} />
                     <span className="mt-0.5 block">
                       <KitChips player={p} compact />
