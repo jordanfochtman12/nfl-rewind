@@ -224,9 +224,8 @@ export function draftLine(p: Player): string {
   if (p.draftYear && (p.draftRound === 0 || p.draftRound === undefined) && p.historical && p.yearsPro === 0) {
     return `${p.draftYear} UDFA`;
   }
-  if (p.draftYear && p.draftRound && p.draftRound > 0) {
-    const pick = p.draftPick ? ` · pick ${p.draftPick}` : "";
-    return `${p.draftYear} · Round ${p.draftRound}${pick}`;
+  if (p.draftYear && p.draftRound && p.draftRound > 0 && p.draftPick != null) {
+    return `${p.draftYear} · Round ${p.draftRound} · pick ${p.draftPick}`;
   }
   if (p.draftYear) return `${p.draftYear} class`;
   if (p.historical) return "Veteran";
