@@ -156,13 +156,22 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   const passBlk = avg(ol.map((x) => x.ratings.passBlk));
   const runBlk = avg(ol.map((x) => x.ratings.runBlk));
   const recSkill = avg(
-    [...wr, te].filter((x): x is Player => !!x).map((x) => (x.ratings.catch + x.ratings.rrt + x.ratings.cit) / 3),
+    [...wr, te].filter((x): x is Player => !!x).map((x) =>
+      // rel (release off press) only means something for a true WR - a TE never
+      // ran that weight into his overall, so don't drag his score on it here.
+      x.pos === "WR"
+        ? (x.ratings.catch + x.ratings.rrt + x.ratings.cit + x.ratings.rel) / 4
+        : (x.ratings.catch + x.ratings.rrt + x.ratings.cit) / 3,
+    ),
   );
   const rushSkill = rb
-    ? (rb.ratings.speed + rb.ratings.btk + rb.ratings.elu + rb.ratings.truck) / 4
+    ? (rb.ratings.speed + rb.ratings.accel + rb.ratings.btk + rb.ratings.elu + rb.ratings.truck) / 5
     : 50;
   const passRush = avg(dl.map((x) => x.ratings.prs));
-  const cov = avg(db.map((x) => x.ratings.cov));
+  const cov = avg(
+    // agi (mirroring receivers) is a CB skill, not a safety one - same reasoning as rel above.
+    db.map((x) => (x.pos === "CB" ? (x.ratings.cov + x.ratings.agi) / 2 : x.ratings.cov)),
+  );
   const tak = avg([...dl, ...lb].map((x) => (x.ratings.tak + x.ratings.pur) / 2));
   const offIq = ((qb?.ratings.throwAwr ?? 50) + (qb?.ratings.awareness ?? 50) + (oc?.offense ?? coach?.offense ?? 70)) / 3;
   const defIq = ((lb[0]?.ratings.awareness ?? 50) + (dc?.defense ?? coach?.defense ?? 70)) / 2;
