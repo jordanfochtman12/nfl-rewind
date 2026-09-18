@@ -293,6 +293,27 @@ export function usedJerseys(save: DynastySave, teamId: TeamId): Set<number> {
   return new Set(rosterOf(save, teamId).map((p) => p.jersey));
 }
 
+function levenshtein(a: string, b: string): number {
+  const dp: number[] = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    let prev = dp[0]!;
+    dp[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const tmp = dp[j]!;
+      dp[j] = a[i - 1] === b[j - 1] ? prev : 1 + Math.min(prev, dp[j]!, dp[j - 1]!);
+      prev = tmp;
+    }
+  }
+  return dp[b.length]!;
+}
+
+/** Same first name plus a near-identical last name (e.g. "Nelson" vs "Nelsen") reads as
+ * the same guy twice on a depth chart, so a freshly generated filler must not land on it. */
+function namesTooClose(existing: Player, candidate: { first: string; last: string }): boolean {
+  if (existing.firstName !== candidate.first) return false;
+  return levenshtein(existing.lastName, candidate.last) <= 2;
+}
+
 export function generatePlayer(
   save: DynastySave,
   pos: Pos,
@@ -300,7 +321,12 @@ export function generatePlayer(
   ovr: number,
   age?: number,
 ): Player {
-  const name = eraName(save);
+  const teammates =
+    teamId !== "fa" && teamId !== "retired" && teamId !== "hof" ? rosterOf(save, teamId) : [];
+  let name = eraName(save);
+  for (let tries = 0; tries < 8 && teammates.some((t) => namesTooClose(t, name)); tries++) {
+    name = eraName(save);
+  }
   const used = teamId !== "fa" && teamId !== "retired" && teamId !== "hof" ? usedJerseys(save, teamId) : new Set<number>();
   const p = makePlayer(save, {
     firstName: name.first,
