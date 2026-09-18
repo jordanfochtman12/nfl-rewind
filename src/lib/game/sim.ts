@@ -6,6 +6,7 @@ import type {
   Gameplan,
   GameResult,
   Player,
+  Pos,
   TeamId,
 } from "./types.ts";
 import {
@@ -153,8 +154,15 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   const coach = team?.coachId ? save.coaches[team.coachId] : undefined;
   const oc = team?.ocId ? save.coaches[team.ocId] : undefined;
   const dc = team?.dcId ? save.coaches[team.dcId] : undefined;
-  const passBlk = avg(ol.map((x) => x.ratings.passBlk));
-  const runBlk = avg(ol.map((x) => x.ratings.runBlk));
+  // str carries real weight in an OL's overall (14-16%) but line push in the run
+  // game especially is a strength stat as much as a technique one - blend it in
+  // rather than let it sit purely decorative. A fullback's headline stats
+  // (runBlk, str) are just as dead otherwise - he was a fixed-odds ball carrier
+  // and nothing else, so fold him into the run-blocking unit as a lead blocker.
+  const passBlk = avg(ol.map((x) => x.ratings.passBlk * 0.75 + x.ratings.str * 0.25));
+  const runBlk = avg(
+    [...ol, ...(fb ? [fb] : [])].map((x) => x.ratings.runBlk * 0.75 + x.ratings.str * 0.25),
+  );
   const recSkill = avg(
     [...wr, te].filter((x): x is Player => !!x).map((x) =>
       // rel (release off press) only means something for a true WR - a TE never
@@ -186,12 +194,16 @@ export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
   let offRun = rushSkill * 0.46 + runBlk * 0.32 + (rb?.ratings.awareness ?? 50) * 0.1 + offIq * 0.12;
   let defPass = cov * 0.4 + passRush * 0.32 + defIq * 0.16 + tak * 0.12;
   let defRun = tak * 0.42 + avg(dl.map((x) => x.ratings.str)) * 0.22 + defIq * 0.2 + passRush * 0.16;
+  // A scheme is only as good as the personnel running it - flat bonuses meant a
+  // vertical passing attack helped just as much with possession receivers as
+  // with burners. Scale each bonus by the roster trait the scheme actually
+  // leans on, centered on the old flat value at a roughly average (75) roster.
   const scheme = team?.offScheme;
-  if (scheme === "vertical") offPass += 3.5;
-  if (scheme === "smashmouth") offRun += 3.5;
-  if (scheme === "westcoast") offPass += 2;
-  if (team?.defScheme === "cover-2") defPass += 2.5;
-  if (team?.defScheme === "3-4") defRun += 2;
+  if (scheme === "vertical") offPass += clamp(3.5 + (avg(wr.map((x) => x.ratings.speed)) - 75) * 0.15, 1.5, 5.5);
+  if (scheme === "smashmouth") offRun += clamp(3.5 + (rushSkill - 75) * 0.15, 1.5, 5.5);
+  if (scheme === "westcoast") offPass += clamp(2 + (recSkill - 75) * 0.12, 0.5, 3.5);
+  if (team?.defScheme === "cover-2") defPass += clamp(2.5 + (cov - 75) * 0.12, 1, 4);
+  if (team?.defScheme === "3-4") defRun += clamp(2 + (avg(lb.map((x) => x.ratings.tak)) - 75) * 0.12, 0.5, 3.5);
   const skill = [qb, qb2, rb, rb2, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
   offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
   offRun += kitBoost(rb, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
@@ -509,12 +521,37 @@ function snapClock(
 
 const INJURIES = ["ankle", "knee", "shoulder", "ribs", "hamstring", "hip", "hand", "shaken up", "concussion", "foot", "groin", "wrist"];
 
+// Real NFL injury rates vary a lot by position - RBs, FBs, and the trench positions take
+// a hit on nearly every snap, while a QB is protected by rule and a kicker barely gets
+// touched. Without this every position shared one flat rate, which is not how it works.
+const POS_INJURY_RISK: Partial<Record<Pos, number>> = {
+  RB: 1.35,
+  FB: 1.25,
+  LT: 1.2,
+  LG: 1.2,
+  C: 1.15,
+  RG: 1.2,
+  RT: 1.2,
+  DE: 1.2,
+  DT: 1.2,
+  OLB: 1.1,
+  MLB: 1.1,
+  TE: 1.1,
+  QB: 0.75,
+  K: 0.3,
+  P: 0.3,
+};
+
+function posInjuryRisk(p: Player): number {
+  return POS_INJURY_RISK[p.pos] ?? 1;
+}
+
 function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, turf: boolean): boolean {
   if (!p || p.injuredWeeks > 0) return false;
   const eraHit = save.year <= 1979 ? 0.0018 : save.year <= 1999 ? 0.0014 : 0.0012;
   const wxHit = wx === "cold" || wx === "snow" ? 1.15 : 1;
   const turfHit = turf && save.year >= 1970 && save.year <= 1999 ? 1.2 : turf ? 1.08 : 1;
-  const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit;
+  const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit * posInjuryRisk(p);
   if (rand(save) > chance) return false;
   const durable = p.ratings.inj >= 88 || kitInjMult(p) <= 0.8;
   p.injuredWeeks = durable ? 1 : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
@@ -586,7 +623,7 @@ function rollInjuries(save: DynastySave, teamId: TeamId): void {
   for (const p of rosterOf(save, teamId)) {
     if (p.injuredWeeks > 0) continue;
     const injMult = kitInjMult(p);
-    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult;
+    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult * posInjuryRisk(p);
     if (rand(save) > chance) continue;
     const durable = p.ratings.inj >= 88 || injMult <= 0.8;
     const weeks = durable ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);
