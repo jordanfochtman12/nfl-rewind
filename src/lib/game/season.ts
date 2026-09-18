@@ -45,7 +45,7 @@ import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen } from "./gm.ts";
+import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
 import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -237,6 +237,7 @@ function finishOffseason(save: DynastySave): void {
   fillCpuRosters(save);
   refreshContracts(save);
   fillCpuRosters(save);
+  enforceCapCompliance(save);
   for (const id of activeTeamIds(save.year)) syncDepth(save, id);
   touchGrade(save);
   const moves = relocationsForYear(save.year);

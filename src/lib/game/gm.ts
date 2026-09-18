@@ -86,6 +86,39 @@ export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, o
   return ok();
 }
 
+/**
+ * Real NFL teams must be cap-compliant by a set date each offseason - nothing in this
+ * engine was ever enforcing that. Signings and trades were cap-gated, but drafted
+ * rookies added salary with no check at all, and once a roster drifted over the cap
+ * nothing ever pulled it back. Must run as the LAST step of the offseason, after the
+ * roster has already been topped back up to 45 - running it before that fill meant
+ * the fill's replacement players (17+ new salaries in a thin-roster year) added back
+ * more payroll than the cuts had just shed, so compliance never actually held.
+ */
+export function enforceCapCompliance(save: DynastySave): void {
+  const cap = save.salaryCap ?? salaryCapFor(save.year);
+  if (cap == null) return;
+  const lastYearIds = new Set(activeTeamIds(save.year - 1));
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!save.teams[id]) continue;
+    // A team new to the league this year (expansion, or a franchise returning
+    // from a relocation gap) gets real roster protection, same as it would in
+    // real life - everyone else has had years to plan around the cap and can
+    // be cut deep enough to actually reach compliance.
+    const floor = lastYearIds.has(id) ? 0 : 40;
+    let guard = 0;
+    while (teamPayroll(save, id) > cap * 1.02 && guard++ < 60) {
+      const roster = rosterOf(save, id);
+      if (roster.length <= floor) break;
+      const cuttable = roster.filter((p) => roster.filter((x) => x.pos === p.pos).length > 1);
+      if (!cuttable.length) break;
+      const worst = cuttable.sort((a, b) => a.ovr / (a.salary || 1) - b.ovr / (b.salary || 1))[0]!;
+      cutPlayer(save, id, worst.id);
+    }
+  }
+}
+
 export function placeOnIR(save: DynastySave, teamId: TeamId, playerId: string): GmResult {
   const p = save.players[playerId];
   if (!onClub(p, teamId)) return fail("That player is not on this roster.");
