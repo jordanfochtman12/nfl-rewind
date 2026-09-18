@@ -113,7 +113,16 @@ export function enforceCapCompliance(save: DynastySave): void {
       if (roster.length <= floor) break;
       const cuttable = roster.filter((p) => roster.filter((x) => x.pos === p.pos).length > 1);
       if (!cuttable.length) break;
-      const worst = cuttable.sort((a, b) => a.ovr / (a.salary || 1) - b.ovr / (b.salary || 1))[0]!;
+      // ovr/salary alone picks the highest earner almost every time regardless of
+      // whether he's actually good - salary swings by 100x across the roster while
+      // ovr swings by maybe 2x, so it drowned out skill entirely and was gutting
+      // franchise QBs and other properly-paid stars instead of bad contracts.
+      // Cut whoever is furthest above what their ovr/age would actually cost at
+      // market rate - the real "cap casualty" candidate, not just the best player.
+      const worst = cuttable.sort(
+        (a, b) =>
+          b.salary - salaryFor(save.year, b.ovr, b.age) - (a.salary - salaryFor(save.year, a.ovr, a.age)),
+      )[0]!;
       cutPlayer(save, id, worst.id);
     }
   }
