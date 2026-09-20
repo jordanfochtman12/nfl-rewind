@@ -11,6 +11,7 @@ import {
   ensureSeasonPicks,
   makeDraftPick,
   maybeStartAflDraft,
+  pruneUndraftedProspects,
   simUntilUserPick,
 } from "./draft.ts";
 import { applyYearExpansion, closeExpansion } from "./expansion.ts";
@@ -217,6 +218,7 @@ export function weekIsInTheBooks(save: DynastySave): boolean {
 }
 
 function openDraft(save: DynastySave): void {
+  pruneUndraftedProspects(save);
   save.draftSession = save.year === 1966 ? "nfl" : "common";
   ensureSeasonPicks(save);
   buildDraftBoard(save);

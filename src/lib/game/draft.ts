@@ -166,6 +166,35 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
   return p;
 }
 
+/**
+ * save.players only ever grew - by a dynasty's end year that's 50k+ entries and an
+ * 80+MB save, degrading every autosave (JSON.stringify runs on the whole thing each
+ * time). Two sources of permanent dead weight, cleared once a year:
+ *
+ * - A drafted-fodder prospect who never got picked is never referenced again by
+ *   anything - draft picks/news only ever get written for players who WERE selected
+ *   (see makeDraftPick below) - so once his class's board is about to be replaced by
+ *   next year's, there's no reason to keep him.
+ * - fillRoster's generated depth fillers are the bigger leak. Once one gets cut he
+ *   lands in free agency, and if nobody signs him he just sits there forever:
+ *   cpuSignNeeds only offers 1-2 slots a team a year and always prefers the best
+ *   available player, so an aging, unremarkable generated FA realistically never
+ *   gets picked up again.
+ *
+ * Real historical players are kept regardless in both cases - someone may look one
+ * up by name even if this particular sim never drafted or signed him.
+ */
+export function pruneUndraftedProspects(save: DynastySave): void {
+  for (const pr of save.draftBoard) {
+    if (pr.taken) continue;
+    const p = save.players[pr.playerId];
+    if (p && !p.historical) delete save.players[pr.playerId];
+  }
+  for (const [id, p] of Object.entries(save.players)) {
+    if (!p.historical && p.teamId === "fa" && p.age >= 30) delete save.players[id];
+  }
+}
+
 export function buildDraftBoard(save: DynastySave): void {
   const session = sessionOf(save);
   save.draftSession = session;
@@ -329,6 +358,7 @@ export function maybeStartAflDraft(save: DynastySave): boolean {
   if (sessionOf(save) !== "nfl") return false;
   const queue = draftQueue(save);
   if (save.draftPickIndex < Math.min(save.draftBoard.length, queue.length) && currentDraftTeam(save)) return false;
+  pruneUndraftedProspects(save);
   save.draftSession = "afl";
   buildDraftBoard(save);
   save.draftPickIndex = 0;
