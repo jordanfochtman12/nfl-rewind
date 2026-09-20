@@ -1,5 +1,5 @@
 import type { DynastySave, Player, TeamId } from "./types.ts";
-import { rand, randInt } from "./rng.ts";
+import { clamp, rand, randInt } from "./rng.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
 export function starScale(year: number): number {
@@ -53,7 +53,14 @@ function resignInPlace(save: DynastySave, p: Player): void {
   p.contractYears = p.age >= 33 ? 1 : randInt(save, 1, 3);
 }
 
-/** Rozelle-rule era: stars stay put. 1994+ true UFA. Never rewrite live deals. */
+/** Rozelle-rule era: stars stay put. 1994+ true UFA, but a team still gets a real shot
+ * at keeping its own player before he ever hits the open market - same as real free
+ * agency, where most departing starters get re-signed by someone, often their own
+ * club, rather than every expiring contract instantly becoming a league-wide free-
+ * for-all. Without this, cpuSignNeeds' open-market pass (0-2 new signings a team a
+ * year) couldn't come close to absorbing the full post-1994 churn, and good veterans
+ * - QBs especially, since a team only carries one - just fell into permanent
+ * unsigned limbo while their old team backfilled with a fresh, weak generated player. */
 function expireContract(save: DynastySave, p: Player): void {
   if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") return;
   const from = p.teamId;
@@ -63,6 +70,14 @@ function expireContract(save: DynastySave, p: Player): void {
       resignInPlace(save, p);
       return;
     }
+  } else if (rand(save) < clamp(0.3 + (p.ovr - 65) * 0.01, 0.1, 0.75)) {
+    // Not cap-gated here: enforceCapCompliance runs at the end of every offseason
+    // and already knows how to shed a bad contract rather than a fairly-priced one,
+    // so a team is better off retaining a good player and letting that later sweep
+    // clean up the payroll than losing him here because the roster happens to be
+    // tight this exact moment.
+    resignInPlace(save, p);
+    return;
   }
   const team = save.teams[from];
   if (team) {

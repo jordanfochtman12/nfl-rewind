@@ -113,13 +113,22 @@ export function enforceCapCompliance(save: DynastySave): void {
       if (roster.length <= floor) break;
       const cuttable = roster.filter((p) => roster.filter((x) => x.pos === p.pos).length > 1);
       if (!cuttable.length) break;
+      // Real teams almost never just release their starting QB for cap reasons -
+      // they restructure the deal instead. A natural age-related ovr dip against
+      // an unchanged multi-year salary makes a QB1 look like the biggest "surplus"
+      // even when he's still clearly a team's best option, and without this he was
+      // getting cut and backfilled with a fresh, mediocre generated replacement far
+      // more often than a real front office would ever let happen.
+      const qb1 = roster.filter((p) => p.pos === "QB").sort((a, b) => b.ovr - a.ovr)[0];
+      const pool = qb1 ? cuttable.filter((p) => p.id !== qb1.id) : cuttable;
+      const candidates = pool.length ? pool : cuttable;
       // ovr/salary alone picks the highest earner almost every time regardless of
       // whether he's actually good - salary swings by 100x across the roster while
       // ovr swings by maybe 2x, so it drowned out skill entirely and was gutting
       // franchise QBs and other properly-paid stars instead of bad contracts.
       // Cut whoever is furthest above what their ovr/age would actually cost at
       // market rate - the real "cap casualty" candidate, not just the best player.
-      const worst = cuttable.sort(
+      const worst = candidates.sort(
         (a, b) =>
           b.salary - salaryFor(save.year, b.ovr, b.age) - (a.salary - salaryFor(save.year, a.ovr, a.age)),
       )[0]!;
@@ -543,7 +552,12 @@ export function cpuSignNeeds(save: DynastySave): void {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     const t = save.teams[id];
     const n = rosterOf(save, id).length;
-    const want = n < 44 ? 2 + (n < 40 ? 2 : 0) : rand(save) < 0.28 ? 1 : 0;
+    // A full 45-man roster still turns over real players every year (post-1994
+    // expiring contracts alone can be a dozen-plus a team) - signing only 0-1
+    // free agents most years left way more of that churn unaddressed than a real
+    // front office would tolerate, especially at a position a team carries just
+    // one of (like QB).
+    const want = n < 44 ? 3 + (n < 40 ? 3 : 0) : rand(save) < 0.55 ? 2 : 1;
     let signed = 0;
     const ranked = pool
       .map((p) => ({ p, s: p.ovr + schemeFitPos(p.pos, t.offScheme, t.defScheme) }))
