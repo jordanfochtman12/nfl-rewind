@@ -1,4 +1,4 @@
-import type { DynastySave, Player, Pos, Ratings, SeasonStats, TeamId } from "./types.ts";
+import type { DefScheme, DynastySave, OffScheme, Player, Pos, Ratings, SeasonStats, TeamId } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { deriveOvr, hasFullKit } from "./ratings.ts";
 import { eraCollege, eraName, jerseyFor } from "./names.ts";
@@ -276,13 +276,38 @@ export function depthAt(save: DynastySave, teamId: TeamId, pos: Pos): Player[] {
   return out;
 }
 
+/**
+ * A flat ovr sort picked your best pure athlete regardless of whether he actually
+ * fits what the coach calls - a possession-route TE would rank ahead of a better
+ * blocking one even under a smashmouth staff that needs him in-line. This nudges
+ * the ranking toward the trait each scheme actually leans on, without swamping ovr:
+ * it only matters as a tiebreaker between players who are otherwise close.
+ */
+function schemeDepthScore(p: Player, off?: OffScheme, def?: DefScheme): number {
+  const r = p.ratings;
+  let bonus = 0;
+  if (off === "vertical" && (p.pos === "WR" || p.pos === "TE")) bonus += (r.speed - 75) * 0.15;
+  if (off === "westcoast" && (p.pos === "WR" || p.pos === "TE")) bonus += (r.catch + r.rrt - 150) * 0.08;
+  if (off === "smashmouth" && p.pos === "RB") bonus += (r.truck - 75) * 0.15;
+  if (off === "smashmouth" && ["LT", "LG", "C", "RG", "RT", "FB"].includes(p.pos)) bonus += (r.runBlk - 75) * 0.15;
+  if (def === "cover-2" && (p.pos === "CB" || p.pos === "S")) bonus += (r.cov - 75) * 0.15;
+  if (def === "3-4" && (p.pos === "OLB" || p.pos === "DE")) bonus += (r.pur - 75) * 0.15;
+  if (def === "wide-9" && (p.pos === "DE" || p.pos === "OLB")) bonus += (r.prs - 75) * 0.15;
+  return bonus;
+}
+
 export function syncDepth(save: DynastySave, teamId: TeamId): void {
   const team = save.teams[teamId];
   if (!team) return;
   team.depth = team.depth ?? {};
   const roster = rosterOf(save, teamId);
   for (const [pos] of DEPTH_CHART) {
-    const have = roster.filter((p) => p.pos === pos).sort((a, b) => b.ovr - a.ovr);
+    const have = roster
+      .filter((p) => p.pos === pos)
+      .sort(
+        (a, b) =>
+          b.ovr + schemeDepthScore(b, team.offScheme, team.defScheme) - (a.ovr + schemeDepthScore(a, team.offScheme, team.defScheme)),
+      );
     const prev = (team.depth[pos] ?? []).filter((id) => have.some((p) => p.id === id));
     const missing = have.filter((p) => !prev.includes(p.id)).map((p) => p.id);
     team.depth[pos] = [...prev, ...missing];

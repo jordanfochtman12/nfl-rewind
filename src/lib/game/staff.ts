@@ -14,6 +14,7 @@ import { rand, randInt } from "./rng.ts";
 import { winPct } from "./standings.ts";
 import { eraName } from "./names.ts";
 import { assignCoachKit, schemeOfSignature } from "./coachKit.ts";
+import { syncDepth } from "./players.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -333,12 +334,20 @@ export function setTeamScheme(
 ): GmResult {
   const t = save.teams[teamId];
   if (!t) return { ok: false, reason: "No club." };
+  const schemeChanged = (patch.offScheme && patch.offScheme !== t.offScheme) || (patch.defScheme && patch.defScheme !== t.defScheme);
   if (patch.offScheme) t.offScheme = patch.offScheme;
   if (patch.defScheme) t.defScheme = patch.defScheme;
   if (patch.draftStyle) t.draftStyle = patch.draftStyle;
   const hc = t.coachId ? save.coaches[t.coachId] : undefined;
   if (hc && patch.offScheme) hc.offScheme = patch.offScheme;
   if (hc && patch.defScheme) hc.defScheme = patch.defScheme;
+  // A real coach installing a new scheme re-evaluates who fits it, not just where
+  // to slot the next new arrival - drop the existing order so it gets rebuilt
+  // scheme-aware from scratch instead of carrying over the old staff's ranking.
+  if (schemeChanged) {
+    t.depth = {};
+    syncDepth(save, teamId);
+  }
   return { ok: true };
 }
 
