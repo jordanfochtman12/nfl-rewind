@@ -434,6 +434,13 @@ function InjuryReport() {
   );
 }
 
+function gradeTone(ovr: number): string {
+  if (ovr >= 90) return "text-brass";
+  if (ovr >= 80) return "text-club-2";
+  if (ovr >= 65) return "text-fg";
+  return "text-muted";
+}
+
 function Roster() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
@@ -468,7 +475,9 @@ function Roster() {
               <td className="px-3 py-2">{p.pos}</td>
               <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
               <td className="tabular px-3 py-2">
-                {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
+                <span className={`stat-glow text-base ${gradeTone(visibleOvr(p))}`}>
+                  {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
+                </span>
               </td>
               <td className="tabular px-3 py-2">{p.age}</td>
               <td className="tabular px-3 py-2 text-muted">{p.contractYears}</td>
@@ -807,10 +816,10 @@ function Standings() {
                 </tr>
               </thead>
               <tbody>
-                {g.teams.map((t) => (
+                {g.teams.map((t, i) => (
                   <tr
                     key={t.id}
-                    className={`cursor-pointer border-t border-line hover:bg-surface-2 ${t.id === save.userTeamId ? "bg-club/20" : ""}`}
+                    className={`cursor-pointer border-t border-line hover:bg-surface-2 ${i === 0 ? "lead-row" : ""} ${t.id === save.userTeamId ? "bg-club/20" : ""}`}
                     onClick={() => openTeam(t.id)}
                   >
                     <td className="px-3 py-2">
@@ -818,9 +827,10 @@ function Standings() {
                         <ClubHash id={t.id} className="h-5 w-1 rounded-full" />
                         <Logo id={t.id} size={22} />
                         {displayName(save.year, t.id)}
+                        {i === 0 ? <span className="text-[10px] tracking-widest text-brass">1ST</span> : null}
                       </span>
                     </td>
-                    <td className="tabular px-3 py-2">{t.wins}</td>
+                    <td className={`tabular px-3 py-2 ${i === 0 ? "stat-glow text-brass" : ""}`}>{t.wins}</td>
                     <td className="tabular px-3 py-2">{t.losses}</td>
                     <td className="tabular px-3 py-2">{t.ties}</td>
                     <td className="tabular px-3 py-2">{t.pf}</td>
@@ -1041,20 +1051,21 @@ function Stats() {
                   </tr>
                 </thead>
                 <tbody>
-                  {board.rows.map(({ p, s }) => {
+                  {board.rows.map(({ p, s }, i) => {
                     const rowCols = statCols(p.pos);
                     return (
-                      <tr key={p.id} className="border-t border-line">
+                      <tr key={p.id} className={`border-t border-line ${i === 0 ? "lead-row" : ""}`}>
                         <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                           <PlayerLink player={p} />
+                          {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">LEADS</span> : null}
                         </td>
                         <td className="px-3 py-2">{p.pos}</td>
                         <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
                         <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
-                        {cols.map((c) => {
+                        {cols.map((c, ci) => {
                           const match = rowCols.find((x) => x.key === c.key) ?? cols.find((x) => x.key === c.key);
                           return (
-                            <td key={c.key} className="tabular px-3 py-2">
+                            <td key={c.key} className={`tabular px-3 py-2 ${i === 0 && ci === 0 ? "stat-glow text-brass" : ""}`}>
                               {match?.of ? match.of(s) : "—"}
                             </td>
                           );
@@ -1293,7 +1304,7 @@ function PlayShell() {
           ))}
         </nav>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-4 py-6">
         {event ? <EventPane /> : null}
         {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {showFa && tab === "office" ? <FreeAgencyNight /> : null}

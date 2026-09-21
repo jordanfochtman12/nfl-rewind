@@ -196,3 +196,24 @@ table tbody tr {
 table tbody tr:hover {
   background-color: color-mix(in srgb, var(--color-surface-2) 55%, transparent);
 }
+
+/* Broadcast-style page-turn: replayed whenever a tab's content is remounted (see PlayShell's `key={tab}`). */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise-in 240ms ease-out;
+}
+
+/* Gold "on top" treatment for a #1 line on a leaderboard/standings table. */
+.lead-row {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--color-brass) 14%, transparent), transparent 70%);
+  box-shadow: inset 3px 0 0 var(--color-brass);
+}

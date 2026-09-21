@@ -78,7 +78,7 @@ export function Btn({
   className?: string;
 }) {
   const base =
-    "chrome-bevel inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-sm font-semibold uppercase italic tracking-wide transition-all active:translate-y-px disabled:opacity-40 disabled:active:translate-y-0";
+    "chrome-bevel inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-sm font-semibold uppercase italic tracking-wide transition-all hover:-translate-y-px active:translate-y-px disabled:opacity-40 disabled:hover:translate-y-0 disabled:active:translate-y-0";
   const map = {
     primary:
       "bg-gradient-to-b from-club to-[color-mix(in_srgb,var(--color-club)_70%,black)] text-club-fg hover:brightness-110",
