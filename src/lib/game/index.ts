@@ -85,6 +85,8 @@ export {
   rosterOf,
   activeRosterOf,
   starters,
+  starterCount,
+  isStarter,
   hasKit,
   pruneRoster,
   trimRoster,

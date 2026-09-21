@@ -1,16 +1,5 @@
-import { playerName, rosterOf, type Player, type Pos, type TeamId } from "@/lib/game";
+import { playerName, starterCount, starters, type Player, type Pos, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
-
-function slot(saveTeam: Player[], pos: Pos, n = 0): Player | undefined {
-  return saveTeam
-    .filter((p) => p.pos === pos && !p.onIR)
-    .sort((a, b) => {
-      const ai = a.injuredWeeks > 0 ? 1 : 0;
-      const bi = b.injuredWeeks > 0 ? 1 : 0;
-      if (ai !== bi) return ai - bi;
-      return b.ovr - a.ovr;
-    })[n];
-}
 
 function Chip({ p, label }: { p?: Player; label: string }) {
   const openProfile = useGameStore((s) => s.openProfile);
@@ -27,7 +16,7 @@ function Chip({ p, label }: { p?: Player; label: string }) {
       type="button"
       onClick={() => openProfile(p.id)}
       className={`min-w-[84px] rounded-md border px-2 py-1 text-center ${
-        hurt ? "border-brick/70 bg-brick/40" : "border-white/20 bg-black/45"
+        hurt ? "border-brick/70 bg-brick/40" : "border-brass/60 bg-black/45"
       }`}
     >
       <p className="text-[10px] tracking-wider text-white/60">{label}</p>
@@ -43,42 +32,74 @@ function Chip({ p, label }: { p?: Player; label: string }) {
 export function DepthField({ teamId }: { teamId?: TeamId }) {
   const save = useGameStore((s) => s.save)!;
   const id = teamId ?? save.userTeamId;
-  const r = rosterOf(save, id);
-  const qb = slot(r, "QB");
-  const rb = slot(r, "RB");
-  const fb = slot(r, "FB");
-  const wr1 = slot(r, "WR", 0);
-  const wr2 = slot(r, "WR", 1);
-  const te = slot(r, "TE");
-  const lt = slot(r, "LT");
-  const lg = slot(r, "LG");
-  const c = slot(r, "C");
-  const rg = slot(r, "RG");
-  const rt = slot(r, "RT");
-  const de1 = slot(r, "DE", 0);
-  const dt1 = slot(r, "DT", 0);
-  const dt2 = slot(r, "DT", 1);
-  const de2 = slot(r, "DE", 1);
-  const olb1 = slot(r, "OLB", 0);
-  const mlb = slot(r, "MLB");
-  const olb2 = slot(r, "OLB", 1);
-  const cb1 = slot(r, "CB", 0);
-  const cb2 = slot(r, "CB", 1);
-  const s1 = slot(r, "S", 0);
-  const s2 = slot(r, "S", 1);
-  const k = slot(r, "K");
-  const p = slot(r, "P");
+  const team = save.teams[id];
+  const off = team.offScheme;
+  const def = team.defScheme;
+  const at = (pos: Pos) => starters(save, id, pos, starterCount(pos, off, def));
+
+  const wr = at("WR");
+  const te = at("TE");
+  const fb = at("FB");
+  const rb = at("RB");
+  const qb = at("QB");
+  const lt = at("LT")[0];
+  const lg = at("LG")[0];
+  const c = at("C")[0];
+  const rg = at("RG")[0];
+  const rt = at("RT")[0];
+  const de = at("DE");
+  const dt = at("DT");
+  const olb = at("OLB");
+  const mlb = at("MLB");
+  const cb = at("CB");
+  const s = at("S");
+  const k = at("K")[0];
+  const p = at("P")[0];
+
+  const dl: { p?: Player; label: string }[] =
+    def === "3-4"
+      ? [
+          { p: de[0], label: "DE" },
+          { p: dt[0], label: "NT" },
+          { p: de[1], label: "DE" },
+        ]
+      : [
+          { p: de[0], label: "DE" },
+          { p: dt[0], label: "DT" },
+          { p: dt[1], label: "DT" },
+          { p: de[1], label: "DE" },
+        ];
+  const lb: { p?: Player; label: string }[] =
+    def === "3-4"
+      ? [
+          { p: olb[0], label: "OLB" },
+          { p: mlb[0], label: "ILB" },
+          { p: mlb[1], label: "ILB" },
+          { p: olb[1], label: "OLB" },
+        ]
+      : [
+          { p: olb[0], label: "OLB" },
+          { p: mlb[0], label: "MLB" },
+          { p: olb[1], label: "OLB" },
+        ];
+
   return (
     <div className="space-y-4">
       <div
         className="overflow-x-auto rounded-xl border border-line p-4"
         style={{ background: "linear-gradient(#2f5a3a, #24482e 50%, #2f5a3a)" }}
       >
-        <p className="mb-3 text-center text-[11px] tracking-[0.4em] text-white/70">OFFENSE</p>
-        <div className="flex justify-around">
-          <Chip p={wr1} label="WR" />
-          <Chip p={te} label="TE" />
-          <Chip p={wr2} label="WR" />
+        <p className="mb-3 text-center text-[11px] tracking-[0.4em] text-white/70">
+          OFFENSE · {off.toUpperCase()}
+        </p>
+        <div className="flex flex-wrap justify-center gap-2">
+          {wr[0] && <Chip p={wr[0]} label="WR" />}
+          {te.map((x) => (
+            <Chip key={x.id} p={x} label="TE" />
+          ))}
+          {wr.slice(1).map((x) => (
+            <Chip key={x.id} p={x} label="WR" />
+          ))}
         </div>
         <div className="mt-3 flex justify-center gap-1">
           <Chip p={lt} label="LT" />
@@ -88,31 +109,32 @@ export function DepthField({ teamId }: { teamId?: TeamId }) {
           <Chip p={rt} label="RT" />
         </div>
         <div className="mt-3 flex justify-center">
-          <Chip p={qb} label="QB" />
+          <Chip p={qb[0]} label="QB" />
         </div>
         <div className="mt-3 flex justify-center gap-6">
-          <Chip p={fb} label="FB" />
-          <Chip p={rb} label="RB" />
+          {fb[0] && <Chip p={fb[0]} label="FB" />}
+          <Chip p={rb[0]} label="RB" />
         </div>
 
         <div className="my-5 h-px bg-white/20" />
-        <p className="mb-3 text-center text-[11px] tracking-[0.4em] text-white/70">DEFENSE</p>
-        <div className="flex justify-center gap-1">
-          <Chip p={de1} label="DE" />
-          <Chip p={dt1} label="DT" />
-          <Chip p={dt2} label="DT" />
-          <Chip p={de2} label="DE" />
+        <p className="mb-3 text-center text-[11px] tracking-[0.4em] text-white/70">
+          DEFENSE · {def.toUpperCase()}
+        </p>
+        <div className="flex flex-wrap justify-center gap-1">
+          {dl.map((x, i) => (
+            <Chip key={x.p?.id ?? `dl-${i}`} p={x.p} label={x.label} />
+          ))}
         </div>
-        <div className="mt-3 flex justify-center gap-3">
-          <Chip p={olb1} label="OLB" />
-          <Chip p={mlb} label="MLB" />
-          <Chip p={olb2} label="OLB" />
+        <div className="mt-3 flex flex-wrap justify-center gap-3">
+          {lb.map((x, i) => (
+            <Chip key={x.p?.id ?? `lb-${i}`} p={x.p} label={x.label} />
+          ))}
         </div>
         <div className="mt-3 flex justify-around">
-          <Chip p={cb1} label="CB" />
-          <Chip p={s1} label="S" />
-          <Chip p={s2} label="S" />
-          <Chip p={cb2} label="CB" />
+          <Chip p={cb[0]} label="CB" />
+          <Chip p={s[0]} label="S" />
+          <Chip p={s[1]} label="S" />
+          <Chip p={cb[1]} label="CB" />
         </div>
         <div className="mt-5 flex justify-center gap-4">
           <Chip p={k} label="K" />

@@ -21,6 +21,7 @@ import {
   gamesInWeek,
   gradeDynasty,
   hasSeasonWork,
+  isStarter,
   locationOf,
   moveDepth,
   nicknameOf,
@@ -30,6 +31,7 @@ import {
   rosterOf,
   saveByteLength,
   standingRows,
+  starterCount,
   statCols,
   statGroup,
   teamPayroll,
@@ -459,10 +461,11 @@ function Roster() {
         </thead>
         <tbody>
           {rows.map((p) => (
-            <tr key={p.id} className="border-t border-line">
+            <tr key={p.id} className={`border-t border-line ${isStarter(save, p) ? "lead-row" : ""}`}>
               <td className="sticky left-0 z-10 w-12 bg-bg tabular px-3 py-2 text-muted">{p.jersey}</td>
               <td className="sticky left-12 z-10 bg-bg px-3 py-2">
                 <PlayerLink player={p} className="font-display text-base" />
+                {isStarter(save, p) ? <span className="ml-2 text-[10px] tracking-widest text-brass">STARTER</span> : null}
                 {p.historical ? "" : <span className="ml-2 text-xs text-subtle">camp</span>}
               </td>
               <td className="px-3 py-2">{p.pos}</td>
@@ -549,6 +552,7 @@ function Roster() {
 function Depth() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
+  const team = save.teams[save.userTeamId];
   const groups = depthChart(save, save.userTeamId);
   return (
     <div className="space-y-8">
@@ -560,15 +564,17 @@ function Depth() {
         <section key={g.label}>
           <h3 className="mb-3 text-sm tracking-[0.2em] text-muted">{g.label}</h3>
           <div className="grid gap-2 sm:grid-cols-2">
-            {g.rows.map((row) => (
+            {g.rows.map((row) => {
+              const starterN = starterCount(row.pos, team.offScheme, team.defScheme);
+              return (
               <div key={row.pos} className="rounded-lg border border-line bg-surface p-3">
                 <p className="text-xs tracking-widest text-muted">{row.pos}</p>
                 <ol className="mt-1 space-y-1">
                   {row.players.map((p, i) => (
-                    <li key={p.id} className={`flex items-center justify-between gap-2 rounded-md px-1.5 py-1 text-sm ${i === 0 ? "lead-row" : ""}`}>
+                    <li key={p.id} className={`flex items-center justify-between gap-2 rounded-md px-1.5 py-1 text-sm ${i < starterN ? "lead-row" : ""}`}>
                       <span className="min-w-0">
                         {i + 1}. <PlayerLink player={p} className="inline min-h-0" />
-                        {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">STARTER</span> : null}
+                        {i < starterN ? <span className="ml-2 text-[10px] tracking-widest text-brass">STARTER</span> : null}
                         {p.injuredWeeks > 0 ? <span className="ml-2 text-brick">out</span> : null}
                         <span className="mt-0.5 block text-xs text-muted">{p.college ?? ""}</span>
                         <span className="mt-0.5 block">
@@ -601,7 +607,8 @@ function Depth() {
                   {!row.players.length && <li className="text-subtle">empty</li>}
                 </ol>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))}
@@ -1061,7 +1068,10 @@ function Stats() {
                           <PlayerLink player={p} />
                           {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">LEADS</span> : null}
                         </td>
-                        <td className="px-3 py-2">{p.pos}</td>
+                        <td className="px-3 py-2">
+                          {p.pos}
+                          {isStarter(save, p) ? <span className="ml-1 text-[10px] tracking-widest text-brass">•ST</span> : null}
+                        </td>
                         <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
                         <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                         {cols.map((c, ci) => {

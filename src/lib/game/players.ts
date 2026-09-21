@@ -235,6 +235,7 @@ export function activeRosterOf(save: DynastySave, teamId: TeamId): Player[] {
 
 /** Depth-aware starters. Injured skip. Empty depth falls back to ovr. */
 export function starters(save: DynastySave, teamId: TeamId, pos: Pos, n = 1): Player[] {
+  if (n <= 0) return [];
   const team = save.teams[teamId];
   const roster = rosterOf(save, teamId).filter((p) => p.pos === pos);
   const healthy = roster.filter((p) => p.injuredWeeks <= 0 && !p.onIR);
@@ -294,6 +295,29 @@ function schemeDepthScore(p: Player, off?: OffScheme, def?: DefScheme): number {
   if (def === "3-4" && (p.pos === "OLB" || p.pos === "DE")) bonus += (r.pur - 75) * 0.15;
   if (def === "wide-9" && (p.pos === "DE" || p.pos === "OLB")) bonus += (r.prs - 75) * 0.15;
   return bonus;
+}
+
+/**
+ * How many players actually take the field at a position under the team's current
+ * scheme, so "starter" highlighting matches the personnel grouping that scheme runs
+ * (e.g. vertical goes 3-WR/no-FB, 3-4 goes 3-DL/4-LB) instead of a flat top-1 guess.
+ */
+export function starterCount(pos: Pos, off?: OffScheme, def?: DefScheme): number {
+  if (pos === "WR") return off === "vertical" ? 3 : off === "smashmouth" ? 1 : 2;
+  if (pos === "TE") return off === "smashmouth" ? 2 : 1;
+  if (pos === "FB") return off === "vertical" ? 0 : 1;
+  if (pos === "DT") return def === "3-4" ? 1 : 2;
+  if (pos === "MLB") return def === "3-4" ? 2 : 1;
+  if (pos === "DE" || pos === "OLB" || pos === "CB" || pos === "S") return 2;
+  return 1;
+}
+
+/** Whether p is in the group of players who actually take the field at his position under his team's current scheme. */
+export function isStarter(save: DynastySave, p: Player): boolean {
+  const team = save.teams[p.teamId as TeamId];
+  if (!team) return false;
+  const n = starterCount(p.pos, team.offScheme, team.defScheme);
+  return starters(save, p.teamId as TeamId, p.pos, n).some((x) => x.id === p.id);
 }
 
 export function syncDepth(save: DynastySave, teamId: TeamId): void {
