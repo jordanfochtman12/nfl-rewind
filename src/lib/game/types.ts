@@ -701,6 +701,8 @@ export interface PrimetimeShow {
   recaps: PrimetimeRecap[];
   playOfNight: string;
   pow: string;
+  powerPoll: string;
+  wire: string[];
   close: string;
 }
 

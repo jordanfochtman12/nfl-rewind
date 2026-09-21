@@ -63,13 +63,16 @@ export function PrimetimeShow() {
             <Logo id={feature.homeId} size={56} />
           </div>
           <div>
-            <p className="text-[11px] tracking-[0.35em] text-brass">FEATURED PACKAGE</p>
+            <p className="text-[11px] tracking-[0.35em] text-brass">SEGMENT 1 · FEATURED PACKAGE</p>
             <p className="mt-1 font-display text-2xl leading-tight text-paper">{feature.line}</p>
             <p className="mt-2 text-sm text-muted">{feature.note}</p>
           </div>
         </div>
       )}
 
+      <p className="border-b border-brass/15 bg-black/30 px-5 py-2 text-[11px] tracking-[0.4em] text-brass">
+        SEGMENT 2 · AROUND THE LEAGUE
+      </p>
       <ol>
         {show.recaps.slice(1, 8).map((r, i) => (
           <li key={`${r.homeId}-${r.awayId}-pkg`} className="grid gap-3 border-t border-brass/10 px-5 py-4 sm:grid-cols-[140px_1fr]">
@@ -92,8 +95,29 @@ export function PrimetimeShow() {
         ))}
       </ol>
 
+      {(show.powerPoll || show.wire?.length) && (
+        <div className="grid gap-6 border-t border-brass/20 bg-black/35 px-5 py-6 sm:grid-cols-2">
+          {show.powerPoll && (
+            <div>
+              <p className="text-[11px] tracking-[0.35em] text-brass">SEGMENT 3 · POWER POLL</p>
+              <p className="mt-2 text-sm leading-relaxed text-paper">{show.powerPoll}</p>
+            </div>
+          )}
+          {!!show.wire?.length && (
+            <div>
+              <p className="text-[11px] tracking-[0.35em] text-brass">SEGMENT 4 · ON THE WIRE</p>
+              <ul className="mt-2 space-y-1.5 text-sm text-paper">
+                {show.wire.map((w, i) => (
+                  <li key={`${i}-${w}`}>— {w}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="space-y-3 border-t border-brass/30 bg-black/55 px-5 py-6">
-        <p className="text-[11px] tracking-[0.4em] text-brass">PLAY OF THE NIGHT · FREEZE FRAME</p>
+        <p className="text-[11px] tracking-[0.4em] text-brass">FINAL SEGMENT · PLAY OF THE NIGHT · FREEZE FRAME</p>
         <p className="font-display text-3xl leading-snug text-paper sm:text-4xl">{show.playOfNight}</p>
         <p className="text-sm text-muted">{show.pow}</p>
         <p className="pt-3 font-display text-sm tracking-[0.08em] text-brass">{show.close}</p>

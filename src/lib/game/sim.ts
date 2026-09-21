@@ -1233,7 +1233,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (make) {
         if (off.k) bumpBox(boxOf(poss), off.k.id, { fgMade: 1 });
         addPts(poss, 3);
-        note(`${off.k ? playerName(off.k) : "The kicker"} from ${fgDist}. It's good.`);
+        note(`${off.k ? playerName(off.k) : "The kicker"} from ${Math.round(fgDist)}. It's good.`);
         closeDrive("fg");
         if (ot && (otRule.kind === "sudden" || (otRule.kind === "modified" && !modifiedFirst && modifiedGotScore))) break;
         if (ot && otRule.kind === "modified" && modifiedFirst) {
