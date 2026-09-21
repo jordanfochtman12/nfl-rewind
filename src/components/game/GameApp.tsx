@@ -60,7 +60,7 @@ import { FreeAgencyNight } from "./FreeAgencyNight";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
-import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
+import { Btn, ClubDesk, ClubHash, ClubRibbon, gradeTone, Logo } from "./chrome";
 import {
   AwardsNight,
   CarouselNight,
@@ -434,13 +434,6 @@ function InjuryReport() {
   );
 }
 
-function gradeTone(ovr: number): string {
-  if (ovr >= 90) return "text-brass";
-  if (ovr >= 80) return "text-club-2";
-  if (ovr >= 65) return "text-fg";
-  return "text-muted";
-}
-
 function Roster() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
@@ -572,9 +565,10 @@ function Depth() {
                 <p className="text-xs tracking-widest text-muted">{row.pos}</p>
                 <ol className="mt-1 space-y-1">
                   {row.players.map((p, i) => (
-                    <li key={p.id} className="flex items-center justify-between gap-2 text-sm">
+                    <li key={p.id} className={`flex items-center justify-between gap-2 rounded-md px-1.5 py-1 text-sm ${i === 0 ? "lead-row" : ""}`}>
                       <span className="min-w-0">
                         {i + 1}. <PlayerLink player={p} className="inline min-h-0" />
+                        {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">STARTER</span> : null}
                         {p.injuredWeeks > 0 ? <span className="ml-2 text-brick">out</span> : null}
                         <span className="mt-0.5 block text-xs text-muted">{p.college ?? ""}</span>
                         <span className="mt-0.5 block">
@@ -582,7 +576,9 @@ function Depth() {
                         </span>
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="tabular text-muted">{p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}</span>
+                        <span className={`stat-glow tabular ${gradeTone(p.revealed ? p.ovr : visibleOvr(p))}`}>
+                          {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
+                        </span>
                         <button
                           type="button"
                           className="min-h-11 min-w-11 text-muted hover:text-fg"
@@ -667,8 +663,9 @@ function Staff() {
   const pool = availableCoaches(save);
   const row = (role: "HC" | "OC" | "DC", id: string | null) => {
     const c = id ? save.coaches[id] : undefined;
+    const winning = !!c && c.careerWins > c.careerLosses;
     return (
-      <article className="rounded-xl border border-line bg-surface p-4">
+      <article className={`rounded-xl border p-4 ${c && c.careerTitles ? "border-brass/50 bg-brass/5" : "border-line bg-surface"}`}>
         <p className="text-xs tracking-[0.2em] text-muted">{role === "HC" ? "Head coach" : role === "OC" ? "Offensive coordinator" : "Defensive coordinator"}</p>
         <h3 className="text-2xl">{c?.name ?? "Vacant"}</h3>
         {c && (
@@ -676,10 +673,15 @@ function Staff() {
             <p className="text-sm text-muted">
               Age {c.age} · Off {c.offense} · Def {c.defense} · Lead {c.leadership} · Dev {c.development} · Eval {c.evaluation}
             </p>
-            <p className="text-sm text-muted">
-              {c.offScheme} / {c.defScheme} · year {c.yearsOnJob} on the job · {c.careerWins}-{c.careerLosses}
-              {c.careerTies ? `-${c.careerTies}` : ""}
-              {c.careerTitles ? ` · ${c.careerTitles} titles` : ""}
+            <p className="text-sm">
+              <span className="text-muted">
+                {c.offScheme} / {c.defScheme} · year {c.yearsOnJob} on the job ·{" "}
+              </span>
+              <span className={`stat-glow ${winning ? "text-brass" : "text-muted"}`}>
+                {c.careerWins}-{c.careerLosses}
+                {c.careerTies ? `-${c.careerTies}` : ""}
+              </span>
+              {c.careerTitles ? <span className="text-muted"> · {c.careerTitles} titles</span> : null}
             </p>
             <CoachChips coach={c} />
           </div>

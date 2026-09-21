@@ -16,14 +16,14 @@ import {
   type TradePiece,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
-import { Btn, Logo } from "./chrome";
+import { Btn, gradeTone, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
 import { KitChips } from "./KitChips";
 
 function Grade({ p }: { p: Player }) {
   const o = visibleOvr(p);
   return (
-    <span className="tabular">
+    <span className={`stat-glow tabular ${gradeTone(o)}`}>
       {p.revealed ? `${o}` : `sc ${o}`}
       {!p.revealed && <span className="ml-1 text-[10px] tracking-widest text-muted">HIDDEN</span>}
     </span>
@@ -137,10 +137,11 @@ export function MarketDesk() {
               </tr>
             </thead>
             <tbody>
-              {fa.map((p) => (
-                <tr key={p.id} className="border-t border-line">
+              {fa.map((p, i) => (
+                <tr key={p.id} className={`border-t border-line ${i === 0 ? "lead-row" : ""}`}>
                   <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                     <PlayerLink player={p} />
+                    {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">TOP FA</span> : null}
                     <span className="mt-0.5 block">
                       <KitChips player={p} compact />
                     </span>
