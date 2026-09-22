@@ -116,6 +116,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     waiverOrder: [],
     waivers: [],
     faOpened: false,
+    teamGameRecords: {},
   };
 }
 
@@ -188,6 +189,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     lastPow: r.lastPow ?? {},
     salaryCap: r.salaryCap ?? null,
     carousel: r.carousel ?? [],
+    teamGameRecords: r.teamGameRecords ?? {},
     primetime: r.primetime,
     userTeamId,
     startingYear,

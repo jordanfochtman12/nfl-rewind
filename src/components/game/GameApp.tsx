@@ -20,6 +20,7 @@ import {
   END_YEAR,
   formatBytes,
   formatMoney,
+  gameRecordBook,
   gamesForTeam,
   gamesInWeek,
   gradeDynasty,
@@ -1106,16 +1107,24 @@ function Stats() {
   );
 }
 
-function RecordBook() {
+const RECORD_SCOPES = ["game", "season", "career"] as const;
+type RecordScope = (typeof RECORD_SCOPES)[number];
+
+function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }) {
   const save = useGameStore((s) => s.save)!;
-  const [scope, setScope] = useState<"career" | "season">("career");
-  const cats = scope === "career" ? careerRecordBook(save, 3) : seasonRecordBook(save, 3);
+  const [scope, setScope] = useState<RecordScope>("career");
+  const cats =
+    scope === "career"
+      ? careerRecordBook(save, teamId ? 1 : 3, teamId)
+      : scope === "season"
+        ? seasonRecordBook(save, teamId ? 1 : 3, teamId)
+        : gameRecordBook(save, teamId);
   return (
     <section>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm tracking-[0.2em] text-muted">Record book</h3>
+        <h3 className="text-sm tracking-[0.2em] text-muted">{title}</h3>
         <div className="flex gap-2">
-          {(["career", "season"] as const).map((s) => (
+          {RECORD_SCOPES.map((s) => (
             <button
               key={s}
               type="button"
@@ -1124,7 +1133,7 @@ function RecordBook() {
                 scope === s ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
               }`}
             >
-              {s === "career" ? "ALL-TIME CAREER" : "ALL-TIME SEASON"}
+              {s === "career" ? "ALL-TIME CAREER" : s === "season" ? "ALL-TIME SEASON" : "SINGLE GAME"}
             </button>
           ))}
         </div>
@@ -1144,7 +1153,7 @@ function RecordBook() {
                       r.name
                     )}{" "}
                     <span className="text-muted">
-                      {r.pos} · {r.year || "—"}
+                      {teamId ? r.pos : `${r.pos} · ${r.team}`} · {r.year || "—"}
                     </span>
                   </span>
                   <span className={`stat-glow shrink-0 tabular ${i === 0 ? "text-brass" : "text-fg"}`}>{r.value}</span>
@@ -1174,7 +1183,8 @@ function History() {
   return (
     <div className="space-y-8">
       <FranchiseBook />
-      <RecordBook />
+      <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />
+      <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{save.year} League leaders</h3>

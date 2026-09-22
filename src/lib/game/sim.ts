@@ -45,6 +45,7 @@ import { coachKitBoost } from "./coachKit.ts";
 import { maybeReveal } from "./scout.ts";
 import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueInfo, type Wx } from "./venues.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
+import { checkGameRecords } from "./records.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -1841,6 +1842,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     game.rivalry ? "divisional blood" : null,
   ].filter(Boolean);
   game.filmNote = filmBits.join(" · ") || undefined;
+  checkGameRecords(save, game);
 
   const at = save.teams[awayId];
   if (!ht || !at) return;

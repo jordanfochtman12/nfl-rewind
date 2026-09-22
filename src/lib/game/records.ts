@@ -1,4 +1,4 @@
-import type { DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
+import type { BoxPlayer, DynastySave, GameRecordEntry, GameResult, Player, Pos, SeasonStats, TeamId } from "./types.ts";
 import { playerName } from "./players.ts";
 import { displayName } from "./teams.ts";
 import { careerTotals } from "./leaders.ts";
@@ -42,12 +42,13 @@ function teamLabel(save: DynastySave, p: Player): string {
   return p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof" ? "—" : displayName(save.year, p.teamId as TeamId);
 }
 
-/** Top single-season performances of all time, across every year simulated so far. */
-export function seasonRecordBook(save: DynastySave, topN = 5): RecordCategory[] {
+/** Top single-season performances of all time, across every year simulated so far. Pass teamId to scope to one franchise. */
+export function seasonRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): RecordCategory[] {
   return CATS.map((cat) => {
     const rows: RecordRow[] = [];
     for (const p of Object.values(save.players)) {
       for (const [yearStr, s] of Object.entries(p.stats)) {
+        if (teamId && s.teamId !== teamId) continue;
         const v = cat.of(s);
         if (v <= 0) continue;
         rows.push({ playerId: p.id, name: playerName(p), team: teamLabel(save, p), pos: p.pos, value: v, year: Number(yearStr) });
@@ -58,12 +59,24 @@ export function seasonRecordBook(save: DynastySave, topN = 5): RecordCategory[] 
   });
 }
 
-/** Career leaders across everyone who has ever taken a snap in this dynasty. */
-export function careerRecordBook(save: DynastySave, topN = 5): RecordCategory[] {
+/** Sum of one category across only the years a player's team on record matches teamId (dedupes by year like careerTotals). */
+function teamCareerValue(p: Player, teamId: TeamId, cat: Cat): number {
+  const seen = new Set<number>();
+  let n = 0;
+  for (const s of [...Object.values(p.stats), ...(p.career ?? [])]) {
+    if (s.teamId !== teamId || seen.has(s.year)) continue;
+    seen.add(s.year);
+    n += cat.of(s);
+  }
+  return n;
+}
+
+/** Career leaders across everyone who has ever taken a snap in this dynasty. Pass teamId for that franchise's career totals only. */
+export function careerRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): RecordCategory[] {
   const totals = Object.values(save.players).map((p) => {
     const years = [...Object.keys(p.stats).map(Number), ...(p.career ?? []).map((s) => s.year)];
     const lastYear = years.length ? Math.max(...years) : 0;
-    return { p, totals: careerTotals(p), lastYear };
+    return { p, totals: teamId ? undefined : careerTotals(p), lastYear };
   });
   return CATS.map((cat) => {
     const rows = totals
@@ -72,7 +85,7 @@ export function careerRecordBook(save: DynastySave, topN = 5): RecordCategory[] 
         name: playerName(p),
         team: teamLabel(save, p),
         pos: p.pos,
-        value: cat.of(t),
+        value: teamId ? teamCareerValue(p, teamId, cat) : cat.of(t!),
         year: lastYear,
       }))
       .filter((r) => r.value > 0)
@@ -80,6 +93,66 @@ export function careerRecordBook(save: DynastySave, topN = 5): RecordCategory[] 
       .slice(0, topN);
     return { id: cat.id, label: cat.label, rows };
   });
+}
+
+function boxValue(b: BoxPlayer, cat: Cat): number {
+  return cat.of(b as unknown as SeasonStats) || 0;
+}
+
+/** Best single-game performance, all-time. Pass teamId to scope to one franchise's own record; omit for the league-wide mark. */
+export function gameRecordBook(save: DynastySave, teamId?: TeamId): RecordCategory[] {
+  const teamIds = teamId ? [teamId] : (Object.keys(save.teams) as TeamId[]);
+  return CATS.map((cat) => {
+    let best: GameRecordEntry | undefined;
+    let bestTeam: TeamId | undefined;
+    for (const tid of teamIds) {
+      const e = save.teamGameRecords[`${tid}:${cat.id}`];
+      if (e && (!best || e.value > best.value)) {
+        best = e;
+        bestTeam = tid;
+      }
+    }
+    if (!best || !bestTeam) return { id: cat.id, label: cat.label, rows: [] };
+    const p = save.players[best.playerId];
+    return {
+      id: cat.id,
+      label: cat.label,
+      rows: [
+        {
+          playerId: best.playerId,
+          name: p ? playerName(p) : best.playerId,
+          team: displayName(Math.min(best.year, save.year), bestTeam),
+          pos: p?.pos ?? "QB",
+          value: best.value,
+          year: best.year,
+        },
+      ],
+    };
+  });
+}
+
+/** Called right after a game's box scores are finalized (before compaction can strip them). */
+export function checkGameRecords(save: DynastySave, game: GameResult): void {
+  if (game.phase === "proBowl") return;
+  if (!game.boxHome || !game.boxAway) return;
+  const sides: [string, string, BoxPlayer[]][] = [
+    [game.homeId, game.awayId, game.boxHome],
+    [game.awayId, game.homeId, game.boxAway],
+  ];
+  for (const [teamId, oppId, box] of sides) {
+    if (!save.teams[teamId as TeamId]) continue;
+    for (const b of box) {
+      for (const cat of CATS) {
+        const v = boxValue(b, cat);
+        if (v <= 0) continue;
+        const key = `${teamId}:${cat.id}`;
+        const prev = save.teamGameRecords[key];
+        if (!prev || v > prev.value) {
+          save.teamGameRecords[key] = { playerId: b.playerId, value: v, year: save.year, week: save.week, opponent: oppId as TeamId };
+        }
+      }
+    }
+  }
 }
 
 const DECADE_SLOTS: [Pos, number][] = [

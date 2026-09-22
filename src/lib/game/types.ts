@@ -458,6 +458,14 @@ export interface GameResult {
   neutral?: boolean;
 }
 
+export interface GameRecordEntry {
+  playerId: string;
+  value: number;
+  year: number;
+  week: number;
+  opponent: TeamId;
+}
+
 export interface NewsItem {
   id: string;
   year: number;
@@ -683,6 +691,8 @@ export interface DynastySave {
   weekFilm?: boolean;
   camp?: CampReport;
   deadline?: DeadlineSession;
+  /** Best single-game performance per team per stat category. Keyed "teamId:catId" — box scores don't survive compaction, so this is the only record of a game after its season ends. */
+  teamGameRecords: Record<string, GameRecordEntry>;
 }
 
 export interface PrimetimeRecap {

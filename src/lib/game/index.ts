@@ -115,6 +115,7 @@ export { seasonLeaders, careerTotals } from "./leaders.ts";
 export {
   seasonRecordBook,
   careerRecordBook,
+  gameRecordBook,
   allDecadeTeam,
   availableDecades,
   type RecordCategory,
