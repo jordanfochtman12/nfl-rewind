@@ -7,6 +7,7 @@ import { addNews } from "./news.ts";
 import { rand, randInt } from "./rng.ts";
 import { shouldRetire } from "./development.ts";
 import { careerTotals } from "./leaders.ts";
+import { checkSeasonMilestones } from "./records.ts";
 import { touchGrade } from "./grade.ts";
 import { retireCoach, shouldRetireCoach } from "./staff.ts";
 import {
@@ -142,6 +143,7 @@ export function resolveAwards(save: DynastySave): AwardsResult {
       playerIds: [cpoty.id],
     });
   }
+  checkSeasonMilestones(save);
   return awards;
 }
 

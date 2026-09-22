@@ -6,6 +6,7 @@ import {
   activeTeamIds,
   availableCoaches,
   canReturnFromIR,
+  careerRecordBook,
   cutPlayer,
   depthChart,
   deskFire,
@@ -45,7 +46,7 @@ import {
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
-import { proBowlSite, roman, superBowlNumber, seasonLeaders, superBowlSite } from "@/lib/game";
+import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow } from "./PrimetimeShow";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
@@ -1102,6 +1103,59 @@ function Stats() {
   );
 }
 
+function RecordBook() {
+  const save = useGameStore((s) => s.save)!;
+  const [scope, setScope] = useState<"career" | "season">("career");
+  const cats = scope === "career" ? careerRecordBook(save, 3) : seasonRecordBook(save, 3);
+  return (
+    <section>
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-sm tracking-[0.2em] text-muted">Record book</h3>
+        <div className="flex gap-2">
+          {(["career", "season"] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setScope(s)}
+              className={`min-h-9 rounded-md border px-3 text-xs tracking-widest ${
+                scope === s ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              }`}
+            >
+              {s === "career" ? "ALL-TIME CAREER" : "ALL-TIME SEASON"}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {cats.map((cat) => (
+          <article key={cat.id} className="chrome-bevel rounded-lg border border-line bg-surface p-3">
+            <p className="text-xs tracking-widest text-brass">{cat.label.toUpperCase()}</p>
+            <ol className="mt-2 space-y-1.5 text-sm">
+              {cat.rows.map((r, i) => (
+                <li key={`${r.playerId}-${r.year}`} className="flex items-center justify-between gap-2">
+                  <span className="min-w-0 truncate">
+                    <span className="text-subtle">{i + 1}.</span>{" "}
+                    {save.players[r.playerId] ? (
+                      <PlayerLink player={save.players[r.playerId]!} className="inline min-h-0" />
+                    ) : (
+                      r.name
+                    )}{" "}
+                    <span className="text-muted">
+                      {r.pos} · {r.year || "—"}
+                    </span>
+                  </span>
+                  <span className={`stat-glow shrink-0 tabular ${i === 0 ? "text-brass" : "text-fg"}`}>{r.value}</span>
+                </li>
+              ))}
+              {!cat.rows.length && <li className="text-muted">No qualifiers yet.</li>}
+            </ol>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function History() {
   const save = useGameStore((s) => s.save)!;
   const leaders = seasonLeaders(save);
@@ -1117,6 +1171,7 @@ function History() {
   return (
     <div className="space-y-8">
       <FranchiseBook />
+      <RecordBook />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{save.year} League leaders</h3>
         <div className="grid gap-3 sm:grid-cols-2">
