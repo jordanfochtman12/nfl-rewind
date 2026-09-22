@@ -4,7 +4,9 @@ import {
   activateFromIR,
   activeRosterOf,
   activeTeamIds,
+  allDecadeTeam,
   availableCoaches,
+  availableDecades,
   canReturnFromIR,
   careerRecordBook,
   cutPlayer,
@@ -43,6 +45,7 @@ import {
   type Pos,
   type TeamId,
   type Gameplan,
+  type HofMember,
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
@@ -1172,6 +1175,7 @@ function History() {
     <div className="space-y-8">
       <FranchiseBook />
       <RecordBook />
+      <AllDecadeTeams />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{save.year} League leaders</h3>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -1238,32 +1242,120 @@ function History() {
           ))}
         </ul>
       </section>
+      <TeamOfHonor />
       <section>
-        <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Hall of Fame</h3>
+        <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Pro Football Hall of Fame</h3>
         <ul className="space-y-2">
-          {save.history.hof.map((h) => {
-            const player = h.playerId ? save.players[h.playerId] : undefined;
-            const coach = h.coachId ? save.coaches[h.coachId] : undefined;
-            return (
-              <li key={`${h.kind ?? "player"}-${h.playerId ?? h.coachId}-${h.year}`} className="text-sm">
-                {h.year}:{" "}
-                {h.kind === "coach" ? (
-                  <span>
-                    {coach?.name ?? h.coachId} <span className="text-muted">· coach</span>
-                  </span>
-                ) : player ? (
-                  <PlayerLink player={player} className="inline min-h-0" />
-                ) : (
-                  h.playerId
-                )}{" "}
-                — {h.blurb}
-              </li>
-            );
-          })}
+          {save.history.hof
+            .slice()
+            .reverse()
+            .map((h) => (
+              <HofPlaque key={`${h.kind ?? "player"}-${h.playerId ?? h.coachId}-${h.year}`} h={h} />
+            ))}
           {!save.history.hof.length && <p className="text-muted">No class yet. Five-year wait after retirement.</p>}
         </ul>
       </section>
     </div>
+  );
+}
+
+function HofPlaque({ h }: { h: HofMember }) {
+  const save = useGameStore((s) => s.save)!;
+  const player = h.playerId ? save.players[h.playerId] : undefined;
+  const coach = h.coachId ? save.coaches[h.coachId] : undefined;
+  return (
+    <li className="chrome-bevel flex items-start gap-3 rounded-lg border border-brass/40 bg-gradient-to-b from-brass/10 to-transparent p-3">
+      <Logo id={h.teamId} size={32} year={h.year} />
+      <div className="min-w-0">
+        <p className="font-display text-lg leading-tight">
+          {h.kind === "coach" ? (
+            <span>
+              {coach?.name ?? h.coachId} <span className="text-sm text-muted">· head coach</span>
+            </span>
+          ) : player ? (
+            <PlayerLink player={player} className="inline min-h-0 font-display text-lg" />
+          ) : (
+            h.playerId
+          )}
+          <span className="ml-2 text-xs tracking-widest text-brass">CLASS OF {h.year}</span>
+        </p>
+        <p className="mt-0.5 text-sm text-muted">{h.blurb}</p>
+      </div>
+    </li>
+  );
+}
+
+function TeamOfHonor() {
+  const save = useGameStore((s) => s.save)!;
+  const entries = save.history.hof
+    .filter((h) => h.teamId === save.userTeamId)
+    .slice()
+    .reverse();
+  return (
+    <section>
+      <h3 className="mb-2 text-sm tracking-[0.2em] text-brass">
+        {displayName(save.year, save.userTeamId)} · Team of Honor
+      </h3>
+      <p className="mb-2 text-sm text-muted">
+        Every Hall of Famer who wore your colors — the wall the building points to when it needs to remember why it matters.
+      </p>
+      <ul className="space-y-2">
+        {entries.map((h) => (
+          <HofPlaque key={`toh-${h.kind ?? "player"}-${h.playerId ?? h.coachId}-${h.year}`} h={h} />
+        ))}
+        {!entries.length && <p className="text-muted">No plaques on the wall yet. Someone will earn one.</p>}
+      </ul>
+    </section>
+  );
+}
+
+function AllDecadeTeams() {
+  const save = useGameStore((s) => s.save)!;
+  const decades = availableDecades(save);
+  const [decade, setDecade] = useState(decades[decades.length - 1] ?? save.startingYear);
+  const slots = allDecadeTeam(save, decade);
+  return (
+    <section>
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-sm tracking-[0.2em] text-muted">All-decade team</h3>
+        <div className="flex flex-wrap gap-2">
+          {decades.map((d) => (
+            <button
+              key={d}
+              type="button"
+              onClick={() => setDecade(d)}
+              className={`min-h-9 rounded-md border px-3 text-xs tracking-widest ${
+                decade === d ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              }`}
+            >
+              {d}S
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {slots.map((slot) => (
+          <article key={slot.pos} className="chrome-bevel rounded-lg border border-line bg-surface p-3">
+            <p className="text-xs tracking-widest text-brass">{slot.pos}</p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              {slot.players.map((p) => (
+                <li key={p.playerId} className="min-w-0">
+                  {save.players[p.playerId] ? (
+                    <PlayerLink player={save.players[p.playerId]!} className="inline min-h-0" />
+                  ) : (
+                    p.name
+                  )}
+                  <span className="ml-1 block text-xs text-muted">
+                    {p.team} · {p.years} season{p.years === 1 ? "" : "s"}
+                  </span>
+                </li>
+              ))}
+              {!slot.players.length && <li className="text-muted">Nobody yet.</li>}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

@@ -3,6 +3,7 @@ import { playerName } from "./players.ts";
 import { displayName } from "./teams.ts";
 import { careerTotals } from "./leaders.ts";
 import { addNews } from "./news.ts";
+import { lastTeamOf } from "./hof.ts";
 
 export interface RecordRow {
   playerId: string;
@@ -78,6 +79,96 @@ export function careerRecordBook(save: DynastySave, topN = 5): RecordCategory[] 
       .sort((a, b) => b.value - a.value)
       .slice(0, topN);
     return { id: cat.id, label: cat.label, rows };
+  });
+}
+
+const DECADE_SLOTS: [Pos, number][] = [
+  ["QB", 1],
+  ["RB", 2],
+  ["WR", 2],
+  ["TE", 1],
+  ["LT", 1],
+  ["LG", 1],
+  ["C", 1],
+  ["RG", 1],
+  ["RT", 1],
+  ["DE", 2],
+  ["DT", 2],
+  ["OLB", 2],
+  ["MLB", 1],
+  ["CB", 2],
+  ["S", 2],
+  ["K", 1],
+];
+
+function decadeScore(p: Player, years: number[]): number {
+  let n = (p.peakOvr ?? p.ovr) * 0.5;
+  for (const y of years) {
+    const s = p.stats[y];
+    if (!s) continue;
+    n += s.passYds * 0.04 + s.passTd * 4 - s.passInt * 2;
+    n += s.rushYds * 0.1 + s.rushTd * 6;
+    n += s.rec * 0.5 + s.recYds * 0.1 + s.recTd * 6;
+    n += s.sacks * 4 + s.ints * 5 + s.tackles * 0.4;
+  }
+  return n;
+}
+
+// The sim never credits offensive linemen with a per-play box-score line, so `p.stats[year]`
+// is never created for them — fall back to their active-year range (draft to retirement)
+// instead of requiring a stat entry, scored on talent + tenure rather than counting stats.
+const OL_POS = new Set<Pos>(["LT", "LG", "C", "RG", "RT"]);
+
+export interface DecadeTeamSlot {
+  pos: Pos;
+  players: { playerId: string; name: string; team: string; years: number }[];
+}
+
+/** Decade start years (1960, 1970, ...) that have at least one season played so far. */
+export function availableDecades(save: DynastySave): number[] {
+  const out = new Set<number>();
+  for (let y = save.startingYear; y <= save.year; y++) out.add(Math.floor(y / 10) * 10);
+  return [...out].sort((a, b) => a - b);
+}
+
+/** Best XI-ish squad for a decade, scored on aggregate production + peak talent across every year played in it. */
+export function allDecadeTeam(save: DynastySave, decadeStart: number): DecadeTeamSlot[] {
+  const years = Array.from({ length: 10 }, (_, i) => decadeStart + i);
+  return DECADE_SLOTS.map(([pos, n]) => {
+    const pool = Object.values(save.players)
+      .filter((p) => p.pos === pos)
+      .map((p) => {
+        if (OL_POS.has(pos)) {
+          const start = p.draftYear ?? save.startingYear;
+          const end = p.retiredYear != null ? p.retiredYear - 1 : save.year;
+          const activeYears = years.filter((y) => y >= start && y <= end);
+          if (!activeYears.length) return null;
+          const teamId = lastTeamOf(save, p);
+          return {
+            p,
+            score: (p.peakOvr ?? p.ovr) * 0.5 + activeYears.length * 2,
+            years: activeYears.length,
+            team: displayName(Math.min(decadeStart + 9, save.year), teamId),
+          };
+        }
+        const playedYears = years.filter((y) => p.stats[y]);
+        if (!playedYears.length) return null;
+        const lastY = playedYears[playedYears.length - 1]!;
+        const teamId = p.stats[lastY]?.teamId;
+        return {
+          p,
+          score: decadeScore(p, years),
+          years: playedYears.length,
+          team: teamId && teamId !== "two" ? displayName(Math.min(lastY, save.year), teamId) : "—",
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, n);
+    return {
+      pos,
+      players: pool.map((x) => ({ playerId: x.p.id, name: playerName(x.p), team: x.team, years: x.years })),
+    };
   });
 }
 

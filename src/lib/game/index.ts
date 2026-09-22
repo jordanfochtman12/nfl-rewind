@@ -22,6 +22,7 @@ export type {
   TradePiece,
   Coach,
   CoachRole,
+  HofMember,
   OffScheme,
   DefScheme,
   DraftStyle,
@@ -111,7 +112,15 @@ export { playerHofScore, coachHofScore } from "./hof.ts";
 export { formatHt } from "./development.ts";
 export { venueOf, pickWeather, bowlVenue, crowdNoise } from "./venues.ts";
 export { seasonLeaders, careerTotals } from "./leaders.ts";
-export { seasonRecordBook, careerRecordBook, type RecordCategory, type RecordRow } from "./records.ts";
+export {
+  seasonRecordBook,
+  careerRecordBook,
+  allDecadeTeam,
+  availableDecades,
+  type RecordCategory,
+  type RecordRow,
+  type DecadeTeamSlot,
+} from "./records.ts";
 export { lookupCollege } from "./data/colleges.ts";
 export {
   statCols,

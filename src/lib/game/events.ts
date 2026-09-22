@@ -278,11 +278,9 @@ export function resolveHof(save: DynastySave): void {
     const teamId = lastTeamOf(save, p);
     const blurb = playerHofBlurb(save, p);
     save.history.hof.push({ playerId: p.id, year: classYear, teamId, blurb, kind: "player" });
-    if (p.userTied) {
-      const list = save.history.teamOfHonor[save.userTeamId] ?? [];
-      if (!list.includes(p.id)) list.push(p.id);
-      save.history.teamOfHonor[save.userTeamId] = list;
-    }
+    const honorList = save.history.teamOfHonor[teamId] ?? [];
+    if (!honorList.includes(p.id)) honorList.push(p.id);
+    save.history.teamOfHonor[teamId] = honorList;
     addNews(save, {
       kind: "hof",
       headline: `Hall of Fame: ${playerName(p)}`,
@@ -299,6 +297,9 @@ export function resolveHof(save: DynastySave): void {
     const teamId = lastCoachTeam(save, c);
     const blurb = coachHofBlurb(c);
     save.history.hof.push({ coachId: c.id, year: classYear, teamId, blurb, kind: "coach" });
+    const coachHonorList = save.history.teamOfHonor[teamId] ?? [];
+    if (!coachHonorList.includes(c.id)) coachHonorList.push(c.id);
+    save.history.teamOfHonor[teamId] = coachHonorList;
     addNews(save, {
       kind: "hof",
       headline: `Hall of Fame: ${c.name}`,
