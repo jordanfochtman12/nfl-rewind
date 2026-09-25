@@ -51,6 +51,15 @@ export function seasonLeaders(save: DynastySave) {
 }
 
 export function careerTotals(p: Player): SeasonStats {
+  return sumStats(p, [...Object.values(p.stats), ...(p.career ?? [])]);
+}
+
+/** Career postseason totals. */
+export function playoffTotals(p: Player): SeasonStats {
+  return sumStats(p, Object.values(p.playoffStats ?? {}));
+}
+
+function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
   const acc = {
     year: 0,
     teamId: p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof" ? "two" : p.teamId,
@@ -87,10 +96,8 @@ export function careerTotals(p: Player): SeasonStats {
     krTd: 0,
     prTd: 0,
   } as SeasonStats;
-  const years = Object.values(p.stats);
-  const extra = p.career ?? [];
   const seen = new Set<number>();
-  for (const s of [...years, ...extra]) {
+  for (const s of lines) {
     if (seen.has(s.year)) continue;
     seen.add(s.year);
     acc.gp += s.gp;

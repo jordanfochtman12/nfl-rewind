@@ -252,6 +252,20 @@ export interface Player {
   arc?: { dy: number; to: number; st: number; g: number; pb: number; ap: number; age: number };
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
+  /** Postseason lines (playoffs + Super Bowl), kept apart from the regular-season record. */
+  playoffStats?: Record<number, SeasonStats>;
+  /** Pro Bowls, All-Pros, awards and rings, by year. */
+  honors?: PlayerHonors;
+}
+
+export type AwardKey = "MVP" | "OPOY" | "DPOY" | "OROY" | "DROY" | "CPOY" | "SBMVP";
+
+export interface PlayerHonors {
+  proBowl: number[];
+  allPro: number[];
+  awards: { year: number; award: AwardKey }[];
+  /** Super Bowl wins. */
+  rings: number[];
 }
 
 export type AttackDial = "run" | "balanced" | "pass";
@@ -714,6 +728,8 @@ export interface DynastySave {
   owner?: OwnerState;
   /** 2 = cap-era contracts priced off the cap (see salaryFor). */
   salaryModel?: number;
+  /** Set once player honors have been rebuilt from the award history (older saves). */
+  honorsBackfilled?: boolean;
 }
 
 export type TicketTier = "value" | "standard" | "premium" | "gouge";

@@ -8,6 +8,7 @@ import type {
   Player,
   Pos,
   TeamId,
+  SeasonStats,
 } from "./types.ts";
 import {
   clockStopFirstDown,
@@ -40,7 +41,7 @@ import {
 } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { activeTeamIds, conferenceOf, divisionKey, originalLeague } from "./teams.ts";
-import { playerName, rosterOf, starters, yearStats } from "./players.ts";
+import { emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { maybeReveal } from "./scout.ts";
@@ -247,12 +248,18 @@ function dist(save: DynastySave, weights: number[]): number {
   return weights.length - 1;
 }
 
-function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number): void {
+function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number, postseason = false): void {
   const era = eraProfile(year);
   for (const b of box) {
     const p = save.players[b.playerId];
     if (!p) continue;
-    const s = yearStats(p, year, teamId);
+    let s: SeasonStats;
+    if (postseason) {
+      p.playoffStats = p.playoffStats ?? {};
+      s = p.playoffStats[year] ?? (p.playoffStats[year] = emptyStats(year, teamId));
+    } else {
+      s = yearStats(p, year, teamId);
+    }
     s.gp += 1;
     maybeReveal(p, 1);
     p.snaps = (p.snaps ?? 0) + 1;
@@ -287,6 +294,7 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.fr += b.fr ?? 0;
     s.krTd += b.krTd ?? 0;
     s.prTd += b.prTd ?? 0;
+    if (postseason) continue;
     if (p.pos === "TE") s.rec = Math.min(s.rec, era.teRecCap);
     else s.rec = Math.min(s.rec, era.recCap);
     s.rushTd = Math.min(s.rushTd, era.rushTdCap);
@@ -1844,11 +1852,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
   padTackles(homeBox, homeU);
   padTackles(awayBox, awayU);
 
-  // Season and career lines are regular season only, like the real record book. Playoff,
-  // Super Bowl and Pro Bowl production lives in that game's box score.
+  // Season and career lines are regular season only, like the real record book. Playoff and
+  // Super Bowl production goes on a separate postseason line; the Pro Bowl counts for neither.
   if (game.phase === "regular") {
     applyBox(save, homeId, homeBox, year);
     applyBox(save, awayId, awayBox, year);
+  } else if (game.phase === "playoffs" || game.phase === "superBowl") {
+    applyBox(save, homeId, homeBox, year, true);
+    applyBox(save, awayId, awayBox, year, true);
   }
   const mvpSort = (b: BoxPlayer) =>
     (b.passYds ?? 0) +

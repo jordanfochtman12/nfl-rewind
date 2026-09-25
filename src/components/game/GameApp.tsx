@@ -22,6 +22,8 @@ import {
   formatMoney,
   gameRecordBook,
   gamesForTeam,
+  playoffTotals,
+  type SeasonStats,
   gameDateLabel,
   realResultFor,
   gamesInWeek,
@@ -182,6 +184,14 @@ function TeamSelect() {
       </div>
       <Group title="National Football League" ids={nfl} />
       <Group title="American Football League" ids={afl} />
+      <p className="text-xs text-subtle">
+        Club marks are original designs in each club&apos;s colors, not official NFL logos. Mascot icons by Lorc,
+        Delapouite and contributors at{" "}
+        <a className="underline" href="https://game-icons.net" target="_blank" rel="noreferrer">
+          game-icons.net
+        </a>
+        , licensed CC BY 3.0.
+      </p>
       </div>
     </main>
   );
@@ -942,7 +952,15 @@ function Stats() {
   const save = useGameStore((s) => s.save)!;
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
+  const [scope, setScope] = useState<"regular" | "playoffs" | "poCareer">("regular");
   const teams = activeTeamIds(save.year);
+  // Most recent postseason on the books (this January's, or last season's during the offseason).
+  const poYear = Object.values(save.players).reduce(
+    (m, p) => Math.max(m, ...Object.keys(p.playoffStats ?? {}).map(Number).filter((y) => y <= save.year)),
+    0,
+  );
+  const lineOf = (p: Player): SeasonStats | undefined =>
+    scope === "regular" ? p.stats[save.year] : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
 
   const inPos = (p: Player) => {
     if (posFilter === "ALL") return true;
@@ -955,14 +973,14 @@ function Stats() {
 
   const allRows = Object.values(save.players)
     .filter((p) => {
-      const s = p.stats[save.year];
+      const s = lineOf(p);
       if (!hasSeasonWork(s)) return false;
       if (!inPos(p)) return false;
       if (teamFilter === "mine") return p.teamId === save.userTeamId;
       if (teamFilter !== "ALL") return p.teamId === teamFilter;
       return true;
     })
-    .map((p) => ({ p, s: p.stats[save.year]! }));
+    .map((p) => ({ p, s: lineOf(p)! }));
 
   const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>) => {
     const score = (s: (typeof rows)[number]["s"]) =>
@@ -1025,6 +1043,31 @@ function Stats() {
 
   return (
     <div className="space-y-6">
+      <div role="tablist" aria-label="Stat scope" className="flex flex-wrap gap-2">
+        {(
+          [
+            ["regular", `${save.year} regular season`],
+            ["playoffs", poYear ? `${poYear} playoffs` : "Playoffs"],
+            ["poCareer", "Playoff careers"],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            aria-selected={scope === k}
+            onClick={() => setScope(k)}
+            className={`min-h-11 rounded-full border px-4 text-xs tracking-widest ${
+              scope === k ? "border-club bg-club/20 text-fg" : "border-line bg-surface text-muted"
+            }`}
+          >
+            {label.toUpperCase()}
+          </button>
+        ))}
+      </div>
+      {scope !== "regular" && !allRows.length && (
+        <p className="text-sm text-muted">No postseason football on the books yet. The lines fill in January.</p>
+      )}
       <div className="flex flex-wrap gap-2">
         {filters.map((pos) => (
           <button

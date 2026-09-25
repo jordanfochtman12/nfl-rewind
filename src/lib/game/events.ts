@@ -1,4 +1,5 @@
 import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts";
+import { recordAward, recordAwards, recordProBowl, recordRings } from "./honors.ts";
 import { activeTeamIds, conferenceOf, displayName, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { generatePlayer, playerName, rosterOf } from "./players.ts";
@@ -124,6 +125,7 @@ export function resolveAwards(save: DynastySave): AwardsResult {
   };
   save.awards = awards;
   save.history.awards.push(awards);
+  recordAwards(save, awards);
   const mvp = awards.mvp ? save.players[awards.mvp] : undefined;
   if (mvp) {
     addNews(save, {
@@ -172,6 +174,7 @@ export function resolveProBowl(save: DynastySave): void {
   const aScore = 14 + randInt(save, 0, 21);
   const bScore = 14 + randInt(save, 0, 21);
   const mvp = (aScore >= bScore ? a : b)[0];
+  for (const p of [...a, ...b]) recordProBowl(p, year);
   save.proBowl = {
     id: `${year}-pb`,
     year,
@@ -338,6 +341,8 @@ export function resolveSuperBowl(save: DynastySave): void {
     league: save.year < 1970 ? "Super Bowl" : "NFL",
     teamId: winner,
   });
+  recordRings(save, save.year, winner);
+  if (mvp) recordAward(mvp, save.year, "SBMVP");
   const credit = (id: TeamId, won: boolean) => {
     const hc = save.teams[id]?.coachId ? save.coaches[save.teams[id]!.coachId!] : undefined;
     if (!hc) return;

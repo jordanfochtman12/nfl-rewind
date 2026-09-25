@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   ARCH_LABEL,
   careerHeadlines,
@@ -25,6 +25,8 @@ import {
   type StatCol,
   type StatFamily,
   type TeamId,
+  honorLines,
+  playoffTotals,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -160,6 +162,8 @@ export function PlayerProfile() {
   const profileId = useGameStore((s) => s.profileId);
   const closeProfile = useGameStore((s) => s.closeProfile);
   const p = save && profileId ? save.players[profileId] : undefined;
+  const [view, setView] = useState<"regular" | "playoffs">("regular");
+  useEffect(() => setView("regular"), [profileId]);
 
   useEffect(() => {
     if (!profileId) return;
@@ -189,6 +193,11 @@ export function PlayerProfile() {
           : "Free agent"
       : displayName(save.year, p.teamId);
   const headlines = careerHeadlines(p);
+  const honors = honorLines(p);
+  const poLog = Object.values(p.playoffStats ?? {})
+    .filter(hasSeasonWork)
+    .sort((a, b) => a.year - b.year);
+  const poCareer = playoffTotals(p);
   const yearFamilies = familiesOf(p.pos, yearRow);
   const careerFamilies = familiesOf(p.pos, career);
   const logFamilies = familiesAcross(p.pos, log);
@@ -272,38 +281,99 @@ export function PlayerProfile() {
             </div>
           </section>
 
-          <section className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {headlines.map((h) => (
-              <div key={h.label} className="rounded-lg border border-line bg-surface px-3 py-3">
-                <p className="text-xs tracking-[0.2em] text-muted">{h.label}</p>
-                <p className="mt-1 font-display text-2xl tabular leading-none">{h.value}</p>
-              </div>
+          {honors.length > 0 && (
+            <section className="rounded-lg border border-brass/40 bg-surface p-4">
+              <p className="text-xs tracking-[0.25em] text-brass">Honors</p>
+              <ul className="mt-2 space-y-1.5 text-sm">
+                {honors.map((h) => (
+                  <li key={h.label} className="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <span className="font-medium">{h.label}</span>
+                    <span className="tabular text-xs text-muted">{h.years.join(", ")}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <div role="tablist" aria-label="Stat view" className="flex gap-2">
+            {(
+              [
+                ["regular", "Regular season"],
+                ["playoffs", `Playoffs${poLog.length ? ` · ${poLog.length}` : ""}`],
+              ] as const
+            ).map(([k, label]) => (
+              <button
+                key={k}
+                type="button"
+                role="tab"
+                aria-selected={view === k}
+                onClick={() => setView(k)}
+                className={`min-h-9 rounded-full border px-4 text-xs tracking-[0.15em] ${
+                  view === k ? "border-brass bg-brass/15 text-brass" : "border-line text-muted hover:text-fg"
+                }`}
+              >
+                {label.toUpperCase()}
+              </button>
             ))}
-          </section>
+          </div>
 
-          <FamilyBlock
-            title={`${save.year} season`}
-            pos={p.pos}
-            families={yearFamilies}
-            rows={hasSeasonWork(yearRow) ? [{ label: String(save.year), s: yearRow! }] : []}
-            empty="Has not taken a snap this season."
-          />
+          {view === "regular" ? (
+            <>
+              <section className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {headlines.map((h) => (
+                  <div key={h.label} className="rounded-lg border border-line bg-surface px-3 py-3">
+                    <p className="text-xs tracking-[0.2em] text-muted">{h.label}</p>
+                    <p className="mt-1 font-display text-2xl tabular leading-none">{h.value}</p>
+                  </div>
+                ))}
+              </section>
 
-          <FamilyBlock
-            title="Career"
-            pos={p.pos}
-            families={careerFamilies}
-            rows={hasSeasonWork(career) ? [{ label: `${log[0]?.year ?? "—"}–${log[log.length - 1]?.year ?? "—"}`, s: career }] : []}
-            empty="No professional stats on the card yet."
-          />
+              <FamilyBlock
+                title={`${save.year} season`}
+                pos={p.pos}
+                families={yearFamilies}
+                rows={hasSeasonWork(yearRow) ? [{ label: String(save.year), s: yearRow! }] : []}
+                empty="Has not taken a snap this season."
+              />
 
-          <FamilyBlock
-            title="Season log"
-            pos={p.pos}
-            families={logFamilies}
-            rows={log.map((s) => ({ label: seasonLabel(s), s }))}
-            empty="The log fills after Sundays."
-          />
+              <FamilyBlock
+                title="Career"
+                pos={p.pos}
+                families={careerFamilies}
+                rows={hasSeasonWork(career) ? [{ label: `${log[0]?.year ?? "—"}–${log[log.length - 1]?.year ?? "—"}`, s: career }] : []}
+                empty="No professional stats on the card yet."
+              />
+
+              <FamilyBlock
+                title="Season log"
+                pos={p.pos}
+                families={logFamilies}
+                rows={log.map((s) => ({ label: seasonLabel(s), s }))}
+                empty="The log fills after Sundays."
+              />
+            </>
+          ) : (
+            <>
+              <FamilyBlock
+                title={`Career playoffs · ${poLog.length} postseason${poLog.length === 1 ? "" : "s"}`}
+                pos={p.pos}
+                families={familiesOf(p.pos, poCareer)}
+                rows={
+                  hasSeasonWork(poCareer)
+                    ? [{ label: "Career", s: poCareer }]
+                    : []
+                }
+                empty="Has not played a postseason game."
+              />
+              <FamilyBlock
+                title="Playoff log"
+                pos={p.pos}
+                families={familiesAcross(p.pos, poLog)}
+                rows={poLog.map((s) => ({ label: seasonLabel(s), s }))}
+                empty="January is still ahead of him."
+              />
+            </>
+          )}
 
           <section className="rounded-lg border border-brass/30 bg-surface p-4">
             <p className="mb-3 text-xs tracking-[0.25em] text-brass">

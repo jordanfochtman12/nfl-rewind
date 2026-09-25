@@ -14,6 +14,7 @@ import { applyScout } from "./scout.ts";
 import { SKILL_POSITIONS } from "./types.ts";
 import { fillCoachFields } from "./staff.ts";
 import { newOwnerState } from "./owner.ts";
+import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
@@ -122,6 +123,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     teamGameRecords: {},
     bestSeasonMarks: {},
     owner: newOwnerState(),
+    honorsBackfilled: true,
   };
 }
 
@@ -194,6 +196,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     lastPow: r.lastPow ?? {},
     salaryCap: r.salaryCap ?? null,
     salaryModel: r.salaryModel,
+    honorsBackfilled: r.honorsBackfilled,
     carousel: r.carousel ?? [],
     teamGameRecords: r.teamGameRecords ?? {},
     bestSeasonMarks: r.bestSeasonMarks ?? {},
@@ -278,6 +281,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     r.kind = r.kind ?? (r.coachId ? "coach" : "player");
   }
   setHomeOverride(out.owner?.home);
+  backfillHonors(out);
   return out;
 }
 

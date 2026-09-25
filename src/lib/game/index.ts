@@ -111,7 +111,8 @@ export { playerHofScore, coachHofScore } from "./hof.ts";
 
 export { formatHt } from "./development.ts";
 export { venueOf, pickWeather, bowlVenue, crowdNoise } from "./venues.ts";
-export { seasonLeaders, careerTotals } from "./leaders.ts";
+export { seasonLeaders, careerTotals, playoffTotals } from "./leaders.ts";
+export { honorLines, AWARD_LABEL } from "./honors.ts";
 export {
   seasonRecordBook,
   careerRecordBook,

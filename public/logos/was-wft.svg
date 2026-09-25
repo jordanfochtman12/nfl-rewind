@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Washington Football Team">
-<rect width="64" height="64" rx="10" fill="#5a1414"/>
-<circle cx="32" cy="32" r="22" fill="none" stroke="#ffb612" stroke-width="3"/>
-<text x="32" y="38" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="16" font-weight="800" fill="#ffb612">W</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Washington Football Team">
+<defs>
+<radialGradient id="f" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#743a3a"/><stop offset="1" stop-color="#3b0d0d"/></radialGradient>
+<filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000" flood-opacity="0.45"/></filter>
+</defs>
+<rect width="512" height="512" rx="84" fill="url(#f)"/>
+<rect x="18" y="18" width="476" height="476" rx="68" fill="none" stroke="#ffb612" stroke-width="12"/>
+
+<g filter="url(#s)"><g fill="#ffb612"><path transform="translate(126.7 392.0)" d="M106.0 0L30.6 0L8.0-260L49.9-260L57.5-147.4L63.1-36.9L77.2-36.9L78.8-147.4L98.3-258.4L160.1-258.4L179.6-147.4L181.2-36.9L195.3-36.9L200.8-147.4L208.5-260L250.6-260L227.8 0L152.3 0L141.4-76.4L136.2-222.8L122.4-222.8L117-76.4L106.0 0Z"/></g></g>
+<path d="M84 18 H428 A68 68 0 0 1 494 84 V150 C360 118 152 118 18 150 V84 A68 68 0 0 1 84 18Z" fill="#fff" opacity="0.06"/>
 </svg>
