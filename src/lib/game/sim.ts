@@ -314,7 +314,7 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
 function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number, redZone: boolean): Player | undefined {
   const w = eraTargetWeights(year);
   const slots: { p: Player | undefined; wt: number }[] = [
-    { p: off.wr[0], wt: w.wr1 * (deep ? 1.2 : 1) * (redZone ? 0.9 : 1) },
+    { p: off.wr[0], wt: w.wr1 * (deep ? 1.1 : 1) * (redZone ? 0.9 : 1) },
     { p: off.wr[1], wt: w.wr2 },
     { p: off.wr[2], wt: w.wr3 * (deep ? 0.65 : 1.15) },
     { p: off.te, wt: w.te * (deep ? 0.55 : 1.15) * (redZone ? 1.35 : 1) },
@@ -327,7 +327,12 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
       save,
       pool.map((s) => {
         const yac = deep ? s.p.ratings.speed * 0.7 + s.p.ratings.cit * 0.5 : s.p.ratings.rrt * 0.6 + s.p.ratings.catch * 0.5;
-        return s.wt * (s.p.ratings.catch + yac) * kitShare(s.p, "recShare");
+        // Talent and target-hog traits tilt the split, but gently: the raw product of ratings
+        // and stacked recShare traits sent ~47% of a team's targets to its WR1 (2,800-yard
+        // seasons). Real top targets draw 25-30%, a true alpha a bit more.
+        const skill = Math.pow((s.p.ratings.catch + yac) / 150, 0.3);
+        const kit = 1 + Math.min(0.3, kitShare(s.p, "recShare") - 1) * 0.5;
+        return s.wt * skill * kit;
       }),
     )
   ]!.p;
@@ -581,6 +586,27 @@ function rbAnchor(save: DynastySave): number {
   // Pull toward the old fixed anchor so a whole league of great backs still runs a bit better.
   const v = vals.length ? 0.75 * (vals.reduce((a, b) => a + b, 0) / vals.length) + 0.25 * 130 : 130;
   rbAnchorCache.set(save, { year: save.year, v });
+  return v;
+}
+
+/**
+ * League-average passing accuracy (starting QB accuracy + his top target's hands and routes).
+ * A passer is judged against his league, like runners, so an era's completion rate comes from
+ * its era target and the gap between an elite QB and a backup reads like real life (~15
+ * points of completion %, not 35).
+ */
+const passAnchorCache = new WeakMap<DynastySave, { year: number; v: number }>();
+function passAnchor(save: DynastySave): number {
+  const hit = passAnchorCache.get(save);
+  if (hit && hit.year === save.year) return hit.v;
+  const vals: number[] = [];
+  for (const id of activeTeamIds(save.year)) {
+    const qb = starters(save, id, "QB", 1)[0];
+    const wr = starters(save, id, "WR", 1)[0];
+    if (qb) vals.push(qb.ratings.throwAcc + (wr ? (wr.ratings.catch + wr.ratings.rrt) / 2 : 50));
+  }
+  const v = vals.length ? 0.75 * (vals.reduce((a, b) => a + b, 0) / vals.length) + 0.25 * 140 : 140;
+  passAnchorCache.set(save, { year: save.year, v });
   return v;
 }
 
@@ -1535,9 +1561,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       }
       let cmpP =
         era.cmpPct +
-        (acc - 140) / 280 +
+        (acc - passAnchor(save)) / 400 +
         off.kit.cmp +
-        edge / 280 -
+        edge / 380 -
         (call === "deep" ? 0.16 : call === "med" ? 0.05 : call === "pa" ? 0.03 : 0) -
         (hurried ? 0.08 : 0) -
         (prevent ? -0.04 : 0);
@@ -1553,7 +1579,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           (rec.ratings.speed + rec.ratings.rrt) / 2 - (def.db[0].ratings.cov + def.db[0].ratings.speed) / 2;
         cmpP += mismatch / 420;
       }
-      cmpP = clamp(cmpP, 0.32, year <= 1969 ? 0.62 : 0.76);
+      cmpP = clamp(cmpP, 0.3, year <= 1969 ? 0.64 : year < 2000 ? 0.78 : 0.82);
       let intP =
         era.intRate *
           (call === "deep" ? 1.85 : call === "med" ? 1.2 : call === "pa" ? 0.95 : call === "screen" ? 0.5 : 0.95) +
@@ -1637,7 +1663,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
               ? 6
               : 7;
       const hi = call === "deep" || call === "pa" ? Math.round(48 * (0.75 + 0.25 * big)) : 22;
-      let yds = sampleYds(save, mu + edge / 25, call === "deep" ? 7 : 4, call === "deep" ? 11 : 2, hi);
+      let yds = sampleYds(save, mu + edge / 34, call === "deep" ? 7 : 4, call === "deep" ? 11 : 2, hi);
       if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) yds += randInt(save, 8, Math.round(28 * big + 6));
       if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
       if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
@@ -1818,8 +1844,12 @@ export function simGame(save: DynastySave, game: GameResult): void {
   padTackles(homeBox, homeU);
   padTackles(awayBox, awayU);
 
-  applyBox(save, homeId, homeBox, year);
-  applyBox(save, awayId, awayBox, year);
+  // Season and career lines are regular season only, like the real record book. Playoff,
+  // Super Bowl and Pro Bowl production lives in that game's box score.
+  if (game.phase === "regular") {
+    applyBox(save, homeId, homeBox, year);
+    applyBox(save, awayId, awayBox, year);
+  }
   const mvpSort = (b: BoxPlayer) =>
     (b.passYds ?? 0) +
     (b.rushYds ?? 0) * 1.1 +

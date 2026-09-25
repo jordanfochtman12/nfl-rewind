@@ -24,7 +24,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1969) {
     return {
       name: "pre-merger",
-      cmpPct: 0.505,
+      cmpPct: 0.58,
       passAtt: 28,
       ypa: 6.7,
       intRate: 0.055,
@@ -44,7 +44,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.56,
+      cmpPct: 0.636,
       passAtt: 29.5,
       ypa: 6.6,
       intRate: 0.05,
@@ -64,7 +64,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1989) {
     return {
       name: "pass-boom",
-      cmpPct: 0.56,
+      cmpPct: 0.64,
       passAtt: 33,
       ypa: 6.9,
       intRate: 0.042,
@@ -84,7 +84,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1999) {
     return {
       name: "nineties",
-      cmpPct: 0.58,
+      cmpPct: 0.648,
       passAtt: 35,
       ypa: 6.9,
       intRate: 0.034,
@@ -104,7 +104,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 2009) {
     return {
       name: "aughts",
-      cmpPct: 0.62,
+      cmpPct: 0.693,
       passAtt: 35,
       ypa: 7.0,
       intRate: 0.03,
@@ -124,7 +124,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 2019) {
     return {
       name: "spread",
-      cmpPct: 0.63,
+      cmpPct: 0.692,
       passAtt: 37,
       ypa: 7.2,
       intRate: 0.025,
@@ -143,7 +143,7 @@ export function eraProfile(year: number): EraProfile {
   }
   return {
     name: "modern",
-    cmpPct: 0.65,
+    cmpPct: 0.709,
     passAtt: 35,
     ypa: 7.2,
     intRate: 0.023,
@@ -258,13 +258,13 @@ export function eraBigPlay(year: number): number {
 }
 
 export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3: number; te: number; rb: number } {
-  if (year <= 1969) return { wr1: 0.34, wr2: 0.28, wr3: 0.06, te: 0.14, rb: 0.18 };
-  if (year <= 1977) return { wr1: 0.32, wr2: 0.26, wr3: 0.08, te: 0.16, rb: 0.18 };
-  if (year <= 1989) return { wr1: 0.3, wr2: 0.24, wr3: 0.1, te: 0.2, rb: 0.16 };
-  if (year <= 1999) return { wr1: 0.3, wr2: 0.24, wr3: 0.12, te: 0.18, rb: 0.16 };
-  if (year <= 2009) return { wr1: 0.28, wr2: 0.22, wr3: 0.16, te: 0.2, rb: 0.14 };
-  if (year <= 2019) return { wr1: 0.28, wr2: 0.22, wr3: 0.18, te: 0.2, rb: 0.12 };
-  return { wr1: 0.26, wr2: 0.22, wr3: 0.18, te: 0.22, rb: 0.12 };
+  if (year <= 1969) return { wr1: 0.3, wr2: 0.28, wr3: 0.08, te: 0.15, rb: 0.19 };
+  if (year <= 1977) return { wr1: 0.28, wr2: 0.26, wr3: 0.1, te: 0.17, rb: 0.19 };
+  if (year <= 1989) return { wr1: 0.25, wr2: 0.23, wr3: 0.13, te: 0.2, rb: 0.19 };
+  if (year <= 1999) return { wr1: 0.25, wr2: 0.23, wr3: 0.15, te: 0.19, rb: 0.18 };
+  if (year <= 2009) return { wr1: 0.24, wr2: 0.21, wr3: 0.18, te: 0.21, rb: 0.16 };
+  if (year <= 2019) return { wr1: 0.24, wr2: 0.21, wr3: 0.19, te: 0.21, rb: 0.15 };
+  return { wr1: 0.23, wr2: 0.21, wr3: 0.19, te: 0.22, rb: 0.15 };
 }
 
 /** RB1 carry share. Workhorse era through the 90s, committees later. */

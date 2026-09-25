@@ -901,7 +901,15 @@ function Schedule() {
                   {g.site ? <span className="w-full text-[10px] text-subtle">{g.site}</span> : null}
                 </span>
                 <span className="shrink-0 text-right">
-                  <span className="tabular block">{g.played ? `${g.homeScore}–${g.awayScore}` : "—"}</span>
+                  <span className="tabular block">
+                    {g.played
+                      ? (() => {
+                          const us = home ? g.homeScore : g.awayScore;
+                          const them = home ? g.awayScore : g.homeScore;
+                          return `${us > them ? "W" : us < them ? "L" : "T"} ${us}–${them}`;
+                        })()
+                      : "—"}
+                  </span>
                   {realResultFor(g, save.userTeamId) ? (
                     <span className="tabular block text-[10px] text-subtle">real {realResultFor(g, save.userTeamId)}</span>
                   ) : null}
@@ -1159,7 +1167,7 @@ function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {cats.map((cat) => (
-          <article key={cat.id} className="chrome-bevel rounded-lg border border-line bg-surface p-3">
+          <article key={cat.id} className="chrome-bevel min-w-0 rounded-lg border border-line bg-surface p-3">
             <p className="text-xs tracking-widest text-brass">{cat.label.toUpperCase()}</p>
             <ol className="mt-2 space-y-1.5 text-sm">
               {cat.rows.map((r, i) => (
@@ -1175,7 +1183,7 @@ function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }
                       {teamId ? r.pos : `${r.pos} · ${r.team}`} · {r.year || "—"}
                     </span>
                   </span>
-                  <span className={`stat-glow shrink-0 tabular ${i === 0 ? "text-brass" : "text-fg"}`}>{r.value}</span>
+                  <span className={`stat-glow shrink-0 tabular ${i === 0 ? "text-brass" : "text-fg"}`}>{r.value.toLocaleString("en-US")}</span>
                 </li>
               ))}
               {!cat.rows.length && <li className="text-muted">No qualifiers yet.</li>}
