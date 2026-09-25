@@ -12,6 +12,7 @@ import { seedPriorCareer } from "./data/careerPrior.ts";
 import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
 import { applyScout } from "./scout.ts";
+import { calibrateVetPeak, lookupVetArc } from "./careerArc.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -414,6 +415,11 @@ export function seedVeterans(save: DynastySave): void {
       jersey,
     });
     if (p.yearsPro > 0) p.career = seedPriorCareer(p, save.year - 1);
+    const arc = lookupVetArc(v.f, v.l, v.p);
+    if (arc) {
+      p.arc = arc;
+      calibrateVetPeak(p, save.year);
+    }
     addToRoster(save, v.t, p.id);
   }
 }

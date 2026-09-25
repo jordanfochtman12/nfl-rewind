@@ -6,7 +6,7 @@
  * the stretch he actually held it, fades at the end, and retires the year he really did.
  */
 import type { Player, Pos } from "./types.ts";
-import { CAREER_ARCS, type CareerArcRow } from "./data/careerArcs.ts";
+import { CAREER_ARCS, VET_ARCS, type CareerArcRow, type VetArcRow } from "./data/careerArcs.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { clamp } from "./rng.ts";
 
@@ -45,6 +45,68 @@ export function lookupArc(year: number, first: string, last: string): Player["ar
     }
   }
   return undefined;
+}
+
+/** Which game positions an old-era draft-table position code could mean. */
+const RAW_POS_FITS: Record<string, Pos[]> = {
+  QB: ["QB"],
+  B: ["QB", "RB", "FB", "CB", "S"],
+  HB: ["RB", "FB", "CB", "S"],
+  FB: ["FB", "RB", "MLB"],
+  RB: ["RB", "FB"],
+  E: ["WR", "TE", "DE", "OLB"],
+  WR: ["WR", "TE"],
+  FL: ["WR"],
+  TE: ["TE", "WR"],
+  T: ["LT", "RT", "LG", "RG", "DT", "DE"],
+  G: ["LG", "RG", "C", "LT", "RT", "DT", "MLB"],
+  C: ["C", "LG", "RG", "MLB", "OLB"],
+  OT: ["LT", "RT", "LG", "RG"],
+  OG: ["LG", "RG", "C"],
+  DE: ["DE", "OLB", "DT"],
+  DT: ["DT", "DE"],
+  LB: ["MLB", "OLB", "DE"],
+  DB: ["CB", "S"],
+  K: ["K", "P"],
+  P: ["P", "K"],
+};
+
+function fits(raw: string, pos: Pos): boolean {
+  const codes = raw.split(/[^A-Z]+/).filter(Boolean);
+  if (!codes.length) return true;
+  return codes.some((c) => (RAW_POS_FITS[c] ?? []).includes(pos));
+}
+
+/** A 1966 veteran's real arc, matched on name and a loose position check against old draft tables. */
+export function lookupVetArc(first: string, last: string, pos: Pos): Player["arc"] | undefined {
+  let rows: VetArcRow[] = [];
+  for (const k of keysOf(first, last)) {
+    const hit = VET_ARCS[k];
+    if (hit?.length) {
+      rows = hit;
+      break;
+    }
+  }
+  if (!rows.length) return undefined;
+  const fitting = rows.filter((r) => fits(r[7], pos));
+  const pick = (fitting.length ? fitting : rows.length === 1 ? rows : []).sort((a, b) => b[3] - a[3])[0];
+  if (!pick) return undefined;
+  return { dy: pick[0], to: pick[1], st: pick[2], g: pick[3], pb: pick[4], ap: pick[5], age: pick[6] };
+}
+
+/**
+ * A veteran arrives mid-career with a hand-curated 1966 rating. Arc targets are
+ * `peak - offset(season)`, so set his peak so that the curve passes through that 1966
+ * rating - his real past and future then hang off the rating he already has.
+ */
+export function calibrateVetPeak(p: Player, season: number): void {
+  if (!p.arc) return;
+  const idx = season - p.arc.dy;
+  p.potential = p.ovr;
+  p.potential = p.ovr + (p.ovr - arcTarget(p, idx));
+  // Already on the back side of his career: that peak happened before 1966, so it counts
+  // toward his legacy (HOF ballot). A young vet still climbing hasn't reached it yet.
+  if (arcTarget(p, idx + 1) <= arcTarget(p, idx)) p.peakOvr = Math.max(p.peakOvr, p.potential);
 }
 
 /**

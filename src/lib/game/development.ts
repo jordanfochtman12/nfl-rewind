@@ -129,6 +129,9 @@ export function agePlayer(save: DynastySave, p: Player): void {
 }
 
 export function shouldRetire(save: DynastySave, p: Player): boolean {
+  // A real player nobody has signed for two straight seasons is done - he stays in the
+  // league's history as retired instead of sitting in the free-agent pool forever.
+  if (p.historical && p.teamId === "fa" && p.yearsPro >= 1 && !p.stats[save.year] && !p.stats[save.year - 1]) return true;
   const real = arcRetiresNow(p, save.year);
   if (real !== undefined) return real;
   if (p.pos === "K" || p.pos === "P") {
