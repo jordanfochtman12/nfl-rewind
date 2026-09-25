@@ -307,7 +307,7 @@ export function attendanceFor(
 export function bowlVenue(site: string, year: number): VenueInfo {
   const s = site.toLowerCase();
   const indoor =
-    /superdome|metrodome|silverdome|rca dome|georgia dome|nrg|ford field|lucas oil|at&t|sofi|allegiant|mercedes|u\.s\. bank|state farm|caesars|roof/.test(s);
+    /superdome|metrodome|silverdome|rca dome|georgia dome|nrg|ford field|lucas oil|at&t|sofi|allegiant|mercedes|u\.s\. bank|state farm|caesars|roof|rogers centre/.test(s);
   let climate: Climate = "south";
   if (/coliseum|rose bowl|sofi|levis|candlestick|oakland/.test(s)) climate = "pacific";
   else if (/orange bowl|hard rock|miami|joe robbie|sun life|pro player|camping world|orlando|tampa|raymond/.test(s)) climate = "florida";
@@ -315,7 +315,9 @@ export function bowlVenue(site: string, year: number): VenueInfo {
   else if (/pontiac|minneapolis|detroit|ford field/.test(s)) climate = "north";
   else if (/houston|rice|nrg|new orleans|tulane|superdome|atlanta|georgia|mercedes/.test(s)) climate = "south";
   else if (/denver|mile high/.test(s)) climate = "mountain";
-  const altitude = /denver|mile high/.test(s) ? 5280 : 0;
+  if (/wembley|tottenham|twickenham|allianz|bayern|deutsche bank|stade de france|bernabeu|rogers|toronto|firstenergy|acrisure|metlife/.test(s)) climate = "north";
+  if (/azteca|banorte/.test(s)) climate = "mountain";
+  const altitude = /denver|mile high/.test(s) ? 5280 : /azteca|banorte/.test(s) ? 7350 : 0;
   return {
     climate,
     indoor,

@@ -685,11 +685,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const awayId = game.awayId as TeamId;
   const bowl =
     game.phase === "superBowl" ? superBowlSite(year) : game.phase === "proBowl" ? proBowlSite(year) : null;
-  const venue: VenueInfo = bowl ? bowlVenue(bowl.site, year) : venueOf(year, homeId);
+  // Real neutral-site regular-season games (London, Mexico City, Germany...) play at that stadium.
+  const siteGame = !bowl && game.phase === "regular" && !!game.site;
+  const venue: VenueInfo = bowl ? bowlVenue(bowl.site, year) : siteGame ? bowlVenue(game.site!, year) : venueOf(year, homeId);
   const wx: Wx = pickWeather(year, save.week, venue.climate, venue.indoor, () => rand(save));
   const homeU = teamUnits(save, homeId);
   const awayU = teamUnits(save, awayId);
-  const neutral = !!bowl;
+  const neutral = !!bowl || siteGame;
   const playoff = game.phase === "playoffs" || game.phase === "superBowl";
   const homeField = neutral ? 0 : 2.1 + (game.night ? 0.5 : 0) + (venue.altitude >= 4000 ? 0.6 : 0);
   const noise = neutral

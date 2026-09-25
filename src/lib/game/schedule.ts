@@ -1,6 +1,7 @@
 import type { DynastySave, GameResult, TeamId } from "./types.ts";
 import { activeTeamIds, conferenceOf, gamesInSeason } from "./teams.ts";
 import { rand, shuffle } from "./rng.ts";
+import { REAL_SCHEDULES } from "./data/realSchedules.ts";
 
 export const RIVALRIES: [TeamId, TeamId][] = [
   ["gnb", "chi"],
@@ -236,8 +237,59 @@ function assignWeeks(save: DynastySave, matchups: [TeamId, TeamId][], year: numb
   return games;
 }
 
+/**
+ * The schedule the league actually played that season: same opponents, same home sites,
+ * same weeks and TV slots, and what really happened in each game. Weeks with no games (the
+ * 1982 and 1987 strikes) are closed up. Returns undefined when there is no real card for the
+ * year, or it doesn't match the clubs actually in this league that season.
+ */
+export function realSchedule(year: number): GameResult[] | undefined {
+  const raw = REAL_SCHEDULES[year];
+  if (!raw) return undefined;
+  const active = new Set(activeTeamIds(year));
+  const rows = raw.split("|").map((g) => g.split(","));
+  const teams = new Set(rows.flatMap((r) => [r[1], r[2]]));
+  if (teams.size !== active.size || [...teams].some((t) => !active.has(t as TeamId))) return undefined;
+  const weeks = [...new Set(rows.map((r) => Number(r[0])))].sort((a, b) => a - b);
+  const dense = new Map(weeks.map((w, i) => [w, i + 1]));
+  const games: GameResult[] = rows.map((r) => {
+    const [wk, home, away, hs, as, date, slot, site] = r as [string, TeamId, TeamId, string, string, string, string, string];
+    const week = dense.get(Number(wk))!;
+    const md = Number(date);
+    const thanksgiving = slot === "T" && md >= 1122 && md <= 1128;
+    const night = year >= 1970 && (slot === "M" || slot === "N" || (slot === "T" && year >= 2006 && !thanksgiving));
+    const g: GameResult = {
+      id: `${year}-w${week}-${home}-${away}`,
+      year,
+      week,
+      phase: "regular",
+      homeId: home,
+      awayId: away,
+      homeScore: 0,
+      awayScore: 0,
+      played: false,
+      rivalry: isRivalry(home, away),
+      date,
+      slot: slot || undefined,
+    };
+    if (night) g.night = true;
+    if (site) g.site = site;
+    if (Number(hs) >= 0 && Number(as) >= 0) {
+      g.realHome = Number(hs);
+      g.realAway = Number(as);
+    }
+    return g;
+  });
+  return games;
+}
+
 export function rebuildSchedule(save: DynastySave): void {
   const year = save.year;
+  const real = realSchedule(year);
+  if (real) {
+    save.schedule = real;
+    return;
+  }
   const teams = activeTeamIds(year);
   const need = gamesInSeason(year);
   const groups =
@@ -264,4 +316,25 @@ export function maxWeek(save: DynastySave): number {
 
 export function gamesInWeek(save: DynastySave, week: number): GameResult[] {
   return save.schedule.filter((g) => g.week === week);
+}
+
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "Sun Sep 11" for a game on the real calendar (January games belong to the next year). */
+export function gameDateLabel(g: GameResult): string | undefined {
+  if (!g.date) return undefined;
+  const m = Number(g.date.slice(0, 2));
+  const d = Number(g.date.slice(2));
+  const dt = new Date(Date.UTC(m <= 2 ? g.year + 1 : g.year, m - 1, d));
+  return `${DAYS[dt.getUTCDay()]} ${MONTHS[m - 1]} ${d}`;
+}
+
+/** History's result from this club's side, e.g. "W 23-14". */
+export function realResultFor(g: GameResult, teamId: TeamId): string | undefined {
+  if (g.realHome === undefined || g.realAway === undefined) return undefined;
+  const home = g.homeId === teamId;
+  const us = home ? g.realHome : g.realAway;
+  const them = home ? g.realAway : g.realHome;
+  return `${us > them ? "W" : us < them ? "L" : "T"} ${us}-${them}`;
 }

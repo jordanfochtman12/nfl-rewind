@@ -462,6 +462,15 @@ export interface GameResult {
   filmNote?: string;
   /** Super Bowl / Pro Bowl — no home crowd. */
   neutral?: boolean;
+  /** Real regular-season neutral site (London, Mexico City, ...). */
+  site?: string;
+  /** Real calendar date, MMDD. */
+  date?: string;
+  /** Real TV slot: M Monday night, T Thursday, S Saturday, F Friday, N Sunday night. */
+  slot?: string;
+  /** What really happened in this game (history's final), when it's on the real schedule. */
+  realHome?: number;
+  realAway?: number;
 }
 
 export interface GameRecordEntry {

@@ -22,6 +22,8 @@ import {
   formatMoney,
   gameRecordBook,
   gamesForTeam,
+  gameDateLabel,
+  realResultFor,
   gamesInWeek,
   gradeDynasty,
   hasSeasonWork,
@@ -882,13 +884,28 @@ function Schedule() {
                 className="flex min-h-11 w-full items-center justify-between rounded-lg border border-line bg-surface px-3 py-3 text-left"
                 onClick={() => setOpenId(g.played ? g.id : null)}
               >
-                <span className="text-sm text-muted">Wk {g.week}</span>
-                <span className="inline-flex items-center gap-2">
-                  {home ? "vs" : "@"} <Logo id={opp} size={24} /> {displayName(save.year, opp)}
-                  {g.rivalry ? <span className="text-[10px] tracking-widest text-brass">RIVALRY</span> : null}
-                  {g.night ? <span className="text-[10px] tracking-widest text-brass">NIGHT</span> : null}
+                <span className="w-16 shrink-0 text-sm text-muted">
+                  Wk {g.week}
+                  {gameDateLabel(g) ? <span className="block text-[10px] text-subtle">{gameDateLabel(g)}</span> : null}
                 </span>
-                <span className="tabular">{g.played ? `${g.homeScore}–${g.awayScore}` : "—"}</span>
+                <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
+                  {g.site ? "vs" : home ? "vs" : "@"} <Logo id={opp} size={24} /> {displayName(save.year, opp)}
+                  {g.rivalry ? <span className="text-[10px] tracking-widest text-brass">RIVALRY</span> : null}
+                  {g.night ? (
+                    <span className="text-[10px] tracking-widest text-brass">
+                      {g.slot === "M" ? "MONDAY NIGHT" : g.slot === "T" ? "THURSDAY NIGHT" : g.slot === "N" ? "SUNDAY NIGHT" : "NIGHT"}
+                    </span>
+                  ) : g.slot === "T" ? (
+                    <span className="text-[10px] tracking-widest text-brass">THANKSGIVING</span>
+                  ) : null}
+                  {g.site ? <span className="w-full text-[10px] text-subtle">{g.site}</span> : null}
+                </span>
+                <span className="shrink-0 text-right">
+                  <span className="tabular block">{g.played ? `${g.homeScore}–${g.awayScore}` : "—"}</span>
+                  {realResultFor(g, save.userTeamId) ? (
+                    <span className="tabular block text-[10px] text-subtle">real {realResultFor(g, save.userTeamId)}</span>
+                  ) : null}
+                </span>
               </button>
             </li>
           );
