@@ -470,12 +470,15 @@ function callPlay(
       (short && mid && rand(save) < clamp(goP, 0.02, 0.55)) ||
       (togo <= 2 && spot >= 62 && rand(save) < clamp(goP, 0.02, 0.4));
     if (go) {
+      // Fourth-and-goal / short yardage: modern offenses throw it a good share of the time.
+      if ((spot >= 97 || togo <= 1) && rand(save) < (year >= 2000 ? 0.38 : year >= 1985 ? 0.25 : 0.12)) return "short";
       if (spot >= 97 || togo <= 1) return scramble > 8 && rand(save) < 0.35 ? "sneak" : "run";
       return togo >= 8 || spot < 70 ? (spot >= 55 ? "med" : "deep") : "run";
     }
     if (fgDist <= range + 4 && !(desperate && trail >= 8 && clock > 30 && spot < 55)) return "fg";
     return "punt";
   }
+  if (spot >= 99 && togo <= 1 && rand(save) < (year >= 2000 ? 0.35 : year >= 1985 ? 0.2 : 0.08)) return "short";
   if (spot >= 99 && togo <= 1) return rand(save) < 0.55 ? "sneak" : "run";
   if (spot >= 95 && plan.redZone === "power") return rand(save) < 0.72 ? "run" : "short";
   let passW = eraPassW;
