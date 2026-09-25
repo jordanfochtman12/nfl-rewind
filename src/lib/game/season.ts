@@ -275,8 +275,14 @@ function closeRelocation(save: DynastySave): void {
   openDraft(save);
 }
 
-export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave {
-  const s = cloneSave(save);
+/**
+ * The actual step logic, mutating `s` in place and returning the same reference. Split out
+ * of `advance` so a batch runner (simUntil) can clone once at the start of a whole
+ * fast-forward instead of once per step - re-cloning the entire save every week made a long
+ * dynasty's fast-forward cost scale with steps-taken x save-size, and both grow together
+ * the deeper a save runs.
+ */
+function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
   const auto = opts.auto || s.cpuOnly;
   switch (s.phase) {
     case "draft": {
@@ -439,28 +445,40 @@ export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave 
   return s;
 }
 
+export function advance(save: DynastySave, opts: AdvanceOpts = {}): DynastySave {
+  return advanceInPlace(cloneSave(save), opts);
+}
+
 export function simUntil(
   save: DynastySave,
   pred: (s: DynastySave) => boolean,
   maxSteps = 12000,
 ): DynastySave {
-  let s = save;
+  // One clone for the whole batch, not one per step - simUntil owns this copy outright and
+  // mutates it in place across every step, so the caller's `save` is still never touched.
+  const s = cloneSave(save);
   for (let i = 0; i < maxSteps; i++) {
     if (pred(s)) return s;
     if (s.phase === "complete") return s;
-    const next = advance(s, { auto: true });
+    const prevYear = s.year;
+    const prevPhase = s.phase;
+    const prevWeek = s.week;
+    const prevPickIndex = s.draftPickIndex;
+    const prevSbPlayed = s.superBowl?.played;
+    const prevSession = s.draftSession;
+    const prevFaOpened = s.faOpened;
+    advanceInPlace(s, { auto: true });
     if (
-      next.year === s.year &&
-      next.phase === s.phase &&
-      next.week === s.week &&
-      next.draftPickIndex === s.draftPickIndex &&
-      next.superBowl?.played === s.superBowl?.played &&
-      next.draftSession === s.draftSession &&
-      next.faOpened === s.faOpened
+      s.year === prevYear &&
+      s.phase === prevPhase &&
+      s.week === prevWeek &&
+      s.draftPickIndex === prevPickIndex &&
+      s.superBowl?.played === prevSbPlayed &&
+      s.draftSession === prevSession &&
+      s.faOpened === prevFaOpened
     ) {
       throw new Error(`simUntil stalled at ${s.year} ${s.phase} week ${s.week}`);
     }
-    s = next;
   }
   throw new Error(`simUntil exceeded max steps at ${s.year} ${s.phase} week ${s.week}`);
 }

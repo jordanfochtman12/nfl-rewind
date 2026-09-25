@@ -245,34 +245,49 @@ export function allDecadeTeam(save: DynastySave, decadeStart: number): DecadeTea
   });
 }
 
-/** Called once a season, right after awards resolve: announces any single-season record broken this year. */
+/**
+ * Called once a season, right after awards resolve: announces any single-season record
+ * broken this year. Compares against a cached prior-best per category instead of
+ * rescanning every player's whole history every season - that rescan is what made a long
+ * dynasty get slower and slower to simulate the deeper it ran.
+ */
 export function checkSeasonMilestones(save: DynastySave): void {
-  const priorBest = new Map<string, number>();
-  for (const p of Object.values(save.players)) {
-    for (const [yearStr, s] of Object.entries(p.stats)) {
-      if (Number(yearStr) >= save.year) continue;
-      for (const cat of CATS) {
-        const v = cat.of(s);
-        if (v > (priorBest.get(cat.id) ?? 0)) priorBest.set(cat.id, v);
+  // Old saves (or a save that's never run this check) start with an empty cache - backfill
+  // it once from real history so the first year after upgrading doesn't fire bogus records.
+  if (!Object.keys(save.bestSeasonMarks).length && save.year > save.startingYear) {
+    for (const p of Object.values(save.players)) {
+      for (const [yearStr, s] of Object.entries(p.stats)) {
+        if (Number(yearStr) >= save.year) continue;
+        for (const cat of CATS) {
+          const v = cat.of(s);
+          if (v > (save.bestSeasonMarks[cat.id] ?? 0)) save.bestSeasonMarks[cat.id] = v;
+        }
       }
     }
   }
-  for (const p of Object.values(save.players)) {
-    const s = p.stats[save.year];
-    if (!s) continue;
-    for (const cat of CATS) {
+  for (const cat of CATS) {
+    let thisYearBest = 0;
+    let holder: Player | undefined;
+    for (const p of Object.values(save.players)) {
+      const s = p.stats[save.year];
+      if (!s) continue;
       const v = cat.of(s);
-      const prior = priorBest.get(cat.id) ?? 0;
-      if (v > prior && v > 0) {
-        addNews(save, {
-          kind: "award",
-          headline: `${playerName(p)} sets the all-time single-season ${cat.label.toLowerCase()} record`,
-          body: `${v} in ${save.year}${prior > 0 ? `, breaking the old mark of ${prior}.` : "."}`,
-          teamIds: p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? [p.teamId as TeamId] : [],
-          playerIds: [p.id],
-        });
-        priorBest.set(cat.id, v);
+      if (v > thisYearBest) {
+        thisYearBest = v;
+        holder = p;
       }
     }
+    const prior = save.bestSeasonMarks[cat.id] ?? 0;
+    if (thisYearBest > prior && holder) {
+      addNews(save, {
+        kind: "award",
+        headline: `${playerName(holder)} sets the all-time single-season ${cat.label.toLowerCase()} record`,
+        body: `${thisYearBest} in ${save.year}${prior > 0 ? `, breaking the old mark of ${prior}.` : "."}`,
+        teamIds:
+          holder.teamId !== "fa" && holder.teamId !== "retired" && holder.teamId !== "hof" ? [holder.teamId as TeamId] : [],
+        playerIds: [holder.id],
+      });
+    }
+    if (thisYearBest > prior) save.bestSeasonMarks[cat.id] = thisYearBest;
   }
 }

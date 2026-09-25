@@ -693,6 +693,8 @@ export interface DynastySave {
   deadline?: DeadlineSession;
   /** Best single-game performance per team per stat category. Keyed "teamId:catId" — box scores don't survive compaction, so this is the only record of a game after its season ends. */
   teamGameRecords: Record<string, GameRecordEntry>;
+  /** All-time single-season best per stat category, through last year. Lets the yearly milestone check compare against one cached number instead of rescanning every player's whole history every season. */
+  bestSeasonMarks: Record<string, number>;
 }
 
 export interface PrimetimeRecap {

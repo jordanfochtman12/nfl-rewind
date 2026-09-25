@@ -184,14 +184,48 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
  * Real historical players are kept regardless in both cases - someone may look one
  * up by name even if this particular sim never drafted or signed him.
  */
+/**
+ * Anyone already on record in the History tab - HOF, a franchise's single-game mark - is
+ * never a deletion candidate. (A season/career leaderboard re-scan would catch more, but
+ * doing that every single year is exactly the O(players x every past year) cost that made
+ * a long dynasty get slower every season; the peakOvr/retirement-age floor below is the
+ * actual gate keeping this safe without needing that rescan.)
+ */
+function recordProtectedIds(save: DynastySave): Set<string> {
+  const ids = new Set<string>();
+  for (const h of save.history.hof) if (h.playerId) ids.add(h.playerId);
+  for (const key of Object.keys(save.teamGameRecords)) ids.add(save.teamGameRecords[key]!.playerId);
+  return ids;
+}
+
 export function pruneUndraftedProspects(save: DynastySave): void {
   for (const pr of save.draftBoard) {
     if (pr.taken) continue;
     const p = save.players[pr.playerId];
     if (p && !p.historical) delete save.players[pr.playerId];
   }
+  const protectedIds = recordProtectedIds(save);
   for (const [id, p] of Object.entries(save.players)) {
-    if (!p.historical && p.teamId === "fa" && p.age >= 30) delete save.players[id];
+    if (protectedIds.has(id)) continue;
+    // cpuSignNeeds only offers a couple slots a team a year and always takes the best
+    // player on the wire, so a generated FA nobody signed by the next draft realistically
+    // never gets picked up - no age gate needed, this was the dominant source of growth.
+    if (!p.historical && p.teamId === "fa") {
+      delete save.players[id];
+      continue;
+    }
+    // Retired filler with no shot at ever ranking in a leaderboard or HOF ballot (peak
+    // well under the ~64-score HOF floor) - keeps the dynasty from growing thousands of
+    // dead-weight player records a 40+ year save will never look up again.
+    if (
+      !p.historical &&
+      p.teamId === "retired" &&
+      (p.peakOvr ?? p.ovr) < 65 &&
+      p.retiredYear != null &&
+      save.year - p.retiredYear >= 3
+    ) {
+      delete save.players[id];
+    }
   }
 }
 
