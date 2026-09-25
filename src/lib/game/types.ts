@@ -244,6 +244,12 @@ export interface Player {
   injuryName?: string;
   /** Parked off the 53-man count by a desk decision; frees a roster spot while hurt. */
   onIR: boolean;
+  /**
+   * Real career shape for a real draftee: draft year, last NFL season (0 = never played),
+   * seasons as a starter, games, Pro Bowls, first-team All-Pros, age at draft. Drives
+   * development and retirement so his ratings follow the arc he actually had.
+   */
+  arc?: { dy: number; to: number; st: number; g: number; pb: number; ap: number; age: number };
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
 }

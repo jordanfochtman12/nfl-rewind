@@ -3,6 +3,7 @@ import { rand, randInt } from "./rng.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
+import { arcRetiresNow, arcTarget, moveToward } from "./careerArc.ts";
 
 const PEAK: Record<Pos, number> = {
   QB: 30,
@@ -97,6 +98,14 @@ export function agePlayer(save: DynastySave, p: Player): void {
   const team = p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? save.teams[p.teamId] : undefined;
   const hc = team?.coachId ? save.coaches[team.coachId] : undefined;
   const devBump = hc ? coachKitBoost(hc, "dev") + ((hc.development ?? 70) - 70) / 180 : 0;
+  if (p.arc) {
+    // Real draftee: follow the career he actually had, with a little week-to-week noise
+    // and a small nudge from a good developmental staff - never past his real peak.
+    let target = arcTarget(p, save.year - p.arc.dy);
+    if (rand(save) < 0.3) target += randInt(save, -1, 1);
+    if (devBump > 0 && rand(save) < devBump) target += 1;
+    moveToward(p, Math.min(target, pot + 1));
+  } else {
   let delta = 0;
   if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
   else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45 + devBump * 0.5) delta = randInt(save, 1, 2);
@@ -110,6 +119,7 @@ export function agePlayer(save: DynastySave, p: Player): void {
   if (p.ovr + delta > pot && delta > 0 && rand(save) < 0.7) delta = Math.max(0, pot - p.ovr);
 
   if (delta !== 0) applyAgeDelta(p, delta);
+  }
   p.peakOvr = Math.max(p.peakOvr, p.ovr);
   const lead = hc ? ((hc.leadership ?? 70) - 70) / 20 + coachKitBoost(hc, "clutch") * 0.15 : 0;
   p.morale = starter
@@ -119,6 +129,8 @@ export function agePlayer(save: DynastySave, p: Player): void {
 }
 
 export function shouldRetire(save: DynastySave, p: Player): boolean {
+  const real = arcRetiresNow(p, save.year);
+  if (real !== undefined) return real;
   if (p.pos === "K" || p.pos === "P") {
     if (p.age >= 48) return true;
     if (p.age >= 42 && p.ovr < 68 && rand(save) < 0.4) return true;

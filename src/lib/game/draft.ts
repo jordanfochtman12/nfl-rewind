@@ -12,10 +12,14 @@ import { applyScout, visibleOvr } from "./scout.ts";
 import { salaryFor } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
+import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
 
+/** Real NFL draft lengths: 20 rounds through 1966, 17 in 1967-76, 12 in 1977-92, 8 in 1993, 7 since. */
 function roundsFor(year: number): number {
-  if (year <= 1976) return 12;
-  if (year <= 1993) return 8;
+  if (year <= 1966) return 20;
+  if (year <= 1976) return 17;
+  if (year <= 1992) return 12;
+  if (year === 1993) return 8;
   return 7;
 }
 
@@ -163,6 +167,18 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
     forty: s.fy,
     rt: s.rt,
   });
+  const arc = lookupArc(save.year, s.f, s.l);
+  if (arc) {
+    // Seed overall is his real career peak - he arrives short of it and grows into it.
+    p.arc = arc;
+    if (arc.age >= 20 && arc.age <= 30) p.age = arc.age;
+    const floor = honorsFloor(arc);
+    if (p.ovr < floor) moveToward(p, floor);
+    p.potential = p.ovr;
+    moveToward(p, arcTarget(p, 0));
+    p.peakOvr = p.ovr;
+    p.scoutOvr = p.ovr;
+  }
   return p;
 }
 
@@ -242,8 +258,13 @@ export function buildDraftBoard(save: DynastySave): void {
   }
   const board: Prospect[] = [];
   let slot = 1;
+  // Every real draftee gets onto the board, even past the last pick - the leftovers go
+  // undrafted and stay in the league as real (historical) free agents instead of being
+  // thrown away. 1966 is the exception: the NFL board stops at its pick count so the AFL
+  // draft that follows still has real names to take.
+  const capAtPicks = session === "nfl";
   for (const s of named) {
-    if (board.length >= total) break;
+    if (capAtPicks && board.length >= total) break;
     const key = `${s.f}|${s.l}|${s.p}`;
     if (used.has(key)) continue;
     used.add(key);

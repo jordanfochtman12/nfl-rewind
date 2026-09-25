@@ -4,6 +4,7 @@ import {
   currentDraftTeam,
   displayName,
   draftOrder,
+  draftQueue,
   formatHt,
   playerName,
   rosterOf,
@@ -101,6 +102,7 @@ export function DraftNight() {
   const rnd = Math.floor(save.draftPickIndex / teamsN) + 1;
   const pickInRound = (save.draftPickIndex % teamsN) + 1;
   const overall = save.draftPickIndex + 1;
+  const totalPicks = useMemo(() => draftQueue(save).length, [save.year, save.draftSession, save.phase]);
   const openAll = save.draftBoard.filter((p) => !p.taken);
   const taken = save.draftBoard.filter((p) => p.taken);
   // draftBoard order is big-board rank, not pick order — find the actual most recent
@@ -178,7 +180,7 @@ export function DraftNight() {
                 <span className="ml-3 text-brass">Pick {pickInRound}</span>
               </h2>
               <p className="text-sm text-muted">
-                Overall {Math.min(overall, save.draftBoard.length)} of {save.draftBoard.length} · {namedLeft} named
+                Overall {Math.min(overall, totalPicks)} of {totalPicks} · {namedLeft} named
                 still on the board
               </p>
             </div>

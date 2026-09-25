@@ -202,7 +202,7 @@ export function gatherRetirees(save: DynastySave): string[] {
   const out: string[] = [];
   for (const p of Object.values(save.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
-    if (p.teamId === "fa" && p.age < 30) continue;
+    if (p.teamId === "fa" && p.age < 30 && !p.arc) continue;
     if (shouldRetire(save, p)) out.push(p.id);
   }
   // Every eligible player actually retires (state change) - RetirementNight's own
