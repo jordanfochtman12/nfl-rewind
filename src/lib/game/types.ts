@@ -701,6 +701,67 @@ export interface DynastySave {
   teamGameRecords: Record<string, GameRecordEntry>;
   /** All-time single-season best per stat category, through last year. Lets the yearly milestone check compare against one cached number instead of rescanning every player's whole history every season. */
   bestSeasonMarks: Record<string, number>;
+  /** The owner's side of the club: the crowd, the gate, and whether the city still wants you. */
+  owner?: OwnerState;
+  /** 2 = cap-era contracts priced off the cap (see salaryFor). */
+  salaryModel?: number;
+}
+
+export type TicketTier = "value" | "standard" | "premium" | "gouge";
+export type HomeClimate = "north" | "midwest" | "south" | "pacific" | "mountain" | "florida";
+
+export interface OwnerLedgerYear {
+  year: number;
+  wins: number;
+  losses: number;
+  ties: number;
+  support: number;
+  avgCrowd: number;
+  fill: number;
+  gate: number;
+  ticket: TicketTier;
+}
+
+/** Where the club plays when the owner has changed history: stayed put, or moved somewhere new. */
+export interface HomeOverride {
+  teamId: TeamId;
+  from: number;
+  city: string;
+  nickname?: string;
+  stadium: string;
+  capacity: number;
+  climate: HomeClimate;
+  indoor: boolean;
+  turf: boolean;
+}
+
+export interface RelocationOffer {
+  year: number;
+  city: string;
+  stadium: string;
+  capacity: number;
+  climate: HomeClimate;
+  indoor: boolean;
+  pitch: string;
+}
+
+export interface OwnerState {
+  /** 0-100. Wins, stars and fair prices build it; losing and gouging burn it. */
+  support: number;
+  ticket: TicketTier;
+  /** This season's home gates so far. */
+  homeGames: number;
+  crowdTotal: number;
+  capacityTotal: number;
+  gate: number;
+  /** Consecutive seasons with support in the danger zone. */
+  threat: number;
+  ledger: OwnerLedgerYear[];
+  offer?: RelocationOffer;
+  /** A real move of your own club is on the calendar; the owner decides. */
+  historic?: { year: number; from: string; to: string };
+  home?: HomeOverride;
+  moves: { year: number; from: string; to: string }[];
 }
 
 export interface PrimetimeRecap {

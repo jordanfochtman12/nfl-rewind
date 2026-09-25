@@ -1,4 +1,4 @@
-import { ACTIVE_1966, TEAM_IDS, type TeamId } from "./types.ts";
+import { ACTIVE_1966, TEAM_IDS, type HomeOverride, type TeamId } from "./types.ts";
 
 export interface TeamMeta {
   id: TeamId;
@@ -71,7 +71,28 @@ export function confLabel(year: number, conference: string): string {
   return conference;
 }
 
+/**
+ * The owner can rewrite the map: keep a club home when history moved it, or take it
+ * somewhere new. One save is live at a time, so the override lives here and every name and
+ * venue lookup honours it without threading the save through eighty call sites.
+ */
+let homeOverride: HomeOverride | undefined;
+
+export function setHomeOverride(o: HomeOverride | undefined): void {
+  homeOverride = o;
+}
+
+export function homeOverrideFor(year: number, id: TeamId): HomeOverride | undefined {
+  return homeOverride && homeOverride.teamId === id && year >= homeOverride.from ? homeOverride : undefined;
+}
+
 export function locationOf(year: number, id: TeamId): string {
+  const o = homeOverrideFor(year, id);
+  if (o) return o.city;
+  return historicLocationOf(year, id);
+}
+
+export function historicLocationOf(year: number, id: TeamId): string {
   switch (id) {
     case "nwe":
       return year <= 1970 ? "Boston" : "New England";
@@ -150,6 +171,8 @@ export function locationOf(year: number, id: TeamId): string {
 }
 
 export function nicknameOf(year: number, id: TeamId): string {
+  const o = homeOverrideFor(year, id);
+  if (o?.nickname) return o.nickname;
   switch (id) {
     case "atl":
       return "Falcons";

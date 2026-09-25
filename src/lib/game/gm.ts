@@ -130,7 +130,7 @@ export function enforceCapCompliance(save: DynastySave): void {
       // market rate - the real "cap casualty" candidate, not just the best player.
       const worst = candidates.sort(
         (a, b) =>
-          b.salary - salaryFor(save.year, b.ovr, b.age) - (a.salary - salaryFor(save.year, a.ovr, a.age)),
+          b.salary - salaryFor(save.year, b.ovr, b.age, b.pos) - (a.salary - salaryFor(save.year, a.ovr, a.age, a.pos)),
       )[0]!;
       cutPlayer(save, id, worst.id);
     }
@@ -188,7 +188,7 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
     return fail("He is on waivers — claim him instead.");
   }
   if (activeRosterOf(save, teamId).length >= ROSTER_TARGET + 8) return fail("Roster is full.");
-  const salary = salaryFor(save.year, p.ovr, p.age);
+  const salary = salaryFor(save.year, p.ovr, p.age, p.pos);
   if (!canAfford(save, teamId, salary)) return fail("Over the cap.");
   if (save.year < 1994 && p.historical && p.yearsPro >= 4 && p.ovr >= 84) {
     // Rozelle-rule era: stars rarely move. User can still try; CPU almost never will.
@@ -216,7 +216,7 @@ export function claimWaiver(save: DynastySave, teamId: TeamId, playerId: string)
   if (idx < 0) return fail("He is not on the wire.");
   const p = save.players[playerId];
   if (!p || p.teamId !== "fa") return fail("Waiver expired.");
-  const salary = salaryFor(save.year, p.ovr, p.age);
+  const salary = salaryFor(save.year, p.ovr, p.age, p.pos);
   if (!canAfford(save, teamId, salary)) return fail("Over the cap.");
   const wire = save.waivers[idx]!;
   save.waivers.splice(idx, 1);

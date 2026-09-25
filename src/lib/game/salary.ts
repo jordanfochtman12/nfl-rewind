@@ -1,4 +1,4 @@
-import type { DynastySave, Player, TeamId } from "./types.ts";
+import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
@@ -26,10 +26,22 @@ export function salaryCapFor(year: number): number | null {
   return 255_000_000;
 }
 
-export function salaryFor(year: number, ovr: number, age: number): number {
+export function salaryFor(year: number, ovr: number, age: number, pos?: Pos): number {
+  const ageTax = age >= 33 ? 0.82 : age <= 23 ? 0.7 : 1;
+  const cap = salaryCapFor(year);
+  if (cap != null) {
+    // Cap-era pay is priced off the cap itself and steeply skewed, like the real thing:
+    // a 95 takes ~10% of the cap, a 70 a little over 1%, the back of the roster sits
+    // near the minimum. The old flat star-scale made a 45-man roster cost ~2x the cap,
+    // so every club was permanently over it, compliance gutted rosters to ~20 players,
+    // and nobody could afford the real free agents sitting on the market.
+    const f = Math.pow(clamp((ovr - 48) / 50, 0, 1), 3.3);
+    const posMult = pos === "QB" ? 1.35 : pos === "K" || pos === "P" ? 0.6 : 1;
+    const raw = cap * (0.004 + 0.12 * f * posMult) * ageTax;
+    return Math.round(raw / 10_000) * 10_000;
+  }
   const star = starScale(year);
   const scale = Math.max(0.12, Math.min(1, (ovr - 42) / 56));
-  const ageTax = age >= 33 ? 0.82 : age <= 23 ? 0.7 : 1;
   const raw = star * scale * ageTax;
   if (year <= 1969) return Math.round(raw / 500) * 500;
   if (year <= 1988) return Math.round(raw / 1000) * 1000;
@@ -49,7 +61,7 @@ export function teamPayroll(save: DynastySave, teamId: TeamId): number {
 }
 
 function resignInPlace(save: DynastySave, p: Player): void {
-  p.salary = salaryFor(save.year, p.ovr, p.age);
+  p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
   p.contractYears = p.age >= 33 ? 1 : randInt(save, 1, 3);
 }
 
@@ -96,13 +108,18 @@ export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): 
   if (opts?.init) {
     for (const p of Object.values(save.players) as Player[]) {
       if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") continue;
-      p.salary = salaryFor(save.year, p.ovr, p.age);
+      p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
       p.contractYears = Math.max(1, p.contractYears ?? randInt(save, 1, 4));
     }
   } else {
+    // The 1993 CBA reset every deal under the new cap; do the same the first cap-era
+    // offseason a save sees (also re-prices older saves priced on the pre-cap scale).
+    const reprice = save.salaryCap != null && (save.salaryModel ?? 1) < 2;
+    if (save.salaryCap != null) save.salaryModel = 2;
     for (const p of Object.values(save.players) as Player[]) {
       if (p.teamId === "retired" || p.teamId === "hof") continue;
       if (p.teamId === "fa") continue;
+      if (reprice) p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
       p.contractYears = (p.contractYears ?? 1) - 1;
       if (p.contractYears <= 0) expireContract(save, p);
     }

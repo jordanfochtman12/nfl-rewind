@@ -156,7 +156,7 @@ export function makePlayer(
     userTied: opts.teamId === save.userTeamId,
     peakOvr: ovr,
     contractYears: randInt(save, 1, 4),
-    salary: salaryFor(save.year, ovr, opts.age),
+    salary: salaryFor(save.year, ovr, opts.age, opts.pos),
     abilities: kit.abilities,
     traits: kit.traits,
     arch,
@@ -326,14 +326,20 @@ export function syncDepth(save: DynastySave, teamId: TeamId): void {
   if (!team) return;
   team.depth = team.depth ?? {};
   const roster = rosterOf(save, teamId);
+  // The owner's own depth chart is theirs to set; new arrivals just join the bottom. CPU
+  // staffs re-rank on merit every time, with a small nod to the incumbent - otherwise a raw
+  // rookie slotted behind a journeyman stays there for good after he's become the better player.
+  const cpu = teamId !== save.userTeamId || save.cpuOnly;
   for (const [pos] of DEPTH_CHART) {
-    const have = roster
-      .filter((p) => p.pos === pos)
-      .sort(
-        (a, b) =>
-          b.ovr + schemeDepthScore(b, team.offScheme, team.defScheme) - (a.ovr + schemeDepthScore(a, team.offScheme, team.defScheme)),
-      );
-    const prev = (team.depth[pos] ?? []).filter((id) => have.some((p) => p.id === id));
+    const prevOrder = team.depth[pos] ?? [];
+    const score = (p: Player) =>
+      p.ovr + schemeDepthScore(p, team.offScheme, team.defScheme) + (cpu && prevOrder[0] === p.id ? 2 : 0);
+    const have = roster.filter((p) => p.pos === pos).sort((a, b) => score(b) - score(a));
+    if (cpu) {
+      team.depth[pos] = have.map((p) => p.id);
+      continue;
+    }
+    const prev = prevOrder.filter((id) => have.some((p) => p.id === id));
     const missing = have.filter((p) => !prev.includes(p.id)).map((p) => p.id);
     team.depth[pos] = [...prev, ...missing];
   }

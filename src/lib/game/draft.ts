@@ -389,7 +389,7 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftRound = round;
     p.draftPick = save.draftPickIndex + 1;
     p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
-    p.salary = salaryFor(save.year, p.ovr, p.age);
+    p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
     p.contractYears = round <= 2 ? 4 : round <= 4 ? 3 : 2;
     addToRoster(save, teamId, p.id);
     syncDepth(save, teamId);

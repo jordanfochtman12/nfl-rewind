@@ -5,7 +5,9 @@ import {
   displayName,
   END_YEAR,
   playerName,
-  relocationsForYear,
+  relocationsFor,
+  followHistory,
+  stayHome,
   type Coach,
   type Player,
   type TeamId,
@@ -389,22 +391,42 @@ export function CarouselNight() {
 
 export function RelocationNight() {
   const save = useGameStore((s) => s.save)!;
-  const moves = relocationsForYear(save.year);
-  if (!moves.length) return null;
+  const desk = useGameStore((s) => s.desk);
+  const historic = save.owner?.historic;
+  const stayed = save.owner?.home?.teamId === save.userTeamId && save.owner.home.from === save.year;
+  const moves = relocationsFor(save, save.year);
+  if (!moves.length && !stayed) return null;
   const oursMove = moves.find((m) => m.teamId === save.userTeamId);
+  const others = moves.filter((m) => m.teamId !== save.userTeamId || !historic);
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
       <FilmStill still="helmet" veil="full" />
       <div className="relative space-y-6 px-5 py-8 sm:px-8">
         <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} MOVING VANS</p>
-        <h2 className="font-display text-4xl sm:text-6xl">{oursMove ? oursMove.title : "The map changes"}</h2>
+        <h2 className="font-display text-4xl sm:text-6xl">
+          {historic ? "Your signature, your city" : stayed ? "The club stays home" : oursMove ? oursMove.title : "The map changes"}
+        </h2>
         <p className="max-w-xl text-paper">
-          {oursMove
-            ? "This is your club. The letterhead is different when you come in Monday."
-            : "Not your trucks. Still your league. The helmets on the schedule will not match last September."}
+          {historic
+            ? `History has the ${historic.from} leaving town this year. You own the club. Sign the lease and become the ${historic.to}, or tear it up and stay.`
+            : stayed
+              ? "You tore up the lease history had waiting. Same city, same stadium, and a fan base that will not forget it."
+              : oursMove
+                ? "This is your club. The letterhead is different when you come in Monday."
+                : "Not your trucks. Still your league. The helmets on the schedule will not match last September."}
         </p>
+        {historic && (
+          <div className="flex flex-wrap gap-3">
+            <Btn kind="primary" onClick={() => desk((s) => followHistory(s))}>
+              Become the {historic.to}
+            </Btn>
+            <Btn kind="ghost" onClick={() => desk((s) => stayHome(s))}>
+              Stay the {historic.from}
+            </Btn>
+          </div>
+        )}
         <ul className="space-y-4">
-          {moves.map((m) => (
+          {others.map((m) => (
             <li key={m.teamId} className="rounded-lg border border-brass/30 bg-black/55 p-4">
               <div className="flex items-center gap-3">
                 <Logo id={m.teamId} size={56} year={save.year} />
@@ -417,7 +439,7 @@ export function RelocationNight() {
             </li>
           ))}
         </ul>
-        <Continue label={save.expansion ? "Expansion draft" : "Open the college draft"} />
+        <Continue label={historic ? "Follow history and continue" : save.expansion ? "Expansion draft" : "Open the college draft"} />
       </div>
     </article>
   );

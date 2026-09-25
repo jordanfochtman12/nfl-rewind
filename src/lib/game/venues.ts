@@ -1,5 +1,5 @@
 import type { TeamId } from "./types.ts";
-import { locationOf, nicknameOf } from "./teams.ts";
+import { homeOverrideFor, locationOf, nicknameOf } from "./teams.ts";
 
 export type Climate = "north" | "midwest" | "south" | "pacific" | "mountain" | "florida";
 
@@ -237,6 +237,11 @@ function capacityOf(id: TeamId, year: number): number {
 }
 
 export function venueOf(year: number, id: TeamId): VenueInfo {
+  const o = homeOverrideFor(year, id);
+  if (o) {
+    const altitude = /denver|salt lake|albuquerque/i.test(o.city) ? 5000 : 0;
+    return { climate: o.climate, indoor: o.indoor, altitude, turf: o.turf || o.indoor || year >= 2009, capacity: o.capacity, stadium: o.stadium };
+  }
   const climate = id === "crd" && year >= 1988 ? "south" : id === "ram" && year >= 1995 && year <= 2015 ? "midwest" : CLIMATE[id];
   const indoor = indoorAt(id, year);
   const altitude = id === "den" ? 5280 : 0;

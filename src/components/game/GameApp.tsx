@@ -52,6 +52,7 @@ import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
 import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow } from "./PrimetimeShow";
+import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
@@ -301,6 +302,7 @@ function Office() {
       </section>
       {finale && <GradeCard grade={grade} />}
       <DeskReport />
+      {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}
       <InjuryReport />
       <ThisSunday />
@@ -1474,6 +1476,7 @@ function PlayShell() {
         </nav>
       </header>
       <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-4 py-6">
+        {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
         {event ? <EventPane /> : null}
         {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {showFa && tab === "office" ? <FreeAgencyNight /> : null}

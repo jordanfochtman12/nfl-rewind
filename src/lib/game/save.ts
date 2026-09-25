@@ -13,6 +13,8 @@ import { seedPriorCareer } from "./data/careerPrior.ts";
 import { applyScout } from "./scout.ts";
 import { SKILL_POSITIONS } from "./types.ts";
 import { fillCoachFields } from "./staff.ts";
+import { newOwnerState } from "./owner.ts";
+import { setHomeOverride } from "./teams.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -73,6 +75,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
   for (const id of TEAM_IDS) {
     teams[id] = emptyTeam(id, false);
   }
+  setHomeOverride(undefined);
   return {
     version: SAVE_VERSION,
     startingYear,
@@ -118,6 +121,7 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
     faOpened: false,
     teamGameRecords: {},
     bestSeasonMarks: {},
+    owner: newOwnerState(),
   };
 }
 
@@ -189,9 +193,11 @@ export function hydrateSave(raw: unknown): DynastySave {
     pendingCoachHof: r.pendingCoachHof ?? [],
     lastPow: r.lastPow ?? {},
     salaryCap: r.salaryCap ?? null,
+    salaryModel: r.salaryModel,
     carousel: r.carousel ?? [],
     teamGameRecords: r.teamGameRecords ?? {},
     bestSeasonMarks: r.bestSeasonMarks ?? {},
+    owner: r.owner ? { ...newOwnerState(), ...r.owner } : newOwnerState(),
     primetime: r.primetime,
     userTeamId,
     startingYear,
@@ -271,6 +277,7 @@ export function hydrateSave(raw: unknown): DynastySave {
   for (const r of out.history.retirements) {
     r.kind = r.kind ?? (r.coachId ? "coach" : "player");
   }
+  setHomeOverride(out.owner?.home);
   return out;
 }
 

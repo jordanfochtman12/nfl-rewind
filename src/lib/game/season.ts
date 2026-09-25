@@ -17,7 +17,7 @@ import {
 import { applyYearExpansion, closeExpansion } from "./expansion.ts";
 import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
-import { relocationsForYear } from "./data/relocations.ts";
+import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
 import { closeDeadline, deadlineWeek, openDeadline } from "./deadline.ts";
 import {
@@ -94,7 +94,7 @@ export function setLabel(save: DynastySave): void {
       save.weekLabel = `${y} Coaching carousel`;
       break;
     case "relocation":
-      save.weekLabel = relocationsForYear(y)[0]?.title ?? `${y} Moving vans`;
+      save.weekLabel = relocationsFor(save, y)[0]?.title ?? `${y} Moving vans`;
       break;
     case "complete":
       save.weekLabel = `${y} Dynasty complete`;
@@ -230,6 +230,7 @@ function openDraft(save: DynastySave): void {
 }
 
 function finishOffseason(save: DynastySave): void {
+  closeOwnerSeason(save);
   save.year += 1;
   compactSaveInPlace(save);
   ageAndRegen(save);
@@ -242,18 +243,17 @@ function finishOffseason(save: DynastySave): void {
   enforceCapCompliance(save);
   for (const id of activeTeamIds(save.year)) syncDepth(save, id);
   touchGrade(save);
-  const moves = relocationsForYear(save.year);
+  const moves = relocationsFor(save, save.year);
   if (moves.length) {
     save.phase = "relocation";
     save.week = 0;
     for (const m of moves) {
-      addNews(save, {
-        kind: "headline",
-        headline: m.title,
-        body: `${m.from} are now the ${m.to}. ${m.body}`,
-        teamIds: [m.teamId],
-        playerIds: [],
-      });
+      // Your own club leaving town is your signature on the lease, not a headline you read.
+      if (m.teamId === save.userTeamId && !save.cpuOnly && isCityMove(m)) {
+        ownerOf(save).historic = { year: m.year, from: m.from, to: m.to };
+        continue;
+      }
+      postRelocationNews(save, m);
     }
     return;
   }
@@ -266,6 +266,7 @@ function finishOffseason(save: DynastySave): void {
 }
 
 function closeRelocation(save: DynastySave): void {
+  if (save.owner?.historic) followHistory(save);
   const exp = expansionForYear(save.year);
   if (exp && save.expansion) {
     save.phase = "expansion";

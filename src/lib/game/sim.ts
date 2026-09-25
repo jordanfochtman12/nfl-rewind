@@ -36,9 +36,10 @@ import {
   wantTwoPoint,
   xpKickYards,
   xpMakeBase,
+  passGainScale,
 } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
-import { conferenceOf, divisionKey, originalLeague } from "./teams.ts";
+import { activeTeamIds, conferenceOf, divisionKey, originalLeague } from "./teams.ts";
 import { playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
@@ -46,6 +47,7 @@ import { maybeReveal } from "./scout.ts";
 import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueInfo, type Wx } from "./venues.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { checkGameRecords } from "./records.ts";
+import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -359,7 +361,7 @@ function pickRusher(
         workloadDamp(off.rb.id),
     });
   if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
-  if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? 0.22 : year <= 1995 ? 0.12 : 0.05 });
+  if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? (year <= 1995 ? 0.22 : 0.08) : year <= 1995 ? 0.12 : 0.05 });
   if (off.qb && (off.kit.scramble > 6 || goal)) pool.push({ p: off.qb, w: goal ? 0.08 + off.kit.scramble / 180 : 0.03 + off.kit.scramble / 220 });
   if (!pool.length) return off.qb;
   return pool[dist(save, pool.map((x) => x.w))]!.p;
@@ -469,8 +471,10 @@ function callPlay(
   if (down === 3 && togo >= 6) passW += 0.22;
   if (down === 3 && togo <= 2) passW -= 0.18;
   if (down === 2 && togo <= 3) passW -= 0.08;
-  if (spot >= 80) passW -= 0.06;
-  if (spot >= 95) passW -= plan.redZone === "spread" ? 0.02 : 0.14;
+  if (spot >= 95 && plan.redZone === "power") passW -= 0.07;
+  // Red-zone offense moved to the air over the decades: by the 2010s most TDs inside the 20 were passes.
+  if (spot >= 80) passW += year >= 2010 ? 0.2 : year >= 2000 ? 0.08 : year >= 1990 ? 0.04 : 0;
+  if (spot >= 90 && plan.redZone === "spread") passW += 0.05;
   if (trail >= 8) passW += 0.12;
   if (trail <= -10 && !desperate) passW -= 0.1;
   if (chew) passW -= 0.1;
@@ -514,7 +518,7 @@ function snapClock(
   const stopFd = clockStopFirstDown(year) && firstDown;
   const stopped = oob || !complete || spiked || stopFd || twoMin && oob;
   if (spiked) return { used: 3, stopped: true };
-  if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 5, 8), stopped: true };
+  if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 6, 9), stopped: true };
   if (stopFd) return { used: randInt(save, 6, 9), stopped: true };
   const [lo, hi] = huddleSeconds(year, hurry ? "hurry" : chew ? "chew" : "standard");
   return { used: randInt(save, lo, hi), stopped: false };
@@ -560,10 +564,33 @@ function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, tur
   return true;
 }
 
-function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number): number {
+/**
+ * League-average lead-back elusiveness + power this season. A runner is measured against his
+ * own league, so each era's yards per carry comes from its era target instead of drifting
+ * upward as rating scales inflate over sixty seasons of development.
+ */
+const rbAnchorCache = new WeakMap<DynastySave, { year: number; v: number }>();
+function rbAnchor(save: DynastySave): number {
+  const hit = rbAnchorCache.get(save);
+  if (hit && hit.year === save.year) return hit.v;
+  const vals: number[] = [];
+  for (const id of activeTeamIds(save.year)) {
+    const rb = starters(save, id, "RB", 1)[0];
+    if (rb) vals.push(rb.ratings.btk + rb.ratings.elu);
+  }
+  // Pull toward the old fixed anchor so a whole league of great backs still runs a bit better.
+  const v = vals.length ? 0.75 * (vals.reduce((a, b) => a + b, 0) / vals.length) + 0.25 * 130 : 130;
+  rbAnchorCache.set(save, { year: save.year, v });
+  return v;
+}
+
+function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
   if (spot + yds < 100) return yds;
-  const dive = (year <= 1969 ? 0.32 : year <= 1977 ? 0.22 : 0.14) + (1 - brake) * 0.25;
-  if (rand(save) < clamp(dive, 0.1, 0.55)) return Math.max(1, 99 - spot);
+  // A catch across the stripe is six; getting dragged down at the one is a runner's fate far
+  // more than a receiver's. Pinning passes as often as runs turned passing TDs into goal-line
+  // rushing TDs (sim had ~2 rush TDs per pass TD; the real league is closer to 2 pass per rush).
+  const dive = ((year <= 1969 ? 0.32 : year <= 1977 ? 0.22 : 0.14) + (1 - brake) * 0.25) * (pass ? 0.35 : 1);
+  if (rand(save) < clamp(dive, pass ? 0.03 : 0.1, 0.55)) return Math.max(1, 99 - spot);
   return yds;
 }
 
@@ -665,7 +692,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const neutral = !!bowl;
   const playoff = game.phase === "playoffs" || game.phase === "superBowl";
   const homeField = neutral ? 0 : 2.1 + (game.night ? 0.5 : 0) + (venue.altitude >= 4000 ? 0.6 : 0);
-  const noise = neutral ? 0 : crowdNoise(homeId, venue, !!game.night, year);
+  const noise = neutral
+    ? 0
+    : crowdNoise(homeId, venue, !!game.night, year) + (homeId === save.userTeamId ? ownerNoise(save) : 0);
   if (game.rivalry) {
     homeU.offPass += 1.1;
     homeU.offRun += 1.1;
@@ -1424,7 +1453,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           if (ot) break;
           continue;
         }
-        const fumP = 0.05 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.03 : 0);
+        const fumP = Math.max(0.02, 0.05 + (off.qb ? kitBoost(off.qb, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.03 : 0));
         if (rand(save) < fumP) {
           if (rusher) bumpBox(boxOf(defId), rusher.id, { ff: 1 });
           const lost = rand(save) < 0.52;
@@ -1608,9 +1637,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const hi = call === "deep" || call === "pa" ? Math.round(48 * (0.75 + 0.25 * big)) : 22;
       let yds = sampleYds(save, mu + edge / 25, call === "deep" ? 7 : 4, call === "deep" ? 11 : 2, hi);
       if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) yds += randInt(save, 8, Math.round(28 * big + 6));
-      if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.45 ? 1 : 0)));
+      if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
       if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
-      yds = pinAtGoal(save, spot, yds, year, brake);
+      yds = Math.round(yds * passGainScale(year));
+      yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
       const t = pickTackler(save, def, true);
@@ -1640,7 +1670,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
         }
         continue;
       }
-      const fumP = 0.007 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.01 : 0);
+      // The catcher's own ball security, not the whole receiving corps' traits summed.
+      const fumP = Math.max(0.002, 0.009 + (rec ? kitBoost(rec, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.01 : 0));
       if (rand(save) < fumP) {
         if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
         const lost = rand(save) < 0.5;
@@ -1674,7 +1705,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak", (id) =>
       boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
     );
-    let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - 130) / 80;
+    let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80;
     if (call === "draw") mu += 0.8;
     if (call === "sneak") mu = 0.7 + (off.ol[2]?.ratings.str ?? 70) / 80 + sneakBoost(year);
     if (togo <= 1 && call !== "sneak") mu += 0.4;
@@ -1683,8 +1714,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (spot >= 80 && plan.redZone === "power") mu += 0.25;
     if (was3rd && togo >= 5) mu -= 0.7;
     let yds = sampleYds(save, mu, call === "sneak" ? 1.2 : 3.0, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 12);
-    if (call !== "sneak" && rusher && rand(save) < ((rusher.ratings.speed / 1500) * big + kitBoost(rusher, "td") * 0.2) * brake) {
-      yds += randInt(save, 9, Math.round(32 * big + 6));
+    // The era big-play curve is a passing-game story; long runs didn't get longer or more
+    // common the way deep balls did, so ground breakaways stop scaling at the late-70s level.
+    const runBig = Math.min(big, 0.72);
+    if (call !== "sneak" && rusher && rand(save) < ((rusher.ratings.speed / 1500) * runBig + kitBoost(rusher, "td") * 0.2) * brake) {
+      yds += randInt(save, 9, Math.round(32 * runBig + 6));
     }
     yds = pinAtGoal(save, spot, yds, year, brake);
     if (rusher) {
@@ -1720,7 +1754,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (ot) break;
       continue;
     }
-    const fumP = 0.011 + off.kit.fum + (wx === "rain" || wx === "snow" ? 0.015 : 0) - (rusher ? rusher.ratings.btk / 2000 : 0);
+    // Ball security is a small edge around the era's fumble rate. It used to subtract btk/2000
+    // from a 1.1% base, so any back with a break-tackle rating over ~22 simply never fumbled.
+    const fumBase = year <= 1977 ? 0.028 : year <= 1989 ? 0.024 : year <= 2005 ? 0.019 : 0.016;
+    const fumP = Math.max(
+      0.003,
+      fumBase + (rusher ? kitBoost(rusher, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.012 : 0) - (rusher ? (rusher.ratings.btk - 70) / 3000 : 0),
+    );
     if (rand(save) < fumP) {
       if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
       const lost = rand(save) < 0.48;
@@ -1828,6 +1868,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.surface = venue.turf ? "turf" : "grass";
   game.indoor = venue.indoor;
   game.attendance = attendanceFor(year, venue, ht?.wins ?? 0, !!game.rivalry, !!game.night, () => rand(save));
+  if (!neutral && homeId === save.userTeamId) game.attendance = ownerCrowd(save, game, game.attendance, venue.capacity);
   game.homeTo = homeTo;
   game.awayTo = awayTo;
   game.homeSafeties = homeSafeties;
@@ -1843,6 +1884,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   ].filter(Boolean);
   game.filmNote = filmBits.join(" · ") || undefined;
   checkGameRecords(save, game);
+  ownerAfterGame(save, game);
 
   const at = save.teams[awayId];
   if (!ht || !at) return;

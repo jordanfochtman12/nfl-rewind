@@ -104,6 +104,53 @@ function buildMatchups(save: DynastySave, teams: TeamId[], gamesNeeded: number):
     if (!placed) break;
   }
 
+  return balanceHomeAway(pairs);
+}
+
+/**
+ * Home field was a coin flip per game, which handed some clubs 12 home dates and others 3.
+ * Real schedules split evenly: teams that meet twice go home-and-home, and everyone else gets
+ * flipped until no club is more than one home game off an even split. Uses no RNG, so the
+ * rest of the season's draws are untouched.
+ */
+function balanceHomeAway(pairs: [TeamId, TeamId][]): [TeamId, TeamId][] {
+  const key = (a: TeamId, b: TeamId) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+  const byPair = new Map<string, number[]>();
+  pairs.forEach(([a, b], i) => {
+    const k = key(a, b);
+    byPair.set(k, [...(byPair.get(k) ?? []), i]);
+  });
+  const fixed = new Set<number>();
+  for (const idxs of byPair.values()) {
+    for (let j = 1; j < idxs.length; j += 2) {
+      const [a, b] = pairs[idxs[j - 1]!]!;
+      pairs[idxs[j]!] = [b, a];
+      fixed.add(idxs[j - 1]!);
+      fixed.add(idxs[j]!);
+    }
+  }
+  const home = new Map<TeamId, number>();
+  const games = new Map<TeamId, number>();
+  for (const [a, b] of pairs) {
+    home.set(a, (home.get(a) ?? 0) + 1);
+    games.set(a, (games.get(a) ?? 0) + 1);
+    games.set(b, (games.get(b) ?? 0) + 1);
+  }
+  const excess = (t: TeamId) => (home.get(t) ?? 0) - (games.get(t) ?? 0) / 2;
+  for (let pass = 0; pass < 50; pass++) {
+    let flipped = false;
+    for (let i = 0; i < pairs.length; i++) {
+      if (fixed.has(i)) continue;
+      const [a, b] = pairs[i]!;
+      if (excess(a) - excess(b) >= 2) {
+        pairs[i] = [b, a];
+        home.set(a, (home.get(a) ?? 0) - 1);
+        home.set(b, (home.get(b) ?? 0) + 1);
+        flipped = true;
+      }
+    }
+    if (!flipped) break;
+  }
   return pairs;
 }
 

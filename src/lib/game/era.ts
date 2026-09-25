@@ -44,7 +44,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.52,
+      cmpPct: 0.56,
       passAtt: 29.5,
       ypa: 6.6,
       intRate: 0.05,
@@ -64,12 +64,12 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1989) {
     return {
       name: "pass-boom",
-      cmpPct: 0.545,
-      passAtt: 32,
+      cmpPct: 0.56,
+      passAtt: 33,
       ypa: 6.9,
       intRate: 0.042,
       sackRate: 0.072,
-      rushAtt: 32,
+      rushAtt: 31,
       ypc: 3.95,
       pointsMu: 20.8,
       teRecCap: 70,
@@ -84,13 +84,13 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1999) {
     return {
       name: "nineties",
-      cmpPct: 0.575,
-      passAtt: 33,
+      cmpPct: 0.58,
+      passAtt: 35,
       ypa: 6.9,
       intRate: 0.034,
       sackRate: 0.068,
-      rushAtt: 29,
-      ypc: 4.0,
+      rushAtt: 27,
+      ypc: 3.8,
       pointsMu: 21.5,
       teRecCap: 80,
       recCap: 105,
@@ -104,13 +104,13 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 2009) {
     return {
       name: "aughts",
-      cmpPct: 0.60,
-      passAtt: 33.5,
+      cmpPct: 0.62,
+      passAtt: 35,
       ypa: 7.0,
       intRate: 0.03,
       sackRate: 0.065,
-      rushAtt: 28,
-      ypc: 4.1,
+      rushAtt: 27,
+      ypc: 3.95,
       pointsMu: 21.8,
       teRecCap: 90,
       recCap: 110,
@@ -125,12 +125,12 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "spread",
       cmpPct: 0.63,
-      passAtt: 35,
+      passAtt: 37,
       ypa: 7.2,
       intRate: 0.025,
       sackRate: 0.062,
-      rushAtt: 27,
-      ypc: 4.2,
+      rushAtt: 26,
+      ypc: 4.05,
       pointsMu: 23.2,
       teRecCap: 100,
       recCap: 120,
@@ -149,7 +149,7 @@ export function eraProfile(year: number): EraProfile {
     intRate: 0.023,
     sackRate: 0.063,
     rushAtt: 27,
-    ypc: 4.25,
+    ypc: 4.1,
     pointsMu: 23.0,
     teRecCap: 110,
     recCap: 130,
@@ -333,10 +333,23 @@ export function kickoffTbRate(year: number): number {
 export function huddleSeconds(year: number, tempo: "chew" | "standard" | "hurry"): [number, number] {
   if (tempo === "hurry") return year <= 1979 ? [16, 22] : [12, 17];
   if (tempo === "chew") return year <= 1979 ? [38, 45] : [35, 42];
-  if (year <= 1969) return [32, 40];
-  if (year <= 1977) return [30, 38];
-  if (year <= 1999) return [27, 35];
-  return [24, 32];
+  // Snap-to-snap on a running clock: the play itself plus the huddle and most of the
+  // play clock (30s from the ready signal before 1976, 40s from the previous whistle after).
+  if (year <= 1969) return [36, 43];
+  if (year <= 1977) return [36, 43];
+  return [36, 43];
+}
+
+/**
+ * Yards per completion ran ~10% short of real league averages in the old eras (12.8+ in the
+ * 60s-70s, drifting to ~11 by the 2020s as short passing took over). Scales a completion's gain.
+ */
+export function passGainScale(year: number): number {
+  if (year <= 1977) return 1.12;
+  if (year <= 1989) return 1.08;
+  if (year <= 1999) return 1.04;
+  if (year <= 2009) return 0.99;
+  return 0.94;
 }
 
 /** 1974 NFL: DPI becomes a spot foul. Before that (and AFL), 15 yards. */
