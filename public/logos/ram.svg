@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Los Angeles Rams">
 <rect width="64" height="64" rx="10" fill="#003594"/>
-<path fill="#ffd100" d="M18 44 C12 28 18 12 32 10 C48 8 56 22 50 34 C46 42 38 40 36 32 C38 38 44 36 44 28 C44 18 36 16 30 18 C20 22 18 34 24 42 C20 42 18 44 18 44Z"/>
-<circle cx="34" cy="22" r="3" fill="#003594"/>
-<path fill="#ffd100" d="M40 18 C48 14 54 20 50 28" fill="none" stroke="#ffd100" stroke-width="3"/>
+<path d="M10 22 C22 8 46 8 53 26 C58 40 46 51 35 46 C27 42 28 31 36 31 C42 31 43 38 39 40" fill="none" stroke="#ffd100" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 34 C20 26 30 24 36 26" fill="none" stroke="#ffd100" stroke-width="3" stroke-linecap="round"/>
 </svg>
