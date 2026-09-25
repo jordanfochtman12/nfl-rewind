@@ -621,6 +621,18 @@ function passAnchor(save: DynastySave): number {
   return v;
 }
 
+/**
+ * The field shrinks inside the 20: fewer windows, no deep safety to beat. Red-zone TD rates
+ * ran 56-67% in the sim against a real 50-56%, worst in the 1990s-2000s when defenses were
+ * built to bend and not break (and scoring ran ~2.5 points a game hot there).
+ */
+function redZoneSqueeze(year: number): number {
+  if (year <= 1977) return 0;
+  if (year <= 1989) return 0.025;
+  if (year <= 2009) return 0.095;
+  return 0.055;
+}
+
 function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
   if (spot + yds < 100) return yds;
   // A catch across the stripe is six; getting dragged down at the one is a runner's fate far
@@ -1583,7 +1595,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (wx === "wind" && call === "deep") cmpP -= 0.06;
       if (year < 1978) cmpP -= Math.max(0, cov - 74) / 400;
       if (was3rd && togo >= 7) cmpP -= 0.07;
-      if (spot >= 80) cmpP -= 0.04;
+      if (spot >= 80) cmpP -= 0.04 + redZoneSqueeze(year);
       if (tightCatchRule(year) && (call === "deep" || call === "med")) cmpP -= 0.02;
       if (rec && def.db[0]) {
         const mismatch =
@@ -1749,7 +1761,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (call === "sneak") mu = 0.7 + (off.ol[2]?.ratings.str ?? 70) / 80 + sneakBoost(year);
     if (togo <= 1 && call !== "sneak") mu += 0.4;
     if (spot >= 95) mu *= 0.5;
-    if (spot >= 80) mu *= 0.72;
+    if (spot >= 80) mu *= 0.72 * (1 - redZoneSqueeze(year) * 2);
     if (spot >= 80 && plan.redZone === "power") mu += 0.25;
     if (was3rd && togo >= 5) mu -= 0.7;
     let yds = sampleYds(save, mu, call === "sneak" ? 1.2 : 3.0, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 12);

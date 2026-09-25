@@ -44,7 +44,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.636,
+      cmpPct: 0.652,
       passAtt: 29.5,
       ypa: 6.6,
       intRate: 0.05,
@@ -84,7 +84,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1999) {
     return {
       name: "nineties",
-      cmpPct: 0.648,
+      cmpPct: 0.668,
       passAtt: 35,
       ypa: 6.9,
       intRate: 0.034,
@@ -104,12 +104,12 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 2009) {
     return {
       name: "aughts",
-      cmpPct: 0.693,
-      passAtt: 35,
+      cmpPct: 0.708,
+      passAtt: 32.5,
       ypa: 7.0,
       intRate: 0.03,
       sackRate: 0.065,
-      rushAtt: 27,
+      rushAtt: 28,
       ypc: 3.95,
       pointsMu: 21.8,
       teRecCap: 90,
@@ -348,7 +348,7 @@ export function passGainScale(year: number): number {
   if (year <= 1977) return 1.12;
   if (year <= 1989) return 1.08;
   if (year <= 1999) return 1.04;
-  if (year <= 2009) return 0.99;
+  if (year <= 2009) return 0.955;
   return 0.94;
 }
 
