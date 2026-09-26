@@ -242,10 +242,22 @@ export function hydrateSave(raw: unknown): DynastySave {
     }
     if (!pl.college) pl.college = lookupCollege(pl.firstName, pl.lastName);
     if (pl.historical && pl.yearsPro > 0) {
-      const through = (out.startingYear ?? STARTING_YEAR) - 1;
-      const debut = pl.draftYear ?? (out.startingYear ?? STARTING_YEAR) - pl.yearsPro;
-      if (debut <= through) {
-        const prior = seedPriorCareer(pl, through);
+      const start = out.startingYear ?? STARTING_YEAR;
+      const through = start - 1;
+      // yearsPro keeps counting through the dynasty (+1 every offseason when the year turns),
+      // so it can't date a veteran's debut on a later load: every reload used to invent more
+      // pre-1966 seasons (a 1964 rookie grew a "career" back to 1957). Back out the offseasons
+      // he has aged through since the start: one per year for active players; a retiree stops
+      // aging the offseason he retires. Prior rows are rebuilt on every load, so this also
+      // repairs saves that already picked up phantom seasons.
+      const retired = pl.teamId === "retired" || pl.teamId === "hof";
+      const agings = retired && pl.retiredYear != null ? pl.retiredYear - start - 1 : out.year - start;
+      const priorPro = Math.max(0, pl.yearsPro - Math.max(0, agings));
+      const debut = pl.draftYear ?? start - priorPro;
+      if (priorPro === 0 && pl.career.some((c) => c.year < start)) {
+        pl.career = pl.career.filter((c) => c.year >= start);
+      } else if (priorPro > 0 && debut <= through) {
+        const prior = seedPriorCareer({ ...pl, yearsPro: priorPro }, through);
         if (prior.length) {
           const sim = pl.career.filter((s) => s.year >= (out.startingYear ?? STARTING_YEAR));
           pl.career = [...prior, ...sim];
