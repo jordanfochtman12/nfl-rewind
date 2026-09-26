@@ -4,15 +4,14 @@ import { useGameStore } from "@/lib/game-store";
 export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?: number }) {
   const saveYear = useGameStore((s) => s.save?.year ?? 1966);
   const y = year ?? saveYear;
-  const c = teamColors(id, y);
   return (
     <img
       src={logoSrc(y, id)}
       alt=""
       width={size}
       height={size}
-      className="shrink-0 rounded-sm"
-      style={{ width: size, height: size, background: c.primary }}
+      className="shrink-0"
+      style={{ width: size, height: size, borderRadius: "16%" }}
     />
   );
 }

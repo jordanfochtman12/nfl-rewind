@@ -104,9 +104,9 @@ const oval = (fill, stroke, sw = 14, rx = 196, ry = 132) =>
 /** file -> [club label, colors, inner mark] */
 const L = {
   // Falcons
-  "atl.svg": ["Atlanta Falcons", { bg: "#a71930", ring: "#000000", ring2: "#ffffff" }, glyph("hawk-emblem", { fill: "#101010", stroke: "#ffffff", strokeW: 10 })],
-  "atl-modern.svg": ["Atlanta Falcons", { bg: "#101010", ring: "#a71930", ring2: "#a5acaf" }, glyph("hawk-emblem", { fill: "#a71930", stroke: "#ffffff", strokeW: 10 })],
-  "atl-2003.svg": ["Atlanta Falcons", { bg: "#101010", ring: "#a71930", ring2: "#ffffff" }, glyph("hawk-emblem", { fill: "#a71930", stroke: "#ffffff", strokeW: 12 })],
+  "atl.svg": ["Atlanta Falcons", { bg: "#a71930", ring: "#000000", ring2: "#ffffff" }, glyph("crow-dive", { fill: "#101010", stroke: "#ffffff", strokeW: 12, scale: 0.74 })],
+  "atl-modern.svg": ["Atlanta Falcons", { bg: "#101010", ring: "#a71930", ring2: "#a5acaf" }, glyph("crow-dive", { fill: "#a71930", stroke: "#ffffff", strokeW: 12, scale: 0.74 })],
+  "atl-2003.svg": ["Atlanta Falcons", { bg: "#101010", ring: "#a71930", ring2: "#ffffff" }, glyph("crow-dive", { fill: "#a71930", stroke: "#a5acaf", strokeW: 14, scale: 0.74 })],
   // Rams
   "ram.svg": ["Los Angeles Rams", { bg: "#003594", ring: "#ffd100" }, glyph("ram-profile", { fill: "#ffd100", stroke: "#ffffff", strokeW: 8 })],
   "ram-stl.svg": ["St. Louis Rams", { bg: "#002244", ring: "#c9a55c", ring2: "#ffffff" }, glyph("ram-profile", { fill: "#c9a55c", stroke: "#ffffff", strokeW: 8 })],
@@ -214,8 +214,8 @@ const L = {
   "sea.svg": ["Seattle Seahawks", { bg: "#1f4e9c", ring: "#a5acaf", ring2: "#69be28" }, glyph("eagle-head", { fill: "#c4c8cb", stroke: "#0b2a5c", strokeW: 10 })],
   "sea-modern.svg": ["Seattle Seahawks", { bg: "#002244", ring: "#69be28", ring2: "#a5acaf" }, glyph("eagle-head", { fill: "#a5acaf", stroke: "#69be28", strokeW: 12 })],
   // Panthers
-  "car.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#bfc0bf" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#ffffff", strokeW: 10 })],
-  "car-2012.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#ffffff" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#bfc0bf", strokeW: 12 })],
+  "car.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#bfc0bf" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#101820", strokeW: 8, scale: 0.74 })],
+  "car-2012.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#ffffff" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#bfc0bf", strokeW: 12, scale: 0.74 })],
   // Jaguars
   "jax.svg": ["Jacksonville Jaguars", { bg: "#006778", ring: "#d7a22a", ring2: "#000000" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#000000", strokeW: 10 })],
   "jax-2013.svg": ["Jacksonville Jaguars", { bg: "#101820", ring: "#006778", ring2: "#d7a22a" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#006778", strokeW: 12 })],
