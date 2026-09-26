@@ -1,50 +1,59 @@
 /** Strip film we don't need so a 60-year file still loads. */
 import type { DynastySave, GameResult } from "./types.ts";
-import { cloneSave } from "./save.ts";
 
-function stripGame(g: GameResult, keepFilm: boolean): void {
-  if (keepFilm) return;
+const FILM_PHASES = new Set(["regular", "deadline", "playoffs", "superBowl", "proBowl"]);
+
+/** This season's film is kept while the season is live; everything older is scores only. */
+function keepsFilm(save: DynastySave, g: GameResult): boolean {
+  return FILM_PHASES.has(save.phase) && g.year === save.year;
+}
+
+function stripGame(g: GameResult): void {
   g.boxHome = undefined;
   g.boxAway = undefined;
   g.drives = undefined;
   g.highlights = undefined;
 }
 
-function walkFilm(save: DynastySave): void {
-  const keepYear = save.year;
-  const inFilm =
-    save.phase === "regular" ||
-    save.phase === "deadline" ||
-    save.phase === "playoffs" ||
-    save.phase === "superBowl" ||
-    save.phase === "proBowl";
-  const walk = (g?: GameResult) => {
-    if (!g) return;
-    stripGame(g, inFilm && g.year === keepYear);
-  };
-  for (const g of save.schedule) walk(g);
-  for (const g of save.playoffGames) walk(g);
-  walk(save.superBowl);
-  walk(save.proBowl);
+function strippedCopy(save: DynastySave, g: GameResult): GameResult {
+  if (keepsFilm(save, g) || (!g.boxHome && !g.boxAway && !g.drives && !g.highlights)) return g;
+  return { ...g, boxHome: undefined, boxAway: undefined, drives: undefined, highlights: undefined };
 }
 
-function trimLedger(save: DynastySave): void {
-  if (save.news.length > 80) save.news = save.news.slice(-80);
-  if (save.weekNews.length > 16) save.weekNews = save.weekNews.slice(-16);
-  if (save.transactions.length > 160) save.transactions = save.transactions.slice(-160);
-}
+// News, the weekly wire and the transaction log are all newest-first (addNews/addTx unshift),
+// so trimming keeps the head. (It used to keep the tail - the oldest entries - so every reload
+// or export swapped the latest headlines for stale ones.)
+const NEWS_KEEP = 80;
+const WEEK_NEWS_KEEP = 16;
+const TX_KEEP = 160;
 
 /** Drop box scores / drives from prior seasons. Scores, sites, and history stay. Mutates. */
 export function compactSaveInPlace(save: DynastySave): void {
-  walkFilm(save);
-  trimLedger(save);
+  for (const g of [...save.schedule, ...save.playoffGames, save.superBowl, save.proBowl]) {
+    if (g && !keepsFilm(save, g)) stripGame(g);
+  }
+  if (save.news.length > NEWS_KEEP) save.news = save.news.slice(0, NEWS_KEEP);
+  if (save.weekNews.length > WEEK_NEWS_KEEP) save.weekNews = save.weekNews.slice(0, WEEK_NEWS_KEEP);
+  if (save.transactions.length > TX_KEEP) save.transactions = save.transactions.slice(0, TX_KEEP);
 }
 
-/** Drop box scores / drives from prior seasons. Scores, sites, and history stay. */
+/**
+ * The compacted view of a save, for writing to disk or exporting. Shallow: it shares
+ * everything it doesn't trim with the live save, so it must only be serialized, never mutated.
+ * (Deep-cloning a late dynasty - 20k players - just to drop old box scores cost most of a second
+ * on every autosave.)
+ */
 export function compactSave(save: DynastySave): DynastySave {
-  const c = cloneSave(save);
-  compactSaveInPlace(c);
-  return c;
+  return {
+    ...save,
+    schedule: save.schedule.map((g) => strippedCopy(save, g)),
+    playoffGames: save.playoffGames.map((g) => strippedCopy(save, g)),
+    superBowl: save.superBowl && strippedCopy(save, save.superBowl),
+    proBowl: save.proBowl && strippedCopy(save, save.proBowl),
+    news: save.news.slice(0, NEWS_KEEP),
+    weekNews: save.weekNews.slice(0, WEEK_NEWS_KEEP),
+    transactions: save.transactions.slice(0, TX_KEEP),
+  };
 }
 
 export function saveByteLength(save: DynastySave): number {
