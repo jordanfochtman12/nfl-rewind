@@ -34,7 +34,48 @@ function keysOf(first: string, last: string): string[] {
   return out;
 }
 
+/**
+ * Brief comebacks that would otherwise read as an unbroken career: Philip Rivers retired after
+ * 2020 and came back for three games in 2025, which left his arc "still going" and kept him at
+ * his peak into his mid-40s. For the sim his career ends where it really did.
+ */
+const CAMEO_ENDS: Record<string, number> = { "philip|rivers": 2020 };
+
 export function lookupArc(year: number, first: string, last: string): Player["arc"] | undefined {
+  const arc = lookupArcRow(year, first, last);
+  if (!arc) return arc;
+  for (const k of keysOf(first, last)) {
+    const end = CAMEO_ENDS[k];
+    if (end !== undefined) return { ...arc, to: end };
+  }
+  return arc;
+}
+
+/**
+ * Supplemental-draft picks the imported arc tables skip: without a real career to follow,
+ * Kosar (1985 supplemental) aged like a generic passer and kept starting until 2001.
+ * [lastSeason, seasonsAsStarter, games, proBowls, firstTeamAllPros, ageAtDraft]
+ */
+const SUPPLEMENTAL: Record<string, { dy: number; row: CareerArcRow }> = {
+  "bernie|kosar": { dy: 1985, row: [1996, 9, 124, 1, 0, 21] },
+  "cris|carter": { dy: 1987, row: [2002, 12, 234, 8, 2, 21] },
+  "brian|bosworth": { dy: 1987, row: [1989, 2, 24, 0, 0, 22] },
+};
+
+function lookupArcRow(year: number, first: string, last: string): Player["arc"] | undefined {
+  const found = lookupTable(year, first, last);
+  if (found) return found;
+  for (const k of keysOf(first, last)) {
+    const sup = SUPPLEMENTAL[k];
+    if (sup && Math.abs(sup.dy - year) <= 1) {
+      const r = sup.row;
+      return { dy: year, to: r[0], st: r[1], g: r[2], pb: r[3], ap: r[4], age: r[5] };
+    }
+  }
+  return undefined;
+}
+
+function lookupTable(year: number, first: string, last: string): Player["arc"] | undefined {
   // Some sources list a supplemental or late-classified pick a year off; exact year first.
   for (const y of [year, year - 1, year + 1]) {
     const bucket = CAREER_ARCS[y];

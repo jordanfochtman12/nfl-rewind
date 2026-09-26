@@ -41,7 +41,8 @@ import {
   passGainScale,
 } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
-import { activeTeamIds, conferenceOf, divisionKey, originalLeague } from "./teams.ts";
+import { ARC_DATA_LAST } from "./careerArc.ts";
+import { activeTeamIds, conferenceOf, divisionKey, gamesInSeason, originalLeague } from "./teams.ts";
 import { emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
@@ -297,12 +298,12 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.krTd += b.krTd ?? 0;
     s.prTd += b.prTd ?? 0;
     if (postseason) continue;
-    if (p.pos === "TE") s.rec = Math.min(s.rec, era.teRecCap);
-    else s.rec = Math.min(s.rec, era.recCap);
-    s.rushTd = Math.min(s.rushTd, era.rushTdCap);
-    s.passTd = Math.min(s.passTd, era.passTdCap);
-    s.passInt = Math.min(s.passInt, era.intCap);
-    s.sacks = Math.min(s.sacks, era.sackCap);
+    if (p.pos === "TE") s.rec = Math.min(s.rec, hardCap(era.teRecCap));
+    else s.rec = Math.min(s.rec, hardCap(era.recCap));
+    s.rushTd = Math.min(s.rushTd, hardCap(era.rushTdCap));
+    s.passTd = Math.min(s.passTd, hardCap(era.passTdCap));
+    s.passInt = Math.min(s.passInt, hardCap(era.intCap));
+    s.sacks = Math.min(s.sacks, hardCap(era.sackCap));
   }
 }
 
@@ -321,7 +322,27 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
   }
 }
 
+/**
+ * Season ceilings. Each era's number sits at that era's real record. Usage starts to taper once
+ * a player's pace passes 80% of it (defenses key on him, the staff spreads it around) and is
+ * about halved by the time he reaches it, so the hard stop almost never binds. Without the taper
+ * the clamp truncated seasons mid-stream - five receivers finishing on exactly 130 catches.
+ */
+function hardCap(eraRef: number): number {
+  return eraRef;
+}
+
+function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number): number {
+  const s = p.stats[year];
+  if (!s || s.gp < 3) return 1;
+  const pace = (s[key] / s.gp) * gamesInSeason(year);
+  const soft = eraRef * 0.8;
+  if (pace <= soft) return 1;
+  return clamp(1 - ((pace - soft) / (eraRef * 0.2)) * 0.55, 0.4, 1);
+}
+
 function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number, redZone: boolean): Player | undefined {
+  const era = eraProfile(year);
   const w = eraTargetWeights(year);
   const slots: { p: Player | undefined; wt: number }[] = [
     { p: off.wr[0], wt: w.wr1 * (deep ? 1.1 : 1) * (redZone ? 0.9 : 1) },
@@ -342,7 +363,8 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
         // seasons). Real top targets draw 25-30%, a true alpha a bit more.
         const skill = Math.pow((s.p.ratings.catch + yac) / 150, 0.3);
         const kit = 1 + Math.min(0.3, kitShare(s.p, "recShare") - 1) * 0.5;
-        return s.wt * skill * kit;
+        const pace = paceDamp(s.p, "rec", year, s.p.pos === "TE" ? era.teRecCap : era.recCap);
+        return s.wt * skill * kit * pace;
       }),
     )
   ]!.p;
@@ -391,7 +413,15 @@ function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean): Player |
 function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
   const pool = [...def.dl, ...def.lb];
   if (!pool.length) return undefined;
-  return pool[dist(save, pool.map((p) => p.ratings.prs * kitShare(p, "sackShare")))];
+  const ref = eraProfile(save.year).sackCap;
+  // Sacks pile up on the true edge rushers: a real sack leader takes 35-45% of his team's total.
+  // A linear split on pass-rush grade spread them almost evenly across the front seven.
+  return pool[
+    dist(
+      save,
+      pool.map((p) => Math.pow(p.ratings.prs / 70, 3) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
+    )
+  ];
 }
 
 function pickThief(save: DynastySave, def: TeamUnits): Player | undefined {
@@ -565,7 +595,10 @@ const POS_INJURY_RISK: Partial<Record<Pos, number>> = {
   P: 0.3,
 };
 
-function posInjuryRisk(p: Player): number {
+function posInjuryRisk(p: Player, year: number): number {
+  // Modern starting QBs miss real time (only about half play every game); the lower modern
+  // base injury rate had them near-indestructible, taking ~94% of their team's attempts.
+  if (p.pos === "QB") return year >= 2000 ? 1.6 : 1.15;
   return POS_INJURY_RISK[p.pos] ?? 1;
 }
 
@@ -574,7 +607,7 @@ function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, tur
   const eraHit = save.year <= 1979 ? 0.0018 : save.year <= 1999 ? 0.0014 : 0.0012;
   const wxHit = wx === "cold" || wx === "snow" ? 1.15 : 1;
   const turfHit = turf && save.year >= 1970 && save.year <= 1999 ? 1.2 : turf ? 1.08 : 1;
-  const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit * posInjuryRisk(p);
+  const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit * posInjuryRisk(p, save.year);
   if (rand(save) > chance) return false;
   const durable = p.ratings.inj >= 88 || kitInjMult(p) <= 0.8;
   p.injuredWeeks = durable ? 1 : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
@@ -699,12 +732,44 @@ function maybeOverturn(save: DynastySave, year: number): boolean {
   return rand(save) < 0.28;
 }
 
+/**
+ * Real availability. A healthy sim plays its stars every week, but real stars missed time -
+ * Montana and Unitas each played under 12 games a season. A real starter whose career games fall
+ * short of the schedule gets an extra weekly injury risk sized so he misses about the share of
+ * games he really missed (beyond what the sim's ordinary injuries already take).
+ */
+const missCache = new WeakMap<object, number>();
+function arcHazard(p: Player): number {
+  const arc = p.arc;
+  if (!arc || arc.to <= 0 || arc.g <= 0) return 0;
+  let h = missCache.get(arc);
+  if (h === undefined) {
+    const last = Math.min(arc.to, ARC_DATA_LAST);
+    let possible = 0;
+    for (let y = arc.dy; y <= last; y++) {
+      possible += y <= 1960 ? 12 : y === 1982 ? 9 : y === 1987 ? 15 : gamesInSeason(y);
+    }
+    const seasons = Math.max(1, last - arc.dy + 1);
+    const st = Math.min(arc.st, seasons);
+    const starterShare = st / seasons;
+    // Years as a backup aren't "missed" games: a backup QB rarely plays; everyone else still
+    // covers kicks. Only the shortfall against that expectation is time lost to injury.
+    const backupPlays = p.pos === "QB" || p.pos === "K" || p.pos === "P" ? 0.2 : 0.75;
+    const expected = (possible / seasons) * (st + (seasons - st) * backupPlays);
+    const missed = clamp(1 - arc.g / Math.max(1, expected), 0, 0.6);
+    const extra = Math.max(0, missed - 0.1) * clamp(starterShare * 1.4, 0, 1);
+    h = extra <= 0 ? 0 : Math.min(0.14, extra / (3.2 * (1 - extra)));
+    missCache.set(arc, h);
+  }
+  return h;
+}
+
 function rollInjuries(save: DynastySave, teamId: TeamId): void {
   const eraHit = save.year <= 1979 ? 0.016 : save.year <= 1999 ? 0.013 : 0.011;
   for (const p of rosterOf(save, teamId)) {
     if (p.injuredWeeks > 0) continue;
     const injMult = kitInjMult(p);
-    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult * posInjuryRisk(p);
+    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult * posInjuryRisk(p, save.year) + arcHazard(p);
     if (rand(save) > chance) continue;
     const durable = p.ratings.inj >= 88 || injMult <= 0.8;
     const weeks = durable ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);
@@ -719,12 +784,12 @@ export function clampSeasonStats(save: DynastySave): void {
   for (const p of Object.values(save.players)) {
     const s = p.stats[save.year];
     if (!s) continue;
-    if (p.pos === "TE") s.rec = Math.min(s.rec, era.teRecCap);
-    else s.rec = Math.min(s.rec, era.recCap);
-    s.rushTd = Math.min(s.rushTd, era.rushTdCap);
-    s.passTd = Math.min(s.passTd, era.passTdCap);
-    s.passInt = Math.min(s.passInt, era.intCap);
-    s.sacks = Math.min(s.sacks, era.sackCap);
+    if (p.pos === "TE") s.rec = Math.min(s.rec, hardCap(era.teRecCap));
+    else s.rec = Math.min(s.rec, hardCap(era.recCap));
+    s.rushTd = Math.min(s.rushTd, hardCap(era.rushTdCap));
+    s.passTd = Math.min(s.passTd, hardCap(era.passTdCap));
+    s.passInt = Math.min(s.passInt, hardCap(era.intCap));
+    s.sacks = Math.min(s.sacks, hardCap(era.sackCap));
     if (!p.career) p.career = [];
     const existing = p.career.find((c) => c.year === save.year);
     if (!existing) p.career.push({ ...s });
