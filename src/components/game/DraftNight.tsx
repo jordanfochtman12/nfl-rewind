@@ -92,6 +92,7 @@ const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["
 export function DraftNight() {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
+  const setTab = useGameStore((s) => s.setTab);
   const openProfile = useGameStore((s) => s.openProfile);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(8);
@@ -270,6 +271,9 @@ export function DraftNight() {
             </p>
           )}
           <div className="flex flex-wrap gap-2">
+            <Btn kind="gold" onClick={() => setTab("primetime")}>
+              Draft preview show
+            </Btn>
             {cpuUp && (
               <>
                 <Btn kind="primary" onClick={() => step({})}>

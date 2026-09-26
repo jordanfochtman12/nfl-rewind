@@ -4,6 +4,7 @@ import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { ReportCard } from "./Storylines";
+import { DraftPreviewShow } from "./DraftPreview";
 
 function Name({ id, name }: { id: string; name: string }) {
   const save = useGameStore((s) => s.save)!;
@@ -74,6 +75,12 @@ export function PrimetimeTeaser() {
 }
 
 export function PrimetimeShow() {
+  const save = useGameStore((s) => s.save)!;
+  if (save.phase === "draft" && save.draftBoard.some((p) => !p.taken)) return <DraftPreviewShow />;
+  return <WeeklyShow />;
+}
+
+function WeeklyShow() {
   const save = useGameStore((s) => s.save)!;
   const show = save.primetime as Show | undefined;
   if (!show || show.v !== 2) {
