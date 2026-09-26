@@ -370,6 +370,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         simPlayoffWeek(s);
         const after = s.playoffGames.filter((g) => g.played).length;
         if (after > before) {
+          buildPrimetime(s, "playoffs");
           s.weekFilm = true;
           if (!auto) break;
         }
@@ -388,15 +389,24 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     }
     case "superBowl": {
       const unplayed = !!s.superBowl && !s.superBowl.played;
-      if (unplayed) resolveSuperBowl(s);
+      if (unplayed) {
+        resolveSuperBowl(s);
+        buildPrimetime(s, "superBowl");
+      }
       if (unplayed && !auto) break;
-      if (!s.awards) resolveAwards(s);
+      if (!s.awards) {
+        resolveAwards(s);
+        buildPrimetime(s, "awards");
+      }
       writeSeasonChapter(s);
       s.phase = "awards";
       break;
     }
     case "awards":
-      if (!s.awards) resolveAwards(s);
+      if (!s.awards) {
+        resolveAwards(s);
+        buildPrimetime(s, "awards");
+      }
       writeSeasonChapter(s);
       if (!s.proBowl?.played) {
         resolveProBowl(s);

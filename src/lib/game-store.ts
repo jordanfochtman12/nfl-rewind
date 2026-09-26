@@ -15,6 +15,7 @@ import { dynastyStorage } from "@/lib/save-idb.ts";
 export type Screen = "title" | "select" | "play";
 export type Tab =
   | "office"
+  | "primetime"
   | "roster"
   | "depth"
   | "staff"

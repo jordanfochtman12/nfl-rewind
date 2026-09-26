@@ -242,6 +242,8 @@ export interface Player {
   arch?: string;
   injuredWeeks: number;
   injuryName?: string;
+  /** When the current injury happened (for the weekly injury report). */
+  injuredOn?: { year: number; week: number; phase: Phase };
   /** Parked off the 53-man count by a desk decision; frees a roster spot while hurt. */
   onIR: boolean;
   /**
@@ -711,6 +713,8 @@ export interface DynastySave {
   pendingCoachHof: string[];
   lastPow: { aflNfl?: string; afc?: string; nfc?: string };
   primetime?: PrimetimeShow;
+  /** Last show's power ranks, for the week-to-week movement arrows. */
+  powerRanks?: Record<string, number>;
   salaryCap: number | null;
   carousel: CarouselMove[];
   waiverOrder: TeamId[];
@@ -796,14 +800,91 @@ export interface PrimetimeRecap {
   awayScore: number;
   line: string;
   note: string;
+  /** Round name in the postseason. */
+  round?: string;
+  /** "J. Unitas 22/31, 288 yds, 3 TD" style lines for the game's top performers. */
+  performers?: string[];
+}
+
+export interface PrimetimeStory {
+  headline: string;
+  body: string;
+  teamIds: TeamId[];
+  playerIds: string[];
+  tag: string;
+}
+
+export interface PrimetimeHonoree {
+  playerId: string;
+  name: string;
+  pos: Pos;
+  teamId: TeamId;
+  line: string;
+}
+
+export interface PrimetimeLeaderBoard {
+  label: string;
+  rows: { playerId: string; name: string; teamId: TeamId; value: number }[];
+}
+
+export interface PrimetimeInjury {
+  playerId: string;
+  name: string;
+  pos: Pos;
+  teamId: TeamId;
+  injury: string;
+  weeks: number;
+  ir: boolean;
+  fresh: boolean;
+}
+
+export interface PrimetimePowerRow {
+  teamId: TeamId;
+  rank: number;
+  prev?: number;
+  record: string;
+  blurb: string;
+}
+
+export interface PrimetimeOutlook {
+  conf: string;
+  seeds: { seed: number; teamId: TeamId; record: string; tag: string }[];
+  bubble: { teamId: TeamId; record: string; back: number }[];
+}
+
+export interface PrimetimePreview {
+  homeId: TeamId;
+  awayId: TeamId;
+  homeRecord: string;
+  awayRecord: string;
+  line: string;
+  pick: TeamId;
+  note: string;
+  when: string;
+  featured: boolean;
 }
 
 export interface PrimetimeShow {
+  /** 2 = the full broadcast (older saves carry the one-card version). */
+  v?: number;
   year: number;
   week: number;
+  kind?: "regular" | "playoffs" | "superBowl" | "awards";
+  title?: string;
   open: string;
+  stories?: PrimetimeStory[];
   recaps: PrimetimeRecap[];
   playOfNight: string;
+  potw?: { conf: string; off?: PrimetimeHonoree; def?: PrimetimeHonoree }[];
+  leaders?: PrimetimeLeaderBoard[];
+  injuries?: PrimetimeInjury[];
+  power?: PrimetimePowerRow[];
+  outlook?: PrimetimeOutlook[];
+  predictions?: { conf: string; teamId: TeamId; note: string }[];
+  superBowlPick?: { winner: TeamId; loser: TeamId; score: string; note: string };
+  previews?: PrimetimePreview[];
+  awards?: { label: string; honoree: PrimetimeHonoree }[];
+  allPro?: PrimetimeHonoree[];
   pow: string;
   powerPoll: string;
   wire: string[];

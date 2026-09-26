@@ -28,6 +28,8 @@ export type {
   DraftStyle,
   DynastyGrade,
   SeasonChapter,
+  PrimetimeShow,
+  PrimetimeHonoree,
 } from "./types.ts";
 
 export {

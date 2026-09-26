@@ -24,12 +24,12 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1969) {
     return {
       name: "pre-merger",
-      cmpPct: 0.58,
-      passAtt: 28,
+      cmpPct: 0.6,
+      passAtt: 30,
       ypa: 6.7,
       intRate: 0.055,
       sackRate: 0.07,
-      rushAtt: 35,
+      rushAtt: 32,
       ypc: 3.85,
       pointsMu: 21.4,
       teRecCap: 55,
@@ -44,7 +44,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.652,
+      cmpPct: 0.635,
       passAtt: 29.5,
       ypa: 6.6,
       intRate: 0.05,
@@ -194,8 +194,9 @@ export function fgEraMod(year: number): number {
   return 1;
 }
 
-export function clockStopFirstDown(year: number): boolean {
-  return year <= 1973;
+/** College football stops the clock to move the chains; the NFL never did. */
+export function clockStopFirstDown(_year: number): boolean {
+  return false;
 }
 
 export type OtKind = "none" | "sudden" | "modified";
@@ -269,10 +270,10 @@ export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3:
 
 /** RB1 carry share. Workhorse era through the 90s, committees later. */
 export function eraRb1Share(year: number): number {
-  if (year <= 1977) return 0.78;
-  if (year <= 1999) return 0.74;
-  if (year <= 2014) return 0.66;
-  return 0.58;
+  if (year <= 1977) return 0.6;
+  if (year <= 1999) return 0.64;
+  if (year <= 2014) return 0.6;
+  return 0.54;
 }
 
 export function penaltyRates(year: number): {
@@ -345,6 +346,7 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "hurry"
  * 60s-70s, drifting to ~11 by the 2020s as short passing took over). Scales a completion's gain.
  */
 export function passGainScale(year: number): number {
+  if (year <= 1969) return 1.2;
   if (year <= 1977) return 1.12;
   if (year <= 1989) return 1.08;
   if (year <= 1999) return 1.04;

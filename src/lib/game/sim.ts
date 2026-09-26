@@ -361,7 +361,7 @@ function pickRusher(
   const workloadDamp = (id: string | undefined) => {
     if (!id || !carriesSoFar) return 1;
     const n = carriesSoFar(id);
-    return n <= 22 ? 1 : Math.max(0.35, 1 - (n - 22) * 0.045);
+    return n <= 18 ? 1 : Math.max(0.3, 1 - (n - 18) * 0.06);
   };
   const pool: { p: Player; w: number }[] = [];
   if (off.rb)
@@ -577,6 +577,7 @@ function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, tur
   const durable = p.ratings.inj >= 88 || kitInjMult(p) <= 0.8;
   p.injuredWeeks = durable ? 1 : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
   p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
+  p.injuredOn = { year: save.year, week: save.week, phase: save.phase };
   return true;
 }
 
@@ -645,12 +646,13 @@ function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, b
 
 function deadBall(year: number, score: number): number {
   let m = 1;
-  if (year <= 1969) m = 0.72;
-  else if (year <= 1977) m = 0.82;
-  else if (year <= 1989) m = 0.92;
-  if (year <= 1969 && score >= 21) m *= 0.78;
-  if (year <= 1969 && score >= 28) m *= 0.62;
-  if (year <= 1977 && score >= 35) m *= 0.7;
+  // Softer than it once was: this used to offset the extra snaps from a (college-only)
+  // first-down clock stop. With real snap counts it just shaves the era's big plays.
+  if (year <= 1969) m = 0.86;
+  else if (year <= 1977) m = 0.88;
+  else if (year <= 1989) m = 0.94;
+  if (year <= 1969 && score >= 28) m *= 0.85;
+  if (year <= 1977 && score >= 35) m *= 0.8;
   return m;
 }
 
@@ -706,6 +708,7 @@ function rollInjuries(save: DynastySave, teamId: TeamId): void {
     const weeks = durable ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);
     p.injuredWeeks = weeks;
     p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
+    p.injuredOn = { year: save.year, week: save.week, phase: save.phase };
   }
 }
 
@@ -1946,58 +1949,63 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
   const at = save.teams[awayId];
   if (!ht || !at) return;
-  ht.pf += game.homeScore;
-  ht.pa += game.awayScore;
-  at.pf += game.awayScore;
-  at.pa += game.homeScore;
-  const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
-  const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
-  if (game.homeScore > game.awayScore) {
-    ht.wins += 1;
-    at.losses += 1;
-    if (game.phase === "regular") {
-      ht.careerWins = (ht.careerWins ?? 0) + 1;
-      at.careerLosses = (at.careerLosses ?? 0) + 1;
-      creditCoachWl(save, homeId, "W");
-      creditCoachWl(save, awayId, "L");
-    }
-    ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
-    at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
-    if (sameDiv) {
-      ht.divWins += 1;
-      at.divLosses += 1;
-    }
-    if (sameConf) {
-      ht.confWins += 1;
-      at.confLosses += 1;
-    }
-  } else if (game.awayScore > game.homeScore) {
-    at.wins += 1;
-    ht.losses += 1;
-    if (game.phase === "regular") {
-      at.careerWins = (at.careerWins ?? 0) + 1;
-      ht.careerLosses = (ht.careerLosses ?? 0) + 1;
-      creditCoachWl(save, awayId, "W");
-      creditCoachWl(save, homeId, "L");
-    }
-    at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
-    ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
-    if (sameDiv) {
-      at.divWins += 1;
-      ht.divLosses += 1;
-    }
-    if (sameConf) {
-      at.confWins += 1;
-      ht.confLosses += 1;
-    }
-  } else {
-    ht.ties += 1;
-    at.ties += 1;
-    if (game.phase === "regular") {
-      ht.careerTies = (ht.careerTies ?? 0) + 1;
-      at.careerTies = (at.careerTies ?? 0) + 1;
-      creditCoachWl(save, homeId, "T");
-      creditCoachWl(save, awayId, "T");
+  // Standings, streaks and head-to-head records are the regular season. Playoff results live
+  // in the bracket; counting them here gave 14-game champions 16-2 records, and since each
+  // playoff round re-reads the standings to order its field, it could reshuffle the bracket.
+  if (game.phase === "regular") {
+    ht.pf += game.homeScore;
+    ht.pa += game.awayScore;
+    at.pf += game.awayScore;
+    at.pa += game.homeScore;
+    const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
+    const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
+    if (game.homeScore > game.awayScore) {
+      ht.wins += 1;
+      at.losses += 1;
+      if (game.phase === "regular") {
+        ht.careerWins = (ht.careerWins ?? 0) + 1;
+        at.careerLosses = (at.careerLosses ?? 0) + 1;
+        creditCoachWl(save, homeId, "W");
+        creditCoachWl(save, awayId, "L");
+      }
+      ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
+      at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
+      if (sameDiv) {
+        ht.divWins += 1;
+        at.divLosses += 1;
+      }
+      if (sameConf) {
+        ht.confWins += 1;
+        at.confLosses += 1;
+      }
+    } else if (game.awayScore > game.homeScore) {
+      at.wins += 1;
+      ht.losses += 1;
+      if (game.phase === "regular") {
+        at.careerWins = (at.careerWins ?? 0) + 1;
+        ht.careerLosses = (ht.careerLosses ?? 0) + 1;
+        creditCoachWl(save, awayId, "W");
+        creditCoachWl(save, homeId, "L");
+      }
+      at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
+      ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
+      if (sameDiv) {
+        at.divWins += 1;
+        ht.divLosses += 1;
+      }
+      if (sameConf) {
+        at.confWins += 1;
+        ht.confLosses += 1;
+      }
+    } else {
+      ht.ties += 1;
+      at.ties += 1;
+      if (game.phase === "regular") {
+        ht.careerTies = (ht.careerTies ?? 0) + 1;
+        at.careerTies = (at.careerTies ?? 0) + 1;
+        creditCoachWl(save, homeId, "T");
+        creditCoachWl(save, awayId, "T");
+      }
     }
   }
   rollInjuries(save, homeId);

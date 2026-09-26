@@ -55,7 +55,7 @@ import {
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
 import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
-import { PrimetimeShow } from "./PrimetimeShow";
+import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
@@ -327,7 +327,7 @@ function Office() {
           </p>
         </section>
       )}
-      <PrimetimeShow />
+      <PrimetimeTeaser />
     </div>
   );
 }
@@ -1465,6 +1465,7 @@ function EventPane() {
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "office", label: "Office" },
+  { id: "primetime", label: "Primetime" },
   { id: "roster", label: "Roster" },
   { id: "depth", label: "Depth" },
   { id: "staff", label: "Staff" },
@@ -1545,7 +1546,8 @@ function PlayShell() {
       </header>
       <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-4 py-6">
         {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
-        {event ? <EventPane /> : null}
+        {event && tab !== "primetime" ? <EventPane /> : null}
+        {tab === "primetime" && <PrimetimeShow />}
         {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {showDeadline && tab === "office" ? <DeadlineNight /> : null}
