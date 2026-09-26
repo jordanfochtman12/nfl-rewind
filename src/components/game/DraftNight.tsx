@@ -85,6 +85,8 @@ function measLine(p: Player): string {
   return [ht, wt, fy].filter(Boolean).join(" · ");
 }
 
+const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
+
 export function DraftNight() {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
@@ -230,7 +232,7 @@ export function DraftNight() {
             <div className="rounded-lg border border-brass/25 bg-black/55 px-4 py-4">
               <p className="text-[11px] tracking-[0.4em] text-brass">THE PICK IS IN</p>
               <p className="mt-1 font-display text-lg text-paper">
-                With the {lastPlayer.draftPick ?? last.slot} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
+                With the {ordinal(lastPlayer.draftPick ?? last.slot)} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 {last.takenBy && <Logo id={last.takenBy} size={48} year={save.year} />}
@@ -288,7 +290,7 @@ export function DraftNight() {
             type="button"
             onClick={() => setPosFilter(pos)}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              posFilter === pos ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              posFilter === pos ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {pos}

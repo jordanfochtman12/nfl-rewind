@@ -61,7 +61,7 @@ export function SundayNight() {
                     <Logo id={away} size={28} year={save.year} />
                     <span className="text-sm">{displayName(save.year, away)}</span>
                   </span>
-                  <span className="tabular font-display text-lg">
+                  <span className="bug-num shrink-0 whitespace-nowrap text-2xl">
                     {g.awayScore}–{g.homeScore}
                   </span>
                   <span className="flex items-center gap-2">

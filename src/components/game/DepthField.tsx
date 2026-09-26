@@ -16,11 +16,11 @@ function Chip({ p, label }: { p?: Player; label: string }) {
       type="button"
       onClick={() => openProfile(p.id)}
       className={`min-w-[84px] rounded-md border px-2 py-1 text-center ${
-        hurt ? "border-brick/70 bg-brick/40" : "border-brass/60 bg-black/45"
+        hurt ? "border-brick/70 bg-brick/40" : "border-white/20 bg-gradient-to-b from-[#1b2130]/95 to-black/90 shadow-[inset_0_2px_0_#ffc629,0_4px_10px_#0008] hover:border-brass"
       }`}
     >
       <p className="text-[10px] tracking-wider text-white/60">{label}</p>
-      <p className="truncate font-display text-xs text-white">{playerName(p).split(" ").slice(-1)}</p>
+      <p className="truncate font-display text-sm font-bold uppercase italic text-white">{playerName(p).split(" ").slice(-1)}</p>
       <p className="tabular text-[10px] text-white/70">
         {p.ovr}
         {hurt ? " · OUT" : ""}
@@ -86,8 +86,11 @@ export function DepthField({ teamId }: { teamId?: TeamId }) {
   return (
     <div className="space-y-4">
       <div
-        className="overflow-x-auto rounded-xl border border-line p-4"
-        style={{ background: "linear-gradient(#2f5a3a, #24482e 50%, #2f5a3a)" }}
+        className="overflow-x-auto rounded-xl border border-white/15 p-4 shadow-[inset_0_0_80px_#000a]"
+        style={{
+          background:
+            "linear-gradient(180deg, #ffffff14, transparent 30%, transparent 70%, #0006), repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), #ffffff2e calc(10% - 2px) 10%), repeating-linear-gradient(90deg, #1d5a31 0 5%, #184d29 5% 10%)",
+        }}
       >
         <p className="mb-3 text-center text-[11px] tracking-[0.4em] text-white/70">
           OFFENSE · {off.toUpperCase()}

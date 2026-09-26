@@ -18,10 +18,12 @@ function Name({ id, name }: { id: string; name: string }) {
 
 function Segment({ id, n, title, children }: { id: string; n: number; title: string; children: ReactNode }) {
   return (
-    <section id={`pt-${id}`} className="scroll-mt-4 border-t border-brass/20">
-      <p className="bg-black/40 px-5 py-2.5 font-display text-[11px] tracking-[0.4em] text-brass">
-        SEGMENT {n} · {title.toUpperCase()}
-      </p>
+    <section id={`pt-${id}`} className="scroll-mt-32 border-t border-white/10">
+      <div className="flex items-stretch bg-gradient-to-b from-[#161b26] to-[#07090e]">
+        <span className="bx-primary flex items-center px-4 font-display text-lg font-extrabold italic">{n}</span>
+        <h3 className="flex items-center px-4 py-2.5 text-lg text-white sm:text-xl">{title}</h3>
+        <span className="ml-auto w-24 bg-gradient-to-r from-transparent to-red/40 [clip-path:polygon(24px_0,100%_0,100%_100%,0_100%)]" aria-hidden />
+      </div>
       <div className="px-5 py-5">{children}</div>
     </section>
   );
@@ -52,16 +54,20 @@ export function PrimetimeTeaser() {
     <button
       type="button"
       onClick={() => setTab("primetime")}
-      className="relative block w-full overflow-hidden rounded-xl border border-brass/35 bg-studio p-5 text-left transition hover:border-brass/70"
+      className="sheen group relative block w-full overflow-hidden rounded-xl border border-white/10 bg-studio p-5 text-left transition hover:border-red/60 sm:p-6"
     >
-      <FilmStill still="primetime" veil="full" />
+      <FilmStill still="primetime" veil="left" />
       <div className="relative">
         <p className="font-display text-[11px] tracking-[0.4em] text-brass">
           {show?.v === 2 ? `${show.year} · ${show.title?.toUpperCase()}` : "THE WEEK IN REVIEW"}
         </p>
-        <p className="font-display text-3xl tracking-[0.14em] text-brass">PRIMETIME</p>
-        <p className="mt-2 text-paper">{lead ?? "Sim a Sunday and the show goes on the air."}</p>
-        <p className="mt-3 text-xs tracking-[0.25em] text-brass">WATCH THE FULL SHOW →</p>
+        <p className="bg-gradient-to-b from-white to-[#9aa4b4] bg-clip-text font-display text-5xl font-black uppercase italic leading-none text-transparent">
+          Primetime
+        </p>
+        <p className="mt-2 max-w-xl text-paper">{lead ?? "Sim a Sunday and the show goes on the air."}</p>
+        <span className="bx-btn bx-primary mt-4 inline-flex min-h-9 items-center px-4 text-[13px]">
+          <span className="bx-in">Watch the full show ▸</span>
+        </span>
       </div>
     </button>
   );
@@ -457,24 +463,26 @@ export function PrimetimeShow() {
   }
 
   return (
-    <article className="relative overflow-hidden rounded-xl border border-brass/35 bg-studio">
-      <FilmStill still="primetime" veil="full" />
+    <article className="relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_30px_80px_-30px_#000]">
+      <FilmStill still="primetime" veil="bottom" className="h-[440px]" />
       <div className="relative">
-        <header className="border-b border-brass/25 px-5 py-5">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="font-display text-[11px] tracking-[0.45em] text-brass">HELLO EVERYBODY · WELCOME TO</p>
-              <h2 className="font-display text-5xl tracking-[0.14em] text-brass sm:text-6xl">PRIMETIME</h2>
-            </div>
-            <p className="font-display text-sm tracking-[0.3em] text-brass">
-              {show.year} · {show.title?.toUpperCase()}
-            </p>
+        <header className="sheen border-b border-white/10 px-5 pb-6 pt-8 sm:px-8 sm:pt-12">
+          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">Hello everybody · welcome to</p>
+          <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
+            <h2 className="bg-gradient-to-b from-white via-[#e9edf3] to-[#9aa4b4] bg-clip-text pr-2 text-6xl font-black leading-[0.85] text-transparent sm:text-8xl">
+              Primetime
+            </h2>
+            <span className="bx-primary mb-1 inline-flex px-3 py-1 font-display text-sm font-extrabold uppercase italic tracking-wider [transform:skewX(-12deg)]">
+              <span className="[transform:skewX(12deg)]">
+                {show.year} · {show.title}
+              </span>
+            </span>
           </div>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-paper">{show.open}</p>
+          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-paper">{show.open}</p>
         </header>
 
         {show.recaps.length > 1 && (
-          <div className="overflow-hidden border-b border-brass/20 bg-black/50 py-2.5">
+          <div className="overflow-hidden border-b border-white/10 bg-black/70 py-2.5">
             <div className="ticker flex w-max gap-6 px-5">
               {show.recaps.concat(show.recaps).map((r, i) => (
                 <div key={`${r.awayId}-${r.homeId}-tick-${i}`} className="flex shrink-0 items-center gap-2 text-xs">
@@ -494,7 +502,7 @@ export function PrimetimeShow() {
             <a
               key={s.id}
               href={`#pt-${s.id}`}
-              className="rounded-full border border-brass/30 px-3 py-1 text-[11px] tracking-widest text-brass hover:bg-brass/10"
+              className="bx-chip px-3 py-1.5 text-[12px]"
             >
               {s.title.toUpperCase()}
             </a>
@@ -507,8 +515,8 @@ export function PrimetimeShow() {
           </Segment>
         ))}
 
-        <footer className="border-t border-brass/30 bg-black/55 px-5 py-5">
-          <p className="font-display text-sm tracking-[0.08em] text-brass">{show.close}</p>
+        <footer className="border-t border-white/10 bg-gradient-to-r from-red-deep/60 to-black/60 px-5 py-5">
+          <p className="font-display text-base font-semibold italic text-white">{show.close}</p>
         </footer>
       </div>
     </article>

@@ -1,60 +1,103 @@
+@import "@fontsource/barlow-condensed/latin-500.css";
+@import "@fontsource/barlow-condensed/latin-600.css";
+@import "@fontsource/barlow-condensed/latin-700.css";
+@import "@fontsource/barlow-condensed/latin-600-italic.css";
+@import "@fontsource/barlow-condensed/latin-700-italic.css";
+@import "@fontsource/barlow-condensed/latin-800-italic.css";
+@import "@fontsource/barlow-condensed/latin-900-italic.css";
+@import "@fontsource/barlow/latin-400.css";
+@import "@fontsource/barlow/latin-500.css";
+@import "@fontsource/barlow/latin-600.css";
+@import "@fontsource/barlow/latin-700.css";
+@import "@fontsource/barlow/latin-400-italic.css";
 @import "tailwindcss";
 
+/*
+ * The broadcast package. Everything here is vector or CSS - gradients, clip paths, SVG - so it
+ * renders pin-sharp at any size or pixel density. The package colors (network red, first-down
+ * yellow, studio black, brushed silver) stay fixed; club colors only paint club identity.
+ */
 @theme {
-  --color-bg: #05070c;
-  --color-surface: #0e131d;
-  --color-surface-2: #161d2a;
-  --color-fg: #eef3fb;
-  --color-muted: #93a1b8;
-  --color-subtle: #5c6a82;
-  --color-accent: #ff5a1f;
-  --color-accent-fg: #0a0d14;
-  --color-good: #2de08a;
-  --color-line: #26314420;
-  --color-brick: #e0263c;
-  --color-paper: #d9e2f2;
-  --color-brass: #ffc93c;
-  --color-studio: #020306;
-  --color-chrome: #aebbd1;
-  --color-chrome-2: #4a566c;
-  --color-club: #ff5a1f;
-  --color-club-2: #ffc93c;
-  --color-club-fg: #0a0d14;
-  --font-display: "Oswald", "Arial Narrow", sans-serif;
-  --font-body: "Inter", "Source Serif 4", "Georgia", serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 18px;
+  --color-bg: #04050a;
+  --color-surface: #0b0e15;
+  --color-surface-2: #151a25;
+  --color-fg: #ffffff;
+  --color-muted: #a7b0c2;
+  --color-subtle: #677286;
+  --color-accent: #e8102e;
+  --color-accent-fg: #ffffff;
+  --color-good: #22e27d;
+  --color-line: #ffffff17;
+  --color-brick: #ff3d55;
+  --color-paper: #e4e9f2;
+  --color-brass: #ffc629;
+  --color-studio: #010204;
+  --color-chrome: #cfd6e2;
+  --color-chrome-2: #56617a;
+  --color-red: #e8102e;
+  --color-red-deep: #7c0014;
+  --color-club: #e8102e;
+  --color-club-2: #ffc629;
+  --color-club-fg: #ffffff;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Barlow Condensed", ui-monospace, monospace;
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 5px;
+  --radius-2xl: 7px;
 }
 
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     background: var(--color-bg);
     color: var(--color-fg);
   }
   body {
     font-family: var(--font-body);
+    font-size: 15px;
     min-height: 100dvh;
-    background:
-      radial-gradient(ellipse 1200px 700px at 50% -10%, color-mix(in srgb, var(--color-club) 16%, transparent), transparent 60%),
-      var(--color-bg);
     color: var(--color-fg);
+    background:
+      radial-gradient(ellipse 90% 520px at 50% -140px, color-mix(in srgb, var(--color-club) 20%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 380px at 12% -80px, color-mix(in srgb, white 7%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 380px at 88% -80px, color-mix(in srgb, white 7%, transparent), transparent 70%),
+      repeating-linear-gradient(115deg, transparent 0 22px, color-mix(in srgb, white 1.6%, transparent) 22px 23px),
+      linear-gradient(180deg, #070912, var(--color-bg) 420px);
+    background-attachment: fixed;
   }
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-display);
-    text-wrap: balance;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+    font-weight: 800;
     font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.02;
+    text-wrap: balance;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-red) 70%, transparent);
+    color: white;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3a4254 transparent;
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -68,19 +111,32 @@
 
 .tabular {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Numbers read in the condensed broadcast face. */
+td.tabular,
+span.tabular,
+p.tabular {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .film-grain {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.09;
+  opacity: 0.06;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
 }
 
 .ticker {
-  animation: ticker 42s linear infinite;
+  animation: ticker 60s linear infinite;
+}
+.ticker:hover {
+  animation-play-state: paused;
 }
 @keyframes ticker {
   from {
@@ -96,36 +152,76 @@
   }
 }
 
-/* --- broadcast-package chrome --- */
+/* ------------------------------------------------------------------ */
+/* Section kickers: every small, widely tracked label becomes a        */
+/* broadcast lower-third tag - heavy condensed italic with a red slash. */
+/* ------------------------------------------------------------------ */
 
-/* Glossy metal bevel: a thin bright rim top-left, dark shadow bottom-right. */
-.chrome-bevel {
-  border: 1px solid color-mix(in srgb, var(--color-chrome) 45%, transparent);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-    inset 0 -2px 4px color-mix(in srgb, black 45%, transparent),
-    0 1px 0 color-mix(in srgb, black 60%, transparent);
+:is(p, h2, h3, h4, span, div)[class*="tracking-[0.2"],
+:is(p, h2, h3, h4, span, div)[class*="tracking-[0.3"],
+:is(p, h2, h3, h4, span, div)[class*="tracking-[0.4"],
+:is(p, h2, h3, h4, span, div)[class*="tracking-[0.5"],
+:is(p, h2, h3, h4, span, div)[class*="tracking-widest"] {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+:is(p, h2, h3, h4)[class*="tracking-[0.2"][class*="text-muted"]:is([class*="text-xs"], [class*="text-sm"], [class*="text-lg"]):not(.text-center) {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  color: var(--color-fg);
+}
+:is(p, h2, h3, h4)[class*="tracking-[0.2"][class*="text-muted"]:is([class*="text-xs"], [class*="text-sm"], [class*="text-lg"]):not(.text-center)::before {
+  content: "";
+  flex: none;
+  width: 0.62em;
+  height: 1.05em;
+  background: linear-gradient(180deg, #ff3a55, var(--color-red) 55%, var(--color-red-deep));
+  transform: skewX(-18deg);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-red) 55%, transparent);
 }
 
-/* Angled score-bug panel: diagonal-cut leading edge like a broadcast lower-third. */
+/* ------------------------------------------------------------------ */
+/* Glass-and-metal panels                                              */
+/* ------------------------------------------------------------------ */
+
+.chrome-bevel {
+  border: 1px solid color-mix(in srgb, var(--color-chrome) 30%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, black 60%, transparent),
+    0 2px 6px color-mix(in srgb, black 55%, transparent);
+}
+
+/* Every card built on the "border border-line" pattern: dark glass with a lit top edge. */
+.border.border-line {
+  border-color: color-mix(in srgb, white 9%, transparent);
+  background-image:
+    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent 42%),
+    linear-gradient(160deg, color-mix(in srgb, var(--color-surface-2) 92%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 9%, transparent),
+    0 10px 28px -14px color-mix(in srgb, black 90%, transparent);
+}
+
+/* Angled panel with a hot leading edge, like a score bug. */
 .broadcast-panel {
   position: relative;
-  background: linear-gradient(135deg, var(--color-surface-2), var(--color-surface) 70%);
-  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 6%, transparent), transparent 45%),
+    linear-gradient(135deg, var(--color-surface-2), var(--color-surface) 70%);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
 }
-
 .broadcast-panel::before {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px);
+  clip-path: inherit;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-club) 90%, white 10%),
-    color-mix(in srgb, var(--color-club-2) 80%, transparent) 40%,
-    transparent 70%
-  );
+  background: linear-gradient(135deg, var(--color-red), color-mix(in srgb, var(--color-chrome) 50%, transparent) 35%, transparent 70%);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -134,74 +230,142 @@
   pointer-events: none;
 }
 
-/* Hot chrome divider bar used under headers / between sections. */
+/* The hot bar across the top of a panel: network red into the club's colors, with a gloss line. */
 .chrome-bar {
+  position: relative;
   height: 4px;
   background: linear-gradient(
     90deg,
-    var(--color-club) 0%,
-    color-mix(in srgb, var(--color-club) 60%, var(--color-club-2) 40%) 45%,
-    var(--color-club-2) 55%,
-    color-mix(in srgb, var(--color-club-2) 40%, transparent) 100%
+    var(--color-red) 0%,
+    var(--color-red) 30%,
+    var(--color-club) 30.2%,
+    var(--color-club) 62%,
+    var(--color-club-2) 62.2%,
+    color-mix(in srgb, var(--color-club-2) 30%, transparent) 100%
   );
-  box-shadow: 0 0 14px color-mix(in srgb, var(--color-club) 55%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-red) 45%, transparent);
+}
+.chrome-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: color-mix(in srgb, white 38%, transparent);
 }
 
-/* Stat-bug numerals: glowing, italic, condensed. */
 .stat-glow {
   font-family: var(--font-display);
   font-style: italic;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 10px color-mix(in srgb, var(--color-club) 60%, transparent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--color-brass) 45%, transparent);
 }
 
 .carbon {
   background-image:
-    linear-gradient(135deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
-    linear-gradient(225deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
-    linear-gradient(45deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%),
-    linear-gradient(315deg, color-mix(in srgb, white 4%, transparent) 25%, transparent 25%);
-  background-position:
-    10px 0,
-    10px 0,
-    0 0,
-    0 0;
-  background-size: 20px 20px;
-  background-repeat: repeat;
+    repeating-linear-gradient(45deg, color-mix(in srgb, white 2.5%, transparent) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, color-mix(in srgb, black 30%, transparent) 0 2px, transparent 2px 6px);
 }
 
-/* --- broadcast card/table pass (applies wherever the flat card/table pattern is already used) --- */
+/* ------------------------------------------------------------------ */
+/* Buttons & tabs: skewed, glossy broadcast chips                      */
+/* ------------------------------------------------------------------ */
 
-/* Every full-bordered card ("rounded-xl/lg border border-line ...") gets a gradient panel + chrome rim,
-   instead of a flat fill. Scoped to the exact class combo so unrelated bordered elements are untouched. */
-.border.border-line {
-  border-color: color-mix(in srgb, var(--color-chrome) 22%, var(--color-line));
-  background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-surface-2) 85%, transparent), transparent 65%);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 5%, transparent),
-    0 1px 0 color-mix(in srgb, black 40%, transparent);
-}
-
-/* Table headers: dark chrome strip with a hot club-color underline instead of a flat fill. */
-table thead {
+.bx-btn {
   position: relative;
-  background: linear-gradient(180deg, var(--color-surface-2), color-mix(in srgb, var(--color-surface-2) 55%, black));
-  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--color-club) 55%, transparent);
+  isolation: isolate;
+  transform: skewX(-12deg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition:
+    filter 120ms ease,
+    transform 120ms ease;
+}
+.bx-btn > .bx-in {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transform: skewX(12deg);
+}
+.bx-btn:not(:disabled):hover {
+  filter: brightness(1.14);
+}
+.bx-btn:not(:disabled):active {
+  transform: skewX(-12deg) translateY(1px);
+}
+.bx-btn:disabled {
+  opacity: 0.4;
+}
+.bx-primary {
+  color: #fff;
+  text-shadow: 0 1px 0 color-mix(in srgb, black 45%, transparent);
+  background: linear-gradient(180deg, #ff4a62 0%, #e8102e 46%, #c10522 54%, #8a0018 100%);
+  border: 1px solid #ff6b7e66;
+  box-shadow:
+    inset 0 1px 0 #ffffff66,
+    inset 0 -2px 0 #0000004d,
+    0 4px 14px -4px #e8102e99;
+}
+.bx-ghost {
+  color: var(--color-fg);
+  background: linear-gradient(180deg, #3b4355 0%, #252b38 46%, #1a1f2a 54%, #10131a 100%);
+  border: 1px solid #ffffff26;
+  box-shadow:
+    inset 0 1px 0 #ffffff33,
+    inset 0 -2px 0 #00000059,
+    0 3px 10px -4px #000000cc;
+}
+.bx-brick {
+  color: #fff;
+  background: linear-gradient(180deg, #5a1a24 0%, #3d0f17 50%, #26080d 100%);
+  border: 1px solid #ff3d5566;
+  box-shadow: inset 0 1px 0 #ffffff26;
+}
+.bx-gold {
+  color: #140f00;
+  background: linear-gradient(180deg, #ffe27a 0%, #ffc629 46%, #e8a900 54%, #a87800 100%);
+  border: 1px solid #fff1b066;
+  box-shadow:
+    inset 0 1px 0 #ffffffaa,
+    0 4px 14px -4px #ffc62999;
 }
 
-/* Row hover + zebra separation for every data table. */
+/* ------------------------------------------------------------------ */
+/* Data tables: black header strip, red underline, zebra rows          */
+/* ------------------------------------------------------------------ */
+
+table thead {
+  background: linear-gradient(180deg, #1b2130, #0c0f16);
+  box-shadow: inset 0 -2px 0 var(--color-red);
+}
+table thead th {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-chrome);
+}
+table tbody tr:nth-child(even) {
+  background-color: color-mix(in srgb, white 2.2%, transparent);
+}
 table tbody tr {
   transition: background-color 120ms ease;
 }
 table tbody tr:hover {
-  background-color: color-mix(in srgb, var(--color-surface-2) 55%, transparent);
+  background-color: color-mix(in srgb, var(--color-red) 11%, transparent);
 }
 
-/* Broadcast-style page-turn: replayed whenever a tab's content is remounted (see PlayShell's `key={tab}`). */
+/* ------------------------------------------------------------------ */
+/* Motion                                                             */
+/* ------------------------------------------------------------------ */
+
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -209,11 +373,115 @@ table tbody tr:hover {
   }
 }
 .rise-in {
-  animation: rise-in 240ms ease-out;
+  animation: rise-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Tab change: a red light wipe crosses the screen. */
+@keyframes wipe {
+  0% {
+    transform: translateX(-60vw) skewX(-20deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(130vw) skewX(-20deg);
+    opacity: 1;
+  }
+}
+.wipe {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 40vw;
+  height: 100dvh;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-red) 16%, transparent) 40%,
+    color-mix(in srgb, white 8%, transparent) 50%,
+    transparent
+  );
+  animation: wipe 560ms cubic-bezier(0.6, 0, 0.3, 1) forwards;
+}
+
+/* A slow gloss sweep for hero plates. */
+@keyframes sheen {
+  0%,
+  70% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(320%) skewX(-20deg);
+  }
+}
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, white 8%, transparent), transparent);
+  animation: sheen 8s ease-in-out infinite;
 }
 
 /* Gold "on top" treatment for a #1 line on a leaderboard/standings table. */
 .lead-row {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--color-brass) 14%, transparent), transparent 70%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--color-brass) 16%, transparent), transparent 70%) !important;
   box-shadow: inset 3px 0 0 var(--color-brass);
+}
+
+/* Score-bug numerals. */
+.bug-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-shadow: 0 2px 0 #0008;
+}
+
+/* Backdrop streaks drift slowly across the scene. */
+@keyframes streak {
+  0% {
+    transform: translateX(-30%) skewX(-30deg);
+  }
+  100% {
+    transform: translateX(40%) skewX(-30deg);
+  }
+}
+.bx-streak {
+  animation: streak 9s ease-in-out infinite alternate;
+}
+
+/* Filter / toggle chips: angled plates; the live one is lit red with a gold sill. */
+.bx-chip {
+  border-radius: 0 !important;
+  border-color: transparent !important;
+  clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+  padding-left: 0.95rem !important;
+  padding-right: 0.95rem !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  background: linear-gradient(180deg, #2a3040, #141821);
+  transition: filter 120ms ease;
+}
+.bx-chip:hover {
+  color: #fff;
+  filter: brightness(1.15);
+}
+.bx-chip-on {
+  color: #fff !important;
+  background:
+    linear-gradient(0deg, var(--color-brass) 0 3px, transparent 3px),
+    linear-gradient(180deg, #ff4a62 0%, #e8102e 48%, #b3001d 52%, #8a0018 100%);
+  text-shadow: 0 1px 0 #0006;
 }

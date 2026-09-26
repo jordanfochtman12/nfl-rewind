@@ -49,8 +49,14 @@ export function buildSeasonPlan(save: DynastySave): void {
   const o = ownerOf(save);
   if (o.support >= 60) goals.push({ id: "fill95", text: "Keep the house full: 95% average at home" });
   else goals.push({ id: "support55", text: "Win the city back: fan support to 55" });
-  const prospect = rosterOf(save, id)
+  // A young player who is actually in line for snaps: top of his position group on this roster.
+  const roster = rosterOf(save, id);
+  const slots: Partial<Record<string, number>> = { QB: 1, RB: 2, FB: 1, WR: 3, TE: 1, DE: 2, DT: 2, OLB: 2, MLB: 1, CB: 3, S: 2 };
+  const inLine = (p: Player) =>
+    roster.filter((q) => q.pos === p.pos && q.ovr > p.ovr && q.injuredWeeks <= 0).length < (slots[p.pos] ?? 1);
+  const prospect = roster
     .filter((p) => p.age <= 24 && p.ovr >= 62 && p.ovr <= 80 && (p.potential ?? p.ovr) >= p.ovr + 5 && !["K", "P"].includes(p.pos))
+    .filter(inLine)
     .sort((a, b) => (b.potential ?? 0) - (a.potential ?? 0))[0];
   if (prospect) goals.push({ id: `develop:${prospect.id}`, text: `Develop ${playerName(prospect)} (${prospect.pos}): 10+ games of work` });
   save.seasonPlan = { year, projWins: Math.round(proj * 10) / 10, outlook, goals };
@@ -104,14 +110,18 @@ export function gradeSeasonPlan(save: DynastySave): void {
   let got = 0;
   let max = 0;
   let delta = 0;
+  const t = save.teams[save.userTeamId]!;
   for (const g of plan.goals) {
     g.met = goalMet(save, g);
     const w = g.major ? 2 : 1;
     max += w;
+    // One win short of the line is close, not a failure: half credit and no penalty.
+    const near = g.id === "wins" && !g.met && t.wins + 1 >= Number(g.text.match(/(\d+) games/)?.[1] ?? 99);
     if (g.met) {
       got += w;
       delta += g.major ? 2 : 1;
-    } else if (g.major) delta -= 3;
+    } else if (near) got += w / 2;
+    else if (g.major) delta -= 2;
   }
   const pct = max ? got / max : 0;
   const grade = pct >= 0.95 ? "A+" : pct >= 0.8 ? "A" : pct >= 0.6 ? "B" : pct >= 0.4 ? "C" : pct >= 0.2 ? "D" : "F";

@@ -58,8 +58,9 @@ import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, s
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
+import { BottomLine, ClubPlate, NetworkBug, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
-import { endHoldout, holdoutAsk } from "@/lib/game";
+import { clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
@@ -101,13 +102,24 @@ function TitleScreen() {
   const bytes = save ? saveByteLength(save) : 0;
   return (
     <main className="relative isolate min-h-dvh overflow-hidden">
-      <FilmStill still="title" video="/art/title.mp4" veil="left" />
-      <div className="relative mx-auto flex min-h-dvh max-w-3xl flex-col justify-center gap-8 px-5 py-12">
-      <p className="font-display text-xs tracking-[0.4em] text-brass">START IN 1966 · SUPER BOWL I ERA</p>
-      <h1 className="font-display text-6xl leading-[0.9] text-fg sm:text-8xl">
-        NFL
-        <span className="block text-brass">Rewind</span>
+      <FilmStill still="title" veil="left" />
+      <div className="relative mx-auto flex min-h-dvh max-w-5xl flex-col justify-center gap-7 px-5 py-12">
+      <NetworkBug className="self-start" />
+      <p className="font-display text-xs tracking-[0.4em] text-brass">Start in 1966 · Super Bowl I era</p>
+      <h1 className="relative -ml-1 select-none leading-[0.8]">
+        <span className="block bg-gradient-to-b from-white via-[#eef1f6] to-[#8e98aa] bg-clip-text pr-4 text-[5.5rem] font-black text-transparent drop-shadow-[0_6px_0_#000] sm:text-[9rem]">
+          NFL
+        </span>
+        <span className="relative -mt-1 inline-block pr-6">
+          <span className="absolute inset-y-[12%] -left-3 right-0 bg-gradient-to-b from-[#ff4a62] via-red to-red-deep shadow-[0_10px_40px_-6px_#e8102e] [transform:skewX(-14deg)]" aria-hidden />
+          <span className="relative block px-3 text-[5.5rem] font-black text-white drop-shadow-[0_3px_0_#0008] sm:text-[9rem]">Rewind</span>
+        </span>
       </h1>
+      <div className="flex max-w-xl items-center gap-3 font-display text-sm font-bold uppercase italic tracking-wider">
+        <span className="bg-brass px-2 py-0.5 text-[#140f00]">1966</span>
+        <span className="h-[3px] flex-1 bg-gradient-to-r from-brass via-white/60 to-red" aria-hidden />
+        <span className="bg-white px-2 py-0.5 text-black">2027</span>
+      </div>
       <p className="max-w-lg text-lg text-paper">
         You are the GM. Draft the real classes, hire the staff, survive Sunday. Rewrite football history from Super Bowl I through 2027.
       </p>
@@ -154,20 +166,27 @@ function TeamSelect() {
   const afl = ACTIVE_1966.filter((id) => originalLeague(id) === "AFL");
   const Group = ({ title, ids }: { title: string; ids: readonly TeamId[] }) => (
     <section className="space-y-3">
-      <h2 className="text-sm tracking-[0.2em] text-muted">{title}</h2>
+      <h2 className="text-lg tracking-[0.2em] text-muted">{title}</h2>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {ids.map((id) => (
           <button
             key={id}
             type="button"
             onClick={() => newGame(id)}
-            className="chrome-bevel flex min-h-14 items-center gap-3 overflow-hidden rounded-lg bg-gradient-to-b from-surface-2/95 to-surface/95 px-3 text-left backdrop-blur-sm transition-all hover:brightness-125"
+            className="group relative flex min-h-16 items-center gap-3 overflow-hidden border border-white/10 bg-gradient-to-b from-[#1b2130]/95 to-[#0a0d14]/95 pr-3 text-left shadow-[inset_0_1px_0_#ffffff1a] backdrop-blur-sm transition-all hover:border-red/70 hover:brightness-125"
           >
-            <ClubHash id={id} year={1966} className="w-1.5 self-stretch rounded-sm" />
-            <Logo id={id} size={44} year={1966} />
-            <span>
-              <span className="block font-display text-base">{locationOf(1966, id)}</span>
-              <span className="text-sm text-muted">{nicknameOf(1966, id)}</span>
+            <span
+              className="flex h-full min-h-16 w-16 shrink-0 items-center justify-center [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]"
+              style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${clubInk(id, 1966).primary} 75%, white), ${clubInk(id, 1966).primary} 50%, color-mix(in srgb, ${clubInk(id, 1966).primary} 65%, black))` }}
+            >
+              <Logo id={id} size={40} year={1966} />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-display text-xs font-bold uppercase italic tracking-[0.14em] text-muted">{locationOf(1966, id)}</span>
+              <span className="block font-display text-2xl font-extrabold uppercase italic leading-none">{nicknameOf(1966, id)}</span>
+            </span>
+            <span className="ml-auto font-display text-xl font-black italic text-red opacity-0 transition group-hover:opacity-100" aria-hidden>
+              ▸
             </span>
           </button>
         ))}
@@ -180,8 +199,8 @@ function TeamSelect() {
       <div className="relative mx-auto max-w-4xl space-y-8 px-5 py-10">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="font-display text-xs tracking-[0.35em] text-brass">1966 MEDIA GUIDE</p>
-          <h1 className="text-3xl">Choose your club</h1>
+          <p className="font-display text-xs tracking-[0.35em] text-brass">1966 media guide</p>
+          <h1 className="text-5xl sm:text-6xl">Choose your club</h1>
         </div>
         <Btn onClick={() => setScreen("title")}>Back</Btn>
       </div>
@@ -230,8 +249,8 @@ function PhaseAction() {
     else step({});
   };
   return (
-    <Btn kind="primary" onClick={onClick}>
-      {label[save.phase] ?? "Continue"}
+    <Btn kind="primary" onClick={onClick} className="min-h-12 px-7 text-lg">
+      {label[save.phase] ?? "Continue"} <span aria-hidden>▸</span>
     </Btn>
   );
 }
@@ -294,14 +313,31 @@ function Office() {
   const house = venueOf(save.year, save.userTeamId);
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-xl border border-line bg-surface">
+      <section className="sheen relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]">
+        <FilmStill still="office" veil="left" />
+        <div
+          className="pointer-events-none absolute -right-10 top-0 h-full w-2/5 opacity-40 [clip-path:polygon(30%_0,100%_0,100%_100%,0_100%)]"
+          style={{ background: `linear-gradient(135deg, ${clubInk(save.userTeamId, save.year).primary}, transparent 75%)` }}
+          aria-hidden
+        />
         <ClubRibbon />
-        <div className="flex flex-wrap items-end justify-between gap-4 p-4">
-          <div>
+        <div className="relative flex flex-wrap items-end justify-between gap-5 p-5 sm:p-6">
+          <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+            <span className="hidden sm:block">
+              <Logo id={save.userTeamId} size={96} />
+            </span>
+            <div className="min-w-0">
             <p className="text-xs tracking-[0.25em] text-muted">{save.weekLabel}</p>
-            <h2 className="text-3xl">{displayName(save.year, save.userTeamId)}</h2>
-            <p className="tabular text-muted">
-              {rec} · career {career} · HC {hc?.name ?? "—"} · OC {oc?.name ?? "—"} · DC {dc?.name ?? "—"}
+            <h2 className="text-4xl leading-[0.9] sm:text-5xl">{displayName(save.year, save.userTeamId)}</h2>
+            <p className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <span className="bug-num text-4xl text-white">{rec}</span>
+              <span className="font-display text-sm font-semibold uppercase italic tracking-wide text-muted">
+                career <span className="text-white">{career}</span>
+              </span>
+            </p>
+            <p className="mt-1 font-display text-sm font-semibold uppercase italic tracking-wide text-muted">
+              HC <span className="text-white">{hc?.name ?? "—"}</span> · OC <span className="text-white">{oc?.name ?? "—"}</span> · DC{" "}
+              <span className="text-white">{dc?.name ?? "—"}</span>
             </p>
             <p className="text-sm text-subtle">
               {house.stadium}
@@ -311,6 +347,7 @@ function Office() {
               Payroll {formatMoney(teamPayroll(save, save.userTeamId), save.year)}
               {save.salaryCap ? ` · cap ${formatMoney(save.salaryCap, save.year)}` : " · pre-cap era"}
             </p>
+            </div>
           </div>
           <PhaseAction />
         </div>
@@ -559,8 +596,8 @@ function Roster() {
                     </Btn>
                   ) : null}
                   <Btn
-                    kind="brick"
-                    className="min-h-9 px-3 text-xs"
+                    kind="ghost"
+                    className="min-h-8 px-3 text-xs hover:!text-brick"
                     onClick={() =>
                       desk((s) => {
                         const r = cutPlayer(s, s.userTeamId, p.id);
@@ -924,15 +961,29 @@ function Schedule() {
                   {g.site ? <span className="w-full text-[10px] text-subtle">{g.site}</span> : null}
                 </span>
                 <span className="shrink-0 text-right">
-                  <span className="tabular block">
-                    {g.played
-                      ? (() => {
-                          const us = home ? g.homeScore : g.awayScore;
-                          const them = home ? g.awayScore : g.homeScore;
-                          return `${us > them ? "W" : us < them ? "L" : "T"} ${us}–${them}`;
-                        })()
-                      : "—"}
-                  </span>
+                  {g.played ? (
+                    (() => {
+                      const us = home ? g.homeScore : g.awayScore;
+                      const them = home ? g.awayScore : g.homeScore;
+                      const r = us > them ? "W" : us < them ? "L" : "T";
+                      return (
+                        <span className="inline-flex items-center gap-2">
+                          <span
+                            className={`px-1.5 font-display text-sm font-extrabold italic [transform:skewX(-12deg)] ${
+                              r === "W" ? "bg-good text-black" : r === "L" ? "bg-red text-white" : "bg-chrome-2 text-white"
+                            }`}
+                          >
+                            {r}
+                          </span>
+                          <span className="bug-num text-xl">
+                            {us}–{them}
+                          </span>
+                        </span>
+                      );
+                    })()
+                  ) : (
+                    <span className="tabular block">—</span>
+                  )}
                   {realResultFor(g, save.userTeamId) ? (
                     <span className="tabular block text-[10px] text-subtle">real {realResultFor(g, save.userTeamId)}</span>
                   ) : null}
@@ -1071,7 +1122,7 @@ function Stats() {
             aria-selected={scope === k}
             onClick={() => setScope(k)}
             className={`min-h-11 rounded-full border px-4 text-xs tracking-widest ${
-              scope === k ? "border-club bg-club/20 text-fg" : "border-line bg-surface text-muted"
+              scope === k ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {label.toUpperCase()}
@@ -1088,19 +1139,19 @@ function Stats() {
             type="button"
             onClick={() => setPosFilter(pos)}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              posFilter === pos ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              posFilter === pos ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {pos}
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>button]:shrink-0">
         <button
           type="button"
           onClick={() => setTeamFilter("ALL")}
           className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-            teamFilter === "ALL" ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+            teamFilter === "ALL" ? "bx-chip bx-chip-on" : "bx-chip"
           }`}
         >
           League
@@ -1109,7 +1160,7 @@ function Stats() {
           type="button"
           onClick={() => setTeamFilter("mine")}
           className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-            teamFilter === "mine" ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+            teamFilter === "mine" ? "bx-chip bx-chip-on" : "bx-chip"
           }`}
         >
           My club
@@ -1120,7 +1171,7 @@ function Stats() {
             type="button"
             onClick={() => setTeamFilter(id)}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              teamFilter === id ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              teamFilter === id ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {locationOf(save.year, id)}
@@ -1213,7 +1264,7 @@ function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }
               type="button"
               onClick={() => setScope(s)}
               className={`min-h-9 rounded-md border px-3 text-xs tracking-widest ${
-                scope === s ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+                scope === s ? "bx-chip bx-chip-on" : "bx-chip"
               }`}
             >
               {s === "career" ? "ALL-TIME CAREER" : s === "season" ? "ALL-TIME SEASON" : "SINGLE GAME"}
@@ -1419,7 +1470,7 @@ function AllDecadeTeams() {
               type="button"
               onClick={() => setDecade(d)}
               className={`min-h-9 rounded-md border px-3 text-xs tracking-widest ${
-                decade === d ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+                decade === d ? "bx-chip bx-chip-on" : "bx-chip"
               }`}
             >
               {d}S
@@ -1514,51 +1565,26 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <ClubDesk id={save.userTeamId} year={save.year} className="min-h-dvh bg-bg">
-      <header
-        className="carbon sticky top-0 z-10 border-b border-line backdrop-blur"
-        style={{
-          background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--color-club) 22%, var(--color-studio)), var(--color-studio) 70%)",
-        }}
-      >
+      <header className="sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div className="chrome-bevel flex items-center gap-3 rounded-md bg-black/30 px-3 py-1.5">
-            <Logo id={save.userTeamId} size={32} />
-            <div>
-              <p className="font-display text-sm italic leading-none tracking-wide text-fg">
-                {displayName(save.year, save.userTeamId)}
-              </p>
-              <p className="stat-glow text-xs text-club-2">{save.weekLabel}</p>
-            </div>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <NetworkBug className="max-md:hidden" />
+            <ClubPlate save={save} />
           </div>
-          <div className="flex gap-2">
-            <Btn onClick={download} className="hidden sm:inline-flex">
+          <div className="flex shrink-0 gap-2">
+            <Btn onClick={download} className="min-h-9 px-4 text-[13px] max-sm:hidden">
               Export
             </Btn>
-            <Btn kind="primary" onClick={resign}>
+            <Btn onClick={resign} className="min-h-9 px-4 text-[13px]">
               Title
             </Btn>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-1.5 overflow-x-auto px-4 pb-3">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setTab(t.id)}
-              className={`chrome-bevel min-h-10 shrink-0 rounded-md px-3 font-display text-sm font-semibold uppercase italic tracking-wide transition-all ${
-                tab === t.id
-                  ? "bg-gradient-to-b from-club to-[color-mix(in_srgb,var(--color-club)_70%,black)] text-club-fg"
-                  : "bg-black/25 text-muted hover:text-fg"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
+        <TabStrip tabs={TABS} active={tab} onPick={setTab} />
       </header>
-      <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-4 py-6">
+      <div key={`wipe-${tab}`} className="wipe" aria-hidden />
+      <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
         {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
         {event && tab !== "primetime" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
@@ -1579,6 +1605,7 @@ function PlayShell() {
         <TeamRosterModal />
         <CrunchCall />
       </main>
+      <BottomLine save={save} />
     </ClubDesk>
   );
 }

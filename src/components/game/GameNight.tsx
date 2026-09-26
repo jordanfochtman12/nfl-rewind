@@ -8,7 +8,7 @@ import {
   type TeamId,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
-import { Logo } from "./chrome";
+import { Btn, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
 
 function StatBar({
@@ -299,16 +299,16 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
               </span>
             ) : null}
           </p>
-          <h3 className="mt-1 font-display text-2xl tracking-wide">
+          <h3 className="mt-1 text-3xl sm:text-4xl">
             {displayName(save.year, away)} at {displayName(save.year, home)}
           </h3>
           <p className="mt-1 text-sm text-muted">{wxLine(game)}</p>
           {game.filmNote ? <p className="mt-1 text-sm text-brass">{game.filmNote}</p> : null}
         </div>
         {onClose ? (
-          <button type="button" className="min-h-11 rounded-md border border-line px-3 text-sm text-muted" onClick={onClose}>
+          <Btn onClick={onClose} className="min-h-9 px-4 text-[13px]">
             Close
-          </button>
+          </Btn>
         ) : null}
       </div>
 
@@ -317,19 +317,21 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
           <div
             className="flex items-center gap-3 px-4 py-4"
             style={{
-              background: `linear-gradient(115deg, ${awayInk.primary}, color-mix(in srgb, ${awayInk.primary} 45%, black) 85%)`,
+              background: `linear-gradient(180deg, #ffffff2e, transparent 46%, #0000 54%, #0005), linear-gradient(115deg, ${awayInk.primary}, color-mix(in srgb, ${awayInk.primary} 45%, black) 85%)`,
               color: awayInk.onPrimary,
             }}
           >
-            <Logo id={away} size={48} year={save.year} />
+            <Logo id={away} size={60} year={save.year} />
             <div>
-              <p className="text-sm opacity-80">{displayName(save.year, away)}</p>
-              <p className="stat-glow tabular font-display text-4xl">{game.played ? game.awayScore : "—"}</p>
+              <p className="font-display text-sm font-bold uppercase italic tracking-wide opacity-90">{displayName(save.year, away)}</p>
+              <p className="bug-num text-6xl">{game.played ? game.awayScore : "—"}</p>
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center gap-2 bg-studio px-4 py-3">
-            <p className="font-display text-xs tracking-[0.4em] text-brass">{game.played ? "FINAL" : "UPCOMING"}</p>
+          <div className="flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#1b2130] to-[#05070b] px-4 py-3">
+            <p className="bx-primary px-3 py-0.5 font-display text-sm font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
+              <span className="inline-block [transform:skewX(12deg)]">{game.played ? `FINAL${game.ot ? "/OT" : ""}` : "UPCOMING"}</span>
+            </p>
             {game.played && game.homeQ && game.awayQ && (
               <table className="text-xs">
                 <thead className="tracking-widest text-muted">
@@ -370,23 +372,23 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
           <div
             className="flex items-center justify-end gap-3 px-4 py-4 text-right"
             style={{
-              background: `linear-gradient(245deg, ${homeInk.primary}, color-mix(in srgb, ${homeInk.primary} 45%, black) 85%)`,
+              background: `linear-gradient(180deg, #ffffff2e, transparent 46%, #0000 54%, #0005), linear-gradient(245deg, ${homeInk.primary}, color-mix(in srgb, ${homeInk.primary} 45%, black) 85%)`,
               color: homeInk.onPrimary,
             }}
           >
             <div>
-              <p className="text-sm opacity-80">{displayName(save.year, home)}</p>
-              <p className="stat-glow tabular font-display text-4xl">{game.played ? game.homeScore : "—"}</p>
+              <p className="font-display text-sm font-bold uppercase italic tracking-wide opacity-90">{displayName(save.year, home)}</p>
+              <p className="bug-num text-6xl">{game.played ? game.homeScore : "—"}</p>
             </div>
-            <Logo id={home} size={48} year={save.year} />
+            <Logo id={home} size={60} year={save.year} />
           </div>
         </div>
       </div>
 
       {mvp && (
-        <div className="chrome-bevel flex items-center justify-between gap-3 rounded-md bg-gradient-to-r from-brass/15 to-transparent px-4 py-3">
-          <span className="text-xs tracking-[0.25em] text-brass">PLAYER OF THE GAME</span>
-          <span className="font-display text-lg">
+        <div className="chrome-bevel flex items-center justify-between gap-3 rounded-md bg-gradient-to-r from-brass/25 via-brass/5 to-transparent px-4 py-3">
+          <span className="bx-gold px-2 py-0.5 text-[11px] tracking-[0.2em] text-[#140f00] [transform:skewX(-12deg)]">PLAYER OF THE GAME</span>
+          <span className="font-display text-xl font-bold uppercase italic">
             <PlayerLink player={mvp} className="inline min-h-0" /> <span className="text-sm text-muted">{mvp.pos}</span>
           </span>
         </div>
@@ -498,7 +500,7 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
             type="button"
             onClick={() => setSide(id)}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              side === id ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface-2 text-muted"
+              side === id ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {displayName(save.year, id)}

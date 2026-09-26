@@ -1,4 +1,4 @@
-import { displayName, type TeamId } from "@/lib/game";
+import { clubInk, displayName, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 
@@ -34,30 +34,51 @@ export function CrunchCall() {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-studio/85 p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="crunch-title">
-      <article className="w-full max-w-lg overflow-hidden rounded-none border-0 border-brass/40 bg-bg sm:rounded-xl sm:border">
-        <header className="border-b border-brass/25 bg-surface px-5 py-4">
-          <p className="font-display text-[11px] tracking-[0.4em] text-brass">CRUNCH TIME · THE OWNER&apos;S CALL</p>
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Logo id={us} size={40} />
-              <span className="tabular font-display text-4xl">{sit.us}</span>
-            </div>
-            <div className="text-center">
-              <p className="tabular font-display text-2xl text-brass">{clockText(sit.clock)}</p>
-              <p className="text-[10px] tracking-[0.3em] text-muted">{period.toUpperCase()}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="tabular font-display text-4xl">{sit.them}</span>
-              <Logo id={opp} size={40} />
-            </div>
+      <article className="w-full max-w-lg overflow-hidden rounded-none border-0 border-white/15 bg-bg shadow-[0_30px_90px_-20px_#000] sm:rounded-xl sm:border">
+        <header className="border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]">
+          <div className="flex items-center justify-between px-5 pt-4">
+            <p className="bx-primary px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
+              <span className="inline-block [transform:skewX(12deg)]">CRUNCH TIME</span>
+            </p>
+            <p className="font-display text-xs font-bold uppercase italic tracking-[0.2em] text-brass">The owner&apos;s call</p>
           </div>
-          <p className="mt-1 text-center text-xs text-muted">
+          <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-stretch">
+            {([us, opp] as TeamId[]).map((id, i) => {
+              const ink = clubInk(id, save.year);
+              const score = i === 0 ? sit.us : sit.them;
+              const slab = (
+                <div
+                  key={id}
+                  className={`flex items-center gap-3 px-4 py-3 ${i === 1 ? "flex-row-reverse text-right" : ""}`}
+                  style={{
+                    background: `linear-gradient(180deg, #ffffff2e, transparent 46%, #0000 54%, #0005), linear-gradient(${i === 0 ? 115 : 245}deg, ${ink.primary}, color-mix(in srgb, ${ink.primary} 40%, black) 90%)`,
+                    color: ink.onPrimary,
+                  }}
+                >
+                  <Logo id={id} size={40} />
+                  <span className="bug-num text-5xl">{score}</span>
+                </div>
+              );
+              return i === 0 ? (
+                slab
+              ) : (
+                <div key="wrap" className="contents">
+                  <div className="flex flex-col items-center justify-center bg-black px-4">
+                    <p className="bug-num text-3xl text-brass">{clockText(sit.clock)}</p>
+                    <p className="font-display text-[11px] font-bold italic tracking-[0.25em] text-muted">{period.toUpperCase()}</p>
+                  </div>
+                  {slab}
+                </div>
+              );
+            })}
+          </div>
+          <p className="py-2 text-center font-display text-xs font-semibold uppercase italic tracking-wider text-muted">
             {displayName(save.year, us)} vs {displayName(save.year, opp)}
           </p>
         </header>
         <div className="space-y-4 px-5 py-5">
           <div>
-            <h2 id="crunch-title" className="font-display text-2xl leading-tight">
+            <h2 id="crunch-title" className="text-3xl leading-tight">
               {title}
             </h2>
             <p className="mt-1 text-sm text-muted">{context}</p>

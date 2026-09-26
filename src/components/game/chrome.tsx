@@ -76,26 +76,20 @@ export function Btn({
   kind = "ghost",
   disabled,
   className = "",
+  title,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
-  kind?: "primary" | "ghost" | "brick";
+  kind?: "primary" | "ghost" | "brick" | "gold";
   disabled?: boolean;
   className?: string;
+  title?: string;
 }) {
-  const base =
-    "chrome-bevel inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 font-display text-sm font-semibold uppercase italic tracking-wide transition-all hover:-translate-y-px active:translate-y-px disabled:opacity-40 disabled:hover:translate-y-0 disabled:active:translate-y-0";
-  const map = {
-    primary:
-      "bg-gradient-to-b from-club to-[color-mix(in_srgb,var(--color-club)_70%,black)] text-club-fg hover:brightness-110",
-    ghost:
-      "bg-gradient-to-b from-surface-2 to-surface text-fg hover:from-[color-mix(in_srgb,var(--color-surface-2)_130%,white)] hover:to-surface-2",
-    brick:
-      "bg-gradient-to-b from-brick to-[color-mix(in_srgb,var(--color-brick)_70%,black)] text-fg hover:brightness-110",
-  };
+  // Skewed glossy chip; the inner span counter-skews so the label stays upright.
+  const base = "bx-btn inline-flex min-h-11 items-center justify-center rounded-sm px-5 text-[15px]";
   return (
-    <button type="button" disabled={disabled} onClick={onClick} className={`${base} ${map[kind]} ${className}`}>
-      {children}
+    <button type="button" title={title} disabled={disabled} onClick={onClick} className={`${base} bx-${kind} ${className}`}>
+      <span className="bx-in">{children}</span>
     </button>
   );
 }

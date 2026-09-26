@@ -309,7 +309,7 @@ export function PlayerProfile() {
                 aria-selected={view === k}
                 onClick={() => setView(k)}
                 className={`min-h-9 rounded-full border px-4 text-xs tracking-[0.15em] ${
-                  view === k ? "border-brass bg-brass/15 text-brass" : "border-line text-muted hover:text-fg"
+                  view === k ? "bx-chip bx-chip-on" : "bx-chip"
                 }`}
               >
                 {label.toUpperCase()}

@@ -196,7 +196,7 @@ export function MarketDesk() {
                 setGet([]);
               }}
               className={`inline-flex min-h-11 items-center gap-2 rounded-md border px-3 text-xs tracking-widest ${
-                other === t.id ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+                other === t.id ? "bx-chip bx-chip-on" : "bx-chip"
               }`}
             >
               <Logo id={t.id} size={18} year={save.year} />
