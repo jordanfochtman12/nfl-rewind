@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ARCH_LABEL,
   currentDraftTeam,
+  originalLeague,
+  sessionOf,
   displayName,
   draftOrder,
   draftQueue,
@@ -137,6 +139,7 @@ export function DraftNight() {
       ? save.players[board[0].playerId]
       : undefined;
   const isUser = save.phase === "draft" && onClock === save.userTeamId;
+  const myPicksLeft = draftQueue(save).slice(save.draftPickIndex).some((p) => p.owner === save.userTeamId);
   const cpuUp = save.phase === "draft" && !!onClock && onClock !== save.userTeamId;
   const done = save.phase !== "draft" || !onClock;
   const needs = onClock
@@ -259,6 +262,13 @@ export function DraftNight() {
             </div>
           )}
 
+          {cpuUp && !myPicksLeft && (
+            <p className="rounded-md border border-brass/40 bg-brass/10 px-4 py-3 text-sm">
+              {sessionOf(save) === "nfl" && originalLeague(save.userTeamId) === "AFL"
+                ? "This is the NFL's draft, so your club doesn't pick here. In 1966 the leagues still drafted separately, and the AFL draft starts right after this one. Jump to my pick takes you straight to your first selection."
+                : "You have no picks left in this draft. They were used or traded away. Let the board finish, or auto the rest."}
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             {cpuUp && (
               <>

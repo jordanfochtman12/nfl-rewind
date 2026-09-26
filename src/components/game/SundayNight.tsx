@@ -1,4 +1,4 @@
-import { deadlineWeek, displayName, gamesInWeek, type GameResult, type TeamId } from "@/lib/game";
+import { byeNote, deadlineWeek, displayName, gamesInWeek, type GameResult, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -35,11 +35,11 @@ export function SundayNight() {
           <p className="font-display text-xs tracking-[0.4em] text-brass">
             {playoff ? save.weekLabel.toUpperCase() : `WEEK ${save.week}`}
           </p>
-          <h2 className="font-display text-4xl sm:text-5xl">{mine ? "Final" : "Bye week"}</h2>
+          <h2 className="font-display text-4xl sm:text-5xl">{mine ? "Final" : "No game this weekend"}</h2>
           <p className="max-w-xl text-paper">
             {mine
               ? "Sit with the film. The next Sunday is not on the clock until you say so."
-              : "You were off. The league still played. Read the wire, then turn the page."}
+              : byeNote(save)}
           </p>
           <Btn kind="primary" onClick={() => step({})}>
             {nextLabel}

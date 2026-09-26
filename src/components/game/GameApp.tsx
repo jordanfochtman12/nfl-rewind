@@ -60,7 +60,7 @@ import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
 import { BottomLine, ClubPlate, NetworkBug, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
-import { clubInk, endHoldout, holdoutAsk } from "@/lib/game";
+import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
@@ -382,6 +382,18 @@ function ThisSunday() {
       : save.phase === "playoffs"
         ? save.playoffGames.find((g) => !g.played && (g.homeId === save.userTeamId || g.awayId === save.userTeamId))
         : gamesInWeek(save, save.week).find((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId);
+  if (!game && save.phase === "regular") {
+    return (
+      <section className="overflow-hidden rounded-xl border border-line bg-surface">
+        <ClubRibbon />
+        <div className="p-4">
+          <p className="text-xs tracking-[0.25em] text-muted">THIS WEEKEND</p>
+          <h3 className="mt-1 text-2xl">No game this weekend</h3>
+          <p className="mt-1 text-sm text-muted">{byeNote(save)}</p>
+        </div>
+      </section>
+    );
+  }
   if (!game || game.played) return null;
   const home = game.homeId as TeamId;
   const away = game.awayId as TeamId;

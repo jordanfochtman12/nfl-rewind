@@ -1,5 +1,5 @@
 import type { DynastySave, GameResult, TeamId } from "./types.ts";
-import { activeTeamIds, conferenceOf, gamesInSeason } from "./teams.ts";
+import { activeTeamIds, conferenceOf, displayName, gamesInSeason, originalLeague } from "./teams.ts";
 import { rand, shuffle } from "./rng.ts";
 import { REAL_SCHEDULES } from "./data/realSchedules.ts";
 
@@ -337,4 +337,34 @@ export function realResultFor(g: GameResult, teamId: TeamId): string | undefined
   const us = home ? g.realHome : g.realAway;
   const them = home ? g.realAway : g.realHome;
   return `${us > them ? "W" : us < them ? "L" : "T"} ${us}-${them}`;
+}
+
+/**
+ * Why the owner's club has no game this week, in real-calendar terms. Before the merger the
+ * two leagues kept their own calendars on one shared week count: the AFL opened a week early
+ * in 1966, so every NFL club is idle in week 1 - exactly as it was.
+ */
+export function byeNote(save: DynastySave, week = save.week): string {
+  const id = save.userTeamId;
+  const season = save.schedule.filter((g) => g.year === save.year && g.phase === "regular");
+  const next = season
+    .filter((g) => g.week > week && (g.homeId === id || g.awayId === id))
+    .sort((a, b) => a.week - b.week)[0];
+  const nextText = next
+    ? `Next: ${gameDateLabel(next) ?? `week ${next.week}`}, ${next.homeId === id ? "vs" : "at"} the ${displayName(save.year, (next.homeId === id ? next.awayId : next.homeId) as TeamId)}.`
+    : "";
+  const played = (g: GameResult) => g.homeId === id || g.awayId === id;
+  const opened = season.some((g) => g.week < week && played(g));
+  if (save.year <= 1969 && !opened) {
+    const mine = originalLeague(id) === "AFL" ? "AFL" : "NFL";
+    const other = mine === "NFL" ? "AFL" : "NFL";
+    const ourLeagueThisWeek = season.some(
+      (g) => g.week === week && originalLeague(g.homeId as TeamId) === mine && originalLeague(g.awayId as TeamId) === mine,
+    );
+    if (!ourLeagueThisWeek) {
+      return `The ${mine} hasn't opened yet. Only the ${other} played this weekend, just like the real ${save.year} calendar. ${nextText}`.trim();
+    }
+  }
+  const odd = activeTeamIds(save.year).length % 2 === 1;
+  return `${odd ? "An odd number of clubs means someone sits every week, and this one is yours." : "Bye week."} ${nextText}`.trim();
 }

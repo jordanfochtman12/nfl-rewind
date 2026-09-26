@@ -8,15 +8,15 @@ import { addNews } from "./news.ts";
 
 const CAMP_BUGS = ["ankle", "hamstring", "shoulder", "groin", "knee", "wrist", "foot", "ribs"];
 
-function cpuTrim(save: DynastySave, teamId: TeamId): { playerId: string; teamId: TeamId }[] {
+function cpuTrim(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): { playerId: string; teamId: TeamId }[] {
   const roster = rosterOf(save, teamId).slice().sort((a, b) => b.ovr - a.ovr);
-  if (roster.length <= ROSTER_TARGET) return [];
+  if (roster.length <= cap) return [];
   const keep = new Set<string>();
   for (const [pos, need] of DEPTH_CHART) {
     for (const p of roster.filter((x) => x.pos === pos).slice(0, need)) keep.add(p.id);
   }
   for (const p of roster) {
-    if (keep.size >= ROSTER_TARGET) break;
+    if (keep.size >= cap) break;
     keep.add(p.id);
   }
   const cuts: { playerId: string; teamId: TeamId }[] = [];
@@ -59,7 +59,26 @@ export function resolveCamp(save: DynastySave): CampReport {
   const cuts: CampReport["cuts"] = [];
   const injuries: CampReport["injuries"] = [];
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (id === save.userTeamId && !save.cpuOnly) {
+      // The owner sets his own 45, but nobody carries more than the active limit into the
+      // season: anything past it goes, lowest grades first, depth-chart starters protected.
+      const limit = ROSTER_TARGET + 8;
+      const mine = cpuTrim(save, id, limit);
+      if (mine.length) {
+        cuts.push(...mine);
+        addNews(save, {
+          kind: "transaction",
+          headline: `Final cuts: ${displayName(save.year, id)} trim to ${limit}`,
+          body: `The staff released ${mine.length} to get under the limit: ${mine
+            .slice(0, 6)
+            .map((c) => playerName(save.players[c.playerId]!))
+            .join(", ")}${mine.length > 6 ? " and more" : ""}.`,
+          teamIds: [id],
+          playerIds: mine.map((c) => c.playerId),
+        });
+      }
+      continue;
+    }
     cuts.push(...cpuTrim(save, id));
   }
   const pool = Object.values(save.players).filter(

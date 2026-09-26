@@ -61,7 +61,7 @@ export {
 export { blankState, hydrateSave, cloneSave } from "./save.ts";
 export { createNewGame } from "./createGame.ts";
 export { advance, simUntil, simToSuperBowl, fastForwardToYear, setLabel, weekIsInTheBooks } from "./season.ts";
-export { rebuildSchedule, gamesForTeam, gameDateLabel, realResultFor, realSchedule, maxWeek, gamesInWeek, isRivalry, RIVALRIES } from "./schedule.ts";
+export { byeNote, rebuildSchedule, gamesForTeam, gameDateLabel, realResultFor, realSchedule, maxWeek, gamesInWeek, isRivalry, RIVALRIES } from "./schedule.ts";
 export { simGame, teamUnits, clampSeasonStats, formatClock, planFor, defaultPlan } from "./sim.ts";
 export { standingRows, winPct, compareTeams, conferenceTeams, divisionWinner } from "./standings.ts";
 export {

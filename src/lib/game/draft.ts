@@ -95,9 +95,17 @@ export function ensureSeasonPicks(save: DynastySave): void {
   }
 }
 
-export function findPick(save: DynastySave, year: number, round: number, orig: TeamId): DraftPickAsset | undefined {
+export function findPick(
+  save: DynastySave,
+  year: number,
+  round: number,
+  orig: TeamId,
+  includeUsed = false,
+): DraftPickAsset | undefined {
   for (const t of Object.values(save.teams)) {
-    const hit = (t.picks ?? []).find((p) => p.year === year && p.round === round && p.orig === orig && !p.used);
+    const hit = (t.picks ?? []).find(
+      (p) => p.year === year && p.round === round && p.orig === orig && (includeUsed || !p.used),
+    );
     if (hit) return hit;
   }
   return undefined;
@@ -136,7 +144,10 @@ export function draftQueue(save: DynastySave): DraftPickAsset[] {
   const q: DraftPickAsset[] = [];
   for (let r = 1; r <= rounds; r++) {
     for (const orig of order) {
-      const asset = findPick(save, save.year, r, orig);
+      // The order is fixed for the whole draft: picks already made stay in their slots.
+      // (Dropping used picks here shifted the queue under draftPickIndex, so every other
+      // selection in the draft was skipped.)
+      const asset = findPick(save, save.year, r, orig, true);
       if (asset) q.push(asset);
     }
   }
