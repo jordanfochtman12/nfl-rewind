@@ -414,12 +414,13 @@ function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
   const pool = [...def.dl, ...def.lb];
   if (!pool.length) return undefined;
   const ref = eraProfile(save.year).sackCap;
-  // Sacks pile up on the true edge rushers: a real sack leader takes 35-45% of his team's total.
-  // A linear split on pass-rush grade spread them almost evenly across the front seven.
+  // Sacks lean toward the true edge rushers (a real sack leader takes ~35-40% of his team's
+  // total). Linear on pass-rush grade spread them almost evenly; cubed, once league sacks were
+  // at real rates, gave the top rusher over half of them (Dent 232 career, seasons stuck at 22).
   return pool[
     dist(
       save,
-      pool.map((p) => Math.pow(p.ratings.prs / 70, 3) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
+      pool.map((p) => Math.pow(p.ratings.prs / 70, 2) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
     )
   ];
 }
