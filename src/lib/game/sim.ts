@@ -598,7 +598,7 @@ const POS_INJURY_RISK: Partial<Record<Pos, number>> = {
 function posInjuryRisk(p: Player, year: number): number {
   // Modern starting QBs miss real time (only about half play every game); the lower modern
   // base injury rate had them near-indestructible, taking ~94% of their team's attempts.
-  if (p.pos === "QB") return year >= 2000 ? 1.6 : 1.15;
+  if (p.pos === "QB") return year >= 2000 ? 1.6 : 1.35;
   return POS_INJURY_RISK[p.pos] ?? 1;
 }
 
@@ -663,10 +663,12 @@ function passAnchor(save: DynastySave): number {
  * built to bend and not break (and scoring ran ~2.5 points a game hot there).
  */
 function redZoneSqueeze(year: number): number {
-  if (year <= 1977) return 0;
-  if (year <= 1989) return 0.025;
-  if (year <= 2009) return 0.095;
-  return 0.055;
+  // Eased by ~0.02 when sacks were brought up to real rates: a sack ends drives the old
+  // near-sackless calibration never lost, and scoring ran about a point a game light.
+  if (year <= 1977) return -0.02;
+  if (year <= 1989) return 0.005;
+  if (year <= 2009) return 0.075;
+  return 0.02;
 }
 
 function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
@@ -1603,7 +1605,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
           (call === "deep" ? 0.02 : 0) +
           (blitz && rand(save) < 0.5 ? 0.03 : -0.01) -
           (pa ? 0.02 : 0) -
-          (off.qb?.ratings.rel ?? 70) / 900,
+          // Quick release helps relative to an average passer. Uncentered, this term took ~8
+          // points off every dropback and cancelled the era sack rate (sacks ran 35-50% low).
+          ((off.qb?.ratings.rel ?? 70) - 70) / 900,
         0.018,
         0.16,
       );
@@ -1644,7 +1648,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           }
           continue;
         }
-        const loss = sampleYds(save, 7, 2, 4, 14);
+        const loss = sampleYds(save, 6.3, 2, 3, 14);
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
         const rusher = pickRusherDef(save, def);
         if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
@@ -1736,7 +1740,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const rec = pickRec(save, off, call === "deep" || call === "pa", year, spot >= 80);
       const acc = (off.qb?.ratings.throwAcc ?? 60) + (rec ? (rec.ratings.catch + rec.ratings.rrt) / 2 : 50);
       const cov = avg(def.db.map((p) => p.ratings.cov));
-      const hurryP = clamp(sackP * 1.7 + (blitz ? 0.06 : 0), 0.05, 0.32);
+      // Pressure was tuned against the sack chance before its release term was centered, which
+      // raised sackP by ~0.057 across the board; back that out so pressure keeps its calibration.
+      const hurryP = clamp((sackP - 0.057) * 1.7 + (blitz ? 0.06 : 0), 0.05, 0.32);
       const hurried = rand(save) < hurryP;
       if (hurried) {
         const hitter = pickRusherDef(save, def);
@@ -1744,7 +1750,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       }
       let cmpP =
         era.cmpPct +
-        (acc - passAnchor(save)) / 400 +
+        // Elite passers sit a little closer to the league than a raw grade gap implies:
+        // at /400 the best QBs ran 9-13% past real passing leaders at an on-target league rate.
+        (acc - passAnchor(save)) / 470 +
         off.kit.cmp +
         edge / 380 -
         (call === "deep" ? 0.16 : call === "med" ? 0.05 : call === "pa" ? 0.03 : 0) -
