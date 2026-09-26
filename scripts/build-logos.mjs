@@ -61,17 +61,27 @@ function astroid(cx, cy, r) {
   return `M${pts.join(" L")} Z`;
 }
 
-function glyph(name, { fill, stroke, strokeW = 14, scale = 0.7, mirror = false, dx = 0, dy = 0 }) {
+let clipSeq = 0;
+
+/**
+ * A mascot silhouette, scaled and centered. `accents` is SVG in the icon's own 512-unit
+ * coordinates painted only inside the silhouette (two-tone heads, masks, stripes); `under`
+ * is extra shape drawn in the same coordinates beneath it (a crest), outlined to match.
+ */
+function glyph(name, { fill, stroke, strokeW = 14, scale = 0.7, mirror = false, dx = 0, dy = 0, accents = "", under = "" }) {
   const ic = GLYPHS[name];
   if (!ic) throw new Error(`missing glyph ${name}`);
   const s = scale;
   const off = (512 - 512 * s) / 2;
   const flip = mirror ? `translate(512 0) scale(-1 1) ` : "";
   const body = ic.body.replace(/fill="currentColor"/g, "").replace(/fill="#000"/g, "");
+  const shapes = under + body;
   const outline = stroke
-    ? `<g fill="${stroke}" stroke="${stroke}" stroke-width="${strokeW}" stroke-linejoin="round">${body}</g>`
+    ? `<g fill="${stroke}" stroke="${stroke}" stroke-width="${strokeW}" stroke-linejoin="round">${shapes}</g>`
     : "";
-  return `<g transform="translate(${off + dx} ${off + dy}) scale(${s}) ${flip}">${outline}<g fill="${fill}">${body}</g></g>`;
+  const id = `gc${clipSeq++}`;
+  const clipped = accents ? `<clipPath id="${id}">${body}</clipPath><g clip-path="url(#${id})">${accents}</g>` : "";
+  return `<g transform="translate(${off + dx} ${off + dy}) scale(${s}) ${flip}">${outline}<g fill="${fill}">${shapes}</g>${clipped}</g>`;
 }
 
 /** The badge: club-color field with a soft light falloff, a ring in the second color, the mark. */
@@ -120,8 +130,8 @@ const L = {
 <path d="${astroid(256, 176, 70)}" fill="#ffb612"/><path d="${astroid(186, 296, 70)}" fill="#c60c30"/><path d="${astroid(326, 296, 70)}" fill="#00539b"/>`,
   ],
   // Eagles
-  "phi.svg": ["Philadelphia Eagles", { bg: "#006341", ring: "#c0c0c0", ring2: "#ffffff" }, glyph("eagle-head", { fill: "#e6e8ea", stroke: "#0b2e1f", strokeW: 10, mirror: true })],
-  "phi-1996.svg": ["Philadelphia Eagles", { bg: "#004c54", ring: "#a5acaf", ring2: "#000000" }, glyph("eagle-head", { fill: "#ffffff", stroke: "#000000", strokeW: 12, mirror: true })],
+  "phi.svg": ["Philadelphia Eagles", { bg: "#006341", ring: "#c0c0c0", ring2: "#ffffff" }, glyph("eagle-emblem", { fill: "#e6e8ea", stroke: "#0b2e1f", strokeW: 10, scale: 0.74 })],
+  "phi-1996.svg": ["Philadelphia Eagles", { bg: "#004c54", ring: "#a5acaf", ring2: "#000000" }, glyph("eagle-head", { fill: "#ffffff", stroke: "#000000", strokeW: 12, mirror: true, accents: '<path d="M0 300 C160 270 330 300 512 250 L512 512 L0 512 Z" fill="#a5acaf"/><path d="M0 318 C160 290 330 318 512 268" stroke="#000" stroke-width="10" fill="none"/>' })],
   // Cowboys
   "dal.svg": [
     "Dallas Cowboys",
@@ -136,8 +146,8 @@ const L = {
   "min.svg": ["Minnesota Vikings", { bg: "#4f2683", ring: "#ffc62f" }, glyph("viking-helmet", { fill: "#ffc62f", stroke: "#ffffff", strokeW: 10 })],
   "min-2013.svg": ["Minnesota Vikings", { bg: "#4f2683", ring: "#ffc62f", ring2: "#ffffff" }, glyph("viking-helmet", { fill: "#ffffff", stroke: "#ffc62f", strokeW: 12 })],
   // Cardinals
-  "crd.svg": ["Cardinals", { bg: "#f2f2f2", ring: "#97233f", ring2: "#000000" }, glyph("finch", { fill: "#b8163c", stroke: "#000000", strokeW: 10 })],
-  "crd-2005.svg": ["Arizona Cardinals", { bg: "#101010", ring: "#97233f", ring2: "#ffb612" }, glyph("finch", { fill: "#97233f", stroke: "#ffffff", strokeW: 12 })],
+  "crd.svg": ["Cardinals", { bg: "#f2f2f2", ring: "#97233f", ring2: "#000000" }, glyph("finch", { fill: "#b8163c", stroke: "#000000", strokeW: 10, under: '<path d="M322 58 L286 6 L340 30 L334 -10 L378 34 Z"/>', accents: '<ellipse cx="418" cy="92" rx="36" ry="32" fill="#101010"/><path d="M430 56 L512 56 L512 124 L430 124 Z" fill="#f5a623"/>' })],
+  "crd-2005.svg": ["Arizona Cardinals", { bg: "#101010", ring: "#97233f", ring2: "#ffb612" }, glyph("finch", { fill: "#b8163c", stroke: "#ffffff", strokeW: 12, under: '<path d="M322 58 L286 6 L340 30 L334 -10 L378 34 Z"/>', accents: '<ellipse cx="418" cy="92" rx="36" ry="32" fill="#101010"/><path d="M430 56 L512 56 L512 124 L430 124 Z" fill="#f5a623"/>' })],
   // Packers
   "gnb.svg": ["Green Bay Packers", { bg: "#203731", ring: "#ffb612" }, oval("#ffffff", "#ffb612", 16) + letters("G", "block", "#203731", { w: 220, h: 210 })],
   // Giants
@@ -203,22 +213,22 @@ const L = {
   // Saints
   "nor.svg": ["New Orleans Saints", { bg: "#101820", ring: "#d3bc8d" }, glyph("fleur-de-lys", { fill: "#d3bc8d", stroke: "#ffffff", strokeW: 6 })],
   // Bengals
-  "cin.svg": ["Cincinnati Bengals", { bg: "#fb4f14", ring: "#000000" }, glyph("tiger-head", { fill: "#000000", stroke: "#ffffff", strokeW: 8 })],
-  "cin-modern.svg": ["Cincinnati Bengals", { bg: "#fb4f14", ring: "#000000", ring2: "#ffffff" }, glyph("tiger-head", { fill: "#000000", stroke: "#ffffff", strokeW: 10 })],
+  "cin.svg": ["Cincinnati Bengals", { bg: "#fb4f14", ring: "#000000" }, glyph("tiger-head", { fill: "#000000", scale: 0.78 })],
+  "cin-modern.svg": ["Cincinnati Bengals", { bg: "#fb4f14", ring: "#000000", ring2: "#ffffff" }, glyph("tiger-head", { fill: "#000000", stroke: "#ffffff", strokeW: 6, scale: 0.78 })],
   "cin-2004.svg": ["Cincinnati Bengals", { bg: "#000000", ring: "#fb4f14" }, letters("B", "block", "#fb4f14", { w: 230, h: 290, stroke: "#ffffff", strokeW: 12 })],
   // Buccaneers
   "tam.svg": ["Tampa Bay Buccaneers", { bg: "#f47b20", ring: "#c8102e", ring2: "#ffffff" }, glyph("pirate-captain", { fill: "#ffffff", stroke: "#c8102e", strokeW: 10 })],
   "tam-modern.svg": ["Tampa Bay Buccaneers", { bg: "#3d3935", ring: "#d50a0a", ring2: "#b1babf" }, glyph("pirate-flag", { fill: "#d50a0a", stroke: "#ffffff", strokeW: 10 })],
   "tam-2014.svg": ["Tampa Bay Buccaneers", { bg: "#101010", ring: "#d50a0a", ring2: "#ff7900" }, glyph("pirate-flag", { fill: "#d50a0a", stroke: "#ffffff", strokeW: 12 })],
   // Seahawks
-  "sea.svg": ["Seattle Seahawks", { bg: "#1f4e9c", ring: "#a5acaf", ring2: "#69be28" }, glyph("eagle-head", { fill: "#c4c8cb", stroke: "#0b2a5c", strokeW: 10 })],
-  "sea-modern.svg": ["Seattle Seahawks", { bg: "#002244", ring: "#69be28", ring2: "#a5acaf" }, glyph("eagle-head", { fill: "#a5acaf", stroke: "#69be28", strokeW: 12 })],
+  "sea.svg": ["Seattle Seahawks", { bg: "#1f4e9c", ring: "#a5acaf", ring2: "#69be28" }, glyph("eagle-head", { fill: "#c4c8cb", stroke: "#0b2a5c", strokeW: 10, accents: '<path d="M250 150 L512 112 L512 146 L262 178 Z" fill="#0b2a5c"/><path d="M0 330 L512 330 L512 512 L0 512 Z" fill="#1f4e9c" opacity="0.55"/>' })],
+  "sea-modern.svg": ["Seattle Seahawks", { bg: "#002244", ring: "#69be28", ring2: "#a5acaf" }, glyph("eagle-head", { fill: "#a5acaf", stroke: "#002244", strokeW: 10, accents: '<path d="M240 150 L512 110 L512 146 L254 180 Z" fill="#69be28"/><path d="M0 300 C200 330 330 300 512 330 L512 512 L0 512 Z" fill="#002244"/><path d="M0 300 C200 330 330 300 512 330" stroke="#69be28" stroke-width="12" fill="none"/>' })],
   // Panthers
   "car.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#bfc0bf" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#101820", strokeW: 8, scale: 0.74 })],
   "car-2012.svg": ["Carolina Panthers", { bg: "#101820", ring: "#0085ca", ring2: "#ffffff" }, glyph("saber-toothed-cat-head", { fill: "#0085ca", stroke: "#bfc0bf", strokeW: 12, scale: 0.74 })],
   // Jaguars
-  "jax.svg": ["Jacksonville Jaguars", { bg: "#006778", ring: "#d7a22a", ring2: "#000000" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#000000", strokeW: 10 })],
-  "jax-2013.svg": ["Jacksonville Jaguars", { bg: "#101820", ring: "#006778", ring2: "#d7a22a" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#006778", strokeW: 12 })],
+  "jax.svg": ["Jacksonville Jaguars", { bg: "#006778", ring: "#d7a22a", ring2: "#000000" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#000000", strokeW: 6, scale: 0.78 })],
+  "jax-2013.svg": ["Jacksonville Jaguars", { bg: "#101820", ring: "#006778", ring2: "#d7a22a" }, glyph("lynx-head", { fill: "#d7a22a", stroke: "#006778", strokeW: 8, scale: 0.78 })],
   // Ravens
   "rav.svg": ["Baltimore Ravens", { bg: "#101010", ring: "#9e7c0c", ring2: "#241773" }, glyph("raven", { fill: "#5b3fb6", stroke: "#ffffff", strokeW: 10 })],
   // Texans
