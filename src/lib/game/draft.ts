@@ -159,7 +159,41 @@ export function draftOrder(save: DynastySave): TeamId[] {
   return standingOrder(save, sessionTeams(save.year, sessionOf(save)));
 }
 
-function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
+/**
+ * Players whose Pro Bowls came on special teams or at fullback. The imported classes rate every
+ * prospect from his career honors, which turned return men and gunners into star receivers and
+ * backs (Matthew Slater was a 91 WR, Kyle Juszczyk a 91 RB). These get a rating for what they
+ * actually did from scrimmage, and their honors no longer lift them.
+ */
+const ROLE_PLAYERS: Record<string, { o: number; p?: Pos }> = {
+  "Matthew|Slater": { o: 56 },
+  "Kyle|Juszczyk": { o: 76, p: "FB" },
+  "Brian|Mitchell": { o: 62 },
+  "Devin|Hester": { o: 70, p: "WR" },
+  "Dante|Hall": { o: 62 },
+  "Mel|Gray": { o: 58 },
+  "Michael|Bates": { o: 56 },
+  "Cordarrelle|Patterson": { o: 72 },
+  "Lorenzo|Neal": { o: 72 },
+  "Steve|Tasker": { o: 58 },
+  "Jakeem|Grant": { o: 64 },
+  "Jacoby|Jones": { o: 68 },
+  "Leon|Washington": { o: 68 },
+  "Allen|Rossum": { o: 60 },
+  "Desmond|Howard": { o: 64 },
+  "Rick|Upchurch": { o: 74 },
+  "Billy|Johnson": { o: 70 },
+  "Vai|Sikahema": { o: 56 },
+  "Mike|Alstott": { o: 80, p: "FB" },
+  "Daryl|Johnston": { o: 72, p: "FB" },
+  "Tom|Rathman": { o: 74, p: "FB" },
+  "Sam|Gash": { o: 68 },
+  "Bill|Bates": { o: 66, p: "S" },
+};
+
+function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player {
+  const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
+  const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
   const p = makePlayer(save, {
     firstName: s.f,
     lastName: s.l,
@@ -179,7 +213,9 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
     rt: s.rt,
   });
   if (s.r) p.realRound = s.r;
-  const arc = lookupArc(save.year, s.f, s.l);
+  const found = lookupArc(save.year, s.f, s.l);
+  // A role player keeps his real career span, but his Pro Bowls don't set his rating.
+  const arc = found && role ? { ...found, pb: 0, ap: 0, st: Math.min(found.st, 2) } : found;
   if (arc) {
     // Seed overall is his real career peak - he arrives short of it and grows into it.
     p.arc = arc;
