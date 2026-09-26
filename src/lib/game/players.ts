@@ -544,3 +544,16 @@ export function reissueJerseysByEra(save: DynastySave): void {
   }
   normalizeJerseys(save);
 }
+
+/**
+ * A player changing teams keeps his number when it's free on the new roster and legal for him
+ * (or grandfathered from before 1973), the way John Hadl took his 21 from San Diego to the Rams.
+ * Otherwise he picks a new one under the year's rules.
+ */
+export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): number {
+  const used = new Set(rosterOf(save, teamId).filter((x) => x.id !== p.id).map((x) => x.jersey));
+  const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
+  const legal = rookieYear < 1973 || jerseyLegal(p.pos, save.year, p.jersey);
+  if (p.jersey > 0 && legal && !used.has(p.jersey)) return p.jersey;
+  return jerseyFor(save, p.pos, used);
+}

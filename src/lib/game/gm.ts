@@ -13,11 +13,10 @@ import type {
   TradePiece,
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
-import { activeRosterOf, addToRoster, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, carryJersey, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
-import { jerseyFor } from "./names.ts";
 import { allPicks, transferPick, pickValue } from "./draft.ts";
 import { fireCoach, hireCoach, setTeamScheme, schemeFitPos } from "./staff.ts";
 import { rand, randInt } from "./rng.ts";
@@ -195,7 +194,7 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
   }
   p.salary = salary;
   p.contractYears = years ?? randInt(save, 1, 3);
-  p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
+  p.jersey = carryJersey(save, p, teamId);
   p.morale = Math.min(99, (p.morale ?? 70) + 6);
   addToRoster(save, teamId, p.id);
   syncDepth(save, teamId);
@@ -222,7 +221,7 @@ export function claimWaiver(save: DynastySave, teamId: TeamId, playerId: string)
   save.waivers.splice(idx, 1);
   p.salary = salary;
   p.contractYears = Math.max(1, p.contractYears || 1);
-  p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
+  p.jersey = carryJersey(save, p, teamId);
   addToRoster(save, teamId, p.id);
   syncDepth(save, teamId);
   save.teams[teamId].payroll = teamPayroll(save, teamId);
@@ -376,7 +375,7 @@ function movePiece(save: DynastySave, from: TeamId, to: TeamId, piece: TradePiec
   if (piece.playerId) {
     const p = save.players[piece.playerId];
     if (!onClub(p, from)) return fail("A player in the deal is not on that roster.");
-    p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, to).map((x) => x.jersey)));
+    p.jersey = carryJersey(save, p, to);
     p.morale = Math.max(35, (p.morale ?? 70) - 4);
     movePlayer(save, p.id, to);
     return ok();
