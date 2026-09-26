@@ -23,6 +23,8 @@ import type {
   TeamId,
   TeamState,
 } from "./types.ts";
+import { milestoneChases, weeklyStorylines } from "./storylines.ts";
+import { seriesNote } from "./h2h.ts";
 import {
   activeTeamIds,
   conferenceOf,
@@ -397,6 +399,8 @@ function previews(save: DynastySave, games: GameResult[], cache: Map<TeamId, num
     const ht = save.teams[home]!;
     const at = save.teams[away]!;
     const notes: string[] = [];
+    const h2h = seriesNote(save, home, away);
+    if (h2h?.revenge) notes.push(h2h.revenge);
     if (g.rivalry) notes.push("Rivalry game.");
     if (g.site) notes.push(`At ${g.site}.`);
     for (const [id, t] of [
@@ -421,6 +425,8 @@ function previews(save: DynastySave, games: GameResult[], cache: Map<TeamId, num
       line: lineText(home, away, spread),
       pick: spread >= 0 ? home : away,
       note: notes.slice(0, 2).join(" "),
+      series: h2h?.series,
+      last: h2h?.last,
       when,
       weight,
     };
@@ -573,6 +579,8 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
   for (const n of save.weekNews.filter((x) => x.year === year && /record|milestone|all-time/i.test(`${x.headline} ${x.body}`))) {
     out.push({ tag: "Record", headline: n.headline, body: n.body, teamIds: n.teamIds, playerIds: n.playerIds, score: 54 });
   }
+
+  if (kind === "regular") out.push(...weeklyStorylines(save));
 
   const seen = new Set<string>();
   const perTag = new Map<string, number>();
@@ -728,6 +736,7 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     predictions: preds,
     superBowlPick: sbPick,
     previews: previews(save, upcoming, cache),
+    chases: kind === "regular" && save.week >= 4 ? milestoneChases(save) : undefined,
     pow: "",
     powerPoll: "",
     wire: save.weekNews.filter((n) => n.year === year).map((n) => n.headline).slice(0, 6),
@@ -750,6 +759,9 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
       award("Defensive Rookie of the Year", a.droy),
       award("Comeback Player of the Year", a.cpoty),
     ].filter((x): x is NonNullable<typeof x> => !!x);
+    if (save.lastPlan?.year === year) show.reportCard = save.lastPlan;
+    const won = (save.achievements ?? []).filter((x) => x.year === year);
+    if (won.length) show.achievements = won;
     show.allPro = a.allPro
       .map((id) => save.players[id])
       .filter((p): p is Player => !!p)
@@ -787,4 +799,24 @@ export function depthChart(save: DynastySave, teamId: TeamId) {
       players: depthAt(save, teamId, pos).slice(0, 4),
     })),
   }));
+}
+
+/** Projected final wins for a club (current record + remaining schedule by team strength). */
+export function projectWins(save: DynastySave, id: TeamId): number {
+  return projectedWins(save, id, new Map());
+}
+
+/** The desk's line and pick for one game. */
+export function previewGame(save: DynastySave, g: GameResult): PrimetimePreview | undefined {
+  return previews(save, [g], new Map())[0];
+}
+
+/** League rank (1 = best) of a club by the desk's power rating. */
+export function strengthRank(save: DynastySave, id: TeamId): number {
+  const cache = new Map<TeamId, number>();
+  const order = activeTeamIds(save.year)
+    .map((t) => ({ t, r: ratingOf(save, t, cache) }))
+    .sort((a, b) => b.r - a.r)
+    .map((x) => x.t);
+  return order.indexOf(id) + 1;
 }

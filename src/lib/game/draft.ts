@@ -167,6 +167,7 @@ function seedToPlayer(save: DynastySave, s: DraftSeed, round: number): Player {
     forty: s.fy,
     rt: s.rt,
   });
+  if (s.r) p.realRound = s.r;
   const arc = lookupArc(save.year, s.f, s.l);
   if (arc) {
     // Seed overall is his real career peak - he arrives short of it and grows into it.
@@ -388,6 +389,7 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftYear = save.year;
     p.draftRound = round;
     p.draftPick = save.draftPickIndex + 1;
+    p.draftTeam = teamId;
     p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
     p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
     p.contractYears = round <= 2 ? 4 : round <= 4 ? 3 : 2;

@@ -123,6 +123,102 @@ function sortBox(box: BoxPlayer[], key: Exclude<keyof BoxPlayer, "playerId">): B
     .sort((a, b) => Number(b[key] ?? 0) - Number(a[key] ?? 0));
 }
 
+const RESULT_TEXT: Record<string, string> = {
+  td: "Touchdown",
+  fg: "Field goal",
+  punt: "Punt",
+  int: "Interception",
+  fumble: "Fumble",
+  miss: "Missed FG",
+  downs: "Downs",
+  end: "End of half",
+  safety: "Safety",
+  "ko-td": "Return TD",
+};
+
+/** The index of the go-ahead score the winner never gave back. */
+export function turningPoint(game: GameResult): number {
+  const drives = game.drives ?? [];
+  if (game.homeScore === game.awayScore) return -1;
+  const winnerHome = game.homeScore > game.awayScore;
+  let tp = -1;
+  let prevLead = false;
+  for (let i = 0; i < drives.length; i++) {
+    const after = drives[i]!.after;
+    if (!after) continue;
+    const lead = winnerHome ? after[0] > after[1] : after[1] > after[0];
+    if (lead && !prevLead) tp = i;
+    prevLead = lead;
+  }
+  return prevLead ? tp : -1;
+}
+
+function DriveChart({ game }: { game: GameResult }) {
+  const save = useGameStore((s) => s.save)!;
+  const [all, setAll] = useState(false);
+  const drives = game.drives ?? [];
+  const home = game.homeId as TeamId;
+  const tp = turningPoint(game);
+  const scoring = (r: string) => r === "td" || r === "fg" || r === "safety" || r === "ko-td";
+  const rows = drives.map((d, i) => ({ d, i })).filter(({ d, i }) => all || scoring(d.result) || i === tp);
+  const tpDrive = tp >= 0 ? drives[tp] : undefined;
+  return (
+    <section>
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <h4 className="text-xs tracking-[0.2em] text-muted">Drive chart</h4>
+        <button type="button" className="text-xs text-subtle underline" onClick={() => setAll((v) => !v)}>
+          {all ? "Scoring drives only" : `All ${drives.length} drives`}
+        </button>
+      </div>
+      {tpDrive && (
+        <p className="mb-2 rounded-md border border-brass/50 bg-brass/10 px-3 py-2 text-sm">
+          <span className="text-xs tracking-widest text-brass">TURNING POINT · </span>
+          {displayName(save.year, tpDrive.teamId)} {RESULT_TEXT[tpDrive.result]?.toLowerCase() ?? tpDrive.result}, {tpDrive.label}
+          {tpDrive.after ? ` to go up ${Math.max(...tpDrive.after)}-${Math.min(...tpDrive.after)}` : ""}. They never trailed again.
+        </p>
+      )}
+      <ol className="space-y-1 text-sm">
+        {rows.map(({ d, i }) => {
+          const from = d.startSpot;
+          const to = Math.max(0, Math.min(100, d.startSpot + d.yards));
+          const isHome = d.teamId === home;
+          return (
+            <li
+              key={i}
+              className={`grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1 rounded-md border px-3 py-2 ${
+                i === tp ? "border-brass/70 bg-brass/10" : "border-line"
+              }`}
+            >
+              <Logo id={d.teamId} size={20} />
+              <span className="min-w-0">
+                <span className={scoring(d.result) ? "font-medium" : "text-muted"}>{RESULT_TEXT[d.result] ?? d.result}</span>
+                <span className="text-xs text-subtle">
+                  {" "}
+                  · {d.plays} pl, {d.yards} yds · {d.label}
+                </span>
+              </span>
+              <span className="tabular text-right">
+                {d.after ? `${d.after[1]}-${d.after[0]}` : ""}
+              </span>
+              <div className="relative col-span-3 h-1 rounded-full bg-black/40">
+                <div
+                  className="absolute top-0 h-1 rounded-full"
+                  style={{
+                    left: `${isHome ? from : 100 - to}%`,
+                    width: `${Math.max(2, Math.abs(to - from))}%`,
+                    background: clubInk(d.teamId, save.year).primary,
+                  }}
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="mt-1 text-[11px] text-subtle">Score shown away-home after each drive.</p>
+    </section>
+  );
+}
+
 export function GameNight({ game, onClose }: { game: GameResult; onClose?: () => void }) {
   const save = useGameStore((s) => s.save)!;
   const home = game.homeId as TeamId;
@@ -380,22 +476,20 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
         </section>
       )}
 
-      {game.drives && game.drives.length > 0 && (
+      {game.crunchCalls && game.crunchCalls.length > 0 && (
         <section>
-          <h4 className="mb-2 text-xs tracking-[0.2em] text-muted">Drives</h4>
-          <ol className="space-y-1 text-sm">
-            {game.drives.slice(0, 18).map((d, i) => (
-              <li key={i} className="flex flex-wrap justify-between gap-2 rounded-md border border-line px-3 py-2">
-                <span className="uppercase text-muted">{d.teamId}</span>
-                <span>
-                  {d.plays} pl · {d.yards} yds · {d.result}
-                </span>
-                <span className="tabular text-muted">{d.label}</span>
+          <h4 className="mb-2 text-xs tracking-[0.2em] text-brass">The owner&apos;s calls</h4>
+          <ul className="space-y-1 text-sm">
+            {game.crunchCalls.map((c, i) => (
+              <li key={i} className="border-l-2 border-brass pl-3">
+                {c}
               </li>
             ))}
-          </ol>
+          </ul>
         </section>
       )}
+
+      {game.drives && game.drives.length > 0 && <DriveChart game={game} />}
 
       <div className="flex gap-2">
         {([away, home] as TeamId[]).map((id) => (

@@ -3,6 +3,7 @@ import { displayName, teamAbbr, type PrimetimeHonoree, type PrimetimeShow as Sho
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
+import { ReportCard } from "./Storylines";
 
 function Name({ id, name }: { id: string; name: string }) {
   const save = useGameStore((s) => s.save)!;
@@ -96,6 +97,31 @@ export function PrimetimeShow() {
           {show.awards.map((a) => (
             <Honoree key={a.label} h={a.honoree} label={a.label} />
           ))}
+        </div>
+      ),
+    });
+  }
+
+  if (show.reportCard) {
+    segs.push({
+      id: "report",
+      title: `The owner's report card`,
+      node: (
+        <div className="space-y-4">
+          <ReportCard plan={show.reportCard} />
+          {show.achievements?.length ? (
+            <div>
+              <p className="text-[10px] tracking-[0.3em] text-brass">NEW IN THE TROPHY CASE</p>
+              <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                {show.achievements.map((a) => (
+                  <li key={a.id} className="rounded-lg border border-brass/30 bg-black/35 p-3">
+                    <p className="font-display text-lg leading-tight">{a.title}</p>
+                    <p className="text-sm text-muted">{a.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       ),
     });
@@ -234,6 +260,26 @@ export function PrimetimeShow() {
             </div>
           ))}
         </div>
+      ),
+    });
+  }
+
+  if (show.chases?.length) {
+    segs.push({
+      id: "chases",
+      title: "Chasing history",
+      node: (
+        <ul className="space-y-2 text-sm">
+          {show.chases.map((c) => (
+            <li key={c.playerId + c.text} className="flex min-w-0 items-center gap-2">
+              <Logo id={c.teamId} size={20} />
+              <span className="min-w-0">
+                <Name id={c.playerId} name={c.name} />
+                <span className="text-muted"> · {c.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
       ),
     });
   }
@@ -397,6 +443,12 @@ export function PrimetimeShow() {
                 <span className="text-paper">{teamAbbr(p.pick as TeamId)}</span>
               </p>
               {p.note ? <p className="mt-1 text-xs text-subtle">{p.note}</p> : null}
+              {p.featured && p.series ? (
+                <p className="mt-1 text-xs text-subtle">
+                  {p.series}
+                  {p.last ? ` · ${p.last}` : ""}
+                </p>
+              ) : null}
             </li>
           ))}
         </ul>

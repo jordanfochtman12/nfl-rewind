@@ -57,6 +57,9 @@ import { MarketDesk } from "./MarketDesk";
 import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
+import { CrunchCall } from "./CrunchCall";
+import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
+import { endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
@@ -316,6 +319,7 @@ function Office() {
       <DeskReport />
       {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}
+      {!finale && <SeasonPlanCard />}
       <InjuryReport />
       <ThisSunday />
       <LastSunday />
@@ -368,6 +372,7 @@ function ThisSunday() {
           They are {them.offScheme} / {them.defScheme}. You are {us.offScheme} / {us.defScheme}. The call sheet on the
           Staff tab is live — this is what the booth will actually call.
         </p>
+        <MatchupNotes game={game} />
       </div>
     </section>
   );
@@ -414,7 +419,15 @@ function InjuryReport() {
                   {p.onIR ? "IR" : p.injuryName ?? "hurt"}
                   {p.injuredWeeks > 0 ? ` · ${p.injuredWeeks}w` : p.onIR ? " · ready" : ""}
                 </span>
-                {p.onIR ? (
+                {p.holdout ? (
+                  <Btn
+                    kind="primary"
+                    className="min-h-8 px-3 text-xs"
+                    onClick={() => desk((s) => endHoldout(s, p.id))}
+                  >
+                    Pay him {formatMoney(holdoutAsk(save, p), save.year)}/yr
+                  </Btn>
+                ) : p.onIR ? (
                   canReturn ? (
                     <Btn
                       kind="ghost"
@@ -1253,6 +1266,7 @@ function History() {
   return (
     <div className="space-y-8">
       <FranchiseBook />
+      <TrophyCase />
       <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
@@ -1563,6 +1577,7 @@ function PlayShell() {
         {!event && tab === "history" && <History />}
         <PlayerProfile />
         <TeamRosterModal />
+        <CrunchCall />
       </main>
     </ClubDesk>
   );

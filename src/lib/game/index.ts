@@ -29,6 +29,9 @@ export type {
   DynastyGrade,
   SeasonChapter,
   PrimetimeShow,
+  SeasonPlan,
+  SeasonGoal,
+  Achievement,
   PrimetimeHonoree,
 } from "./types.ts";
 
@@ -106,7 +109,9 @@ export { formatMoney, salaryCapFor, teamPayroll } from "./salary.ts";
 export { abilitiesFrom, abilityLine, assignKit, kitBoost, kitDef, kitImpactLine, kitInjMult, ABILITY_DEFS, TRAIT_DEFS } from "./abilities.ts";
 export { lookupProfile, ratingsFromProfile, SCOUT_KEYS, RATING_GROUPS, ARCH_LABEL, inferArch } from "./profiles.ts";
 export type { Arch } from "./profiles.ts";
-export { buildPrimetime, depthChart } from "./primetime.ts";
+export { buildPrimetime, depthChart, previewGame, projectWins } from "./primetime.ts";
+export { goalProgress, endHoldout, holdoutAsk, milestoneChases, type Chase } from "./storylines.ts";
+export { seriesNote } from "./h2h.ts";
 export { draftStyleOf, availableCoaches, hireCoach, fireCoach, setTeamScheme, fillCoachFields, staffOf } from "./staff.ts";
 export { assignCoachKit, coachAbilityLine, coachKitLine, coachKitDef, COACH_ABILITY_DEFS, COACH_TRAIT_DEFS } from "./coachKit.ts";
 export { playerHofScore, coachHofScore } from "./hof.ts";

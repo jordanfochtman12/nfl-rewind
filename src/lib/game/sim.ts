@@ -9,6 +9,7 @@ import type {
   Pos,
   TeamId,
   SeasonStats,
+  CrunchSituation,
 } from "./types.ts";
 import {
   clockStopFirstDown,
@@ -49,6 +50,7 @@ import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueI
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { checkGameRecords } from "./records.ts";
 import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
+import { recordMeeting } from "./h2h.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -729,12 +731,36 @@ export function clampSeasonStats(save: DynastySave): void {
   }
 }
 
+/**
+ * Crunch time: the owner's call in a close game late. A probe run pauses the game at the
+ * first undecided big moment by throwing CrunchPause (on a throwaway copy of the save); the
+ * real run replays the identical game - same RNG, same plays - and applies the choices made.
+ */
+
+export type { CrunchSituation };
+
+export class CrunchPause extends Error {
+  situation: CrunchSituation;
+  constructor(situation: CrunchSituation) {
+    super("crunch");
+    this.situation = situation;
+  }
+}
+
+let crunchHook: { gameId: string; teamId: TeamId; choices: string[]; probe: boolean } | undefined;
+export function setCrunchHook(h: typeof crunchHook): void {
+  crunchHook = h;
+}
+
 export function simGame(save: DynastySave, game: GameResult): void {
   if (game.played) return;
   const year = save.year;
   const era = eraProfile(year);
   const homeId = game.homeId as TeamId;
   const awayId = game.awayId as TeamId;
+  const hook = crunchHook && crunchHook.gameId === game.id ? crunchHook : undefined;
+  let crunchN = 0;
+  const crunchCalls: string[] = [];
   const bowl =
     game.phase === "superBowl" ? superBowlSite(year) : game.phase === "proBowl" ? proBowlSite(year) : null;
   // Real neutral-site regular-season games (London, Mexico City, Germany...) play at that stadium.
@@ -841,6 +867,40 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
   };
   const trailOf = (id: TeamId) => (id === homeId ? awayScore - homeScore : homeScore - awayScore);
+  const ask = (
+    kind: CrunchSituation["kind"],
+    teamId: TeamId,
+    options: CrunchSituation["options"],
+    fgDist?: number,
+  ): string | undefined => {
+    if (!hook || teamId !== hook.teamId) return undefined;
+    const i = crunchN++;
+    let pick: string | undefined;
+    if (i < hook.choices.length) pick = hook.choices[i];
+    else if (hook.probe && i < 3) {
+      const us = teamId === homeId ? homeScore : awayScore;
+      const them = teamId === homeId ? awayScore : homeScore;
+      throw new CrunchPause({ gameId: game.id, index: i, kind, q, clock, us, them, down, togo, spot, fgDist, options });
+    }
+    const opt = options.find((o) => o.id === pick);
+    // "coach" (or anything unknown) hands the call back to the staff's own logic.
+    if (!opt) return undefined;
+    crunchCalls.push(`Q${q > 4 ? "OT" : q} ${Math.floor(clock / 60)}:${String(clock % 60).padStart(2, "0")} — ${opt.label}`);
+    note(`The owner's call: ${opt.label.toLowerCase()}.`);
+    return pick;
+  };
+  /** Kick deep or onside? Late and trailing, the owner can make the call. */
+  const onsideCall = (kicker: TeamId, auto: boolean): boolean => {
+    const trailK = trailOf(kicker);
+    if (hook && kicker === hook.teamId && q >= 4 && clock <= 300 && trailK >= 1 && trailK <= 16) {
+      const pick = ask("onside", kicker, [
+        { id: "onside", label: "Onside kick" },
+        { id: "deep", label: "Kick it deep and trust the defense" },
+      ]);
+      if (pick) return pick === "onside";
+    }
+    return auto;
+  };
   const live = (id: TeamId) => units[id]!;
   const toOf = (id: TeamId) => (id === homeId ? homeTO : awayTO);
   const spendTO = (id: TeamId) => {
@@ -1088,7 +1148,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const u = live(id);
     const trail = trailOf(id);
     const afl = year <= 1969 && originalLeague(id) === "AFL";
-    const go2 = twoPointOk(year, id) && wantTwoPoint(year, trail, q, clock, afl);
+    let go2 = twoPointOk(year, id) && wantTwoPoint(year, trail, q, clock, afl);
+    if (twoPointOk(year, id) && hook && id === hook.teamId && q >= 4 && Math.abs(trail) <= 8) {
+      const pick = ask("two", id, [
+        { id: "kick", label: "Kick the extra point" },
+        { id: "two", label: "Go for two" },
+      ]);
+      if (pick) go2 = pick === "two";
+    }
     if (go2) {
       const ok = rand(save) < clamp(twoPointMakeP(year) + (u.offPass - 70) / 220 + u.kit.td, 0.28, 0.58);
       if (ok) addPts(id, 2);
@@ -1122,8 +1189,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     extraPoint(id);
     const defId = id === homeId ? awayId : homeId;
     const trailK = trailOf(id);
-    const onside = q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8;
-    kickoffTo(defId, onside);
+    kickoffTo(defId, onsideCall(id, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8));
   };
 
   const tryTimeout = (id: TeamId, running: boolean) => {
@@ -1139,7 +1205,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
   homeU.offPass += homeField;
   homeU.offRun += neutral ? 0 : 1.6;
 
+  // Each drive's `after` score is stamped at the next snap, once the try and kickoff are done.
+  let stamped = 0;
+  const stampDrives = () => {
+    for (; stamped < drives.length; stamped++) drives[stamped]!.after = [homeScore, awayScore];
+  };
   while (plays < 260) {
+    stampDrives();
     plays += 1;
     if (q === 2 || q === 4) {
       if (!warned && clock <= 120 && clock > 0) {
@@ -1265,6 +1337,26 @@ export function simGame(save: DynastySave, game: GameResult): void {
       note("Fake punt. They keep it.");
       call = "run";
     }
+    if (
+      down === 4 &&
+      hook &&
+      poss === hook.teamId &&
+      q >= 4 &&
+      Math.abs(trailOf(poss)) <= 8 &&
+      togo <= 5 &&
+      spot >= 30 &&
+      call !== "kneel" &&
+      call !== "spike"
+    ) {
+      const fgDist = 100 - spot + 17;
+      const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${togo}` }];
+      if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${fgDist}-yard field goal` });
+      if (spot < 72) opts.push({ id: "punt", label: "Punt it away" });
+      const pick = ask("fourth", poss, opts, fgDist);
+      if (pick === "go") call = togo <= 1 ? "sneak" : togo <= 2 ? "run" : "short";
+      else if (pick === "fg") call = "fg";
+      else if (pick === "punt") call = "punt";
+    }
 
     if (call === "kneel") {
       const used = Math.min(clock, 40);
@@ -1327,7 +1419,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           continue;
         }
         const trailK = trailOf(poss);
-        kickoffTo(defId, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8);
+        kickoffTo(defId, onsideCall(poss, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8));
       } else {
         closeDrive("miss");
         flipPoss(Math.max(20, 100 - (spot + 7)));
@@ -1912,6 +2004,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.homeTot = homeTotYards(homeBox);
   game.awayTot = homeTotYards(awayBox);
   game.ot = ot;
+  stampDrives();
   game.drives = drives.slice(0, 32);
   game.homePen = homePen;
   game.awayPen = awayPen;
@@ -1935,6 +2028,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.homeSafeties = homeSafeties;
   game.awaySafeties = awaySafeties;
   game.neutral = neutral;
+  if (crunchCalls.length) game.crunchCalls = crunchCalls;
   const filmBits = [
     bowl ? `Neutral site · ${bowl.site}` : null,
     wx !== "clear" ? wx : null,
@@ -1946,6 +2040,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.filmNote = filmBits.join(" · ") || undefined;
   checkGameRecords(save, game);
   ownerAfterGame(save, game);
+  recordMeeting(save, game);
 
   const at = save.teams[awayId];
   if (!ht || !at) return;

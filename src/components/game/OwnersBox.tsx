@@ -107,6 +107,25 @@ export function OwnersBox() {
         </p>
       )}
 
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-surface-2/40 p-3">
+        <div>
+          <p className="text-xs tracking-[0.2em] text-muted">CRUNCH-TIME CALLS</p>
+          <p className="text-xs text-subtle">Close games, late: you make the 4th-down, two-point and onside calls.</p>
+        </div>
+        <Btn
+          kind={save.crunchOn === false ? "ghost" : "primary"}
+          className="min-h-9 px-3 text-xs"
+          onClick={() =>
+            desk((s) => {
+              s.crunchOn = s.crunchOn === false;
+              return s.crunchOn ? "Crunch-time calls are on. The headset is yours." : "Crunch-time calls are off. The coach has the headset.";
+            })
+          }
+        >
+          {save.crunchOn === false ? "Off" : "On"}
+        </Btn>
+      </div>
+
       {recent.length > 0 && (
         <div className="mt-4">
           <p className="text-xs tracking-[0.2em] text-muted">THE BOOKS</p>

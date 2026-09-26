@@ -75,20 +75,9 @@ export function writeSeasonChapter(save: DynastySave): SeasonChapter {
   const pw = prior.reduce((n, c) => n + c.wins, 0);
   const pl = prior.reduce((n, c) => n + c.losses, 0);
   const pt = prior.reduce((n, c) => n + c.ties, 0);
-  let pf = t?.pf ?? 0;
-  let pa = t?.pa ?? 0;
-  const extra = [...save.playoffGames, save.superBowl].filter(
-    (g): g is NonNullable<typeof g> => !!g && g.played && (g.homeId === teamId || g.awayId === teamId),
-  );
-  for (const g of extra) {
-    if (g.homeId === teamId) {
-      pf -= g.homeScore;
-      pa -= g.awayScore;
-    } else {
-      pf -= g.awayScore;
-      pa -= g.homeScore;
-    }
-  }
+  // Team pf/pa only count the regular season (playoff games live in the bracket).
+  const pf = t?.pf ?? 0;
+  const pa = t?.pa ?? 0;
   const chapter: SeasonChapter = {
     year: save.year,
     teamId,

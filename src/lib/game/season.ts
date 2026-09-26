@@ -3,7 +3,7 @@ import { END_YEAR } from "./types.ts";
 import { activeTeamIds, roman, superBowlNumber } from "./teams.ts";
 import { cloneSave, resetSeasonRecord } from "./save.ts";
 import { rebuildSchedule, gamesInWeek, maxWeek } from "./schedule.ts";
-import { clampSeasonStats, simGame } from "./sim.ts";
+import { clampSeasonStats, CrunchPause, setCrunchHook, simGame } from "./sim.ts";
 import {
   autoDraftRest,
   buildDraftBoard,
@@ -44,6 +44,7 @@ import { rand } from "./rng.ts";
 import { agePlayer } from "./development.ts";
 import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
+import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
@@ -155,6 +156,8 @@ function startRegular(save: DynastySave): void {
   save.superBowl = undefined;
   save.proBowl = undefined;
   save.awards = undefined;
+  seasonArcs(save, () => rand(save));
+  buildSeasonPlan(save);
   if (save.year === 1970) {
     addNews(save, {
       kind: "headline",
@@ -166,13 +169,65 @@ function startRegular(save: DynastySave): void {
   }
 }
 
+/** Awards night: the honors, the owner's report card, the season's chapter, the trophy case, then the show. */
+function closeSeasonBooks(s: DynastySave): void {
+  resolveAwards(s);
+  gradeSeasonPlan(s);
+  writeSeasonChapter(s);
+  checkAchievements(s);
+  buildPrimetime(s, "awards");
+}
+
 function tickInjuries(save: DynastySave): void {
   for (const p of Object.values(save.players)) {
     if (p.injuredWeeks > 0) {
       p.injuredWeeks -= 1;
-      if (p.injuredWeeks <= 0) p.injuryName = undefined;
+      if (p.injuredWeeks <= 0) {
+        p.injuryName = undefined;
+        if (p.holdout) holdoutReported(save, p);
+      }
     }
   }
+}
+
+/**
+ * Crunch time. Before the owner's game is played for real, a throwaway copy of the week is
+ * simulated; if the game reaches an undecided big moment it pauses there and asks. Once
+ * every moment has an answer, the real week is played with those calls - the sim is
+ * deterministic, so it's the same game up to each decision and the owner's call from there.
+ * Returns false while a decision is pending.
+ */
+function crunchGate(s: DynastySave, gameId: string | undefined, run: (x: DynastySave) => void): boolean {
+  if (!gameId || s.cpuOnly || s.crunchOn === false) {
+    run(s);
+    return true;
+  }
+  if (!s.crunch || s.crunch.gameId !== gameId) s.crunch = { gameId, choices: [] };
+  const choices = s.crunch.choices.slice();
+  const probe = cloneSave(s);
+  setCrunchHook({ gameId, teamId: s.userTeamId, choices, probe: true });
+  try {
+    run(probe);
+  } catch (e) {
+    setCrunchHook(undefined);
+    if (e instanceof CrunchPause) {
+      s.crunch.situation = e.situation;
+      return false;
+    }
+    throw e;
+  }
+  setCrunchHook({ gameId, teamId: s.userTeamId, choices, probe: false });
+  try {
+    run(s);
+  } finally {
+    setCrunchHook(undefined);
+  }
+  s.crunch = undefined;
+  return true;
+}
+
+function userGameId(s: DynastySave, games: { id: string; homeId: string; awayId: string; played: boolean }[]): string | undefined {
+  return games.find((g) => !g.played && (g.homeId === s.userTeamId || g.awayId === s.userTeamId))?.id;
 }
 
 function simThisWeek(save: DynastySave): void {
@@ -227,6 +282,7 @@ function openDraft(save: DynastySave): void {
   save.draftPickIndex = 0;
   save.faOpened = false;
   save.waivers = [];
+  draftRetrospective(save);
 }
 
 function finishOffseason(save: DynastySave): void {
@@ -355,7 +411,8 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       const games = gamesInWeek(s, s.week);
       const unplayed = games.some((g) => !g.played);
       if (unplayed) {
-        simThisWeek(s);
+        if (auto) simThisWeek(s);
+        else if (!crunchGate(s, userGameId(s, games), simThisWeek)) break;
         if (!auto) break;
       }
       leaveRegularWeek(s);
@@ -367,7 +424,12 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     case "playoffs": {
       if (!s.weekFilm) {
         const before = s.playoffGames.filter((g) => g.played).length;
-        simPlayoffWeek(s);
+        if (auto) simPlayoffWeek(s);
+        else {
+          const open = s.playoffGames.filter((g) => !g.played);
+          const w = Math.min(...open.map((g) => g.week));
+          if (!crunchGate(s, userGameId(s, open.filter((g) => g.week === w)), simPlayoffWeek)) break;
+        }
         const after = s.playoffGames.filter((g) => g.played).length;
         if (after > before) {
           buildPrimetime(s, "playoffs");
@@ -390,24 +452,19 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     case "superBowl": {
       const unplayed = !!s.superBowl && !s.superBowl.played;
       if (unplayed) {
-        resolveSuperBowl(s);
+        if (auto) resolveSuperBowl(s);
+        else if (!crunchGate(s, s.superBowl ? userGameId(s, [s.superBowl]) : undefined, resolveSuperBowl)) break;
         buildPrimetime(s, "superBowl");
       }
       if (unplayed && !auto) break;
-      if (!s.awards) {
-        resolveAwards(s);
-        buildPrimetime(s, "awards");
-      }
-      writeSeasonChapter(s);
+      if (!s.awards) closeSeasonBooks(s);
+      else writeSeasonChapter(s);
       s.phase = "awards";
       break;
     }
     case "awards":
-      if (!s.awards) {
-        resolveAwards(s);
-        buildPrimetime(s, "awards");
-      }
-      writeSeasonChapter(s);
+      if (!s.awards) closeSeasonBooks(s);
+      else writeSeasonChapter(s);
       if (!s.proBowl?.played) {
         resolveProBowl(s);
         gatherRetirees(s);

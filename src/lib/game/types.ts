@@ -254,6 +254,14 @@ export interface Player {
   arc?: { dy: number; to: number; st: number; g: number; pb: number; ap: number; age: number };
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
+  /** The round history actually took him in (real draftees), for draft retrospectives. */
+  realRound?: number;
+  /** The club that drafted him in this dynasty. */
+  draftTeam?: TeamId;
+  /** Announced final season (a real player's farewell tour). */
+  finalSeason?: number;
+  /** Holding out for a new contract; misses games until the owner pays him. */
+  holdout?: boolean;
   /** Postseason lines (playoffs + Super Bowl), kept apart from the regular-season record. */
   playoffStats?: Record<number, SeasonStats>;
   /** Pro Bowls, All-Pros, awards and rings, by year. */
@@ -419,6 +427,8 @@ export interface DriveSummary {
   result: DriveResult;
   startSpot: number;
   label: string;
+  /** [home, away] once the drive (and any try after it) is over. */
+  after?: [number, number];
 }
 
 export interface GameResult {
@@ -478,6 +488,8 @@ export interface GameResult {
   filmNote?: string;
   /** Super Bowl / Pro Bowl — no home crowd. */
   neutral?: boolean;
+  /** The owner's crunch-time calls in this game. */
+  crunchCalls?: string[];
   /** Real regular-season neutral site (London, Mexico City, ...). */
   site?: string;
   /** Real calendar date, MMDD. */
@@ -487,6 +499,57 @@ export interface GameResult {
   /** What really happened in this game (history's final), when it's on the real schedule. */
   realHome?: number;
   realAway?: number;
+}
+
+export interface CrunchSituation {
+  gameId: string;
+  index: number;
+  kind: "fourth" | "two" | "onside";
+  q: number;
+  clock: number;
+  us: number;
+  them: number;
+  down: number;
+  togo: number;
+  /** Yards from the owner's own goal line. */
+  spot: number;
+  fgDist?: number;
+  options: { id: string; label: string }[];
+}
+
+export interface HeadToHead {
+  a: TeamId;
+  b: TeamId;
+  aWins: number;
+  bWins: number;
+  ties: number;
+  last?: { year: number; label: string; winner?: TeamId; score: string; playoff: boolean };
+  lastPlayoff?: { year: number; label: string; winner: TeamId; score: string };
+}
+
+export interface SeasonGoal {
+  id: string;
+  text: string;
+  met?: boolean;
+  /** Counts double on the report card. */
+  major?: boolean;
+}
+
+export interface SeasonPlan {
+  year: number;
+  projWins: number;
+  outlook: string;
+  goals: SeasonGoal[];
+  graded?: boolean;
+  grade?: string;
+  verdict?: string;
+}
+
+export interface Achievement {
+  id: string;
+  year: number;
+  title: string;
+  body: string;
 }
 
 export interface GameRecordEntry {
@@ -732,6 +795,18 @@ export interface DynastySave {
   owner?: OwnerState;
   /** 2 = cap-era contracts priced off the cap (see salaryFor). */
   salaryModel?: number;
+  /** All-time head-to-head between every pair of clubs, keyed "a|b" (sorted). */
+  h2h?: Record<string, HeadToHead>;
+  /** This season's expectations and the owner's goals; graded when the season ends. */
+  seasonPlan?: SeasonPlan;
+  /** Last season's graded plan (the report card). */
+  lastPlan?: SeasonPlan;
+  /** Dynasty trophy case. */
+  achievements?: Achievement[];
+  /** A crunch-time decision the owner owes before this week's game can finish. */
+  crunch?: { gameId: string; choices: string[]; situation?: CrunchSituation };
+  /** Owner setting: pause for crunch-time calls in close games (default on). */
+  crunchOn?: boolean;
   /** Set once player honors have been rebuilt from the award history (older saves). */
   honorsBackfilled?: boolean;
 }
@@ -860,6 +935,9 @@ export interface PrimetimePreview {
   line: string;
   pick: TeamId;
   note: string;
+  /** All-time series and last meeting, from the head-to-head book. */
+  series?: string;
+  last?: string;
   when: string;
   featured: boolean;
 }
@@ -885,6 +963,11 @@ export interface PrimetimeShow {
   previews?: PrimetimePreview[];
   awards?: { label: string; honoree: PrimetimeHonoree }[];
   allPro?: PrimetimeHonoree[];
+  /** Records and career marks within reach. */
+  chases?: { playerId: string; name: string; teamId: TeamId; text: string }[];
+  /** Awards night: the owner's report card and this year's trophy-case entries. */
+  reportCard?: SeasonPlan;
+  achievements?: Achievement[];
   pow: string;
   powerPoll: string;
   wire: string[];

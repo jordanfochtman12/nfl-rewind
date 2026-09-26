@@ -46,6 +46,8 @@ interface GameStore {
   step: (opts?: AdvanceOpts) => void;
   simWeek: () => void;
   desk: (fn: (s: DynastySave) => string | void) => void;
+  /** Answer the pending crunch-time call and play on. */
+  crunchChoose: (optionId: string) => void;
   exportJson: () => string;
   importJson: (raw: string) => void;
   resign: () => void;
@@ -103,6 +105,14 @@ export const useGameStore = create<GameStore>()(
         if (save.phase === "freeAgency") set({ save: advance(save, { closeFa: true }) });
         else if (save.phase === "complete") return;
         else set({ save: advance(save, { auto: save.phase === "draft" }) });
+      },
+      crunchChoose: (optionId) => {
+        const { save } = get();
+        if (!save?.crunch?.situation) return;
+        const s = cloneSave(save);
+        s.crunch!.choices.push(optionId);
+        s.crunch!.situation = undefined;
+        set({ save: advance(s) });
       },
       desk: (fn) => {
         const { save } = get();
