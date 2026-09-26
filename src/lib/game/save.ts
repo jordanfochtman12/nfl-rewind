@@ -16,7 +16,7 @@ import { fillCoachFields } from "./staff.ts";
 import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
-import { normalizeJerseys, reissueJerseysByEra } from "./players.ts";
+import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers } from "./players.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -309,6 +309,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     reissueJerseysByEra(out);
     out.jerseyEra = true;
   } else normalizeJerseys(out);
+  restoreVeteranNumbers(out);
   return out;
 }
 

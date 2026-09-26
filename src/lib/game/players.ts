@@ -557,3 +557,30 @@ export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): numbe
   if (p.jersey > 0 && legal && !used.has(p.jersey)) return p.jersey;
   return jerseyFor(save, p.pos, used);
 }
+
+/**
+ * Real 1966 veterans wear their real numbers. Saves from before numbers traveled with players
+ * lost them on any trade or signing (Hadl's 21); on load each one gets his number back, and a
+ * teammate who was wearing it (someone without a real number of his own) takes a new one.
+ */
+export function restoreVeteranNumbers(save: DynastySave): number {
+  const real = new Map<string, number>();
+  for (const v of VETERANS_1966 as VetSeed[]) if (v.n) real.set(`${v.f}|${v.l}|${v.p}`, v.n);
+  const realOf = (p: Player) => (p.historical && p.draftYear == null ? real.get(`${p.firstName}|${p.lastName}|${p.pos}`) : undefined);
+  let fixed = 0;
+  for (const id of Object.keys(save.teams) as TeamId[]) {
+    const roster = rosterOf(save, id);
+    for (const p of roster) {
+      const n = realOf(p);
+      if (n === undefined || p.jersey === n) continue;
+      const holder = roster.find((x) => x.id !== p.id && x.jersey === n);
+      if (holder && realOf(holder) === n) continue;
+      p.jersey = n;
+      fixed += 1;
+      if (holder) {
+        holder.jersey = jerseyFor(save, holder.pos, new Set(roster.map((x) => x.jersey)));
+      }
+    }
+  }
+  return fixed;
+}

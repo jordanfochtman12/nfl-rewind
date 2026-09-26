@@ -189,6 +189,9 @@ const ROLE_PLAYERS: Record<string, { o: number; p?: Pos }> = {
   "Tom|Rathman": { o: 74, p: "FB" },
   "Sam|Gash": { o: 68 },
   "Bill|Bates": { o: 66, p: "S" },
+  // His 1985-2005 span includes eight CFL seasons (1990-97) the arc can't tell apart from NFL
+  // years; as a steady starter for all of it he passed for 62,000 yards (real NFL: 14,715).
+  "Doug|Flutie": { o: 70 },
 };
 
 function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player {
