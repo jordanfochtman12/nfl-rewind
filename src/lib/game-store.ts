@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist, type PersistStorage, type StorageValue } from "zustand/middleware";
 import {
   advance,
   cloneSave,
@@ -53,18 +53,59 @@ interface GameStore {
   resign: () => void;
 }
 
-function persistStorage() {
+type Persisted = { save: DynastySave | null };
+
+/*
+ * Writes the dynasty to IndexedDB only when the save itself changed (switching tabs or opening a
+ * profile doesn't touch it), coalesces bursts of clicks into one write, and serializes once. A
+ * late dynasty is tens of megabytes, so writing on every state change made late-game play crawl.
+ */
+function persistStorage(): PersistStorage<Persisted> {
+  let lastWritten: DynastySave | null | undefined;
+  let pending: { name: string; value: StorageValue<Persisted> } | null = null;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let writing: Promise<void> = Promise.resolve();
+  const flush = () => {
+    if (timer) clearTimeout(timer);
+    timer = undefined;
+    const job = pending;
+    pending = null;
+    if (!job) return writing;
+    writing = writing.then(async () => {
+      const save = job.value.state.save;
+      const payload = JSON.stringify({ ...job.value, state: { save: save ? compactSave(save) : null } });
+      await dynastyStorage.setItem(job.name, payload);
+    });
+    return writing;
+  };
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") void flush();
+    });
+    window.addEventListener("pagehide", () => void flush());
+  }
   return {
-    getItem: (name: string) => dynastyStorage.getItem(name),
-    removeItem: (name: string) => dynastyStorage.removeItem(name),
-    setItem: async (name: string, value: string) => {
+    getItem: async (name) => {
+      const raw = await dynastyStorage.getItem(name);
+      if (!raw) return null;
       try {
-        const parsed = JSON.parse(value) as { state?: { save?: DynastySave | null } };
-        if (parsed?.state?.save) parsed.state.save = compactSave(parsed.state.save);
-        await dynastyStorage.setItem(name, JSON.stringify(parsed));
+        return JSON.parse(raw) as StorageValue<Persisted>;
       } catch {
-        await dynastyStorage.setItem(name, value);
+        return null;
       }
+    },
+    setItem: (name, value) => {
+      const save = value.state.save;
+      if (save === lastWritten) return;
+      lastWritten = save;
+      pending = { name, value };
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => void flush(), 350);
+    },
+    removeItem: async (name) => {
+      pending = null;
+      lastWritten = undefined;
+      await dynastyStorage.removeItem(name);
     },
   };
 }
@@ -134,7 +175,7 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: "nfl-rewind-dynasty",
-      storage: createJSONStorage(persistStorage),
+      storage: persistStorage(),
       partialize: (s) => ({ save: s.save }),
       onRehydrateStorage: () => (state) => {
         if (state?.save) state.save = hydrateSave(state.save);
