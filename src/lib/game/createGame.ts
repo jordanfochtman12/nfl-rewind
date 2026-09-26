@@ -2,7 +2,7 @@ import type { CreateGameOpts, DynastySave, TeamId } from "./types.ts";
 import { STARTING_YEAR } from "./types.ts";
 import { ACTIVE_1966 } from "./types.ts";
 import { blankState } from "./save.ts";
-import { fillRoster, seedVeterans, syncDepth } from "./players.ts";
+import { fillRoster, seedVeterans, syncDepth, normalizeJerseys } from "./players.ts";
 import { rebuildSchedule } from "./schedule.ts";
 import { buildDraftBoard, ensureSeasonPicks } from "./draft.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
@@ -56,5 +56,7 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
     teamIds: [o.userTeamId],
     playerIds: [],
   });
+  normalizeJerseys(save);
+  save.jerseyEra = true;
   return save;
 }

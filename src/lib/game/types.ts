@@ -807,6 +807,8 @@ export interface DynastySave {
   crunch?: { gameId: string; choices: string[]; situation?: CrunchSituation };
   /** Owner setting: pause for crunch-time calls in close games (default on). */
   crunchOn?: boolean;
+  /** Set once rosters carry era-accurate jersey numbers (older saves are reissued on load). */
+  jerseyEra?: boolean;
   /** Set once player honors have been rebuilt from the award history (older saves). */
   honorsBackfilled?: boolean;
 }

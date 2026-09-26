@@ -1,7 +1,7 @@
 import type { DefScheme, DynastySave, OffScheme, Player, Pos, Ratings, SeasonStats, TeamId } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { deriveOvr, hasFullKit } from "./ratings.ts";
-import { eraCollege, eraName, jerseyFor } from "./names.ts";
+import { eraCollege, eraName, jerseyFor, jerseyLegal } from "./names.ts";
 import { jitter, randInt } from "./rng.ts";
 import { VETERANS_1966, type VetSeed } from "./data/veterans1966.ts";
 import { assignKit } from "./abilities.ts";
@@ -489,4 +489,58 @@ export function allPlayers(save: DynastySave): Player[] {
 
 export function hasKit(p: Player): boolean {
   return hasFullKit(p.ratings);
+}
+
+/**
+ * Keep every roster's numbers legal for the year: anyone wearing a number his position can't
+ * wear (a 1980s defensive end in the 80s, a converted player carrying his old number) gets a
+ * legal one, and duplicates on a roster are settled in favor of the better player. Players who
+ * entered the league before the 1973 numbering system keep theirs, as the real rule allowed.
+ */
+export function normalizeJerseys(save: DynastySave): number {
+  let changed = 0;
+  for (const id of Object.keys(save.teams) as TeamId[]) {
+    const roster = rosterOf(save, id).slice().sort((a, b) => b.ovr - a.ovr);
+    if (!roster.length) continue;
+    const used = new Set<number>();
+    const redo: Player[] = [];
+    for (const p of roster) {
+      const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
+      const grandfathered = rookieYear < 1973;
+      const legal = grandfathered || jerseyLegal(p.pos, save.year, p.jersey);
+      if (legal && p.jersey > 0 && !used.has(p.jersey)) used.add(p.jersey);
+      else if (legal && p.jersey === 0 && save.year >= 2023 && !used.has(0)) used.add(0);
+      else redo.push(p);
+    }
+    for (const p of redo) {
+      p.jersey = jerseyFor(save, p.pos, used);
+      used.add(p.jersey);
+      changed += 1;
+    }
+  }
+  return changed;
+}
+
+/**
+ * One-time renumbering for saves from before era-accurate numbers: every player takes a number
+ * as if he picked it under the rules of his rookie year, so a 2023 roster has its front seven in
+ * the 90s and receivers in the teens instead of one chart for every era. Real 1966 veterans
+ * (seeded with their actual numbers) keep them.
+ */
+export function reissueJerseysByEra(save: DynastySave): void {
+  for (const id of Object.keys(save.teams) as TeamId[]) {
+    const roster = rosterOf(save, id).slice().sort((a, b) => b.ovr - a.ovr);
+    const used = new Set<number>();
+    const keep = roster.filter((p) => p.historical && p.draftYear == null && p.jersey > 0);
+    for (const p of keep) used.add(p.jersey);
+    for (const p of roster) {
+      if (keep.includes(p)) continue;
+      const rookieYear = Math.max(1966, Math.min(save.year, p.draftYear ?? save.year - (p.yearsPro ?? 0)));
+      const ctx = { rng: save.rng, year: rookieYear };
+      p.jersey = jerseyFor(ctx, p.pos, used);
+      save.rng = ctx.rng;
+      used.add(p.jersey);
+    }
+  }
+  normalizeJerseys(save);
 }

@@ -16,6 +16,7 @@ import { fillCoachFields } from "./staff.ts";
 import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
+import { normalizeJerseys, reissueJerseysByEra } from "./players.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -199,6 +200,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     honorsBackfilled: r.honorsBackfilled,
     crunch: r.crunch,
     crunchOn: r.crunchOn,
+    jerseyEra: r.jerseyEra,
     powerRanks: r.powerRanks,
     h2h: r.h2h,
     seasonPlan: r.seasonPlan,
@@ -301,6 +303,12 @@ export function hydrateSave(raw: unknown): DynastySave {
   }
   setHomeOverride(out.owner?.home);
   backfillHonors(out);
+  // Older saves numbered every era off one chart (1990s ends in the 80s, no 90s for the front
+  // seven); bring rosters in line with the year's numbering rules.
+  if (!out.jerseyEra) {
+    reissueJerseysByEra(out);
+    out.jerseyEra = true;
+  } else normalizeJerseys(out);
   return out;
 }
 

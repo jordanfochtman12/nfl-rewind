@@ -38,7 +38,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, syncDepth } from "./players.ts";
+import { fillRoster, normalizeJerseys, syncDepth } from "./players.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
 import { agePlayer } from "./development.ts";
@@ -297,6 +297,7 @@ function finishOffseason(save: DynastySave): void {
   refreshContracts(save);
   fillCpuRosters(save);
   enforceCapCompliance(save);
+  normalizeJerseys(save);
   for (const id of activeTeamIds(save.year)) syncDepth(save, id);
   touchGrade(save);
   const moves = relocationsFor(save, save.year);
