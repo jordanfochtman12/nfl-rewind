@@ -742,6 +742,35 @@ export interface TradeOffer {
   status: "open" | "accepted" | "declined";
 }
 
+/** A CPU club on the phone mid-season with a trade. Good until the next week kicks off. */
+export interface TradeCall extends TradeOffer {
+  year: number;
+  week: number;
+  pitch: string;
+}
+
+/** The owner's offer to a free agent other clubs want too. */
+export interface FaBid {
+  year: number;
+  playerId: string;
+  /** 0 market, 1 strong, 2 blow him away. */
+  tier: number;
+  salary: number;
+  years: number;
+  rivals: { teamId: TeamId; tier: number }[];
+  /** Fixed at the first offer so raising the bid is the only lever. */
+  luck: number[];
+  status: "open" | "won" | "lost";
+  winner?: TeamId;
+  note?: string;
+}
+
+export interface Rumor {
+  text: string;
+  teamIds: TeamId[];
+  playerId?: string;
+}
+
 export interface DeadlineSession {
   year: number;
   week: number;
@@ -797,6 +826,10 @@ export interface Almanac {
 }
 
 export interface DynastySave {
+  /** CPU clubs on the owner's line with trade offers. */
+  calls?: TradeCall[];
+  /** Free-agent bidding wars this offseason. */
+  faBids?: FaBid[];
   version: number;
   startingYear: number;
   year: number;
@@ -1030,6 +1063,8 @@ export interface PrimetimeShow {
   reportCard?: SeasonPlan;
   /** Awards night: this season against real history. */
   timeline?: TimelineEntry;
+  /** Trade-deadline weeks: who's buying, who's selling, who wants out. */
+  rumors?: Rumor[];
   achievements?: Achievement[];
   pow: string;
   powerPoll: string;

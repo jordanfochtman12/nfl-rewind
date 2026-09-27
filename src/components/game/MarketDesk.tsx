@@ -8,6 +8,8 @@ import {
   freeAgents,
   playerName,
   rosterOf,
+  bidEligible,
+  placeBid,
   signPlayer,
   tradeWindowOpen,
   visibleOvr,
@@ -157,12 +159,13 @@ export function MarketDesk() {
                       kind="primary"
                       onClick={() =>
                         desk((s) => {
+                          if (bidEligible(s, s.players[p.id]!)) return placeBid(s, p.id, 0);
                           const r = signPlayer(s, s.userTeamId, p.id);
                           return r.ok ? `Signed ${playerName(p)}.` : r.reason;
                         })
                       }
                     >
-                      Sign
+                      {bidEligible(save, p) ? "Make offer" : "Sign"}
                     </Btn>
                   </td>
                 </tr>

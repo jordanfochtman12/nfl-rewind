@@ -60,7 +60,7 @@ function futurePick(save: DynastySave, teamId: TeamId): string | undefined {
   return picks[0]?.id;
 }
 
-function tryOffer(save: DynastySave, from: TeamId, user: TeamId): TradeOffer | undefined {
+export function tryOffer(save: DynastySave, from: TeamId, user: TeamId): TradeOffer | undefined {
   const their = extraAt(save, from).filter((p) => p.ovr >= 62 && p.ovr <= 84);
   const ours = extraAt(save, user).filter((p) => p.ovr >= 58 && p.ovr <= 86);
   if (!their.length || !ours.length) return undefined;
@@ -95,6 +95,8 @@ export function openDeadline(save: DynastySave): DeadlineSession {
   if (save.deadline?.year === save.year && save.deadline.week === save.week && !save.deadline.resolved) {
     return save.deadline;
   }
+  // The deadline's own offers replace whatever was still on hold.
+  save.calls = [];
   const before = save.transactions.length;
   const rounds = 2 + randInt(save, 0, 2);
   for (let i = 0; i < rounds; i++) cpuTrades(save);

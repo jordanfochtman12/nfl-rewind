@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  activeTeamIds,
   canInductRing,
   canRetireNumber,
   displayName,
@@ -13,7 +15,7 @@ import {
   type TeamId,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
-import { Btn } from "./chrome";
+import { Btn, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
 
 /** "Retire #12" and "Ring of Honor", for a player who earned them in the owner's colors. */
@@ -46,25 +48,44 @@ export function HonorButtons({ player }: { player: Player }) {
   );
 }
 
-/** Induction night for one of the owner's own: the line, the hardware, the moments. */
-export function InductionCard({ player, teamId }: { player: Player; teamId: TeamId }) {
+/**
+ * Induction night card. With a club, what he did in its colors (the owner's club gets the honor
+ * buttons); without one, the whole career under the club he's most tied to.
+ */
+export function InductionCard({ player, teamId, note }: { player: Player; teamId?: TeamId; note?: string }) {
   const save = useGameStore((s) => s.save)!;
   const c = legacyCase(save, player, teamId);
   if (!c) return null;
+  const mine = teamId === save.userTeamId;
+  const club = c.teamId;
+  const others = (c.clubs ?? []).filter((x) => x.teamId !== club);
   return (
-    <li className="overflow-hidden rounded-lg border border-brass/60 bg-gradient-to-br from-brass/20 via-black/60 to-black/80">
+    <li
+      className={`overflow-hidden rounded-lg border ${
+        mine ? "border-brass/60 bg-gradient-to-br from-brass/20 via-black/60 to-black/80" : "border-line bg-gradient-to-br from-white/5 via-black/60 to-black/80"
+      }`}
+    >
       <div className="flex items-stretch">
-        <div className="flex w-20 shrink-0 items-center justify-center border-r border-brass/40 bg-black/50 font-display text-4xl text-brass sm:w-28 sm:text-5xl">
-          {player.jersey >= 0 ? `#${player.jersey}` : "—"}
+        <div className="flex w-20 shrink-0 flex-col items-center justify-center gap-2 border-r border-brass/30 bg-black/50 py-3 sm:w-28">
+          <Logo id={club} size={34} />
+          <span className="font-display text-3xl text-brass sm:text-4xl">{player.jersey >= 0 ? `#${player.jersey}` : "—"}</span>
         </div>
         <div className="min-w-0 flex-1 px-4 py-4">
           <p className="text-[11px] tracking-[0.3em] text-brass">
-            {displayName(save.year, teamId).toUpperCase()} · {c.span} · {c.seasons} SEASON{c.seasons === 1 ? "" : "S"}
+            {displayName(save.year, club).toUpperCase()} · {c.span} · {teamId ? c.seasons : c.clubs?.[0]?.seasons ?? c.seasons} SEASON
+            {(teamId ? c.seasons : c.clubs?.[0]?.seasons ?? c.seasons) === 1 ? "" : "S"}
           </p>
           <p className="font-display text-3xl leading-tight">
             <PlayerLink player={player} className="inline min-h-0" /> <span className="text-sm text-muted">{player.pos}</span>
           </p>
-          <p className="mt-1 text-sm text-paper">With the club: {c.line}</p>
+          {others.length > 0 && (
+            <p className="text-xs text-muted">
+              Also: {others.map((o) => `${displayName(save.year, o.teamId)} (${o.seasons})`).join(" · ")}
+            </p>
+          )}
+          <p className="mt-1 text-sm text-paper">
+            {teamId ? "With the club" : `Career, ${c.seasons} season${c.seasons === 1 ? "" : "s"}`}: {c.line}
+          </p>
           {c.honors.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {c.honors.map((h) => (
@@ -81,7 +102,8 @@ export function InductionCard({ player, teamId }: { player: Player; teamId: Team
               ))}
             </ul>
           )}
-          {teamId === save.userTeamId && <HonorButtons player={player} />}
+          {note && <p className="mt-2 text-xs tracking-[0.15em] text-brass">{note}</p>}
+          {mine && <HonorButtons player={player} />}
         </div>
       </div>
     </li>
@@ -91,18 +113,45 @@ export function InductionCard({ player, teamId }: { player: Player; teamId: Team
 /** The History tab's franchise legacy: the rafters, the Ring, and who's still waiting. */
 export function LegacySection() {
   const save = useGameStore((s) => s.save)!;
-  const u = save.userTeamId;
+  const [club, setClub] = useState<TeamId>(save.userTeamId);
+  const u = club;
+  const mineView = club === save.userTeamId;
   const nums = retiredNumbers(save, u);
   const ring = ringOfHonor(save, u);
-  const waiting = legacyCandidates(save);
-  if (!nums.length && !ring.length && !waiting.length) return null;
+  const waiting = mineView ? legacyCandidates(save) : [];
   const pl = (id: string) => save.players[id];
+  const honored = (id: TeamId) => retiredNumbers(save, id).length + ringOfHonor(save, id).length;
+  const clubs = activeTeamIds(save.year)
+    .slice()
+    .sort((a, b) => Number(b === save.userTeamId) - Number(a === save.userTeamId) || displayName(save.year, a).localeCompare(displayName(save.year, b)));
   return (
     <section className="space-y-4 rounded-xl border border-brass/30 bg-black/40 p-4 sm:p-5">
-      <div>
-        <p className="font-display text-xs tracking-[0.4em] text-brass">FRANCHISE LEGACY</p>
-        <h3 className="font-display text-2xl">The rafters and the Ring</h3>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-display text-xs tracking-[0.4em] text-brass">FRANCHISE LEGACY</p>
+          <h3 className="flex items-center gap-2 font-display text-2xl">
+            <Logo id={club} size={28} /> The rafters and the Ring
+          </h3>
+        </div>
+        <label className="text-xs tracking-[0.2em] text-muted">
+          CLUB{" "}
+          <select
+            className="ml-1 min-h-9 rounded-sm border border-line bg-black/70 px-2 text-sm text-paper"
+            value={club}
+            onChange={(e) => setClub(e.target.value as TeamId)}
+          >
+            {clubs.map((id) => (
+              <option key={id} value={id}>
+                {displayName(save.year, id)}
+                {honored(id) ? ` (${honored(id)})` : ""}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+      {!nums.length && !ring.length && !waiting.length && (
+        <p className="text-sm text-muted">No retired numbers and no Ring of Honor yet. The rafters are empty.</p>
+      )}
       {nums.length > 0 && (
         <div>
           <p className="text-xs tracking-[0.3em] text-muted">RETIRED NUMBERS</p>

@@ -79,7 +79,12 @@ export function FranchiseBook() {
           <ul className="mt-2 space-y-1 text-sm">
             {honor.map((id) => {
               const p = save.players[id];
-              return <li key={id}>{p ? <PlayerLink player={p} className="inline min-h-0" /> : id}</li>;
+              const c = save.coaches[id];
+              return (
+                <li key={id}>
+                  {p ? <PlayerLink player={p} className="inline min-h-0" /> : c ? <span>{c.name} <span className="text-muted">· coach</span></span> : id}
+                </li>
+              );
             })}
           </ul>
         </section>

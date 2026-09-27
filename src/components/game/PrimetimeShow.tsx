@@ -282,6 +282,28 @@ function WeeklyShow() {
     });
   }
 
+  if (show.rumors?.length) {
+    segs.push({
+      id: "rumors",
+      title: "Rumor mill",
+      node: (
+        <ul className="space-y-2.5 text-sm">
+          {show.rumors.map((r) => (
+            <li key={r.text} className="flex min-w-0 items-start gap-2">
+              <span className="mt-0.5 flex shrink-0 gap-1">
+                {r.teamIds.slice(0, 2).map((id) => (
+                  <Logo key={id} id={id} size={20} />
+                ))}
+                {!r.teamIds.length && <span className="font-display text-xs tracking-widest text-brick">LIVE</span>}
+              </span>
+              <span className="min-w-0 text-paper">{r.text}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
   if (show.chases?.length) {
     segs.push({
       id: "chases",

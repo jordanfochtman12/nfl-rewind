@@ -452,7 +452,7 @@ export function deskHoles(
 }
 
 /** Win% once there's a real sample; early in a season (or in the offseason) roster talent stands in for it. */
-function contendScore(save: DynastySave, teamId: TeamId): number {
+export function contendScore(save: DynastySave, teamId: TeamId): number {
   const t = save.teams[teamId];
   if (!t) return 0.5;
   const g = t.wins + t.losses + t.ties;

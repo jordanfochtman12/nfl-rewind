@@ -1,6 +1,9 @@
 export { SAVE_VERSION, STARTING_YEAR, END_YEAR, ROSTER_TARGET, TEAM_IDS, ACTIVE_1966, HOF_WAIT_YEARS, COACH_HOF_WAIT_YEARS } from "./types.ts";
 export type {
   AdvanceOpts,
+  TradeCall,
+  FaBid,
+  Rumor,
   AwardsResult,
   BoxPlayer,
   CampReport,
@@ -197,6 +200,20 @@ export {
   legacyCandidates,
   type LegacyCase,
 } from "./legacy.ts";
+export {
+  openCalls,
+  acceptCall,
+  declineCall,
+  BID_TIERS,
+  bidEligible,
+  askingPrice,
+  bidFor,
+  leaning,
+  placeBid,
+  resolveBid,
+  hotFreeAgents,
+  type Leaning,
+} from "./market.ts";
 export { deadlineWeek, openDeadline, closeDeadline, acceptDeadlineOffer, declineDeadlineOffer, offerLine } from "./deadline.ts";
 export {
   TICKET_TIERS,

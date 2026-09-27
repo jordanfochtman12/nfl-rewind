@@ -62,6 +62,7 @@ import { BottomLine, ClubPlate, NetworkBug, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
+import { PhoneLine } from "./MarketLife";
 import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
@@ -356,6 +357,7 @@ function Office() {
       </section>
       {finale && <GradeCard grade={grade} />}
       <DeskReport />
+      <PhoneLine />
       {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}
       {!finale && <SeasonPlanCard />}
@@ -1448,17 +1450,38 @@ function HofPlaque({ h }: { h: HofMember }) {
 
 function TeamOfHonor() {
   const save = useGameStore((s) => s.save)!;
+  const [club, setClub] = useState<TeamId>(save.userTeamId);
   const entries = save.history.hof
-    .filter((h) => h.teamId === save.userTeamId)
+    .filter((h) => h.teamId === club)
     .slice()
     .reverse();
+  const count = (id: TeamId) => save.history.hof.filter((h) => h.teamId === id).length;
+  const clubs = activeTeamIds(save.year)
+    .slice()
+    .sort((a, b) => Number(b === save.userTeamId) - Number(a === save.userTeamId) || displayName(save.year, a).localeCompare(displayName(save.year, b)));
+  const mine = club === save.userTeamId;
   return (
     <section>
-      <h3 className="mb-2 text-sm tracking-[0.2em] text-brass">
-        {displayName(save.year, save.userTeamId)} · Team of Honor
-      </h3>
+      <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
+        <h3 className="text-sm tracking-[0.2em] text-brass">{displayName(save.year, club)} · Team of Honor</h3>
+        <select
+          aria-label="Club"
+          className="min-h-9 rounded-sm border border-line bg-black/70 px-2 text-sm text-paper"
+          value={club}
+          onChange={(e) => setClub(e.target.value as TeamId)}
+        >
+          {clubs.map((id) => (
+            <option key={id} value={id}>
+              {displayName(save.year, id)}
+              {count(id) ? ` (${count(id)})` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
       <p className="mb-2 text-sm text-muted">
-        Every Hall of Famer who wore your colors — the wall the building points to when it needs to remember why it matters.
+        {mine
+          ? "Every Hall of Famer who wore your colors — the wall the building points to when it needs to remember why it matters."
+          : `Every Hall of Famer the ${displayName(save.year, club)} claim.`}
       </p>
       <ul className="space-y-2">
         {entries.map((h) => (

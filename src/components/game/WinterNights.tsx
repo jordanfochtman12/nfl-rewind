@@ -268,6 +268,7 @@ export function HofNight() {
   const save = useGameStore((s) => s.save)!;
   const klass = save.pendingHof.map((id) => save.players[id]).filter(Boolean) as Player[];
   const coaches = (save.pendingCoachHof ?? []).map((id) => save.coaches[id]).filter(Boolean) as Coach[];
+  // Coaches share the wall; only the players get a link here.
   const honor = (save.history.teamOfHonor[save.userTeamId] ?? [])
     .map((id) => save.players[id])
     .filter(Boolean) as Player[];
@@ -279,7 +280,7 @@ export function HofNight() {
     if (!club || club.teamId === u || club.seasons < 6 || !save.teams[club.teamId]) return undefined;
     const r = retiredNumbers(save, club.teamId);
     if (r.some((x) => x.playerId === p.id || x.n === p.jersey)) return undefined;
-    return `the ${displayName(save.year, club.teamId)} retire his #${p.jersey}`;
+    return `The ${displayName(save.year, club.teamId)} retire his #${p.jersey}.`;
   };
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/50 bg-studio">
@@ -302,24 +303,17 @@ export function HofNight() {
             </ul>
           </section>
         )}
+        {league.length > 0 && (
+          <section>
+            <p className="text-xs tracking-[0.3em] text-muted">{yours.length ? "AND THE REST OF THE CLASS" : "THE CLASS"}</p>
+            <ul className="mt-2 space-y-3">
+              {league.map((p) => (
+                <InductionCard key={p.id} player={p} note={rafters(p)} />
+              ))}
+            </ul>
+          </section>
+        )}
         <ul className="space-y-3">
-          {league.map((p) => (
-            <li
-              key={p.id}
-              className={`rounded-lg border px-4 py-4 ${
-                p.userTied ? "border-brass/60 bg-brass/15" : "border-line bg-black/55"
-              }`}
-            >
-              <p className="font-display text-2xl">
-                <PlayerLink player={p} className="inline min-h-0" />{" "}
-                <span className="text-sm text-muted">{p.pos}</span>
-              </p>
-              <p className="mt-1 text-sm text-muted">
-                Peak {p.peakOvr} · {p.userTied ? "Team of Honor" : "the league’s memory"}
-                {rafters(p) ? ` · ${rafters(p)}` : ""}
-              </p>
-            </li>
-          ))}
           {coaches.map((c) => (
             <li key={c.id} className="rounded-lg border border-brass/40 bg-black/55 px-4 py-4">
               <p className="font-display text-2xl">

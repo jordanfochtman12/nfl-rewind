@@ -45,6 +45,7 @@ import { agePlayer } from "./development.ts";
 import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
 import { recordTimeline } from "./timeline.ts";
+import { phoneRings, resolveAllBids } from "./market.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
@@ -239,6 +240,7 @@ function simThisWeek(save: DynastySave): void {
   for (const g of games) simGame(save, g);
   cpuInSeasonMoves(save);
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
+  phoneRings(save);
   weekPrimetime(save);
   buildPrimetime(save);
   save.waiverOrder = activeTeamIds(save.year)
@@ -393,6 +395,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.faOpened = true;
       }
       if (auto || opts.closeFa) {
+        resolveAllBids(s);
         runFreeAgency(s);
         s.faOpened = false;
         s.phase = "preseason";

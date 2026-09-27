@@ -11,7 +11,7 @@ import { careerTotals } from "./leaders.ts";
 import { checkSeasonMilestones } from "./records.ts";
 import { touchGrade } from "./grade.ts";
 import { retireCoach, shouldRetireCoach } from "./staff.ts";
-import { honorInductees } from "./legacy.ts";
+import { honorInductees, honorRetirees } from "./legacy.ts";
 import {
   coachHofBlurb,
   coachHofEligible,
@@ -256,6 +256,7 @@ export function resolveRetirement(save: DynastySave): void {
       });
     }
   }
+  honorRetirees(save, save.pendingRetirees);
   for (const id of save.pendingCoachRetirees ?? []) {
     const c = save.coaches[id];
     if (c) retireCoach(save, c);

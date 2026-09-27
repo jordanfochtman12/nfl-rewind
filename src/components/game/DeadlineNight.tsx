@@ -10,7 +10,7 @@ import { Btn } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 
-function Piece({ piece }: { piece: TradePiece }) {
+export function Piece({ piece }: { piece: TradePiece }) {
   const save = useGameStore((s) => s.save)!;
   if (piece.playerId) {
     const p = save.players[piece.playerId];

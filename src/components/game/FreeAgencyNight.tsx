@@ -5,6 +5,7 @@ import {
   freeAgents,
   playerName,
   rosterOf,
+  bidEligible,
   signPlayer,
   visibleOvr,
 } from "@/lib/game";
@@ -13,6 +14,7 @@ import { Btn } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import { KitChips } from "./KitChips";
+import { BidControls, BiddingWars } from "./MarketLife";
 
 export function FreeAgencyNight() {
   const save = useGameStore((s) => s.save)!;
@@ -67,6 +69,8 @@ export function FreeAgencyNight() {
         </div>
       </section>
 
+      <BiddingWars />
+
       {signed.length > 0 && (
         <section className="rounded-xl border border-line bg-surface p-4">
           <p className="text-xs tracking-[0.25em] text-muted">AROUND THE LEAGUE</p>
@@ -102,6 +106,9 @@ export function FreeAgencyNight() {
               </div>
               <div className="flex items-center gap-3">
                 <span className="tabular text-muted">{p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}</span>
+                {bidEligible(save, p) ? (
+                  <BidControls player={p} />
+                ) : (
                 <Btn
                   kind="primary"
                   onClick={() =>
@@ -113,6 +120,7 @@ export function FreeAgencyNight() {
                 >
                   Sign
                 </Btn>
+                )}
               </div>
             </li>
           ))}

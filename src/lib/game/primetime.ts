@@ -5,6 +5,7 @@
  * rankings with movement, the playoff picture and predictions, next week's lines, and in
  * January the postseason, Super Bowl and season-awards specials.
  */
+import { rumorMill } from "./market.ts";
 import type {
   BoxPlayer,
   DynastySave,
@@ -737,6 +738,7 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     superBowlPick: sbPick,
     previews: previews(save, upcoming, cache),
     chases: kind === "regular" && save.week >= 4 ? milestoneChases(save) : undefined,
+    rumors: kind === "regular" ? rumorMill(save) : undefined,
     pow: "",
     powerPoll: "",
     wire: save.weekNews.filter((n) => n.year === year).map((n) => n.headline).slice(0, 6),

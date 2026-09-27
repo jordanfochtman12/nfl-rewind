@@ -84,6 +84,8 @@ function sum(rows: SeasonStats[]): SeasonStats {
 
 export interface LegacyCase {
   teamId: TeamId;
+  /** Whole-career cases: every club he played for, most seasons first. */
+  clubs?: { teamId: TeamId; seasons: number }[];
   seasons: number;
   span: string;
   line: string;
@@ -92,11 +94,23 @@ export interface LegacyCase {
   titles: number;
 }
 
-/** What he did in this club's colors: the line, the hardware, the nights people remember. */
-export function legacyCase(save: DynastySave, p: Player, teamId: TeamId): LegacyCase | undefined {
-  const rows = clubSeasons(p, teamId);
+/** Every season he played, anywhere, in order. */
+function allSeasons(p: Player): SeasonStats[] {
+  const byYear = new Map<number, SeasonStats>();
+  for (const r of [...(p.career ?? []), ...Object.values(p.stats)]) if (r.gp > 0) byYear.set(r.year, r);
+  return [...byYear.values()].sort((a, b) => a.year - b.year);
+}
+
+/**
+ * What he did in this club's colors: the line, the hardware, the nights people remember.
+ * Without a club, the whole career.
+ */
+export function legacyCase(save: DynastySave, p: Player, teamId?: TeamId): LegacyCase | undefined {
+  const rows = teamId ? clubSeasons(p, teamId) : allSeasons(p);
   if (!rows.length) return undefined;
   const years = new Set(rows.map((r) => r.year));
+  const clubIn = new Map(rows.map((r) => [r.year, r.teamId]));
+  const ours = (year: number, id: string) => (teamId ? id === teamId : clubIn.get(year) === id);
   const first = rows[0]!.year;
   const last = rows[rows.length - 1]!.year;
   const line = seasonLine(p, sum(rows));
@@ -119,14 +133,14 @@ export function legacyCase(save: DynastySave, p: Player, teamId: TeamId): Legacy
     const won = b.homeScore >= b.awayScore ? b.homeId : b.awayId;
     const lost = won === b.homeId ? b.awayId : b.homeId;
     const score = `${Math.max(b.homeScore, b.awayScore)}-${Math.min(b.homeScore, b.awayScore)}`;
-    if (won === teamId) {
+    if (ours(b.year, won)) {
       titles += 1;
       moments.push(
         b.mvpId === p.id
           ? `Super Bowl ${roman(b.number)} MVP: beat the ${displayName(b.year, lost)} ${score}.`
           : `Won Super Bowl ${roman(b.number)} over the ${displayName(b.year, lost)}, ${score}.`,
       );
-    } else if (lost === teamId && b.mvpId === p.id) {
+    } else if (ours(b.year, lost) && b.mvpId === p.id) {
       moments.push(`Super Bowl ${roman(b.number)} MVP in a loss to the ${displayName(b.year, won)}.`);
     }
   }
@@ -134,11 +148,15 @@ export function legacyCase(save: DynastySave, p: Player, teamId: TeamId): Legacy
   for (const a of awards.filter((x) => x.award === "MVP")) moments.push(`League MVP in ${a.year}.`);
   const best = rows.slice().sort((a, b) => seasonWeight(p, b) - seasonWeight(p, a))[0];
   if (best && rows.length > 1) moments.push(`Best year: ${best.year}, ${seasonLine(p, best)}.`);
-  const playoffs = Object.values(p.playoffStats ?? {}).filter((s) => s.teamId === teamId && s.gp > 0);
+  const playoffs = Object.values(p.playoffStats ?? {}).filter((s) => (teamId ? s.teamId === teamId : true) && s.gp > 0);
   const pg = playoffs.reduce((n, s) => n + s.gp, 0);
-  if (pg >= 4) moments.push(`${pg} playoff games in these colors.`);
+  if (pg >= 4) moments.push(teamId ? `${pg} playoff games in these colors.` : `${pg} career playoff games.`);
+  const counts = new Map<TeamId, number>();
+  for (const r of rows) if (r.teamId !== "two") counts.set(r.teamId, (counts.get(r.teamId) ?? 0) + 1);
+  const clubs = [...counts].map(([id, n]) => ({ teamId: id, seasons: n })).sort((a, b) => b.seasons - a.seasons);
   return {
-    teamId,
+    teamId: teamId ?? clubs[0]?.teamId ?? save.userTeamId,
+    clubs: teamId ? undefined : clubs,
     seasons: rows.length,
     span: first === last ? `${first}` : `${first}-${last}`,
     line,
@@ -248,5 +266,24 @@ export function honorInductees(save: DynastySave, playerIds: string[]): void {
     if (!club || club.teamId === save.userTeamId || !save.teams[club.teamId]) continue;
     if (club.seasons >= 4) inductRing(save, id, club.teamId, true);
     if (club.seasons >= 6) retireNumber(save, id, club.teamId, true);
+  }
+}
+
+/**
+ * Retirement day around the league: a club's franchise icons go into its Ring without waiting
+ * on Canton, and the true greats get their numbers retired. The owner makes his own calls.
+ */
+export function honorRetirees(save: DynastySave, playerIds: string[]): void {
+  for (const id of playerIds) {
+    const p = save.players[id];
+    if (!p) continue;
+    const club = signatureClub(p);
+    if (!club || club.teamId === save.userTeamId || !save.teams[club.teamId] || club.seasons < 8) continue;
+    const c = legacyCase(save, p, club.teamId);
+    if (!c) continue;
+    const pb = (p.honors?.proBowl ?? []).filter((y) => clubSeasons(p, club.teamId).some((s) => s.year === y)).length;
+    const peak = p.peakOvr ?? p.ovr;
+    if (peak >= 86 || pb >= 4 || c.titles >= 2) inductRing(save, id, club.teamId, true);
+    if (club.seasons >= 10 && (pb >= 6 || peak >= 92)) retireNumber(save, id, club.teamId, true);
   }
 }
