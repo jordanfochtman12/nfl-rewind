@@ -3,6 +3,7 @@ import {
   STARTING_YEAR,
   TEAM_IDS,
   type DynastySave,
+  type Player,
   type SeasonStats,
   type TeamId,
   type TeamState,
@@ -204,6 +205,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     liveOn: r.liveOn,
     liveResume: r.liveResume,
     calls: r.calls,
+    progression: r.progression,
     faBids: r.faBids,
     powerRanks: r.powerRanks,
     h2h: r.h2h,
@@ -321,6 +323,43 @@ function outYear(r: Partial<DynastySave>, fallback: number): number {
   return r.year ?? fallback;
 }
 
-export function cloneSave(save: DynastySave): DynastySave {
-  return structuredClone(save);
+/** Retired players and Hall of Famers: history, not state. Shared between save copies. */
+function settled(p: Player): boolean {
+  return p.teamId === "retired" || p.teamId === "hof";
 }
+
+let freezeSettled = false;
+/** QA only: freeze shared retired players so any write to one throws instead of leaking across copies. */
+export function setFreezeSettled(on: boolean): void {
+  freezeSettled = on;
+}
+
+function deepFreeze(o: unknown): void {
+  if (!o || typeof o !== "object" || Object.isFrozen(o)) return;
+  Object.freeze(o);
+  for (const v of Object.values(o)) deepFreeze(v);
+}
+
+/**
+ * A working copy of the save. By a late dynasty nine players in ten are retired, and copying
+ * them was most of the cost of every advance; they're shared by reference instead and only the
+ * living part of the league is deep-copied. Code that changes a retired player takes its own
+ * copy first with ownPlayer.
+ */
+export function cloneSave(save: DynastySave): DynastySave {
+  const { players, ...rest } = save;
+  const out = structuredClone(rest) as DynastySave;
+  const live: Record<string, Player> = {};
+  for (const id in players) if (!settled(players[id]!)) live[id] = players[id]!;
+  const copied = structuredClone(live);
+  const next: Record<string, Player> = {};
+  // Same key order as the original: iteration order feeds the deterministic sim.
+  for (const id in players) {
+    const p = copied[id] ?? players[id]!;
+    if (freezeSettled && !copied[id]) deepFreeze(p);
+    next[id] = p;
+  }
+  out.players = next;
+  return out;
+}
+

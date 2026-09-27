@@ -50,6 +50,8 @@ export function CampNight() {
         </div>
       </section>
 
+      <ProgressionCard />
+
       {camp?.battles && camp.battles.length > 0 && (
         <section className="rounded-xl border border-line bg-surface p-4">
           <p className="text-xs tracking-[0.25em] text-muted">CAMP BATTLES</p>
@@ -132,5 +134,56 @@ export function CampNight() {
         </section>
       )}
     </div>
+  );
+}
+
+const ordinal = (n: number) => `${n}${n % 10 === 1 && n % 100 !== 11 ? "st" : n % 10 === 2 && n % 100 !== 12 ? "nd" : n % 10 === 3 && n % 100 !== 13 ? "rd" : "th"}`;
+
+/** Who came back from the offseason better, and who came back slower. */
+function ProgressionCard() {
+  const save = useGameStore((s) => s.save)!;
+  const rep = save.progression;
+  if (!rep || rep.year !== save.year) return null;
+  const rows = rep.rows
+    .map((r) => ({ ...r, p: save.players[r.playerId], d: r.to - r.from }))
+    .filter((r) => r.p && r.p.teamId === save.userTeamId);
+  const up = rows.filter((r) => r.d >= 2).sort((a, b) => b.d - a.d).slice(0, 6);
+  const down = rows.filter((r) => r.d <= -2).sort((a, b) => a.d - b.d).slice(0, 4);
+  if (!up.length && !down.length) return null;
+  const tag = (p: NonNullable<(typeof rows)[number]["p"]>) =>
+    p.draftYear && p.draftRound
+      ? `${p.draftYear} ${ordinal(p.draftRound)}-rounder`
+      : p.draftYear
+        ? `${p.draftYear} free agent`
+        : `${p.yearsPro}-yr vet`;
+  const headline = up[0] && up[0].d >= 5 ? `${up[0].p!.pos === "QB" ? "Your quarterback" : `Your ${tag(up[0].p!)}`} jumped +${up[0].d}` : "Progression report";
+  const Row = ({ r }: { r: (typeof rows)[number] }) => (
+    <li className="flex items-center gap-3 py-2">
+      <span className={`w-12 shrink-0 text-center font-display text-xl ${r.d > 0 ? "text-brass" : "text-brick"}`}>
+        {r.d > 0 ? `+${r.d}` : r.d}
+      </span>
+      <span className="min-w-0 flex-1">
+        <PlayerLink player={r.p!} className="inline min-h-0" />{" "}
+        <span className="text-sm text-muted">
+          {r.p!.pos} · {r.p!.age} · {tag(r.p!)}
+        </span>
+      </span>
+      <span className="tabular shrink-0 text-sm text-muted">
+        {r.from} → <span className="text-paper">{r.to}</span>
+      </span>
+    </li>
+  );
+  return (
+    <section className="rounded-xl border border-brass/40 bg-surface p-4">
+      <p className="text-xs tracking-[0.25em] text-brass">CAMP REPORT · WHO CAME BACK DIFFERENT</p>
+      <h3 className="mt-1 font-display text-2xl">{headline}</h3>
+      {up.length > 0 && <ul className="mt-2 divide-y divide-line">{up.map((r) => <Row key={r.playerId} r={r} />)}</ul>}
+      {down.length > 0 && (
+        <>
+          <p className="mt-3 text-xs tracking-[0.25em] text-muted">LOST A STEP</p>
+          <ul className="divide-y divide-line">{down.map((r) => <Row key={r.playerId} r={r} />)}</ul>
+        </>
+      )}
+    </section>
   );
 }

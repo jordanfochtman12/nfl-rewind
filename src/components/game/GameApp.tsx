@@ -252,9 +252,45 @@ function PhaseAction() {
     else step({});
   };
   return (
-    <Btn kind="primary" onClick={onClick} className="min-h-12 px-7 text-lg">
-      {label[save.phase] ?? "Continue"} <span aria-hidden>▸</span>
-    </Btn>
+    <div className="flex flex-wrap items-center gap-2">
+      <Btn kind="primary" onClick={onClick} className="min-h-12 px-7 text-lg">
+        {label[save.phase] ?? "Continue"} <span aria-hidden>▸</span>
+      </Btn>
+      <BatchSim />
+    </div>
+  );
+}
+
+/** "Sim to the deadline" / "Sim to the playoffs". Stops early when a club calls. */
+function BatchSim() {
+  const save = useGameStore((s) => s.save)!;
+  const simTo = useGameStore((s) => s.simTo);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+  if (save.phase !== "regular" || save.cpuOnly) return null;
+  const deadlineOpen = !(save.deadline?.year === save.year);
+  const go = (target: "deadline" | "playoffs") => {
+    setBusy(target);
+    setNote(null);
+    // Let the label paint before the main thread goes to work.
+    setTimeout(() => {
+      const why = simTo(target);
+      setBusy(null);
+      setNote(why === "call" ? "A club is on the phone. Take the call in the Office." : null);
+    }, 30);
+  };
+  return (
+    <>
+      {deadlineOpen && (
+        <Btn className="min-h-12 px-4 text-sm" disabled={!!busy} onClick={() => go("deadline")}>
+          {busy === "deadline" ? "Simming…" : "Sim to the deadline ▸▸"}
+        </Btn>
+      )}
+      <Btn className="min-h-12 px-4 text-sm" disabled={!!busy} onClick={() => go("playoffs")}>
+        {busy === "playoffs" ? "Simming…" : "Sim to the playoffs ▸▸"}
+      </Btn>
+      {note && <p className="w-full text-sm text-brass">{note}</p>}
+    </>
   );
 }
 

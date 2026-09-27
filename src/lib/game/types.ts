@@ -727,6 +727,12 @@ export interface CampInjury {
   name: string;
 }
 
+/** How the owner's players came out of the offseason: rating before and after. */
+export interface ProgressionReport {
+  year: number;
+  rows: { playerId: string; from: number; to: number }[];
+}
+
 export interface CampReport {
   year: number;
   cuts: CampCut[];
@@ -826,6 +832,8 @@ export interface Almanac {
 }
 
 export interface DynastySave {
+  /** The owner's offseason progression, shown at camp. */
+  progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */
   calls?: TradeCall[];
   /** Free-agent bidding wars this offseason. */

@@ -174,11 +174,23 @@ export function makePlayer(
   return p;
 }
 
+/**
+ * This save's own copy of a player, safe to change. Retired players are shared between save
+ * copies (see cloneSave), so anything that changes one takes its own copy first.
+ */
+export function ownPlayer(save: DynastySave, id: string): Player | undefined {
+  const p = save.players[id];
+  if (!p || (p.teamId !== "retired" && p.teamId !== "hof")) return p;
+  const mine = structuredClone(p);
+  save.players[id] = mine;
+  return mine;
+}
+
 export function addToRoster(save: DynastySave, teamId: TeamId, playerId: string): void {
   const team = save.teams[teamId];
   if (!team) return;
   if (!team.roster.includes(playerId)) team.roster.push(playerId);
-  const p = save.players[playerId];
+  const p = ownPlayer(save, playerId);
   if (p) {
     p.teamId = teamId;
     if (teamId === save.userTeamId) p.userTied = true;

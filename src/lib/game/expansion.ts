@@ -127,7 +127,11 @@ function takeExpansionPick(save: DynastySave, clubId: TeamId, playerId: string, 
 
 function fillExpansionClub(save: DynastySave, clubId: TeamId): void {
   while (rosterOf(save, clubId).length < ROSTER_TARGET) {
-    const leftover = save.draftBoard.filter((d) => !d.taken)[0];
+    // Leftover prospects who have since retired stay retired.
+    const leftover = save.draftBoard.filter((d) => {
+      const lp = save.players[d.playerId];
+      return !d.taken && !(lp && (lp.teamId === "retired" || lp.teamId === "hof"));
+    })[0];
     if (leftover) {
       leftover.taken = true;
       leftover.takenBy = clubId;

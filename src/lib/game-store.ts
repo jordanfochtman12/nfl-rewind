@@ -6,6 +6,8 @@ import {
   compactSave,
   createNewGame,
   hydrateSave,
+  openCalls,
+  simUntil,
   type AdvanceOpts,
   type DynastySave,
   type TeamId,
@@ -45,6 +47,8 @@ interface GameStore {
   continueGame: () => void;
   step: (opts?: AdvanceOpts) => void;
   simWeek: () => void;
+  /** Batch sim to the trade deadline or the playoffs; stops early if a club calls. Returns why it stopped. */
+  simTo: (target: "deadline" | "playoffs") => string;
   desk: (fn: (s: DynastySave) => string | void) => void;
   /** Answer the pending crunch-time call and play on. */
   crunchChoose: (optionId: string) => void;
@@ -151,6 +155,21 @@ export const useGameStore = create<GameStore>()(
         if (save.phase === "freeAgency") set({ save: advance(save, { closeFa: true }) });
         else if (save.phase === "complete") return;
         else set({ save: advance(save, { auto: save.phase === "draft" }) });
+      },
+      simTo: (target) => {
+        const { save } = get();
+        if (!save || (save.phase !== "regular" && save.phase !== "deadline")) return "";
+        const seen = new Set(openCalls(save).map((c) => c.id));
+        let why = "";
+        const done = (s: DynastySave) => {
+          if (openCalls(s).some((c) => !seen.has(c.id))) return (why = "call"), true;
+          if (target === "deadline" && (s.phase === "deadline" || (s.deadline?.year === s.year && s.deadline.resolved)))
+            return (why = "deadline"), true;
+          if (s.phase !== "regular" && s.phase !== "deadline") return (why = "playoffs"), true;
+          return false;
+        };
+        set({ save: simUntil(save, done) });
+        return why;
       },
       crunchChoose: (optionId) => {
         const { save } = get();

@@ -31,7 +31,10 @@ function pitchFor(save: DynastySave, c: TradeCall): string {
   const want = c.get.find((x) => x.playerId)?.playerId;
   const sp = send ? save.players[send] : undefined;
   const wp = want ? save.players[want] : undefined;
-  const score = contendScore(save, from);
+  const t = save.teams[from];
+  const played = t ? t.wins + t.losses + t.ties : 0;
+  // Buyer or seller only once there's a record to back it up.
+  const score = played >= 3 ? contendScore(save, from) : 0.5;
   const club = name(save, from);
   if (!sp || !wp) return `The ${club} are on the line.`;
   if (score >= 0.6) {

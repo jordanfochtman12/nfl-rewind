@@ -12,6 +12,7 @@ import { checkSeasonMilestones } from "./records.ts";
 import { touchGrade } from "./grade.ts";
 import { retireCoach, shouldRetireCoach } from "./staff.ts";
 import { honorInductees, honorRetirees } from "./legacy.ts";
+import { ownPlayer } from "./players.ts";
 import {
   coachHofBlurb,
   coachHofEligible,
@@ -276,7 +277,7 @@ export function gatherHof(save: DynastySave): string[] {
 export function resolveHof(save: DynastySave): void {
   const classYear = save.year + 1;
   for (const id of save.pendingHof) {
-    const p = save.players[id];
+    const p = ownPlayer(save, id);
     if (!p) continue;
     p.hofYear = classYear;
     p.teamId = "hof";

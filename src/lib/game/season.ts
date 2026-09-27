@@ -38,7 +38,8 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, normalizeJerseys, syncDepth } from "./players.ts";
+import { fillRoster, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
 import { agePlayer } from "./development.ts";
@@ -106,11 +107,17 @@ export function setLabel(save: DynastySave): void {
 }
 
 function ageAndRegen(save: DynastySave): void {
+  // The owner's camp report: who came back better, who came back slower.
+  const before = rosterOf(save, save.userTeamId).map((p) => ({ p, from: visibleOvr(p) }));
   for (const p of Object.values(save.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     agePlayer(save, p);
   }
   ageStaff(save);
+  save.progression = {
+    year: save.year,
+    rows: before.map(({ p, from }) => ({ playerId: p.id, from, to: visibleOvr(p) })).filter((r) => r.to !== r.from),
+  };
 }
 
 function runCpuFreeAgency(save: DynastySave): void {
@@ -183,6 +190,7 @@ function closeSeasonBooks(s: DynastySave): void {
 
 function tickInjuries(save: DynastySave): void {
   for (const p of Object.values(save.players)) {
+    if (p.teamId === "retired" || p.teamId === "hof") continue;
     if (p.injuredWeeks > 0) {
       p.injuredWeeks -= 1;
       if (p.injuredWeeks <= 0) {
