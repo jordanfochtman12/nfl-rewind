@@ -1,7 +1,7 @@
 import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
 import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
-import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth } from "./players.ts";
+import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, usedJerseys } from "./players.ts";
 import { eraCollege, jerseyFor } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { randInt } from "./rng.ts";
@@ -440,7 +440,7 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftRound = round;
     p.draftPick = save.draftPickIndex + 1;
     p.draftTeam = teamId;
-    p.jersey = jerseyFor(save, p.pos, new Set(rosterOf(save, teamId).map((x) => x.jersey)));
+    p.jersey = jerseyFor(save, p.pos, usedJerseys(save, teamId));
     p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
     p.contractYears = round <= 2 ? 4 : round <= 4 ? 3 : 2;
     addToRoster(save, teamId, p.id);

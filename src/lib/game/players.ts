@@ -182,6 +182,9 @@ export function addToRoster(save: DynastySave, teamId: TeamId, playerId: string)
   if (p) {
     p.teamId = teamId;
     if (teamId === save.userTeamId) p.userTied = true;
+    // Nobody pulls a retired number out of the rafters.
+    const retired = save.history?.retiredNumbers?.[teamId];
+    if (retired?.some((r) => r.n === p.jersey && r.playerId !== p.id)) p.jersey = carryJersey(save, p, teamId);
   }
   syncDepth(save, teamId);
 }
@@ -345,8 +348,16 @@ export function syncDepth(save: DynastySave, teamId: TeamId): void {
   }
 }
 
+/** Retired numbers on a club: number -> the player it was retired for. */
+export function retiredFor(save: Pick<DynastySave, "history">, teamId: TeamId): Map<number, string> {
+  return new Map((save.history.retiredNumbers?.[teamId] ?? []).map((r) => [r.n, r.playerId]));
+}
+
+/** Numbers taken on a club: everyone on the roster, plus the ones hanging in the rafters. */
 export function usedJerseys(save: DynastySave, teamId: TeamId): Set<number> {
-  return new Set(rosterOf(save, teamId).map((p) => p.jersey));
+  const out = new Set(rosterOf(save, teamId).map((p) => p.jersey));
+  for (const n of retiredFor(save, teamId).keys()) out.add(n);
+  return out;
 }
 
 function levenshtein(a: string, b: string): number {
@@ -502,12 +513,15 @@ export function normalizeJerseys(save: DynastySave): number {
   for (const id of Object.keys(save.teams) as TeamId[]) {
     const roster = rosterOf(save, id).slice().sort((a, b) => b.ovr - a.ovr);
     if (!roster.length) continue;
-    const used = new Set<number>();
+    const retired = retiredFor(save, id);
+    const used = new Set<number>(retired.keys());
     const redo: Player[] = [];
     for (const p of roster) {
       const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
       const grandfathered = rookieYear < 1973;
       const legal = grandfathered || jerseyLegal(p.pos, save.year, p.jersey);
+      // The man whose number it is keeps wearing it until he's gone.
+      if (retired.get(p.jersey) === p.id) continue;
       if (legal && p.jersey > 0 && !used.has(p.jersey)) used.add(p.jersey);
       else if (legal && p.jersey === 0 && save.year >= 2023 && !used.has(0)) used.add(0);
       else redo.push(p);
@@ -530,7 +544,7 @@ export function normalizeJerseys(save: DynastySave): number {
 export function reissueJerseysByEra(save: DynastySave): void {
   for (const id of Object.keys(save.teams) as TeamId[]) {
     const roster = rosterOf(save, id).slice().sort((a, b) => b.ovr - a.ovr);
-    const used = new Set<number>();
+    const used = new Set<number>(retiredFor(save, id).keys());
     const keep = roster.filter((p) => p.historical && p.draftYear == null && p.jersey > 0);
     for (const p of keep) used.add(p.jersey);
     for (const p of roster) {
@@ -552,6 +566,7 @@ export function reissueJerseysByEra(save: DynastySave): void {
  */
 export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): number {
   const used = new Set(rosterOf(save, teamId).filter((x) => x.id !== p.id).map((x) => x.jersey));
+  for (const [n, owner] of retiredFor(save, teamId)) if (owner !== p.id) used.add(n);
   const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
   const legal = rookieYear < 1973 || jerseyLegal(p.pos, save.year, p.jersey);
   if (p.jersey > 0 && legal && !used.has(p.jersey)) return p.jersey;
@@ -570,15 +585,17 @@ export function restoreVeteranNumbers(save: DynastySave): number {
   let fixed = 0;
   for (const id of Object.keys(save.teams) as TeamId[]) {
     const roster = rosterOf(save, id);
+    const retired = retiredFor(save, id);
     for (const p of roster) {
       const n = realOf(p);
       if (n === undefined || p.jersey === n) continue;
+      if (retired.has(n) && retired.get(n) !== p.id) continue;
       const holder = roster.find((x) => x.id !== p.id && x.jersey === n);
       if (holder && realOf(holder) === n) continue;
       p.jersey = n;
       fixed += 1;
       if (holder) {
-        holder.jersey = jerseyFor(save, holder.pos, new Set(roster.map((x) => x.jersey)));
+        holder.jersey = jerseyFor(save, holder.pos, new Set([...roster.map((x) => x.jersey), ...retired.keys()]));
       }
     }
   }

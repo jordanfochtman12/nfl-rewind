@@ -1055,7 +1055,8 @@ export function draftSeedsFor(year: number): DraftSeed[] {
   ];
   const by = new Map<string, DraftSeed>();
   for (const s of rows) {
-    const key = `${s.f}|${s.l}`.toLowerCase();
+    // Full-name key: sources split "Too Tall Jones" or "Lee Roy Selmon" differently.
+    const key = `${s.f} ${s.l}`.toLowerCase().replace(/[.'’]/g, "").replace(/\s+/g, " ").trim();
     const prev = by.get(key);
     if (!prev) {
       by.set(key, { ...s, rt: s.rt ? { ...s.rt } : undefined });

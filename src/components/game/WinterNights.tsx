@@ -1,7 +1,10 @@
 import {
   availableCoaches,
   careerTotals,
+  clubSeasons,
   deskHire,
+  retiredNumbers,
+  signatureClub,
   displayName,
   END_YEAR,
   playerName,
@@ -17,6 +20,7 @@ import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import { CoachChips } from "./KitChips";
+import { HonorButtons, InductionCard } from "./Legacy";
 
 function Continue({ label }: { label: string }) {
   const step = useGameStore((s) => s.step);
@@ -160,7 +164,7 @@ export function ProBowlNight() {
   );
 }
 
-function retireCard(p: Player, blurb: string, mine: boolean) {
+function retireCard(p: Player, blurb: string, mine: boolean, honors = false) {
   const c = careerTotals(p);
   const line = [c.passYds && `${c.passYds} pass`, c.rushYds && `${c.rushYds} rush`, c.rec && `${c.rec} rec`]
     .filter(Boolean)
@@ -177,6 +181,7 @@ function retireCard(p: Player, blurb: string, mine: boolean) {
         </span>
       </p>
       <p className="mt-1 text-sm text-paper">{blurb || line || `Peak ${p.peakOvr}.`}</p>
+      {honors && <HonorButtons player={p} />}
     </li>
   );
 }
@@ -231,7 +236,7 @@ export function RetirementNight() {
         {mine.length > 0 && (
           <section>
             <p className="text-xs tracking-[0.3em] text-brass">YOUR CLUB</p>
-            <ul className="mt-2 space-y-2">{mine.map((p) => retireCard(p, "", true))}</ul>
+            <ul className="mt-2 space-y-2">{mine.map((p) => retireCard(p, "", true, true))}</ul>
           </section>
         )}
         {myCoach.length > 0 && (
@@ -266,7 +271,16 @@ export function HofNight() {
   const honor = (save.history.teamOfHonor[save.userTeamId] ?? [])
     .map((id) => save.players[id])
     .filter(Boolean) as Player[];
-  const yours = klass.filter((p) => p.userTied || p.teamId === save.userTeamId);
+  const u = save.userTeamId;
+  const yours = klass.filter((p) => clubSeasons(p, u).length > 0);
+  const league = klass.filter((p) => !yours.includes(p));
+  const rafters = (p: Player) => {
+    const club = signatureClub(p);
+    if (!club || club.teamId === u || club.seasons < 6 || !save.teams[club.teamId]) return undefined;
+    const r = retiredNumbers(save, club.teamId);
+    if (r.some((x) => x.playerId === p.id || x.n === p.jersey)) return undefined;
+    return `the ${displayName(save.year, club.teamId)} retire his #${p.jersey}`;
+  };
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/50 bg-studio">
       <FilmStill still="superbowl" veil="full" />
@@ -278,8 +292,18 @@ export function HofNight() {
             ? "A bust with your club on the plaque. The wait after the last snap."
             : "Canton opens the door. Your name is not on it this winter."}
         </p>
+        {yours.length > 0 && (
+          <section>
+            <p className="text-xs tracking-[0.3em] text-brass">INDUCTION NIGHT · ONE OF YOURS</p>
+            <ul className="mt-2 space-y-3">
+              {yours.map((p) => (
+                <InductionCard key={p.id} player={p} teamId={u} />
+              ))}
+            </ul>
+          </section>
+        )}
         <ul className="space-y-3">
-          {klass.map((p) => (
+          {league.map((p) => (
             <li
               key={p.id}
               className={`rounded-lg border px-4 py-4 ${
@@ -290,7 +314,10 @@ export function HofNight() {
                 <PlayerLink player={p} className="inline min-h-0" />{" "}
                 <span className="text-sm text-muted">{p.pos}</span>
               </p>
-              <p className="mt-1 text-sm text-muted">Peak {p.peakOvr} · {p.userTied ? "Team of Honor" : "the league’s memory"}</p>
+              <p className="mt-1 text-sm text-muted">
+                Peak {p.peakOvr} · {p.userTied ? "Team of Honor" : "the league’s memory"}
+                {rafters(p) ? ` · ${rafters(p)}` : ""}
+              </p>
             </li>
           ))}
           {coaches.map((c) => (

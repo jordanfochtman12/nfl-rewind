@@ -181,6 +181,22 @@ export { writeSeasonChapter, seasonResultLine, chapterLine } from "./almanac.ts"
 export { relocationsForYear, RELOCATION_SPECS } from "./data/relocations.ts";
 export { compactSave, compactSaveInPlace, saveByteLength, formatBytes } from "./compact.ts";
 export { resolveCamp, campBubble } from "./camp.ts";
+export {
+  retiredNumbers,
+  ringOfHonor,
+  clubSeasons,
+  signatureClub,
+  seasonLine,
+  legacyCase,
+  canRetireNumber,
+  retireNumber,
+  canInductRing,
+  inductRing,
+  inRing,
+  isNumberRetired,
+  legacyCandidates,
+  type LegacyCase,
+} from "./legacy.ts";
 export { deadlineWeek, openDeadline, closeDeadline, acceptDeadlineOffer, declineDeadlineOffer, offerLine } from "./deadline.ts";
 export {
   TICKET_TIERS,

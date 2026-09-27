@@ -768,8 +768,24 @@ export interface TimelineEntry {
   notes: string[];
 }
 
+/** A number the club put away for good. */
+export interface RetiredNumber {
+  n: number;
+  playerId: string;
+  year: number;
+}
+
+export interface RingOfHonorEntry {
+  playerId: string;
+  year: number;
+}
+
 export interface Almanac {
   timeline?: TimelineEntry[];
+  /** By club: numbers nobody on that club can wear again. */
+  retiredNumbers?: Record<string, RetiredNumber[]>;
+  /** By club: its Ring of Honor. */
+  ringOfHonor?: Record<string, RingOfHonorEntry[]>;
   superBowls: BowlAlmanacEntry[];
   championships: { year: number; league: string; teamId: TeamId }[];
   hof: HofMember[];

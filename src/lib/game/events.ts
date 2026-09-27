@@ -11,6 +11,7 @@ import { careerTotals } from "./leaders.ts";
 import { checkSeasonMilestones } from "./records.ts";
 import { touchGrade } from "./grade.ts";
 import { retireCoach, shouldRetireCoach } from "./staff.ts";
+import { honorInductees } from "./legacy.ts";
 import {
   coachHofBlurb,
   coachHofEligible,
@@ -292,6 +293,7 @@ export function resolveHof(save: DynastySave): void {
       playerIds: [p.id],
     });
   }
+  honorInductees(save, save.pendingHof);
   for (const id of save.pendingCoachHof ?? []) {
     const c = save.coaches[id];
     if (!c || c.hofYear) continue;
