@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { clubInk, locationOf, nicknameOf, teamAbbr, type DynastySave, type GameResult, type TeamId } from "@/lib/game";
 import { Logo } from "./chrome";
+import { useGameStore } from "@/lib/game-store";
 
 /** The network bug: our own wordmark, top-left of every screen. */
 export function NetworkBug({ className = "" }: { className?: string }) {
@@ -24,7 +25,9 @@ export function ClubPlate({ save, right }: { save: DynastySave; right?: ReactNod
   const id = save.userTeamId;
   const ink = clubInk(id, save.year);
   const t = save.teams[id];
-  const rec = t ? `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}` : "";
+  const live = useGameStore((s) => s.liveGameId);
+  // While the owner's game is on the live broadcast, the record would give the result away.
+  const rec = live ? "LIVE" : t ? `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}` : "";
   return (
     <div className="flex min-w-0 items-stretch">
       <div
@@ -108,15 +111,18 @@ function scoreLine(g: GameResult): string {
 
 /** The crawl along the bottom of the screen: the latest scores around the league, then the wire. */
 export function BottomLine({ save }: { save: DynastySave }) {
+  const live = useGameStore((s) => s.liveGameId);
   const played = [...save.schedule, ...save.playoffGames, ...(save.superBowl ? [save.superBowl] : [])].filter(
-    (g) => g.played && g.year === save.year,
+    (g) => g.played && g.year === save.year && g.id !== live,
   );
   const last = played.at(-1);
   const recent = last
     ? played.filter((g) => g.phase === last.phase && (g.phase === "regular" ? g.week === last.week : true)).slice(-16)
     : [];
   const label = !last ? "" : last.phase === "regular" ? `WEEK ${last.week}` : last.phase === "superBowl" ? "SUPER BOWL" : "PLAYOFFS";
-  const wire = save.news.slice(0, 8);
+  const wire = save.news
+    .filter((n) => !live || !(n.year === save.year && n.week === save.week && n.teamIds.includes(save.userTeamId)))
+    .slice(0, 8);
   if (!recent.length && !wire.length) return null;
   const items: { k: string; node: ReactNode }[] = [
     ...recent.map((g) => ({

@@ -29,6 +29,7 @@ export type {
   DynastyGrade,
   SeasonChapter,
   PrimetimeShow,
+  PlayLog,
   SeasonPlan,
   SeasonGoal,
   Achievement,

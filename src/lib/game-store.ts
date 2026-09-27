@@ -48,6 +48,9 @@ interface GameStore {
   desk: (fn: (s: DynastySave) => string | void) => void;
   /** Answer the pending crunch-time call and play on. */
   crunchChoose: (optionId: string) => void;
+  /** The owner's game currently on the live broadcast (hides spoilers elsewhere on screen). */
+  liveGameId: string | null;
+  setLiveGame: (id: string | null) => void;
   exportJson: () => string;
   importJson: (raw: string) => void;
   resign: () => void;
@@ -121,6 +124,8 @@ export const useGameStore = create<GameStore>()(
       pendingTeam: null,
       lastDeskNote: null,
       hasHydrated: false,
+      liveGameId: null,
+      setLiveGame: (liveGameId) => set({ liveGameId }),
       setScreen: (screen) => set({ screen }),
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
@@ -151,6 +156,9 @@ export const useGameStore = create<GameStore>()(
         const { save } = get();
         if (!save?.crunch?.situation) return;
         const s = cloneSave(save);
+        const sit = s.crunch!.situation!;
+        // The broadcast picks up where the owner watched it to when he made the call.
+        s.liveResume = { gameId: sit.gameId, index: Math.max(0, (sit.log?.length ?? 1) - 1) };
         s.crunch!.choices.push(optionId);
         s.crunch!.situation = undefined;
         set({ save: advance(s) });

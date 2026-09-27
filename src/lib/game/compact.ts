@@ -13,11 +13,12 @@ function stripGame(g: GameResult): void {
   g.boxAway = undefined;
   g.drives = undefined;
   g.highlights = undefined;
+  g.log = undefined;
 }
 
 function strippedCopy(save: DynastySave, g: GameResult): GameResult {
-  if (keepsFilm(save, g) || (!g.boxHome && !g.boxAway && !g.drives && !g.highlights)) return g;
-  return { ...g, boxHome: undefined, boxAway: undefined, drives: undefined, highlights: undefined };
+  if (keepsFilm(save, g) || (!g.boxHome && !g.boxAway && !g.drives && !g.highlights && !g.log)) return g;
+  return { ...g, boxHome: undefined, boxAway: undefined, drives: undefined, highlights: undefined, log: undefined };
 }
 
 // News, the weekly wire and the transaction log are all newest-first (addNews/addTx unshift),

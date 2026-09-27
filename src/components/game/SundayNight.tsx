@@ -3,6 +3,8 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { GameNight } from "./GameNight";
+import { LiveBroadcast, wasWatched } from "./LiveBroadcast";
+import { useState } from "react";
 
 function slateOf(save: NonNullable<ReturnType<typeof useGameStore.getState>["save"]>): GameResult[] {
   if (save.phase === "playoffs") {
@@ -19,6 +21,30 @@ export function SundayNight() {
     slate.find((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId) ??
     save.playoffGames.filter((g) => g.played && (g.homeId === save.userTeamId || g.awayId === save.userTeamId)).at(-1);
   const rest = slate.filter((g) => g.id !== mine?.id);
+  const canLive = !!mine?.log?.length && save.liveOn !== false && !wasWatched(mine.id);
+  const [live, setLive] = useState(canLive);
+  const desk = useGameStore((s) => s.desk);
+  if (live && mine?.log) {
+    const resume = save.liveResume?.gameId === mine.id ? save.liveResume.index : 0;
+    return (
+      <div className="space-y-3">
+        <LiveBroadcast game={mine} log={mine.log} startAt={resume} onDone={() => setLive(false)} />
+        <button
+          type="button"
+          className="text-xs text-subtle underline"
+          onClick={() => {
+            desk((s) => {
+              s.liveOn = false;
+              return "Live broadcasts are off. Turn them back on from the postgame film.";
+            });
+            setLive(false);
+          }}
+        >
+          Skip live games from now on
+        </button>
+      </div>
+    );
+  }
   const playoff = save.phase === "playoffs";
   const nextLabel = playoff
     ? save.playoffGames.some((g) => !g.played)
@@ -46,6 +72,23 @@ export function SundayNight() {
           </Btn>
         </div>
       </section>
+      {mine?.log?.length ? (
+        <div className="flex flex-wrap gap-2">
+          <Btn onClick={() => setLive(true)}>Watch the broadcast</Btn>
+          {save.liveOn === false && (
+            <Btn
+              onClick={() =>
+                desk((s) => {
+                  s.liveOn = true;
+                  return "Live broadcasts are back on.";
+                })
+              }
+            >
+              Turn live games back on
+            </Btn>
+          )}
+        </div>
+      ) : null}
       {mine ? <GameNight game={mine} /> : null}
       {rest.length > 0 && (
         <section className="rounded-xl border border-line bg-surface p-4">

@@ -1,6 +1,8 @@
 import { clubInk, displayName, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
+import { LiveBroadcast } from "./LiveBroadcast";
+import { useState } from "react";
 
 const clockText = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 const fieldText = (spot: number) => (spot === 50 ? "midfield" : spot > 50 ? `the opponent's ${100 - spot}` : `your own ${spot}`);
@@ -11,7 +13,10 @@ export function CrunchCall() {
   const choose = useGameStore((s) => s.crunchChoose);
   const desk = useGameStore((s) => s.desk);
   const sit = save.crunch?.situation;
+  const [reachedKey, setReachedKey] = useState<string | null>(null);
   if (!sit) return null;
+  const key = `${sit.gameId}:${sit.index}`;
+  const reached = reachedKey === key || !sit.log?.length;
   const game =
     [...save.schedule, ...save.playoffGames, ...(save.superBowl ? [save.superBowl] : [])].find((g) => g.id === sit.gameId);
   const us = save.userTeamId;
@@ -31,6 +36,26 @@ export function CrunchCall() {
       : sit.kind === "two"
         ? `Now ${state} with ${clockText(sit.clock)} to play. One point is nearly automatic; two is a coin flip.`
         : `${state[0]!.toUpperCase()}${state.slice(1)} with ${clockText(sit.clock)} left. Onside and you might steal a possession, or hand them a short field.`;
+
+  if (!reached && game && sit.log) {
+    const resume = save.liveResume?.gameId === sit.gameId ? save.liveResume.index : 0;
+    return (
+      <div className="fixed inset-0 z-[60] flex items-end justify-center bg-studio/85 p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label="Your game, live">
+        <article className="w-full max-w-2xl overflow-hidden rounded-none border-0 border-white/15 bg-bg shadow-[0_30px_90px_-20px_#000] sm:rounded-xl sm:border">
+          <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e] px-4 py-2.5">
+            <p className="bx-primary px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
+              <span className="inline-block [transform:skewX(12deg)]">LIVE · YOUR GAME</span>
+            </p>
+            <p className="font-display text-xs font-bold uppercase italic tracking-wider text-brass">A big call is coming</p>
+          </div>
+          <LiveBroadcast game={game} log={sit.log} startAt={resume} compact final={false} onReachEnd={() => setReachedKey(key)} />
+          <div className="px-4 py-3">
+            <Btn onClick={() => setReachedKey(key)}>Skip to the call</Btn>
+          </div>
+        </article>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-studio/85 p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="crunch-title">

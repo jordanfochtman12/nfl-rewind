@@ -201,6 +201,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     crunch: r.crunch,
     crunchOn: r.crunchOn,
     jerseyEra: r.jerseyEra,
+    liveOn: r.liveOn,
+    liveResume: r.liveResume,
     powerRanks: r.powerRanks,
     h2h: r.h2h,
     seasonPlan: r.seasonPlan,

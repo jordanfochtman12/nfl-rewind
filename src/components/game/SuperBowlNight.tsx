@@ -3,12 +3,21 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
+import { LiveBroadcast, wasWatched } from "./LiveBroadcast";
+import { useRef, useState } from "react";
 
 export function SuperBowlNight() {
   const save = useGameStore((s) => s.save)!;
   const { step } = useGameStore();
   const g = save.superBowl;
+  // The owner's Super Bowl airs live the first time it's shown after kickoff.
+  const seenAtKickoff = useRef<boolean | null>(null);
+  const [dismissed, setDismissed] = useState(false);
+  if (g?.played && seenAtKickoff.current === null) seenAtKickoff.current = wasWatched(g.id);
   if (!g) return null;
+  if (g.played && g.log?.length && save.liveOn !== false && !seenAtKickoff.current && !dismissed) {
+    return <LiveBroadcast game={g} log={g.log} startAt={save.liveResume?.gameId === g.id ? save.liveResume.index : 0} onDone={() => setDismissed(true)} />;
+  }
   const site = superBowlSite(save.year);
   const home = g.homeId as TeamId;
   const away = g.awayId as TeamId;

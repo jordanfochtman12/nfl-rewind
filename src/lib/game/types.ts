@@ -490,6 +490,8 @@ export interface GameResult {
   neutral?: boolean;
   /** The owner's crunch-time calls in this game. */
   crunchCalls?: string[];
+  /** Play-by-play for the owner's games (current season only). */
+  log?: PlayLog[];
   /** Real regular-season neutral site (London, Mexico City, ...). */
   site?: string;
   /** Real calendar date, MMDD. */
@@ -501,7 +503,25 @@ export interface GameResult {
   realAway?: number;
 }
 
+/** One snap of the owner's game, for the live broadcast. */
+export interface PlayLog {
+  q: number;
+  clock: number;
+  poss: TeamId;
+  down: number;
+  togo: number;
+  /** Yards from the offense's own goal line before the snap. */
+  spot: number;
+  text: string;
+  /** Score after the play. */
+  hs: number;
+  as: number;
+  tag?: "td" | "to" | "big" | "fg" | "call" | "safety";
+}
+
 export interface CrunchSituation {
+  /** The game so far, up to the moment of the call. */
+  log?: PlayLog[];
   gameId: string;
   index: number;
   kind: "fourth" | "two" | "onside";
@@ -807,6 +827,10 @@ export interface DynastySave {
   crunch?: { gameId: string; choices: string[]; situation?: CrunchSituation };
   /** Owner setting: pause for crunch-time calls in close games (default on). */
   crunchOn?: boolean;
+  /** Where the live broadcast picks back up after a crunch-time call. */
+  liveResume?: { gameId: string; index: number };
+  /** Owner preference: watch his games play out live. */
+  liveOn?: boolean;
   /** Set once rosters carry era-accurate jersey numbers (older saves are reissued on load). */
   jerseyEra?: boolean;
   /** Set once player honors have been rebuilt from the award history (older saves). */

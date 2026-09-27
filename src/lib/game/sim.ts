@@ -1,5 +1,6 @@
 import type {
   BoxPlayer,
+  PlayLog,
   DriveResult,
   DriveSummary,
   DynastySave,
@@ -307,8 +308,83 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
   }
 }
 
+/** While the owner's game is on, every stat event of the current snap is also handed here. */
+let playTap: ((id: string, patch: Partial<BoxPlayer>) => void) | undefined;
+
+interface OpenPlay {
+  q: number;
+  clock: number;
+  poss: TeamId;
+  down: number;
+  togo: number;
+  spot: number;
+  bumps: [string, Partial<BoxPlayer>][];
+  notes: string[];
+}
+
+/** One line of play-by-play from the stat events of a snap. */
+function describePlay(save: DynastySave, cur: OpenPlay): { text: string; tag?: PlayLog["tag"] } | undefined {
+  const nm = (id: string) => {
+    const p = save.players[id];
+    return p ? playerName(p) : "—";
+  };
+  const find = (k: keyof BoxPlayer) => cur.bumps.find(([, b]) => (b[k] as number | undefined) !== undefined && (b[k] as number) !== 0);
+  const notes = cur.notes.join(" ");
+  let text = "";
+  let tag: PlayLog["tag"];
+  const fg = find("fgAtt");
+  const punt = find("punts");
+  const sack = find("sacksThrown");
+  const att = find("passAtt");
+  const rush = find("rushAtt");
+  const kr = find("krYds") ?? find("krTd");
+  if (fg) {
+    text = find("fgMade") ? `${nm(fg[0])} field goal is good.` : `${nm(fg[0])} field goal is no good.`;
+    if (find("fgMade")) tag = "fg";
+  } else if (punt) {
+    const pr = find("prYds");
+    text = `${nm(punt[0])} punts ${Math.round(punt[1].puntYds ?? 0)} yards${pr ? `, ${nm(pr[0])} returns it ${Math.round(pr[1].prYds ?? 0)}` : ""}.`;
+  } else if (sack) {
+    const by = find("sacks");
+    text = `${nm(sack[0])} sacked${by ? ` by ${nm(by[0])}` : ""}.`;
+  } else if (att) {
+    const cmp = att[1].passCmp;
+    const rec = find("rec");
+    const int = att[1].passInt ? find("ints") : undefined;
+    const yds = att[1].passYds ?? 0;
+    if (int) {
+      text = `${nm(att[0])} is intercepted by ${nm(int[0])}.`;
+      tag = "to";
+    } else if (cmp && rec) {
+      const gain = find("passTd") || find("recTd") ? Math.round(100 - cur.spot) : yds;
+      text = `${nm(att[0])} to ${nm(rec[0])} for ${gain} yard${Math.abs(gain) === 1 ? "" : "s"}.`;
+      if (yds >= 20) tag = "big";
+    } else text = `${nm(att[0])} incomplete.`;
+    if (find("passTd") || find("recTd")) tag = "td";
+  } else if (rush) {
+    const yds = find("rushTd") ? Math.round(100 - cur.spot) : (rush[1].rushYds ?? 0);
+    text = yds < 0 ? `${nm(rush[0])} dropped for a loss of ${-yds}.` : `${nm(rush[0])} runs for ${yds} yard${yds === 1 ? "" : "s"}.`;
+    if (yds >= 20) tag = "big";
+    if (find("rushTd")) tag = "td";
+  } else if (kr) {
+    text = `${nm(kr[0])} returns the kickoff ${kr[1].krYds ?? 0} yards.`;
+    if (find("krTd")) tag = "td";
+  }
+  if (find("prTd")) tag = "td";
+  if (/coughs it up|fumble/i.test(notes) && tag !== "td") tag = "to";
+  if (/pick-six|house|the other way, six|scoop and score/i.test(notes)) tag = "td";
+  if (/safety/i.test(notes)) tag = "safety";
+  if (/owner's call/i.test(notes)) tag = tag ?? "call";
+  const extra = cur.notes.filter((n) => !/It's good\.$/.test(n));
+  if (extra.length) text = text ? `${text} ${extra.join(" ")}` : extra.join(" ");
+  if (tag === "td" && !/touchdown|house|six|distance|score/i.test(text)) text += " Touchdown!";
+  if (find("xpAtt")) text += find("xpMade") ? " The kick is good." : " The kick is no good.";
+  return text ? { text, tag } : undefined;
+}
+
 function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPlayer>): void {
   if (!id) return;
+  playTap?.(id, patch);
   let row = box.find((b) => b.playerId === id);
   if (!row) {
     row = { playerId: id };
@@ -919,8 +995,20 @@ export function simGame(save: DynastySave, game: GameResult): void {
     return base;
   };
 
+  // Play-by-play for the owner's own games: each snap's stat events and booth notes become a line.
+  const logOn = !save.cpuOnly && (homeId === save.userTeamId || awayId === save.userTeamId || game.phase === "superBowl");
+  const log: PlayLog[] = [];
+  let cur: OpenPlay | undefined;
+  const flushPlay = () => {
+    if (!cur) return;
+    const d = describePlay(save, cur);
+    if (d) log.push({ q: cur.q, clock: cur.clock, poss: cur.poss, down: cur.down, togo: Math.max(1, Math.round(cur.togo)), spot: Math.round(cur.spot), text: d.text, hs: homeScore, as: awayScore, tag: d.tag });
+    cur = undefined;
+  };
+  playTap = logOn ? (id, patch) => cur?.bumps.push([id, patch]) : undefined;
   const note = (s: string) => {
     if (highlights.length < 12) highlights.push(s);
+    cur?.notes.push(s);
   };
   const qi = () => (q <= 4 ? q - 1 : 4);
   const addPts = (id: TeamId, n: number) => {
@@ -948,7 +1036,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     else if (hook.probe && i < 3) {
       const us = teamId === homeId ? homeScore : awayScore;
       const them = teamId === homeId ? awayScore : homeScore;
-      throw new CrunchPause({ gameId: game.id, index: i, kind, q, clock, us, them, down, togo, spot, fgDist, options });
+      flushPlay();
+      playTap = undefined;
+      throw new CrunchPause({ gameId: game.id, index: i, kind, q, clock, us, them, down, togo, spot, fgDist, options, log: logOn ? log.slice() : undefined });
     }
     const opt = options.find((o) => o.id === pick);
     // "coach" (or anything unknown) hands the call back to the staff's own logic.
@@ -1280,6 +1370,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
   while (plays < 260) {
     stampDrives();
+    if (logOn) {
+      flushPlay();
+      cur = { q, clock, poss, down, togo, spot, bumps: [], notes: [] };
+    }
     plays += 1;
     if (q === 2 || q === 4) {
       if (!warned && clock <= 120 && clock > 0) {
@@ -1566,6 +1660,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
     if (rand(save) < pens.hold * Math.max(0.55, 1 + (offU.kit.pen ?? 0))) {
       const yds = halfDist(spot, 10, true);
+      cur?.notes.push(`Holding on the offense, ${yds} yards.`);
       addPen(poss, yds);
       spot = Math.max(1, spot - yds);
       togo += yds;
@@ -2079,6 +2174,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.awayTot = homeTotYards(awayBox);
   game.ot = ot;
   stampDrives();
+  flushPlay();
+  playTap = undefined;
+  if (logOn) game.log = log;
   game.drives = drives.slice(0, 32);
   game.homePen = homePen;
   game.awayPen = awayPen;
