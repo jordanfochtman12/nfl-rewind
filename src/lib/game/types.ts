@@ -750,7 +750,26 @@ export interface DeadlineSession {
   resolved: boolean;
 }
 
+/** One season of real history vs. this league. */
+export interface TimelineEntry {
+  year: number;
+  realChamp?: TeamId;
+  realRunnerUp?: TeamId;
+  realScore?: string;
+  simChamp: TeamId;
+  simRunnerUp: TeamId;
+  simScore: string;
+  user: {
+    sim: { w: number; l: number; t: number };
+    real?: { w: number; l: number; t: number };
+    simPlayoffs: boolean;
+    realPlayoffs?: boolean;
+  };
+  notes: string[];
+}
+
 export interface Almanac {
+  timeline?: TimelineEntry[];
   superBowls: BowlAlmanacEntry[];
   championships: { year: number; league: string; teamId: TeamId }[];
   hof: HofMember[];
@@ -993,6 +1012,8 @@ export interface PrimetimeShow {
   chases?: { playerId: string; name: string; teamId: TeamId; text: string }[];
   /** Awards night: the owner's report card and this year's trophy-case entries. */
   reportCard?: SeasonPlan;
+  /** Awards night: this season against real history. */
+  timeline?: TimelineEntry;
   achievements?: Achievement[];
   pow: string;
   powerPoll: string;

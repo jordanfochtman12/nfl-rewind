@@ -1,4 +1,4 @@
-import { byeNote, deadlineWeek, displayName, gamesInWeek, type GameResult, type TeamId } from "@/lib/game";
+import { byeNote, deadlineWeek, realLine, displayName, gamesInWeek, type GameResult, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -67,6 +67,12 @@ export function SundayNight() {
               ? "Sit with the film. The next Sunday is not on the clock until you say so."
               : byeNote(save)}
           </p>
+          {mine && realLine(save, mine) ? (
+            <p className="max-w-xl border-l-2 border-brass pl-3 text-sm text-muted">
+              <span className="font-display font-bold uppercase italic tracking-wide text-brass">This week in real history · </span>
+              {realLine(save, mine)}
+            </p>
+          ) : null}
           <Btn kind="primary" onClick={() => step({})}>
             {nextLabel}
           </Btn>

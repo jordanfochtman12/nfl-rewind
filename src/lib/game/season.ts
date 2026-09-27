@@ -44,6 +44,7 @@ import { rand } from "./rng.ts";
 import { agePlayer } from "./development.ts";
 import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
+import { recordTimeline } from "./timeline.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
@@ -175,6 +176,7 @@ function closeSeasonBooks(s: DynastySave): void {
   gradeSeasonPlan(s);
   writeSeasonChapter(s);
   checkAchievements(s);
+  recordTimeline(s);
   buildPrimetime(s, "awards");
 }
 

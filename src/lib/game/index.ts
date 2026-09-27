@@ -30,6 +30,7 @@ export type {
   SeasonChapter,
   PrimetimeShow,
   PlayLog,
+  TimelineEntry,
   SeasonPlan,
   SeasonGoal,
   Achievement,
@@ -196,3 +197,4 @@ export {
   relocationsFor,
 } from "./owner.ts";
 export { draftPreview, collegeLine, groupOf, POS_GROUPS, type DraftPreviewData, type PosGroup, type PreviewProspect, type MockPick } from "./draftPreview.ts";
+export { realLine, realPostseason, realRecords, recordTimeline } from "./timeline.ts";

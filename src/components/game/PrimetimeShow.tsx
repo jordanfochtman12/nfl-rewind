@@ -5,6 +5,7 @@ import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { ReportCard } from "./Storylines";
 import { DraftPreviewShow } from "./DraftPreview";
+import { TimelineCard } from "./Timeline";
 
 function Name({ id, name }: { id: string; name: string }) {
   const save = useGameStore((s) => s.save)!;
@@ -138,6 +139,10 @@ function WeeklyShow() {
         </div>
       ),
     });
+  }
+
+  if (show.timeline) {
+    segs.push({ id: "timeline", title: "Real history vs. your timeline", node: <TimelineCard entry={show.timeline} /> });
   }
 
   if (show.stories?.length) {

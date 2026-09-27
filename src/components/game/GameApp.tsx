@@ -60,6 +60,7 @@ import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
 import { BottomLine, ClubPlate, NetworkBug, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
+import { TimelineSection } from "./Timeline";
 import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
@@ -1330,6 +1331,7 @@ function History() {
     <div className="space-y-8">
       <FranchiseBook />
       <TrophyCase />
+      <TimelineSection />
       <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />

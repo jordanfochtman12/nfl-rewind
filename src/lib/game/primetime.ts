@@ -760,6 +760,8 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
       award("Comeback Player of the Year", a.cpoty),
     ].filter((x): x is NonNullable<typeof x> => !!x);
     if (save.lastPlan?.year === year) show.reportCard = save.lastPlan;
+    const tl = save.history.timeline?.find((e) => e.year === year);
+    if (tl) show.timeline = tl;
     const won = (save.achievements ?? []).filter((x) => x.year === year);
     if (won.length) show.achievements = won;
     show.allPro = a.allPro
