@@ -5,6 +5,7 @@ type DraftSeed = { f: string; l: string; p: Pos; c?: string; o: number; r?: numb
 /** Later-round and UDFA names merged after EXTRA/MORE. Dupes are skipped at board build. */
 export const DRAFT_FILL: Record<number, DraftSeed[]> = {
   1966: [
+    { f: "Pete", l: "Lammons", p: "TE", c: "Texas", o: 76, r: 14 },
     { f: "Jim", l: "Hart", p: "QB", c: "Southern Illinois", o: 76, r: 0 },
     { f: "Ben", l: "Hawkins", p: "WR", c: "Arizona State", o: 76, r: 3 },
     { f: "Doug", l: "Van Horn", p: "RG", c: "Ohio State", o: 76, r: 4 },
@@ -28,7 +29,6 @@ export const DRAFT_FILL: Record<number, DraftSeed[]> = {
   ],
   1967: [
     { f: "Bob", l: "McCall", p: "RB", c: "Arizona", o: 70, r: 4 },
-    { f: "Pete", l: "Lammons", p: "TE", c: "Texas", o: 76, r: 8 },
     { f: "George", l: "Goeddeke", p: "C", c: "Notre Dame", o: 72, r: 3 },
     { f: "Bill", l: "Phillips", p: "S", c: "Arkansas State", o: 72, r: 4 },
     { f: "John", l: "Huarte", p: "QB", c: "Notre Dame", o: 68, r: 6 },

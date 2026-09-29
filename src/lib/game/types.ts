@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 16;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -832,6 +832,8 @@ export interface Almanac {
 }
 
 export interface DynastySave {
+  /** Original records retained when repairing historical duplicate identities. */
+  identityRepairs?: { keptId: string; originals: Player[] }[];
   /** The owner's offseason progression, shown at camp. */
   progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */

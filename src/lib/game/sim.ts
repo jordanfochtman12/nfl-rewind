@@ -1511,8 +1511,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       call !== "spike"
     ) {
       const fgDist = 100 - spot + 17;
-      const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${togo}` }];
-      if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${fgDist}-yard field goal` });
+      const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${Math.max(1, Math.round(togo))}` }];
+      if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${Math.round(fgDist)}-yard field goal` });
       if (spot < 72) opts.push({ id: "punt", label: "Punt it away" });
       const pick = ask("fourth", poss, opts, fgDist);
       if (pick === "go") call = togo <= 1 ? "sneak" : togo <= 2 ? "run" : "short";
