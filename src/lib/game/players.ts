@@ -13,6 +13,8 @@ import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
 import { applyScout } from "./scout.ts";
 import { calibrateVetPeak, lookupVetArc } from "./careerArc.ts";
+import { historicalNameKey } from "./identity.ts";
+import { draftSeedsFor } from "./data/draftClasses.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -425,8 +427,12 @@ export function generatePlayer(
 
 export function seedVeterans(save: DynastySave): void {
   const seen = new Set<string>();
+  // The 1966 roster source includes rookies (e.g. Pete Lammons). They belong
+  // on the opening draft board, not on a roster and the board simultaneously.
+  const rookies = new Set(draftSeedsFor(1966).map((s) => historicalNameKey(s.f, s.l, 1966)));
   for (const v of VETERANS_1966 as VetSeed[]) {
-    const key = `${v.t}:${v.f}:${v.l}`;
+    const key = historicalNameKey(v.f, v.l, 1966);
+    if (rookies.has(key)) continue;
     if (seen.has(key)) continue;
     seen.add(key);
     const used = usedJerseys(save, v.t);

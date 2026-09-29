@@ -18,6 +18,7 @@ import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
 import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers } from "./players.ts";
+import { repairPlayerIdentities } from "./repairIdentities.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -227,6 +228,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     camp: r.camp,
     deadline: r.deadline,
   };
+  const savedRng = out.rng;
+  repairPlayerIdentities(out);
   for (const pl of Object.values(out.players)) {
     pl.salary = pl.salary ?? 0;
     pl.abilities = pl.abilities ?? [];
@@ -316,6 +319,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     out.jerseyEra = true;
   } else normalizeJerseys(out);
   restoreVeteranNumbers(out);
+  // Loading (including jersey repair) must not change the next simulated play.
+  out.rng = savedRng;
   return out;
 }
 

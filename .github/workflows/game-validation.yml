@@ -1,0 +1,20 @@
+name: Game validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  game-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: node --experimental-strip-types --test src/lib/game/identity.test.ts src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts
+      - run: npm run qa
+      - run: npm run build

@@ -10,6 +10,8 @@ import { DRAFT_2000S } from "./draftClasses2000s.ts";
 import { DRAFT_2010S } from "./draftClasses2010s.ts";
 import { DRAFT_INGEST } from "./draftClassesIngest.ts";
 import { STAR_PROFILES } from "./starProfiles.ts";
+import { cleanNameParts, historicalNameKey } from "../identity.ts";
+import { historicalYear } from "../historicalYears.ts";
 
 export interface DraftSeed {
   f: string;
@@ -1054,9 +1056,12 @@ export function draftSeedsFor(year: number): DraftSeed[] {
     ...(DRAFT_INGEST[year] ?? []),
   ];
   const by = new Map<string, DraftSeed>();
-  for (const s of rows) {
+  for (const raw of rows) {
+    const name = cleanNameParts(raw.f, raw.l);
+    const s = { ...raw, f: name.firstName, l: name.lastName };
+    if (historicalYear(s.f, s.l, year) !== year) continue;
     // Full-name key: sources split "Too Tall Jones" or "Lee Roy Selmon" differently.
-    const key = `${s.f} ${s.l}`.toLowerCase().replace(/[.'’]/g, "").replace(/\s+/g, " ").trim();
+    const key = historicalNameKey(s.f, s.l, year);
     const prev = by.get(key);
     if (!prev) {
       by.set(key, { ...s, rt: s.rt ? { ...s.rt } : undefined });

@@ -5,7 +5,7 @@ import { LiveBroadcast } from "./LiveBroadcast";
 import { useState } from "react";
 
 const clockText = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
-const fieldText = (spot: number) => (spot === 50 ? "midfield" : spot > 50 ? `the opponent's ${100 - spot}` : `your own ${spot}`);
+import { fieldText, displayYards } from "../../lib/game/fieldText.ts";
 
 /** The owner's phone rings from the sideline: a close game, late, and a call to make. */
 export function CrunchCall() {
@@ -26,13 +26,13 @@ export function CrunchCall() {
   const period = sit.q > 4 ? "Overtime" : `4th quarter`;
   const title =
     sit.kind === "fourth"
-      ? `4th-and-${sit.togo} at ${fieldText(sit.spot)}`
+      ? `4th-and-${displayYards(sit.togo)} at ${fieldText(sit.spot)}`
       : sit.kind === "two"
         ? "Touchdown. Kick or go for two?"
         : "Kicking off, and the clock is running out";
   const context =
     sit.kind === "fourth"
-      ? `${clockText(sit.clock)} left, ${state}.${sit.fgDist && sit.fgDist <= 58 ? ` The kick would be from ${sit.fgDist} yards.` : ""} Come up short and they take over right there.`
+      ? `${clockText(sit.clock)} left, ${state}.${sit.fgDist && sit.fgDist <= 58 ? ` The kick would be from ${displayYards(sit.fgDist)} yards.` : ""} Come up short and they take over right there.`
       : sit.kind === "two"
         ? `Now ${state} with ${clockText(sit.clock)} to play. One point is nearly automatic; two is a coin flip.`
         : `${state[0]!.toUpperCase()}${state.slice(1)} with ${clockText(sit.clock)} left. Onside and you might steal a possession, or hand them a short field.`;
@@ -111,7 +111,8 @@ export function CrunchCall() {
           <div className="grid gap-2">
             {sit.options.map((o, i) => (
               <Btn key={o.id} kind={i === 0 ? "primary" : "ghost"} className="w-full justify-start" onClick={() => choose(o.id)}>
-                {o.label}
+                {sit.kind === "fourth" && o.id === "go" ? `Go for it on 4th-and-${displayYards(sit.togo)}`
+                  : sit.kind === "fourth" && o.id === "fg" && sit.fgDist ? `Kick the ${displayYards(sit.fgDist)}-yard field goal` : o.label}
               </Btn>
             ))}
             <Btn kind="ghost" className="w-full justify-start text-muted" onClick={() => choose("coach")}>
