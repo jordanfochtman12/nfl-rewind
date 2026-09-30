@@ -220,6 +220,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     bestSeasonMarks: r.bestSeasonMarks ?? {},
     owner: r.owner ? { ...newOwnerState(), ...r.owner } : newOwnerState(),
     primetime: r.primetime,
+    primetimeArchive: (r.primetimeArchive ?? []).slice(-26),
     userTeamId,
     startingYear,
     draftSession: r.draftSession ?? (outYear(r, startingYear) === 1966 ? "nfl" : "common"),

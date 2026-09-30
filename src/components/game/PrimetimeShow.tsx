@@ -1,6 +1,13 @@
-import { StudioRecapAudio } from "./BroadcastSound";
+import { StudioEpisode } from "./StudioEpisode";
+import { useState } from "react";
 import type { ReactNode } from "react";
-import { displayName, teamAbbr, type PrimetimeHonoree, type PrimetimeShow as Show, type TeamId } from "@/lib/game";
+import {
+  displayName,
+  teamAbbr,
+  type PrimetimeHonoree,
+  type PrimetimeShow as Show,
+  type TeamId,
+} from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -13,19 +20,38 @@ function Name({ id, name }: { id: string; name: string }) {
   const open = useGameStore((s) => s.openProfile);
   if (!save.players[id]) return <span>{name}</span>;
   return (
-    <button type="button" onClick={() => open(id)} className="text-left font-medium hover:text-brass">
+    <button
+      type="button"
+      onClick={() => open(id)}
+      className="text-left font-medium hover:text-brass"
+    >
       {name}
     </button>
   );
 }
 
-function Segment({ id, n, title, children }: { id: string; n: number; title: string; children: ReactNode }) {
+function Segment({
+  id,
+  n,
+  title,
+  children,
+}: {
+  id: string;
+  n: number;
+  title: string;
+  children: ReactNode;
+}) {
   return (
     <section id={`pt-${id}`} className="scroll-mt-32 border-t border-white/10">
       <div className="flex items-stretch bg-gradient-to-b from-[#161b26] to-[#07090e]">
-        <span className="bx-primary flex items-center px-4 font-display text-lg font-extrabold italic">{n}</span>
+        <span className="bx-primary flex items-center px-4 font-display text-lg font-extrabold italic">
+          {n}
+        </span>
         <h3 className="flex items-center px-4 py-2.5 text-lg text-white sm:text-xl">{title}</h3>
-        <span className="ml-auto w-24 bg-gradient-to-r from-transparent to-red/40 [clip-path:polygon(24px_0,100%_0,100%_100%,0_100%)]" aria-hidden />
+        <span
+          className="ml-auto w-24 bg-gradient-to-r from-transparent to-red/40 [clip-path:polygon(24px_0,100%_0,100%_100%,0_100%)]"
+          aria-hidden
+        />
       </div>
       <div className="px-5 py-5">{children}</div>
     </section>
@@ -67,7 +93,9 @@ export function PrimetimeTeaser() {
         <p className="bg-gradient-to-b from-white to-[#9aa4b4] bg-clip-text font-display text-5xl font-black uppercase italic leading-none text-transparent">
           Primetime
         </p>
-        <p className="mt-2 max-w-xl text-paper">{lead ?? "Sim a Sunday and the show goes on the air."}</p>
+        <p className="mt-2 max-w-xl text-paper">
+          {lead ?? "Sim a Sunday and the show goes on the air."}
+        </p>
         <span className="bx-btn bx-primary mt-4 inline-flex min-h-9 items-center px-4 text-[13px]">
           <span className="bx-in">Watch the full show ▸</span>
         </span>
@@ -84,25 +112,29 @@ export function PrimetimeShow() {
 
 function WeeklyShow() {
   const save = useGameStore((s) => s.save)!;
-  const show = save.primetime as Show | undefined;
+  const [selected, setSelected] = useState("");
+  const episodes = [...(save.primetimeArchive ?? []), ...(save.primetime ? [save.primetime] : [])];
+  const show = (episodes.find((s) => s.episode?.id === selected) ?? save.primetime) as
+    Show | undefined;
   if (!show || show.v !== 2) {
     return (
       <section className="relative overflow-hidden rounded-xl border border-brass/25 bg-studio p-6">
         <FilmStill still="primetime" veil="full" />
         <div className="relative">
-          <p className="font-display text-xs tracking-[0.4em] text-brass">NFL · THE WEEK IN REVIEW</p>
+          <p className="font-display text-xs tracking-[0.4em] text-brass">
+            NFL · THE WEEK IN REVIEW
+          </p>
           <h2 className="mt-2 font-display text-4xl tracking-[0.14em] text-brass">PRIMETIME</h2>
           <p className="mt-3 max-w-xl text-muted">
-            Sim a Sunday and the show goes on the air: the stories, every score, players of the week, the injury
-            report, power rankings, the playoff picture and next week&apos;s lines.
+            Sim a Sunday and the show goes on the air: the stories, every score, players of the
+            week, the injury report, power rankings, the playoff picture and next week&apos;s lines.
           </p>
         </div>
       </section>
     );
   }
 
-  const recapText = ["Welcome to the Rewind studio.", ...show.recaps.slice(0, 5).map(r => `${r.line} ${r.note}`), ...(show.stories ?? []).slice(0, 2).map(st => `${st.headline}. ${st.body}`)].join(" ");
-  const segs: { id: string; title: string; node: ReactNode }[] = [{ id: "studio", title: "Studio desk", node: <div><h3 className="text-2xl">Your week, on the air</h3><p className="mt-2 text-sm text-muted">A spoken roundup of this week’s simulated results and headlines. Uses your browser’s available voice.</p><StudioRecapAudio text={recapText} /><p className="text-sm text-paper">{show.recaps[0]?.line ?? show.stories?.[0]?.headline ?? "The league returns next week."}</p></div> }];
+  const segs: { id: string; title: string; node: ReactNode }[] = [];
 
   if (show.awards?.length) {
     segs.push({
@@ -144,7 +176,11 @@ function WeeklyShow() {
   }
 
   if (show.timeline) {
-    segs.push({ id: "timeline", title: "Real history vs. your timeline", node: <TimelineCard entry={show.timeline} /> });
+    segs.push({
+      id: "timeline",
+      title: "Real history vs. your timeline",
+      node: <TimelineCard entry={show.timeline} />,
+    });
   }
 
   if (show.stories?.length) {
@@ -154,8 +190,13 @@ function WeeklyShow() {
       node: (
         <ol className="space-y-3">
           {show.stories.map((st, i) => (
-            <li key={`${i}-${st.headline}`} className="flex gap-3 rounded-lg border border-brass/15 bg-black/35 p-3">
-              <div className="shrink-0">{st.teamIds[0] ? <Logo id={st.teamIds[0]} size={34} /> : null}</div>
+            <li
+              key={`${i}-${st.headline}`}
+              className="flex gap-3 rounded-lg border border-brass/15 bg-black/35 p-3"
+            >
+              <div className="shrink-0">
+                {st.teamIds[0] ? <Logo id={st.teamIds[0]} size={34} /> : null}
+              </div>
               <div className="min-w-0">
                 <p className="text-[10px] tracking-[0.3em] text-brass">{st.tag.toUpperCase()}</p>
                 <p className="font-display text-lg leading-snug">{st.headline}</p>
@@ -187,14 +228,19 @@ function WeeklyShow() {
               <p className="mt-2 font-display text-xl leading-snug">{feature.line}</p>
               <p className="text-sm text-muted">{feature.note}</p>
               <ul className="mt-2 space-y-0.5 text-xs text-paper">
-                {feature.performers?.map((x) => <li key={x}>· {x}</li>)}
+                {feature.performers?.map((x) => (
+                  <li key={x}>· {x}</li>
+                ))}
               </ul>
             </div>
           )}
           {rest.length > 0 && (
             <ul className="grid gap-3 sm:grid-cols-2">
               {rest.map((r) => (
-                <li key={`${r.homeId}-${r.awayId}`} className="rounded-lg border border-brass/10 bg-black/30 p-3">
+                <li
+                  key={`${r.homeId}-${r.awayId}`}
+                  className="rounded-lg border border-brass/10 bg-black/30 p-3"
+                >
                   <div className="flex items-center gap-2">
                     <Logo id={r.awayId} size={24} />
                     <span className="tabular">{r.awayScore}</span>
@@ -207,7 +253,9 @@ function WeeklyShow() {
                   </div>
                   <p className="mt-1 text-sm leading-snug">{r.line}</p>
                   <ul className="mt-1 space-y-0.5 text-xs text-muted">
-                    {r.performers?.slice(0, 2).map((x) => <li key={x}>· {x}</li>)}
+                    {r.performers?.slice(0, 2).map((x) => (
+                      <li key={x}>· {x}</li>
+                    ))}
                   </ul>
                 </li>
               ))}
@@ -229,8 +277,20 @@ function WeeklyShow() {
       node: (
         <div className="grid gap-3 sm:grid-cols-2">
           {show.potw.flatMap((p) => [
-            p.off ? <Honoree key={`${p.conf}-o`} h={p.off} label={`${p.conf} offensive player of the week`} /> : null,
-            p.def ? <Honoree key={`${p.conf}-d`} h={p.def} label={`${p.conf} defensive player of the week`} /> : null,
+            p.off ? (
+              <Honoree
+                key={`${p.conf}-o`}
+                h={p.off}
+                label={`${p.conf} offensive player of the week`}
+              />
+            ) : null,
+            p.def ? (
+              <Honoree
+                key={`${p.conf}-d`}
+                h={p.def}
+                label={`${p.conf} defensive player of the week`}
+              />
+            ) : null,
           ])}
         </div>
       ),
@@ -263,7 +323,10 @@ function WeeklyShow() {
       node: (
         <div className="grid gap-3 sm:grid-cols-3">
           {show.leaders.map((b) => (
-            <div key={b.label} className="min-w-0 rounded-lg border border-brass/15 bg-black/35 p-3">
+            <div
+              key={b.label}
+              className="min-w-0 rounded-lg border border-brass/15 bg-black/35 p-3"
+            >
               <p className="text-[10px] tracking-[0.3em] text-brass">{b.label.toUpperCase()}</p>
               <ol className="mt-1.5 space-y-1 text-sm">
                 {b.rows.map((r, i) => (
@@ -296,7 +359,9 @@ function WeeklyShow() {
                 {r.teamIds.slice(0, 2).map((id) => (
                   <Logo key={id} id={id} size={20} />
                 ))}
-                {!r.teamIds.length && <span className="font-display text-xs tracking-widest text-brick">LIVE</span>}
+                {!r.teamIds.length && (
+                  <span className="font-display text-xs tracking-widest text-brick">LIVE</span>
+                )}
               </span>
               <span className="min-w-0 text-paper">{r.text}</span>
             </li>
@@ -337,9 +402,14 @@ function WeeklyShow() {
               <Logo id={i.teamId} size={20} />
               <Name id={i.playerId} name={i.name} />
               <span className="text-xs text-muted">{i.pos}</span>
-              {i.fresh ? <span className="rounded bg-brick/30 px-1.5 text-[10px] tracking-widest text-brick">NEW</span> : null}
+              {i.fresh ? (
+                <span className="rounded bg-brick/30 px-1.5 text-[10px] tracking-widest text-brick">
+                  NEW
+                </span>
+              ) : null}
               <span className="ml-auto text-xs text-muted">
-                {i.injury} · {i.ir ? "injured reserve" : `out ${i.weeks} wk${i.weeks === 1 ? "" : "s"}`}
+                {i.injury} ·{" "}
+                {i.ir ? "injured reserve" : `out ${i.weeks} wk${i.weeks === 1 ? "" : "s"}`}
               </span>
             </li>
           ))}
@@ -357,7 +427,10 @@ function WeeklyShow() {
           {show.power.map((r) => {
             const move = r.prev ? r.prev - r.rank : 0;
             return (
-              <li key={r.teamId} className="flex items-center gap-3 rounded-md bg-black/30 px-3 py-2">
+              <li
+                key={r.teamId}
+                className="flex items-center gap-3 rounded-md bg-black/30 px-3 py-2"
+              >
                 <span className="w-6 font-display text-xl text-brass">{r.rank}</span>
                 <span
                   className={`w-8 text-xs tabular ${move > 0 ? "text-good" : move < 0 ? "text-brick" : "text-subtle"}`}
@@ -407,7 +480,9 @@ function WeeklyShow() {
                       <li key={b.teamId} className="flex items-center gap-2">
                         <Logo id={b.teamId} size={16} />
                         <span className="min-w-0 truncate">{displayName(save.year, b.teamId)}</span>
-                        <span className="ml-auto shrink-0 text-xs">{b.back > 0 ? `${b.back} GB` : "tied"}</span>
+                        <span className="ml-auto shrink-0 text-xs">
+                          {b.back > 0 ? `${b.back} GB` : "tied"}
+                        </span>
                         <span className="tabular w-12 shrink-0 text-right">{b.record}</span>
                       </li>
                     ))}
@@ -429,7 +504,10 @@ function WeeklyShow() {
         <div className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-2">
             {show.predictions?.map((p) => (
-              <div key={p.conf} className="flex items-start gap-3 rounded-lg border border-brass/15 bg-black/35 p-3">
+              <div
+                key={p.conf}
+                className="flex items-start gap-3 rounded-lg border border-brass/15 bg-black/35 p-3"
+              >
                 <Logo id={p.teamId} size={36} />
                 <div className="min-w-0">
                   <p className="text-[10px] tracking-[0.3em] text-brass">{p.conf} CHAMPION PICK</p>
@@ -443,7 +521,9 @@ function WeeklyShow() {
             <div className="flex flex-wrap items-center gap-3 rounded-lg border border-brass/40 bg-black/50 p-4">
               <Logo id={show.superBowlPick.winner} size={44} />
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] tracking-[0.3em] text-brass">THE DESK&apos;S SUPER BOWL PICK</p>
+                <p className="text-[10px] tracking-[0.3em] text-brass">
+                  THE DESK&apos;S SUPER BOWL PICK
+                </p>
                 <p className="font-display text-xl">
                   {displayName(save.year, show.superBowlPick.winner)} {show.superBowlPick.score}
                 </p>
@@ -468,16 +548,20 @@ function WeeklyShow() {
               key={`${p.awayId}-${p.homeId}`}
               className={`min-w-0 rounded-lg border p-3 ${p.featured ? "border-brass/60 bg-brass/10 sm:col-span-2" : "border-brass/15 bg-black/30"}`}
             >
-              {p.featured && <p className="mb-1 text-[10px] tracking-[0.3em] text-brass">GAME OF THE WEEK</p>}
+              {p.featured && (
+                <p className="mb-1 text-[10px] tracking-[0.3em] text-brass">GAME OF THE WEEK</p>
+              )}
               <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                 <Logo id={p.awayId} size={p.featured ? 32 : 22} />
                 <span className="min-w-0">
-                  {displayName(save.year, p.awayId)} <span className="text-muted">({p.awayRecord})</span>
+                  {displayName(save.year, p.awayId)}{" "}
+                  <span className="text-muted">({p.awayRecord})</span>
                 </span>
                 <span className="text-subtle">@</span>
                 <Logo id={p.homeId} size={p.featured ? 32 : 22} />
                 <span className="min-w-0">
-                  {displayName(save.year, p.homeId)} <span className="text-muted">({p.homeRecord})</span>
+                  {displayName(save.year, p.homeId)}{" "}
+                  <span className="text-muted">({p.homeRecord})</span>
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted">
@@ -503,25 +587,50 @@ function WeeklyShow() {
       <FilmStill still="primetime" veil="bottom" className="h-[440px]" />
       <div className="relative">
         <header className="sheen border-b border-white/10 px-5 pb-6 pt-8 sm:px-8 sm:pt-12">
-          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">Hello everybody · welcome to</p>
+          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">
+            THE REWIND NETWORK / STUDIO COVERAGE
+          </p>
           <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
             <h2 className="bg-gradient-to-b from-white via-[#e9edf3] to-[#9aa4b4] bg-clip-text pr-2 text-6xl font-black leading-[0.85] text-transparent sm:text-8xl">
               Primetime
             </h2>
             <span className="bx-primary mb-1 inline-flex px-3 py-1 font-display text-sm font-extrabold uppercase italic tracking-wider [transform:skewX(-12deg)]">
               <span className="[transform:skewX(12deg)]">
-                {show.year} · {show.title}
+                {show.year} /{" "}
+                {show.episode?.edition === "superBowl" ? "Championship celebration" : show.title}
               </span>
             </span>
           </div>
-          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-paper">{show.open}</p>
+          <p className="mt-4 max-w-3xl font-display text-2xl text-white">
+            {show.episode?.headline ?? show.open}
+          </p>
+          <p className="mt-2 text-sm text-muted">{show.episode?.subtitle}</p>
+          {episodes.length > 1 && (
+            <label className="pt-archive">
+              Broadcast archive
+              <select
+                aria-label="Broadcast archive"
+                value={show.episode?.id ?? ""}
+                onChange={(e) => setSelected(e.target.value)}
+              >
+                {episodes.map((s, i) => (
+                  <option key={s.episode?.id ?? i} value={s.episode?.id}>
+                    {s.year} / {s.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
         </header>
 
         {show.recaps.length > 1 && (
           <div className="overflow-hidden border-b border-white/10 bg-black/70 py-2.5">
             <div className="ticker flex w-max gap-6 px-5">
               {show.recaps.concat(show.recaps).map((r, i) => (
-                <div key={`${r.awayId}-${r.homeId}-tick-${i}`} className="flex shrink-0 items-center gap-2 text-xs">
+                <div
+                  key={`${r.awayId}-${r.homeId}-tick-${i}`}
+                  className="flex shrink-0 items-center gap-2 text-xs"
+                >
                   <Logo id={r.awayId} size={18} />
                   <span className="tabular text-paper">{r.awayScore}</span>
                   <span className="text-subtle">@</span>
@@ -533,24 +642,23 @@ function WeeklyShow() {
           </div>
         )}
 
-        <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">
-          {segs.map((s) => (
-            <a
-              key={s.id}
-              href={`#pt-${s.id}`}
-              className="bx-chip px-3 py-1.5 text-[12px]"
-            >
-              {s.title.toUpperCase()}
-            </a>
+        {show.episode && <StudioEpisode key={show.episode.id} episode={show.episode} />}
+        <details className="pt-reference" open={!show.episode}>
+          <summary>Explore the complete scorebook, awards and league reports</summary>
+          <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">
+            {segs.map((s) => (
+              <a key={s.id} href={`#pt-${s.id}`} className="bx-chip px-3 py-1.5 text-[12px]">
+                {s.title.toUpperCase()}
+              </a>
+            ))}
+          </nav>
+
+          {segs.map((s, i) => (
+            <Segment key={s.id} id={s.id} n={i + 1} title={s.title}>
+              {s.node}
+            </Segment>
           ))}
-        </nav>
-
-        {segs.map((s, i) => (
-          <Segment key={s.id} id={s.id} n={i + 1} title={s.title}>
-            {s.node}
-          </Segment>
-        ))}
-
+        </details>
         <footer className="border-t border-white/10 bg-gradient-to-r from-red-deep/60 to-black/60 px-5 py-5">
           <p className="font-display text-base font-semibold italic text-white">{show.close}</p>
         </footer>

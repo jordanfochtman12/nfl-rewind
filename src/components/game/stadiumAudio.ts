@@ -1,4 +1,5 @@
-/** Original "Sunday Lights" sports-studio theme. Authored notes, synthesized locally. */
+import { NETWORK_BPM, scoreStep } from "./studioScore";
+/** Original "Sunday Lights / Network Mix": layered brass, strings, bass and breakbeat percussion. */
 export function stadiumAudio() {
   const context = new AudioContext();
   const crowd = context.createGain(),
@@ -9,6 +10,21 @@ export function stadiumAudio() {
   limiter.threshold.value = -12;
   crowd.connect(limiter);
   music.connect(limiter);
+  const room = context.createConvolver();
+  const impulse = context.createBuffer(
+    2,
+    Math.floor(context.sampleRate * 1.25),
+    context.sampleRate,
+  );
+  for (let channel = 0; channel < 2; channel++) {
+    const data = impulse.getChannelData(channel);
+    for (let i = 0; i < data.length; i++)
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3) * 0.3;
+  }
+  room.buffer = impulse;
+  const send = context.createGain();
+  send.gain.value = 0.16;
+  music.connect(room).connect(send).connect(limiter);
   limiter.connect(context.destination);
   const noiseBuffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
   const noiseData = noiseBuffer.getChannelData(0);
@@ -40,9 +56,13 @@ export function stadiumAudio() {
     o.type = type;
     o.frequency.value = hz(midi);
     f.type = "lowpass";
-    f.frequency.value = type === "sawtooth" ? 1400 : 4000;
+    f.frequency.setValueAtTime(type === "sawtooth" ? 650 : 4000, when);
+    if (type === "sawtooth") {
+      f.frequency.exponentialRampToValueAtTime(3100, when + 0.055);
+      f.frequency.exponentialRampToValueAtTime(850, when + Math.max(0.1, duration));
+    }
     g.gain.setValueAtTime(0, when);
-    g.gain.linearRampToValueAtTime(level, when + 0.012);
+    g.gain.linearRampToValueAtTime(level, when + (type === "sawtooth" ? 0.025 : 0.012));
     g.gain.exponentialRampToValueAtTime(0.001, when + duration);
     o.connect(f).connect(g).connect(music);
     o.start(when);
@@ -85,14 +105,26 @@ export function stadiumAudio() {
       };
     }
   };
-  const chords = [
-    [48, 55, 60, 63],
-    [44, 51, 56, 60],
-    [46, 53, 58, 62],
-    [43, 50, 55, 62],
-  ];
-  const motif = [72, null, 67, 70, 75, 72, null, 67, 70, null, 74, 70, 67, 65, 63, null];
-  const stepSeconds = 60 / 112 / 2;
+  const cymbal = (when: number, crash = false) => {
+    const source = context.createBufferSource(),
+      filter = context.createBiquadFilter(),
+      gain = context.createGain();
+    source.buffer = noiseBuffer;
+    filter.type = "highpass";
+    filter.frequency.value = crash ? 5000 : 8500;
+    const duration = crash ? 1.1 : 0.055;
+    gain.gain.setValueAtTime(crash ? 0.065 : 0.025, when);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+    source.connect(filter).connect(gain).connect(music);
+    source.start(when);
+    source.stop(when + duration + 0.01);
+    source.onended = () => {
+      source.disconnect();
+      filter.disconnect();
+      gain.disconnect();
+    };
+  };
+  const stepSeconds = 60 / NETWORK_BPM / 2;
   const timer = window.setInterval(() => {
     if (context.state !== "running") return;
     const duck = "speechSynthesis" in window && window.speechSynthesis.speaking ? 0.28 : 1;
@@ -103,16 +135,25 @@ export function stadiumAudio() {
     }
     if (next < context.currentTime) next = context.currentTime + 0.03;
     while (next < context.currentTime + 0.15) {
-      const chord = chords[Math.floor(beat / 8) % 4]!,
-        local = beat % 8;
-      if (local % 2 === 0) {
-        drum(next, local === 2 || local === 6);
-        note(chord[0]!, next, 0.18, 0.27);
+      const s = scoreStep(beat);
+      cymbal(next, s.crash);
+      if (s.beat === 0 || s.beat === 4 || s.beat === 7) drum(next, false);
+      if (s.beat === 2 || s.beat === 6 || s.fill) drum(next, true);
+      if (s.fill) drum(next + stepSeconds / 2, true);
+      note(s.root - 12 + (s.beat === 5 ? 12 : 0), next, 0.17, 0.24, "triangle");
+      if (s.brass)
+        s.chord.forEach((n) => {
+          note(n, next, s.beat === 0 ? 0.4 : 0.19, 0.047, "sawtooth");
+          note(n + 0.07, next + 0.007, 0.23, 0.022, "sawtooth");
+        });
+      // Sixteenth-note string pulse, softer during the bridge.
+      const arp = s.chord[(s.beat + Math.floor(beat / 8)) % 4]!;
+      note(arp + 12, next, 0.12, s.section === 2 ? 0.025 : 0.04, "triangle");
+      note(s.chord[(s.beat + 1) % 4]! + 12, next + stepSeconds / 2, 0.1, 0.023, "triangle");
+      if (s.melody !== null && s.melody !== undefined) {
+        note(s.melody, next, s.section === 2 ? 0.38 : 0.23, 0.075, "sawtooth");
+        note(s.melody - 12, next, 0.3, 0.035, "triangle");
       }
-      if (local === 0 || local === 3 || local === 6)
-        chord.slice(1).forEach((n) => note(n, next, 0.2, 0.07, "sawtooth"));
-      const melody = motif[beat % motif.length];
-      if (melody !== null && melody !== undefined) note(melody, next, 0.24, 0.095, "sawtooth");
       beat++;
       next += stepSeconds;
     }
@@ -127,7 +168,7 @@ export function stadiumAudio() {
     setMusic(on: boolean, level: number) {
       musicOn = on;
       volume = level;
-      if (!on) music.gain.setTargetAtTime(0, context.currentTime, .03);
+      if (!on) music.gain.setTargetAtTime(0, context.currentTime, 0.03);
     },
     cue(big = false) {
       if (context.state !== "running" || !crowdOn) return;

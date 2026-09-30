@@ -1715,7 +1715,7 @@ function PlayShell() {
         <TeamRosterModal />
         <CrunchCall />
       </main>
-      <BottomLine save={save} />
+      {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
   );
 }

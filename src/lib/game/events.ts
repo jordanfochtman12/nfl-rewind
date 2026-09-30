@@ -83,7 +83,8 @@ function allProIds(players: Player[], year: number): string[] {
   return ids;
 }
 
-export function resolveAwards(save: DynastySave): AwardsResult {
+/** Pure ballot, also used by the regular-season studio special. */
+export function calculateAwards(save: DynastySave): AwardsResult {
   const year = save.year;
   const players = seasonList(save);
   const off = players.slice().sort((a, b) => offScore(b, year) - offScore(a, year));
@@ -125,6 +126,13 @@ export function resolveAwards(save: DynastySave): AwardsResult {
     cpoty: cpoty?.id,
     allPro: allProIds(players, year),
   };
+  return awards;
+}
+
+export function resolveAwards(save: DynastySave): AwardsResult {
+  const year = save.year;
+  const awards = calculateAwards(save);
+  const cpoty = awards.cpoty ? save.players[awards.cpoty] : undefined;
   save.awards = awards;
   save.history.awards.push(awards);
   recordAwards(save, awards);

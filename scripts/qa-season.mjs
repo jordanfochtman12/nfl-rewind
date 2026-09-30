@@ -245,7 +245,7 @@ assert(sayersCareer.rushYds >= 800, `Sayers 1965 rush yds on the card (got ${say
 const namathCareer = g.careerTotals(namath);
 assert(namathCareer.passYds >= 2500, `Namath 1965 pass yds on the card (got ${namathCareer.passYds})`);
 
-assert(g.SAVE_VERSION === 17, `SAVE_VERSION 17 (got ${g.SAVE_VERSION})`);
+assert(g.SAVE_VERSION === 18, `SAVE_VERSION 18 (got ${g.SAVE_VERSION})`);
 const lombardi = save.coaches.lombardi;
 assert(lombardi, "Vince Lombardi is on the 1966 staff");
 assert(lombardi.teamId === "gnb", "Lombardi coaches the Packers");

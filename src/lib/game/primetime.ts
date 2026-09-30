@@ -40,7 +40,9 @@ import { gameDateLabel, gamesInWeek } from "./schedule.ts";
 import { depthAt, playerName, rosterOf } from "./players.ts";
 import { conferenceTeams, sortedDivision, winPct } from "./standings.ts";
 import { playoffTeamCount } from "./era.ts";
-import { leagueChampions } from "./playoffs.ts";
+import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
+import { calculateAwards } from "./events.ts";
+import { produceEpisode } from "./studio.ts";
 
 type Kind = NonNullable<PrimetimeShow["kind"]>;
 
@@ -626,6 +628,8 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
   const kind: Kind = kindArg ?? (save.phase === "playoffs" ? "playoffs" : "regular");
   const year = save.year;
   const cache = new Map<TeamId, number>();
+  const regularGames = save.schedule.filter(g => g.year === year && g.phase === "regular");
+  const finale = kind === "regular" && regularGames.length > 0 && regularGames.every(g => g.played);
   let games: GameResult[];
   if (kind === "regular") games = gamesInWeek(save, save.week).filter((g) => g.played);
   else if (kind === "playoffs") {
@@ -665,6 +669,12 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
         ];
       }
     }
+  }
+  if (finale) {
+    // Seeding only writes playoffGames. Preview the real bracket without advancing the calendar.
+    const bracket = { ...save, playoffGames: [] };
+    seedPlayoffs(bracket);
+    upcoming = bracket.playoffGames;
   }
   const userNext = upcoming.find((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId);
   const userPlayed = games.some((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId);
@@ -745,8 +755,8 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     close,
   };
 
-  if (kind === "awards" && save.awards) {
-    const a = save.awards;
+  if ((kind === "awards" && save.awards) || finale) {
+    const a = finale ? calculateAwards(save) : save.awards!;
     const award = (label: string, id?: string) => {
       const p = id ? save.players[id] : undefined;
       if (!p) return undefined;
@@ -787,6 +797,13 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     }
   }
 
+  if (finale) show.title = "Regular-season finale";
+  show.episode = produceEpisode(save, show, sorted, upcoming, finale);
+  show.open = show.episode.chapters[0]!.lines.map(l => l.text).join(" ");
+  show.close = show.episode.chapters.at(-1)!.lines[0]!.text;
+  const archive = [...(save.primetimeArchive ?? []), ...(save.primetime ? [save.primetime] : [])]
+    .filter(s => s.year === year && s.episode && s.episode.id !== show.episode!.id);
+  save.primetimeArchive = [...new Map(archive.map(s => [s.episode!.id,s])).values()].slice(-26);
   save.primetime = show;
 }
 

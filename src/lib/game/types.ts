@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 17;
+export const SAVE_VERSION = 18;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -882,6 +882,7 @@ export interface DynastySave {
   pendingCoachHof: string[];
   lastPow: { aflNfl?: string; afc?: string; nfc?: string };
   primetime?: PrimetimeShow;
+  primetimeArchive?: PrimetimeShow[];
   /** Last show's power ranks, for the week-to-week movement arrows. */
   powerRanks?: Record<string, number>;
   salaryCap: number | null;
@@ -1055,6 +1056,15 @@ export interface PrimetimePreview {
 }
 
 export interface PrimetimeShow {
+  /** Frozen editorial rundown: never reads future results while replaying an episode. */
+  episode?: {
+    id: string;
+    edition: "weekly" | "seasonFinale" | "playoffs" | "championship" | "superBowl" | "awards";
+    headline: string;
+    subtitle: string;
+    chapters: { id: string; kicker: string; title: string; teamIds: TeamId[]; lines: { speaker: "HOST" | "ANALYST" | "REPORTER"; text: string }[] }[];
+    focusIds: string[];
+  };
   /** 2 = the full broadcast (older saves carry the one-card version). */
   v?: number;
   year: number;

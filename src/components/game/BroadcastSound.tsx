@@ -127,7 +127,7 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
         </div>
         {music && (
           <label className="flex flex-wrap items-center gap-2 text-xs text-muted">
-            Sunday Lights · original theme{" "}
+            Sunday Lights · Network Mix{" "}
             <input
               aria-label="Music volume"
               type="range"

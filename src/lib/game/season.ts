@@ -250,6 +250,8 @@ function simThisWeek(save: DynastySave): void {
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
   phoneRings(save);
   weekPrimetime(save);
+  // The finale's ballot and stat boards must use the same era-bounded season totals as awards night.
+  if (save.schedule.filter(g => g.year === save.year && g.phase === "regular").every(g => g.played)) clampSeasonStats(save);
   buildPrimetime(save);
   save.waiverOrder = activeTeamIds(save.year)
     .slice()
