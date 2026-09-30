@@ -367,7 +367,8 @@ export function resolveSuperBowl(save: DynastySave): void {
 
 export function weekPrimetime(save: DynastySave): void {
   save.weekNews = [];
-  const weekGames = save.schedule.filter((g) => g.week === save.week && g.played);
+  const weekGames = save.schedule.filter((g) => g.year === save.year && g.week === save.week && g.phase === 'regular' && g.played);
+  save.lastPow = {};
   if (!weekGames.length) return;
   const night = weekGames.find((g) => g.night);
   const blow = [...weekGames].sort(
@@ -381,36 +382,45 @@ export function weekPrimetime(save: DynastySave): void {
       kind: "headline",
       headline: `${displayName(save.year, w as TeamId)} ${Math.max(featured.homeScore, featured.awayScore)}, ${displayName(save.year, l as TeamId)} ${Math.min(featured.homeScore, featured.awayScore)}`,
       body: featured.night
-        ? "Monday night. The country watched."
+        ? featured.slot === 'M' ? "Monday night. The country watched." : "Under the lights. The evening's featured game."
         : featured.rivalry
           ? "A rivalry game that will sit in the Monday papers."
           : Math.abs(featured.homeScore - featured.awayScore) >= 17
             ? "A rout that will sit in the Monday papers."
-            : "One-possession theater until the last two minutes.",
+            : featured.homeScore === featured.awayScore ? "All square at the final whistle." : `Decided by ${Math.abs(featured.homeScore - featured.awayScore)} points.`,
       teamIds: [w as TeamId, l as TeamId],
       playerIds: featured.mvpPlayerId ? [featured.mvpPlayerId] : [],
     });
   }
   const confs = save.year < 1970 ? (["NFL", "AFL"] as const) : (["AFC", "NFC"] as const);
   for (const conf of confs) {
-    const ids = activeTeamIds(save.year).filter((id) => conferenceOf(save.year, id) === conf);
     let best: Player | undefined;
-    let bestN = -1;
-    for (const id of ids) {
-      for (const p of rosterOf(save, id)) {
-        const n = offScore(p, save.year);
+    let bestTeam: TeamId | undefined;
+    let bestN = -Infinity;
+    for (const game of weekGames) {
+      for (const [id, box] of [[game.homeId, game.boxHome], [game.awayId, game.boxAway]] as const) {
+        if (conferenceOf(save.year, id as TeamId) !== conf) continue;
+        for (const line of box ?? []) {
+        const p = save.players[line.playerId];
+        if (!p || !['QB', 'RB', 'FB', 'WR', 'TE'].includes(p.pos)) continue;
+        if (!(line.passAtt || line.rushAtt || line.rec)) continue;
+        const n = (line.passYds ?? 0) * .04 + (line.passTd ?? 0) * 4 +
+          (line.rushYds ?? 0) * .1 + (line.rushTd ?? 0) * 6 +
+          (line.rec ?? 0) * .5 + (line.recYds ?? 0) * .1 + (line.recTd ?? 0) * 6 - (line.passInt ?? 0) * 2;
         if (n > bestN) {
           bestN = n;
           best = p;
+          bestTeam = id as TeamId;
+        }
         }
       }
     }
-    if (best) {
+    if (best && bestTeam) {
       addNews(save, {
         kind: "pow",
         headline: `${conf} Offensive Player of the Week: ${playerName(best)}`,
-        body: `${best.pos} for ${displayName(save.year, best.teamId as TeamId)}.`,
-        teamIds: best.teamId !== "fa" && best.teamId !== "retired" && best.teamId !== "hof" ? [best.teamId] : [],
+        body: `${best.pos} for ${displayName(save.year, bestTeam)}. Based on this week's game.`,
+        teamIds: [bestTeam],
         playerIds: [best.id],
       });
       if (conf === "NFL" || conf === "NFC") save.lastPow.nfc = best.id;

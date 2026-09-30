@@ -533,6 +533,18 @@ function fgMakeP(k: Player | undefined, distYds: number, wx: Wx, year: number, c
 
 type Call = "run" | "short" | "med" | "deep" | "screen" | "draw" | "pa" | "sneak" | "punt" | "fg" | "kneel" | "spike";
 
+/** Protect a trailing team's final possession before ordinary era/coach tendencies. */
+export function finalPossessionCall(
+  q: number, clock: number, down: number, spot: number, trail: number, kickRange: number,
+): Call | undefined {
+  if (q < 4 || clock > 30 || trail <= 0) return undefined;
+  // Take a tying/winning kick on fourth down or when only one snap remains.
+  if (trail <= 3 && 117 - spot <= kickRange && (down === 4 || clock <= 8)) return "fg";
+  // A punt or a clock-consuming run cannot rescue this possession. Avoid blind
+  // spikes too: the engine may already have a stopped clock after an incompletion.
+  return spot < 65 ? "deep" : spot < 85 ? "med" : "short";
+}
+
 function callPlay(
   save: DynastySave,
   year: number,
@@ -556,11 +568,13 @@ function callPlay(
   const desperate = late && trail >= 3;
   const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -7 && clock < 240)) && !desperate;
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
+  const finalCall = finalPossessionCall(q, clock, down, spot, trail,
+    fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0));
+  if (finalCall) return finalCall;
   if (q >= 4 && trail <= -1 && clock <= 90 && spot > 35 && toLeft === 0 && down !== 4) {
     if (clock <= 12 && down <= 2) return "kneel";
     if (clock <= 40) return "kneel";
   }
-  if (last && trail >= 1 && down <= 2 && clock <= 8) return "spike";
   if (down === 4) {
     const fgDist = 100 - spot + 17;
     const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0);

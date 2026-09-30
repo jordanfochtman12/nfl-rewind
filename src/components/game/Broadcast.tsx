@@ -78,8 +78,9 @@ export function TabStrip<T extends string>({
   onPick: (id: T) => void;
 }) {
   return (
-    <nav className="relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
-      <div className="mx-auto flex max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 [scrollbar-width:none]">
+      <nav className="relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
+        <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Franchise</span><select aria-label="Franchise section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
+        <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex">
         {tabs.map((t) => {
           const on = t.id === active;
           return (

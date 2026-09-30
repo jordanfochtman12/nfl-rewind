@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   ACTIVE_1966,
   activateFromIR,
@@ -92,6 +93,7 @@ import {
 function TitleScreen() {
   const { save, setScreen, continueGame, exportJson, importJson, hasHydrated } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [importError, setImportError] = useState('');
   const download = () => {
     const json = exportJson();
     if (!json || json === "null") return;
@@ -145,10 +147,13 @@ function TitleScreen() {
           onChange={(e) => {
             const f = e.target.files?.[0];
             if (!f) return;
-            void f.text().then(importJson);
+            setImportError('');
+            void f.text().then(importJson).catch(() => setImportError('This file could not be imported. Choose a valid NFL Rewind dynasty JSON. Your current dynasty has not been replaced.'));
+            e.target.value = '';
           }}
         />
       </div>
+      {importError && <p role="alert" className="text-sm text-brick">{importError}</p>}
       {!hasHydrated && <p className="text-sm text-muted">Reading the file…</p>}
       {save && hasHydrated && (
         <p className="text-sm text-paper">
@@ -157,14 +162,16 @@ function TitleScreen() {
           {bytes ? ` · ${formatBytes(bytes)}` : ""}
         </p>
       )}
-      <p className="text-sm text-muted">AFL / NFL · named veterans · no player photographs</p>
+      <div className="title-pillars"><div><strong>Build the franchise</strong><span>Draft real classes. Develop your core.</span></div><div><strong>Own the decisions</strong><span>Manage the roster. Shape the game plan.</span></div><div><strong>Change the history</strong><span>Six decades. One lasting legacy.</span></div></div>
       </div>
     </main>
   );
 }
 
 function TeamSelect() {
-  const { newGame, setScreen } = useGameStore();
+  const { newGame, setScreen, save } = useGameStore();
+  const [selectedTeam, setSelectedTeam] = useState<TeamId | null>(null);
+  const [replaceReady, setReplaceReady] = useState(false);
   const nfl = ACTIVE_1966.filter((id) => originalLeague(id) === "NFL");
   const afl = ACTIVE_1966.filter((id) => originalLeague(id) === "AFL");
   const Group = ({ title, ids }: { title: string; ids: readonly TeamId[] }) => (
@@ -175,8 +182,9 @@ function TeamSelect() {
           <button
             key={id}
             type="button"
-            onClick={() => newGame(id)}
-            className="group relative flex min-h-16 items-center gap-3 overflow-hidden border border-white/10 bg-gradient-to-b from-[#1b2130]/95 to-[#0a0d14]/95 pr-3 text-left shadow-[inset_0_1px_0_#ffffff1a] backdrop-blur-sm transition-all hover:border-red/70 hover:brightness-125"
+            onClick={() => { setSelectedTeam(id); setReplaceReady(false); }}
+            aria-pressed={selectedTeam === id}
+            className={`group relative flex min-h-16 items-center gap-3 overflow-hidden border bg-gradient-to-b from-[#1b2130]/95 to-[#0a0d14]/95 pr-3 text-left shadow-[inset_0_1px_0_#ffffff1a] backdrop-blur-sm transition-all hover:border-red/70 hover:brightness-125 ${selectedTeam === id ? 'border-brass ring-1 ring-brass' : 'border-white/10'}`}
           >
             <span
               className="flex h-full min-h-16 w-16 shrink-0 items-center justify-center [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]"
@@ -209,6 +217,10 @@ function TeamSelect() {
       </div>
       <Group title="National Football League" ids={nfl} />
       <Group title="American Football League" ids={afl} />
+      {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
+        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
+        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">Starting replaces your current {displayName(save.year, save.userTeamId)} dynasty. Return to the title and export it first if you want to keep it.</p>}
+      </section>}
       <p className="text-xs text-subtle">
         Club marks are original designs in each club&apos;s colors, not official NFL logos. Mascot icons by Lorc,
         Delapouite and contributors at{" "}
@@ -392,7 +404,8 @@ function Office() {
         </div>
       </section>
       {finale && <GradeCard grade={grade} />}
-      <DeskReport />
+      <FranchiseHQ />
+      <details className="hq-panel p-4"><summary className="cursor-pointer font-semibold">Detailed roster needs</summary><div className="mt-3"><DeskReport /></div></details>
       <PhoneLine />
       {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}
@@ -768,6 +781,7 @@ function SundayCallSheet() {
   );
   return (
     <section className="space-y-3">
+      <OpponentPreview />
       <h3 className="text-sm tracking-[0.2em] text-muted">Sunday call sheet</h3>
       <p className="text-sm text-muted">
         This is what the booth actually calls. Run/pass mix, fourth-down nerve, tempo, blitz frequency, and how you play inside the 20. The other club scripts off its scheme unless the scoreboard forces its hand.
@@ -778,6 +792,11 @@ function SundayCallSheet() {
         <Dial label="Tempo" field="tempo" options={["chew", "standard", "hurry"]} />
         <Dial label="Blitz" field="blitz" options={["rare", "normal", "heavy"]} />
         <Dial label="Red zone" field="redZone" options={["power", "balanced", "spread"]} />
+      </div>
+      <div className="hq-plan-notes" aria-live="polite">
+        <p><strong>Attack:</strong> {plan.attack === 'run' ? 'Lean on the ground game to control possession; long-yardage situations still demand passing.' : plan.attack === 'pass' ? 'Test coverage and create explosive gains; protection and turnovers become more important.' : 'Keep both options available and let game situation shape the call.'}</p>
+        <p><strong>Pressure:</strong> {plan.blitz === 'heavy' ? 'Send extra rushers more often, accepting greater exposure behind them.' : plan.blitz === 'rare' ? 'Keep more defenders in coverage and ask your front to generate pressure.' : 'Mix pressure with coverage instead of committing to one approach.'}</p>
+        <p><strong>Clock:</strong> {plan.tempo === 'chew' ? 'Use more clock between plays. Fewer possessions can protect a lead but limit comeback chances.' : plan.tempo === 'hurry' ? 'Push the pace and preserve time. Extra possessions give both offenses more opportunities.' : 'Use a normal pace, with the scoreboard influencing late-game urgency.'}</p>
       </div>
     </section>
   );
@@ -1640,6 +1659,7 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <ClubDesk id={save.userTeamId} year={save.year} className="min-h-dvh bg-bg">
+      <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
       <header className="sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
@@ -1659,23 +1679,23 @@ function PlayShell() {
         <TabStrip tabs={TABS} active={tab} onPick={setTab} />
       </header>
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
-      <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+      <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
         {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
-        {event && tab !== "primetime" ? <EventPane /> : null}
+        {event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
         {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {showDeadline && tab === "office" ? <DeadlineNight /> : null}
         {!event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
-        {!event && tab === "roster" && <Roster />}
-        {!event && tab === "depth" && <Depth />}
-        {!event && tab === "staff" && <Staff />}
-        {!event && tab === "market" && <MarketDesk />}
-        {!event && tab === "standings" && <Standings />}
-        {!event && tab === "schedule" && <Schedule />}
-        {!event && tab === "stats" && <Stats />}
-        {!event && tab === "draft" && !showDraft && <DraftNight />}
-        {!event && tab === "history" && <History />}
+        {tab === "roster" && <Roster />}
+        {tab === "depth" && <Depth />}
+        {tab === "staff" && <Staff />}
+        {tab === "market" && <MarketDesk />}
+        {tab === "standings" && <Standings />}
+        {tab === "schedule" && <Schedule />}
+        {tab === "stats" && <Stats />}
+        {tab === "draft" && !showDraft && <DraftNight />}
+        {tab === "history" && <History />}
         <PlayerProfile />
         <TeamRosterModal />
         <CrunchCall />
