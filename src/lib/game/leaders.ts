@@ -50,8 +50,8 @@ export function seasonLeaders(save: DynastySave) {
   };
 }
 
-export function careerTotals(p: Player): SeasonStats {
-  return sumStats(p, [...Object.values(p.stats), ...(p.career ?? [])]);
+export function careerTotals(p: Player, range?: { fromYear?: number; throughYear?: number }): SeasonStats {
+  return sumStats(p, [...Object.values(p.stats), ...(p.career ?? [])].filter(s => s.year >= (range?.fromYear ?? 0) && s.year <= (range?.throughYear ?? Infinity)));
 }
 
 /** Career postseason totals. */

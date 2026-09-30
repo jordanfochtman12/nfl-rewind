@@ -1,3 +1,4 @@
+import { StudioRecapAudio } from "./BroadcastSound";
 import type { ReactNode } from "react";
 import { displayName, teamAbbr, type PrimetimeHonoree, type PrimetimeShow as Show, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
@@ -100,7 +101,8 @@ function WeeklyShow() {
     );
   }
 
-  const segs: { id: string; title: string; node: ReactNode }[] = [];
+  const recapText = ["Welcome to the Rewind studio.", ...show.recaps.slice(0, 5).map(r => `${r.line} ${r.note}`), ...(show.stories ?? []).slice(0, 2).map(st => `${st.headline}. ${st.body}`)].join(" ");
+  const segs: { id: string; title: string; node: ReactNode }[] = [{ id: "studio", title: "Studio desk", node: <div><h3 className="text-2xl">Your week, on the air</h3><p className="mt-2 text-sm text-muted">A spoken roundup of this week’s simulated results and headlines. Uses your browser’s available voice.</p><StudioRecapAudio text={recapText} /><p className="text-sm text-paper">{show.recaps[0]?.line ?? show.stories?.[0]?.headline ?? "The league returns next week."}</p></div> }];
 
   if (show.awards?.length) {
     segs.push({

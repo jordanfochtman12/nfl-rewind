@@ -158,6 +158,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     t.plan = t.plan ?? { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
     t.plan.blitz = t.plan.blitz ?? "normal";
     t.plan.redZone = t.plan.redZone ?? "balanced";
+    t.plan.protection ??= "balanced";
+    t.plan.defensiveFocus ??= "balanced";
     t.active = t.active ?? false;
     t.ocId = t.ocId ?? null;
     t.dcId = t.dcId ?? null;

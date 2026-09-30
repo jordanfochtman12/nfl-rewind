@@ -10,6 +10,8 @@ import {
   availableDecades,
   canReturnFromIR,
   careerRecordBook,
+  careerTotals,
+  playerName,
   cutPlayer,
   depthChart,
   deskFire,
@@ -763,12 +765,12 @@ function SundayCallSheet() {
       <span className="text-xs tracking-[0.2em] text-muted">{label}</span>
       <select
         className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
-        value={plan[field]}
+        value={plan[field] ?? "balanced"}
         onChange={(e) => desk((s) => void deskPlan(s, s.userTeamId, { [field]: e.target.value }))}
       >
         {options.map((x) => (
           <option key={x} value={x}>
-            {x}
+            {x === "maxProtect" ? "Max protect" : x}
           </option>
         ))}
       </select>
@@ -787,10 +789,14 @@ function SundayCallSheet() {
         <Dial label="Tempo" field="tempo" options={["chew", "standard", "hurry"]} />
         <Dial label="Blitz" field="blitz" options={["rare", "normal", "heavy"]} />
         <Dial label="Red zone" field="redZone" options={["power", "balanced", "spread"]} />
+        <Dial label="Protection" field="protection" options={["balanced", "maxProtect"]} />
+        <Dial label="Defensive focus" field="defensiveFocus" options={["balanced", "run", "pass"]} />
       </div>
       <div className="hq-plan-notes" aria-live="polite">
         <p><strong>Attack:</strong> {plan.attack === 'run' ? 'Lean on the ground game to control possession; long-yardage situations still demand passing.' : plan.attack === 'pass' ? 'Test coverage and create explosive gains; protection and turnovers become more important.' : 'Keep both options available and let game situation shape the call.'}</p>
         <p><strong>Pressure:</strong> {plan.blitz === 'heavy' ? 'Send extra rushers more often, accepting greater exposure behind them.' : plan.blitz === 'rare' ? 'Keep more defenders in coverage and ask your front to generate pressure.' : 'Mix pressure with coverage instead of committing to one approach.'}</p>
+        <p><strong>Protection:</strong> {plan.protection === "maxProtect" ? "Keep extra help in protection: fewer sacks, but fewer receiving options reduce completion chances." : "Release the full route combination with standard pass protection."}</p>
+        <p><strong>Defensive focus:</strong> {plan.defensiveFocus === "run" ? "Commit resources to stopping the run and accept weaker pass coverage." : plan.defensiveFocus === "pass" ? "Prioritize pass coverage and concede more space on the ground." : "Defend both phases without selling out against either."}</p>
         <p><strong>Clock:</strong> {plan.tempo === 'chew' ? 'Use more clock between plays. Fewer possessions can protect a lead but limit comeback chances.' : plan.tempo === 'hurry' ? 'Push the pace and preserve time. Extra possessions give both offenses more opportunities.' : 'Use a normal pace, with the scoreboard influencing late-game urgency.'}</p>
       </div>
     </section>
@@ -1082,7 +1088,10 @@ function Stats() {
   const save = useGameStore((s) => s.save)!;
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
-  const [scope, setScope] = useState<"regular" | "playoffs" | "poCareer">("regular");
+  const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"all" | "active" | "retired">("all");
+  const careerScope = scope === "career" || scope === "dynastyCareer" || scope === "poCareer";
   const teams = activeTeamIds(save.year);
   // Most recent postseason on the books (this January's, or last season's during the offseason).
   const poYear = Object.values(save.players).reduce(
@@ -1090,7 +1099,7 @@ function Stats() {
     0,
   );
   const lineOf = (p: Player): SeasonStats | undefined =>
-    scope === "regular" ? p.stats[save.year] : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
+    scope === "regular" ? p.stats[save.year] : scope === "career" ? careerTotals(p, { throughYear: save.year }) : scope === "dynastyCareer" ? careerTotals(p, { fromYear: save.startingYear ?? 1966, throughYear: save.year }) : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
 
   const inPos = (p: Player) => {
     if (posFilter === "ALL") return true;
@@ -1105,6 +1114,9 @@ function Stats() {
     .filter((p) => {
       const s = lineOf(p);
       if (!hasSeasonWork(s)) return false;
+      if (search.trim() && !playerName(p).toLowerCase().includes(search.trim().toLowerCase())) return false;
+      const retired = p.teamId === "retired" || p.teamId === "hof";
+      if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
       if (!inPos(p)) return false;
       if (teamFilter === "mine") return p.teamId === save.userTeamId;
       if (teamFilter !== "ALL") return p.teamId === teamFilter;
@@ -1177,6 +1189,8 @@ function Stats() {
         {(
           [
             ["regular", `${save.year} regular season`],
+            ["career", "Career totals"],
+            ["dynastyCareer", "Dynasty totals"],
             ["playoffs", poYear ? `${poYear} playoffs` : "Playoffs"],
             ["poCareer", "Playoff careers"],
           ] as const
@@ -1195,7 +1209,12 @@ function Stats() {
           </button>
         ))}
       </div>
-      {scope !== "regular" && !allRows.length && (
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="flex-1 text-xs text-muted">Find a player<input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search player name" className="mt-1 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-base text-fg" /></label>
+        {careerScope && <label className="text-xs text-muted">Player status<select value={status} onChange={e => setStatus(e.target.value as typeof status)} className="mt-1 block min-h-11 rounded-md border border-line bg-surface px-3 text-sm text-fg"><option value="all">Active + retired</option><option value="active">Active players</option><option value="retired">Retired + Hall of Fame</option></select></label>}
+      </div>
+      {careerScope && <p className="text-sm text-muted">{scope === "career" ? "Cumulative regular-season stats: recorded historical seasons before your start plus every season played in this dynasty, including the current season." : scope === "dynastyCareer" ? `Cumulative regular-season stats from ${save.startingYear ?? 1966} through ${save.year}. Historical stats before your dynasty are excluded.` : "Cumulative postseason stats, kept separate from regular-season totals."} Retired players retain their totals. Team filters select current club membership; each player's totals include all clubs. Showing up to 40 leaders per category; search to find any player.</p>}
+      {(scope === "playoffs" || scope === "poCareer") && !allRows.length && !search && (
         <p className="text-sm text-muted">No postseason football on the books yet. The lines fill in January.</p>
       )}
       <div className="flex flex-wrap gap-2">
@@ -1293,7 +1312,7 @@ function Stats() {
                   {!board.rows.length && (
                     <tr>
                       <td className="px-3 py-4 text-muted" colSpan={4 + cols.length}>
-                        Play a Sunday — stats land after the whistle.
+                        {search || careerScope ? "No players match these filters." : "Play a Sunday — stats land after the whistle."}
                       </td>
                     </tr>
                   )}

@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 16;
+export const SAVE_VERSION = 17;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -285,6 +285,8 @@ export type BlitzDial = "rare" | "normal" | "heavy";
 export type RedZoneDial = "power" | "balanced" | "spread";
 
 export interface Gameplan {
+  protection?: "balanced" | "maxProtect";
+  defensiveFocus?: "balanced" | "run" | "pass";
   attack: AttackDial;
   fourth: FourthDial;
   tempo: TempoDial;
@@ -432,6 +434,8 @@ export interface DriveSummary {
 }
 
 export interface GameResult {
+  /** Call sheets at kickoff, preserved independently of subsequent coaching edits. */
+  callSheets?: { home: Gameplan; away: Gameplan };
   id: string;
   year: number;
   week: number;
@@ -505,6 +509,10 @@ export interface GameResult {
 
 /** One snap of the owner's game, for the live broadcast. */
 export interface PlayLog {
+  /** Actual stat events, absent in film recorded before version 17. */
+  snap?: { call: string; kind: "pass" | "run" | "sack" | "kick" | "other"; yards: number; complete?: boolean };
+  homeTimeouts?: number;
+  awayTimeouts?: number;
   q: number;
   clock: number;
   poss: TeamId;

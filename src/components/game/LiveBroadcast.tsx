@@ -1,3 +1,7 @@
+import { BroadcastField } from "./BroadcastField";
+import { FilmReport } from "./FilmReport";
+import { useBroadcastSound } from "./BroadcastSound";
+import { boothLine } from "@/lib/game/commentary";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { clubInk, teamAbbr, type GameResult, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
@@ -58,9 +62,9 @@ const TAG_STYLE: Record<NonNullable<PlayLog["tag"]>, { label: string; cls: strin
 };
 
 const SPEEDS = [
-  { label: "1x", ms: 650 },
-  { label: "2x", ms: 300 },
-  { label: "4x", ms: 110 },
+  { label: "1x", ms: 2200 },
+  { label: "2x", ms: 1000 },
+  { label: "4x", ms: 400 },
 ];
 
 /**
@@ -95,13 +99,20 @@ export function LiveBroadcast({
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState(compact ? 1 : 0);
   const doneRef = useRef(false);
+  const [halftime, setHalftime] = useState(false);
+  const halfSeen = useRef(startAt > 0);
+  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", log[i] ? boothLine(log[i]!, i) : "", i);
   const atEnd = i >= log.length - 1;
+  const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 
   useEffect(() => {
-    if (!playing || atEnd) return;
-    const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), SPEEDS[speed]!.ms);
+    if (!playing || atEnd || halftime) return;
+    if (!compact && !halfSeen.current && log[i]?.q <= 2 && (log[i + 1]?.q ?? 0) >= 3) {
+      halfSeen.current = true; setHalftime(true); return;
+    }
+    const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), playMs);
     return () => clearTimeout(t);
-  }, [i, playing, speed, atEnd, log.length]);
+  }, [i, playing, playMs, atEnd, log, halftime, compact]);
 
   useEffect(() => {
     if (atEnd && !doneRef.current) {
@@ -136,8 +147,6 @@ export function LiveBroadcast({
   const H = compact ? 70 : 110;
   const pts = wp.slice(0, i + 1).map((v, k) => `${((k / Math.max(1, log.length - 1)) * W).toFixed(1)},${((1 - v) * H).toFixed(1)}`);
   const usWp = wp[i]!;
-  const ballX = Math.max(1, Math.min(99, sit.poss === home ? sit.spot : 100 - sit.spot));
-  const lineX = Math.max(1, Math.min(99, sit.poss === home ? sit.spot + sit.togo : 100 - sit.spot - sit.togo));
 
   const slab = (id: TeamId, score: number, ink: ReturnType<typeof clubInk>, side: "l" | "r") => (
     <div
@@ -156,6 +165,7 @@ export function LiveBroadcast({
 
   return (
     <section className="overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]" aria-label="Live broadcast">
+      {compact && !atEnd && <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs text-muted"><span>Replay to your decision</span><button type="button" className="bx-chip min-h-9 px-3" onClick={() => setI(log.length - 1)}>Jump to decision</button></div>}
       {!compact && (
         <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e] px-4 py-2">
           <p className="bx-primary px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
@@ -164,15 +174,15 @@ export function LiveBroadcast({
           <div className="flex flex-wrap items-center gap-1.5">
             {!ended && (
               <>
-                <button type="button" onClick={() => setPlaying((p) => !p)} className="bx-chip min-h-8 px-3 text-[11px]">
+                <button type="button" onClick={() => { sound.chime(); setPlaying((p) => !p); }} className="bx-chip min-h-8 px-3 text-[11px]">
                   {playing ? "Pause" : "Play"}
                 </button>
                 {SPEEDS.map((s2, k) => (
-                  <button key={s2.label} type="button" onClick={() => setSpeed(k)} className={`bx-chip min-h-8 px-2.5 text-[11px] ${speed === k ? "bx-chip-on" : ""}`}>
+                  <button key={s2.label} type="button" onClick={() => { sound.chime(); setSpeed(k); }} className={`bx-chip min-h-8 px-2.5 text-[11px] ${speed === k ? "bx-chip-on" : ""}`}>
                     {s2.label}
                   </button>
                 ))}
-                <button type="button" onClick={() => setI(log.length - 1)} className="bx-chip min-h-8 px-3 text-[11px]">
+                <button type="button" onClick={() => { setHalftime(false); halfSeen.current = true; setI(log.length - 1); }} className="bx-chip min-h-8 px-3 text-[11px]">
                   Skip to final
                 </button>
               </>
@@ -182,6 +192,8 @@ export function LiveBroadcast({
                 type="button"
                 onClick={() => {
                   doneRef.current = true;
+                  halfSeen.current = false;
+                  setHalftime(false);
                   setI(0);
                   setPlaying(true);
                 }}
@@ -194,12 +206,14 @@ export function LiveBroadcast({
         </div>
       )}
 
+      {!compact && <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2">{sound.controls}<span className="text-[11px] text-muted">{game.stadium} · {game.indoor ? "Indoors" : game.weather ?? "Clear"}</span></div>}
+
       {/* score bug */}
       <div className="grid grid-cols-[1fr_auto_1fr]">
         {slab(away, cur.as, awayInk, "l")}
         <div className="flex flex-col items-center justify-center bg-black px-3">
-          <p className="bug-num text-xl text-brass">{ended ? "FINAL" : `${sit.q > 4 ? "OT" : `Q${sit.q}`} ${clockText(sit.clock)}`}</p>
-          {!ended && (
+          <p className="bug-num text-xl text-brass">{ended ? "FINAL" : halftime ? "HALFTIME" : `${sit.q > 4 ? "OT" : `Q${sit.q}`} ${clockText(sit.clock)}`}</p>
+          {!ended && !halftime && (
             <p className="whitespace-nowrap font-display text-[11px] font-bold uppercase italic tracking-wide text-muted">
               {ORD[Math.min(4, sit.down)] ?? "4th"} & {sit.togo} · {spotText(sit, opp)}
             </p>
@@ -208,20 +222,10 @@ export function LiveBroadcast({
         {slab(home, cur.hs, homeInk, "r")}
       </div>
 
-      {/* field strip */}
-      <div className="relative h-7 overflow-hidden border-y border-white/10" style={{ background: "repeating-linear-gradient(90deg, #1d5a31 0 5%, #184d29 5% 10%)" }} aria-hidden>
-        <div className="absolute inset-y-0 left-0 w-[8%]" style={{ background: awayInk.primary, opacity: 0.55 }} />
-        <div className="absolute inset-y-0 right-0 w-[8%]" style={{ background: homeInk.primary, opacity: 0.55 }} />
-        {!ended && (
-          <>
-            <div className="absolute inset-y-0 w-[3px] bg-brass shadow-[0_0_8px_#ffc629] transition-all duration-300" style={{ left: `${8 + lineX * 0.84}%` }} />
-            <div
-              className="absolute top-1/2 h-3 w-5 -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-white/60 bg-[#7a4a22] transition-all duration-300"
-              style={{ left: `${8 + ballX * 0.84}%` }}
-            />
-          </>
-        )}
-      </div>
+      <BroadcastField play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} />
+      {!compact && <div className="flex flex-wrap items-center gap-3 border-y border-white/10 px-4 py-2 text-xs text-muted"><span>{teamAbbr(away)} timeouts: {cur.awayTimeouts ?? "—"}</span><span>{teamAbbr(home)} timeouts: {cur.homeTimeouts ?? "—"}</span><span className="ml-auto">Play {i + 1} / {log.length}</span></div>}
+      {halftime && <div className="border-b border-brass/30"><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
+      {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 
       <div className={`grid gap-0 ${compact ? "" : "md:grid-cols-[1.4fr_1fr]"}`}>
         {/* play feed */}
@@ -243,7 +247,7 @@ export function LiveBroadcast({
         {!compact && (
           <div className="border-t border-white/10 p-3 md:border-l md:border-t-0">
             <p className="flex items-baseline justify-between font-display text-xs font-bold uppercase italic tracking-wide text-muted">
-              <span>Win probability · {teamAbbr(us)}</span>
+              <span>Estimated win probability · {teamAbbr(us)}</span>
               <span className="bug-num text-2xl text-white">{Math.round(usWp * 100)}%</span>
             </p>
             <svg viewBox={`0 0 ${W} ${H}`} className="mt-1 h-24 w-full" preserveAspectRatio="none" aria-hidden>
@@ -261,9 +265,9 @@ export function LiveBroadcast({
                   .map((l, k) => (
                     <li key={k} className="flex gap-2">
                       <span className={`shrink-0 px-1 font-display font-bold italic ${TAG_STYLE[l.tag!].cls}`}>{TAG_STYLE[l.tag!].label.split(" ")[0]}</span>
-                      <span className="text-paper">
+                      <button type="button" className="text-left text-paper underline decoration-white/20 hover:text-white" onClick={() => { setHalftime(false); setI(log.indexOf(l)); setPlaying(false); }}>
                         {l.q > 4 ? "OT" : `Q${l.q}`} {teamAbbr(l.poss)}: {l.text}
-                      </span>
+                      </button>
                     </li>
                   ))}
               </ul>

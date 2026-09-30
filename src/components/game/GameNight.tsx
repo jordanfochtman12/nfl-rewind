@@ -1,3 +1,4 @@
+import { FilmReport } from "./FilmReport";
 import { useMemo, useState } from "react";
 import {
   clubInk,
@@ -464,6 +465,8 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
           </div>
         ) : null}
       </dl>
+
+      <FilmReport game={game} log={game.log ?? []} />
 
       {game.highlights && game.highlights.length > 0 && (
         <section>
