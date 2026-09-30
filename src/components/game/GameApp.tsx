@@ -106,35 +106,24 @@ function TitleScreen() {
   const grade = save ? gradeDynasty(save) : null;
   const bytes = save ? saveByteLength(save) : 0;
   return (
-    <main className="relative isolate min-h-dvh overflow-hidden">
-      <FilmStill still="title" veil="left" />
-      <div className="relative mx-auto flex min-h-dvh max-w-5xl flex-col justify-center gap-7 px-5 py-12">
-      <NetworkBug className="self-start" />
-      <p className="font-display text-xs tracking-[0.4em] text-brass">Start in 1966 · Super Bowl I era</p>
-      <h1 className="relative -ml-1 select-none leading-[0.8]">
-        <span className="block bg-gradient-to-b from-white via-[#eef1f6] to-[#8e98aa] bg-clip-text pr-4 text-[5.5rem] font-black text-transparent drop-shadow-[0_6px_0_#000] sm:text-[9rem]">
-          NFL
-        </span>
-        <span className="relative -mt-1 inline-block pr-6">
-          <span className="absolute inset-y-[12%] -left-3 right-0 bg-gradient-to-b from-[#ff4a62] via-red to-red-deep shadow-[0_10px_40px_-6px_#e8102e] [transform:skewX(-14deg)]" aria-hidden />
-          <span className="relative block px-3 text-[5.5rem] font-black text-white drop-shadow-[0_3px_0_#0008] sm:text-[9rem]">Rewind</span>
-        </span>
-      </h1>
-      <div className="flex max-w-xl items-center gap-3 font-display text-sm font-bold uppercase italic tracking-wider">
-        <span className="bg-brass px-2 py-0.5 text-[#140f00]">1966</span>
-        <span className="h-[3px] flex-1 bg-gradient-to-r from-brass via-white/60 to-red" aria-hidden />
-        <span className="bg-white px-2 py-0.5 text-black">2027</span>
-      </div>
-      <p className="max-w-lg text-lg text-paper">
-        You are the GM. Draft the real classes, hire the staff, survive Sunday. Rewrite football history from Super Bowl I through 2027.
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+    <main className="next-title">
+      <div className="next-title-scene" aria-hidden />
+      <header className="next-title-header"><NetworkBug /><span className="next-edition"><span className="next-edition-label">FRANCHISE FOOTBALL</span><i /> 1966—2027</span></header>
+      <div className="next-title-layout">
+      <div className="next-title-copy">
+      <p className="next-kicker"><span /> THE FRANCHISE IS YOURS</p>
+      <h1 className="next-wordmark"><span>NFL</span><strong>REWIND<span className="next-wordmark-dot">.</span></strong></h1>
+      <p className="next-title-tagline">History made them legends.<br /><strong>Your decisions change everything.</strong></p>
+      <p className="next-title-description">Take the front office. Draft the real classes. Build a dynasty from the first Super Bowl to a new era of football.</p>
+      <div className="next-title-actions">
         <Btn kind="primary" onClick={() => setScreen("select")}>
-          New dynasty
+          New dynasty <span aria-hidden>↗</span>
         </Btn>
         <Btn onClick={continueGame} disabled={!save}>
           Continue
         </Btn>
+      </div>
+      <div className="next-file-actions">
         <Btn onClick={download} disabled={!save}>
           Export dynasty JSON
         </Btn>
@@ -162,7 +151,13 @@ function TitleScreen() {
           {bytes ? ` · ${formatBytes(bytes)}` : ""}
         </p>
       )}
-      <div className="title-pillars"><div><strong>Build the franchise</strong><span>Draft real classes. Develop your core.</span></div><div><strong>Own the decisions</strong><span>Manage the roster. Shape the game plan.</span></div><div><strong>Change the history</strong><span>Six decades. One lasting legacy.</span></div></div>
+      </div>
+      <aside className="next-dynasty-card" aria-label="Your dynasty">
+        <div className="next-card-label"><span>{save ? 'YOUR FRANCHISE' : 'THE OPENING CHAPTER'}</span><span className="next-status-dot" /></div>
+        {save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
+      </aside>
+      </div>
+      <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2027</span></div>
       </div>
     </main>
   );
@@ -364,7 +359,7 @@ function Office() {
   const house = venueOf(save.year, save.userTeamId);
   return (
     <div className="space-y-6">
-      <section className="sheen relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]">
+      <section className="franchise-hero sheen relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]">
         <FilmStill still="office" veil="left" />
         <div
           className="pointer-events-none absolute -right-10 top-0 h-full w-2/5 opacity-40 [clip-path:polygon(30%_0,100%_0,100%_100%,0_100%)]"
@@ -1658,9 +1653,9 @@ function PlayShell() {
   const showFa = save.phase === "freeAgency" && !event;
   const showDeadline = save.phase === "deadline" && !event;
   return (
-    <ClubDesk id={save.userTeamId} year={save.year} className="min-h-dvh bg-bg">
+    <ClubDesk id={save.userTeamId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
       <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
-      <header className="sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
+      <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
@@ -1679,7 +1674,8 @@ function PlayShell() {
         <TabStrip tabs={TABS} active={tab} onPick={setTab} />
       </header>
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
-      <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+      <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+        <div className="next-section-context"><span>FRANCHISE / {TABS.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
         {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
         {event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}

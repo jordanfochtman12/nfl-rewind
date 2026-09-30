@@ -6,16 +6,9 @@ import { useGameStore } from "@/lib/game-store";
 /** The network bug: our own wordmark, top-left of every screen. */
 export function NetworkBug({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex shrink-0 select-none items-stretch font-display text-[13px] font-extrabold italic leading-none ${className}`} aria-label="NFL Rewind">
-      <span className="bx-primary flex items-center px-2 py-1" style={{ transform: "skewX(-12deg)" }}>
-        <span style={{ transform: "skewX(12deg)" }}>NFL</span>
-      </span>
-      <span
-        className="flex items-center bg-gradient-to-b from-white to-[#c8d0dc] px-2 py-1 text-[#07090f]"
-        style={{ transform: "skewX(-12deg)" }}
-      >
-        <span style={{ transform: "skewX(12deg)" }}>REWIND</span>
-      </span>
+    <span className={`next-network-bug ${className}`} aria-label="NFL Rewind">
+      <img src="/brand/rewind-emblem.svg" width="42" height="42" alt="" />
+      <span><b>NFL <em>REWIND</em></b><small>FRANCHISE FOOTBALL</small></span>
     </span>
   );
 }
@@ -78,7 +71,7 @@ export function TabStrip<T extends string>({
   onPick: (id: T) => void;
 }) {
   return (
-      <nav className="relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
+      <nav className="next-navigation relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
         <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Franchise</span><select aria-label="Franchise section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
         <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex">
         {tabs.map((t) => {
