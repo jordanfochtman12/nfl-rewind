@@ -101,7 +101,7 @@ export function LiveBroadcast({
   const doneRef = useRef(false);
   const [halftime, setHalftime] = useState(false);
   const halfSeen = useRef(startAt > 0);
-  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", log[i] ? boothLine(log[i]!, i) : "", i);
+  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", log[i] ? boothLine(log[i]!, i) : "", i, game.year);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 

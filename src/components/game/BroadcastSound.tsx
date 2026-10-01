@@ -1,3 +1,4 @@
+import { footballSpeech } from "@/lib/game/footballSpeech";
 import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
 
@@ -11,7 +12,7 @@ function chooseVoice(voices: SpeechSynthesisVoice[], name: string) {
   );
 }
 
-export function useBroadcastSound(active: boolean, cue: string, text: string, index: number) {
+export function useBroadcastSound(active: boolean, cue: string, text: string, index: number, year: number) {
   const [enabled, setEnabled] = useState(false);
   const [music, setMusic] = useState(false);
   const [volume, setVolume] = useState(0.3);
@@ -24,7 +25,7 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
   const speaking = (line: string) => {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(line);
+    const speech = new SpeechSynthesisUtterance(footballSpeech(line, year));
     const voice = chooseVoice(voices, voiceName);
     if (voice) speech.voice = voice;
     speech.rate = cue === "td" ? 1.02 : 0.96;
@@ -174,7 +175,7 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
   };
 }
 
-export function StudioRecapAudio({ text }: { text: string }) {
+export function StudioRecapAudio({ text, year }: { text: string; year: number }) {
   const [playing, setPlaying] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
@@ -206,7 +207,7 @@ export function StudioRecapAudio({ text }: { text: string }) {
             setPlaying(false);
             return;
           }
-          const speech = new SpeechSynthesisUtterance(text);
+          const speech = new SpeechSynthesisUtterance(footballSpeech(text, year));
           const voice = chooseVoice(window.speechSynthesis.getVoices(), "");
           if (voice) speech.voice = voice;
           speech.rate = .96;

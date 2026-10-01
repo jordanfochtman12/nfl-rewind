@@ -642,7 +642,7 @@ function WeeklyShow() {
           </div>
         )}
 
-        {show.episode && <StudioEpisode key={show.episode.id} episode={show.episode} />}
+        {show.episode && <StudioEpisode key={show.episode.id} episode={show.episode} year={show.year} />}
         <details className="pt-reference" open={!show.episode}>
           <summary>Explore the complete scorebook, awards and league reports</summary>
           <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">

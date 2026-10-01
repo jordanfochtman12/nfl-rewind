@@ -1,3 +1,4 @@
+import { footballSpeech } from "@/lib/game/footballSpeech";
 import { useEffect, useRef, useState } from "react";
 import type { PrimetimeShow } from "@/lib/game";
 import { Logo } from "./chrome";
@@ -6,7 +7,7 @@ import { stadiumAudio } from "./stadiumAudio";
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
 /** A directed, chapter-by-chapter broadcast. The frozen script is also the accessible transcript. */
-export function StudioEpisode({ episode }: { episode: Episode }) {
+export function StudioEpisode({ episode, year }: { episode: Episode; year: number }) {
   const [index, setIndex] = useState(0),
     [line, setLine] = useState(0),
     [playing, setPlaying] = useState(false);
@@ -59,7 +60,7 @@ export function StudioEpisode({ episode }: { episode: Episode }) {
       if (active) advance();
     };
     if (narration && "speechSynthesis" in window) {
-      const speech = new SpeechSynthesisUtterance(current.text);
+      const speech = new SpeechSynthesisUtterance(footballSpeech(current.text, year));
       const preferred =
         voices.find((v) => v.name === voice) ??
         voices.find((v) => /Natural|Online|Google/i.test(v.name)) ??
@@ -88,7 +89,7 @@ export function StudioEpisode({ episode }: { episode: Episode }) {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [playing, index, line, narration, voice, voices]);
+  }, [playing, index, line, narration, voice, voices, year]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);
