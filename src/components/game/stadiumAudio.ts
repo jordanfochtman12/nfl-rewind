@@ -1,6 +1,7 @@
 import { NETWORK_BPM, scoreStep } from "./studioScore";
+import { DRAFT_BPM, draftScoreStep } from "./draftScore";
 /** Original "Sunday Lights / Network Mix": layered brass, strings, bass and breakbeat percussion. */
-export function stadiumAudio() {
+export function stadiumAudio(theme: "network" | "draft" = "network") {
   const context = new AudioContext();
   const crowd = context.createGain(),
     music = context.createGain();
@@ -124,7 +125,7 @@ export function stadiumAudio() {
       gain.disconnect();
     };
   };
-  const stepSeconds = 60 / NETWORK_BPM / 2;
+  const stepSeconds = 60 / (theme === "draft" ? DRAFT_BPM : NETWORK_BPM) / 2;
   const timer = window.setInterval(() => {
     if (context.state !== "running") return;
     const duck = "speechSynthesis" in window && window.speechSynthesis.speaking ? 0.28 : 1;
@@ -135,7 +136,7 @@ export function stadiumAudio() {
     }
     if (next < context.currentTime) next = context.currentTime + 0.03;
     while (next < context.currentTime + 0.15) {
-      const s = scoreStep(beat);
+      const s = theme === "draft" ? draftScoreStep(beat) : scoreStep(beat);
       cymbal(next, s.crash);
       if (s.beat === 0 || s.beat === 4 || s.beat === 7) drum(next, false);
       if (s.beat === 2 || s.beat === 6 || s.fill) drum(next, true);

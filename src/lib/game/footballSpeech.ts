@@ -33,6 +33,8 @@ const positions: Record<string, string> = {
   KR: "kick returner",
   PR: "punt returner",
 };
+export const footballPosition = (pos: string): string => positions[pos] ?? pos;
+
 const counts: Record<string, [string, string]> = {
   yds: ["yard", "yards"],
   yd: ["yard", "yards"],

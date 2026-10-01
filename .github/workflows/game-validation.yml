@@ -16,6 +16,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: node --experimental-strip-types --test scripts/football-speech.test.mjs
+      - run: node --experimental-strip-types --test scripts/draft-announcer.test.mjs
       - run: node --experimental-strip-types --test scripts/franchise-briefing.test.mjs
       - run: node --experimental-strip-types --test scripts/sunday-broadcast.test.mjs
       - run: node --experimental-strip-types --test scripts/primetime-studio.test.mjs

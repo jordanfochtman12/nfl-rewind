@@ -1,3 +1,4 @@
+import { DraftAnnouncerProvider } from "./DraftAnnouncer";
 import { useMemo, useRef, useState } from "react";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
@@ -1672,6 +1673,7 @@ function PlayShell() {
   const showFa = save.phase === "freeAgency" && !event;
   const showDeadline = save.phase === "deadline" && !event;
   return (
+    <DraftAnnouncerProvider>
     <ClubDesk id={save.userTeamId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
       <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
       <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
@@ -1717,6 +1719,7 @@ function PlayShell() {
       </main>
       {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
+    </DraftAnnouncerProvider>
   );
 }
 

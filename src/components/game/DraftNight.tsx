@@ -1,3 +1,4 @@
+import { useDraftAnnouncer } from "./DraftAnnouncer";
 import { useEffect, useMemo, useState } from "react";
 import {
   ARCH_LABEL,
@@ -91,6 +92,7 @@ function measLine(p: Player): string {
 const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 
 export function DraftNight() {
+  const announcer = useDraftAnnouncer();
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
   const setTab = useGameStore((s) => s.setTab);
@@ -151,7 +153,7 @@ export function DraftNight() {
     : "";
 
   useEffect(() => {
-    if (!cpuUp || paused) return;
+    if (!cpuUp || paused || announcer.busy || announcer.hidden) return;
     setHold(8);
     const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
     const fire = setTimeout(() => step({}), 1800);
@@ -159,7 +161,7 @@ export function DraftNight() {
       clearInterval(tick);
       clearTimeout(fire);
     };
-  }, [cpuUp, paused, save.draftPickIndex, step]);
+  }, [cpuUp, paused, save.draftPickIndex, step, announcer.busy, announcer.hidden]);
 
   useEffect(() => {
     if (!isUser) return;
@@ -178,6 +180,7 @@ export function DraftNight() {
 
   return (
     <div className="space-y-4">
+      {announcer.controls}
       <section className="hq-panel p-4" aria-label="Prospect comparison">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades reflect scouting uncertainty.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
         {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{visibleOvr(p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Scout grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
