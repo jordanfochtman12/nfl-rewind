@@ -30,7 +30,8 @@ export type Tab =
   | "schedule"
   | "stats"
   | "draft"
-  | "history";
+  | "history"
+  | "league";
 
 interface GameStore {
   save: DynastySave | null;
@@ -154,7 +155,7 @@ export const useGameStore = create<GameStore>()(
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
       closeProfile: () => set({ profileId: null }),
-      openTeam: (viewTeamId) => set({ viewTeamId }),
+      openTeam: (viewTeamId) => set({ viewTeamId, profileId: null }),
       closeTeam: () => set({ viewTeamId: null }),
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
