@@ -11,6 +11,7 @@ import type {
   TeamId,
   SeasonStats,
   CrunchSituation,
+  LiveOrder,
 } from "./types.ts";
 import {
   clockStopFirstDown,
@@ -136,8 +137,8 @@ export interface TeamUnits {
   };
 }
 
-export function teamUnits(save: DynastySave, teamId: TeamId): TeamUnits {
-  const qbs = starters(save, teamId, "QB", 2);
+export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlySet<string>): TeamUnits {
+  const qbs = starters(save, teamId, "QB", 2, benched);
   const qb = qbs[0];
   const qb2 = qbs[1];
   const rbs = starters(save, teamId, "RB", 2);
@@ -986,7 +987,17 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const otRule = otRules(year, game.phase);
   const units: Record<string, TeamUnits> = { [homeId]: homeU, [awayId]: awayU };
   const boxOf = (id: TeamId) => (id === homeId ? homeBox : awayBox);
+  // The owner's sideline orders (live broadcast): a new plan or a benched quarterback, from a
+  // given snap on. Everything before that snap plays out exactly as it did.
+  const orders = (save.liveOrders ?? []).filter((o) => o.gameId === game.id).sort((a, b) => a.at - b.at);
+  let orderAt = 0;
+  let ownerPlan: Partial<Gameplan> = {};
+  const benched = new Set<string>();
   const planNow = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
+    const auto = planNowAuto(id, trail, qq, ck);
+    return id === save.userTeamId ? { ...auto, ...ownerPlan } : auto;
+  };
+  const planNowAuto = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
     const base = planFor(save, id);
     if (qq >= 4 && trail >= 8 && ck <= 300) return { ...base, attack: "pass", fourth: "aggressive", tempo: "hurry" };
     if (qq >= 4 && trail <= -8 && ck <= 240) return { ...base, attack: "run", fourth: "conservative", tempo: "chew" };
@@ -1154,7 +1165,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
 
   const rebuild = (id: TeamId) => {
-    const next = teamUnits(save, id);
+    const next = teamUnits(save, id, id === save.userTeamId ? benched : undefined);
     if (id === homeId && !neutral) {
       next.offPass += homeField;
       next.offRun += 1.6;
@@ -1363,6 +1374,37 @@ export function simGame(save: DynastySave, game: GameResult): void {
   homeU.offPass += homeField;
   homeU.offRun += neutral ? 0 : 1.6;
 
+  const applyOrder = (o: LiveOrder) => {
+    const u = save.userTeamId;
+    let text = "";
+    if (o.kind === "plan" && o.plan) {
+      ownerPlan = { ...ownerPlan, ...o.plan };
+      const bits = [
+        o.plan.attack && (o.plan.attack === "pass" ? "throw it" : o.plan.attack === "run" ? "run the ball" : "stay balanced"),
+        o.plan.tempo && (o.plan.tempo === "hurry" ? "go hurry-up" : o.plan.tempo === "chew" ? "milk the clock" : "normal tempo"),
+        o.plan.fourth && (o.plan.fourth === "aggressive" ? "go for it on fourth down" : o.plan.fourth === "conservative" ? "punt and play field position" : "take the points"),
+        o.plan.blitz && (o.plan.blitz === "heavy" ? "send the house" : o.plan.blitz === "rare" ? "sit back in coverage" : "normal pressure"),
+      ].filter(Boolean);
+      text = `Word from the owner's box: ${bits.join(", ")}.`;
+    } else if (o.kind === "benchQb") {
+      const qb = live(u).qb;
+      if (!qb) return;
+      benched.add(qb.id);
+      rebuild(u);
+      const next = live(u).qb;
+      if (!next || next.id === qb.id) {
+        benched.delete(qb.id);
+        rebuild(u);
+        return;
+      }
+      text = `The owner has seen enough. ${playerName(qb)} is out; ${playerName(next)} takes over at quarterback.`;
+    }
+    if (text) {
+      log.push({ q, clock, poss, down, togo: Math.max(1, Math.round(togo)), spot: Math.round(spot), text, hs: homeScore, as: awayScore, tag: "call" });
+      note(text);
+    }
+  };
+
   // Each drive's `after` score is stamped at the next snap, once the try and kickoff are done.
   let stamped = 0;
   const stampDrives = () => {
@@ -1372,6 +1414,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     stampDrives();
     if (logOn) {
       flushPlay();
+      while (orderAt < orders.length && orders[orderAt]!.at <= log.length) applyOrder(orders[orderAt++]!);
       cur = { q, clock, poss, down, togo, spot, bumps: [], notes: [] };
     }
     plays += 1;

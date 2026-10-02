@@ -205,6 +205,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     liveOn: r.liveOn,
     liveResume: r.liveResume,
     calls: r.calls,
+    liveOrders: r.liveOrders,
     progression: r.progression,
     faBids: r.faBids,
     powerRanks: r.powerRanks,
@@ -308,6 +309,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     r.kind = r.kind ?? (r.coachId ? "coach" : "player");
   }
   setHomeOverride(out.owner?.home);
+  retireDraftTwins(out);
   backfillHonors(out);
   // Older saves numbered every era off one chart (1990s ends in the 80s, no 90s for the front
   // seven); bring rosters in line with the year's numbering rules.
@@ -317,6 +319,40 @@ export function hydrateSave(raw: unknown): DynastySave {
   } else normalizeJerseys(out);
   restoreVeteranNumbers(out);
   return out;
+}
+
+/**
+ * Older draft data listed a few prospects twice under different name splits ("Too Tall" Jones
+ * and "Too" Tall Jones), so saves from before the fix carry two copies of one real player.
+ * Their careers stay in the books; the lesser active copy retires quietly.
+ */
+function retireDraftTwins(save: DynastySave): void {
+  const key = (p: Player) => `${p.firstName} ${p.lastName}`.toLowerCase().replace(/[.'’]/g, "").replace(/\s+/g, " ").trim();
+  const seen = new Map<string, Player>();
+  for (const p of Object.values(save.players)) {
+    if (!p.historical || p.draftYear == null) continue;
+    const k = `${key(p)}|${p.pos}|${p.draftYear}`;
+    const twin = seen.get(k);
+    if (!twin) {
+      seen.set(k, p);
+      continue;
+    }
+    const active = (x: Player) => !settled(x) && x.teamId !== "fa";
+    // Keep the one on a roster, then the better one.
+    const [keep, drop] =
+      active(twin) !== active(p) ? (active(twin) ? [twin, p] : [p, twin]) : twin.ovr >= p.ovr ? [twin, p] : [p, twin];
+    seen.set(k, keep);
+    drop.twinOf = keep.id;
+    if (settled(drop)) continue;
+    const from = drop.teamId;
+    if (from !== "fa" && save.teams[from as TeamId]) {
+      const t = save.teams[from as TeamId];
+      t.roster = t.roster.filter((id) => id !== drop.id);
+      if (t.depth) for (const pos of Object.keys(t.depth) as (keyof typeof t.depth)[]) t.depth[pos] = (t.depth[pos] ?? []).filter((id) => id !== drop.id);
+    }
+    drop.teamId = "retired";
+    drop.retiredYear = drop.retiredYear ?? save.year;
+  }
 }
 
 function outYear(r: Partial<DynastySave>, fallback: number): number {

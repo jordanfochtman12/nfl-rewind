@@ -2,6 +2,7 @@ export { SAVE_VERSION, STARTING_YEAR, END_YEAR, ROSTER_TARGET, TEAM_IDS, ACTIVE_
 export type {
   AdvanceOpts,
   TradeCall,
+  LiveOrder,
   FaBid,
   Rumor,
   AwardsResult,
@@ -214,6 +215,7 @@ export {
   hotFreeAgents,
   type Leaning,
 } from "./market.ts";
+export { findGame, ownerGameJustPlayed, ordersUpTo, withOrder } from "./liveCalls.ts";
 export { deadlineWeek, openDeadline, closeDeadline, acceptDeadlineOffer, declineDeadlineOffer, offerLine } from "./deadline.ts";
 export {
   TICKET_TIERS,

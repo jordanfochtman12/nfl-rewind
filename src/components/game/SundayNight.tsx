@@ -24,11 +24,19 @@ export function SundayNight() {
   const canLive = !!mine?.log?.length && save.liveOn !== false && !wasWatched(mine.id);
   const [live, setLive] = useState(canLive);
   const desk = useGameStore((s) => s.desk);
+  const rewindId = useGameStore((s) => s.rewind?.gameId);
   if (live && mine?.log) {
     const resume = save.liveResume?.gameId === mine.id ? save.liveResume.index : 0;
     return (
       <div className="space-y-3">
-        <LiveBroadcast game={mine} log={mine.log} startAt={resume} onDone={() => setLive(false)} />
+        <LiveBroadcast
+          key={`${mine.id}-${(save.liveOrders ?? []).filter((o) => o.gameId === mine.id).length}`}
+          game={mine}
+          log={mine.log}
+          startAt={resume}
+          onDone={() => setLive(false)}
+          canCall={rewindId === mine.id}
+        />
         <button
           type="button"
           className="text-xs text-subtle underline"

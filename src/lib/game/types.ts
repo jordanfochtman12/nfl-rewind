@@ -266,6 +266,8 @@ export interface Player {
   playoffStats?: Record<number, SeasonStats>;
   /** Pro Bowls, All-Pros, awards and rings, by year. */
   honors?: PlayerHonors;
+  /** A duplicate record of another player from older draft data; kept for the books only. */
+  twinOf?: string;
 }
 
 export type AwardKey = "MVP" | "OPOY" | "DPOY" | "OROY" | "DROY" | "CPOY" | "SBMVP";
@@ -517,6 +519,15 @@ export interface PlayLog {
   hs: number;
   as: number;
   tag?: "td" | "to" | "big" | "fg" | "call" | "safety";
+}
+
+/** A call the owner sends down to the sideline during his live game, from play `at` on. */
+export interface LiveOrder {
+  gameId: string;
+  /** Play-by-play index the order takes effect at. */
+  at: number;
+  kind: "plan" | "benchQb";
+  plan?: Partial<Gameplan>;
 }
 
 export interface CrunchSituation {
@@ -900,9 +911,11 @@ export interface DynastySave {
   /** Dynasty trophy case. */
   achievements?: Achievement[];
   /** A crunch-time decision the owner owes before this week's game can finish. */
-  crunch?: { gameId: string; choices: string[]; situation?: CrunchSituation };
+  crunch?: { gameId: string; choices: string[]; situation?: CrunchSituation; /** Play index of each answered call. */ at?: number[] };
   /** Owner setting: pause for crunch-time calls in close games (default on). */
   crunchOn?: boolean;
+  /** The owner's sideline orders for this week's game (cleared when the week is done). */
+  liveOrders?: LiveOrder[];
   /** Where the live broadcast picks back up after a crunch-time call. */
   liveResume?: { gameId: string; index: number };
   /** Owner preference: watch his games play out live. */

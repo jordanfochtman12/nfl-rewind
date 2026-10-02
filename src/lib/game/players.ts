@@ -250,10 +250,10 @@ export function activeRosterOf(save: DynastySave, teamId: TeamId): Player[] {
 }
 
 /** Depth-aware starters. Injured skip. Empty depth falls back to ovr. */
-export function starters(save: DynastySave, teamId: TeamId, pos: Pos, n = 1): Player[] {
+export function starters(save: DynastySave, teamId: TeamId, pos: Pos, n = 1, benched?: ReadonlySet<string>): Player[] {
   if (n <= 0) return [];
   const team = save.teams[teamId];
-  const roster = rosterOf(save, teamId).filter((p) => p.pos === pos);
+  const roster = rosterOf(save, teamId).filter((p) => p.pos === pos && !benched?.has(p.id));
   const healthy = roster.filter((p) => p.injuredWeeks <= 0 && !p.onIR);
   const order = team?.depth?.[pos] ?? [];
   const seen = new Set<string>();

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { clubInk, teamAbbr, type GameResult, type PlayLog, type TeamId } from "@/lib/game";
+import { clubInk, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 
@@ -75,6 +75,7 @@ export function LiveBroadcast({
   onReachEnd,
   compact = false,
   final = true,
+  canCall = false,
 }: {
   game: GameResult;
   log: PlayLog[];
@@ -86,6 +87,8 @@ export function LiveBroadcast({
   compact?: boolean;
   /** False when the log stops mid-game (a crunch-time call); no FINAL at the end. */
   final?: boolean;
+  /** The owner can send calls down from his box (the game replays from that snap). */
+  canCall?: boolean;
 }) {
   const save = useGameStore((s) => s.save)!;
   const us = save.userTeamId;
@@ -223,6 +226,14 @@ export function LiveBroadcast({
         )}
       </div>
 
+      {canCall && !ended && !compact && (
+        <OwnersBoxCalls
+          gameId={game.id}
+          at={i + 1}
+          onCall={() => setPlaying(true)}
+        />
+      )}
+
       <div className={`grid gap-0 ${compact ? "" : "md:grid-cols-[1.4fr_1fr]"}`}>
         {/* play feed */}
         <ol className="space-y-1.5 p-3" aria-live="polite">
@@ -280,5 +291,95 @@ export function LiveBroadcast({
         </div>
       )}
     </section>
+  );
+}
+
+type Dial<K extends keyof Gameplan> = { key: K; label: string; opts: { v: Gameplan[K]; label: string }[] };
+const DIALS: [Dial<"attack">, Dial<"tempo">, Dial<"fourth">, Dial<"blitz">] = [
+  { key: "attack", label: "Offense", opts: [{ v: "pass", label: "Throw it" }, { v: "balanced", label: "Balanced" }, { v: "run", label: "Run it" }] },
+  { key: "tempo", label: "Clock", opts: [{ v: "hurry", label: "Hurry-up" }, { v: "standard", label: "Normal" }, { v: "chew", label: "Milk it" }] },
+  { key: "fourth", label: "4th down", opts: [{ v: "aggressive", label: "Go for it" }, { v: "normal", label: "Normal" }, { v: "conservative", label: "Play it safe" }] },
+  { key: "blitz", label: "Defense", opts: [{ v: "heavy", label: "Send the house" }, { v: "normal", label: "Normal" }, { v: "rare", label: "Sit in coverage" }] },
+];
+
+// Stays open across the replay that follows each call.
+let boxOpen = false;
+
+/** The owner's box: change the plan or pull the quarterback from the next snap on. */
+function OwnersBoxCalls({ gameId, at, onCall }: { gameId: string; at: number; onCall: () => void }) {
+  const save = useGameStore((s) => s.save)!;
+  const liveOrder = useGameStore((s) => s.liveOrder);
+  const [open, setOpenState] = useState(boxOpen);
+  const setOpen = (f: (v: boolean) => boolean) => setOpenState((v) => (boxOpen = f(v)));
+  const [busy, setBusy] = useState(false);
+  const now = ordersUpTo(save, gameId, at);
+  const send = (o: Omit<LiveOrder, "gameId" | "at">) => {
+    setBusy(true);
+    // Let "Calling down..." paint before the replay runs.
+    setTimeout(() => {
+      liveOrder({ ...o, at });
+      setBusy(false);
+      onCall();
+    }, 20);
+  };
+  return (
+    <div className="border-b border-white/10 bg-black/40 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className={`bx-chip min-h-8 px-3 text-[11px] ${open ? "bx-chip-on" : ""}`}
+          aria-expanded={open}
+        >
+          Owner&apos;s box {open ? "▴" : "▾"}
+        </button>
+        {busy ? (
+          <span className="text-xs text-brass">Calling down to the sideline…</span>
+        ) : (
+          Object.keys(now.plan).length > 0 && (
+            <span className="text-xs text-muted">
+              Your orders:{" "}
+              {DIALS.filter((d) => now.plan[d.key])
+                .map((d) => d.opts.find((o) => o.v === now.plan[d.key])?.label)
+                .join(" · ")}
+            </span>
+          )
+        )}
+      </div>
+      {open && (
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          {DIALS.map((d) => (
+            <div key={d.key} className="flex flex-wrap items-center gap-1.5">
+              <span className="w-16 font-display text-[11px] font-bold uppercase italic tracking-wide text-subtle">{d.label}</span>
+              {d.opts.map((o) => {
+                const on = now.plan[d.key] === o.v;
+                return (
+                  <button
+                    key={o.v}
+                    type="button"
+                    disabled={busy || on}
+                    onClick={() => send({ kind: "plan", plan: { [d.key]: o.v } as Partial<Gameplan> })}
+                    className={`bx-chip min-h-8 px-2.5 text-[11px] ${on ? "bx-chip-on" : ""}`}
+                  >
+                    {o.label}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+          <div className="flex items-center gap-2 sm:col-span-2">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => send({ kind: "benchQb" })}
+              className="bx-chip min-h-8 px-3 text-[11px] text-brick"
+            >
+              Bench the quarterback
+            </button>
+            <span className="text-[11px] text-subtle">Calls take effect on the next snap. Everything before it stands.</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

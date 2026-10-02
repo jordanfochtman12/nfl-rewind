@@ -7,7 +7,10 @@ import {
   createNewGame,
   hydrateSave,
   openCalls,
+  ownerGameJustPlayed,
   simUntil,
+  withOrder,
+  type LiveOrder,
   type AdvanceOpts,
   type DynastySave,
   type TeamId,
@@ -50,6 +53,10 @@ interface GameStore {
   /** Batch sim to the trade deadline or the playoffs; stops early if a club calls. Returns why it stopped. */
   simTo: (target: "deadline" | "playoffs") => string;
   desk: (fn: (s: DynastySave) => string | void) => void;
+  /** The save just before the owner's latest game was played, for calls during its broadcast. */
+  rewind: { gameId: string; pre: DynastySave; opts?: AdvanceOpts } | null;
+  /** Send a call down from the owner's box at a play of the live broadcast; the game replays from there. */
+  liveOrder: (order: Omit<LiveOrder, "gameId">) => void;
   /** Answer the pending crunch-time call and play on. */
   crunchChoose: (optionId: string) => void;
   /** The owner's game currently on the live broadcast (hides spoilers elsewhere on screen). */
@@ -67,6 +74,18 @@ type Persisted = { save: DynastySave | null };
  * profile doesn't touch it), coalesces bursts of clicks into one write, and serializes once. A
  * late dynasty is tens of megabytes, so writing on every state change made late-game play crawl.
  */
+/** Move to the next save, remembering the pre-game save when this step played the owner's game. */
+function stepTo(
+  set: (p: Partial<GameStore>) => void,
+  prev: DynastySave,
+  next: DynastySave,
+  opts?: AdvanceOpts,
+): void {
+  const gameId = ownerGameJustPlayed(prev, next);
+  if (gameId) set({ save: next, rewind: { gameId, pre: prev, opts } });
+  else set({ save: next, rewind: null });
+}
+
 function persistStorage(): PersistStorage<Persisted> {
   let lastWritten: DynastySave | null | undefined;
   let pending: { name: string; value: StorageValue<Persisted> } | null = null;
@@ -138,7 +157,7 @@ export const useGameStore = create<GameStore>()(
       closeTeam: () => set({ viewTeamId: null }),
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
-        set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null });
+        set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
       },
       continueGame: () => {
         const { save } = get();
@@ -147,14 +166,17 @@ export const useGameStore = create<GameStore>()(
       step: (opts) => {
         const { save } = get();
         if (!save) return;
-        set({ save: advance(save, opts) });
+        stepTo(set, save, advance(save, opts), opts);
       },
       simWeek: () => {
         const { save } = get();
         if (!save) return;
         if (save.phase === "freeAgency") set({ save: advance(save, { closeFa: true }) });
         else if (save.phase === "complete") return;
-        else set({ save: advance(save, { auto: save.phase === "draft" }) });
+        else {
+          const opts = { auto: save.phase === "draft" };
+          stepTo(set, save, advance(save, opts), opts);
+        }
       },
       simTo: (target) => {
         const { save } = get();
@@ -168,7 +190,7 @@ export const useGameStore = create<GameStore>()(
           if (s.phase !== "regular" && s.phase !== "deadline") return (why = "playoffs"), true;
           return false;
         };
-        set({ save: simUntil(save, done) });
+        set({ save: simUntil(save, done), rewind: null });
         return why;
       },
       crunchChoose: (optionId) => {
@@ -179,15 +201,27 @@ export const useGameStore = create<GameStore>()(
         // The broadcast picks up where the owner watched it to when he made the call.
         s.liveResume = { gameId: sit.gameId, index: Math.max(0, (sit.log?.length ?? 1) - 1) };
         s.crunch!.choices.push(optionId);
+        s.crunch!.at = [...(s.crunch!.at ?? []), sit.log?.length ?? 0];
         s.crunch!.situation = undefined;
-        set({ save: advance(s) });
+        stepTo(set, s, advance(s));
+      },
+      rewind: null,
+      liveOrder: (o) => {
+        const r = get().rewind;
+        if (!r) return;
+        const base = withOrder(r.pre, { ...o, gameId: r.gameId });
+        const next = advance(base, r.opts);
+        next.liveResume = { gameId: r.gameId, index: Math.max(0, o.at - 1) };
+        // The rewind point stays the same pre-game save, now carrying the orders so far.
+        set({ save: next, rewind: { ...r, pre: base } });
       },
       desk: (fn) => {
         const { save } = get();
         if (!save) return;
         const s = cloneSave(save);
         const note = fn(s);
-        set({ save: s, lastDeskNote: note ?? null });
+        // A replay from before the game would undo this change, so live calls end here.
+        set({ save: s, lastDeskNote: note ?? null, rewind: null });
       },
       exportJson: () => {
         const { save } = get();
@@ -196,7 +230,7 @@ export const useGameStore = create<GameStore>()(
       },
       importJson: (raw) => {
         const save = hydrateSave(JSON.parse(raw));
-        set({ save, screen: "play" });
+        set({ save, screen: "play", rewind: null });
       },
       resign: () => set({ screen: "title", profileId: null, viewTeamId: null }),
     }),

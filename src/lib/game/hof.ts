@@ -73,7 +73,7 @@ export function coachHofScore(c: Coach): number {
 }
 
 export function playerHofEligible(save: DynastySave, p: Player): boolean {
-  if (p.hofYear) return false;
+  if (p.hofYear || p.twinOf) return false;
   if (!p.retiredYear) return false;
   if (save.year + 1 < p.retiredYear + HOF_WAIT_YEARS) return false;
   const score = playerHofScore(save, p);

@@ -13,10 +13,20 @@ export function SuperBowlNight() {
   // The owner's Super Bowl airs live the first time it's shown after kickoff.
   const seenAtKickoff = useRef<boolean | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const rewindId = useGameStore((s) => s.rewind?.gameId);
   if (g?.played && seenAtKickoff.current === null) seenAtKickoff.current = wasWatched(g.id);
   if (!g) return null;
   if (g.played && g.log?.length && save.liveOn !== false && !seenAtKickoff.current && !dismissed) {
-    return <LiveBroadcast game={g} log={g.log} startAt={save.liveResume?.gameId === g.id ? save.liveResume.index : 0} onDone={() => setDismissed(true)} />;
+    return (
+      <LiveBroadcast
+        key={`${g.id}-${(save.liveOrders ?? []).filter((o) => o.gameId === g.id).length}`}
+        game={g}
+        log={g.log}
+        startAt={save.liveResume?.gameId === g.id ? save.liveResume.index : 0}
+        onDone={() => setDismissed(true)}
+        canCall={rewindId === g.id}
+      />
+    );
   }
   const site = superBowlSite(save.year);
   const home = g.homeId as TeamId;

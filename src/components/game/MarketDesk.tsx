@@ -131,7 +131,7 @@ export function MarketDesk() {
             <thead className="text-xs tracking-wider text-muted">
               <tr>
                 <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-                {["Pos", "Grade", "Age", "College", ""].map((h) => (
+                {["", "Pos", "Grade", "Age", "College"].map((h) => (
                   <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                     {h}
                   </th>
@@ -148,12 +148,6 @@ export function MarketDesk() {
                       <KitChips player={p} compact />
                     </span>
                   </td>
-                  <td className="px-3 py-2">{p.pos}</td>
-                  <td className="px-3 py-2">
-                    <Grade p={p} />
-                  </td>
-                  <td className="tabular px-3 py-2">{p.age}</td>
-                  <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                   <td className="px-3 py-2">
                     <Btn
                       kind="primary"
@@ -168,6 +162,12 @@ export function MarketDesk() {
                       {bidEligible(save, p) ? "Make offer" : "Sign"}
                     </Btn>
                   </td>
+                  <td className="px-3 py-2">{p.pos}</td>
+                  <td className="px-3 py-2">
+                    <Grade p={p} />
+                  </td>
+                  <td className="tabular px-3 py-2">{p.age}</td>
+                  <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                 </tr>
               ))}
               {!fa.length && (
