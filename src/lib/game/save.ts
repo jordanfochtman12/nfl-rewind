@@ -208,6 +208,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     liveOn: r.liveOn,
     liveResume: r.liveResume,
     calls: r.calls,
+    talks: r.talks,
+    tagYear: r.tagYear,
     previewPicks: r.previewPicks,
     liveOrders: r.liveOrders,
     progression: r.progression,

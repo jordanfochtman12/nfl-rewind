@@ -67,6 +67,7 @@ import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
 import { PhoneLine } from "./MarketLife";
+import { TalksReminder } from "./ContractTalks";
 import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";

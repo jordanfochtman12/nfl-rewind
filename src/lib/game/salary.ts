@@ -1,5 +1,6 @@
 import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
+import { startTalks } from "./contracts.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
 export function starScale(year: number): number {
@@ -73,7 +74,7 @@ function resignInPlace(save: DynastySave, p: Player): void {
  * year) couldn't come close to absorbing the full post-1994 churn, and good veterans
  * - QBs especially, since a team only carries one - just fell into permanent
  * unsigned limbo while their old team backfilled with a fresh, weak generated player. */
-function expireContract(save: DynastySave, p: Player): void {
+export function expireContract(save: DynastySave, p: Player): void {
   if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") return;
   const from = p.teamId;
   if (save.year < 1994) {
@@ -121,7 +122,10 @@ export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): 
       if (p.teamId === "fa") continue;
       if (reprice) p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
       p.contractYears = (p.contractYears ?? 1) - 1;
-      if (p.contractYears <= 0) expireContract(save, p);
+      // The owner's own players come to the table; everyone else expires the usual way.
+      // (the back of the roster is left to the staff, so the table holds players who matter).
+      if (p.contractYears <= 0 && p.teamId === save.userTeamId && !save.cpuOnly && p.ovr >= 66) startTalks(save, p);
+      else if (p.contractYears <= 0) expireContract(save, p);
     }
   }
   for (const t of Object.values(save.teams)) {

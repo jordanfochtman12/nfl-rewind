@@ -767,6 +767,25 @@ export interface TradeOffer {
   status: "open" | "accepted" | "declined";
 }
 
+/** Talks with one of the owner's expiring players, open until free agency starts. */
+export interface Negotiation {
+  playerId: string;
+  year: number;
+  /** The agent's asking price per year, and how long he wants. */
+  ask: number;
+  askYears: number;
+  /** What the agent says about the number. */
+  pitch: string;
+  /** Rounds of talks left before he decides to test the market. */
+  patience: number;
+  status: "open" | "signed" | "walked" | "tagged" | "option" | "staff" | "gone";
+  rounds: { salary: number; years: number; reply: string; tone: "yes" | "counter" | "no" | "insult" }[];
+  counter?: { salary: number; years: number };
+  /** Private: the least he'll take, before years are weighed in. */
+  floor: number;
+  result?: string;
+}
+
 /** A CPU club on the phone mid-season with a trade. Good until the next week kicks off. */
 export interface TradeCall extends TradeOffer {
   year: number;
@@ -853,6 +872,10 @@ export interface Almanac {
 export interface DynastySave {
   /** Original records retained when repairing historical duplicate identities. */
   identityRepairs?: { keptId: string; originals: Player[] }[];
+  /** The owner's contract talks this offseason. */
+  talks?: Negotiation[];
+  /** The league year the owner last used the franchise tag. */
+  tagYear?: number;
   /** The desk's preseason calls, frozen at kickoff. */
   previewPicks?: PreviewPicks;
   /** The owner's offseason progression, shown at camp. */

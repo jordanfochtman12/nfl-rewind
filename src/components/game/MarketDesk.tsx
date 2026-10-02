@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ContractTalks } from "./ContractTalks";
 import {
   claimWaiver,
   cutPlayer,
@@ -73,6 +74,7 @@ export function MarketDesk() {
 
   return (
     <div className="space-y-8">
+      <ContractTalks />
       {save.phase === "freeAgency" && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brass/40 bg-surface p-4">
           <div>

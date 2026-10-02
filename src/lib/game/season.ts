@@ -48,9 +48,10 @@ import { buildPrimetime } from "./primetime.ts";
 import { recordTimeline } from "./timeline.ts";
 import { phoneRings, resolveAllBids } from "./market.ts";
 import { freezePreviewPicks } from "./seasonPreview.ts";
+import { closeTalks } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
-import { refreshContracts, teamPayroll } from "./salary.ts";
+import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
 import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
@@ -122,6 +123,8 @@ function ageAndRegen(save: DynastySave): void {
 }
 
 function runCpuFreeAgency(save: DynastySave): void {
+  // Free agency opening is the deadline for the owner's contract talks.
+  closeTalks(save, (p) => expireContract(save, p));
   cpuSignNeeds(save);
 }
 

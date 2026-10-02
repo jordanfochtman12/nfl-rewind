@@ -1,4 +1,5 @@
 import { useDraftAnnouncer } from "./DraftAnnouncer";
+import { TalksReminder } from "./ContractTalks";
 import { useEffect, useMemo, useState } from "react";
 import {
   ARCH_LABEL,
@@ -180,6 +181,7 @@ export function DraftNight() {
 
   return (
     <div className="space-y-4">
+      <TalksReminder />
       {announcer.controls}
       <section className="hq-panel p-4" aria-label="Prospect comparison">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades reflect scouting uncertainty.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
