@@ -13,12 +13,10 @@ import {
   formatMoney,
   hasSeasonWork,
   playerName,
-  SCOUT_KEYS,
   seasonLabel,
   seasonLog,
   teamColors,
   visibleOvr,
-  visibleRatings,
   scoutLetter,
   type Player,
   type SeasonStats,
@@ -31,21 +29,7 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { KitChips } from "./KitChips";
-
-function Meter({ label, value }: { label: string; value: number }) {
-  const tone = value >= 90 ? "bg-brass" : value >= 80 ? "bg-accent" : value >= 70 ? "bg-paper" : "bg-muted";
-  return (
-    <div>
-      <div className="mb-1 flex justify-between text-xs tracking-wider text-muted">
-        <span>{label}</span>
-        <span className="tabular text-fg">{value}</span>
-      </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-surface-2">
-        <div className={`h-full rounded-full ${tone}`} style={{ width: `${Math.min(100, Math.max(0, value))}%` }} />
-      </div>
-    </div>
-  );
-}
+import { ProfileExtras } from "./ProfileExtras";
 
 function archLabel(p: Player): string {
   const a = p.arch as keyof typeof ARCH_LABEL | undefined;
@@ -182,9 +166,6 @@ export function PlayerProfile() {
   const yearRow = p.stats[save.year];
   const career = careerOf(p);
   const log = seasonLog(p).filter(hasSeasonWork);
-  const keys = SCOUT_KEYS[p.pos] ?? SCOUT_KEYS.WR;
-  const shown = visibleRatings(p);
-  const shownOvr = visibleOvr(p);
   const club =
     p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof"
       ? p.teamId === "hof"
@@ -380,18 +361,7 @@ export function PlayerProfile() {
             </>
           )}
 
-          <section className="rounded-lg border border-brass/30 bg-surface p-4">
-            <p className="mb-3 text-xs tracking-[0.25em] text-brass">
-              {p.revealed
-                ? `Attributes — derived overall ${p.ovr}`
-                : `Scout attributes — grade ${shownOvr} · ${scoutLetter(shownOvr)}`}
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              {keys.map((k) => (
-                <Meter key={k.key} label={k.label} value={shown[k.key]} />
-              ))}
-            </div>
-          </section>
+          <ProfileExtras p={p} />
         </div>
       </article>
     </div>
