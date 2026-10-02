@@ -1,4 +1,6 @@
+import { DraftAnnouncerProvider } from "./DraftAnnouncer";
 import { useMemo, useRef, useState } from "react";
+import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   ACTIVE_1966,
   activateFromIR,
@@ -9,6 +11,8 @@ import {
   availableDecades,
   canReturnFromIR,
   careerRecordBook,
+  careerTotals,
+  playerName,
   cutPlayer,
   depthChart,
   deskFire,
@@ -92,6 +96,7 @@ import {
 function TitleScreen() {
   const { save, setScreen, continueGame, exportJson, importJson, hasHydrated } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [importError, setImportError] = useState('');
   const download = () => {
     const json = exportJson();
     if (!json || json === "null") return;
@@ -104,35 +109,24 @@ function TitleScreen() {
   const grade = save ? gradeDynasty(save) : null;
   const bytes = save ? saveByteLength(save) : 0;
   return (
-    <main className="relative isolate min-h-dvh overflow-hidden">
-      <FilmStill still="title" veil="left" />
-      <div className="relative mx-auto flex min-h-dvh max-w-5xl flex-col justify-center gap-7 px-5 py-12">
-      <NetworkBug className="self-start" />
-      <p className="font-display text-xs tracking-[0.4em] text-brass">Start in 1966 · Super Bowl I era</p>
-      <h1 className="relative -ml-1 select-none leading-[0.8]">
-        <span className="block bg-gradient-to-b from-white via-[#eef1f6] to-[#8e98aa] bg-clip-text pr-4 text-[5.5rem] font-black text-transparent drop-shadow-[0_6px_0_#000] sm:text-[9rem]">
-          NFL
-        </span>
-        <span className="relative -mt-1 inline-block pr-6">
-          <span className="absolute inset-y-[12%] -left-3 right-0 bg-gradient-to-b from-[#ff4a62] via-red to-red-deep shadow-[0_10px_40px_-6px_#e8102e] [transform:skewX(-14deg)]" aria-hidden />
-          <span className="relative block px-3 text-[5.5rem] font-black text-white drop-shadow-[0_3px_0_#0008] sm:text-[9rem]">Rewind</span>
-        </span>
-      </h1>
-      <div className="flex max-w-xl items-center gap-3 font-display text-sm font-bold uppercase italic tracking-wider">
-        <span className="bg-brass px-2 py-0.5 text-[#140f00]">1966</span>
-        <span className="h-[3px] flex-1 bg-gradient-to-r from-brass via-white/60 to-red" aria-hidden />
-        <span className="bg-white px-2 py-0.5 text-black">2027</span>
-      </div>
-      <p className="max-w-lg text-lg text-paper">
-        You are the GM. Draft the real classes, hire the staff, survive Sunday. Rewrite football history from Super Bowl I through 2027.
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+    <main className="next-title">
+      <div className="next-title-scene" aria-hidden />
+      <header className="next-title-header"><NetworkBug /><span className="next-edition"><span className="next-edition-label">FRANCHISE FOOTBALL</span><i /> 1966—2027</span></header>
+      <div className="next-title-layout">
+      <div className="next-title-copy">
+      <p className="next-kicker"><span /> THE FRANCHISE IS YOURS</p>
+      <h1 className="next-wordmark"><span>NFL</span><strong>REWIND<span className="next-wordmark-dot">.</span></strong></h1>
+      <p className="next-title-tagline">History made them legends.<br /><strong>Your decisions change everything.</strong></p>
+      <p className="next-title-description">Take the front office. Draft the real classes. Build a dynasty from the first Super Bowl to a new era of football.</p>
+      <div className="next-title-actions">
         <Btn kind="primary" onClick={() => setScreen("select")}>
-          New dynasty
+          New dynasty <span aria-hidden>↗</span>
         </Btn>
         <Btn onClick={continueGame} disabled={!save}>
           Continue
         </Btn>
+      </div>
+      <div className="next-file-actions">
         <Btn onClick={download} disabled={!save}>
           Export dynasty JSON
         </Btn>
@@ -145,10 +139,13 @@ function TitleScreen() {
           onChange={(e) => {
             const f = e.target.files?.[0];
             if (!f) return;
-            void f.text().then(importJson);
+            setImportError('');
+            void f.text().then(importJson).catch(() => setImportError('This file could not be imported. Choose a valid NFL Rewind dynasty JSON. Your current dynasty has not been replaced.'));
+            e.target.value = '';
           }}
         />
       </div>
+      {importError && <p role="alert" className="text-sm text-brick">{importError}</p>}
       {!hasHydrated && <p className="text-sm text-muted">Reading the file…</p>}
       {save && hasHydrated && (
         <p className="text-sm text-paper">
@@ -157,14 +154,22 @@ function TitleScreen() {
           {bytes ? ` · ${formatBytes(bytes)}` : ""}
         </p>
       )}
-      <p className="text-sm text-muted">AFL / NFL · named veterans · no player photographs</p>
+      </div>
+      <aside className="next-dynasty-card" aria-label="Your dynasty">
+        <div className="next-card-label"><span>{save ? 'YOUR FRANCHISE' : 'THE OPENING CHAPTER'}</span><span className="next-status-dot" /></div>
+        {save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
+      </aside>
+      </div>
+      <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2027</span></div>
       </div>
     </main>
   );
 }
 
 function TeamSelect() {
-  const { newGame, setScreen } = useGameStore();
+  const { newGame, setScreen, save } = useGameStore();
+  const [selectedTeam, setSelectedTeam] = useState<TeamId | null>(null);
+  const [replaceReady, setReplaceReady] = useState(false);
   const nfl = ACTIVE_1966.filter((id) => originalLeague(id) === "NFL");
   const afl = ACTIVE_1966.filter((id) => originalLeague(id) === "AFL");
   const Group = ({ title, ids }: { title: string; ids: readonly TeamId[] }) => (
@@ -175,8 +180,9 @@ function TeamSelect() {
           <button
             key={id}
             type="button"
-            onClick={() => newGame(id)}
-            className="group relative flex min-h-16 items-center gap-3 overflow-hidden border border-white/10 bg-gradient-to-b from-[#1b2130]/95 to-[#0a0d14]/95 pr-3 text-left shadow-[inset_0_1px_0_#ffffff1a] backdrop-blur-sm transition-all hover:border-red/70 hover:brightness-125"
+            onClick={() => { setSelectedTeam(id); setReplaceReady(false); }}
+            aria-pressed={selectedTeam === id}
+            className={`group relative flex min-h-16 items-center gap-3 overflow-hidden border bg-gradient-to-b from-[#1b2130]/95 to-[#0a0d14]/95 pr-3 text-left shadow-[inset_0_1px_0_#ffffff1a] backdrop-blur-sm transition-all hover:border-red/70 hover:brightness-125 ${selectedTeam === id ? 'border-brass ring-1 ring-brass' : 'border-white/10'}`}
           >
             <span
               className="flex h-full min-h-16 w-16 shrink-0 items-center justify-center [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]"
@@ -209,6 +215,10 @@ function TeamSelect() {
       </div>
       <Group title="National Football League" ids={nfl} />
       <Group title="American Football League" ids={afl} />
+      {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
+        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
+        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">Starting replaces your current {displayName(save.year, save.userTeamId)} dynasty. Return to the title and export it first if you want to keep it.</p>}
+      </section>}
       <p className="text-xs text-subtle">
         Club marks are original designs in each club&apos;s colors, not official NFL logos. Mascot icons by Lorc,
         Delapouite and contributors at{" "}
@@ -352,7 +362,7 @@ function Office() {
   const house = venueOf(save.year, save.userTeamId);
   return (
     <div className="space-y-6">
-      <section className="sheen relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]">
+      <section className="franchise-hero sheen relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]">
         <FilmStill still="office" veil="left" />
         <div
           className="pointer-events-none absolute -right-10 top-0 h-full w-2/5 opacity-40 [clip-path:polygon(30%_0,100%_0,100%_100%,0_100%)]"
@@ -392,7 +402,8 @@ function Office() {
         </div>
       </section>
       {finale && <GradeCard grade={grade} />}
-      <DeskReport />
+      <FranchiseHQ />
+      <details className="hq-panel p-4"><summary className="cursor-pointer font-semibold">Detailed roster needs</summary><div className="mt-3"><DeskReport /></div></details>
       <PhoneLine />
       {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}
@@ -755,12 +766,12 @@ function SundayCallSheet() {
       <span className="text-xs tracking-[0.2em] text-muted">{label}</span>
       <select
         className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
-        value={plan[field]}
+        value={plan[field] ?? "balanced"}
         onChange={(e) => desk((s) => void deskPlan(s, s.userTeamId, { [field]: e.target.value }))}
       >
         {options.map((x) => (
           <option key={x} value={x}>
-            {x}
+            {x === "maxProtect" ? "Max protect" : x}
           </option>
         ))}
       </select>
@@ -768,6 +779,7 @@ function SundayCallSheet() {
   );
   return (
     <section className="space-y-3">
+      <OpponentPreview />
       <h3 className="text-sm tracking-[0.2em] text-muted">Sunday call sheet</h3>
       <p className="text-sm text-muted">
         This is what the booth actually calls. Run/pass mix, fourth-down nerve, tempo, blitz frequency, and how you play inside the 20. The other club scripts off its scheme unless the scoreboard forces its hand.
@@ -778,6 +790,15 @@ function SundayCallSheet() {
         <Dial label="Tempo" field="tempo" options={["chew", "standard", "hurry"]} />
         <Dial label="Blitz" field="blitz" options={["rare", "normal", "heavy"]} />
         <Dial label="Red zone" field="redZone" options={["power", "balanced", "spread"]} />
+        <Dial label="Protection" field="protection" options={["balanced", "maxProtect"]} />
+        <Dial label="Defensive focus" field="defensiveFocus" options={["balanced", "run", "pass"]} />
+      </div>
+      <div className="hq-plan-notes" aria-live="polite">
+        <p><strong>Attack:</strong> {plan.attack === 'run' ? 'Lean on the ground game to control possession; long-yardage situations still demand passing.' : plan.attack === 'pass' ? 'Test coverage and create explosive gains; protection and turnovers become more important.' : 'Keep both options available and let game situation shape the call.'}</p>
+        <p><strong>Pressure:</strong> {plan.blitz === 'heavy' ? 'Send extra rushers more often, accepting greater exposure behind them.' : plan.blitz === 'rare' ? 'Keep more defenders in coverage and ask your front to generate pressure.' : 'Mix pressure with coverage instead of committing to one approach.'}</p>
+        <p><strong>Protection:</strong> {plan.protection === "maxProtect" ? "Keep extra help in protection: fewer sacks, but fewer receiving options reduce completion chances." : "Release the full route combination with standard pass protection."}</p>
+        <p><strong>Defensive focus:</strong> {plan.defensiveFocus === "run" ? "Commit resources to stopping the run and accept weaker pass coverage." : plan.defensiveFocus === "pass" ? "Prioritize pass coverage and concede more space on the ground." : "Defend both phases without selling out against either."}</p>
+        <p><strong>Clock:</strong> {plan.tempo === 'chew' ? 'Use more clock between plays. Fewer possessions can protect a lead but limit comeback chances.' : plan.tempo === 'hurry' ? 'Push the pace and preserve time. Extra possessions give both offenses more opportunities.' : 'Use a normal pace, with the scoreboard influencing late-game urgency.'}</p>
       </div>
     </section>
   );
@@ -1068,7 +1089,10 @@ function Stats() {
   const save = useGameStore((s) => s.save)!;
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
-  const [scope, setScope] = useState<"regular" | "playoffs" | "poCareer">("regular");
+  const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"all" | "active" | "retired">("all");
+  const careerScope = scope === "career" || scope === "dynastyCareer" || scope === "poCareer";
   const teams = activeTeamIds(save.year);
   // Most recent postseason on the books (this January's, or last season's during the offseason).
   const poYear = Object.values(save.players).reduce(
@@ -1076,7 +1100,7 @@ function Stats() {
     0,
   );
   const lineOf = (p: Player): SeasonStats | undefined =>
-    scope === "regular" ? p.stats[save.year] : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
+    scope === "regular" ? p.stats[save.year] : scope === "career" ? careerTotals(p, { throughYear: save.year }) : scope === "dynastyCareer" ? careerTotals(p, { fromYear: save.startingYear ?? 1966, throughYear: save.year }) : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
 
   const inPos = (p: Player) => {
     if (posFilter === "ALL") return true;
@@ -1091,6 +1115,9 @@ function Stats() {
     .filter((p) => {
       const s = lineOf(p);
       if (!hasSeasonWork(s)) return false;
+      if (search.trim() && !playerName(p).toLowerCase().includes(search.trim().toLowerCase())) return false;
+      const retired = p.teamId === "retired" || p.teamId === "hof";
+      if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
       if (!inPos(p)) return false;
       if (teamFilter === "mine") return p.teamId === save.userTeamId;
       if (teamFilter !== "ALL") return p.teamId === teamFilter;
@@ -1163,6 +1190,8 @@ function Stats() {
         {(
           [
             ["regular", `${save.year} regular season`],
+            ["career", "Career totals"],
+            ["dynastyCareer", "Dynasty totals"],
             ["playoffs", poYear ? `${poYear} playoffs` : "Playoffs"],
             ["poCareer", "Playoff careers"],
           ] as const
@@ -1181,7 +1210,12 @@ function Stats() {
           </button>
         ))}
       </div>
-      {scope !== "regular" && !allRows.length && (
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="flex-1 text-xs text-muted">Find a player<input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search player name" className="mt-1 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-base text-fg" /></label>
+        {careerScope && <label className="text-xs text-muted">Player status<select value={status} onChange={e => setStatus(e.target.value as typeof status)} className="mt-1 block min-h-11 rounded-md border border-line bg-surface px-3 text-sm text-fg"><option value="all">Active + retired</option><option value="active">Active players</option><option value="retired">Retired + Hall of Fame</option></select></label>}
+      </div>
+      {careerScope && <p className="text-sm text-muted">{scope === "career" ? "Cumulative regular-season stats: recorded historical seasons before your start plus every season played in this dynasty, including the current season." : scope === "dynastyCareer" ? `Cumulative regular-season stats from ${save.startingYear ?? 1966} through ${save.year}. Historical stats before your dynasty are excluded.` : "Cumulative postseason stats, kept separate from regular-season totals."} Retired players retain their totals. Team filters select current club membership; each player's totals include all clubs. Showing up to 40 leaders per category; search to find any player.</p>}
+      {(scope === "playoffs" || scope === "poCareer") && !allRows.length && !search && (
         <p className="text-sm text-muted">No postseason football on the books yet. The lines fill in January.</p>
       )}
       <div className="flex flex-wrap gap-2">
@@ -1279,7 +1313,7 @@ function Stats() {
                   {!board.rows.length && (
                     <tr>
                       <td className="px-3 py-4 text-muted" colSpan={4 + cols.length}>
-                        Play a Sunday — stats land after the whistle.
+                        {search || careerScope ? "No players match these filters." : "Play a Sunday — stats land after the whistle."}
                       </td>
                     </tr>
                   )}
@@ -1639,8 +1673,10 @@ function PlayShell() {
   const showFa = save.phase === "freeAgency" && !event;
   const showDeadline = save.phase === "deadline" && !event;
   return (
-    <ClubDesk id={save.userTeamId} year={save.year} className="min-h-dvh bg-bg">
-      <header className="sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
+    <DraftAnnouncerProvider>
+    <ClubDesk id={save.userTeamId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
+      <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
+      <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
@@ -1659,29 +1695,31 @@ function PlayShell() {
         <TabStrip tabs={TABS} active={tab} onPick={setTab} />
       </header>
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
-      <main key={event ? `event-${save.phase}` : tab} className="rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+      <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+        <div className="next-section-context"><span>FRANCHISE / {TABS.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
         {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
-        {event && tab !== "primetime" ? <EventPane /> : null}
+        {event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
         {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
         {showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {showDeadline && tab === "office" ? <DeadlineNight /> : null}
         {!event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
-        {!event && tab === "roster" && <Roster />}
-        {!event && tab === "depth" && <Depth />}
-        {!event && tab === "staff" && <Staff />}
-        {!event && tab === "market" && <MarketDesk />}
-        {!event && tab === "standings" && <Standings />}
-        {!event && tab === "schedule" && <Schedule />}
-        {!event && tab === "stats" && <Stats />}
-        {!event && tab === "draft" && !showDraft && <DraftNight />}
-        {!event && tab === "history" && <History />}
+        {tab === "roster" && <Roster />}
+        {tab === "depth" && <Depth />}
+        {tab === "staff" && <Staff />}
+        {tab === "market" && <MarketDesk />}
+        {tab === "standings" && <Standings />}
+        {tab === "schedule" && <Schedule />}
+        {tab === "stats" && <Stats />}
+        {tab === "draft" && !showDraft && <DraftNight />}
+        {tab === "history" && <History />}
         <PlayerProfile />
         <TeamRosterModal />
         <CrunchCall />
       </main>
-      <BottomLine save={save} />
+      {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
+    </DraftAnnouncerProvider>
   );
 }
 

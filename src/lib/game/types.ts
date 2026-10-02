@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 18;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2027;
 export const ROSTER_TARGET = 45;
@@ -287,6 +287,8 @@ export type BlitzDial = "rare" | "normal" | "heavy";
 export type RedZoneDial = "power" | "balanced" | "spread";
 
 export interface Gameplan {
+  protection?: "balanced" | "maxProtect";
+  defensiveFocus?: "balanced" | "run" | "pass";
   attack: AttackDial;
   fourth: FourthDial;
   tempo: TempoDial;
@@ -434,6 +436,8 @@ export interface DriveSummary {
 }
 
 export interface GameResult {
+  /** Call sheets at kickoff, preserved independently of subsequent coaching edits. */
+  callSheets?: { home: Gameplan; away: Gameplan };
   id: string;
   year: number;
   week: number;
@@ -507,6 +511,10 @@ export interface GameResult {
 
 /** One snap of the owner's game, for the live broadcast. */
 export interface PlayLog {
+  /** Actual stat events, absent in film recorded before version 17. */
+  snap?: { call: string; kind: "pass" | "run" | "sack" | "kick" | "other"; yards: number; complete?: boolean };
+  homeTimeouts?: number;
+  awayTimeouts?: number;
   q: number;
   clock: number;
   poss: TeamId;
@@ -843,6 +851,8 @@ export interface Almanac {
 }
 
 export interface DynastySave {
+  /** Original records retained when repairing historical duplicate identities. */
+  identityRepairs?: { keptId: string; originals: Player[] }[];
   /** The owner's offseason progression, shown at camp. */
   progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */
@@ -883,6 +893,7 @@ export interface DynastySave {
   pendingCoachHof: string[];
   lastPow: { aflNfl?: string; afc?: string; nfc?: string };
   primetime?: PrimetimeShow;
+  primetimeArchive?: PrimetimeShow[];
   /** Last show's power ranks, for the week-to-week movement arrows. */
   powerRanks?: Record<string, number>;
   salaryCap: number | null;
@@ -1058,6 +1069,15 @@ export interface PrimetimePreview {
 }
 
 export interface PrimetimeShow {
+  /** Frozen editorial rundown: never reads future results while replaying an episode. */
+  episode?: {
+    id: string;
+    edition: "weekly" | "seasonFinale" | "playoffs" | "championship" | "superBowl" | "awards";
+    headline: string;
+    subtitle: string;
+    chapters: { id: string; kicker: string; title: string; teamIds: TeamId[]; lines: { speaker: "HOST" | "ANALYST" | "REPORTER"; text: string }[] }[];
+    focusIds: string[];
+  };
   /** 2 = the full broadcast (older saves carry the one-card version). */
   v?: number;
   year: number;

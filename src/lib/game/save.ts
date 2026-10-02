@@ -18,6 +18,7 @@ import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
 import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers } from "./players.ts";
+import { repairPlayerIdentities } from "./repairIdentities.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -157,6 +158,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     t.plan = t.plan ?? { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
     t.plan.blitz = t.plan.blitz ?? "normal";
     t.plan.redZone = t.plan.redZone ?? "balanced";
+    t.plan.protection ??= "balanced";
+    t.plan.defensiveFocus ??= "balanced";
     t.active = t.active ?? false;
     t.ocId = t.ocId ?? null;
     t.dcId = t.dcId ?? null;
@@ -218,6 +221,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     bestSeasonMarks: r.bestSeasonMarks ?? {},
     owner: r.owner ? { ...newOwnerState(), ...r.owner } : newOwnerState(),
     primetime: r.primetime,
+    primetimeArchive: (r.primetimeArchive ?? []).slice(-26),
     userTeamId,
     startingYear,
     draftSession: r.draftSession ?? (outYear(r, startingYear) === 1966 ? "nfl" : "common"),
@@ -228,6 +232,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     camp: r.camp,
     deadline: r.deadline,
   };
+  const savedRng = out.rng;
+  repairPlayerIdentities(out);
   for (const pl of Object.values(out.players)) {
     pl.salary = pl.salary ?? 0;
     pl.abilities = pl.abilities ?? [];
@@ -318,6 +324,8 @@ export function hydrateSave(raw: unknown): DynastySave {
     out.jerseyEra = true;
   } else normalizeJerseys(out);
   restoreVeteranNumbers(out);
+  // Loading (including jersey repair) must not change the next simulated play.
+  out.rng = savedRng;
   return out;
 }
 

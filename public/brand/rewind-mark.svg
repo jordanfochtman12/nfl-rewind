@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="264" viewBox="0 0 360 264" fill="none">
+  <title>NFL Rewind emblem</title>
+  <path d="M12 132C62 44 120 11 180 11s118 33 168 121c-50 88-108 121-168 121S62 220 12 132Z" stroke="#e7eef7" stroke-width="16" stroke-linejoin="round"/>
+  <path d="m146 94-73 52 73 52V94Zm101 0-73 52 73 52V94Z" fill="#ff2448"/>
+  <path d="M156 60h73m-60-12v24m23-24v24m23-24v24" stroke="#e8f2ff" stroke-width="9" stroke-linecap="square"/>
+</svg>

@@ -1,3 +1,4 @@
+import { pressureAdjustment } from "./broadcast.ts";
 import type {
   BoxPlayer,
   PlayLog,
@@ -101,6 +102,8 @@ export function planFor(save: DynastySave, teamId: TeamId): Gameplan {
     tempo: t.plan.tempo,
     blitz: t.plan.blitz ?? base.blitz,
     redZone: t.plan.redZone ?? base.redZone,
+    protection: t.plan.protection ?? "balanced",
+    defensiveFocus: t.plan.defensiveFocus ?? "balanced",
   };
 }
 
@@ -313,6 +316,8 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
 let playTap: ((id: string, patch: Partial<BoxPlayer>) => void) | undefined;
 
 interface OpenPlay {
+  call?: string;
+  sackYards?: number;
   q: number;
   clock: number;
   poss: TeamId;
@@ -534,6 +539,22 @@ function fgMakeP(k: Player | undefined, distYds: number, wx: Wx, year: number, c
 
 type Call = "run" | "short" | "med" | "deep" | "screen" | "draw" | "pa" | "sneak" | "punt" | "fg" | "kneel" | "spike";
 
+/** Protect a trailing team's final possession before ordinary era/coach tendencies. */
+export function finalPossessionCall(
+  q: number, clock: number, down: number, spot: number, trail: number, kickRange: number,
+): Call | undefined {
+  if (q < 4 || clock > 30 || trail <= 0) return undefined;
+  // Take a tying/winning kick on fourth down or when only one snap remains.
+  if (trail <= 3 && 117 - spot <= kickRange && (down === 4 || clock <= 8)) return "fg";
+  // A punt or a clock-consuming run cannot rescue this possession. Avoid blind
+  // spikes too: the engine may already have a stopped clock after an incompletion.
+  return spot < 65 ? "deep" : spot < 85 ? "med" : "short";
+}
+
+export function canKneelOut(q: number, clock: number, down: number, spot: number, trail: number, defensiveTimeouts: number): boolean {
+  return q >= 4 && clock > 0 && clock <= 40 && down < 4 && spot > 1 && trail < 0 && defensiveTimeouts === 0;
+}
+
 function callPlay(
   save: DynastySave,
   year: number,
@@ -548,6 +569,7 @@ function callPlay(
   k: Player | undefined,
   wx: Wx,
   toLeft: number,
+  defensiveTimeouts: number,
   lastRun: boolean,
   scramble: number,
   altitude: number,
@@ -557,11 +579,10 @@ function callPlay(
   const desperate = late && trail >= 3;
   const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -7 && clock < 240)) && !desperate;
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
-  if (q >= 4 && trail <= -1 && clock <= 90 && spot > 35 && toLeft === 0 && down !== 4) {
-    if (clock <= 12 && down <= 2) return "kneel";
-    if (clock <= 40) return "kneel";
-  }
-  if (last && trail >= 1 && down <= 2 && clock <= 8) return "spike";
+  const finalCall = finalPossessionCall(q, clock, down, spot, trail,
+    fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0));
+  if (finalCall) return finalCall;
+  if (canKneelOut(q, clock, down, spot, trail, defensiveTimeouts)) return "kneel";
   if (down === 4) {
     const fgDist = 100 - spot + 17;
     const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0);
@@ -647,7 +668,9 @@ function snapClock(
   if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 6, 9), stopped: true };
   if (stopFd) return { used: randInt(save, 6, 9), stopped: true };
   const [lo, hi] = huddleSeconds(year, hurry ? "hurry" : chew ? "chew" : "standard");
-  return { used: randInt(save, lo, hi), stopped: false };
+  const used = randInt(save, lo, hi);
+  // A live snap may cross 2:00, but its between-play runoff cannot cross the warning.
+  return { used: (q === 2 || q === 4) && clock > 120 ? Math.min(used, Math.max(7, clock - 120)) : used, stopped: false };
 }
 
 const INJURIES = ["ankle", "knee", "shoulder", "ribs", "hamstring", "hip", "hand", "shaken up", "concussion", "foot", "groin", "wrist"];
@@ -1013,7 +1036,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const flushPlay = () => {
     if (!cur) return;
     const d = describePlay(save, cur);
-    if (d) log.push({ q: cur.q, clock: cur.clock, poss: cur.poss, down: cur.down, togo: Math.max(1, Math.round(cur.togo)), spot: Math.round(cur.spot), text: d.text, hs: homeScore, as: awayScore, tag: d.tag });
+    if (d) {
+      const sum = (key: keyof BoxPlayer) => cur!.bumps.reduce((n, [, b]) => n + (typeof b[key] === "number" ? b[key] as number : 0), 0);
+      const kind = sum("sacksThrown") ? "sack" : sum("passAtt") ? "pass" : sum("rushAtt") ? "run" : sum("fgAtt") || sum("punts") ? "kick" : "other";
+      const yards = kind === "pass" ? sum("passYds") : kind === "run" ? sum("rushYds") : kind === "sack" ? cur.sackYards ?? 0 : 0;
+      log.push({ q: cur.q, clock: cur.clock, poss: cur.poss, down: cur.down, togo: Math.max(1, Math.round(cur.togo)), spot: Math.round(cur.spot), text: d.text, hs: homeScore, as: awayScore, tag: d.tag,
+        snap: { call: cur.call ?? "special", kind, yards: Math.round(Math.min(yards, 100 - cur.spot)), complete: kind === "pass" ? sum("passCmp") > 0 : undefined }, homeTimeouts: homeTO, awayTimeouts: awayTO });
+    }
     cur = undefined;
   };
   playTap = logOn ? (id, patch) => cur?.bumps.push([id, patch]) : undefined;
@@ -1119,6 +1148,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
 
   let poss = rand(save) < 0.5 ? homeId : awayId;
+  const openingReceiver = poss;
   let spot = ko.tb;
   let down = 1;
   let togo = 10;
@@ -1194,7 +1224,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
 
   const tickClock = (id: TeamId, used: number) => {
-    addPoss(id, used);
+    addPoss(id, Math.min(clock, used));
     clock = Math.max(0, clock - used);
   };
 
@@ -1421,7 +1451,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (q === 2 || q === 4) {
       if (!warned && clock <= 120 && clock > 0) {
         warned = true;
-        clock = 120;
+        note("Two-minute warning.");
       }
     }
     if (clock <= 0) {
@@ -1432,13 +1462,16 @@ export function simGame(save: DynastySave, game: GameResult): void {
         continue;
       }
       if (q === 2) {
+        flushPlay();
+        closeDrive("end");
         q = 3;
         clock = 900;
         warned = false;
         homeTO = 3;
         awayTO = 3;
-        closeDrive("end");
-        kickoffTo(poss === homeId ? awayId : homeId, false);
+        const receiver = openingReceiver === homeId ? awayId : homeId;
+        if (logOn) cur = { q, clock, poss: receiver, down: 1, togo: 10, spot: 20, bumps: [], notes: [] };
+        kickoffTo(receiver, false);
         continue;
       }
       if (q === 4 && !ot) {
@@ -1469,6 +1502,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const def = live(defId);
     const trail = trailOf(poss);
     const plan = planNow(poss, trail, q, clock);
+    const defensivePlan = planNow(defId, -trail, q, clock);
     const fat = fatigue(off, q, clock, poss);
     const dfat = fatigue(def, q, clock, defId);
     const clutch = (q >= 4 && (trail > 0 || clock < 180) ? off.kit.clutch : 0) * 0.35;
@@ -1483,10 +1517,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const brake = deadBall(year, offScore);
     const garbage = q >= 4 && trail <= -17 && clock <= 360;
     const prevent = garbage && trail <= -17;
-    const blitz =
-      (plan.blitz === "heavy" ? 0.18 : plan.blitz === "rare" ? 0.05 : 0.1) +
-      (down === 3 && togo >= 6 ? 0.08 : 0) +
-      (def.kit.sack > 0 ? 0.02 : 0);
+    const pressure = pressureAdjustment(defensivePlan.blitz);
 
     const offU = poss === homeId ? homeU : awayU;
     const disc = Math.max(0.55, 1 + (offU.kit.pen ?? 0));
@@ -1530,6 +1561,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       off.k,
       wx,
       toOf(poss),
+      toOf(defId),
       lastRun,
       off.kit.scramble,
       venue.altitude,
@@ -1554,8 +1586,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       call !== "spike"
     ) {
       const fgDist = 100 - spot + 17;
-      const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${togo}` }];
-      if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${fgDist}-yard field goal` });
+      const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${Math.max(1, Math.round(togo))}` }];
+      if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${Math.round(fgDist)}-yard field goal` });
       if (spot < 72) opts.push({ id: "punt", label: "Punt it away" });
       const pick = ask("fourth", poss, opts, fgDist);
       if (pick === "go") call = togo <= 1 ? "sneak" : togo <= 2 ? "run" : "short";
@@ -1563,6 +1595,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       else if (pick === "punt") call = "punt";
     }
 
+    if (cur) cur.call = call;
     if (call === "kneel") {
       const used = Math.min(clock, 40);
       tickClock(poss, used);
@@ -1733,16 +1766,17 @@ export function simGame(save: DynastySave, game: GameResult): void {
           ((poss === homeId ? awayRushYds : homeRushYds) > 110 && pass ? 0.6 : 0)
         : 0;
     const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0);
-    const defP = (pass ? def.defPass : def.defRun) * dfat + (blitz && pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0);
+    const focusEdge = defensivePlan.defensiveFocus === "run" ? (pass ? -5 : 5) : defensivePlan.defensiveFocus === "pass" ? (pass ? 5 : -5) : 0;
+    const defP = (pass ? def.defPass : def.defRun) * dfat + (pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0) + focusEdge;
     const edge = offP - defP;
 
     if (pass) {
       const sackP = clamp(
-        era.sackRate +
+        era.sackRate + pressure - (plan.protection === "maxProtect" ? 0.025 : 0) +
           (defP - off.offPass * fat) / 220 +
           off.kit.sack +
           (call === "deep" ? 0.02 : 0) +
-          (blitz && rand(save) < 0.5 ? 0.03 : -0.01) -
+          (rand(save) < 0.5 ? 0.03 : -0.01) -
           (pa ? 0.02 : 0) -
           // Quick release helps relative to an average passer. Uncentered, this term took ~8
           // points off every dropback and cancelled the era sack rate (sacks ran 35-50% low).
@@ -1788,6 +1822,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           continue;
         }
         const loss = sampleYds(save, 6.3, 2, 3, 14);
+        if (cur) cur.sackYards = -loss;
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
         const rusher = pickRusherDef(save, def);
         if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
@@ -1881,14 +1916,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const cov = avg(def.db.map((p) => p.ratings.cov));
       // Pressure was tuned against the sack chance before its release term was centered, which
       // raised sackP by ~0.057 across the board; back that out so pressure keeps its calibration.
-      const hurryP = clamp((sackP - 0.057) * 1.7 + (blitz ? 0.06 : 0), 0.05, 0.32);
+      const hurryP = clamp((sackP - 0.057) * 1.7 + 0.06 + pressure, 0.05, 0.32);
       const hurried = rand(save) < hurryP;
       if (hurried) {
         const hitter = pickRusherDef(save, def);
         if (hitter) bumpBox(boxOf(defId), hitter.id, { qbHits: 1 });
       }
       let cmpP =
-        era.cmpPct +
+        era.cmpPct + pressure - (plan.protection === "maxProtect" ? 0.025 : 0) +
         // Elite passers sit a little closer to the league than a raw grade gap implies:
         // at /400 the best QBs ran 9-13% past real passing leaders at an on-target league rate.
         (acc - passAnchor(save)) / 470 +
@@ -2198,6 +2233,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const mvp = homeScore >= awayScore ? homeMvp : awayMvp;
   const ht = save.teams[homeId];
   game.played = true;
+  game.callSheets = { home: { ...planFor(save, homeId) }, away: { ...planFor(save, awayId) } };
   game.homeScore = homeScore;
   game.awayScore = awayScore;
   game.boxHome = homeBox;

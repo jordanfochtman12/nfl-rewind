@@ -13,6 +13,8 @@ import { salaryFor } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
 import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
+import { historicalNameKey } from "./identity.ts";
+import { historicalYear } from "./historicalYears.ts";
 
 /** Real NFL draft lengths: 20 rounds through 1966, 17 in 1967-76, 12 in 1977-92, 8 in 1993, 7 since. */
 function roundsFor(year: number): number {
@@ -305,7 +307,10 @@ export function buildDraftBoard(save: DynastySave): void {
   const named = draftSeedsFor(save.year);
   const used = new Set<string>();
   for (const pl of Object.values(save.players)) {
-    if (pl.historical) used.add(`${pl.firstName}|${pl.lastName}|${pl.pos}`);
+    const debut = historicalYear(pl.firstName, pl.lastName, pl.arc?.dy ?? pl.draftYear);
+    if (pl.historical && (debut == null || debut === save.year)) {
+      used.add(historicalNameKey(pl.firstName, pl.lastName, save.year));
+    }
   }
   const board: Prospect[] = [];
   let slot = 1;
@@ -316,7 +321,7 @@ export function buildDraftBoard(save: DynastySave): void {
   const capAtPicks = session === "nfl";
   for (const s of named) {
     if (capAtPicks && board.length >= total) break;
-    const key = `${s.f}|${s.l}|${s.p}`;
+    const key = historicalNameKey(s.f, s.l, save.year);
     if (used.has(key)) continue;
     used.add(key);
     const p = seedToPlayer(save, s, s.r ?? 1);

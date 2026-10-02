@@ -16,6 +16,7 @@ import {
   type TeamId,
 } from "@/lib/game/index.ts";
 import { dynastyStorage } from "@/lib/save-idb.ts";
+import { importDynasty } from '@/lib/game/importSave';
 
 export type Screen = "title" | "select" | "play";
 export type Tab =
@@ -229,8 +230,8 @@ export const useGameStore = create<GameStore>()(
         return JSON.stringify(compactSave(save), null, 2);
       },
       importJson: (raw) => {
-        const save = hydrateSave(JSON.parse(raw));
-        set({ save, screen: "play", rewind: null });
+        const save = importDynasty(raw);
+        set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
       },
       resign: () => set({ screen: "title", profileId: null, viewTeamId: null }),
     }),
