@@ -216,6 +216,20 @@ Also fixed two stale `qa-season.mjs` assertions unrelated to IR (were failing be
 
 ---
 
+## Update (franchise features, October 2026)
+
+Shipped on `main` (engine in `src/lib/game/`, UI in `src/components/game/`):
+
+- **Season preview special** (`seasonPreview.ts`, `previewVoice.ts`, `SeasonPreview.tsx`): airs on Primetime during camp week. 2,000 simulated seasons on the sim's own unit strength (about 2 wins of error per team), every club broken down, division picks, award odds, bold predictions, must-watch games, Super Bowl pick. The desk changes by era; features rotate yearly; last year's picks get graded in "the receipts" and again on awards night (`previewPicks`, `deskGrade`). Pure: reads the real schedule and its own seeded generator, never the save's RNG.
+- **Contract talks** (`contracts.ts`, `ContractTalks.tsx`): the owner's expiring players (66+) negotiate before free agency: ask, counter, insult, patience, franchise tag from 1994. Untouched talks fall back to the old staff logic.
+- **Owner's box** (`liveCalls.ts`): change the plan or bench the QB during the live broadcast; the game replays from the pre-game save with every earlier snap unchanged.
+- **Market life** (`market.ts`): CPU trade calls, free-agent bidding wars, deadline rumor mill.
+- **Franchise legacy** (`legacy.ts`): retired numbers, Ring of Honor, Hall of Fame induction cards for every club.
+- **Timeline** (`timeline.ts`): real history vs. this league, every season.
+- **Speed:** `cloneSave` shares retired players between copies (`ownPlayer` before changing one); late-dynasty weeks ~2.5x faster.
+
+Deploys: ship through a pull request merged on GitHub. Direct pushes to `main` from an agent identity were not picked up by Vercel.
+
 ## Commands
 
 ```bash
