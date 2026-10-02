@@ -77,6 +77,7 @@ import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
 import { PlayerLink, PlayerProfile } from "./PlayerProfile";
 import { TeamRosterModal } from "./TeamRoster";
+import { LeagueDirectory } from "./LeagueDirectory";
 import { ExpansionNight } from "./ExpansionNight";
 import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
@@ -1646,6 +1647,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "staff", label: "Staff" },
   { id: "market", label: "Market" },
   { id: "standings", label: "Standings" },
+  { id: "league", label: "League" },
   { id: "schedule", label: "Schedule" },
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
@@ -1714,6 +1716,7 @@ function PlayShell() {
         {tab === "stats" && <Stats />}
         {tab === "draft" && !showDraft && <DraftNight />}
         {tab === "history" && <History />}
+        {tab === "league" && <LeagueDirectory />}
         <PlayerProfile />
         <TeamRosterModal />
         <CrunchCall />

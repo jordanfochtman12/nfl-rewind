@@ -161,6 +161,7 @@ export function PlayerProfile() {
   const save = useGameStore((s) => s.save);
   const profileId = useGameStore((s) => s.profileId);
   const closeProfile = useGameStore((s) => s.closeProfile);
+  const openTeam = useGameStore((s) => s.openTeam);
   const p = save && profileId ? save.players[profileId] : undefined;
   const [view, setView] = useState<"regular" | "playoffs">("regular");
   useEffect(() => setView("regular"), [profileId]);
@@ -203,7 +204,7 @@ export function PlayerProfile() {
   const logFamilies = familiesAcross(p.pos, log);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-studio/80 p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-studio/80 p-0 sm:items-center sm:p-4">
       <button type="button" className="absolute inset-0" aria-label="Close profile" onClick={closeProfile} />
       <article
         role="dialog"
@@ -226,10 +227,14 @@ export function PlayerProfile() {
               {playerName(p)}
             </h2>
             <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
-              {p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" && (
-                <Logo id={p.teamId} size={22} year={save.year} />
+              {p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? (
+                <button type="button" onClick={() => openTeam(p.teamId as TeamId)} className="inline-flex items-center gap-2 hover:text-brass">
+                  <Logo id={p.teamId} size={22} year={save.year} />
+                  <span className="underline decoration-white/20 underline-offset-2">{club}</span>
+                </button>
+              ) : (
+                <span>{club}</span>
               )}
-              <span>{club}</span>
               <span>· {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`}</span>
             </p>
           </div>
