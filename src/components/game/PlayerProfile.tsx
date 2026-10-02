@@ -13,7 +13,7 @@ import {
   formatMoney,
   hasSeasonWork,
   playerName,
-  seasonLabel,
+  nicknameOf,
   seasonLog,
   teamColors,
   visibleOvr,
@@ -64,15 +64,35 @@ function Status({ p }: { p: Player }) {
   return <span className="text-good">Active</span>;
 }
 
+type StatRow = { label: string; s: SeasonStats; now?: boolean };
+
+/** The club cell: logo and nickname, or "2 teams" for a season split by a trade. */
+function ClubCell({ s }: { s: SeasonStats }) {
+  const openTeam = useGameStore((st) => st.openTeam);
+  const teams = useGameStore((st) => st.save?.teams);
+  if (!s.teamId || s.teamId === "two") return <span className="text-muted">{s.teamId === "two" ? "2 teams" : "—"}</span>;
+  const id = s.teamId as TeamId;
+  return (
+    <button type="button" disabled={!teams?.[id]} onClick={() => openTeam(id)} className="flex items-center gap-1.5 whitespace-nowrap text-left hover:text-brass">
+      <Logo id={id} size={18} year={s.year} />
+      <span className="font-display text-xs font-bold uppercase italic">{nicknameOf(s.year, id)}</span>
+    </button>
+  );
+}
+
 function StatTable({
   title,
   cols,
   rows,
+  total,
+  clubs,
   empty,
 }: {
   title: string;
   cols: StatCol[];
-  rows: { label: string; s: SeasonStats }[];
+  rows: StatRow[];
+  total?: StatRow;
+  clubs?: boolean;
   empty: string;
 }) {
   if (!rows.length) {
@@ -86,10 +106,11 @@ function StatTable({
   return (
     <section className="overflow-x-auto rounded-lg border border-line bg-surface">
       <p className="px-4 pt-3 text-xs tracking-[0.25em] text-muted">{title}</p>
-      <table className="mt-2 w-full min-w-[520px] text-left text-sm">
+      <table className="mt-2 w-full min-w-[560px] text-left text-sm">
         <thead className="text-xs tracking-wider text-muted">
           <tr>
             <th className="sticky left-0 z-10 bg-surface px-3 py-2 font-medium">Year</th>
+            {clubs && <th className="bg-surface px-3 py-2 font-medium">Team</th>}
             {cols.map((c) => (
               <th key={c.key} className="bg-surface px-3 py-2 font-medium">
                 {c.label}
@@ -99,8 +120,13 @@ function StatTable({
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.label} className="border-t border-line">
-              <td className="sticky left-0 z-10 bg-surface px-3 py-2 text-muted">{r.label}</td>
+            <tr key={`${r.label}-${r.s.teamId}`} className={`border-t border-line ${r.now ? "bg-brass/5" : ""}`}>
+              <td className={`sticky left-0 z-10 bg-surface px-3 py-2 tabular ${r.now ? "text-brass" : "text-muted"}`}>{r.label}</td>
+              {clubs && (
+                <td className="px-3 py-2">
+                  <ClubCell s={r.s} />
+                </td>
+              )}
               {cols.map((c) => (
                 <td key={c.key} className="tabular px-3 py-2">
                   {c.of ? c.of(r.s) : "—"}
@@ -109,6 +135,19 @@ function StatTable({
             </tr>
           ))}
         </tbody>
+        {total && (
+          <tfoot>
+            <tr className="border-t-2 border-brass/50 font-semibold text-white">
+              <td className="sticky left-0 z-10 bg-surface px-3 py-2 font-display text-xs font-bold uppercase italic tracking-wider text-brass">Career</td>
+              {clubs && <td className="px-3 py-2 text-xs text-muted">{total.label}</td>}
+              {cols.map((c) => (
+                <td key={c.key} className="tabular px-3 py-2">
+                  {c.of ? c.of(total.s) : "—"}
+                </td>
+              ))}
+            </tr>
+          </tfoot>
+        )}
       </table>
     </section>
   );
@@ -119,12 +158,16 @@ function FamilyBlock({
   pos,
   families,
   rows,
+  total,
+  clubs,
   empty,
 }: {
   title: string;
   pos: Player["pos"];
   families: StatFamily[];
-  rows: { label: string; s: SeasonStats }[];
+  rows: StatRow[];
+  total?: StatRow;
+  clubs?: boolean;
   empty: string;
 }) {
   if (!rows.length) {
@@ -135,7 +178,7 @@ function FamilyBlock({
       {families.map((f) => {
         const used = f === families[0] ? rows : rows.filter((r) => familiesOf(pos, r.s).includes(f));
         if (!used.length) return null;
-        return <StatTable key={f} title={`${title} · ${FAMILY_LABEL[f]}`} cols={colsForFamily(f)} rows={used} empty={empty} />;
+        return <StatTable key={f} title={`${title} · ${FAMILY_LABEL[f]}`} cols={colsForFamily(f)} rows={used} total={total} clubs={clubs} empty={empty} />;
       })}
     </div>
   );
@@ -180,8 +223,6 @@ export function PlayerProfile() {
     .filter(hasSeasonWork)
     .sort((a, b) => a.year - b.year);
   const poCareer = playoffTotals(p);
-  const yearFamilies = familiesOf(p.pos, yearRow);
-  const careerFamilies = familiesOf(p.pos, career);
   const logFamilies = familiesAcross(p.pos, log);
 
   return (
@@ -315,48 +356,25 @@ export function PlayerProfile() {
               </section>
 
               <FamilyBlock
-                title={`${save.year} season`}
-                pos={p.pos}
-                families={yearFamilies}
-                rows={hasSeasonWork(yearRow) ? [{ label: String(save.year), s: yearRow! }] : []}
-                empty="Has not taken a snap this season."
-              />
-
-              <FamilyBlock
-                title="Career"
-                pos={p.pos}
-                families={careerFamilies}
-                rows={hasSeasonWork(career) ? [{ label: `${log[0]?.year ?? "—"}–${log[log.length - 1]?.year ?? "—"}`, s: career }] : []}
-                empty="No professional stats on the card yet."
-              />
-
-              <FamilyBlock
-                title="Season log"
+                title="Year by year"
                 pos={p.pos}
                 families={logFamilies}
-                rows={log.map((s) => ({ label: seasonLabel(s), s }))}
-                empty="The log fills after Sundays."
+                clubs
+                rows={log.map((s) => ({ label: String(s.year), s, now: s.year === save.year }))}
+                total={hasSeasonWork(career) ? { label: `${log.length} season${log.length === 1 ? "" : "s"}`, s: career } : undefined}
+                empty={hasSeasonWork(yearRow) ? "The log fills after Sundays." : "No professional stats on the card yet."}
               />
             </>
           ) : (
             <>
               <FamilyBlock
-                title={`Career playoffs · ${poLog.length} postseason${poLog.length === 1 ? "" : "s"}`}
-                pos={p.pos}
-                families={familiesOf(p.pos, poCareer)}
-                rows={
-                  hasSeasonWork(poCareer)
-                    ? [{ label: "Career", s: poCareer }]
-                    : []
-                }
-                empty="Has not played a postseason game."
-              />
-              <FamilyBlock
-                title="Playoff log"
+                title="Playoffs year by year"
                 pos={p.pos}
                 families={familiesAcross(p.pos, poLog)}
-                rows={poLog.map((s) => ({ label: seasonLabel(s), s }))}
-                empty="January is still ahead of him."
+                clubs
+                rows={poLog.map((s) => ({ label: String(s.year), s }))}
+                total={hasSeasonWork(poCareer) ? { label: `${poLog.length} postseason${poLog.length === 1 ? "" : "s"}`, s: poCareer } : undefined}
+                empty="Has not played a postseason game."
               />
             </>
           )}
