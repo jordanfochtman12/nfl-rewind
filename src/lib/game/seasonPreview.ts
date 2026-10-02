@@ -14,7 +14,7 @@ import type {
   SeasonPreview,
   TeamId,
 } from "./types.ts";
-import { activeTeamIds, conferenceOf, displayName, divisionKey, gamesInSeason, nicknameOf, roman, superBowlNumber, teamAbbr } from "./teams.ts";
+import { activeTeamIds, conferenceOf, displayName, divisionKey, gamesInSeason, locationOf, nicknameOf, roman, superBowlNumber, teamAbbr } from "./teams.ts";
 import { playerName, rosterOf, starters } from "./players.ts";
 import { teamUnits } from "./sim.ts";
 import { eraProfile, playoffTeamCount } from "./era.ts";
@@ -25,6 +25,8 @@ import { expansionForYear } from "./data/expansions.ts";
 import { relocationsForYear } from "./data/relocations.ts";
 import { REAL_POSTSEASON } from "./data/realPostseason.ts";
 import { realRecords } from "./timeline.ts";
+import { compose, crewFor, eraColor, fill, ORD_WORDS, P, tenure, vary } from "./previewVoice.ts";
+import { seriesNote } from "./h2h.ts";
 
 type Episode = SeasonPreview["episode"];
 type Line = Episode["chapters"][number]["lines"][number];
@@ -365,32 +367,77 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     const weak = GROUP_WORDS[best[best.length - 1]!.key].bad;
     const tier = tierOf(id);
     const po = (sim.playoff.get(id) ?? 0) / runs;
-    const k = `${year}-${id}`;
-    const qbLine = qb ? `${playerName(qb)}${qb.age >= 34 ? `, ${qb.age} now,` : qb.draftYear === year ? ", a rookie," : ""} under center` : "an open question under center";
+    const k = `pv-${id}`;
+    const cap = (x: string) => x[0]!.toUpperCase() + x.slice(1);
+    const qbName = qb ? `${playerName(qb)}${qb.age >= 34 ? `, ${qb.age} years old,` : qb.draftYear === year ? ", a rookie," : ""}` : "";
+    const qbSentence = qb
+      ? compose(k + "qb", year, [
+          qbName.endsWith(",") ? ["{Q} "] : ["{Q} ", "{Q}, the starter, ", "Once again {Q} ", "This year {Q} ", "Again, {Q} "],
+          ["is under center", "takes the snaps", "runs the offense", "has the keys", "is the triggerman", "calls the signals"],
+          [".", ", for better or worse.", ", and that's the story.", ", no controversy.", ", and the staff sleeps fine.", ", the way it should be."],
+        ], { Q: qbName }).replace(/^./, (c) => c.toUpperCase())
+      : "Nobody has won the quarterback job yet.";
+    const worry = compose(k + "w", year, [
+      ["The worry is ", "The question mark: ", "What keeps the staff up at night: ", "The soft spot is ", "Where they can be beaten: ", "Opponents will attack "],
+      ["{W}", "{W}"],
+      [".", ", and everybody on the schedule knows it.", ", until proven otherwise.", ", and fixing it raises the ceiling.", ", and it showed in camp.", ", which is fixable.", ", which might not be fixable."],
+    ], { W: weak });
+    // Facts that only this club has this year; two of them make each write-up its own.
+    const facts: string[] = [];
+    const hcNew = hcChange.get(id);
+    if (hcNew) facts.push(vary(k + "nc", year, [`${hcNew} takes over, and the scheme changes with him.`, `New head coach ${hcNew} gets his first look at what he inherited.`, `${hcNew}'s first year on the job.`]));
+    const add = (came.get(id) ?? []).filter((p) => p.draftYear !== year).sort((a, b) => b.ovr - a.ovr)[0];
+    if (add && add.ovr >= 74) facts.push(compose(k + "add", year, [[`${playerName(add)} is the addition that matters`, `Adding ${playerName(add)} changes the math at ${add.pos}`, `${playerName(add)} arrives with something to prove`, `The new ${add.pos}, ${playerName(add)}, fills a need`], [".", ", and it shows on the practice field.", ", a smart move by the front office.", ", and he fits the scheme."]]));
+    const gone = (was.get(id) ?? []).sort((a, b) => b.ovr - a.ovr)[0];
+    if (gone && gone.ovr >= 76) facts.push(vary(k + "gone", year, [`Losing ${playerName(gone)} hurts more than people think.`, `Replacing ${playerName(gone)} is the job of the summer.`, `There's a ${gone.pos}-sized hole where ${playerName(gone)} used to be.`]));
+    if (x && x.id !== qb?.id) facts.push(compose(k + "x", year, [[`Keep an eye on ${playerName(x)}`, `${playerName(x)}, ${x.age}, is the wild card`, `The upside play is ${playerName(x)}`, `Watch ${playerName(x)}`, `The name to know is ${playerName(x)}`], [".", ": if he hits, the projection is low.", ", the kind of player who changes a season.", ", ready for more snaps."]]));
+    const sr = sosRank.get(id)!;
+    if (sr <= 4) facts.push(vary(k + "sos", year, [`The schedule is brutal: ${ordinal(sr)} toughest in the league.`, `Nobody envies this schedule, the ${ordinal(sr)} hardest around.`]));
+    else if (sr > ids.length - 4) facts.push(vary(k + "sos", year, [`The schedule is a gift, one of the softest in football.`, `Few teams get an easier slate.`]));
+    if (lr.playoffs) facts.push(compose(k + "po", year, [[`They made the playoffs a year ago at ${recText(lr.w, lr.l, lr.t)}`, `Back after a ${recText(lr.w, lr.l, lr.t)} playoff season`, `A ${recText(lr.w, lr.l, lr.t)} playoff team last year`], [".", ", and the expectations went up.", ", so January is the standard now.", ", and they want more."]]));
+    const star = stars[0] ? save.players[stars[0]] : undefined;
+    if (star) facts.push(compose(k + "star", year, [[`${playerName(star)} `, `The ${star.pos}, ${playerName(star)}, `], ["is the best player on the field most Sundays", "is the reason to buy a ticket", "makes the whole thing go", "is a matchup nightmare", "is worth the price of admission"], [".", ", plain and simple.", ", and every opponent game-plans for him.", ", and he's in his prime."]]));
+    const chosen = facts.length <= 2 ? facts : [facts[(hash(k) + year) % facts.length]!, facts[(hash(k) + year + 1 + (year % 2)) % facts.length]!].filter((f, i, arr) => arr.indexOf(f) === i);
+    const trend =
+      delta >= 2.5 ? vary(k + "up", year, P.outlookUp) : delta <= -2.5 ? vary(k + "dn", year, P.outlookDown) : vary(k + "fl", year, P.outlookFlat);
+    const trendTail = vary(k + "tt", year, ["", ` Our number is ${projW.toFixed(1)}, with a range of ${lo} to ${hi}.`, ` We'll say ${Math.round(projW)} wins, give or take ${Math.max(1, Math.round((hi - lo) / 2))}.`, ` ${projW.toFixed(1)} wins in the simulations, ${lo} on a bad day and ${hi} on a great one.`, ` Somewhere between ${lo} and ${hi} wins.`, ""]);
+    const lead = `${vary(k + "o1", year, P.outlookStart)} ${strong[0]} and ${strong[1]}.`;
+    const order = (hash(k) + year) % 3;
     const outlook = newClubs.has(id)
-      ? `A brand-new club, built from other teams' leftovers and a draft class. ${pick(k + "exp", ["Nobody expects much. That's the freedom.", "The goal is respectability, and maybe one Sunday that makes a city fall in love.", "Expansion teams get patience. They also get hit in the mouth."])}`
-      : `${pick(k + "o1", ["It starts with", "Everything here runs through", "The case begins with", "Start with"])} ${strong[0]} and ${strong[1]}. ${qbLine[0]!.toUpperCase() + qbLine.slice(1)}. The worry is ${weak}. ${
-          delta >= 2.5
-            ? pick(k + "up", ["Two thousand simulations say this club takes a real step forward.", "The numbers like this team a lot more than last year's record does.", "Last year's record undersells this roster."])
-            : delta <= -2.5
-              ? pick(k + "dn", ["Last year's record looks like the ceiling, not the floor.", "Some of last year's wins were borrowed. Payment comes due.", "Regression is coming, and it doesn't knock."])
-              : pick(k + "fl", ["Expect something close to last year.", "This is who they are, give or take a bounce.", "Steady. Not spectacular."])
-        }`;
+      ? `A brand-new club, built from other teams' leftovers and a draft class. ${vary(k + "exp", year, ["Nobody expects much. That's the freedom.", "The goal is respectability, and maybe one Sunday that makes a city fall in love.", "Expansion teams get patience. They also get hit in the mouth."])}`
+      : order === 0
+        ? [lead, qbSentence, worry, ...chosen, trend + trendTail].join(" ")
+        : order === 1
+          ? [cap(trend) + trendTail, lead, ...chosen, qbSentence, worry].join(" ")
+          : [qbSentence, lead, ...chosen.slice(0, 1), worry, trend + trendTail, ...chosen.slice(1)].join(" ");
+    const sb = `Super Bowl ${roman(superBowlNumber(year))}`;
     const bestCase =
       tier === "Contender" || tier === "Playoff hopeful"
-        ? `${hi} wins, ${po >= 0.6 ? "a bye" : "a home playoff game"}, and a real shot at Super Bowl ${roman(superBowlNumber(year))}.`
-        : `${hi} wins and ${po >= 0.15 ? "a playoff ticket nobody saw coming" : "the start of something"}.`;
-    const worstCase = `${lo} wins${hc && (hc.yearsOnJob ?? 0) >= 3 && lo <= games * 0.35 ? `, and ${hc.name} is coaching for his job by Thanksgiving` : ""}${tier === "Contender" ? ", and a long winter of asking what happened" : ""}.`;
-    const verdict =
-      tier === "Contender"
-        ? pick(k + "v", ["A Super Bowl or bust kind of year.", "Anything short of January is a failure.", "The roster is built to win now. So win now."])
-        : tier === "Playoff hopeful"
-          ? pick(k + "v", ["Good enough to play in January. Is it good enough to stay?", "A playoff team on paper. Paper doesn't tackle.", "Should be in the mix in December."])
-          : tier === "In the mix"
-            ? pick(k + "v", ["A coin flip for the playoffs. The schedule decides it.", "One break either way swings this whole season.", "They'll be in it into November. Then we'll find out."])
-            : tier === "Long shot"
-              ? pick(k + "v", ["Needs a lot to go right.", "A few upsets away from being interesting.", "Spoiler material. Circle the date if you're a contender."])
-              : pick(k + "v", ["It's a development year. Judge the young players, not the record.", "Top-five pick territory, and that's not the worst thing.", "Patience. The building knows it's a long road."]);
+        ? compose(k + "bc", year, [
+            [`${hi} wins`, `${hi} wins, maybe ${hi + 1}`, `A ${hi}-win season`, `${hi} victories`],
+            [po >= 0.6 ? ", a first-round bye" : ", a home playoff game", ", the division crown", ", home field in January", ", a top-two seed"],
+            [`, and a real shot at ${sb}.`, `, and a trip to ${sb}.`, ", and a parade route.", ", and the trophy.", `, and ${star ? `${playerName(star)} on the All-Pro team` : "a stack of Pro Bowlers"}.`, ", and February football."],
+          ])
+        : compose(k + "bc", year, [
+            [`${hi} wins`, `A ${hi}-win surprise`, `${hi} wins and some swagger`],
+            [po >= 0.15 ? ", a playoff ticket nobody saw coming" : ", the start of something", ", a winning record", ", a spoiler's reputation", x ? `, and ${playerName(x)} becomes a star` : ", a young core that grows up fast"],
+            [".", ", and the league takes notice.", ", and a winter of optimism.", ", and next year starts early.", ", and a fan base that believes again."],
+          ]);
+    const hotSeatTail = hc && (hc.yearsOnJob ?? 0) >= 3 && lo <= games * 0.35;
+    const worstCase = compose(k + "wc", year, [
+      [`${lo} wins`, `A ${lo}-win slog`, `Just ${lo} wins`, `${lo} wins, maybe fewer`, `Only ${lo} wins`],
+      hotSeatTail
+        ? [`, and ${hc!.name} is coaching for his job by Thanksgiving`, `, and ${hc!.name}'s seat gets hot`, `, and ownership starts asking ${hc!.name} hard questions`]
+        : tier === "Contender"
+          ? [", and a long winter of asking what happened", ", and the window starts to close", ", and the injury report decides the season", ", and a first-round exit"]
+          : [", and a high draft pick", ", and a long December", ", and a rebuild that speeds up", ", and empty seats by November"],
+      [".", ", and it could happen.", ", which nobody in the building wants to think about.", ", if things break wrong.", ", if the injuries pile up."],
+    ]);
+    const verdict = vary(
+      k + "v",
+      year,
+      tier === "Contender" ? P.contender : tier === "Playoff hopeful" ? P.hopeful : tier === "In the mix" ? P.mix : tier === "Long shot" ? P.longShot : P.rebuilding,
+    );
     return {
       id,
       rank: rankOf.get(id)!,
@@ -439,8 +486,8 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     const second = order[1] ? T.get(order[1])! : undefined;
     const tight = second && top.divisionPct - second.divisionPct < 0.15;
     const note = tight
-      ? `${pick(key + year, ["Too close to call.", "A two-horse race.", "This one goes down to December."])} The ${nick(top.id)} take it in ${pct(top.divisionPct)} of our simulations, the ${nick(second!.id)} in ${pct(second!.divisionPct)}.`
-      : `The ${nick(top.id)} win it ${pct(top.divisionPct)} of the time. ${top.divisionPct >= 0.6 ? "The rest are playing for a wild card." : "Not a lock, but the clear favorite."}`;
+      ? `${vary(key, year, P.divTight)} The ${nick(top.id)} take it in ${pct(top.divisionPct)} of our simulations, the ${nick(second!.id)} in ${pct(second!.divisionPct)}.`
+      : `${compose(key + "dn", year, [[`The ${nick(top.id)} `, `It's the ${nick(top.id)}: they `, `Our model says the ${nick(top.id)}: they `], ["win it ", "take the division ", "come out on top "], [`${pct(top.divisionPct)} of the time.`, `in ${pct(top.divisionPct)} of the simulations.`]])} ${top.divisionPct >= 0.6 ? vary(key + "l", year, P.divLock) : vary(key + "c", year, P.divClear)}`;
     return { key, conf: conferenceOf(year, order[0]!) as string, order, note };
   });
 
@@ -562,7 +609,7 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     .filter((p) => p.age <= 25 && p.potential - p.ovr >= 6 && p.ovr >= 68 && p.draftYear !== year && p.pos !== "K" && p.pos !== "P")
     .sort((a, b) => b.potential - b.ovr - (a.potential - a.ovr) + (b.ovr - a.ovr) * 0.4)
     .slice(0, 5)
-    .map((p) => ({ playerId: p.id, teamId: teamOf(p), note: `${p.pos}, ${p.age}. ${pick(p.id + year, ["The staff can't stop talking about him.", "Year two, three is when it clicks. This is the year.", "The tools were always there. Now the reps are too.", "Camp's best story."])}` }));
+    .map((p) => ({ playerId: p.id, teamId: teamOf(p), note: `${p.pos}, ${p.age}. ${vary(p.id + "b", year, P.breakout)}` }));
   const lastRide = all
     .filter((p) => p.age >= 33 && p.ovr >= 76 && p.pos !== "K" && p.pos !== "P")
     .sort((a, b) => b.ovr - a.ovr + (b.age - a.age))
@@ -570,14 +617,14 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     .map((p) => {
       const c = careerTotals(p);
       const line = p.pos === "QB" ? `${comma(c.passYds)} career passing yards` : p.pos === "RB" ? `${comma(c.rushYds)} career rushing yards` : ["WR", "TE"].includes(p.pos) ? `${comma(c.rec)} career catches` : c.sacks ? `${Math.round(c.sacks)} career sacks` : `${p.yearsPro} seasons`;
-      return { playerId: p.id, teamId: teamOf(p), note: `${p.age} years old, ${line}. ${pick(p.id + "r" + year, ["How many Sundays are left?", "He says he's got one more in him.", "Enjoy it while it lasts.", "Father Time is undefeated. He's still trying."])}` };
+      return { playerId: p.id, teamId: teamOf(p), note: `${p.age} years old, ${line}. ${vary(p.id + "r", year, P.lastRide)}` };
     });
   const hotSeat = teams
     .map((t) => ({ t, c: save.teams[t.id]!.coachId ? save.coaches[save.teams[t.id]!.coachId!] : undefined }))
     .filter((x): x is { t: PreviewTeam; c: Coach } => !!x.c && !x.t.newCoach && (x.c.yearsOnJob ?? 0) >= 3 && x.t.id !== u)
     .sort((a, b) => a.t.projW - b.t.projW - (a.c.yearsOnJob - b.c.yearsOnJob) * 0.15)
     .slice(0, 3)
-    .map(({ t, c }) => ({ coachId: c.id, teamId: t.id, note: `Year ${c.yearsOnJob + 1}. ${recText(c.careerWins, c.careerLosses, c.careerTies)} career. Projected ${t.projW.toFixed(1)} wins. ${pick(c.id + year, ["Ownership's patience has a number on it.", "Needs a fast start.", "The rumors start by October if this goes wrong."])}` }));
+    .map(({ t, c }) => ({ coachId: c.id, teamId: t.id, note: `Year ${c.yearsOnJob + 1}. ${recText(c.careerWins, c.careerLosses, c.careerTies)} career. Projected ${t.projW.toFixed(1)} wins. ${vary(c.id + "h", year, P.hotSeat)}` }));
 
   // Career milestones within reach this season.
   const MARKS: { of: (p: Player) => number; per: (p: Player) => number; steps: number[]; label: string; pos: Player["pos"][] }[] = [
@@ -640,14 +687,14 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
       const note = sbRematch
         ? `Super Bowl ${roman(lastSb!.number)} rematch.`
         : isRivalry(h, a)
-          ? pick(g.id, ["Throw out the records.", "Bad blood, good football.", "The one both cities circle first."])
+          ? vary(g.homeId + g.awayId, year, P.watchRivalry)
           : g.week === 1
             ? "Opening week, and it's a heavyweight bout."
             : T.get(h)!.tier === "Contender" && T.get(a)!.tier === "Contender"
-              ? pick(g.id, ["Could be a January preview.", "Two contenders, one tiebreaker.", "Seeding implications in pencil."])
+              ? vary(g.id, year, P.watchTitans)
               : g.homeId === u || g.awayId === u
                 ? "The owner's box will be full."
-                : pick(g.id, ["Styles make fights.", "Prove-it game.", "Somebody's statement game."]);
+                : vary(g.id, year, P.watchMisc);
       return { gameId: g.id, week: g.week, homeId: h, awayId: a, line, note: `${note}${g.night ? " Under the lights." : ""}` };
     });
 
@@ -655,30 +702,58 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
 
   const stories: SeasonPreview["storylines"] = [];
   const story = (id: string, kicker: string, title: string, body: string, teamIds: TeamId[], playerIds: string[] = []) => stories.push({ id, kicker, title, body, teamIds, playerIds });
+  const V = (slot: string, list: readonly string[]) => vary(slot, year, list);
+  const sbOf = (y: number) => save.history.superBowls.find((x) => x.year === y);
+  const winnerOf = (b: { homeId: TeamId; awayId: TeamId; homeScore: number; awayScore: number }) => (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId;
   if (lastChamp && T.get(lastChamp)) {
     const t = T.get(lastChamp)!;
+    const twoAgo = sbOf(year - 2);
+    const threePeat = twoAgo && winnerOf(twoAgo) === lastChamp;
+    const sc = `${Math.max(lastSb!.homeScore, lastSb!.awayScore)}-${Math.min(lastSb!.homeScore, lastSb!.awayScore)}`;
     story(
       "champ",
-      "THE CHAMPS",
-      `Can the ${nick(lastChamp)} do it again?`,
-      `The ${name(lastChamp)} won Super Bowl ${roman(lastSb!.number)}, ${Math.max(lastSb!.homeScore, lastSb!.awayScore)}-${Math.min(lastSb!.homeScore, lastSb!.awayScore)} over the ${name(lastRunner!)}. Repeating is the hardest thing in this sport. Our simulations give them a ${pct(t.titlePct)} chance to raise the trophy again, and ${pct(t.playoffPct)} to get back to January at all. ${t.departures.length ? `They lost ${t.departures.slice(0, 2).map((x) => playerName(save.players[x]!)).join(" and ")} this offseason.` : "They kept the band together."}`,
+      threePeat ? "THREE-PEAT WATCH" : V("ck", ["THE CHAMPS", "DEFENDING CHAMPIONS", "TITLE DEFENSE", "THE HUNTED"]),
+      threePeat ? `The ${nick(lastChamp)} go for three straight` : V("ct", [`Can the ${nick(lastChamp)} do it again?`, `The ${nick(lastChamp)} have a target on their backs`, `Repeat or retreat for the ${nick(lastChamp)}?`, `Everybody's chasing the ${nick(lastChamp)}`, `The ${nick(lastChamp)} defend the crown`]),
+      `${V("cb1", [
+        `The ${name(lastChamp)} won Super Bowl ${roman(lastSb!.number)}, ${sc} over the ${name(lastRunner!)}.`,
+        `Seven months ago the ${name(lastChamp)} beat the ${name(lastRunner!)} ${sc} in Super Bowl ${roman(lastSb!.number)}.`,
+        `Super Bowl ${roman(lastSb!.number)} belonged to the ${name(lastChamp)}: ${sc} over the ${name(lastRunner!)}.`,
+      ])}${threePeat ? " That's two in a row. Nobody has ever made three look easy." : ` ${V("cb2", ["Repeating is the hardest thing in this sport.", "Everybody gets your best shot the year after.", "The parade's over. Now everyone wants a piece of you.", "Defending a title is a different job than winning one."])}`} Our simulations give them a ${pct(t.titlePct)} chance to raise the trophy again, and ${pct(t.playoffPct)} to get back to January at all. ${t.departures.length ? `They lost ${t.departures.slice(0, 2).map((x) => playerName(save.players[x]!)).join(" and ")} this offseason.` : V("cb3", ["They kept the band together.", "The core is intact.", "Nobody important walked out the door."])}`,
       [lastChamp],
       t.departures.slice(0, 2),
     );
   }
   if (lastRunner && T.get(lastRunner)) {
     const t = T.get(lastRunner)!;
-    story("runner", "UNFINISHED BUSINESS", `The ${nick(lastRunner)} came up one game short`, `Nobody remembers who lost the Super Bowl, except the team that lost it. The ${name(lastRunner)} are back with a ${pct(t.confPct)} chance to win the ${conferenceOf(year, lastRunner)} again. ${t.playoffPct >= 0.6 ? "The roster is still there." : "But the hangover is real: just a " + pct(t.playoffPct) + " shot at the playoffs."}`, [lastRunner]);
+    story(
+      "runner",
+      V("rk", ["UNFINISHED BUSINESS", "SO CLOSE", "THE HANGOVER", "ONE GAME SHORT"]),
+      V("rt", [`The ${nick(lastRunner)} came up one game short`, `Can the ${nick(lastRunner)} get back?`, `The ${nick(lastRunner)} and the Super Bowl hangover`, `Revenge tour for the ${nick(lastRunner)}?`]),
+      `${V("rb1", ["Nobody remembers who lost the Super Bowl, except the team that lost it.", "Losing the last game of the year stays with you all summer.", "History is cruel to Super Bowl losers. Most of them don't make it back."])} The ${name(lastRunner)} are back with a ${pct(t.confPct)} chance to win the ${conferenceOf(year, lastRunner)} again. ${t.playoffPct >= 0.6 ? V("rb2", ["The roster is still there.", "They have the talent to get back.", "The team that got there is mostly intact."]) : "But the hangover is real: just a " + pct(t.playoffPct) + " shot at the playoffs."}`,
+      [lastRunner],
+    );
   }
+  // A dynasty in the making, or a contender still waiting for its first title in this league.
+  const recent = [1, 2, 3, 4, 5].map((n) => sbOf(year - n)).filter((x): x is NonNullable<typeof x> => !!x);
+  const wins5 = new Map<TeamId, number>();
+  for (const b of recent) wins5.set(winnerOf(b), (wins5.get(winnerOf(b)) ?? 0) + 1);
+  const dyn = [...wins5].filter(([id, n]) => n >= 2 && T.get(id)).sort((a, b) => b[1] - a[1])[0];
+  if (dyn) story("dynasty", "DYNASTY WATCH", V("dt", [`${numberWord(dyn[1])[0]!.toUpperCase() + numberWord(dyn[1]).slice(1)} titles in five years for the ${nick(dyn[0])}`, `Is this the ${nick(dyn[0])}' league now?`, `The ${nick(dyn[0])} and the D-word`]), `${dyn[1]} Super Bowls in the last five seasons. ${T.get(dyn[0])!.verdict} ${pct(T.get(dyn[0])!.titlePct)} to add another.`, [dyn[0]]);
+  const titled = new Set(save.history.superBowls.map((b) => winnerOf(b)));
+  const drought = teams.filter((t) => t.rank <= 6 && !titled.has(t.id) && save.history.superBowls.length >= 5).sort((a, b) => b.titlePct - a.titlePct)[0];
+  if (drought) story("drought", V("drk", ["STILL WAITING", "THE DROUGHT", "NEVER BEEN THERE"]), V("drt", [`The ${nick(drought.id)} have never won it`, `Is this the year for the ${nick(drought.id)}?`, `The ${nick(drought.id)} are tired of waiting`]), `${save.history.superBowls.length} Super Bowls in this league, and none for the ${name(drought.id)}. They're ranked ${ordinal(drought.rank)} going in, ${pct(drought.titlePct)} to win it all. ${drought.outlook.split(". ")[0]}.`, [drought.id]);
   const newCoachTeams = teams.filter((t) => t.newCoach);
   if (newCoachTeams.length) {
+    const n = numberWord(newCoachTeams.length);
     story(
       "coaches",
-      "NEW FACES ON THE SIDELINE",
-      `${newCoachTeams.length === 1 ? "One club" : `${numberWord(newCoachTeams.length)[0]!.toUpperCase() + numberWord(newCoachTeams.length).slice(1)} clubs`} start over with a new head coach`,
+      V("nk", ["NEW FACES ON THE SIDELINE", "COACHING CAROUSEL", "FRESH STARTS", "NEW HEADSETS"]),
+      newCoachTeams.length === 1
+        ? V("nt1", [`${newCoachTeams[0]!.coach} takes over in ${locationOf(year, newCoachTeams[0]!.id)}`, `One new head coach: ${newCoachTeams[0]!.coach}`])
+        : V("nt", [`${n[0]!.toUpperCase() + n.slice(1)} clubs start over with a new head coach`, `${n[0]!.toUpperCase() + n.slice(1)} new head coaches, ${n} fresh starts`, `The carousel stopped ${n} times`]),
       newCoachTeams
         .slice(0, 5)
-        .map((t) => `${t.coach} takes over the ${name(t.id)} (${recText(t.lastYear.w, t.lastYear.l, t.lastYear.t)} last year, projected ${t.projW.toFixed(1)}).`)
+        .map((t, i) => (i % 2 ? `In ${locationOf(year, t.id)}, ${t.coach} inherits a ${recText(t.lastYear.w, t.lastYear.l, t.lastYear.t)} team projected for ${t.projW.toFixed(1)} wins.` : `${t.coach} takes over the ${name(t.id)} (${recText(t.lastYear.w, t.lastYear.l, t.lastYear.t)} last year, projected ${t.projW.toFixed(1)}).`))
         .join(" "),
       newCoachTeams.map((t) => t.id),
     );
@@ -687,9 +762,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   if (rookieQbs.length) {
     story(
       "rookieqb",
-      "BABY-FACED ASSASSINS",
-      rookieQbs.length === 1 ? `A rookie starts at quarterback in ${displayName(year, rookieQbs[0]!.id).replace(` ${nick(rookieQbs[0]!.id)}`, "")}` : `${numberWord(rookieQbs.length)[0]!.toUpperCase() + numberWord(rookieQbs.length).slice(1)} rookie quarterbacks start week one`,
-      rookieQbs.map((t) => `${playerName(save.players[t.qbId!]!)} gets the keys for the ${name(t.id)}.`).join(" ") + " Rookie quarterbacks get humbled. The question is how fast they recover.",
+      V("qk", ["BABY-FACED ASSASSINS", "ROOKIES UNDER CENTER", "TRIAL BY FIRE", "THE KIDS ARE STARTING"]),
+      rookieQbs.length === 1 ? `A rookie starts at quarterback in ${locationOf(year, rookieQbs[0]!.id)}` : `${numberWord(rookieQbs.length)[0]!.toUpperCase() + numberWord(rookieQbs.length).slice(1)} rookie quarterbacks start week one`,
+      rookieQbs.map((t) => `${playerName(save.players[t.qbId!]!)} gets the keys for the ${name(t.id)}.`).join(" ") + ` ${V("qb2", ["Rookie quarterbacks get humbled. The question is how fast they recover.", "The first interception is coming. What matters is the next throw.", "Defensive coordinators have been waiting all summer for this.", "Every rookie quarterback hits a wall. The good ones climb it."])}`,
       rookieQbs.map((t) => t.id),
       rookieQbs.map((t) => t.qbId!),
     );
@@ -701,16 +776,16 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   if (bigAdds.length) {
     story(
       "moves",
-      "NEW ADDRESS",
-      `${playerName(bigAdds[0]!)} headlines the offseason's biggest moves`,
-      bigAdds.map((p) => `${playerName(p)} (${p.pos}) goes from the ${name(last(p)!.teamId as TeamId)} to the ${name(teamOf(p))}.`).join(" "),
+      V("mk", ["NEW ADDRESS", "OFFSEASON WINNERS", "ON THE MOVE", "NEW COLORS"]),
+      V("mt", [`${playerName(bigAdds[0]!)} headlines the offseason's biggest moves`, `${playerName(bigAdds[0]!)} has a new home`, `The ${nick(teamOf(bigAdds[0]!))} landed ${playerName(bigAdds[0]!)}`]),
+      bigAdds.map((p, i) => (i % 2 ? `The ${name(teamOf(p))} added ${playerName(p)} (${p.pos}) from the ${name(last(p)!.teamId as TeamId)}.` : `${playerName(p)} (${p.pos}) goes from the ${name(last(p)!.teamId as TeamId)} to the ${name(teamOf(p))}.`)).join(" "),
       bigAdds.map(teamOf),
       bigAdds.map((p) => p.id),
     );
   }
   const holdouts = all.filter((p) => p.holdout && p.ovr >= 74).sort((a, b) => b.ovr - a.ovr).slice(0, 3);
   if (holdouts.length) {
-    story("holdouts", "CONTRACT STANDOFFS", `${playerName(holdouts[0]!)} isn't in camp`, holdouts.map((p) => `${playerName(p)} wants a new deal from the ${name(teamOf(p))}.`).join(" ") + " These usually end the week before the opener. Usually.", holdouts.map(teamOf), holdouts.map((p) => p.id));
+    story("holdouts", V("hk", ["CONTRACT STANDOFFS", "HOLDOUT WATCH", "SHOW ME THE MONEY"]), V("ht", [`${playerName(holdouts[0]!)} isn't in camp`, `Where is ${playerName(holdouts[0]!)}?`, `${playerName(holdouts[0]!)} wants paid`]), holdouts.map((p) => `${playerName(p)} wants a new deal from the ${name(teamOf(p))}.`).join(" ") + ` ${V("hb", ["These usually end the week before the opener. Usually.", "Somebody blinks before week one. Probably.", "Missed practice time adds up by October."])}`, holdouts.map(teamOf), holdouts.map((p) => p.id));
   }
   for (const r of relocationsForYear(year)) {
     if (!T.get(r.teamId)) continue;
@@ -722,8 +797,8 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   }
   const risers = teams.filter((t) => t.projW - t.lastYear.w >= 3 && t.lastYear.w + t.lastYear.l > 0).sort((a, b) => b.projW - b.lastYear.w - (a.projW - a.lastYear.w));
   const fallers = teams.filter((t) => t.lastYear.w - t.projW >= 3).sort((a, b) => b.lastYear.w - b.projW - (a.lastYear.w - a.projW));
-  if (risers[0]) story("rise", "ON THE RISE", `The ${nick(risers[0].id)} are coming`, `${recText(risers[0].lastYear.w, risers[0].lastYear.l, risers[0].lastYear.t)} a year ago. Projected ${risers[0].projW.toFixed(1)} wins now, with a ${pct(risers[0].playoffPct)} shot at the playoffs. ${risers[0].outlook}`, [risers[0].id]);
-  if (fallers[0]) story("fall", "BUYER BEWARE", `Don't trust the ${nick(fallers[0].id)}' record`, `They went ${recText(fallers[0].lastYear.w, fallers[0].lastYear.l, fallers[0].lastYear.t)}. The roster projects closer to ${fallers[0].projW.toFixed(1)} wins. ${fallers[0].outlook}`, [fallers[0].id]);
+  if (risers[0]) story("rise", V("uk", ["ON THE RISE", "COMING UP FAST", "BREAKOUT TEAM", "WATCH OUT"]), V("ut", [`The ${nick(risers[0].id)} are coming`, `The ${nick(risers[0].id)} are for real`, `Nobody wants to play the ${nick(risers[0].id)} now`]), `${recText(risers[0].lastYear.w, risers[0].lastYear.l, risers[0].lastYear.t)} a year ago. Projected ${risers[0].projW.toFixed(1)} wins now, with a ${pct(risers[0].playoffPct)} shot at the playoffs. ${risers[0].outlook}`, [risers[0].id]);
+  if (fallers[0]) story("fall", V("fk", ["BUYER BEWARE", "REGRESSION WATCH", "CORRECTION COMING"]), V("ftl", [`Don't trust the ${nick(fallers[0].id)}' record`, `The ${nick(fallers[0].id)} are due for a fall`, `Last year's ${nick(fallers[0].id)} were a mirage`]), `They went ${recText(fallers[0].lastYear.w, fallers[0].lastYear.l, fallers[0].lastYear.t)}. The roster projects closer to ${fallers[0].projW.toFixed(1)} wins. ${fallers[0].outlook}`, [fallers[0].id]);
 
   // Rule changes and league history the season opens with.
   const RULES: Record<number, string> = {
@@ -795,6 +870,247 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     concerns: gradeSorted.slice(-2).reverse().map((g) => `${GROUP_WORDS[g.key].bad[0]!.toUpperCase() + GROUP_WORDS[g.key].bad.slice(1)}: ${g.grade}.`),
   };
 
+  /* -------------------------------------------------- the desk, the receipts, the features */
+
+  const crew = crewFor(year);
+  const cast = {
+    HOST: { name: crew.HOST.name, role: crew.HOST.role, tenure: tenure(crew.HOST, year) },
+    ANALYST: { name: crew.ANALYST.name, role: crew.ANALYST.role, tenure: tenure(crew.ANALYST, year) },
+    REPORTER: { name: crew.REPORTER.name, role: crew.REPORTER.role, tenure: tenure(crew.REPORTER, year) },
+  };
+  const first = (n: string) => n.replace(/ “.*”/, "").split(" ")[0]!;
+  const v = (slot: string, list: readonly string[]) => vary(slot, year, list);
+  const tic = (who: "HOST" | "ANALYST" | "REPORTER", slot: string) => v(`tic-${who}-${slot}`, crew[who].tics);
+
+  // Last year's calls against what happened.
+  let receipts: SeasonPreview["receipts"];
+  const old = save.previewPicks?.year === year - 1 ? save.previewPicks : undefined;
+  if (old && lastChamp) {
+    const lines: string[] = [];
+    let good = 0;
+    const lname = (id: TeamId) => displayName(year - 1, id);
+    if (old.superBowl.winner === lastChamp) {
+      lines.push(`A year ago on this set we picked the ${lname(lastChamp)} to win it all. They did.`);
+      good += 2;
+    } else if (lastSb && [lastSb.homeId, lastSb.awayId].includes(old.superBowl.winner)) {
+      lines.push(`We had the ${lname(old.superBowl.winner)} winning the Super Bowl. They got there and lost to the ${lname(lastChamp)}.`);
+      good += 1;
+    } else {
+      const t = save.teams[old.superBowl.winner];
+      lines.push(`We picked the ${lname(old.superBowl.winner)} to win the Super Bowl. They went ${t ? recText(t.wins, t.losses, t.ties) : "nowhere"}. The ${lname(lastChamp)} won it.`);
+    }
+    const errs = Object.entries(old.projW)
+      .filter(([id]) => save.teams[id as TeamId])
+      .map(([id, w]) => ({ id: id as TeamId, w, act: save.teams[id as TeamId]!.wins }))
+      .map((x) => ({ ...x, d: x.act - x.w }));
+    const nailed = errs.filter((x) => x.act >= games * 0.6).sort((a, b) => Math.abs(a.d) - Math.abs(b.d))[0];
+    const missed = errs.slice().sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
+    if (nailed && Math.abs(nailed.d) <= 1) {
+      lines.push(`We said ${nailed.w.toFixed(1)} wins for the ${lname(nailed.id)}. They won ${nailed.act}.`);
+      good += 1;
+    }
+    if (missed && Math.abs(missed.d) >= 3)
+      lines.push(missed.d > 0 ? `We had the ${lname(missed.id)} at ${missed.w.toFixed(1)} wins. They won ${missed.act}. We'll take the hit.` : `We had the ${lname(missed.id)} at ${missed.w.toFixed(1)} wins. They won ${missed.act}. Ouch.`);
+    const lastAwards = save.history.awards.find((x) => x.year === year - 1);
+    const mvpCall = old.awards.find((x) => x.label === "Most Valuable Player")?.playerId;
+    if (lastAwards?.mvp && mvpCall) {
+      const pick0 = save.players[mvpCall];
+      const won = save.players[lastAwards.mvp];
+      if (mvpCall === lastAwards.mvp) {
+        lines.push(`Our MVP pick, ${pick0 ? playerName(pick0) : "our guy"}, won it.`);
+        good += 1;
+      } else if (won) lines.push(`Our MVP pick was ${pick0 ? playerName(pick0) : "somebody else"}. ${playerName(won)} won it.`);
+    }
+    receipts = { headline: good >= 2 ? "Last year's picks held up" : "Last year's picks, revisited", lines };
+    receipts.lines.push(good >= 2 ? v("rg", P.receiptsGood) : v("rb", P.receiptsBad));
+  }
+
+  // The rotating features.
+  type Feature = SeasonPreview["features"][number];
+  const qbs = teams.map((t) => (t.qbId ? save.players[t.qbId] : undefined)).filter((p): p is Player => !!p).sort((a, b) => b.ovr - a.ovr);
+  const line2 = (x: number) => Math.round(x * 2) / 2;
+  const builders: (() => Feature | undefined)[] = [
+    () =>
+      qbs.length >= 6
+        ? {
+            id: "qbs",
+            kicker: "Ranked",
+            title: "The quarterback top ten",
+            intro: v("fqb", ["Everything in this league starts at quarterback. Here's our top ten.", "The most important position in sports, ranked.", "Ten quarterbacks we'd build around. In order."]),
+            rows: qbs.slice(0, 10).map((p, i) => ({
+              playerId: p.id,
+              teamId: teamOf(p),
+              label: String(i + 1),
+              value: `${p.age}`,
+              note: last(p)?.passYds ? `${comma(last(p)!.passYds)} yds, ${last(p)!.passTd} TD last year` : p.draftYear === year ? "Rookie" : "New starter",
+            })),
+          }
+        : undefined,
+    () => {
+      const pool = teams.slice().sort((a, b) => hash(a.id + year) - hash(b.id + year)).slice(0, 8).sort((a, b) => b.projW - a.projW);
+      return {
+        id: "ou",
+        kicker: "Win totals",
+        title: "Over or under",
+        intro: v("fou", ["We set the lines. The analyst picks a side.", "Win totals, and a call on every one.", "Over or under. No pushes allowed."]),
+        rows: pool.map((t) => {
+          const lineW = line2(t.projW * 0.65 + (t.lastYear.w + t.lastYear.l > 0 ? t.lastYear.w : t.projW) * 0.35);
+          const over = t.projW > lineW + 0.2 || (Math.abs(t.projW - lineW) <= 0.2 && !!t.xFactorId);
+          return {
+            teamId: t.id,
+            label: nick(t.id),
+            value: `${over ? "Over" : "Under"} ${lineW.toFixed(1)}`,
+            note: over
+              ? t.xFactorId
+                ? `${playerName(save.players[t.xFactorId]!)} pushes them past it.`
+                : "The roster is better than the line."
+              : t.lastYear.w > t.projW
+                ? "Last year's record is propping up this number."
+                : "Too many questions for that many wins.",
+          };
+        }),
+      };
+    },
+    () => {
+      const qs: { q: string; a: string; teamId?: TeamId; playerId?: string }[] = [];
+      const [c1, c2] = confChamps;
+      if (c1) qs.push({ q: `Who wins the ${c1.conf}?`, a: `The ${name(c1.teamId)}. ${pct(T.get(c1.teamId)!.confPct)} in our simulations.`, teamId: c1.teamId });
+      if (c2) qs.push({ q: `And the ${c2.conf}?`, a: `The ${name(c2.teamId)}, ${pct(T.get(c2.teamId)!.confPct)}.`, teamId: c2.teamId });
+      if (lastChamp && T.get(lastChamp)) qs.push({ q: `Can the ${nick(lastChamp)} repeat?`, a: `${pct(T.get(lastChamp)!.titlePct)} chance. ${T.get(lastChamp)!.titlePct >= 0.15 ? "Better than most defending champions get." : "History says no."}`, teamId: lastChamp });
+      if (oroy[0]) qs.push({ q: "Which rookie makes the biggest splash?", a: `${playerName(save.players[oroy[0].playerId!]!)} with the ${nick(oroy[0].teamId)}.`, playerId: oroy[0].playerId, teamId: oroy[0].teamId });
+      if (hotSeat[0]) qs.push({ q: "Which coach is in trouble first?", a: `${save.coaches[hotSeat[0].coachId]?.name} in ${locationOf(year, hotSeat[0].teamId)}.`, teamId: hotSeat[0].teamId });
+      if (sleeper) qs.push({ q: "Who's the surprise playoff team?", a: `The ${name(sleeper.id)}. ${pct(sleeper.playoffPct)} and climbing.`, teamId: sleeper.id });
+      const sackMan = dpoy.find((d) => ["DE", "OLB", "DT"].includes(save.players[d.playerId!]?.pos ?? ""));
+      if (sackMan) qs.push({ q: "Who leads the league in sacks?", a: `${playerName(save.players[sackMan.playerId!]!)}.`, playerId: sackMan.playerId, teamId: sackMan.teamId });
+      if (lastRide[0]) qs.push({ q: `Is this ${playerName(save.players[lastRide[0].playerId]!)}'s last season?`, a: v("lastq", ["Don't bet against him playing again.", "I think so. Enjoy it.", "He'll decide in January. The tape says he can still go."]), playerId: lastRide[0].playerId, teamId: lastRide[0].teamId });
+      if (qs.length < 4) return undefined;
+      const start = year % qs.length;
+      const five = [...qs.slice(start), ...qs.slice(0, start)].slice(0, 5);
+      return { id: "questions", kicker: "Five questions", title: `Five questions for ${year}`, intro: v("fq", ["Five questions that decide the season. Five answers.", "Rapid fire. Five questions.", "We asked ourselves five questions. Here are the answers."]), rows: five.map((x, i) => ({ label: `${i + 1}`, teamId: x.teamId, playerId: x.playerId, value: x.q, note: x.a })) };
+    },
+    () => {
+      const g = schedule
+        .filter((x) => isRivalry(x.homeId as TeamId, x.awayId as TeamId) && T.get(x.homeId as TeamId) && T.get(x.awayId as TeamId))
+        .sort((a, b) => T.get(b.homeId as TeamId)!.titlePct + T.get(b.awayId as TeamId)!.titlePct - (T.get(a.homeId as TeamId)!.titlePct + T.get(a.awayId as TeamId)!.titlePct))[0];
+      if (!g) return undefined;
+      const h = g.homeId as TeamId;
+      const a = g.awayId as TeamId;
+      const sn = seriesNote(save, h, a);
+      return {
+        id: "rivalry",
+        kicker: "Rivalry spotlight",
+        title: `${nick(a)} at ${nick(h)}, week ${g.week}`,
+        intro: v("frv", ["Some games mean more. This is the one.", "Throw out the records. This is a rivalry.", "The game both fan bases circled the day the schedule came out."]),
+        rows: [
+          { teamId: a, label: nick(a), value: `${T.get(a)!.projW.toFixed(1)} proj. wins`, note: T.get(a)!.verdict },
+          { teamId: h, label: nick(h), value: `${T.get(h)!.projW.toFixed(1)} proj. wins`, note: T.get(h)!.verdict },
+          ...(sn ? [{ label: "Series", value: sn.series, note: sn.revenge ?? sn.last }] : []),
+        ],
+      };
+    },
+    () => {
+      const ago = [50, 40, 30, 25, 20, 15, 10, 5]
+        .map((n) => ({ n, b: save.history.superBowls.find((x) => x.year === year - n) }))
+        .filter((x): x is { n: number; b: NonNullable<typeof x.b> } => !!x.b)
+        .slice(0, 4);
+      if (!ago.length) return undefined;
+      return {
+        id: "anniversary",
+        kicker: "This league's history",
+        title: `${ago[0]!.n} years ago this season`,
+        intro: v("fan", ["Before we look ahead, a look back at this league's own history.", "Anniversaries worth remembering.", "Where this league has been."]),
+        rows: ago.map(({ n, b }) => {
+          const w = (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId;
+          const l = (w === b.homeId ? b.awayId : b.homeId) as TeamId;
+          const mine0 = save.history.seasons.find((c) => c.year === b.year && c.teamId === u);
+          return {
+            teamId: w,
+            label: `${n} years`,
+            value: `${displayName(b.year, w)}, Super Bowl ${roman(b.number)}`,
+            note: `${Math.max(b.homeScore, b.awayScore)}-${Math.min(b.homeScore, b.awayScore)} over the ${displayName(b.year, l)}${b.mvpName ? `. MVP: ${b.mvpName}` : ""}${mine0 ? `. Your club went ${recText(mine0.wins, mine0.losses, mine0.ties)}` : ""}.`,
+          };
+        }),
+      };
+    },
+    () => {
+      const by = (k2: "Line" | "Front") => teams.slice().sort((a, b) => a.grades.find((g) => g.key === k2)!.pct - b.grades.find((g) => g.key === k2)!.pct).slice(0, 3);
+      return {
+        id: "trenches",
+        kicker: "Won up front",
+        title: "The best lines in football",
+        intro: v("ftr", ["Games are won in the trenches. These are the teams that win there.", "The big uglies. Ranked.", "Forget the skill players for a minute. Here's where football is decided."]),
+        rows: [
+          ...by("Line").map((t, i) => ({ teamId: t.id, label: `OL ${i + 1}`, value: nick(t.id), note: `Offensive line grade ${t.grades.find((g) => g.key === "Line")!.grade}` })),
+          ...by("Front").map((t, i) => ({ teamId: t.id, label: `DL ${i + 1}`, value: nick(t.id), note: `Front seven grade ${t.grades.find((g) => g.key === "Front")!.grade}` })),
+        ],
+      };
+    },
+    () => {
+      const hcs = teams
+        .map((t) => ({ t, c: save.teams[t.id]!.coachId ? save.coaches[save.teams[t.id]!.coachId!] : undefined }))
+        .filter((x): x is { t: PreviewTeam; c: Coach } => !!x.c);
+      if (hcs.length < 4) return undefined;
+      const tenured = hcs.slice().sort((a, b) => b.c.yearsOnJob - a.c.yearsOnJob)[0]!;
+      const winning = hcs.slice().sort((a, b) => b.c.careerWins - a.c.careerWins)[0]!;
+      const rings = hcs.filter((x) => x.c.careerTitles > 0).sort((a, b) => b.c.careerTitles - a.c.careerTitles)[0];
+      const fresh = hcs.filter((x) => x.t.newCoach);
+      return {
+        id: "coaches",
+        kicker: "Coaches' corner",
+        title: "The men with the headsets",
+        intro: v("fco", ["Players win games. Coaches win seasons.", "The sideline, by the numbers.", "A look at the coaches who'll decide this year."]),
+        rows: [
+          { teamId: tenured.t.id, label: "Longest tenure", value: tenured.c.name, note: `Year ${tenured.c.yearsOnJob + 1} with the ${nick(tenured.t.id)}.` },
+          { teamId: winning.t.id, label: "Most wins", value: winning.c.name, note: `${recText(winning.c.careerWins, winning.c.careerLosses, winning.c.careerTies)} career.` },
+          ...(rings ? [{ teamId: rings.t.id, label: "Rings", value: rings.c.name, note: `${rings.c.careerTitles} championship${rings.c.careerTitles === 1 ? "" : "s"}.` }] : []),
+          ...fresh.slice(0, 3).map((x) => ({ teamId: x.t.id, label: "New", value: x.c.name, note: `Takes over a ${recText(x.t.lastYear.w, x.t.lastYear.l, x.t.lastYear.t)} team.` })),
+        ],
+      };
+    },
+    () => {
+      const ageOf = (id: TeamId) => {
+        const xs = rosterOf(save, id).sort((a, b) => b.ovr - a.ovr).slice(0, 22).map((p) => p.age);
+        return xs.reduce((a, b) => a + b, 0) / Math.max(1, xs.length);
+      };
+      const rowsA = teams.map((t) => ({ t, a: ageOf(t.id) })).sort((a, b) => a.a - b.a);
+      return {
+        id: "ages",
+        kicker: "Old guard, new blood",
+        title: "Youngest and oldest starting lineups",
+        intro: v("fag", ["Youth is a strategy. So is experience.", "Who's built for now, and who's built for later.", "Age is just a number. It's also a pretty good predictor."]),
+        rows: [
+          ...rowsA.slice(0, 3).map((x) => ({ teamId: x.t.id, label: "Young", value: nick(x.t.id), note: `Starters average ${x.a.toFixed(1)} years old.` })),
+          ...rowsA.slice(-3).reverse().map((x) => ({ teamId: x.t.id, label: "Veteran", value: nick(x.t.id), note: `Starters average ${x.a.toFixed(1)} years old.` })),
+        ],
+      };
+    },
+    () => {
+      const bySos = teams.slice().sort((a, b) => a.sosRank - b.sosRank);
+      return {
+        id: "schedules",
+        kicker: "The schedule makers",
+        title: "Toughest and softest schedules",
+        intro: v("fsc", ["Not all sixteen-game slates are created equal.", "The schedule can make a season. Here's who got lucky.", "Strength of schedule, from the gauntlet to the cakewalk."]).replace("sixteen", numberWord(games)),
+        rows: [
+          ...bySos.slice(0, 3).map((t) => ({ teamId: t.id, label: "Toughest", value: nick(t.id), note: t.toughStretch ?? "" })),
+          ...bySos.slice(-3).reverse().map((t) => ({ teamId: t.id, label: "Softest", value: nick(t.id), note: `${pct(t.playoffPct)} to make the playoffs with it.` })),
+        ],
+      };
+    },
+  ];
+  const features: Feature[] = [];
+  const nB = builders.length;
+  for (const start of [year, year + 3, year + 6]) {
+    for (let step = 0; step < nB && features.length < 3; step++) {
+      const i = (start + step) % nB;
+      const f = builders[i]!();
+      if (f && !features.some((x) => x.id === f.id)) {
+        features.push(f);
+        break;
+      }
+    }
+  }
+
   /* -------------------------------------------------- the broadcast */
 
   const chapters: Episode["chapters"] = [];
@@ -802,60 +1118,113 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   const H = (text: string): Line => ({ speaker: "HOST", text });
   const A = (text: string): Line => ({ speaker: "ANALYST", text });
   const R = (text: string): Line => ({ speaker: "REPORTER", text });
-  const k = String(year);
   const favorite = teams.slice().sort((a, b) => b.titlePct - a.titlePct)[0]!;
-  chap("open", "SEASON PREVIEW", `${year}: here we go`, [favorite.id], [
-    H(
-      `${pick(k + "hi", ["Good morning, everybody, and welcome in.", "Welcome in, everybody. Pull up a chair.", "Hello again, everybody, and welcome to the season."])} The ${year} season is days away, ${ids.length} teams, ${games} games apiece, and one trophy. I'm ${PREVIEW_CAST.HOST.name}, alongside ${PREVIEW_CAST.ANALYST.name.replace(/ “.*” /, " ")} and ${PREVIEW_CAST.REPORTER.name}. We've watched the film, we've run the numbers two thousand times, and we're putting our picks on the record.`,
+  const hostN = cast.HOST.tenure;
+  const intro = hostN === 1 ? `I'm ${crew.HOST.name}, and this is my first preview on this desk.` : `I'm ${crew.HOST.name}, back for my ${ORD_WORDS[hostN - 1] ?? `${hostN}th`} season preview.`;
+  const analystN = cast.ANALYST.tenure;
+  const withCrew = analystN === 1 ? `Joining us for the first time, ${crew.ANALYST.name}, and as always, ${crew.REPORTER.name}.` : `With me, ${first(crew.ANALYST.name)} ${crew.ANALYST.name.split(" ").at(-1)} and ${crew.REPORTER.name}.`;
+  chap("open", "SEASON PREVIEW", v("ttl", [`${year}: here we go`, `The ${year} season starts now`, `Welcome to ${year}`, `${year}: everybody's undefeated`, `Kickoff ${year}`]), [favorite.id], [
+    H(`${v("hello", P.hello)} ${intro} ${withCrew} ${v("era", eraColor(year))} ${ids.length} teams, ${games} games apiece, one trophy. ${v("prom", P.promise)}`),
+    A(
+      `${tic("ANALYST", "open")} ${v("ft", P.firstTake)} ${fill(v("fav", P.favorite), { T: name(favorite.id), P: pct(favorite.titlePct) })} ${favorite.titlePct < 0.15 ? v("fw", P.favoriteWide) : v("fn", P.favoriteNarrow)}`,
     ),
-    A(`${pick(k + "a1", ["I've been waiting all summer for this.", "Rich, I've got some takes today. Hold onto something.", "Camp's over. Now it counts."])} The favorite on paper is the ${name(favorite.id)}, and I'm not going to pretend otherwise: ${pct(favorite.titlePct)} to win it all. That's the best number in the league. ${favorite.titlePct < 0.15 ? "But it also means the field is wide open." : "That's a team that knows exactly what it is."}`),
-    ...(rules ? [R(`And before we go anywhere: ${rules}`)] : []),
+    ...(rules ? [R(`${tic("REPORTER", "rules")} the rulebook changed this year: ${rules[0]!.toLowerCase()}${rules.slice(1)}`)] : []),
   ]);
-  for (const s of stories.slice(0, 4)) {
-    chap(`story-${s.id}`, s.kicker, s.title, s.teamIds.slice(0, 2), [H(s.body), A(pick(s.id + k, ["I'll tell you what I'm watching: the first three weeks. You find out who you are early.", "Here's my issue. Talk is cheap in August. Show me in October.", "I played in this league. Momentum from last year doesn't carry over. You build it again from scratch.", "This is the storyline that'll define the first half of the season."]))]);
+  if (receipts) {
+    chap("receipts", "THE RECEIPTS", receipts.headline, lastChamp ? [lastChamp] : [], [
+      H(`${tic("HOST", "rc")} before the new picks, the old ones. ${receipts.lines.slice(0, 2).join(" ")}`),
+      A(receipts.lines.slice(2).join(" ") || v("rcA", P.receiptsBad)),
+    ]);
   }
-  for (const d of divisions) {
+  // The champion's story leads; the rest come in a different order every year.
+  const [lead0, ...restStories] = stories;
+  const orderedStories = lead0 ? [lead0, ...restStories.sort((a, b) => hash(a.id + year) - hash(b.id + year))] : [];
+  const storyCount = 2 + (year % 3);
+  for (const st of orderedStories.slice(0, storyCount)) {
+    chap(`story-${st.id}`, st.kicker, st.title, st.teamIds.slice(0, 2), [H(st.body), A(`${tic("ANALYST", st.id)} ${v("sr" + st.id, P.storyReply)}`)]);
+  }
+  const featChap = (f: Feature) =>
+    chap(`feature-${f.id}`, f.kicker.toUpperCase(), f.title, f.rows.map((r) => r.teamId).filter((x): x is TeamId => !!x).slice(0, 2), [
+      H(f.intro),
+      ...f.rows.slice(0, 6).map((r, i) => {
+        const who = r.playerId ? playerName(save.players[r.playerId]!) : r.value ?? r.label;
+        const text = f.id === "questions" ? `${r.value} ${r.note}` : f.id === "qbs" ? `Number ${r.label}: ${who}, ${nick(r.teamId!)}. ${r.note}.` : `${r.label}: ${who}${r.value && r.value !== who ? `, ${r.value}` : ""}. ${r.note ?? ""}`;
+        return i % 2 ? H(text) : A(text);
+      }),
+    ]);
+  if (features[0]) featChap(features[0]);
+  const divFmt = (d: (typeof divisions)[number], idx: number) => {
     const order = d.order.map((id) => T.get(id)!);
     const top = order[0]!;
+    const second = order[1];
     const sleeperD = order.slice(1).sort((a, b) => b.playoffPct - a.playoffPct)[0];
-    const newestKey = order.flatMap((t) => t.newcomers.slice(0, 1)).map((id) => save.players[id]!).filter(Boolean).sort((a, b) => b.ovr - a.ovr)[0];
-    chap(`div-${d.key}`, d.conf, d.key, d.order.slice(0, 2), [
-      H(`The ${d.key}. ${d.note}`),
-      A(`Here's how I see it finishing: ${order.map((t, i) => `${i + 1}, the ${nick(t.id)}`).join("; ")}. ${top.outlook.split(". ").slice(0, 2).join(". ")}.${sleeperD && sleeperD.playoffPct >= 0.3 ? ` Don't sleep on the ${nick(sleeperD.id)}, though: ${pct(sleeperD.playoffPct)} to make the playoffs.` : ""}`),
-      ...(newestKey ? [R(`${pick(d.key + k, ["I'm told", "People around the club tell me", "Talking to the staff this week,"])} ${playerName(newestKey)} has been the story of camp for the ${nick(teamOf(newestKey))}. ${newestKey.draftYear === year ? "Rookie or not, they expect him to play." : "The fit looks right."}`)] : []),
-    ]);
-  }
-  chap(
-    "lightning",
-    "LIGHTNING ROUND",
-    "Every club in one breath",
-    [],
-    ranked.flatMap((id, i) => {
+    const camp = order.flatMap((t) => t.newcomers.slice(0, 1)).map((id) => save.players[id]!).filter(Boolean).sort((a, b) => b.ovr - a.ovr)[0];
+    const finish = `${order.map((t, i) => `${i + 1}, the ${nick(t.id)}`).join("; ")}.`;
+    const reason = top.outlook.split(". ").slice(0, 2).join(". ") + ".";
+    const campLine = camp ? `${tic("REPORTER", d.key)} ${fill(v("rc" + d.key, P.reporterCamp), { P: playerName(camp), T: nick(teamOf(camp)) })} ${camp.draftYear === year ? v("rk" + d.key, ["Rookie or not, they expect him to play.", "He'll play early.", "The rookie isn't waiting his turn."]) : v("vt" + d.key, ["He fits what they do.", "He's already a leader in that room.", "The coaches love the fit.", "Expect him on the field a lot."])}` : "";
+    const opener = fill(v("do" + d.key, P.divOpen), { D: d.key });
+    const fmt = (hash(d.key) + year + idx) % 3;
+    if (fmt === 1 && second && top.divisionPct - second.divisionPct < 0.25) {
+      return [
+        H(`${opener} ${tic("HOST", d.key)} I'm taking the ${nick(second.id)}.`),
+        A(`${v("dis" + d.key, P.disagree)} It's the ${nick(top.id)}. ${reason} My order: ${finish}`),
+        R(`The numbers split the difference: ${nick(top.id)} ${pct(top.divisionPct)}, ${nick(second.id)} ${pct(second.divisionPct)}.${campLine ? ` ${campLine}` : ""}`),
+      ];
+    }
+    if (fmt === 2 && campLine) {
+      return [R(campLine), H(`${opener} ${d.note}`), A(`${v("ag" + d.key, P.agree)} ${finish}${sleeperD && sleeperD.playoffPct >= 0.3 ? ` Watch the ${nick(sleeperD.id)}.` : ""}`)];
+    }
+    return [
+      H(`${opener} ${d.note}`),
+      A(`${v("hs" + d.key, ["Here's how I see it finishing:", "My order:", "Top to bottom:", "Put me down for:"])} ${finish} ${reason}${sleeperD && sleeperD.playoffPct >= 0.3 ? ` ${compose(d.key + "sl", year, [["Don't sleep on ", "Keep an eye on ", "Watch out for ", "Circle "], [`the ${nick(sleeperD.id)}`], [`, though: ${pct(sleeperD.playoffPct)} to make the playoffs.`, `. ${pct(sleeperD.playoffPct)} playoff odds.`, `, ${/^(8|11|18)/.test(pct(sleeperD.playoffPct)) ? "an" : "a"} ${pct(sleeperD.playoffPct)} playoff team in our numbers.`]])}` : ""}`),
+      ...(campLine ? [R(campLine)] : []),
+    ];
+  };
+  const half = Math.ceil(divisions.length / 2);
+  divisions.forEach((d, i) => {
+    chap(`div-${d.key}`, d.conf, d.key, d.order.slice(0, 2), divFmt(d, i));
+    if (i === half - 1 && features[1]) featChap(features[1]);
+  });
+  if (year % 2) {
+    chap("lightning", "LIGHTNING ROUND", v("lt", ["Every club in one breath", "All of them, fast", "Around the league in sixty seconds"]), [], ranked.map((id, i) => {
       const t = T.get(id)!;
       const line = `${i + 1}. The ${name(id)}: ${t.projW.toFixed(1)} wins. ${t.verdict}`;
-      return [i % 2 ? A(line) : H(line)];
-    }),
-  );
-  for (const a of awards.slice(0, 3)) {
+      return i % 2 ? A(line) : H(line);
+    }));
+  } else {
+    const tiers = ["Contender", "Playoff hopeful", "In the mix", "Long shot", "Rebuilding"] as const;
+    chap("tiers", "THE TIERS", v("tt", ["Sorting the league", "Where everybody stands", "Tier by tier"]), [], tiers
+      .map((tier) => ({ tier, list: teams.filter((t) => t.tier === tier) }))
+      .filter((x) => x.list.length)
+      .map((x, i) => {
+        const text = `${x.tier}${x.list.length === 1 ? "" : "s"}: ${x.list.map((t) => `the ${nick(t.id)}`).join(", ")}.`;
+        return i % 2 ? A(text) : H(text);
+      }));
+  }
+  const others = awards.slice(1);
+  const shownAwards = [awards[0]!, ...others.slice(year % Math.max(1, others.length)), ...others.slice(0, year % Math.max(1, others.length))].filter(Boolean).slice(0, 3);
+  for (const a of shownAwards) {
     const top = a.picks[0]!;
     const who = top.playerId ? playerName(save.players[top.playerId]!) : save.coaches[top.coachId!]?.name ?? "";
+    const alt = a.picks[1];
     chap(`award-${a.label}`, "AWARDS WATCH", a.label, [top.teamId], [
-      H(`${a.label}. The favorite on our board: ${who}, ${top.odds}. ${top.note}`),
-      A(`${a.picks.length > 1 ? `I'll give you a name at a better price: ${a.picks[1]!.playerId ? playerName(save.players[a.picks[1]!.playerId]!) : ""}, ${a.picks[1]!.odds}.` : ""} ${pick(a.label + k, ["Value is value.", "That's where the money is.", "Remember I said it."])}`),
+      H(`${fill(v("ao" + a.label, P.awardOpen), { A: a.label })} The favorite on our board: ${who}, ${top.odds}. ${top.note}`),
+      A(`${alt ? `${v("alt" + a.label, ["I'll give you a name at a better price:", "My value play:", "Give me", "Don't overlook"])} ${alt.playerId ? playerName(save.players[alt.playerId]!) : save.coaches[alt.coachId!]?.name ?? ""}, ${alt.odds}.` : ""} ${v("av" + a.label, P.awardValue)}`),
     ]);
   }
-  if (bold.length) chap("bold", "BOLD PREDICTIONS", "On the record", bold.slice(0, 2).flatMap((b) => b.teamIds.slice(0, 1)), bold.slice(0, 5).map((b, i) => (i % 2 ? H(b.text) : A(b.text))));
+  if (features[2]) featChap(features[2]);
+  if (bold.length) chap("bold", "BOLD PREDICTIONS", v("bt", ["On the record", "Hold us to it", "Calls we'll regret"]), bold.slice(0, 2).flatMap((b) => b.teamIds.slice(0, 1)), [H(v("bi", P.boldIntro)), ...bold.slice(0, 5).map((b, i) => (i % 2 ? H(b.text) : A(b.text)))]);
   chap("yours", "YOUR CLUB", yours.headline, [u], [
-    H(`Now to the ${name(u)}. ${yours.lines[0]}`),
-    A(`${yours.lines[1]} ${yours.keys.join(" ")} The concern: ${yours.concerns[0]?.toLowerCase() ?? "depth"}`),
-    R(`${mine.toughStretch ? `Circle this: ${mine.toughStretch}. ` : ""}${mine.newcomers.length ? `Watch ${playerName(save.players[mine.newcomers[0]!]!)}, the newcomer the staff is most excited about.` : "Same core, one more year together."}`),
+    H(`${v("yo", ["Now to the", "Let's talk about the", "And then there's the", "Time for the"])} ${name(u)}. ${yours.lines[0]}`),
+    A(`${yours.lines[1]} ${yours.keys.join(" ")} ${v("yc", ["The concern:", "What worries me:", "The question:"])} ${yours.concerns[0]?.toLowerCase() ?? "depth"}`),
+    R(`${mine.toughStretch ? `Circle this: ${mine.toughStretch}. ` : ""}${mine.newcomers.length ? `${tic("REPORTER", "yours")} ${playerName(save.players[mine.newcomers[0]!]!)} is the newcomer the staff is most excited about.` : "Same core, one more year together."}`),
   ]);
   chap("sb", "THE PICK", `Super Bowl ${roman(superBowlNumber(year))}`, [sbPick.winner, sbPick.loser], [
-    H(`All right. The pick. Super Bowl ${roman(superBowlNumber(year))}.`),
-    A(`I've got the ${name(sbPick.winner)} over the ${name(sbPick.loser)}, ${sbPick.score}. ${T.get(sbPick.winner)!.outlook.split(". ")[0]}. That's my champion.`),
-    R(`For what it's worth, our two thousand simulations agree: the ${nick(sbPick.winner)} win it ${pct(sbPick.confidence)} of the time. Which means ${pct(1 - sbPick.confidence)} of the time, somebody proves us wrong.`),
+    H(`${v("sbi", P.sbIntro)} Super Bowl ${roman(superBowlNumber(year))}.`),
+    A(`I've got the ${name(sbPick.winner)} over the ${name(sbPick.loser)}, ${sbPick.score}. ${T.get(sbPick.winner)!.outlook.split(". ")[0]}. ${v("sbb", P.sbBack)}`),
+    R(`${fill(v("sbo", P.odds), { T: nick(sbPick.winner), P: pct(sbPick.confidence) })} ${v("sbu", P.upset)}`),
     ...(history ? [H(history)] : []),
-    H(`${pick(k + "bye", ["That's the preview. Enjoy the season, everybody.", "That's our show. Kickoff is close. We'll see you Sunday.", "The picks are in. Now let's go play. See you on Sunday."])}`),
+    H(v("bye", crew.signoff)),
   ]);
 
   const episode: Episode = {
@@ -865,7 +1234,7 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     subtitle: `${ids.length} teams · ${divisions.length} divisions · 2,000 simulated seasons`,
     chapters,
     focusIds: [],
-    cast: PREVIEW_CAST,
+    cast: { HOST: cast.HOST, ANALYST: cast.ANALYST, REPORTER: cast.REPORTER },
   };
 
   return {
@@ -886,6 +1255,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     rules,
     history,
     yours,
+    cast,
+    features,
+    receipts,
     episode,
   };
 }

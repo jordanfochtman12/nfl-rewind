@@ -6,7 +6,6 @@ import {
   gamesInSeason,
   nicknameOf,
   oddsOf,
-  PREVIEW_CAST,
   roman,
   superBowlNumber,
   teamAbbr,
@@ -448,6 +447,48 @@ export function SeasonPreviewShow() {
     ),
   });
 
+  if (pv.receipts) {
+    const rc = pv.receipts;
+    segs.push({
+      id: "receipts",
+      kicker: "Holding ourselves accountable",
+      title: rc.headline,
+      node: (
+        <ul className="space-y-1.5 text-[15px]">
+          {rc.lines.map((l) => (
+            <li key={l} className="border-l-2 border-brass/60 pl-3 text-paper">{l}</li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
+  for (const f of pv.features) {
+    segs.push({
+      id: `f-${f.id}`,
+      kicker: f.kicker,
+      title: f.title,
+      node: (
+        <div>
+          <p className="mb-3 text-sm text-muted">{f.intro}</p>
+          <ol className="grid gap-2 md:grid-cols-2">
+            {f.rows.map((r, i) => (
+              <li key={`${r.label}-${i}`} className="grid grid-cols-[auto_auto_1fr] items-center gap-3 border border-white/10 bg-black/40 px-3 py-2">
+                <span className="bug-num min-w-8 text-center text-lg text-brass">{r.label.length <= 3 ? r.label : ""}</span>
+                {r.teamId ? <Logo id={r.teamId} size={26} /> : <span />}
+                <span className="min-w-0">
+                  {r.label.length > 3 && <span className="block font-display text-[10px] font-bold uppercase italic tracking-wider text-subtle">{r.label}</span>}
+                  {r.playerId ? <Who id={r.playerId} sub={r.value} /> : <span className="font-display text-sm font-bold uppercase italic text-white">{r.value}</span>}
+                  {r.note && <span className="block text-xs text-muted">{r.note}</span>}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ),
+    });
+  }
+
   if (pv.storylines.length) {
     segs.push({
       id: "stories",
@@ -676,15 +717,17 @@ export function SeasonPreviewShow() {
             ))}
           </ul>
           <ul className="mt-5 grid max-w-3xl gap-2 sm:grid-cols-3" aria-label="On the desk">
-            {(Object.keys(PREVIEW_CAST) as (keyof typeof PREVIEW_CAST)[]).map((k) => {
-              const c = PREVIEW_CAST[k];
+            {(["HOST", "ANALYST", "REPORTER"] as const).map((k) => {
+              const c = pv.cast[k];
               const initials = c.name.replace(/“.*”/, "").split(/\s+/).filter(Boolean).map((w) => w[0]).join("").slice(0, 2);
               return (
                 <li key={k} className="flex items-center gap-3 border border-white/10 bg-black/50 px-3 py-2">
                   <span className="bx-primary flex h-10 w-10 shrink-0 items-center justify-center font-display text-base font-extrabold italic">{initials}</span>
                   <span className="min-w-0">
                     <span className="block truncate font-display text-sm font-extrabold uppercase italic text-white">{c.name}</span>
-                    <span className="block truncate text-[11px] text-muted">{c.role}</span>
+                    <span className="block truncate text-[11px] text-muted">
+                      {c.role} · {c.tenure === 1 ? "first year on the desk" : `${c.tenure}th year`.replace(/^(\d*1)th/, "$1st").replace(/^(\d*2)th/, "$1nd").replace(/^(\d*3)th/, "$1rd").replace(/^(1[123])(st|nd|rd)/, "$1th")}
+                    </span>
                   </span>
                 </li>
               );

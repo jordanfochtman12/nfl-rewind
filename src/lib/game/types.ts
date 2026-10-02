@@ -1130,6 +1130,18 @@ export interface SeasonPreview {
   rules?: string;
   history?: string;
   yours: { teamId: TeamId; headline: string; lines: string[]; keys: string[]; concerns: string[] };
+  /** This year's desk: it changes with the decades. */
+  cast: Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string; tenure: number }>;
+  /** Rotating features: a different handful every season. */
+  features: {
+    id: string;
+    kicker: string;
+    title: string;
+    intro: string;
+    rows: { teamId?: TeamId; playerId?: string; label: string; value?: string; note?: string }[];
+  }[];
+  /** Last year's picks, held up to the light. */
+  receipts?: { headline: string; lines: string[] };
   episode: NonNullable<PrimetimeShow["episode"]>;
 }
 
