@@ -21,6 +21,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
   const chapter = episode.chapters[index]!;
   const current = chapter.lines[line]!;
   const finale = episode.edition === "superBowl";
+  const preview = episode.edition === "seasonPreview";
   const end = index === episode.chapters.length - 1 && line === chapter.lines.length - 1;
   const advance = () => {
     if (line < chapter.lines.length - 1) setLine(line + 1);
@@ -66,7 +67,14 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
         voices.find((v) => /Natural|Online|Google/i.test(v.name)) ??
         voices.find((v) => v.lang === "en-US") ??
         voices[0];
-      if (preferred) speech.voice = preferred;
+      // A named crew gets a voice each: the host keeps the chosen one, the others take the
+      // next distinct English voices, so the desk sounds like three people.
+      const crew = episode.cast ? (["HOST", "ANALYST", "REPORTER"] as const).indexOf(current.speaker) : 0;
+      const pool = voices.filter((v) => v.lang.startsWith("en-US")).length >= 3 ? voices.filter((v) => v.lang.startsWith("en-US")) : voices;
+      const start = Math.max(0, pool.findIndex((v) => v.name === preferred?.name));
+      const chosen = crew > 0 && pool.length > 1 ? pool[(start + crew) % pool.length] : preferred;
+      if (chosen) speech.voice = chosen;
+      if (episode.cast && current.speaker === "ANALYST") speech.pitch = 0.9;
       speech.rate = current.speaker === "ANALYST" ? 0.96 : 1;
       speech.onend = next;
       speech.onerror = () => {
@@ -89,7 +97,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
       active = false;
       window.clearTimeout(timer);
     };
-  }, [playing, index, line, narration, voice, voices, year]);
+  }, [playing, index, line, narration, voice, voices, year, episode.cast]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);
@@ -211,7 +219,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
             </div>
           )}
           <div className="pt-stage-top">
-            <span className="pt-onair">{playing ? "ON AIR" : "STUDIO REPLAY"}</span>
+            <span className="pt-onair">{playing ? "ON AIR" : preview ? "SEASON PREVIEW" : "STUDIO REPLAY"}</span>
             <span>
               {String(index + 1).padStart(2, "0")} /{" "}
               {String(episode.chapters.length).padStart(2, "0")} SEGMENTS
@@ -228,11 +236,8 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
             {chapter.lines.map((l, i) => (
               <div key={i} className={i === line ? "pt-script-line is-speaking" : "pt-script-line"}>
                 <span>
-                  {l.speaker === "HOST"
-                    ? "STUDIO"
-                    : l.speaker === "ANALYST"
-                      ? "BREAKDOWN"
-                      : "LEAGUE REPORT"}
+                  {episode.cast?.[l.speaker]?.name.toUpperCase() ??
+                    (l.speaker === "HOST" ? "STUDIO" : l.speaker === "ANALYST" ? "BREAKDOWN" : "LEAGUE REPORT")}
                 </span>
                 <p>{l.text}</p>
               </div>
@@ -276,7 +281,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
         </nav>
       </div>
       <p className="pt-production-note">
-        REWIND NETWORK · Original studio coverage · Music: Sunday Lights / Network Mix
+        REWIND NETWORK · {preview ? "Season preview special" : "Original studio coverage"} · Music: Sunday Lights / Network Mix
       </p>
     </section>
   );

@@ -50,6 +50,8 @@ export function CampNight() {
         </div>
       </section>
 
+      <PreviewTeaser />
+
       <ProgressionCard />
 
       {camp?.battles && camp.battles.length > 0 && (
@@ -185,5 +187,27 @@ function ProgressionCard() {
         </>
       )}
     </section>
+  );
+}
+
+/** Camp week is when the network airs its season preview. */
+function PreviewTeaser() {
+  const setTab = useGameStore((s) => s.setTab);
+  const year = useGameStore((s) => s.save!.year);
+  return (
+    <button
+      type="button"
+      onClick={() => setTab("primetime")}
+      className="sheen group relative flex w-full items-center gap-4 overflow-hidden rounded-xl border border-red/50 bg-gradient-to-r from-red-deep/70 via-black/80 to-black px-5 py-4 text-left"
+    >
+      <span className="bx-primary px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
+        <span className="inline-block [transform:skewX(12deg)]">ON AIR</span>
+      </span>
+      <span className="min-w-0">
+        <span className="block font-display text-2xl font-extrabold uppercase italic leading-tight text-white">The {year} Season Preview</span>
+        <span className="block text-sm text-paper">Every club, team by team. Projections, award odds, bold predictions and the Super Bowl pick.</span>
+      </span>
+      <span className="ml-auto shrink-0 font-display text-sm font-bold uppercase italic text-brass group-hover:text-white">Watch on Primetime ▸</span>
+    </button>
   );
 }

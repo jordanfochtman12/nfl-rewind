@@ -13,6 +13,7 @@ import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { ReportCard } from "./Storylines";
 import { DraftPreviewShow } from "./DraftPreview";
+import { SeasonPreviewShow } from "./SeasonPreview";
 import { TimelineCard } from "./Timeline";
 
 function Name({ id, name }: { id: string; name: string }) {
@@ -107,6 +108,7 @@ export function PrimetimeTeaser() {
 export function PrimetimeShow() {
   const save = useGameStore((s) => s.save)!;
   if (save.phase === "draft" && save.draftBoard.some((p) => !p.taken)) return <DraftPreviewShow />;
+  if (save.phase === "preseason") return <SeasonPreviewShow />;
   return <WeeklyShow />;
 }
 
@@ -170,6 +172,32 @@ function WeeklyShow() {
               </ul>
             </div>
           ) : null}
+        </div>
+      ),
+    });
+  }
+
+  if (show.deskGrade) {
+    const dg = show.deskGrade;
+    segs.push({
+      id: "deskgrade",
+      title: "Grading our preseason picks",
+      node: (
+        <div className="grid gap-4 md:grid-cols-[auto_1fr_1fr]">
+          <div className="flex flex-col items-center justify-center gap-1 border border-white/10 bg-black/40 px-6 py-3">
+            <span className="bug-num text-6xl text-brass">{dg.grade}</span>
+            <span className="text-center font-display text-xs font-bold uppercase italic tracking-wide text-muted">{dg.headline}</span>
+          </div>
+          <ul className="space-y-1.5 text-sm">
+            {dg.hits.map((h) => (
+              <li key={h} className="border-l-2 border-good pl-3 text-paper">{h}</li>
+            ))}
+          </ul>
+          <ul className="space-y-1.5 text-sm">
+            {dg.misses.map((h) => (
+              <li key={h} className="border-l-2 border-red pl-3 text-paper">{h}</li>
+            ))}
+          </ul>
         </div>
       ),
     });

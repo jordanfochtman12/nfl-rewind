@@ -47,6 +47,7 @@ import { addNews } from "./news.ts";
 import { buildPrimetime } from "./primetime.ts";
 import { recordTimeline } from "./timeline.ts";
 import { phoneRings, resolveAllBids } from "./market.ts";
+import { freezePreviewPicks } from "./seasonPreview.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
 import { refreshContracts, teamPayroll } from "./salary.ts";
@@ -154,6 +155,8 @@ function runFreeAgency(save: DynastySave): void {
 }
 
 function startRegular(save: DynastySave): void {
+  // The preview's calls go on the record before the records reset (it reads last season's).
+  if (!save.cpuOnly) save.previewPicks = freezePreviewPicks(save);
   for (const id of activeTeamIds(save.year)) resetSeasonRecord(save.teams[id]!);
   rebuildSchedule(save);
   save.waiverOrder = activeTeamIds(save.year).slice().sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!));

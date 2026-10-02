@@ -853,6 +853,8 @@ export interface Almanac {
 export interface DynastySave {
   /** Original records retained when repairing historical duplicate identities. */
   identityRepairs?: { keptId: string; originals: Player[] }[];
+  /** The desk's preseason calls, frozen at kickoff. */
+  previewPicks?: PreviewPicks;
   /** The owner's offseason progression, shown at camp. */
   progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */
@@ -1068,11 +1070,85 @@ export interface PrimetimePreview {
   featured: boolean;
 }
 
+/** One club in the season preview: the projection, the grades, the case for and against. */
+export interface PreviewTeam {
+  id: TeamId;
+  rank: number;
+  tier: "Contender" | "Playoff hopeful" | "In the mix" | "Long shot" | "Rebuilding";
+  projW: number;
+  projL: number;
+  /** 10th to 90th percentile of simulated wins. */
+  range: [number, number];
+  playoffPct: number;
+  divisionPct: number;
+  titlePct: number;
+  confPct: number;
+  division: string;
+  divFinish: number;
+  lastYear: { w: number; l: number; t: number; playoffs?: boolean };
+  grades: { key: "QB" | "Skill" | "Line" | "Front" | "Secondary" | "Coaching"; grade: string; pct: number }[];
+  qbId?: string;
+  coach?: string;
+  newCoach?: boolean;
+  stars: string[];
+  xFactorId?: string;
+  newcomers: string[];
+  departures: string[];
+  sosRank: number;
+  toughStretch?: string;
+  opener?: string;
+  outlook: string;
+  bestCase: string;
+  worstCase: string;
+  verdict: string;
+}
+
+export interface PreviewPick {
+  playerId?: string;
+  coachId?: string;
+  teamId: TeamId;
+  odds: string;
+  note: string;
+}
+
+/** The preseason special: the whole league, club by club, and every call the desk makes. */
+export interface SeasonPreview {
+  year: number;
+  teams: PreviewTeam[];
+  divisions: { key: string; conf: string; order: TeamId[]; note: string }[];
+  awards: { label: string; picks: PreviewPick[] }[];
+  superBowl: { winner: TeamId; loser: TeamId; score: string; note: string; confidence: number };
+  confChamps: { conf: string; teamId: TeamId; note: string }[];
+  storylines: { id: string; kicker: string; title: string; body: string; teamIds: TeamId[]; playerIds: string[] }[];
+  bold: { text: string; teamIds: TeamId[] }[];
+  mustWatch: { gameId: string; week: number; homeId: TeamId; awayId: TeamId; line: string; note: string }[];
+  rookies: { playerId: string; teamId: TeamId; note: string }[];
+  breakouts: { playerId: string; teamId: TeamId; note: string }[];
+  lastRide: { playerId: string; teamId: TeamId; note: string }[];
+  hotSeat: { coachId: string; teamId: TeamId; note: string }[];
+  milestones: { playerId: string; teamId: TeamId; note: string }[];
+  rules?: string;
+  history?: string;
+  yours: { teamId: TeamId; headline: string; lines: string[]; keys: string[]; concerns: string[] };
+  episode: NonNullable<PrimetimeShow["episode"]>;
+}
+
+/** Frozen at kickoff so the awards show can grade the desk's preseason calls. */
+export interface PreviewPicks {
+  year: number;
+  superBowl: { winner: TeamId; loser: TeamId };
+  divisions: { key: string; teamId: TeamId }[];
+  awards: { label: string; playerId?: string; coachId?: string }[];
+  projW: Record<string, number>;
+}
+
 export interface PrimetimeShow {
   /** Frozen editorial rundown: never reads future results while replaying an episode. */
   episode?: {
     id: string;
-    edition: "weekly" | "seasonFinale" | "playoffs" | "championship" | "superBowl" | "awards";
+    edition: "weekly" | "seasonFinale" | "playoffs" | "championship" | "superBowl" | "awards" | "seasonPreview";
+    /** Named crew for this edition (the season preview has one). */
+    cast?: Partial<Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string }>>;
     headline: string;
     subtitle: string;
     chapters: { id: string; kicker: string; title: string; teamIds: TeamId[]; lines: { speaker: "HOST" | "ANALYST" | "REPORTER"; text: string }[] }[];
@@ -1104,6 +1180,8 @@ export interface PrimetimeShow {
   reportCard?: SeasonPlan;
   /** Awards night: this season against real history. */
   timeline?: TimelineEntry;
+  /** Awards night: how the preseason picks held up. */
+  deskGrade?: { headline: string; grade: string; hits: string[]; misses: string[] };
   /** Trade-deadline weeks: who's buying, who's selling, who wants out. */
   rumors?: Rumor[];
   achievements?: Achievement[];

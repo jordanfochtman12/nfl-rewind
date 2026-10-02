@@ -38,7 +38,7 @@ import {
 } from "./teams.ts";
 import { gameDateLabel, gamesInWeek } from "./schedule.ts";
 import { depthAt, playerName, rosterOf } from "./players.ts";
-import { conferenceTeams, sortedDivision, winPct } from "./standings.ts";
+import { conferenceTeams, divisionWinner, sortedDivision, winPct } from "./standings.ts";
 import { playoffTeamCount } from "./era.ts";
 import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
 import { calculateAwards } from "./events.ts";
@@ -774,6 +774,8 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     if (save.lastPlan?.year === year) show.reportCard = save.lastPlan;
     const tl = save.history.timeline?.find((e) => e.year === year);
     if (tl) show.timeline = tl;
+    const dg = deskGrade(save);
+    if (dg) show.deskGrade = dg;
     const won = (save.achievements ?? []).filter((x) => x.year === year);
     if (won.length) show.achievements = won;
     show.allPro = a.allPro
@@ -805,6 +807,70 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
     .filter(s => s.year === year && s.episode && s.episode.id !== show.episode!.id);
   save.primetimeArchive = [...new Map(archive.map(s => [s.episode!.id,s])).values()].slice(-26);
   save.primetime = show;
+}
+
+/** How the season preview's calls held up. */
+function deskGrade(save: DynastySave): PrimetimeShow["deskGrade"] {
+  const pk = save.previewPicks;
+  const year = save.year;
+  if (!pk || pk.year !== year) return undefined;
+  const hits: string[] = [];
+  const misses: string[] = [];
+  const sb = save.superBowl;
+  const champ = sb?.played ? ((sb.homeScore >= sb.awayScore ? sb.homeId : sb.awayId) as TeamId) : undefined;
+  let score = 0;
+  if (champ) {
+    if (champ === pk.superBowl.winner) {
+      hits.push(`Called it: the ${name(save, champ)} won the Super Bowl, just like we said in August.`);
+      score += 4;
+    } else if (sb && [sb.homeId, sb.awayId].includes(pk.superBowl.winner)) {
+      misses.push(`So close: our champion, the ${name(save, pk.superBowl.winner)}, made the Super Bowl and lost it.`);
+      score += 2;
+    } else misses.push(`Our Super Bowl pick, the ${name(save, pk.superBowl.winner)}, never got there. The ${name(save, champ)} did.`);
+  }
+  let divHit = 0;
+  for (const d of pk.divisions) {
+    const actual = divisionWinner(save, d.key);
+    if (actual === d.teamId) divHit += 1;
+  }
+  score += divHit;
+  (divHit >= pk.divisions.length / 2 ? hits : misses).push(`${divHit} of ${pk.divisions.length} division winners right.`);
+  const a = save.awards;
+  const actualAward: Record<string, string | undefined> = {
+    "Most Valuable Player": a?.mvp,
+    "Offensive Player of the Year": a?.offPoy,
+    "Defensive Player of the Year": a?.defPoy,
+    "Offensive Rookie of the Year": a?.oroy,
+    "Defensive Rookie of the Year": a?.droy,
+  };
+  for (const w of pk.awards) {
+    const won = actualAward[w.label];
+    if (!won || !w.playerId) continue;
+    const p = save.players[w.playerId];
+    if (won === w.playerId) {
+      hits.push(`${w.label}: we had ${p ? playerName(p) : "him"} at the top of the board in August.`);
+      score += 2;
+    }
+  }
+  const diffs = activeTeamIds(year)
+    .filter((id) => pk.projW[id] !== undefined && save.teams[id])
+    .map((id) => ({ id, d: save.teams[id]!.wins + save.teams[id]!.ties * 0.5 - pk.projW[id]! }));
+  if (diffs.length) {
+    const mae = diffs.reduce((n, x) => n + Math.abs(x.d), 0) / diffs.length;
+    (mae <= 2 ? hits : misses).push(`Our win projections missed by ${mae.toFixed(1)} games a team on average.`);
+    if (mae <= 2) score += 2;
+    const over = diffs.slice().sort((x, y) => y.d - x.d)[0]!;
+    const under = diffs.slice().sort((x, y) => x.d - y.d)[0]!;
+    if (over.d >= 3) misses.push(`We sold the ${name(save, over.id)} short: ${pk.projW[over.id]!.toFixed(1)} projected, ${rec(save.teams[over.id]!)} actual.`);
+    if (under.d <= -3) misses.push(`We bought the ${name(save, under.id)}: ${pk.projW[under.id]!.toFixed(1)} projected, ${rec(save.teams[under.id]!)} actual.`);
+  }
+  const grade = score >= 12 ? "A" : score >= 9 ? "B" : score >= 6 ? "C" : score >= 3 ? "D" : "F";
+  return {
+    headline: grade <= "B" ? "The desk had a good year" : grade === "C" ? "Some hits, some misses" : "The desk would like a mulligan",
+    grade,
+    hits,
+    misses,
+  };
 }
 
 export function depthChart(save: DynastySave, teamId: TeamId) {

@@ -474,9 +474,10 @@ function noteCarousel(save: DynastySave, teamId: TeamId, role: CoachRole, fired:
   save.carousel.push({ year: save.year, teamId, fired, hired, role, note });
 }
 
-function autoHireHeadCoach(save: DynastySave, teamId: TeamId): Coach {
+function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string): Coach {
   const t = save.teams[teamId];
-  const historical = LATER_COACHES.filter((s) => s.yearAvail <= save.year + 1).filter((s) => {
+  // The man the club just fired is out of work, but he isn't a candidate for his old job.
+  const historical = LATER_COACHES.filter((s) => s.yearAvail <= save.year + 1 && s.id !== exclude).filter((s) => {
     const existing = save.coaches[s.id];
     if (!existing) return true;
     if (existing.retiredYear || existing.hofYear) return false;
@@ -583,7 +584,7 @@ export function runCoachingCarousel(save: DynastySave): void {
         hc.firedCount = (hc.firedCount ?? 0) + 1;
         vacate(save, hc, "HC", id);
       }
-      const hired = autoHireHeadCoach(save, id);
+      const hired = autoHireHeadCoach(save, id, hc?.id);
       noteCarousel(save, id, "HC", fired, hired.name);
       addNews(save, {
         kind: "headline",
