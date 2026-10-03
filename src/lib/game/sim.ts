@@ -55,6 +55,7 @@ import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { checkGameRecords } from "./records.ts";
 import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
+import { defaultPlan, staffPlan } from "./gameplans.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -85,26 +86,13 @@ export function formatClock(sec: number): string {
   return `${m}:${r.toString().padStart(2, "0")}`;
 }
 
-export function defaultPlan(offScheme?: string): Gameplan {
-  if (offScheme === "smashmouth") return { attack: "run", fourth: "conservative", tempo: "chew", blitz: "rare", redZone: "power" };
-  if (offScheme === "vertical") return { attack: "pass", fourth: "normal", tempo: "hurry", blitz: "normal", redZone: "spread" };
-  if (offScheme === "westcoast") return { attack: "pass", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
-  return { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
-}
+export { defaultPlan };
 
+/** The call sheet a club takes into a game: its staff's plan, plus the owner's own changes for his club. */
 export function planFor(save: DynastySave, teamId: TeamId): Gameplan {
-  const t = save.teams[teamId];
-  const base = defaultPlan(t?.offScheme);
-  if (!t?.plan) return base;
-  return {
-    attack: t.plan.attack,
-    fourth: t.plan.fourth,
-    tempo: t.plan.tempo,
-    blitz: t.plan.blitz ?? base.blitz,
-    redZone: t.plan.redZone ?? base.redZone,
-    protection: t.plan.protection ?? "balanced",
-    defensiveFocus: t.plan.defensiveFocus ?? "balanced",
-  };
+  const base = staffPlan(save, teamId);
+  const edits = teamId === save.userTeamId ? save.teams[teamId]?.planEdits : undefined;
+  return edits ? { ...base, ...edits } : base;
 }
 
 export interface TeamUnits {
@@ -614,7 +602,7 @@ function callPlay(
   if (spot >= 95 && plan.redZone === "power") return rand(save) < 0.72 ? "run" : "short";
   let passW = eraPassW;
   if (plan.attack === "pass") passW += 0.08;
-  if (plan.attack === "run") passW -= 0.09;
+  if (plan.attack === "run") passW -= 0.07;
   if (down === 3 && togo >= 6) passW += 0.22;
   if (down === 3 && togo <= 2) passW -= 0.18;
   if (down === 2 && togo <= 3) passW -= 0.08;
@@ -624,7 +612,8 @@ function callPlay(
   if (spot >= 90 && plan.redZone === "spread") passW += 0.05;
   if (trail >= 8) passW += 0.12;
   if (trail <= -10 && !desperate) passW -= 0.1;
-  if (chew) passW -= 0.1;
+  // A ball-control plan leans on the run most when it's ahead; the clock-killing push at the end stays strong.
+  if (chew) passW -= q >= 4 && trail <= -7 && clock < 240 ? 0.1 : trail <= 0 ? 0.05 : 0.02;
   if (wx === "snow" || wx === "rain") passW -= 0.08;
   if (wx === "wind") passW -= 0.04;
   if (desperate) passW += 0.18;

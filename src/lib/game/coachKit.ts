@@ -119,8 +119,8 @@ const SIGNATURES: Record<string, { abilities: string[]; traits: string[]; off?: 
   mckay: { abilities: ["Ground game"], traits: ["Old school"], off: "smashmouth", def: "4-3" },
   patera: { abilities: ["Defensive genius"], traits: ["Stubborn"], off: "multiple", def: "4-3" },
   coughlin: { abilities: ["Disciplinarian", "Situational"], traits: ["Stubborn"], off: "multiple", def: "4-3" },
-  "capers-car": { abilities: ["Defensive genius", "Cover-2 mind"], traits: ["Film junkie"], off: "multiple", def: "cover-2" },
-  "capers-htx": { abilities: ["Defensive genius"], traits: ["Film junkie"], off: "multiple", def: "cover-2" },
+  "capers-car": { abilities: ["Defensive genius", "Blitz artist"], traits: ["Film junkie"], off: "multiple", def: "3-4" },
+  "capers-htx": { abilities: ["Defensive genius", "Blitz artist"], traits: ["Film junkie"], off: "multiple", def: "3-4" },
   "marchibroda-rav": { abilities: ["Play-caller"], traits: ["Teacher"], off: "multiple", def: "4-3" },
   "gillman-dc": { abilities: ["Defensive genius", "Developer"], traits: ["Teacher"], def: "4-3" },
   "stram-oc": { abilities: ["West coast", "Play-caller"], traits: ["Teacher"], off: "westcoast" },
@@ -136,7 +136,7 @@ const SIGNATURES: Record<string, { abilities: string[]; traits: string[]; off?: 
   tomlin: { abilities: ["Motivator", "Situational"], traits: ["Players' coach"], off: "multiple", def: "3-4" },
   harbaugh: { abilities: ["Disciplinarian", "Situational"], traits: ["Stubborn"], off: "multiple", def: "3-4" },
   mcvay: { abilities: ["Play-caller", "Innovator"], traits: ["Film junkie", "Aggressive"], off: "westcoast", def: "3-4" },
-  payton: { abilities: ["Defensive genius", "Motivator"], traits: ["Players' coach"], off: "multiple", def: "4-3" },
+  payton: { abilities: ["Play-caller", "Innovator"], traits: ["Aggressive"], off: "multiple", def: "4-3" },
   reidandy: { abilities: ["Play-caller"], traits: ["Players' coach"] },
 };
 

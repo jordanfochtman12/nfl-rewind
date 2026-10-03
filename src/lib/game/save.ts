@@ -17,7 +17,8 @@ import { fillCoachFields } from "./staff.ts";
 import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
-import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers } from "./players.ts";
+import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers, syncDepth } from "./players.ts";
+import { editsAgainst, NEUTRAL_PLAN, syncRealSchemes } from "./gameplans.ts";
 import { repairPlayerIdentities } from "./repairIdentities.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
@@ -311,6 +312,16 @@ export function hydrateSave(raw: unknown): DynastySave {
   for (const c of Object.values(out.coaches)) {
     fillCoachFields(c, out.year);
   }
+  // Clubs used to store one neutral call sheet each, so nobody ran his coach's game. Keep only
+  // what an owner changed by hand; the rest now comes from the staff's own playbooks.
+  for (const t of Object.values(out.teams)) {
+    if (t.planEdits) continue;
+    t.planEdits = t.id === out.userTeamId && t.plan ? editsAgainst(NEUTRAL_PLAN, t.plan) : {};
+  }
+  syncRealSchemes(out, (id) => {
+    out.teams[id].depth = {};
+    syncDepth(out, id);
+  });
   for (const h of out.history.hof) {
     h.kind = h.kind ?? (h.coachId ? "coach" : "player");
   }

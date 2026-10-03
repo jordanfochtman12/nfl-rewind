@@ -15,6 +15,8 @@ import { winPct } from "./standings.ts";
 import { eraName } from "./names.ts";
 import { assignCoachKit, schemeOfSignature } from "./coachKit.ts";
 import { syncDepth } from "./players.ts";
+import { applyStaffSchemes, syncRealSchemes } from "./gameplans.ts";
+import { playbookFor } from "./data/coachPlans.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -81,6 +83,7 @@ export function fillCoachFields(c: Coach, year: number): Coach {
 
 export function makeCoachFromSeed(seed: CoachSeed, year: number, extra?: Partial<Coach>): Coach {
   const sig = schemeOfSignature(seed.id, seed.name);
+  const book = playbookFor(seed.id, year);
   const c: Coach = {
     id: seed.id,
     name: seed.name,
@@ -90,8 +93,8 @@ export function makeCoachFromSeed(seed: CoachSeed, year: number, extra?: Partial
     defense: seed.defense,
     historical: true,
     role: extra?.role ?? "HC",
-    offScheme: extra?.offScheme ?? seed.offScheme ?? sig.off ?? "multiple",
-    defScheme: extra?.defScheme ?? seed.defScheme ?? sig.def ?? "4-3",
+    offScheme: extra?.offScheme ?? book?.off ?? seed.offScheme ?? sig.off ?? "multiple",
+    defScheme: extra?.defScheme ?? book?.def ?? seed.defScheme ?? sig.def ?? "4-3",
     yearsOnJob: extra?.yearsOnJob ?? seed.yearsOnJob ?? 1,
     careerWins: extra?.careerWins ?? seed.careerWins ?? 0,
     careerLosses: extra?.careerLosses ?? seed.careerLosses ?? 0,
@@ -166,8 +169,8 @@ export function seedStaff(save: DynastySave): void {
   for (const seed of COORDINATORS_1966) {
     const role: CoachRole = seed.id.includes("-oc") ? "OC" : "DC";
     const coach = bump(seed, role, save.year, {
-      offScheme: seed.offScheme ?? TEAM_OFF[seed.teamId ?? "gnb"] ?? "multiple",
-      defScheme: seed.defScheme ?? TEAM_DEF[seed.teamId ?? "gnb"] ?? "4-3",
+      offScheme: playbookFor(seed.id, save.year)?.off ?? seed.offScheme ?? TEAM_OFF[seed.teamId ?? "gnb"] ?? "multiple",
+      defScheme: playbookFor(seed.id, save.year)?.def ?? seed.defScheme ?? TEAM_DEF[seed.teamId ?? "gnb"] ?? "4-3",
       teamId: seed.teamId,
     });
     save.coaches[coach.id] = coach;
@@ -309,6 +312,11 @@ export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, ro
     t.defScheme = c.defScheme;
   } else if (role === "OC") t.ocId = c.id;
   else t.dcId = c.id;
+  // A new play-caller brings his own system with him.
+  applyStaffSchemes(save, teamId, (id) => {
+    save.teams[id].depth = {};
+    syncDepth(save, id);
+  });
   addNews(save, {
     kind: "headline",
     headline: `${c.name} hired as ${role} in ${displayName(save.year, teamId)}`,
@@ -339,8 +347,12 @@ export function setTeamScheme(
   if (patch.defScheme) t.defScheme = patch.defScheme;
   if (patch.draftStyle) t.draftStyle = patch.draftStyle;
   const hc = t.coachId ? save.coaches[t.coachId] : undefined;
-  if (hc && patch.offScheme) hc.offScheme = patch.offScheme;
-  if (hc && patch.defScheme) hc.defScheme = patch.defScheme;
+  // The owner's schemes stick: lock in both sides as the club lines up now, not just the one he changed.
+  if (hc && (patch.offScheme || patch.defScheme)) {
+    hc.offScheme = t.offScheme;
+    hc.defScheme = t.defScheme;
+    hc.schemeLocked = true;
+  }
   // A real coach installing a new scheme re-evaluates who fits it, not just where
   // to slot the next new arrival - drop the existing order so it gets rebuilt
   // scheme-aware from scratch instead of carrying over the old staff's ranking.
@@ -628,14 +640,13 @@ export function ensureStaff(save: DynastySave): void {
     if (!t.ocId) autoHireCoord(save, id, "OC");
     if (!t.dcId) autoHireCoord(save, id, "DC");
     if (!t.coachId && !user) autoHireHeadCoach(save, id);
-
-
-    const hc = t.coachId ? save.coaches[t.coachId] : undefined;
-    if (hc) {
-      t.offScheme = hc.offScheme;
-      t.defScheme = hc.defScheme;
-    }
   }
+  // Every club lines up in its staff's schemes, and real coaches move with their own careers:
+  // Noll to the vertical game in 1978, Shula once Marino arrives in 1983.
+  syncRealSchemes(save, (id) => {
+    save.teams[id].depth = {};
+    syncDepth(save, id);
+  });
 }
 
 export function staffOf(save: DynastySave, teamId: TeamId): { hc?: Coach; oc?: Coach; dc?: Coach } {

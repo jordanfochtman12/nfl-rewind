@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ArrowUpRight, Activity, Shield, Target, Users, CalendarDays, TrendingUp } from 'lucide-react';
 import { useGameStore, type Tab } from '@/lib/game-store';
-import { displayName, nicknameOf, rosterOf, deskHoles, formatMoney, teamPayroll, standingRows, venueOf, superBowlSite } from '@/lib/game';
+import { displayName, nicknameOf, rosterOf, deskHoles, formatMoney, teamPayroll, standingRows, venueOf, superBowlSite, staffSystems } from '@/lib/game';
 import type { TeamId } from '@/lib/game';
 import { nextMatchup, seasonForm, unitReport } from '@/lib/game/briefing';
 import { Logo } from './chrome';
@@ -65,7 +65,7 @@ export function OpponentPreview() {
   const neutral = game.neutral || game.phase === 'superBowl';
   const site = game.phase === 'superBowl' ? superBowlSite(save.year).site : game.site ?? venueOf(save.year, game.homeId as TeamId).stadium;
   return <article className="hq-matchup">
-    <div className="hq-matchup-club"><span className="hq-eyebrow">NEXT OPPONENT / {neutral ? 'NEUTRAL SITE' : game.homeId === save.userTeamId ? 'HOME' : 'AWAY'}</span><div><Logo id={opponent} year={save.year} size={64}/><div><h3>{displayName(save.year, opponent)}</h3><p>{team.wins}–{team.losses}{team.ties ? `–${team.ties}` : ''} · {site}</p></div></div><span className="hq-caption">{team.offScheme} offense / {team.defScheme} defense</span></div>
+    <div className="hq-matchup-club"><span className="hq-eyebrow">NEXT OPPONENT / {neutral ? 'NEUTRAL SITE' : game.homeId === save.userTeamId ? 'HOME' : 'AWAY'}</span><div><Logo id={opponent} year={save.year} size={64}/><div><h3>{displayName(save.year, opponent)}</h3><p>{team.wins}–{team.losses}{team.ties ? `–${team.ties}` : ''} · {site}</p></div></div><span className="hq-caption">{staffSystems(save, opponent).offense} / {staffSystems(save, opponent).defense}</span></div>
     <div className="hq-matchup-notes"><div><span className="hq-eyebrow">RESPECT THE STRENGTH</span><strong>{strongest.name} <b>{strongest.grade}</b></strong><p>Account for their strongest available unit in your game plan.</p></div><div><span className="hq-eyebrow">LOOK FOR AN EDGE</span><strong>{weakest.name} <b>{weakest.grade}</b></strong><p>Their lowest graded unit. Compare it with your personnel.</p></div><button className="hq-link" onClick={() => setTab('staff')}>Build your game plan <ArrowUpRight size={16}/></button></div>
   </article>;
 }

@@ -19,7 +19,12 @@ import {
   deskHire,
   deskScheme,
   deskPlan,
+  deskResetPlan,
   deskHoles,
+  planFor,
+  playbookOf,
+  staffPlan,
+  staffSystems,
   displayName,
   END_YEAR,
   formatBytes,
@@ -471,8 +476,8 @@ function ThisSunday() {
           {game.neutral || site ? " · neutral site" : ""}
         </p>
         <p className="mt-2 text-sm">
-          They are {them.offScheme} / {them.defScheme}. You are {us.offScheme} / {us.defScheme}. The call sheet on the
-          Staff tab is live — this is what the booth will actually call.
+          They run {staffSystems(save, opp).offense} and {staffSystems(save, opp).defense}. You run {staffSystems(save, save.userTeamId).offense} and{" "}
+          {staffSystems(save, save.userTeamId).defense}. The call sheet on the Staff tab is live — this is what the booth will actually call.
         </p>
         <MatchupNotes game={game} />
       </div>
@@ -753,8 +758,10 @@ function Depth() {
 function SundayCallSheet() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
-  const t = save.teams[save.userTeamId];
-  const plan: Gameplan = t.plan ?? { attack: "balanced", fourth: "normal", tempo: "standard", blitz: "normal", redZone: "balanced" };
+  const plan: Gameplan = planFor(save, save.userTeamId);
+  const staff: Gameplan = staffPlan(save, save.userTeamId);
+  const sys = staffSystems(save, save.userTeamId);
+  const changed = (Object.keys(staff) as (keyof Gameplan)[]).filter((k) => plan[k] !== staff[k]);
   const Dial = ({
     label,
     field,
@@ -764,8 +771,11 @@ function SundayCallSheet() {
     field: keyof Gameplan;
     options: string[];
   }) => (
-    <label className="rounded-xl border border-line bg-surface p-4 text-sm">
-      <span className="text-xs tracking-[0.2em] text-muted">{label}</span>
+    <label className={`rounded-xl border p-4 text-sm ${changed.includes(field) ? "border-brass/60 bg-brass/5" : "border-line bg-surface"}`}>
+      <span className="flex items-center justify-between gap-2 text-xs tracking-[0.2em] text-muted">
+        {label}
+        {changed.includes(field) && <span className="text-[10px] tracking-wider text-brass">YOUR CALL</span>}
+      </span>
       <select
         className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
         value={plan[field] ?? "balanced"}
@@ -774,6 +784,7 @@ function SundayCallSheet() {
         {options.map((x) => (
           <option key={x} value={x}>
             {x === "maxProtect" ? "Max protect" : x}
+            {staff[field] === x ? " (staff)" : ""}
           </option>
         ))}
       </select>
@@ -783,8 +794,29 @@ function SundayCallSheet() {
     <section className="space-y-3">
       <OpponentPreview />
       <h3 className="text-sm tracking-[0.2em] text-muted">Sunday call sheet</h3>
+      <div className="rounded-xl border border-line bg-surface p-4">
+        <p className="text-xs tracking-[0.2em] text-muted">Your staff's game plan</p>
+        <p className="mt-1 text-sm text-paper">
+          <span className="font-medium text-white">{sys.offense}</span>
+          {sys.offBy ? <span className="text-muted"> · called by {sys.offBy}</span> : null}
+        </p>
+        <p className="text-sm text-paper">
+          <span className="font-medium text-white">{sys.defense}</span>
+          {sys.defBy ? <span className="text-muted"> · called by {sys.defBy}</span> : null}
+        </p>
+        <p className="mt-2 text-xs text-muted">
+          {changed.length
+            ? `You've overruled the staff on ${changed.length} ${changed.length === 1 ? "call" : "calls"}. The rest follows your coaches, and changes with them.`
+            : "Every dial below is your coaches' own call. Change one and it's yours until you hand it back."}
+        </p>
+        {changed.length > 0 && (
+          <Btn className="mt-2 min-h-10 px-4 text-sm" onClick={() => desk((s) => (deskResetPlan(s, s.userTeamId), "The staff has the call sheet back."))}>
+            Hand it back to the staff
+          </Btn>
+        )}
+      </div>
       <p className="text-sm text-muted">
-        This is what the booth actually calls. Run/pass mix, fourth-down nerve, tempo, blitz frequency, and how you play inside the 20. The other club scripts off its scheme unless the scoreboard forces its hand.
+        This is what the booth actually calls. Run/pass mix, fourth-down nerve, tempo, blitz frequency, and how you play inside the 20. Every other club runs its own coaches' game plan until the scoreboard forces its hand.
       </p>
       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
         <Dial label="Attack" field="attack" options={["run", "balanced", "pass"]} />
@@ -824,6 +856,11 @@ function Staff() {
             <p className="text-sm text-muted">
               Age {c.age} · Off {c.offense} · Def {c.defense} · Lead {c.leadership} · Dev {c.development} · Eval {c.evaluation}
             </p>
+            {playbookOf(c, save.year) && (
+              <p className="text-sm text-paper">
+                Runs the {role === "DC" ? playbookOf(c, save.year)!.defense : role === "OC" ? playbookOf(c, save.year)!.offense : `${playbookOf(c, save.year)!.offense} · ${playbookOf(c, save.year)!.defense}`}
+              </p>
+            )}
             <p className="text-sm">
               <span className="text-muted">
                 {c.offScheme} / {c.defScheme} · year {c.yearsOnJob} on the job ·{" "}
@@ -865,7 +902,8 @@ function Staff() {
               <option value="">Choose a coach</option>
               {pool.slice(0, 24).map((cch) => (
                 <option key={cch.id} value={cch.id}>
-                  {cch.name} · {cch.age} · off {cch.offense}/def {cch.defense} · {cch.offScheme}/{cch.defScheme}
+                  {cch.name} · {cch.age} · off {cch.offense}/def {cch.defense} ·{" "}
+                  {playbookOf(cch, save.year) ? `${playbookOf(cch, save.year)!.offense} / ${playbookOf(cch, save.year)!.defense}` : `${cch.offScheme}/${cch.defScheme}`}
                 </option>
               ))}
             </select>

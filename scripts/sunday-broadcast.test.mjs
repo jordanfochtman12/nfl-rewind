@@ -91,8 +91,7 @@ test("version 16 saves hydrate new coaching defaults and keep legacy film readab
 test("a full simulated game records real snap types, timeout bounds and independent kickoff sheets", () => {
   const s = createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 1966 });
   const g = s.schedule.find((g) => g.homeId === "gnb" || g.awayId === "gnb");
-  s.teams.gnb.plan.protection = "maxProtect";
-  s.teams.gnb.plan.defensiveFocus = "pass";
+  s.teams.gnb.planEdits = { protection: "maxProtect", defensiveFocus: "pass" };
   simGame(s, g);
   assert.ok(g.played);
   assert.ok(g.log.length > 60);
@@ -108,7 +107,7 @@ test("a full simulated game records real snap types, timeout bounds and independ
     assert.ok(p.awayTimeouts >= 0 && p.awayTimeouts <= 3);
   }
   const sheet = g.homeId === "gnb" ? g.callSheets.home : g.callSheets.away;
-  s.teams.gnb.plan.protection = "balanced";
+  s.teams.gnb.planEdits.protection = "balanced";
   assert.equal(sheet.protection, "maxProtect");
   for (const id of [g.homeId, g.awayId]) {
     const box = id === g.homeId ? g.boxHome : g.boxAway;
@@ -137,7 +136,7 @@ test("coaching dials change seeded simulation outcomes without changing the stan
   const index = s.schedule.findIndex((g) => g.homeId === "gnb" || g.awayId === "gnb");
   const run = (patch) => {
     const c = structuredClone(s);
-    Object.assign(c.teams.gnb.plan, patch);
+    c.teams.gnb.planEdits = { ...c.teams.gnb.planEdits, ...patch };
     simGame(c, c.schedule[index]);
     return JSON.stringify(c.schedule[index].log);
   };

@@ -15,6 +15,7 @@ import {
   visibleOvr,
   type Player,
   type TeamId,
+  staffSystems,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -162,11 +163,11 @@ export function TeamRosterModal() {
                   </dd>
                   <dt className="text-muted">Offense</dt>
                   <dd className="text-paper">
-                    {oc?.name ?? "—"} <span className="text-muted">· {t.offScheme}</span>
+                    {staffSystems(save, id).offense} <span className="text-muted">· {staffSystems(save, id).offBy ?? oc?.name ?? "—"}</span>
                   </dd>
                   <dt className="text-muted">Defense</dt>
                   <dd className="text-paper">
-                    {dc?.name ?? "—"} <span className="text-muted">· {t.defScheme}</span>
+                    {staffSystems(save, id).defense} <span className="text-muted">· {staffSystems(save, id).defBy ?? dc?.name ?? "—"}</span>
                   </dd>
                   <dt className="text-muted">Payroll</dt>
                   <dd className="text-paper">

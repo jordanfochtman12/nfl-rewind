@@ -14,6 +14,7 @@ import {
   type Coach,
   type Player,
   type TeamId,
+  playbookOf,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -186,7 +187,7 @@ function retireCard(p: Player, blurb: string, mine: boolean, honors = false) {
   );
 }
 
-function coachCard(c: Coach, mine: boolean) {
+function coachCard(c: Coach, mine: boolean, year: number) {
   const rec = `${c.careerWins}-${c.careerLosses}${c.careerTies ? `-${c.careerTies}` : ""}`;
   return (
     <li
@@ -201,7 +202,8 @@ function coachCard(c: Coach, mine: boolean) {
       </p>
       <p className="mt-1 text-sm text-paper">
         {rec}
-        {c.careerTitles ? ` · ${c.careerTitles} titles` : ""} · {c.offScheme}/{c.defScheme}
+        {c.careerTitles ? ` · ${c.careerTitles} titles` : ""} ·{" "}
+        {playbookOf(c, year) ? `${playbookOf(c, year)!.offense} / ${playbookOf(c, year)!.defense}` : `${c.offScheme}/${c.defScheme}`}
       </p>
       <div className="mt-2">
         <CoachChips coach={c} compact />
@@ -242,7 +244,7 @@ export function RetirementNight() {
         {myCoach.length > 0 && (
           <section>
             <p className="text-xs tracking-[0.3em] text-brass">YOUR SIDELINE</p>
-            <ul className="mt-2 space-y-2">{myCoach.map((c) => coachCard(c, true))}</ul>
+            <ul className="mt-2 space-y-2">{myCoach.map((c) => coachCard(c, true, save.year))}</ul>
           </section>
         )}
         {rest.length > 0 && (
@@ -254,7 +256,7 @@ export function RetirementNight() {
         {restCoach.length > 0 && (
           <section>
             <p className="text-xs tracking-[0.3em] text-muted">COACHES</p>
-            <ul className="mt-2 space-y-2">{restCoach.slice(0, 6).map((c) => coachCard(c, false))}</ul>
+            <ul className="mt-2 space-y-2">{restCoach.slice(0, 6).map((c) => coachCard(c, false, save.year))}</ul>
           </section>
         )}
         {pending.length === 0 && coaches.length === 0 && <p className="text-muted">The league keeps its veterans one more year.</p>}
@@ -388,7 +390,8 @@ export function CarouselNight() {
               <option value="">Choose a coach</option>
               {pool.slice(0, 24).map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} · {c.age} · off {c.offense}/def {c.defense} · {c.offScheme}/{c.defScheme}
+                  {c.name} · {c.age} · off {c.offense}/def {c.defense} ·{" "}
+                  {playbookOf(c, save.year) ? `${playbookOf(c, save.year)!.offense} / ${playbookOf(c, save.year)!.defense}` : `${c.offScheme}/${c.defScheme}`}
                   {c.abilities?.[0] ? ` · ${c.abilities[0]}` : ""}
                 </option>
               ))}

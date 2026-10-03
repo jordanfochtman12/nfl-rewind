@@ -20,6 +20,8 @@ import { activeTeamIds, displayName } from "./teams.ts";
 import { allPicks, transferPick, pickValue } from "./draft.ts";
 import { fireCoach, hireCoach, setTeamScheme, schemeFitPos } from "./staff.ts";
 import { rand, randInt } from "./rng.ts";
+import { editsAgainst, staffPlan } from "./gameplans.ts";
+import { planFor } from "./sim.ts";
 import { visibleOvr } from "./scout.ts";
 import { winPct } from "./standings.ts";
 
@@ -430,8 +432,18 @@ export function deskScheme(
 export function deskPlan(save: DynastySave, teamId: TeamId, patch: Partial<Gameplan>): GmResult {
   const t = save.teams[teamId];
   if (!t) return { ok: false, reason: "No club." };
-  const base = t.plan ?? { attack: "balanced" as const, fourth: "normal" as const, tempo: "standard" as const, blitz: "normal" as const, redZone: "balanced" as const };
-  t.plan = { ...base, ...patch };
+  // Store only what differs from the staff's own call, so the rest keeps following the coaches.
+  t.planEdits = editsAgainst(staffPlan(save, teamId), { ...t.planEdits, ...patch });
+  t.plan = planFor(save, teamId);
+  return { ok: true };
+}
+
+/** Hand the call sheet back to the coaching staff. */
+export function deskResetPlan(save: DynastySave, teamId: TeamId): GmResult {
+  const t = save.teams[teamId];
+  if (!t) return { ok: false, reason: "No club." };
+  t.planEdits = {};
+  t.plan = planFor(save, teamId);
   return { ok: true };
 }
 

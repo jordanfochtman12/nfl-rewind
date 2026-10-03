@@ -330,6 +330,8 @@ export interface Coach {
   abilities: string[];
   traits: string[];
   firedCount: number;
+  /** The owner rewrote this coach's scheme at the desk; keep it over his real one. */
+  schemeLocked?: boolean;
   retiredYear?: number;
   hofYear?: number;
 }
@@ -372,8 +374,10 @@ export interface TeamState {
   careerWins: number;
   careerLosses: number;
   careerTies: number;
-  /** Sunday call sheet. CPU derives from scheme if unset. */
+  /** Legacy stored call sheet; the live one comes from the staff (see planFor). */
   plan?: Gameplan;
+  /** The owner's own changes to his staff's call sheet (owner's club only). */
+  planEdits?: Partial<Gameplan>;
 }
 
 export interface BoxPlayer {
