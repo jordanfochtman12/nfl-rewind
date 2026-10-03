@@ -31,6 +31,8 @@ export type Tab =
   | "stats"
   | "draft"
   | "history"
+  | "team"
+  | "hof"
   | "league";
 
 interface GameStore {

@@ -330,6 +330,18 @@ export function hydrateSave(raw: unknown): DynastySave {
     out.teams[id].depth = {};
     syncDepth(out, id);
   });
+  // One plaque each: older saves could enshrine a player twice. Keep his first class.
+  const seenHof = new Set<string>();
+  out.history.hof = out.history.hof
+    .slice()
+    .sort((a, b) => a.year - b.year)
+    .filter((h) => {
+      const k = h.playerId ? `p:${h.playerId}` : `c:${h.coachId}`;
+      if (seenHof.has(k)) return false;
+      seenHof.add(k);
+      if (h.playerId && out.players[h.playerId]) out.players[h.playerId]!.hofYear = h.year;
+      return true;
+    });
   for (const h of out.history.hof) {
     h.kind = h.kind ?? (h.coachId ? "coach" : "player");
   }

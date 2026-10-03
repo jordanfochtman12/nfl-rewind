@@ -54,7 +54,7 @@ function Chapter({ ch }: { ch: SeasonChapter }) {
 export function FranchiseBook() {
   const save = useGameStore((s) => s.save)!;
   const grade = gradeDynasty(save);
-  const chapters = (save.history.seasons ?? []).slice().reverse();
+  const chapters = (save.history.seasons ?? []).filter((c) => c.teamId === save.userTeamId).slice().reverse();
   const honor = save.history.teamOfHonor[save.userTeamId] ?? [];
   return (
     <div className="space-y-8">

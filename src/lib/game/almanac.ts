@@ -1,6 +1,6 @@
 /** Franchise book. No React. */
 import type { DynastySave, Pos, SeasonChapter, TeamId } from "./types.ts";
-import { displayName, roman, superBowlNumber } from "./teams.ts";
+import { activeTeamIds, displayName, roman, superBowlNumber } from "./teams.ts";
 import { playerName } from "./players.ts";
 
 export function seasonResultLine(save: DynastySave, teamId: TeamId): string {
@@ -95,7 +95,37 @@ export function writeSeasonChapter(save: DynastySave): SeasonChapter {
   const idx = save.history.seasons.findIndex((c) => c.year === save.year && c.teamId === teamId);
   if (idx >= 0) save.history.seasons[idx] = chapter;
   else save.history.seasons.push(chapter);
+  writeLeagueChapters(save);
   return chapter;
+}
+
+/**
+ * Every other club's season goes in the books too, so any franchise's history can be read
+ * back: record, finish, coach, honors. (The draft class stays the owner's own detail.)
+ */
+function writeLeagueChapters(save: DynastySave): void {
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId) continue;
+    const t = save.teams[id];
+    if (!t || t.wins + t.losses + t.ties === 0) continue;
+    const hc = t.coachId ? save.coaches[t.coachId] : undefined;
+    const chapter: SeasonChapter = {
+      year: save.year,
+      teamId: id,
+      wins: t.wins,
+      losses: t.losses,
+      ties: t.ties,
+      pf: Math.max(0, t.pf),
+      pa: Math.max(0, t.pa),
+      coach: hc?.name,
+      result: seasonResultLine(save, id),
+      drafted: [],
+      honors: honorsFor(save, id),
+    };
+    const idx = save.history.seasons.findIndex((c) => c.year === save.year && c.teamId === id);
+    if (idx >= 0) save.history.seasons[idx] = chapter;
+    else save.history.seasons.push(chapter);
+  }
 }
 
 export function chapterLine(ch: SeasonChapter): string {

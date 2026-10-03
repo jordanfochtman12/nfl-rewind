@@ -330,6 +330,8 @@ export interface Coach {
   abilities: string[];
   traits: string[];
   firedCount: number;
+  /** Seasons on each club's staff (head-coach seasons count double), for the club he's most tied to. */
+  tenure?: Record<string, number>;
   /** The owner rewrote this coach's scheme at the desk; keep it over his real one. */
   schemeLocked?: boolean;
   retiredYear?: number;

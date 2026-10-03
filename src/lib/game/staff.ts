@@ -591,6 +591,11 @@ function autoHireCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC"): Co
   return coach;
 }
 
+function creditTenure(c: Coach, teamId: TeamId, weight: number): void {
+  c.tenure = c.tenure ?? {};
+  c.tenure[teamId] = (c.tenure[teamId] ?? 0) + weight;
+}
+
 export function runCoachingCarousel(save: DynastySave): void {
   save.carousel = save.carousel ?? [];
   const ids = activeTeamIds(save.year);
@@ -610,14 +615,17 @@ export function runCoachingCarousel(save: DynastySave): void {
     const dc = t.dcId ? save.coaches[t.dcId] : undefined;
     if (hc) {
       hc.yearsOnJob += 1;
+      creditTenure(hc, id, 2);
       progressCoach(save, hc, id);
     }
     if (oc) {
       oc.yearsOnJob += 1;
+      creditTenure(oc, id, 1);
       progressCoach(save, oc, id);
     }
     if (dc) {
       dc.yearsOnJob += 1;
+      creditTenure(dc, id, 1);
       progressCoach(save, dc, id);
     }
 

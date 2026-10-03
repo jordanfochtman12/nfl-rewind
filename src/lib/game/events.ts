@@ -284,9 +284,11 @@ export function gatherHof(save: DynastySave): string[] {
 
 export function resolveHof(save: DynastySave): void {
   const classYear = save.year + 1;
+  // The books, not the player record, are the authority: a stale copy once let Willie Lanier in twice.
+  const enshrined = new Set(save.history.hof.map((m) => m.playerId ?? `coach:${m.coachId}`));
   for (const id of save.pendingHof) {
     const p = ownPlayer(save, id);
-    if (!p) continue;
+    if (!p || enshrined.has(p.id)) continue;
     p.hofYear = classYear;
     p.teamId = "hof";
     const teamId = lastTeamOf(save, p);
@@ -306,7 +308,7 @@ export function resolveHof(save: DynastySave): void {
   honorInductees(save, save.pendingHof);
   for (const id of save.pendingCoachHof ?? []) {
     const c = save.coaches[id];
-    if (!c || c.hofYear) continue;
+    if (!c || c.hofYear || enshrined.has(`coach:${c.id}`)) continue;
     c.hofYear = classYear;
     c.teamId = null;
     const teamId = lastCoachTeam(save, c);

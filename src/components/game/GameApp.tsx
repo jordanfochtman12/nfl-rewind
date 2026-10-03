@@ -63,6 +63,8 @@ import {
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
+import { TeamHistory } from "./TeamHistory";
+import { HallOfFame } from "./HallOfFame";
 import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
@@ -1690,6 +1692,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
   { id: "history", label: "History" },
+  { id: "team", label: "Team History" },
+  { id: "hof", label: "Hall of Fame" },
 ];
 
 function PlayShell() {
@@ -1754,6 +1758,10 @@ function PlayShell() {
         {tab === "stats" && <Stats />}
         {tab === "draft" && !showDraft && <DraftNight />}
         {tab === "history" && <History />}
+        {tab === "team" && (
+          <TeamHistory records={(id) => <RecordBookSection title={`${displayName(save.year, id)} franchise records`} teamId={id} />} />
+        )}
+        {tab === "hof" && <HallOfFame />}
         {tab === "league" && <LeagueDirectory />}
         <PlayerProfile />
         <TeamRosterModal />
