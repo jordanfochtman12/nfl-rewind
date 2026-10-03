@@ -1,3 +1,5 @@
+import { castVoices } from "@/lib/voiceCast";
+import { commissionerFor } from "@/lib/game/broadcastCrew";
 import {
   createContext,
   useCallback,
@@ -136,11 +138,9 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       setLine([text, nextLine].filter(Boolean).join(" "));
       setError("");
       const token = serial.current;
-      const chosen =
-        voices.find((v) => v.name === voice) ??
-        voices.find((v) => /Natural|Online|Google/i.test(v.name)) ??
-        voices.find((v) => v.lang === "en-US") ??
-        voices[0];
+      // The commissioner reads the picks: Rozelle, Tagliabue, Goodell. A man's voice, his own.
+      const reader = castVoices(voices, [{ key: "COMM", gender: commissionerFor(save.year).gender, rate: 0.98 }], voice).get("COMM");
+      const chosen = reader?.voice;
       setBusy(true);
       const read = (words: string, onEnd: () => void) => {
         if (serial.current !== token) return;
@@ -150,7 +150,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         }
         const utterance = new SpeechSynthesisUtterance(footballSpeech(words, save.year));
         if (chosen) utterance.voice = chosen;
-        utterance.rate = 0.95;
+        utterance.pitch = reader?.pitch ?? 1;
+        utterance.rate = 0.95 * (reader?.rate ?? 1);
         utterance.volume = volume;
         const fail = () => {
           if (serial.current !== token) return;

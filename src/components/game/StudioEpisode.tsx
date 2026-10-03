@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import type { PrimetimeShow } from "@/lib/game";
 import { Logo } from "./chrome";
 import { stadiumAudio } from "./stadiumAudio";
+import { castVoices } from "@/lib/voiceCast";
+import { crewFor, crewGender } from "@/lib/game/previewVoice";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -62,20 +64,22 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
     };
     if (narration && "speechSynthesis" in window) {
       const speech = new SpeechSynthesisUtterance(footballSpeech(current.text, year));
-      const preferred =
-        voices.find((v) => v.name === voice) ??
-        voices.find((v) => /Natural|Online|Google/i.test(v.name)) ??
-        voices.find((v) => v.lang === "en-US") ??
-        voices[0];
-      // A named crew gets a voice each: the host keeps the chosen one, the others take the
-      // next distinct English voices, so the desk sounds like three people.
-      const crew = episode.cast ? (["HOST", "ANALYST", "REPORTER"] as const).indexOf(current.speaker) : 0;
-      const pool = voices.filter((v) => v.lang.startsWith("en-US")).length >= 3 ? voices.filter((v) => v.lang.startsWith("en-US")) : voices;
-      const start = Math.max(0, pool.findIndex((v) => v.name === preferred?.name));
-      const chosen = crew > 0 && pool.length > 1 ? pool[(start + crew) % pool.length] : preferred;
-      if (chosen) speech.voice = chosen;
-      if (episode.cast && current.speaker === "ANALYST") speech.pitch = 0.9;
-      speech.rate = current.speaker === "ANALYST" ? 0.96 : 1;
+      // Every person on the desk has a voice of their own that matches them: the host takes a
+      // chosen voice if one is picked, and nobody shares a voice unless the device runs out.
+      const crew = crewFor(year);
+      const who = (k: "HOST" | "ANALYST" | "REPORTER") => {
+        const c = episode.cast?.[k];
+        return { key: k, gender: c?.gender ?? (c ? crewGender(c.name) : undefined) ?? crew[k].gender };
+      };
+      const cast = castVoices(voices, [
+        { ...who("HOST"), rate: 1 },
+        { ...who("ANALYST"), pitch: 0.96, rate: 0.97 },
+        { ...who("REPORTER"), rate: 1.03 },
+      ], voice);
+      const c = cast.get(current.speaker);
+      if (c?.voice) speech.voice = c.voice;
+      speech.pitch = c?.pitch ?? 1;
+      speech.rate = c?.rate ?? 1;
       speech.onend = next;
       speech.onerror = () => {
         if (active) {
@@ -160,7 +164,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
           <label className="pt-voice">
             Voice
             <select
-              aria-label="Studio narrator voice"
+              aria-label="Host voice"
               value={voice}
               onChange={(e) => setVoice(e.target.value)}
             >
@@ -236,8 +240,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
             {chapter.lines.map((l, i) => (
               <div key={i} className={i === line ? "pt-script-line is-speaking" : "pt-script-line"}>
                 <span>
-                  {episode.cast?.[l.speaker]?.name.toUpperCase() ??
-                    (l.speaker === "HOST" ? "STUDIO" : l.speaker === "ANALYST" ? "BREAKDOWN" : "LEAGUE REPORT")}
+                  {(episode.cast?.[l.speaker]?.name ?? crewFor(year)[l.speaker].name).toUpperCase()}
                 </span>
                 <p>{l.text}</p>
               </div>

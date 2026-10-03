@@ -874,9 +874,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
 
   const crew = crewFor(year);
   const cast = {
-    HOST: { name: crew.HOST.name, role: crew.HOST.role, tenure: tenure(crew.HOST, year) },
-    ANALYST: { name: crew.ANALYST.name, role: crew.ANALYST.role, tenure: tenure(crew.ANALYST, year) },
-    REPORTER: { name: crew.REPORTER.name, role: crew.REPORTER.role, tenure: tenure(crew.REPORTER, year) },
+    HOST: { name: crew.HOST.name, role: crew.HOST.role, tenure: tenure(crew.HOST, year), gender: crew.HOST.gender },
+    ANALYST: { name: crew.ANALYST.name, role: crew.ANALYST.role, tenure: tenure(crew.ANALYST, year), gender: crew.ANALYST.gender },
+    REPORTER: { name: crew.REPORTER.name, role: crew.REPORTER.role, tenure: tenure(crew.REPORTER, year), gender: crew.REPORTER.gender },
   };
   const first = (n: string) => n.replace(/ “.*”/, "").split(" ")[0]!;
   const v = (slot: string, list: readonly string[]) => vary(slot, year, list);

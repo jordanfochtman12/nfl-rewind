@@ -1,9 +1,10 @@
 import { BroadcastField } from "./BroadcastField";
 import { FilmReport } from "./FilmReport";
 import { useBroadcastSound } from "./BroadcastSound";
-import { boothLine } from "@/lib/game/commentary";
+import { boothCall } from "@/lib/game/commentary";
+import { boothFor, firstName } from "@/lib/game/broadcastCrew";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { clubInk, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
+import { clubInk, nicknameOf, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 
@@ -104,7 +105,24 @@ export function LiveBroadcast({
   const doneRef = useRef(false);
   const [halftime, setHalftime] = useState(false);
   const halfSeen = useRef(startAt > 0);
-  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", log[i] ? boothLine(log[i]!, i) : "", i, game.year);
+  const booth = boothFor(game.year);
+  const call = useMemo(
+    () =>
+      log[i]
+        ? boothCall(log[i]!, i, {
+            nick: (id) => nicknameOf(game.year, id as TeamId),
+            homeId: home,
+            awayId: away,
+            pbpFirst: firstName(booth.pbp.name),
+            colorFirst: firstName(booth.color.name),
+            colorBackground: booth.color.background,
+            prev: log[i - 1],
+          })
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [i, log, game.year],
+  );
+  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 
@@ -250,6 +268,15 @@ export function LiveBroadcast({
                   {t && <span className={`ml-2 px-1.5 py-px not-italic ${t.cls}`}>{t.label}</span>}
                 </p>
                 <p className={k === 0 ? "text-[15px] text-white" : "text-sm text-paper"}>{l.text}</p>
+                {k === 0 &&
+                  call
+                    .filter((c) => c.speaker === "COLOR")
+                    .map((c) => (
+                      <p key={c.text} className="mt-1 text-sm italic text-paper">
+                        <span className="not-italic font-display text-[11px] font-bold uppercase tracking-wide text-brass">{booth.color.name}: </span>
+                        {c.text}
+                      </p>
+                    ))}
               </li>
             );
           })}

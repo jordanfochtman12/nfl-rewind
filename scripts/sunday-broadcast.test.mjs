@@ -149,3 +149,53 @@ test("coaching dials change seeded simulation outcomes without changing the stan
   ])
     assert.notEqual(run(patch), standard);
 });
+
+test("every broadcaster gets a voice of their own that matches them", async () => {
+  const { castVoices, voiceGender } = await import("../src/lib/voiceCast.ts");
+  const windows = [
+    { name: "Microsoft Aria Online (Natural) - English (United States)", lang: "en-US" },
+    { name: "Microsoft Guy Online (Natural) - English (United States)", lang: "en-US" },
+    { name: "Microsoft Jenny Online (Natural) - English (United States)", lang: "en-US" },
+    { name: "Microsoft Christopher Online (Natural) - English (United States)", lang: "en-US" },
+    { name: "Microsoft David - English (United States)", lang: "en-US" },
+    { name: "Microsoft Zira - English (United States)", lang: "en-US" },
+  ];
+  const mac = [
+    { name: "Samantha", lang: "en-US" },
+    { name: "Alex", lang: "en-US" },
+    { name: "Daniel", lang: "en-GB" },
+    { name: "Karen", lang: "en-AU" },
+    { name: "Bubbles", lang: "en-US" },
+  ];
+  const chrome = [
+    { name: "Google US English", lang: "en-US" },
+    { name: "Google UK English Female", lang: "en-GB" },
+    { name: "Google UK English Male", lang: "en-GB" },
+  ];
+  assert.equal(voiceGender({ name: "Google US English", lang: "en-US" }), "f");
+  assert.equal(voiceGender({ name: "Google UK English Male", lang: "en-GB" }), "m");
+  const desk = [
+    { key: "Rich Delaney", gender: "m" },
+    { key: "Tony Vance", gender: "m" },
+    { key: "Dana Whitfield", gender: "f" },
+  ];
+  for (const voices of [windows, mac, chrome]) {
+    const cast = castVoices(voices, desk);
+    for (const p of desk) {
+      const c = cast.get(p.key);
+      assert.ok(c?.voice, `${p.key} has a voice`);
+      const g = voiceGender(c.voice);
+      // Never the wrong gender when a right one exists; a shared voice is pitched toward the person.
+      if (voices.some((v) => voiceGender(v) === p.gender)) assert.equal(g, p.gender, `${p.key} on ${c.voice.name}`);
+      assert.ok(!/bubbles/i.test(c.voice.name));
+    }
+    const names = desk.map((p) => cast.get(p.key).voice.name);
+    if (voices.filter((v) => voiceGender(v) === "m").length >= 2) assert.notEqual(names[0], names[1], "two men, two voices");
+  }
+  // Natural voices win over the old robotic ones.
+  assert.match(castVoices(windows, desk).get("Rich Delaney").voice.name, /Online \(Natural\)/);
+  // Two men on a device with one male voice still sound like two people.
+  const one = castVoices(mac.slice(0, 2), desk.slice(0, 2));
+  const [a, b] = desk.slice(0, 2).map((p) => one.get(p.key));
+  assert.ok(a.pitch !== b.pitch || a.rate !== b.rate);
+});

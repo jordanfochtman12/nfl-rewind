@@ -97,10 +97,14 @@ test("pick accountability uses the actual winner and never fabricates a comeback
   const show = { year: 1966, week: 2, kind: "regular", title: "Week 2", recaps: [], stories: [] };
   const e = produceEpisode(s, show, [g], [], false);
   const segment = e.chapters.find((c) => c.id === "accountability");
-  assert.match(segment.lines.map((l) => l.text).join(" "), /got that one wrong/);
+  // The desk owns the miss and credits the team that actually won.
+  const said = segment.lines.map((l) => l.text).join(" ");
+  assert.match(said, /whiffed|miss|wrong/i);
+  assert.match(said, /CHI 21, GNB 7/);
   const script = JSON.stringify(e);
   assert.ok(!script.includes("in overtime"));
-  assert.match(script, /committed 3 turnovers/);
+  // The turnover story comes from the recorded count: three by the loser.
+  assert.match(script, /gave it away three times|Three turnovers|turnover battle by three/);
 });
 
 test("episode archive is bounded, deduplicated on rebuild, and migrates version 17", () => {

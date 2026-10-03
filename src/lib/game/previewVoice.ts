@@ -34,6 +34,8 @@ function gcd(a: number, b: number): number {
 export interface CrewMember {
   name: string;
   role: string;
+  /** Who's on the air, so the broadcast casts a voice that matches. */
+  gender: "m" | "f";
   /** Short spoken tics that make him or her sound like one person. */
   tics: string[];
   since: number;
@@ -48,7 +50,7 @@ export interface Crew {
 
 const HOSTS: (CrewMember & { until: number; signoff: string[] })[] = [
   {
-    name: "Walt Prescott",
+    name: "Walt Prescott", gender: "m",
     role: "Host",
     since: 1966,
     until: 1979,
@@ -56,7 +58,7 @@ const HOSTS: (CrewMember & { until: number; signoff: string[] })[] = [
     signoff: ["That's our preview. Good night, and good football.", "So ends the preview. The games begin Sunday. Good night.", "We'll see you from the stadium. Good night, everybody."],
   },
   {
-    name: "Rich Delaney",
+    name: "Rich Delaney", gender: "m",
     role: "Host",
     since: 1980,
     until: 1999,
@@ -64,7 +66,7 @@ const HOSTS: (CrewMember & { until: number; signoff: string[] })[] = [
     signoff: ["That's the preview. Enjoy the season, everybody.", "That's our show. Kickoff is close. We'll see you Sunday.", "The picks are in. Now let's go play. See you on Sunday.", "Buckle up. It's going to be a ride. Good night."],
   },
   {
-    name: "Kara Lindqvist",
+    name: "Kara Lindqvist", gender: "f",
     role: "Host",
     since: 2000,
     until: 2014,
@@ -72,7 +74,7 @@ const HOSTS: (CrewMember & { until: number; signoff: string[] })[] = [
     signoff: ["That's the season preview. We're back Sunday morning, live.", "Save the picks. We'll grade them in February. Good night.", "The season starts now. Thanks for watching."],
   },
   {
-    name: "Jalen Reyes",
+    name: "Jalen Reyes", gender: "m",
     role: "Host",
     since: 2015,
     until: 9999,
@@ -82,18 +84,23 @@ const HOSTS: (CrewMember & { until: number; signoff: string[] })[] = [
 ];
 
 const ANALYSTS: (CrewMember & { until: number })[] = [
-  { name: "Hank “Bull” Mullins", role: "Analyst · 12 seasons, guard", since: 1966, until: 1975, tics: ["In my day,", "Football's a simple game.", "Block and tackle, Walt.", "I'll tell you plainly:"] },
-  { name: "Marcus “Hammer” Boyd", role: "Analyst · 11 seasons, linebacker", since: 1976, until: 1990, tics: ["Hold onto something.", "I've been in that huddle.", "That's grown-man football.", "Put it on film."] },
-  { name: "Tony Vance", role: "Analyst · 14 seasons, quarterback", since: 1991, until: 2005, tics: ["From the pocket, here's what I see:", "Quarterbacks win in this league.", "Read the coverage, Rich.", "I'll take my chances with that."] },
-  { name: "Darius Cole", role: "Analyst · 10 seasons, cornerback", since: 2006, until: 2016, tics: ["On an island, you learn things.", "That's a matchup problem.", "Trust the tape.", "I'm not buying it."] },
-  { name: "Brooke Hensley", role: "Analyst · former personnel director", since: 2017, until: 9999, tics: ["I've graded these players.", "The tape says otherwise.", "Value over name.", "Process over results."] },
+  { name: "Hank “Bull” Mullins", gender: "m", role: "Analyst · 12 seasons, guard", since: 1966, until: 1975, tics: ["In my day,", "Football's a simple game.", "Block and tackle, Walt.", "I'll tell you plainly:"] },
+  { name: "Marcus “Hammer” Boyd", gender: "m", role: "Analyst · 11 seasons, linebacker", since: 1976, until: 1990, tics: ["Hold onto something.", "I've been in that huddle.", "That's grown-man football.", "Put it on film."] },
+  { name: "Tony Vance", gender: "m", role: "Analyst · 14 seasons, quarterback", since: 1991, until: 2005, tics: ["From the pocket, here's what I see:", "Quarterbacks win in this league.", "Read the coverage, Rich.", "I'll take my chances with that."] },
+  { name: "Darius Cole", gender: "m", role: "Analyst · 10 seasons, cornerback", since: 2006, until: 2016, tics: ["On an island, you learn things.", "That's a matchup problem.", "Trust the tape.", "I'm not buying it."] },
+  { name: "Brooke Hensley", gender: "f", role: "Analyst · former personnel director", since: 2017, until: 9999, tics: ["I've graded these players.", "The tape says otherwise.", "Value over name.", "Process over results."] },
 ];
 
 const REPORTERS: (CrewMember & { until: number })[] = [
-  { name: "Bob Kessler", role: "Wire service, league beat", since: 1966, until: 1984, tics: ["From the press box,", "A man in the front office tells me", "Word on the wire is", "My notebook says"] },
-  { name: "Dana Whitfield", role: "League insider", since: 1985, until: 2009, tics: ["I'm told", "People around the club tell me", "Talking to the staff this week,", "Sources say"] },
-  { name: "Sam Ortiz", role: "National insider", since: 2010, until: 9999, tics: ["Per league sources,", "I'm hearing", "Two people in the building told me", "From my reporting,"] },
+  { name: "Bob Kessler", gender: "m", role: "Wire service, league beat", since: 1966, until: 1984, tics: ["From the press box,", "A man in the front office tells me", "Word on the wire is", "My notebook says"] },
+  { name: "Dana Whitfield", gender: "f", role: "League insider", since: 1985, until: 2009, tics: ["I'm told", "People around the club tell me", "Talking to the staff this week,", "Sources say"] },
+  { name: "Sam Ortiz", gender: "m", role: "National insider", since: 2010, until: 9999, tics: ["Per league sources,", "I'm hearing", "Two people in the building told me", "From my reporting,"] },
 ];
+
+/** Everyone who has worked the desk, for looking a name back up (older saves stored names only). */
+export function crewGender(name: string): "m" | "f" | undefined {
+  return [...HOSTS, ...ANALYSTS, ...REPORTERS].find((c) => c.name === name)?.gender;
+}
 
 const onDesk = <T extends { since: number; until: number }>(list: T[], year: number) => list.find((c) => year >= c.since && year <= c.until) ?? list[list.length - 1]!;
 

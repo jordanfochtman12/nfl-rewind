@@ -331,8 +331,12 @@ export function kickoffTbRate(year: number): number {
   return 0.1;
 }
 
-export function huddleSeconds(year: number, tempo: "chew" | "standard" | "hurry"): [number, number] {
+export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptempo" | "hurry"): [number, number] {
+  // "hurry" is the two-minute drill: racing the clock, snapping as fast as the ball is set.
   if (tempo === "hurry") return year <= 1979 ? [16, 22] : [12, 17];
+  // A game-long no-huddle (the K-Gun, Marchibroda's Colts) still lets the clock run between
+  // snaps; it just skips the huddle. Real ones ran ten or fifteen percent more plays, not double.
+  if (tempo === "uptempo") return year <= 1979 ? [31, 37] : [27, 33];
   if (tempo === "chew") return year <= 1979 ? [38, 45] : [35, 42];
   // Snap-to-snap on a running clock: the play itself plus the huddle and most of the
   // play clock (30s from the ready signal before 1976, 40s from the previous whistle after).

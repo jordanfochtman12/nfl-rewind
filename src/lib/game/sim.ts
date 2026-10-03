@@ -649,14 +649,17 @@ function snapClock(
   spiked: boolean,
 ): { used: number; stopped: boolean } {
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
-  const hurry = plan.tempo === "hurry" || (q >= 4 && trail >= 4 && clock <= 240);
+  // Racing the clock (late and behind) is the true two-minute drill; a hurry-up game plan
+  // otherwise means a no-huddle pace, not a drill for sixty minutes.
+  const urgent = (q >= 4 && trail >= 4 && clock <= 240) || (twoMin && trail > 0);
+  const hurry = urgent || plan.tempo === "hurry";
   const chew = plan.tempo === "chew" && trail <= 0 && !(q >= 4 && clock <= 180 && trail >= 1);
   const stopFd = clockStopFirstDown(year) && firstDown;
   const stopped = oob || !complete || spiked || stopFd || twoMin && oob;
   if (spiked) return { used: 3, stopped: true };
   if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 6, 9), stopped: true };
   if (stopFd) return { used: randInt(save, 6, 9), stopped: true };
-  const [lo, hi] = huddleSeconds(year, hurry ? "hurry" : chew ? "chew" : "standard");
+  const [lo, hi] = huddleSeconds(year, urgent ? "hurry" : hurry ? "uptempo" : chew ? "chew" : "standard");
   const used = randInt(save, lo, hi);
   // A live snap may cross 2:00, but its between-play runoff cannot cross the warning.
   return { used: (q === 2 || q === 4) && clock > 120 ? Math.min(used, Math.max(7, clock - 120)) : used, stopped: false };
@@ -1204,7 +1207,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const injure = (id: TeamId, p: Player | undefined) => {
     if (!p) return;
     if (!maybeInGameInjury(save, p, wx, venue.turf)) return;
-    note(`${playerName(p)} is down. ${p.injuryName}.`);
+    const hurt = p.injuryName ?? "injury";
+    note(
+      hurt === "shaken up"
+        ? `${playerName(p)} is shaken up and slow to get off the turf.`
+        : hurt === "concussion"
+          ? `${playerName(p)} is down. He's being checked for a concussion.`
+          : `${playerName(p)} is down with a ${hurt === "ribs" ? "rib" : hurt} injury.`,
+    );
     rebuild(id);
     const u = live(id);
     if (p.pos === "QB" && u.qb && u.qb.id !== p.id) {

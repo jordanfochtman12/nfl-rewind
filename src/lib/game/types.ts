@@ -1160,7 +1160,7 @@ export interface SeasonPreview {
   history?: string;
   yours: { teamId: TeamId; headline: string; lines: string[]; keys: string[]; concerns: string[] };
   /** This year's desk: it changes with the decades. */
-  cast: Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string; tenure: number }>;
+  cast: Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string; tenure: number; gender?: "m" | "f" }>;
   /** Rotating features: a different handful every season. */
   features: {
     id: string;
@@ -1189,7 +1189,7 @@ export interface PrimetimeShow {
     id: string;
     edition: "weekly" | "seasonFinale" | "playoffs" | "championship" | "superBowl" | "awards" | "seasonPreview";
     /** Named crew for this edition (the season preview has one). */
-    cast?: Partial<Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string }>>;
+    cast?: Partial<Record<"HOST" | "ANALYST" | "REPORTER", { name: string; role: string; gender?: "m" | "f" }>>;
     headline: string;
     subtitle: string;
     chapters: { id: string; kicker: string; title: string; teamIds: TeamId[]; lines: { speaker: "HOST" | "ANALYST" | "REPORTER"; text: string }[] }[];

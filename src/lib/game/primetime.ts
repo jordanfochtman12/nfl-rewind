@@ -441,10 +441,32 @@ function previews(save: DynastySave, games: GameResult[], cache: Map<TeamId, num
 
 /* ---------- stories ---------- */
 
+function storyHash(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** A big game, said the way a reporter would say it. */
+function spokenBig(b: BoxPlayer): string {
+  const n = (x?: number) => x ?? 0;
+  const w = (k: number) => (k <= 10 ? ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][k]! : String(k));
+  if (n(b.passAtt) >= 10) return `${n(b.passCmp)} of ${n(b.passAtt)} for ${comma(n(b.passYds))} yards and ${w(n(b.passTd))} touchdown${n(b.passTd) === 1 ? "" : "s"}${n(b.passInt) ? `, with ${w(n(b.passInt))} pick${n(b.passInt) === 1 ? "" : "s"}` : ""}`;
+  if (n(b.rushYds) >= 100) return `${n(b.rushAtt)} carries for ${n(b.rushYds)} yards${n(b.rushTd) ? ` and ${w(n(b.rushTd))} touchdown${n(b.rushTd) === 1 ? "" : "s"}` : ""}`;
+  if (n(b.recYds) >= 100) return `${n(b.rec)} catches for ${n(b.recYds)} yards${n(b.recTd) ? ` and ${w(n(b.recTd))} touchdown${n(b.recTd) === 1 ? "" : "s"}` : ""}`;
+  if (n(b.sacks) >= 2) return `${n(b.sacks)} sacks`;
+  return `${w(n(b.ints))} interceptions`;
+}
+
 function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: PrimetimeInjury[]): PrimetimeStory[] {
   const out: (PrimetimeStory & { score: number })[] = [];
   const year = save.year;
   const covered = new Set<TeamId>();
+  // Each kind of story has a few ways of being told, rotating week to week.
+  const tell = (key: string, list: string[]) => list[storyHash(`${key}|${year}|${save.week}`) % list.length]!;
 
   for (const g of games) {
     const hw = g.homeScore > g.awayScore;
@@ -462,7 +484,18 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
       out.push({
         tag: "Upset",
         headline: `${name(save, w)} stun ${name(save, l)}`,
-        body: `${name(save, w)} came in ${wt.wins - 1}-${wt.losses}${wt.ties ? `-${wt.ties}` : ""} and walked out with a ${Math.max(g.homeScore, g.awayScore)}-${Math.min(g.homeScore, g.awayScore)} win over the ${rec(lt)} ${name(save, l)}.`,
+        body: (() => {
+          const before = `${wt.wins - 1}-${wt.losses}${wt.ties ? `-${wt.ties}` : ""}`;
+          const sc = `${Math.max(g.homeScore, g.awayScore)}-${Math.min(g.homeScore, g.awayScore)}`;
+          return tell(`up${w}`, [
+            `Nobody gave the ${name(save, w)} much of a chance. They were ${before}, the ${name(save, l)} were ${rec(lt)}, and the ${name(save, w)} won it ${sc}.`,
+            `The ${name(save, w)} came in ${before} and knocked off the ${rec(lt)} ${name(save, l)}, ${sc}.`,
+            `${sc}, and it's the underdog. The ${name(save, w)} were ${before} going in. The ${name(save, l)} are left with a lot of questions.`,
+            `File this one under surprises: the ${name(save, w)}, ${before} before kickoff, beat the ${rec(lt)} ${name(save, l)} ${sc}.`,
+            `The ${name(save, l)} were ${rec(lt)} and rolling. The ${name(save, w)} didn't care, and won ${sc}.`,
+            `Upset alert, and it held: the ${name(save, w)} over the ${name(save, l)}, ${sc}.`,
+          ]);
+        })(),
         teamIds: [w, l],
         playerIds: g.mvpPlayerId ? [g.mvpPlayerId] : [],
         score: 60 + (lPre - wPre) * 50,
@@ -484,7 +517,11 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
         out.push({
           tag: "Big day",
           headline: `${playerName(p)} goes off for ${big}`,
-          body: `${statLine(b)} for the ${name(save, teamId)}${g.round ? ` in the ${g.round}` : ""}.`,
+          body: tell(`big${p.id}`, [
+            `${playerName(p)} was unstoppable: ${spokenBig(b)} for the ${name(save, teamId)}${g.round ? ` in the ${g.round}` : ""}.`,
+            `Take a look at this line from ${playerName(p)}: ${spokenBig(b)}${g.round ? ` in the ${g.round}` : ""}. The ${name(save, teamId)} rode him all day.`,
+            `${spokenBig(b)[0]!.toUpperCase()}${spokenBig(b).slice(1)}. That's ${playerName(p)}'s day for the ${name(save, teamId)}${g.round ? ` in the ${g.round}` : ""}, and it's one of the best performances we've seen this year.`,
+          ]),
           teamIds: [teamId],
           playerIds: [p.id],
           score: sc,
@@ -501,7 +538,11 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
         out.push({
           tag: "Perfect",
           headline: `Still perfect: ${name(save, t.id)} ${t.wins}-0`,
-          body: `Nobody has solved them yet. ${t.pf - t.pa >= 0 ? "+" : ""}${t.pf - t.pa} in point differential.`,
+          body: tell(`perf${t.id}`, [
+            `Nobody has solved them yet. They've outscored people by ${t.pf - t.pa} points.`,
+            `${t.wins} games, ${t.wins} wins, and a ${t.pf - t.pa}-point scoring margin. Everybody's chasing them.`,
+            `Still unbeaten. The question around the league is who even has a chance against them.`,
+          ]),
           teamIds: [t.id],
           playerIds: [],
           score: 52 + t.wins,
@@ -511,7 +552,11 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
         out.push({
           tag: "Winless",
           headline: `${name(save, t.id)} still looking for a win`,
-          body: `0-${t.losses}${t.ties ? `-${t.ties}` : ""}. The questions in the building are getting louder.`,
+          body: tell(`winless${t.id}`, [
+            `0-${t.losses}${t.ties ? `-${t.ties}` : ""}. The questions in the building are getting louder.`,
+            `Still searching for that first win. At 0-${t.losses}, the pressure on the coaching staff is real.`,
+            `0-${t.losses}${t.ties ? `-${t.ties}` : ""}, and it isn't getting easier. People around the team are frustrated.`,
+          ]),
           teamIds: [t.id],
           playerIds: [],
           score: 32 + t.losses,
@@ -521,7 +566,9 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
         out.push({
           tag: won ? "Hot" : "Skid",
           headline: won ? `${name(save, t.id)} have won ${n} straight` : `${name(save, t.id)} have dropped ${n} in a row`,
-          body: won ? `${rec(t)} and climbing.` : `${rec(t)}. The season is slipping away.`,
+          body: won
+            ? tell(`hot${t.id}`, [`${rec(t)} and climbing.`, `${n} in a row, and they're ${rec(t)}. Nobody wants to play them right now.`, `They're ${rec(t)} and playing as well as anybody in the league.`])
+            : tell(`skid${t.id}`, [`${rec(t)}. The season is slipping away.`, `${n} straight losses, and at ${rec(t)} they're running out of time.`, `They're ${rec(t)}, and it's getting ugly.`]),
           teamIds: [t.id],
           playerIds: [],
           score: 30 + n * 3,
@@ -543,7 +590,7 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
             out.push({
               tag: "Clinched",
               headline: `${name(save, t.id)} clinch a playoff spot`,
-              body: `${rec(t)} with ${left(t)} to play. January football is booked.`,
+              body: tell(`clinch${t.id}`, [`${rec(t)} with ${left(t)} to play. January football is booked.`, `They're in. ${rec(t)}, and now it's about seeding.`, `Clinched, with ${left(t)} game${left(t) === 1 ? "" : "s"} still to go.`]),
               teamIds: [t.id],
               playerIds: [],
               score: 56,
@@ -555,7 +602,7 @@ function stories(save: DynastySave, games: GameResult[], kind: Kind, injuries: P
             out.push({
               tag: "Eliminated",
               headline: `${name(save, t.id)} eliminated`,
-              body: `${rec(t)}. The math ran out.`,
+              body: tell(`elim${t.id}`, [`${rec(t)}. The math ran out.`, `At ${rec(t)}, they're officially out of it.`, `That's it for them. ${rec(t)}, no postseason this year.`]),
               teamIds: [t.id],
               playerIds: [],
               score: 40,

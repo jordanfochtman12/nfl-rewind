@@ -1,18 +1,12 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
 import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
+import { castVoices } from "@/lib/voiceCast";
+import { boothFor } from "@/lib/game/broadcastCrew";
+import { crewFor } from "@/lib/game/previewVoice";
+import type { BoothLine } from "@/lib/game/commentary";
 
-function chooseVoice(voices: SpeechSynthesisVoice[], name: string) {
-  if (name) return voices.find((v) => v.name === name);
-  const english = voices.filter((v) => /^en(-|_)/i.test(v.lang));
-  return (
-    english.find((v) => /natural|online|google/i.test(v.name)) ??
-    english.find((v) => /en-US/i.test(v.lang)) ??
-    english[0]
-  );
-}
-
-export function useBroadcastSound(active: boolean, cue: string, text: string, index: number, year: number) {
+export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number) {
   const [enabled, setEnabled] = useState(false);
   const [music, setMusic] = useState(false);
   const [volume, setVolume] = useState(0.3);
@@ -22,16 +16,25 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
   const [voiceName, setVoiceName] = useState("");
   const engine = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const last = useRef(index);
-  const speaking = (line: string) => {
+  const booth = boothFor(year);
+  // Two people in the booth, two voices: the play-by-play man and his color analyst, each cast
+  // to match (a chosen voice goes to the play-by-play call).
+  const speaking = (call: BoothLine[]) => {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(footballSpeech(line, year));
-    const voice = chooseVoice(voices, voiceName);
-    if (voice) speech.voice = voice;
-    speech.rate = cue === "td" ? 1.02 : 0.96;
-    speech.pitch = 0.98;
-    speech.volume = 0.85;
-    window.speechSynthesis.speak(speech);
+    const cast = castVoices(voices, [
+      { key: "PBP", gender: booth.pbp.gender, rate: 1.02 },
+      { key: "COLOR", gender: booth.color.gender, pitch: 0.94, rate: 0.97 },
+    ], voiceName);
+    for (const line of call) {
+      const speech = new SpeechSynthesisUtterance(footballSpeech(line.text, year));
+      const c = cast.get(line.speaker);
+      if (c?.voice) speech.voice = c.voice;
+      speech.pitch = c?.pitch ?? 1;
+      speech.rate = (c?.rate ?? 1) * (line.speaker === "PBP" && cue === "td" ? 1.06 : 1);
+      speech.volume = line.speaker === "PBP" ? 0.9 : 0.85;
+      window.speechSynthesis.speak(speech);
+    }
   };
   const ensureAudio = async () => {
     try {
@@ -72,8 +75,9 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
     if (enabled && ["td", "to", "fg", "safety"].includes(cue)) engine.current?.cue(cue === "td");
     // Finish ordinary calls. Only a major event interrupts the current sentence.
     if (announcer && (["td", "to", "safety"].includes(cue) || !window.speechSynthesis.speaking))
-      speaking(text);
-  }, [index, active, cue, text, enabled, announcer]);
+      speaking(lines);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, active, cue, enabled, announcer]);
   useEffect(
     () => () => {
       void engine.current?.close();
@@ -120,7 +124,11 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
               }
               setAnnouncer(!announcer);
               if (announcer) window.speechSynthesis.cancel();
-              else speaking("Welcome to NFL Rewind. It's a great day for football.");
+              else
+                speaking([
+                  { speaker: "PBP", text: `Hello again, everybody. I'm ${booth.pbp.name}, alongside ${booth.color.name}, and it is a great day for football.` },
+                  { speaker: "COLOR", text: `It sure is. Let's get this thing started.` },
+                ]);
             }}
           >
             Announcer: {announcer ? "On" : "Off"}
@@ -144,9 +152,9 @@ export function useBroadcastSound(active: boolean, cue: string, text: string, in
         )}
         {announcer && (
           <label className="flex flex-wrap items-center gap-2 text-xs text-muted">
-            Announcer voice
+            Play-by-play voice ({booth.pbp.name})
             <select
-              aria-label="Announcer voice"
+              aria-label="Play-by-play voice"
               className="min-h-9 max-w-full rounded border border-white/20 bg-studio px-2"
               value={voiceName}
               onChange={(e) => {
@@ -208,9 +216,11 @@ export function StudioRecapAudio({ text, year }: { text: string; year: number })
             return;
           }
           const speech = new SpeechSynthesisUtterance(footballSpeech(text, year));
-          const voice = chooseVoice(window.speechSynthesis.getVoices(), "");
-          if (voice) speech.voice = voice;
-          speech.rate = .96;
+          const host = crewFor(year).HOST;
+          const c = castVoices(window.speechSynthesis.getVoices(), [{ key: "HOST", gender: host.gender }]).get("HOST");
+          if (c?.voice) speech.voice = c.voice;
+          speech.pitch = c?.pitch ?? 1;
+          speech.rate = 0.96 * (c?.rate ?? 1);
           speech.onend = speech.onerror = () => setPlaying(false);
           window.speechSynthesis.speak(speech);
           setPlaying(true);
