@@ -7,6 +7,7 @@
  */
 import type { Player, Pos } from "./types.ts";
 import { CAREER_ARCS, VET_ARCS, type CareerArcRow, type VetArcRow } from "./data/careerArcs.ts";
+import { UNDRAFTED_ARCS } from "./data/undrafted.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { clamp } from "./rng.ts";
 
@@ -66,7 +67,7 @@ function lookupArcRow(year: number, first: string, last: string): Player["arc"] 
   const found = lookupTable(year, first, last);
   if (found) return found;
   for (const k of keysOf(first, last)) {
-    const sup = SUPPLEMENTAL[k];
+    const sup = SUPPLEMENTAL[k] ?? UNDRAFTED_ARCS[k];
     if (sup && Math.abs(sup.dy - year) <= 1) {
       const r = sup.row;
       return { dy: year, to: r[0], st: r[1], g: r[2], pb: r[3], ap: r[4], age: r[5] };

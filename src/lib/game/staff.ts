@@ -9,6 +9,7 @@ import type {
 } from "./types.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
 import { COORDINATORS_1966, LATER_COACHES, type CoachSeed } from "./data/coaches.ts";
+import { MORE_COACHES } from "./data/coachesMore.ts";
 import { addNews } from "./news.ts";
 import { rand, randInt } from "./rng.ts";
 import { winPct } from "./standings.ts";
@@ -17,6 +18,7 @@ import { assignCoachKit, schemeOfSignature } from "./coachKit.ts";
 import { syncDepth } from "./players.ts";
 import { applyStaffSchemes, syncRealSchemes } from "./gameplans.ts";
 import { playbookFor } from "./data/coachPlans.ts";
+import { EXPANSION_SPECS } from "./data/expansions.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -232,6 +234,27 @@ export function draftStyleOf(id: TeamId): import("./types.ts").DraftStyle {
   return map[id] ?? "need";
 }
 
+/** Is this real coach already a head coach under another of his career entries (Shula's Colts and Dolphins)? */
+function otherJob(save: DynastySave, c: Coach): boolean {
+  return c.historical && Object.values(save.coaches).some((o) => o.id !== c.id && o.historical && o.name === c.name && headCoachOf(save, o));
+}
+
+function headCoachOf(save: DynastySave, c: Coach): boolean {
+  return !!c.teamId && save.teams[c.teamId]?.coachId === c.id;
+}
+
+/** A man takes one job at a time: hiring him under one entry clears any post he held under another. */
+function leaveOtherPosts(save: DynastySave, c: Coach): void {
+  if (!c.historical) return;
+  for (const o of Object.values(save.coaches)) {
+    if (o.id === c.id || !o.historical || o.name !== c.name || !o.teamId) continue;
+    const t = save.teams[o.teamId];
+    if (t?.coachId === o.id) vacate(save, o, "HC", o.teamId);
+    else if (t?.ocId === o.id) vacate(save, o, "OC", o.teamId);
+    else if (t?.dcId === o.id) vacate(save, o, "DC", o.teamId);
+  }
+}
+
 function sittingOn(save: DynastySave, c: Coach): boolean {
   if (!c.teamId) return false;
   const t = save.teams[c.teamId];
@@ -240,11 +263,22 @@ function sittingOn(save: DynastySave, c: Coach): boolean {
 }
 
 export function availableCoaches(save: DynastySave, role?: CoachRole): Coach[] {
+  // Some real coaches have one entry per chapter of their career (Shula's Colts and Dolphins);
+  // a man already holding a job under one of them isn't on the market under another.
+  // A coordinator can still be lured to a head job; a sitting head coach can't be hired twice.
+  const working = new Set(
+    Object.values(save.coaches)
+      .filter((c) => c.historical && (role && role !== "HC" ? sittingOn(save, c) : headCoachOf(save, c)))
+      .map((c) => c.name),
+  );
   return Object.values(save.coaches)
     .filter((c) => {
       if (c.retiredYear || c.hofYear) return false;
       if (c.yearAvail > save.year + 1) return false;
       if (sittingOn(save, c)) return false;
+      if (c.historical && working.has(c.name)) return false;
+      // Paul Brown is the Bengals' first coach, not a free agent the winter before.
+      if (EXPANSION_SPECS.some((x) => x.year >= save.year && x.clubs.some((k) => k.coachId === c.id))) return false;
       if (role && c.role !== role && c.role !== "HC") return false;
       return true;
     })
@@ -303,6 +337,7 @@ export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, ro
     const prev = save.coaches[prevId];
     vacate(save, prev, role, teamId);
   }
+  leaveOtherPosts(save, c);
   c.role = role;
   c.teamId = teamId;
   c.yearsOnJob = 1;
@@ -489,12 +524,13 @@ function noteCarousel(save: DynastySave, teamId: TeamId, role: CoachRole, fired:
 function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string): Coach {
   const t = save.teams[teamId];
   // The man the club just fired is out of work, but he isn't a candidate for his old job.
-  const historical = LATER_COACHES.filter((s) => s.yearAvail <= save.year + 1 && s.id !== exclude).filter((s) => {
-    const existing = save.coaches[s.id];
-    if (!existing) return true;
-    if (existing.retiredYear || existing.hofYear) return false;
-    return !sittingOn(save, existing);
-  });
+  const open = new Set(availableCoaches(save, "HC").map((c) => c.id));
+  const historical = [...LATER_COACHES, ...MORE_COACHES]
+    .filter((s) => (s.role ?? "HC") === "HC" && s.yearAvail <= save.year + 1 && s.id !== exclude)
+    .filter((s) => {
+      const existing = save.coaches[s.id];
+      return existing ? open.has(existing.id) : true;
+    });
   let coach: Coach;
   if (historical.length && rand(save) < 0.62) {
     const seed = historical[randInt(save, 0, historical.length - 1)]!;
@@ -506,7 +542,7 @@ function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string):
     save.coaches[coach.id] = coach;
   } else {
     const promote = t.ocId ? save.coaches[t.ocId] : undefined;
-    if (promote && !promote.retiredYear && promote.offense >= 76 && rand(save) < 0.55) {
+    if (promote && !promote.retiredYear && promote.offense >= 76 && !otherJob(save, promote) && rand(save) < 0.55) {
       promote.role = "HC";
       promote.teamId = teamId;
       promote.yearsOnJob = 1;
@@ -532,6 +568,7 @@ function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string):
   t.coachId = coach.id;
   t.offScheme = coach.offScheme;
   t.defScheme = coach.defScheme;
+  leaveOtherPosts(save, coach);
   return coach;
 }
 
@@ -550,6 +587,7 @@ function autoHireCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC"): Co
   }
   if (role === "OC") t.ocId = coach.id;
   else t.dcId = coach.id;
+  leaveOtherPosts(save, coach);
   return coach;
 }
 

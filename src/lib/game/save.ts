@@ -13,7 +13,8 @@ import { lookupCollege } from "./data/colleges.ts";
 import { seedPriorCareer } from "./data/careerPrior.ts";
 import { applyScout } from "./scout.ts";
 import { SKILL_POSITIONS } from "./types.ts";
-import { fillCoachFields } from "./staff.ts";
+import { fillCoachFields, makeCoachFromSeed } from "./staff.ts";
+import { MORE_COACHES } from "./data/coachesMore.ts";
 import { newOwnerState } from "./owner.ts";
 import { backfillHonors } from "./honors.ts";
 import { setHomeOverride } from "./teams.ts";
@@ -311,6 +312,13 @@ export function hydrateSave(raw: unknown): DynastySave {
   }
   for (const c of Object.values(out.coaches)) {
     fillCoachFields(c, out.year);
+  }
+  // Coaches added to the real pipeline after this dynasty began join the pool too, as long as
+  // they're still young enough to be coaching.
+  for (const seed of MORE_COACHES) {
+    if (out.coaches[seed.id]) continue;
+    if (seed.born && out.year - seed.born > 68) continue;
+    out.coaches[seed.id] = makeCoachFromSeed(seed, out.year, { teamId: null, role: seed.role ?? "HC" });
   }
   // Clubs used to store one neutral call sheet each, so nobody ran his coach's game. Keep only
   // what an owner changed by hand; the rest now comes from the staff's own playbooks.

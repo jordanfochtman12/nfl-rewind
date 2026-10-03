@@ -9,6 +9,7 @@ import { DRAFT_MODERN_LATE } from "./draftClassesModernLate.ts";
 import { DRAFT_2000S } from "./draftClasses2000s.ts";
 import { DRAFT_2010S } from "./draftClasses2010s.ts";
 import { DRAFT_INGEST } from "./draftClassesIngest.ts";
+import { UNDRAFTED } from "./undrafted.ts";
 import { STAR_PROFILES } from "./starProfiles.ts";
 import { cleanNameParts, historicalNameKey } from "../identity.ts";
 import { historicalYear } from "../historicalYears.ts";
@@ -1054,6 +1055,7 @@ export function draftSeedsFor(year: number): DraftSeed[] {
     ...(DRAFT_2000S[year] ?? []),
     ...(DRAFT_2010S[year] ?? []),
     ...(DRAFT_INGEST[year] ?? []),
+    ...(UNDRAFTED[year] ?? []),
   ];
   const by = new Map<string, DraftSeed>();
   for (const raw of rows) {

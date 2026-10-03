@@ -6,6 +6,7 @@ import { fillRoster, seedVeterans, syncDepth, normalizeJerseys } from "./players
 import { rebuildSchedule } from "./schedule.ts";
 import { buildDraftBoard, ensureSeasonPicks } from "./draft.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
+import { MORE_COACHES } from "./data/coachesMore.ts";
 import { addNews } from "./news.ts";
 import { setLabel } from "./season.ts";
 import { displayName } from "./teams.ts";
@@ -13,11 +14,11 @@ import { seedStaff, makeCoachFromSeed } from "./staff.ts";
 import { refreshContracts } from "./salary.ts";
 
 function seedCoaches(save: DynastySave): void {
-  for (const c of [...COACHES_1966, ...EXPANSION_COACHES, ...LATER_COACHES]) {
+  for (const c of [...COACHES_1966, ...EXPANSION_COACHES, ...LATER_COACHES, ...MORE_COACHES]) {
     const sitting = !!(c.teamId && c.yearAvail <= save.year);
     const coach = makeCoachFromSeed(c, save.year, {
       teamId: sitting ? c.teamId : null,
-      role: "HC",
+      role: c.role ?? "HC",
     });
     save.coaches[coach.id] = coach;
     if (sitting && c.teamId && save.teams[c.teamId]) {

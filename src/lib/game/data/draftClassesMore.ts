@@ -395,8 +395,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Asante", l: "Samuel", p: "CB", c: "UCF", o: 86, r: 4 },
     { f: "Lance", l: "Briggs", p: "OLB", c: "Arizona", o: 86, r: 3 },
     { f: "Charles", l: "Tillman", p: "CB", c: "Louisiana-Lafayette", o: 84, r: 2 },
-    { f: "Tony", l: "Romig", p: "QB", c: "Eastern Illinois", o: 74, r: 0 },
-    { f: "Tony", l: "Romig", p: "QB", c: "Eastern Illinois", o: 74, r: 0 },
     { f: "Tony", l: "Romo", p: "QB", c: "Eastern Illinois", o: 86, r: 0 },
     { f: "Shaun", l: "Cody", p: "DT", c: "USC", o: 74, r: 2 },
   ],

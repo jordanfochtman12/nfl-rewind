@@ -1,0 +1,95 @@
+import type { CoachSeed } from "./coaches.ts";
+
+/**
+ * More of the real coaching pipeline, 1967–2025: head coaches enter the pool the year they
+ * first ran a club, coordinators the year they first ran a side of the ball. Each has a
+ * playbook in coachPlans.ts with the game he actually called.
+ */
+export const MORE_COACHES: CoachSeed[] = [
+  // ---- the '60s and '70s ----
+  { id: "saban-lou", name: "Lou Saban", teamId: null, yearAvail: 1967, offense: 80, defense: 76, born: 1921, leadership: 80, development: 76, evaluation: 74 },
+  { id: "nolan-dick", name: "Dick Nolan", teamId: null, yearAvail: 1968, offense: 74, defense: 84, born: 1932, leadership: 76, development: 76, evaluation: 76 },
+  { id: "fairbanks", name: "Chuck Fairbanks", teamId: null, yearAvail: 1973, offense: 80, defense: 84, born: 1933, leadership: 80, development: 80, evaluation: 82 },
+  { id: "bum-phillips", name: "Bum Phillips", teamId: null, yearAvail: 1975, offense: 80, defense: 86, born: 1923, leadership: 90, development: 78, evaluation: 78 },
+  { id: "pardee", name: "Jack Pardee", teamId: null, yearAvail: 1975, offense: 80, defense: 80, born: 1936, leadership: 78, development: 74, evaluation: 76 },
+  { id: "red-miller", name: "Red Miller", teamId: null, yearAvail: 1977, offense: 78, defense: 84, born: 1927, leadership: 82, development: 74, evaluation: 74 },
+  { id: "walt-michaels", name: "Walt Michaels", teamId: null, yearAvail: 1977, offense: 74, defense: 84, born: 1929, leadership: 76, development: 76, evaluation: 76 },
+  { id: "rutigliano", name: "Sam Rutigliano", teamId: null, yearAvail: 1978, offense: 82, defense: 72, born: 1932, leadership: 80, development: 76, evaluation: 74 },
+  { id: "gregg-forrest", name: "Forrest Gregg", teamId: null, yearAvail: 1975, offense: 80, defense: 76, born: 1933, leadership: 82, development: 76, evaluation: 74 },
+  { id: "collier-joe-den", name: "Joe Collier", teamId: null, yearAvail: 1972, offense: 64, defense: 88, born: 1932, leadership: 78, development: 82, evaluation: 80, role: "DC" },
+  { id: "campbell-marion", name: "Marion Campbell", teamId: null, yearAvail: 1974, offense: 66, defense: 84, born: 1929, leadership: 74, development: 76, evaluation: 76, role: "DC" },
+
+  // ---- the '80s ----
+  { id: "reeves", name: "Dan Reeves", teamId: null, yearAvail: 1981, offense: 84, defense: 82, born: 1944, leadership: 86, development: 80, evaluation: 80 },
+  { id: "jrobinson", name: "John Robinson", teamId: null, yearAvail: 1983, offense: 84, defense: 78, born: 1935, leadership: 84, development: 80, evaluation: 80 },
+  { id: "walton-joe", name: "Joe Walton", teamId: null, yearAvail: 1983, offense: 80, defense: 72, born: 1935, leadership: 72, development: 74, evaluation: 74 },
+  { id: "schottenheimer", name: "Marty Schottenheimer", teamId: null, yearAvail: 1984, offense: 82, defense: 88, born: 1943, leadership: 90, development: 84, evaluation: 82 },
+  { id: "wyche", name: "Sam Wyche", teamId: null, yearAvail: 1984, offense: 86, defense: 74, born: 1945, leadership: 76, development: 80, evaluation: 76 },
+  { id: "berry-raymond", name: "Raymond Berry", teamId: null, yearAvail: 1984, offense: 80, defense: 78, born: 1933, leadership: 82, development: 80, evaluation: 76 },
+  { id: "glanville", name: "Jerry Glanville", teamId: null, yearAvail: 1985, offense: 80, defense: 82, born: 1941, leadership: 80, development: 72, evaluation: 74 },
+  { id: "buddy-ryan", name: "Buddy Ryan", teamId: null, yearAvail: 1986, offense: 72, defense: 94, born: 1931, leadership: 86, development: 76, evaluation: 80 },
+  { id: "mora-jim", name: "Jim Mora", teamId: null, yearAvail: 1986, offense: 76, defense: 86, born: 1935, leadership: 84, development: 78, evaluation: 80 },
+  { id: "burns-jerry", name: "Jerry Burns", teamId: null, yearAvail: 1986, offense: 84, defense: 76, born: 1927, leadership: 78, development: 78, evaluation: 76 },
+  { id: "infante", name: "Lindy Infante", teamId: null, yearAvail: 1988, offense: 84, defense: 72, born: 1940, leadership: 72, development: 76, evaluation: 74 },
+  { id: "art-shell", name: "Art Shell", teamId: null, yearAvail: 1989, offense: 80, defense: 78, born: 1946, leadership: 84, development: 78, evaluation: 76 },
+  { id: "lebeau", name: "Dick LeBeau", teamId: null, yearAvail: 1984, offense: 62, defense: 94, born: 1937, leadership: 86, development: 88, evaluation: 84, role: "DC" },
+
+  // ---- the '90s ----
+  { id: "dgreen", name: "Dennis Green", teamId: null, yearAvail: 1992, offense: 86, defense: 80, born: 1949, leadership: 84, development: 84, evaluation: 86 },
+  { id: "bross", name: "Bobby Ross", teamId: null, yearAvail: 1992, offense: 82, defense: 80, born: 1936, leadership: 84, development: 80, evaluation: 78 },
+  { id: "wannstedt", name: "Dave Wannstedt", teamId: null, yearAvail: 1993, offense: 72, defense: 84, born: 1952, leadership: 76, development: 76, evaluation: 76 },
+  { id: "wade-phillips", name: "Wade Phillips", teamId: null, yearAvail: 1993, offense: 70, defense: 90, born: 1947, leadership: 80, development: 82, evaluation: 80 },
+  { id: "norv-turner", name: "Norv Turner", teamId: null, yearAvail: 1994, offense: 88, defense: 72, born: 1952, leadership: 72, development: 84, evaluation: 76 },
+  { id: "jfisher", name: "Jeff Fisher", teamId: null, yearAvail: 1994, offense: 74, defense: 86, born: 1958, leadership: 82, development: 78, evaluation: 78 },
+  { id: "june-jones", name: "June Jones", teamId: null, yearAvail: 1994, offense: 84, defense: 70, born: 1953, leadership: 74, development: 78, evaluation: 74 },
+  { id: "switzer", name: "Barry Switzer", teamId: null, yearAvail: 1994, offense: 80, defense: 76, born: 1937, leadership: 82, development: 70, evaluation: 74 },
+  { id: "rhodes-ray", name: "Ray Rhodes", teamId: null, yearAvail: 1995, offense: 74, defense: 84, born: 1950, leadership: 82, development: 76, evaluation: 76 },
+  { id: "kiffin", name: "Monte Kiffin", teamId: null, yearAvail: 1996, offense: 62, defense: 92, born: 1940, leadership: 82, development: 88, evaluation: 84, role: "DC" },
+  { id: "mariucci", name: "Steve Mariucci", teamId: null, yearAvail: 1997, offense: 86, defense: 74, born: 1955, leadership: 80, development: 82, evaluation: 78 },
+  { id: "fassel", name: "Jim Fassel", teamId: null, yearAvail: 1997, offense: 84, defense: 76, born: 1949, leadership: 80, development: 80, evaluation: 76 },
+  { id: "billick", name: "Brian Billick", teamId: null, yearAvail: 1999, offense: 86, defense: 78, born: 1954, leadership: 84, development: 80, evaluation: 82 },
+  { id: "jim-johnson", name: "Jim Johnson", teamId: null, yearAvail: 1999, offense: 62, defense: 92, born: 1941, leadership: 80, development: 86, evaluation: 84, role: "DC" },
+
+  // ---- the 2000s ----
+  { id: "martz", name: "Mike Martz", teamId: null, yearAvail: 2000, offense: 92, defense: 70, born: 1951, leadership: 72, development: 82, evaluation: 76 },
+  { id: "sherman-mike", name: "Mike Sherman", teamId: null, yearAvail: 2000, offense: 84, defense: 76, born: 1954, leadership: 78, development: 78, evaluation: 76 },
+  { id: "haslett", name: "Jim Haslett", teamId: null, yearAvail: 2000, offense: 72, defense: 84, born: 1955, leadership: 78, development: 74, evaluation: 74 },
+  { id: "herm-edwards", name: "Herm Edwards", teamId: null, yearAvail: 2001, offense: 72, defense: 84, born: 1954, leadership: 84, development: 78, evaluation: 74 },
+  { id: "gregg-williams", name: "Gregg Williams", teamId: null, yearAvail: 2001, offense: 64, defense: 88, born: 1958, leadership: 76, development: 78, evaluation: 78 },
+  { id: "spurrier", name: "Steve Spurrier", teamId: null, yearAvail: 2002, offense: 86, defense: 68, born: 1945, leadership: 74, development: 74, evaluation: 72 },
+  { id: "fox-john", name: "John Fox", teamId: null, yearAvail: 2002, offense: 74, defense: 86, born: 1955, leadership: 84, development: 78, evaluation: 80 },
+  { id: "mlewis", name: "Marvin Lewis", teamId: null, yearAvail: 2003, offense: 74, defense: 88, born: 1958, leadership: 82, development: 80, evaluation: 80 },
+  { id: "del-rio", name: "Jack Del Rio", teamId: null, yearAvail: 2003, offense: 72, defense: 84, born: 1963, leadership: 78, development: 76, evaluation: 76 },
+  { id: "lovie", name: "Lovie Smith", teamId: null, yearAvail: 2004, offense: 72, defense: 88, born: 1958, leadership: 84, development: 80, evaluation: 80 },
+  { id: "kubiak", name: "Gary Kubiak", teamId: null, yearAvail: 2006, offense: 88, defense: 74, born: 1961, leadership: 82, development: 82, evaluation: 80 },
+  { id: "mccarthy", name: "Mike McCarthy", teamId: null, yearAvail: 2006, offense: 88, defense: 76, born: 1963, leadership: 82, development: 82, evaluation: 80 },
+  { id: "msmith", name: "Mike Smith", teamId: null, yearAvail: 2008, offense: 74, defense: 84, born: 1959, leadership: 82, development: 78, evaluation: 78 },
+  { id: "sparano", name: "Tony Sparano", teamId: null, yearAvail: 2008, offense: 80, defense: 74, born: 1961, leadership: 78, development: 74, evaluation: 74 },
+  { id: "rex-ryan", name: "Rex Ryan", teamId: null, yearAvail: 2009, offense: 70, defense: 90, born: 1962, leadership: 86, development: 78, evaluation: 78 },
+  { id: "jschwartz", name: "Jim Schwartz", teamId: null, yearAvail: 2009, offense: 70, defense: 86, born: 1966, leadership: 74, development: 78, evaluation: 80 },
+  { id: "mcdaniels", name: "Josh McDaniels", teamId: null, yearAvail: 2009, offense: 88, defense: 70, born: 1976, leadership: 70, development: 80, evaluation: 72 },
+  { id: "garrett", name: "Jason Garrett", teamId: null, yearAvail: 2010, offense: 82, defense: 74, born: 1966, leadership: 80, development: 78, evaluation: 76 },
+
+  // ---- the 2010s and 2020s ----
+  { id: "jharbaugh", name: "Jim Harbaugh", teamId: null, yearAvail: 2011, offense: 88, defense: 86, born: 1963, leadership: 92, development: 86, evaluation: 86 },
+  { id: "rivera", name: "Ron Rivera", teamId: null, yearAvail: 2011, offense: 76, defense: 86, born: 1962, leadership: 84, development: 80, evaluation: 78 },
+  { id: "arians", name: "Bruce Arians", teamId: null, yearAvail: 2013, offense: 90, defense: 76, born: 1952, leadership: 88, development: 86, evaluation: 80 },
+  { id: "chip-kelly", name: "Chip Kelly", teamId: null, yearAvail: 2013, offense: 88, defense: 70, born: 1963, leadership: 72, development: 74, evaluation: 70 },
+  { id: "zimmer", name: "Mike Zimmer", teamId: null, yearAvail: 2014, offense: 70, defense: 90, born: 1956, leadership: 80, development: 82, evaluation: 80 },
+  { id: "bowles", name: "Todd Bowles", teamId: null, yearAvail: 2015, offense: 70, defense: 88, born: 1963, leadership: 80, development: 80, evaluation: 78 },
+  { id: "pederson", name: "Doug Pederson", teamId: null, yearAvail: 2016, offense: 86, defense: 74, born: 1968, leadership: 84, development: 80, evaluation: 78 },
+  { id: "kshanahan", name: "Kyle Shanahan", teamId: null, yearAvail: 2017, offense: 94, defense: 76, born: 1979, leadership: 84, development: 88, evaluation: 84 },
+  { id: "mcdermott", name: "Sean McDermott", teamId: null, yearAvail: 2017, offense: 74, defense: 88, born: 1974, leadership: 86, development: 82, evaluation: 82 },
+  { id: "vrabel", name: "Mike Vrabel", teamId: null, yearAvail: 2018, offense: 78, defense: 86, born: 1975, leadership: 90, development: 82, evaluation: 80 },
+  { id: "reich", name: "Frank Reich", teamId: null, yearAvail: 2018, offense: 86, defense: 72, born: 1961, leadership: 80, development: 80, evaluation: 76 },
+  { id: "lafleur", name: "Matt LaFleur", teamId: null, yearAvail: 2019, offense: 90, defense: 76, born: 1979, leadership: 84, development: 84, evaluation: 80 },
+  { id: "stefanski", name: "Kevin Stefanski", teamId: null, yearAvail: 2020, offense: 88, defense: 74, born: 1982, leadership: 82, development: 82, evaluation: 80 },
+  { id: "sirianni", name: "Nick Sirianni", teamId: null, yearAvail: 2021, offense: 86, defense: 74, born: 1981, leadership: 84, development: 80, evaluation: 78 },
+  { id: "dcampbell", name: "Dan Campbell", teamId: null, yearAvail: 2021, offense: 84, defense: 78, born: 1976, leadership: 94, development: 84, evaluation: 80 },
+  { id: "saleh", name: "Robert Saleh", teamId: null, yearAvail: 2021, offense: 70, defense: 88, born: 1979, leadership: 84, development: 80, evaluation: 78 },
+  { id: "kevin-oconnell", name: "Kevin O'Connell", teamId: null, yearAvail: 2022, offense: 88, defense: 74, born: 1985, leadership: 82, development: 82, evaluation: 78 },
+  { id: "daboll", name: "Brian Daboll", teamId: null, yearAvail: 2022, offense: 86, defense: 74, born: 1975, leadership: 80, development: 82, evaluation: 76 },
+  { id: "dryans", name: "DeMeco Ryans", teamId: null, yearAvail: 2023, offense: 72, defense: 88, born: 1984, leadership: 88, development: 82, evaluation: 80 },
+  { id: "macdonald", name: "Mike Macdonald", teamId: null, yearAvail: 2024, offense: 72, defense: 90, born: 1987, leadership: 80, development: 84, evaluation: 82 },
+  { id: "ben-johnson", name: "Ben Johnson", teamId: null, yearAvail: 2025, offense: 92, defense: 72, born: 1986, leadership: 80, development: 84, evaluation: 80 },
+];

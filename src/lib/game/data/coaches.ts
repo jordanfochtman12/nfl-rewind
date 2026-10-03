@@ -1,4 +1,4 @@
-import type { DefScheme, OffScheme, TeamId } from "../types.ts";
+import type { CoachRole, DefScheme, OffScheme, TeamId } from "../types.ts";
 
 export interface CoachSeed {
   id: string;
@@ -18,6 +18,8 @@ export interface CoachSeed {
   careerTies?: number;
   careerTitles?: number;
   yearsOnJob?: number;
+  /** The job he enters the pool for (head coaches unless set). */
+  role?: CoachRole;
 }
 
 export const COACHES_1966: CoachSeed[] = [
