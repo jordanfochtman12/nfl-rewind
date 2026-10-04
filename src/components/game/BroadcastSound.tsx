@@ -1,4 +1,5 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
+import { settingsNow } from "@/lib/settings-store";
 import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
@@ -10,10 +11,10 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   const [enabled, setEnabled] = useState(false);
   const [music, setMusic] = useState(false);
   const [volume, setVolume] = useState(0.3);
-  const [announcer, setAnnouncer] = useState(false);
+  const [announcer, setAnnouncer] = useState(() => settingsNow().boothVoices);
   const [unavailable, setUnavailable] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voiceName, setVoiceName] = useState("");
+  const [voiceName, setVoiceName] = useState(() => settingsNow().voiceName);
   const engine = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const last = useRef(index);
   const booth = boothFor(year);

@@ -146,19 +146,21 @@ export function awardBallots(save: DynastySave, opts: { live?: boolean; top?: nu
   const group = (pos: Pos) => (pos === "DE" || pos === "OLB" ? "edge" : pos === "DT" ? "inside" : pos === "MLB" ? "backer" : "db");
   // Refit after tackles moved to the linebackers and secondary and sacks to the true pass
   // rushers (where real ones are): 114 simulated seasons, fit to the real award's split.
-  const DEF_SCALE = { edge: 1, inside: 1.2, backer: 1.62, db: 1.78 } as const;
+  const DEF_SCALE = { edge: 1, inside: 1.1, backer: 1.46, db: 1.66 } as const;
   const edgeTop = def.filter((p) => group(p.pos) === "edge").map((p) => defPerf(p, year)).sort((a, b) => b - a).slice(0, 3);
   const edgeBar = Math.max(1, edgeTop.reduce((a, b) => a + b, 0) / Math.max(1, edgeTop.length));
   const rel = (p: Player) =>
     OFFENSE.includes(p.pos) ? offPerf(p, year) / bar.get(p.pos === "FB" ? "RB" : p.pos)! : (defPerf(p, year) * DEF_SCALE[group(p.pos)]) / edgeBar;
 
-  const modern = year >= 2000;
-  const mvpWeight: Partial<Record<Pos, number>> = { QB: 1, RB: modern ? 0.89 : 0.97, FB: 0.8, WR: modern ? 0.78 : 0.84, TE: 0.62 };
+  // A back's MVP case by era, fit to the real award over two simulated histories: backs won a
+  // third of the '70s and '90s votes, almost none in the '60s, the '80s or since 2010.
+  const rbMvp = year <= 1969 ? 0.8 : year <= 1979 ? 0.94 : year <= 1989 ? 0.81 : year <= 1999 ? 0.95 : year <= 2009 ? 0.9 : year <= 2019 ? 0.84 : 0.8;
+  const mvpWeight: Partial<Record<Pos, number>> = { QB: 1, RB: rbMvp, FB: 0.8 * (rbMvp / 0.9), WR: 0.78, TE: 0.62 };
   const rank = <T,>(list: T[], score: (x: T) => number, n = top) =>
     list.map((x) => ({ x, s: score(x) })).sort((a, b) => b.s - a.s).slice(0, n).map((r) => r.x);
 
   const mvpScore = (p: Player) =>
-    (OFFENSE.includes(p.pos) ? (mvpWeight[p.pos] ?? 0.7) * rel(p) : 0.74 * rel(p)) + 0.7 * (winPctOf(save, p, year) - 0.5);
+    (OFFENSE.includes(p.pos) ? (mvpWeight[p.pos] ?? 0.7) * rel(p) : 0.66 * rel(p)) + 0.7 * (winPctOf(save, p, year) - 0.5);
   const mvp = rank(players.filter((p) => OFFENSE.includes(p.pos) || DEFENSE.includes(p.pos)), mvpScore);
 
   // Tight ends are measured against tight ends, so a great one reads as dominant; no tight end

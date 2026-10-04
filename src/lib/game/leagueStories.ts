@@ -12,6 +12,8 @@ import { awardBallots, awardExists } from "./events.ts";
 import { PRE_1966_MARKS, seasonRecordBook } from "./records.ts";
 import { playerName } from "./players.ts";
 import { realPostseason, realRecords } from "./timeline.ts";
+import { contractYearBreakouts } from "./careerMoments.ts";
+import { risingRivalries } from "./h2h.ts";
 
 const rec = (t: { wins: number; losses: number; ties: number }) => `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}`;
 /** Standings points: two for a win, one for a tie, so ties never need fractions. */
@@ -236,7 +238,7 @@ export function recordChases(save: DynastySave): RecordChase[] {
 /* ---------------- storylines ---------------- */
 
 export interface LeagueStory {
-  kind: "dynasty" | "drought" | "unbeaten" | "winless" | "streak" | "hotSeat" | "history" | "record";
+  kind: "dynasty" | "drought" | "unbeaten" | "winless" | "streak" | "hotSeat" | "history" | "record" | "contract" | "tradeRequest" | "rivalry";
   title: string;
   body: string;
   teamIds: TeamId[];
@@ -382,6 +384,26 @@ export function leagueStorylines(save: DynastySave, max = 8): LeagueStory[] {
     }
   }
 
+  for (const r of risingRivalries(save, 2)) {
+    out.push({ kind: "rivalry", title: `${name(r.a)} vs ${name(r.b)}: a new rivalry`, body: `Close games and playoff meetings have made this one personal. Series: ${r.record}.`, teamIds: [r.a, r.b], weight: 3 + r.heat / 4 });
+  }
+  if (played >= 4) {
+    for (const { player, line } of contractYearBreakouts(save).slice(0, 2)) {
+      const club = player.teamId as TeamId;
+      out.push({ kind: "contract", title: `${playerName(player)} is playing for a contract`, body: `Last year of his deal. ${line}`, teamIds: [club], weight: 3.5 });
+    }
+    for (const p of Object.values(save.players)) {
+      if (p.tradeRequest !== year || p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") continue;
+      const moved = save.transactions.some((t) => t.year === year && t.kind === "trade" && t.playerId === p.id);
+      out.push({
+        kind: "tradeRequest",
+        title: moved ? `${playerName(p)} got his wish` : `${playerName(p)} wants out`,
+        body: moved ? `Traded to the ${displayName(year, p.teamId as TeamId)} after asking for a move.` : `He has asked the ${displayName(year, p.teamId as TeamId)} for a trade.`,
+        teamIds: [p.teamId as TeamId],
+        weight: moved ? 4 : 5,
+      });
+    }
+  }
   for (const c of recordChases(save).slice(0, 1))
     out.push({ kind: "record", title: c.broken ? `${c.name} has the record` : `${c.name} chases history`, body: c.text, teamIds: c.teamId ? [c.teamId] : [], weight: c.broken ? 8 : 5 + (c.pace / c.record - 1) * 20 });
 
@@ -398,6 +420,7 @@ export function breakingNews(save: DynastySave): NewsItem[] {
   return save.news.filter((n) => {
     if (n.year !== save.year) return false;
     if (/ deal with /.test(n.headline)) return true;
+    if (/ asks the .* for a trade$/.test(n.headline)) return true;
     if (/sets the all-time/.test(n.headline)) return true;
     if (/ out in /.test(n.headline)) return true;
     if (/ place .* on IR$/.test(n.headline)) {

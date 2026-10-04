@@ -19,6 +19,8 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
+import { announceRuleChanges } from "./rulebook.ts";
+import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { closeDeadline, deadlineWeek, openDeadline } from "./deadline.ts";
 import {
   cpuInSeasonMoves,
@@ -254,8 +256,11 @@ function simThisWeek(save: DynastySave): void {
   const games = gamesInWeek(save, save.week);
   pickFeaturedGame(save, games);
   for (const g of games) simGame(save, g);
+  weeklyMoments(save, games);
   cpuInSeasonMoves(save);
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
+  tradeDemands(save);
+  honorTradeRequests(save);
   phoneRings(save);
   weekPrimetime(save);
   // The finale's ballot and stat boards must use the same era-bounded season totals as awards night.
@@ -420,6 +425,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.faOpened = false;
         s.phase = "preseason";
         resolveCamp(s);
+        announceRuleChanges(s);
       }
       break;
     case "expansion":
@@ -429,6 +435,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     case "preseason":
       if (!s.camp || s.camp.year !== s.year) {
         resolveCamp(s);
+        announceRuleChanges(s);
         if (!auto) break;
       }
       startRegular(s);

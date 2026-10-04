@@ -131,8 +131,54 @@ export interface TeamUnits {
   };
 }
 
+/**
+ * A passer on a pace past the era's typical leader sees the coverage roll his way: fewer
+ * chunk gains. It starts at the leader's pace and firms up quickly above it, so ordinary
+ * starters are untouched and record seasons stay rare rather than impossible.
+ */
+function passTaper(perGame: number | undefined, ref: number): number {
+  if (!perGame) return 1;
+  const r = perGame / ref;
+  if (r <= 1) return 1;
+  return Math.max(0.68, 1 - (r - 1) * 1.6);
+}
+
+/** A typical league-leading interception total for the era (real decade leaders). */
+function intLeaderRef(year: number): number {
+  if (year <= 1969) return 28;
+  if (year <= 1989) return 25;
+  if (year <= 2009) return 21;
+  if (year <= 2019) return 19;
+  return 17;
+}
+
+/**
+ * A passer on pace for far more picks than a typical leader gets more careful (and his staff
+ * calls safer throws), so a 40-interception season stays a near-impossibility, not a cap.
+ */
+function intTaper(p: Player | undefined, year: number): number {
+  const s = p?.stats[year];
+  if (!s || s.gp < 3) return 1;
+  const pace = (s.passInt / s.gp) * gamesInSeason(year);
+  const soft = intLeaderRef(year) * 0.8;
+  if (pace <= soft) return 1;
+  return clamp(1 - ((pace - soft) / intLeaderRef(year)) * 1.2, 0.45, 1);
+}
+
+/** A quarterback whose interceptions this season run far past his era's normal rate. */
+function pickHappy(p: Player | undefined, year: number): boolean {
+  const st = p?.stats[year];
+  if (!st || st.passAtt < 100) return false;
+  const rate = st.passInt / st.passAtt;
+  const norm = eraProfile(year).intRate;
+  return rate >= norm * 1.7 || (st.passInt >= 20 && rate >= norm * 1.35);
+}
+
 export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlySet<string>): TeamUnits {
   const qbs = starters(save, teamId, "QB", 2, benched);
+  // A starter giving the ball away at a historic rate loses the job to a backup who's close to
+  // him, the way real coaches pull a quarterback long before he can throw 50 interceptions.
+  if (qbs[1] && pickHappy(qbs[0], save.year) && qbs[1].ovr >= (qbs[0]?.ovr ?? 0) - 15 && !pickHappy(qbs[1], save.year)) qbs.reverse();
   const qb = qbs[0];
   const qb2 = qbs[1];
   const rbs = starters(save, teamId, "RB", 2);
@@ -248,7 +294,6 @@ function dist(save: DynastySave, weights: number[]): number {
 }
 
 function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number, postseason = false): void {
-  const era = eraProfile(year);
   for (const b of box) {
     const p = save.players[b.playerId];
     if (!p) continue;
@@ -293,13 +338,6 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.fr += b.fr ?? 0;
     s.krTd += b.krTd ?? 0;
     s.prTd += b.prTd ?? 0;
-    if (postseason) continue;
-    if (p.pos === "TE") s.rec = Math.min(s.rec, hardCap(era.teRecCap));
-    else s.rec = Math.min(s.rec, hardCap(era.recCap));
-    s.rushTd = Math.min(s.rushTd, hardCap(era.rushTdCap));
-    s.passTd = Math.min(s.passTd, hardCap(era.passTdCap));
-    s.passInt = Math.min(s.passInt, hardCap(era.intCap));
-    s.sacks = Math.min(s.sacks, hardCap(era.sackCap));
   }
 }
 
@@ -395,15 +433,12 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
   }
 }
 
-/**
- * Season ceilings. Each era's number sits at that era's real record. Usage starts to taper once
- * a player's pace passes 80% of it (defenses key on him, the staff spreads it around) and is
- * about halved by the time he reaches it, so the hard stop almost never binds. Without the taper
- * the clamp truncated seasons mid-stream - five receivers finishing on exactly 130 catches.
+/*
+ * No season stat has a ceiling. Each era's reference number sits near that era's real record;
+ * a player's usage tapers once his pace runs well past a typical leader's (defenses key on him,
+ * the staff spreads it around), so records fall now and then, the way they do, without five
+ * players a year piling up on the same number.
  */
-function hardCap(eraRef: number): number {
-  return eraRef;
-}
 
 function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number): number {
   const s = p.stats[year];
@@ -413,10 +448,11 @@ function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number)
   // leaders land where real leaders did and the record itself takes a rare season. Sacks
   // brake harder: with the rush concentrated on the true edge players, the gentler curve let
   // five ends a year run into the cap.
-  const soft = eraRef * (key === "sacks" ? 0.62 : 0.74);
+  const soft = eraRef * (key === "sacks" ? 0.5 : 0.74);
   if (pace <= soft) return 1;
+  // A gradual slope, not a wall: a steep one bunched leaders on the same total.
   return key === "sacks"
-    ? clamp(1 - ((pace - soft) / (eraRef * 0.3)) * 0.85, 0.2, 1)
+    ? clamp(1 - ((pace - soft) / (eraRef * 0.3)) * 0.8, 0.22, 1)
     : clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
 }
 
@@ -518,9 +554,9 @@ function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean): Player |
  * alone, coverage linebackers with a decent rush grade ran up 12-16 sacks a year (real: 2-5).
  */
 const RUSH_ROLE: Partial<Record<Pos, Partial<Record<string, number>> & { base: number }>> = {
-  DE: { base: 0.85, edge: 1, finisher: 0.85, "two-gap": 0.65 },
+  DE: { base: 0.8, edge: 0.88, finisher: 0.8, "two-gap": 0.65 },
   DT: { base: 0.55, finisher: 0.65, "two-gap": 0.5, anchor: 0.4 },
-  OLB: { base: 0.26, edge: 0.95, finisher: 0.28, "cover-lb": 0.16 },
+  OLB: { base: 0.26, edge: 0.85, finisher: 0.28, "cover-lb": 0.16 },
   MLB: { base: 0.17, finisher: 0.2, thumper: 0.17, "cover-lb": 0.11 },
 };
 function rushRole(p: Player, scheme: DefScheme | undefined): number {
@@ -545,7 +581,7 @@ function pickRusherDef(save: DynastySave, def: TeamUnits, scheme?: DefScheme): P
   return pool[
     dist(
       save,
-      pool.map((p) => Math.pow(p.ratings.prs / 70, 1.4) * rushRole(p, scheme) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
+      pool.map((p) => Math.pow(p.ratings.prs / 70, 0.8) * rushRole(p, scheme) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
     )
   ];
 }
@@ -943,17 +979,11 @@ function rollInjuries(save: DynastySave, teamId: TeamId): void {
   }
 }
 
+/** End of the regular season: each player's line goes into his career record. */
 export function clampSeasonStats(save: DynastySave): void {
-  const era = eraProfile(save.year);
   for (const p of Object.values(save.players)) {
     const s = p.stats[save.year];
     if (!s) continue;
-    if (p.pos === "TE") s.rec = Math.min(s.rec, hardCap(era.teRecCap));
-    else s.rec = Math.min(s.rec, hardCap(era.recCap));
-    s.rushTd = Math.min(s.rushTd, hardCap(era.rushTdCap));
-    s.passTd = Math.min(s.passTd, hardCap(era.passTdCap));
-    s.passInt = Math.min(s.passInt, hardCap(era.intCap));
-    s.sacks = Math.min(s.sacks, hardCap(era.sackCap));
     if (!p.career) p.career = [];
     const existing = p.career.find((c) => c.year === save.year);
     if (!existing) p.career.push({ ...s });
@@ -1900,7 +1930,12 @@ export function simGame(save: DynastySave, game: GameResult): void {
         if (cur) cur.sackYards = -loss;
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
         const rusher = pickRusherDef(save, def, defClub?.defScheme);
-        if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
+        // Since 1982 two men who get there together split it: half a sack each.
+        const helper = year >= 1982 && rusher && rand(save) < 0.14 ? pickRusherDef(save, def, defClub?.defScheme) : undefined;
+        if (rusher && helper && helper.id !== rusher.id) {
+          bumpBox(boxOf(defId), rusher.id, { sacks: 0.5, tackles: 1, tfl: 1, qbHits: 1 });
+          bumpBox(boxOf(defId), helper.id, { sacks: 0.5, qbHits: 1 });
+        } else if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
         const used = snapClock(save, plan, year, q, clock, trail, true, false, false, false);
         tickClock(poss, Math.max(used.used, 18));
         drivePlays += 1;
@@ -2012,7 +2047,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (wx === "wind" && call === "deep") cmpP -= 0.06;
       if (year < 1978) cmpP -= Math.max(0, cov - 74) / 400;
       if (was3rd && togo >= 7) cmpP -= 0.07;
-      if (spot >= 80) cmpP -= 0.04 + redZoneSqueeze(year);
+      // Tight windows near the goal line separate the passers: the great ones still find a man.
+      if (spot >= 80) cmpP -= 0.04 + redZoneSqueeze(year) - ((off.qb?.ratings.throwAcc ?? 70) - 72) / 260;
       if (tightCatchRule(year) && (call === "deep" || call === "med")) cmpP -= 0.02;
       if (rec && def.db[0]) {
         const mismatch =
@@ -2025,13 +2061,16 @@ export function simGame(save: DynastySave, game: GameResult): void {
           (call === "deep" ? 1.85 : call === "med" ? 1.2 : call === "pa" ? 0.95 : call === "screen" ? 0.5 : 0.95) +
         off.kit.int * 0.35 +
         def.kit.int * 0.35;
-      intP += (70 - (off.qb?.ratings.throwAwr ?? 70)) / 380;
+      // Decision-making moves a passer's pick rate, but within the range real passers live in:
+      // at /380 a poor decision-maker nearly doubled it and threw 40-50 a year.
+      intP += (70 - (off.qb?.ratings.throwAwr ?? 70)) / 620 - 0.005;
       if (hurried) intP += 0.014;
       if (wx === "rain") intP += 0.012;
       if (wx === "wind" && call === "deep") intP += 0.008;
       // Real 60s passers threw ~1.7 picks a game (6% of throws); the sim ran ~1.25.
       if (year <= 1969) intP += 0.02;
       intP += qbCliff(save, poss, off.qb);
+      intP *= intTaper(off.qb, year);
       intP = clamp(intP, 0.018, 0.11);
       const roll = rand(save);
       if (rec) bumpBox(boxOf(poss), rec.id, { targets: 1 });
@@ -2110,7 +2149,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
       if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
       // A passer on a record pace sees the coverage roll his way: fewer chunk gains.
-      yds = Math.round(yds * passGainScale(year) * (0.55 + 0.45 * taperOf(off.qb, "passYds", year, leaderPace(year).pass)));
+      yds = Math.round(yds * passGainScale(year) * passTaper(seasonPace(off.qb, "passYds", year), leaderPace(year).pass));
       yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });

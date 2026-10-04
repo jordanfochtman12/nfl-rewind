@@ -33,7 +33,7 @@ export function eraProfile(year: number): EraProfile {
       ypc: 3.85,
       pointsMu: 21.4,
       teRecCap: 55,
-      recCap: 85,
+      recCap: 70,
       rushTdCap: 16,
       passTdCap: 36,
       intCap: 28,
@@ -53,7 +53,7 @@ export function eraProfile(year: number): EraProfile {
       ypc: 3.8,
       pointsMu: 19.8,
       teRecCap: 60,
-      recCap: 85,
+      recCap: 70,
       rushTdCap: 16,
       passTdCap: 30,
       intCap: 24,
@@ -68,7 +68,7 @@ export function eraProfile(year: number): EraProfile {
       passAtt: 33,
       ypa: 6.9,
       intRate: 0.042,
-      sackRate: 0.04,
+      sackRate: 0.028,
       rushAtt: 31,
       ypc: 3.95,
       pointsMu: 20.8,
@@ -88,7 +88,7 @@ export function eraProfile(year: number): EraProfile {
       passAtt: 33.5,
       ypa: 6.9,
       intRate: 0.034,
-      sackRate: 0.016,
+      sackRate: 0.002,
       rushAtt: 28.5,
       ypc: 3.8,
       pointsMu: 21.5,
@@ -108,12 +108,12 @@ export function eraProfile(year: number): EraProfile {
       passAtt: 32.5,
       ypa: 7.0,
       intRate: 0.03,
-      sackRate: 0.011,
+      sackRate: 0.007,
       rushAtt: 28,
       ypc: 3.95,
       pointsMu: 21.8,
       teRecCap: 102,
-      recCap: 143,
+      recCap: 132,
       rushTdCap: 20,
       passTdCap: 42,
       intCap: 18,
@@ -128,12 +128,12 @@ export function eraProfile(year: number): EraProfile {
       passAtt: 35.5,
       ypa: 7.2,
       intRate: 0.025,
-      sackRate: 0.027,
+      sackRate: 0.018,
       rushAtt: 26,
       ypc: 4.05,
       pointsMu: 23.2,
       teRecCap: 116,
-      recCap: 149,
+      recCap: 138,
       rushTdCap: 20,
       passTdCap: 48,
       intCap: 16,
@@ -147,12 +147,12 @@ export function eraProfile(year: number): EraProfile {
     passAtt: 34,
     ypa: 7.2,
     intRate: 0.023,
-    sackRate: 0.072,
+    sackRate: 0.059,
     rushAtt: 27,
     ypc: 4.1,
     pointsMu: 23.0,
     teRecCap: 116,
-    recCap: 150,
+    recCap: 140,
     rushTdCap: 20,
     passTdCap: 50,
     intCap: 15,
@@ -195,8 +195,8 @@ export function twoPointOk(year: number, teamId: TeamId): boolean {
  */
 export function fgEraMod(year: number): number {
   if (year <= 1969) return 0.79;
-  if (year <= 1973) return 0.8;
-  if (year <= 1977) return 0.82;
+  if (year <= 1973) return 0.77;
+  if (year <= 1977) return 0.79;
   if (year <= 1985) return 0.88;
   if (year <= 1993) return 0.91;
   if (year <= 1999) return 0.97;
@@ -217,11 +217,14 @@ export function otRules(
 ): { kind: OtKind; seconds: number } {
   const decisive = phase === "playoffs" || phase === "superBowl";
   if (!decisive && year < 1974) return { kind: "none", seconds: 0 };
+  // Modified sudden death (a first-possession field goal doesn't end it) came to the playoffs
+  // in 2010 and the regular season in 2012; regular-season overtime went to ten minutes in 2017.
   if (!decisive) {
-    if (year >= 2017) return { kind: "sudden", seconds: 600 };
+    if (year >= 2017) return { kind: "modified", seconds: 600 };
+    if (year >= 2012) return { kind: "modified", seconds: 900 };
     return { kind: "sudden", seconds: 900 };
   }
-  if (year >= 2012) return { kind: "modified", seconds: 900 };
+  if (year >= 2010) return { kind: "modified", seconds: 900 };
   return { kind: "sudden", seconds: 900 };
 }
 
@@ -277,11 +280,11 @@ export function eraBigPlay(year: number): number {
 export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3: number; te: number; rb: number } {
   if (year <= 1969) return { wr1: 0.3, wr2: 0.28, wr3: 0.08, te: 0.15, rb: 0.19 };
   if (year <= 1977) return { wr1: 0.28, wr2: 0.26, wr3: 0.1, te: 0.17, rb: 0.19 };
-  if (year <= 1989) return { wr1: 0.25, wr2: 0.23, wr3: 0.13, te: 0.2, rb: 0.19 };
-  if (year <= 1999) return { wr1: 0.25, wr2: 0.23, wr3: 0.15, te: 0.19, rb: 0.18 };
-  if (year <= 2009) return { wr1: 0.24, wr2: 0.21, wr3: 0.18, te: 0.21, rb: 0.16 };
-  if (year <= 2019) return { wr1: 0.24, wr2: 0.21, wr3: 0.19, te: 0.21, rb: 0.15 };
-  return { wr1: 0.23, wr2: 0.21, wr3: 0.19, te: 0.22, rb: 0.15 };
+  if (year <= 1989) return { wr1: 0.27, wr2: 0.22, wr3: 0.12, te: 0.2, rb: 0.19 };
+  if (year <= 1999) return { wr1: 0.28, wr2: 0.22, wr3: 0.13, te: 0.19, rb: 0.18 };
+  if (year <= 2009) return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.21, rb: 0.16 };
+  if (year <= 2019) return { wr1: 0.28, wr2: 0.2, wr3: 0.16, te: 0.21, rb: 0.15 };
+  return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.22, rb: 0.15 };
 }
 
 /** RB1 carry share. Workhorse era through the 90s, committees later. */
@@ -423,11 +426,15 @@ export function playoffBrake(phase: string): number {
  * records, so a leader looks like a real leader and a record season stays a rarity.
  */
 export function leaderPace(year: number): { pass: number; rush: number; recYds: number } {
-  if (year <= 1977) return { pass: 245, rush: 104, recYds: 88 };
-  if (year <= 1989) return { pass: 280, rush: 106, recYds: 90 };
-  if (year <= 2003) return { pass: 275, rush: 104, recYds: 94 };
-  if (year <= 2009) return { pass: 290, rush: 106, recYds: 96 };
-  return { pass: 310, rush: 100, recYds: 100 };
+  // Per game, at each era's average league leader: ~3,500 passing yards in the late '60s,
+  // ~3,050 in the '70s, ~4,300 through the '80s and '90s, ~4,600 in the 2000s, ~5,000 since.
+  if (year <= 1969) return { pass: 232, rush: 82, recYds: 92 };
+  if (year <= 1977) return { pass: 200, rush: 104, recYds: 88 };
+  if (year <= 1989) return { pass: 255, rush: 100, recYds: 93 };
+  if (year <= 2003) return { pass: 248, rush: 104, recYds: 97 };
+  if (year <= 2009) return { pass: 270, rush: 108, recYds: 100 };
+  if (year <= 2019) return { pass: 295, rush: 98, recYds: 106 };
+  return { pass: 283, rush: 100, recYds: 104 };
 }
 
 /**

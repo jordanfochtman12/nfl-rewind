@@ -133,13 +133,18 @@ test("coaching dials change seeded simulation outcomes without changing the stan
   assert.equal(pressureAdjustment("normal"), 0);
   assert.ok(pressureAdjustment("heavy") > pressureAdjustment("rare"));
   const s = createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 213 });
-  const index = s.schedule.findIndex((g) => g.homeId === "gnb" || g.awayId === "gnb");
-  const run = (patch) => {
-    const c = structuredClone(s);
-    c.teams.gnb.planEdits = { ...c.teams.gnb.planEdits, ...patch };
-    simGame(c, c.schedule[index]);
-    return JSON.stringify(c.schedule[index].log);
-  };
+  // A dial nudges probabilities, so a single game can play out snap-for-snap the same; three
+  // games together can't.
+  const games = s.schedule.flatMap((g, i) => (g.homeId === "gnb" || g.awayId === "gnb" ? [i] : [])).slice(0, 3);
+  const run = (patch) =>
+    games
+      .map((index) => {
+        const c = structuredClone(s);
+        c.teams.gnb.planEdits = { ...c.teams.gnb.planEdits, ...patch };
+        simGame(c, c.schedule[index]);
+        return JSON.stringify(c.schedule[index].log);
+      })
+      .join("|");
   const standard = run({ protection: "balanced", defensiveFocus: "balanced", blitz: "normal" });
   for (const patch of [
     { protection: "maxProtect" },
@@ -271,4 +276,33 @@ test("saves pack for disk and come back exactly the same", async () => {
   assert.ok(same(back.history) === same(plain.history), "history survives packing");
   assert.ok(same(back.teams) === same(plain.teams), "clubs and picks survive packing");
   assert.ok(disk.length < JSON.stringify(s).length * 0.75, `packed ${disk.length} vs ${JSON.stringify(s).length}`);
+});
+
+test("the league's year: rule changes at camp, career milestones, trade requests and rivalries that build", async () => {
+  const G = await import("../src/lib/game/index.ts");
+  let s = G.createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: 13 });
+  const step = () => (s = G.advance(s, s.phase === "freeAgency" ? { closeFa: true } : s.phase === "draft" ? { auto: true } : {}));
+  for (let i = 0; i < 2000 && !(s.year === 1974 && s.phase === "regular"); i++) step();
+  // The 1974 rule changes were announced at 1974 camp, once each.
+  const told = s.news.filter((n) => n.year === 1974 && /^New for 1974:/.test(n.headline));
+  assert.equal(told.length, G.rulesTakingEffect(1974).length);
+  for (let i = 0; i < 2000 && s.year < 1975; i++) step();
+  assert.ok(G.rulebookThrough(1975).every((r) => r.year <= 1975));
+  // Rivalry heat only builds from games played, cools over time, and never goes negative.
+  const pairs = Object.values(s.h2h ?? {});
+  assert.ok(pairs.length > 0);
+  for (const r of pairs) assert.ok((r.heat ?? 0) >= 0);
+  const hot = G.risingRivalries(s, 5);
+  for (const r of hot) assert.ok(r.heat >= G.RIVALRY_HOT);
+  // Trade requests: a few a season at most, one per club.
+  for (let y = 1966; y < 1975; y++) {
+    const asked = Object.values(s.players).filter((p) => p.tradeRequest === y);
+    assert.ok(asked.length <= 3, `${y}: ${asked.length} requests`);
+  }
+  // Milestones name a round number that was actually crossed.
+  for (const n of s.news.filter((n) => / passes [\d,]+ career /.test(n.headline))) {
+    const mark = Number(n.headline.match(/passes ([\d,]+)/)[1].replace(/,/g, ""));
+    const now = Number(n.body.match(/^([\d,]+)/)[1].replace(/,/g, ""));
+    assert.ok(now >= mark, n.headline);
+  }
 });

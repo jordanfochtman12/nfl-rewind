@@ -10,6 +10,7 @@ import {
   leagueStorylines,
   playoffPicture,
   recordChases,
+  rulebookThrough,
   teamAbbr,
   type DynastySave,
   type RaceMark,
@@ -145,6 +146,36 @@ export function StoryBoard({ save, max = 6, focus }: { save: DynastySave; max?: 
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+/** The rule changes on the books by this season, newest first, with what each does to the game. */
+export function Rulebook({ save }: { save: DynastySave }) {
+  const rules = rulebookThrough(save.year);
+  const [all, setAll] = useState(false);
+  if (!rules.length) return null;
+  const shown = all ? rules : rules.slice(0, 5);
+  return (
+    <section className="rounded-xl border border-line bg-surface p-4" aria-label="Rulebook">
+      <p className="text-xs tracking-[0.25em] text-muted">THE RULEBOOK · CHANGES SINCE 1966</p>
+      <ol className="mt-3 space-y-3">
+        {shown.map((r) => (
+          <li key={`${r.year}-${r.title}`} className="flex gap-3">
+            <span className="tabular w-12 shrink-0 font-display text-lg text-brass">{r.year}</span>
+            <div>
+              <p className="text-sm text-paper">{r.title}</p>
+              <p className="text-xs text-muted">{r.body}</p>
+              <p className="mt-0.5 text-xs text-brass/90">{r.effect}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      {rules.length > 5 && (
+        <button type="button" className="mt-2 min-h-9 text-xs text-brass underline" onClick={() => setAll(!all)}>
+          {all ? "Show the latest" : `Show all ${rules.length}`}
+        </button>
+      )}
     </section>
   );
 }

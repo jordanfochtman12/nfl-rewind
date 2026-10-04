@@ -5,6 +5,7 @@
  * night, the draft and the winter - and breaks in with a bulletin when big news lands.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { settingsNow } from "@/lib/settings-store";
 import {
   breakingNews,
   buildSeasonPreview,
@@ -14,6 +15,7 @@ import {
   gamesInSeason,
   gamesInWeek,
   playerName,
+  rulesTakingEffect,
   weekIsInTheBooks,
   type AdvanceOpts,
   type DynastySave,
@@ -29,6 +31,8 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { StudioEpisode } from "./StudioEpisode";
+import { SettingsSheet } from "./SettingsSheet";
+import { TV_TOUR, Tour } from "./Tour";
 import { WhipAround } from "./WhipAround";
 import { LiveBroadcast } from "./LiveBroadcast";
 import { DraftNight } from "./DraftNight";
@@ -44,7 +48,7 @@ type Stage =
   | { k: "live"; key: string; game: GameResult }
   | { k: "studio"; key: string; episode: Episode }
   | { k: "draft"; key: string }
-  | { k: "card"; key: string; title: string; kicker: string; say: string; items: string[]; opts: AdvanceOpts; seconds: number }
+  | { k: "card"; key: string; title: string; kicker: string; say: string; items: string[]; opts: AdvanceOpts; seconds: number; /** An info card: airing it marks this key instead of moving the calendar. */ mark?: string }
   | { k: "end"; key: string };
 
 const STUDIO_EDITIONS: Record<string, Episode["edition"][]> = {
@@ -77,7 +81,9 @@ const phaseNews = (save: DynastySave, phases: string[], n = 8) =>
 function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): Stage {
   const y = save.year;
   const ep = save.primetime?.episode;
-  const studio = ep && save.primetime!.year === y && STUDIO_EDITIONS[save.phase]?.includes(ep.edition) && !seen.has(ep.id) ? ep : undefined;
+  // The weekly recap can be switched off in settings; the big nights always air.
+  const wantStudio = settingsNow().tvStudio || !["weekly", "playoffs"].includes(ep?.edition ?? "");
+  const studio = ep && wantStudio && save.primetime!.year === y && STUDIO_EDITIONS[save.phase]?.includes(ep.edition) && !seen.has(ep.id) ? ep : undefined;
   const card = (key: string, title: string, kicker: string, say: string, items: string[], opts: AdvanceOpts = {}, seconds = 10): Stage => ({
     // Unique per calendar state, so each card gets its own countdown.
     k: "card", key: `${key}-${y}-${save.phase}-${save.week}-${save.draftPickIndex}`, title, kicker, say, items, opts, seconds,
@@ -86,6 +92,9 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
     case "preseason": {
       if (save.camp?.year !== y)
         return card("camp", "Training camp opens", `${y} PRESEASON`, `Training camps open around the league. The ${y} season is almost here.`, phaseNews(save, ["freeAgency", "preseason"]));
+      const rules = rulesTakingEffect(y);
+      if (rules.length && !seen.has(`rules-${y}`))
+        return { ...(card("rules", `New rules for ${y}`, "THE RULEBOOK", `New rules for ${y}. ${rules.map((r) => r.title).join(". ")}.`, rules.map((r) => `${r.title}: ${r.effect}`), {}, 12) as Extract<Stage, { k: "card" }>), mark: `rules-${y}` };
       const p = preview();
       if (!seen.has(`preview-${y}`)) return { k: "preview", key: `preview-${y}`, episode: p };
       return card("kickoff", `The ${y} season kicks off`, "OPENING WEEKEND", `Cut-downs are done. Here comes week one of the ${y} season.`, phaseNews(save, ["preseason"]));
@@ -169,7 +178,7 @@ function useHost(year: number, on: boolean) {
       if (!on || !text || !("speechSynthesis" in window)) return;
       const host = crewFor(year).HOST;
       const u = new SpeechSynthesisUtterance(footballSpeech(text, year));
-      const c = castVoices(voices, [{ key: host.name, gender: host.gender }]).get(host.name);
+      const c = castVoices(voices, [{ key: host.name, gender: host.gender }], settingsNow().voiceName).get(host.name);
       if (c?.voice) u.voice = c.voice;
       u.rate = c?.rate ?? 1;
       u.pitch = c?.pitch ?? 1;
@@ -217,8 +226,9 @@ export function WatchTV() {
   const setTv = useGameStore((s) => s.setTv);
   const [seen, setSeen] = useState<Set<string>>(() => new Set());
   const [paused, setPaused] = useState(false);
-  const [voice, setVoice] = useState(true);
+  const [voice, setVoice] = useState(() => settingsNow().narration);
   const say = useHost(save.year, voice);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   useWakeLock();
 
   const previewYear = useRef<number>(-1);
@@ -244,7 +254,7 @@ export function WatchTV() {
     }
     const fresh = now.filter((n) => !known.current!.has(n.id)).reverse();
     for (const n of fresh) known.current.add(n.id);
-    if (fresh.length) setQueue((q) => [...q, ...fresh].slice(-4));
+    if (fresh.length && settingsNow().tvBulletins) setQueue((q) => [...q, ...fresh].slice(-4));
   }, [save]);
   const onAir = stage.k === "whip" || stage.k === "live" || stage.k === "draft" || stage.k === "preview";
   const bulletin = !onAir ? queue[0] : undefined;
@@ -275,7 +285,8 @@ export function WatchTV() {
         advance({});
         return;
       case "card":
-        advance(stage.opts);
+        if (stage.mark) mark(stage.mark);
+        else advance(stage.opts);
         return;
       case "draft":
         advance({ auto: true });
@@ -308,16 +319,19 @@ export function WatchTV() {
             </span>
           </p>
           <div className="flex flex-wrap gap-1.5">
-            <button type="button" className="bx-chip min-h-10 px-3 text-xs" aria-pressed={paused} onClick={() => setPaused(!paused)}>
+            <button type="button" data-tour="tv-hold" className="bx-chip min-h-10 px-3 text-xs" aria-pressed={paused} onClick={() => setPaused(!paused)}>
               {paused ? "▶ Resume" : "❚❚ Hold"}
             </button>
             <button type="button" className="bx-chip min-h-10 px-3 text-xs" aria-pressed={voice} onClick={() => { if (voice) window.speechSynthesis?.cancel(); setVoice(!voice); }}>
               Host: {voice ? "on" : "off"}
             </button>
-            <button type="button" className="bx-chip min-h-10 px-3 text-xs" disabled={stage.k === "end"} onClick={next}>
+            <button type="button" data-tour="tv-skip" className="bx-chip min-h-10 px-3 text-xs" disabled={stage.k === "end"} onClick={next}>
               Skip ▸
             </button>
-            <button type="button" className="bx-chip min-h-10 px-3 text-xs" onClick={exit}>
+            <button type="button" className="bx-chip min-h-10 px-3 text-xs" aria-label="Settings" onClick={() => setSettingsOpen(true)}>
+              ⚙
+            </button>
+            <button type="button" data-tour="tv-exit" className="bx-chip min-h-10 px-3 text-xs" onClick={exit}>
               Exit TV
             </button>
           </div>
@@ -350,6 +364,8 @@ export function WatchTV() {
           </section>
         )}
       </div>
+      {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
+      {!settingsOpen && <Tour id="tv" steps={TV_TOUR} />}
     </div>
   );
 }
@@ -461,7 +477,7 @@ function Card({ stage, save, say, paused, onGo }: { stage: Extract<Stage, { k: "
             ))}
           </ul>
         )}
-        <Countdown left={left} label={watchLabel(save)} onGo={onGo} />
+        <Countdown left={left} label={stage.mark ? "Continue" : watchLabel(save)} onGo={onGo} />
       </div>
     </section>
   );

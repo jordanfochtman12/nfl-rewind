@@ -1,6 +1,8 @@
 /** All-time head-to-head between every pair of clubs: the memory behind rivalries and revenge games. */
 import type { DynastySave, GameResult, HeadToHead, TeamId } from "./types.ts";
 import { displayName, teamAbbr } from "./teams.ts";
+import { addNews } from "./news.ts";
+import { isRivalry } from "./schedule.ts";
 
 export function h2hKey(a: TeamId, b: TeamId): string {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
@@ -25,6 +27,46 @@ export function recordMeeting(save: DynastySave, g: GameResult): void {
   const lo = Math.min(g.homeScore, g.awayScore);
   r.last = { year: g.year, label, winner, score: `${hi}-${lo}`, playoff };
   if (playoff && winner) r.lastPlayoff = { year: g.year, label, winner, score: `${hi}-${lo}` };
+  // Heat: a close game, an overtime, above all a playoff meeting. It cools by 30% a year, so a
+  // division pair that just splits two games stays warm, not hot.
+  const before = heatAt(r, g.year);
+  const margin = hi - lo;
+  const big = /Championship|Super Bowl/.test(g.round ?? "");
+  const add = 0.2 + (margin <= 7 ? 0.8 : 0) + (margin <= 3 ? 0.4 : 0) + (g.ot ? 0.8 : 0) + (playoff ? 3 : 0) + (big ? 2 : 0);
+  r.heat = before + add;
+  r.heatYear = g.year;
+  if (before < RIVALRY_HOT && r.heat >= RIVALRY_HOT && !isRivalry(a, b)) {
+    addNews(save, {
+      kind: "headline",
+      headline: `${displayName(g.year, a)} and ${displayName(g.year, b)}: a rivalry is born`,
+      body: `${playoff ? `They met again in the ${label}` : "Another one-score finish"}, ${hi}-${lo}. The series stands ${r.aWins}-${r.bWins}${r.ties ? `-${r.ties}` : ""}.`,
+      teamIds: [a, b],
+      playerIds: [],
+    });
+  }
+}
+
+/** A series is a rivalry once its heat reaches this (the classic rivalries always are). */
+export const RIVALRY_HOT = 6;
+
+function heatAt(r: HeadToHead, year: number): number {
+  if (!r.heat) return 0;
+  return r.heat * Math.pow(0.7, Math.max(0, year - (r.heatYear ?? year)));
+}
+
+/** How hot a series runs this season: built by close games and playoff meetings. */
+export function rivalryHeat(save: DynastySave, a: TeamId, b: TeamId): number {
+  const r = save.h2h?.[h2hKey(a, b)];
+  return r ? heatAt(r, save.year) : 0;
+}
+
+/** The hottest series in the league right now that weren't rivalries to begin with. */
+export function risingRivalries(save: DynastySave, n = 3): { a: TeamId; b: TeamId; heat: number; record: string }[] {
+  return Object.values(save.h2h ?? {})
+    .map((r) => ({ a: r.a, b: r.b, heat: heatAt(r, save.year), record: `${r.aWins}-${r.bWins}${r.ties ? `-${r.ties}` : ""}` }))
+    .filter((x) => x.heat >= RIVALRY_HOT && !isRivalry(x.a, x.b) && save.teams[x.a]?.active && save.teams[x.b]?.active)
+    .sort((x, y) => y.heat - x.heat)
+    .slice(0, n);
 }
 
 export interface SeriesNote {

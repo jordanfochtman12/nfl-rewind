@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { clubInk, nicknameOf, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
+import { useEraClass } from "./eraLook";
 
 /** Games already watched this session, so revisiting the film doesn't replay the broadcast. */
 const watched = new Set<string>();
@@ -99,6 +100,7 @@ export function LiveBroadcast({
   autoHalftime?: boolean;
 }) {
   const save = useGameStore((s) => s.save)!;
+  const eraCls = useEraClass(game.year);
   const home = game.homeId as TeamId;
   // Win probability is told from the owner's side when it's his game, else from the home side.
   const us = !save.sandbox && (game.homeId === save.userTeamId || game.awayId === save.userTeamId) ? save.userTeamId : home;
@@ -185,10 +187,11 @@ export function LiveBroadcast({
 
   const slab = (id: TeamId, score: number, ink: ReturnType<typeof clubInk>, side: "l" | "r") => (
     <div
-      className={`flex min-w-0 items-center gap-2 px-3 py-2 ${side === "r" ? "flex-row-reverse text-right" : ""}`}
+      className={`bug-slab flex min-w-0 items-center gap-2 px-3 py-2 ${side === "r" ? "flex-row-reverse text-right" : ""}`}
       style={{
         background: `linear-gradient(180deg, #ffffff2e, transparent 46%, #0000 54%, #0005), linear-gradient(${side === "l" ? 115 : 245}deg, ${ink.primary}, color-mix(in srgb, ${ink.primary} 40%, black) 90%)`,
         color: ink.onPrimary,
+        ["--slab" as string]: ink.primary,
       }}
     >
       <Logo id={id} size={compact ? 28 : 36} />
@@ -199,7 +202,7 @@ export function LiveBroadcast({
   );
 
   return (
-    <section className="overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000]" aria-label="Live broadcast">
+    <section className={`overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000] ${eraCls}`} aria-label="Live broadcast">
       {compact && !atEnd && <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs text-muted"><span>Replay to your decision</span><button type="button" className="bx-chip min-h-9 px-3" onClick={() => setI(log.length - 1)}>Jump to decision</button></div>}
       {!compact && (
         <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e] px-4 py-2">

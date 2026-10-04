@@ -245,3 +245,6 @@ export { franchiseTrophies, franchiseSeasons, franchiseSummary, jerseyFor, coach
 export { featuredOf, featuredScore, pickFeaturedGame, ownerClub } from "./sandbox.ts";
 export { awardRaces, breakingNews, leagueStorylines, playoffPicture, recordChases } from "./leagueStories.ts";
 export type { AwardLadder, LadderRow, LeagueStory, RaceGroup, RaceMark, RaceRow, RecordChase } from "./leagueStories.ts";
+export { RULE_CHANGES, rulebookThrough, rulesTakingEffect } from "./rulebook.ts";
+export type { RuleChange } from "./rulebook.ts";
+export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";

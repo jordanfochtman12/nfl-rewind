@@ -2,6 +2,7 @@ import type { DynastySave, GameResult, TeamId } from "./types.ts";
 import { activeTeamIds, conferenceOf, displayName, gamesInSeason, originalLeague } from "./teams.ts";
 import { rand, shuffle } from "./rng.ts";
 import { REAL_SCHEDULES } from "./data/realSchedules.ts";
+import { RIVALRY_HOT, rivalryHeat } from "./h2h.ts";
 
 export const RIVALRIES: [TeamId, TeamId][] = [
   ["gnb", "chi"],
@@ -288,6 +289,7 @@ export function rebuildSchedule(save: DynastySave): void {
   const real = realSchedule(year);
   if (real) {
     save.schedule = real;
+    markHotRivalries(save);
     return;
   }
   const teams = activeTeamIds(year);
@@ -304,6 +306,15 @@ export function rebuildSchedule(save: DynastySave): void {
     if (g.length >= 2) matchups.push(...buildMatchups(save, g, need));
   }
   save.schedule = assignWeeks(save, matchups, year);
+  markHotRivalries(save);
+}
+
+/** A series that has heated up in this timeline is billed as a rivalry game, like the classics. */
+function markHotRivalries(save: DynastySave): void {
+  for (const g of save.schedule) {
+    if (g.rivalry || g.played) continue;
+    if (rivalryHeat(save, g.homeId as TeamId, g.awayId as TeamId) >= RIVALRY_HOT) g.rivalry = true;
+  }
 }
 
 export function gamesForTeam(save: DynastySave, teamId: TeamId): GameResult[] {

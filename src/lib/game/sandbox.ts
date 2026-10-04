@@ -18,10 +18,10 @@ function strength(save: DynastySave, id: TeamId): number {
   return (pct * played + ranked * 3) / (played + 3);
 }
 
-export function featuredScore(save: DynastySave, g: Pick<GameResult, "homeId" | "awayId" | "night" | "phase">): number {
+export function featuredScore(save: DynastySave, g: Pick<GameResult, "homeId" | "awayId" | "night" | "phase" | "rivalry">): number {
   const a = strength(save, g.homeId as TeamId);
   const b = strength(save, g.awayId as TeamId);
-  return a + b - Math.abs(a - b) * 0.5 + (g.night ? 0.12 : 0) + (g.phase !== "regular" ? 0.05 : 0);
+  return a + b - Math.abs(a - b) * 0.5 + (g.night ? 0.12 : 0) + (g.rivalry ? 0.08 : 0) + (g.phase !== "regular" ? 0.05 : 0);
 }
 
 /**

@@ -262,6 +262,8 @@ export interface Player {
   finalSeason?: number;
   /** Holding out for a new contract; misses games until the owner pays him. */
   holdout?: boolean;
+  /** The season he asked his club for a trade. */
+  tradeRequest?: number;
   /** Postseason lines (playoffs + Super Bowl), kept apart from the regular-season record. */
   playoffStats?: Record<number, SeasonStats>;
   /** Pro Bowls, All-Pros, awards and rings, by year. */
@@ -574,6 +576,9 @@ export interface HeadToHead {
   ties: number;
   last?: { year: number; label: string; winner?: TeamId; score: string; playoff: boolean };
   lastPlayoff?: { year: number; label: string; winner: TeamId; score: string };
+  /** How hot the series is, as of heatYear: close games and playoff meetings build it, time cools it. */
+  heat?: number;
+  heatYear?: number;
 }
 
 export interface SeasonGoal {

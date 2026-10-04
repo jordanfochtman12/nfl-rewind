@@ -1189,3 +1189,43 @@
 .tv-bulletin { animation: tv-bulletin 500ms ease-out both; }
 @keyframes tv-bulletin { from { transform: scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .whip-cue, .tv-bulletin { animation: none; } }
+
+/* ---------- Era broadcast looks (settings: "Era broadcast style") ---------- */
+.era-look { position: relative; }
+.era-look .bug-num { font-variant-numeric: tabular-nums; }
+
+/* 1960s-70s: flat team-color bugs, slab numerals, square corners, a faint CRT. */
+.era-60s, .era-70s { border-radius: 4px; }
+.era-60s .bug-slab, .era-70s .bug-slab { background: var(--slab) !important; }
+.era-60s .bug-num, .era-70s .bug-num { font-family: "Rockwell", "Roboto Slab", "Courier New", Georgia, serif; font-style: normal; font-weight: 700; letter-spacing: 0.02em; }
+.era-60s .broadcast-field, .era-70s .broadcast-field { filter: saturate(0.7) sepia(0.18) contrast(0.95); }
+.era-60s::after, .era-70s::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+}
+.era-60s .bx-primary, .era-70s .bx-primary { background: #e8c547; color: #1a1400; transform: none; }
+.era-60s .bx-primary > span, .era-70s .bx-primary > span { transform: none; }
+.era-60s .font-display, .era-70s .font-display { font-style: normal; }
+.era-60s .broadcast-field { filter: grayscale(0.35) sepia(0.25) contrast(0.92); }
+
+/* 1980s: chrome and bevel. */
+.era-80s .bug-slab { box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.35), inset 0 -3px 0 rgb(0 0 0 / 0.35); }
+.era-80s .bug-num { font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 800; font-style: normal; text-shadow: 0 2px 0 rgb(0 0 0 / 0.45); }
+.era-80s .bx-primary { background: linear-gradient(180deg, #4b73c9, #1d3b85); color: #fff; }
+
+/* 1990s: the glossy box in the corner. */
+.era-90s .bug-slab { border-radius: 10px; margin: 3px; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5); }
+.era-90s .bug-slab::before { content: ""; position: absolute; inset: 0 0 55% 0; background: linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent); border-radius: 10px 10px 0 0; pointer-events: none; }
+.era-90s .bug-slab { position: relative; }
+.era-90s .bug-num { font-style: italic; font-weight: 900; }
+
+/* 2000s: dark glass panels. */
+.era-00s .bug-slab { background: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(0 0 0 / 0.55)), var(--slab) !important; backdrop-filter: blur(4px); }
+.era-00s .bug-num { font-weight: 800; letter-spacing: -0.02em; }
+
+@media (prefers-reduced-motion: reduce) { .era-60s::after, .era-70s::after { display: none; } }
+
+/* First-time tour: the control a step is about. */
+.tour-focus { outline: 3px solid #ffc629 !important; outline-offset: 3px; border-radius: 6px; position: relative; z-index: 75; box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.35); }
+.tour-card { animation: tv-bulletin 300ms ease-out both; }

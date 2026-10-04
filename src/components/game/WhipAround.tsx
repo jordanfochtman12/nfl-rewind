@@ -5,11 +5,13 @@
  * the whole slate; tap one to lock the channel on it.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
+import { settingsNow } from "@/lib/settings-store";
 import { clubInk, displayName, nicknameOf, teamAbbr, type GameResult, type PlayLog, type TeamId } from "@/lib/game";
 import { footballSpeech } from "@/lib/game/footballSpeech";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import { castVoices } from "@/lib/voiceCast";
 import { Logo } from "./chrome";
+import { useEraClass } from "./eraLook";
 
 /** Seconds of game time since kickoff. Overtime runs on past the end of the fourth. */
 const gameTime = (l: Pick<PlayLog, "q" | "clock">) => (l.q - 1) * 900 + (900 - l.clock);
@@ -70,11 +72,12 @@ export function WhipAround({
     [games],
   );
   const finalOnly = games.filter((g) => !g.log?.length);
+  const eraCls = useEraClass(year);
   const end = Math.max(3600, ...feeds.map((f) => f.end));
   const [now, setNow] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const [speed, setSpeed] = useState(0);
-  const [voice, setVoice] = useState(true);
+  const [speed, setSpeed] = useState<number>(() => settingsNow().whipSpeed);
+  const [voice, setVoice] = useState(() => settingsNow().narration);
   const [lock, setLock] = useState<string | null>(null);
   const [cut, setCut] = useState<Cut | null>(null);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -147,7 +150,7 @@ export function WhipAround({
       const line = best.why === "TOUCHDOWN" ? `Touchdown, ${scorer}! ${best.text}` : best.why === "TURNOVER" ? `Turnover! ${best.text}` : best.text;
       const u = new SpeechSynthesisUtterance(footballSpeech(line, year));
       const pbp = boothFor(year).pbp;
-      const c = castVoices(voices, [{ key: pbp.name, gender: pbp.gender, rate: 1.08 }]).get(pbp.name);
+      const c = castVoices(voices, [{ key: pbp.name, gender: pbp.gender, rate: 1.08 }], settingsNow().voiceName).get(pbp.name);
       if (c?.voice) u.voice = c.voice;
       u.rate = c?.rate ?? 1.08;
       u.pitch = c?.pitch ?? 1;
@@ -162,7 +165,7 @@ export function WhipAround({
   const liveCount = state.filter(({ f, i }) => i < f.log.length - 1).length;
 
   return (
-    <section className="whip overflow-hidden rounded-xl border border-white/10 bg-studio" aria-label="Whip-around">
+    <section className={`whip overflow-hidden rounded-xl border border-white/10 bg-studio ${eraCls}`} aria-label="Whip-around">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e] px-3 py-2">
         <p className="flex items-center gap-2">
           <span className="bg-red px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] text-white">{finished ? "FINAL" : "LIVE"}</span>
@@ -271,8 +274,8 @@ function Channel({ f, i, year, why, final }: { f: Feed; i: number; year: number;
   const ball = sit ? (sit.poss === away ? sit.spot : 100 - sit.spot) : 50;
   const slab = (id: TeamId, n: number, ink: ReturnType<typeof clubInk>, side: "l" | "r") => (
     <div
-      className={`flex min-w-0 items-center gap-2 px-3 py-2 ${side === "r" ? "flex-row-reverse text-right" : ""}`}
-      style={{ background: `linear-gradient(${side === "l" ? 115 : 245}deg, ${ink.primary}, color-mix(in srgb, ${ink.primary} 40%, black) 90%)`, color: ink.onPrimary }}
+      className={`bug-slab flex min-w-0 items-center gap-2 px-3 py-2 ${side === "r" ? "flex-row-reverse text-right" : ""}`}
+      style={{ background: `linear-gradient(${side === "l" ? 115 : 245}deg, ${ink.primary}, color-mix(in srgb, ${ink.primary} 40%, black) 90%)`, color: ink.onPrimary, ["--slab" as string]: ink.primary }}
     >
       <Logo id={id} size={34} year={year} />
       <span className="min-w-0 truncate font-display text-sm font-extrabold italic uppercase max-sm:hidden">{nicknameOf(year, id)}</span>

@@ -4,6 +4,7 @@
  * history — and the watch bar steps, fast-forwards, or auto-plays the calendar.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
+import { settingsNow } from "@/lib/settings-store";
 import {
   activeTeamIds,
   displayName,
@@ -79,8 +80,8 @@ export function WatchBar() {
   const live = useGameStore((s) => s.liveGameId);
   const tab = useGameStore((s) => s.tab);
   const [auto, setAuto] = useState(false);
-  const [speed, setSpeed] = useState<Speed>("normal");
-  const [stopBig, setStopBig] = useState(true);
+  const [speed, setSpeed] = useState<Speed>(() => settingsNow().autoSpeed);
+  const [stopBig, setStopBig] = useState(() => settingsNow().stopForBigNights);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const done = save.phase === "complete";
@@ -125,12 +126,17 @@ export function WatchBar() {
   return (
     <section className="hq-panel space-y-3 p-4" aria-label="Watch controls">
       <div className="flex flex-wrap items-center gap-2">
+        <span data-tour="watch-next" className="contents">
         <Btn kind="primary" className="min-h-12 px-6 text-lg" disabled={done || !!busy} onClick={() => { setNote(null); once(); }}>
           {watchLabel(save)} <span aria-hidden>▸</span>
         </Btn>
+        </span>
+        <span data-tour="watch-tv" className="contents">
         <Btn kind="gold" className="min-h-12 px-4" disabled={done || !!busy} onClick={() => { setAuto(false); startTv(save.year); }}>
           📺 TV mode
         </Btn>
+        </span>
+        <span data-tour="watch-auto" className="contents">
         <Btn
           className="min-h-12 px-4"
           disabled={done || !!busy}
@@ -142,6 +148,7 @@ export function WatchBar() {
         >
           {auto ? "❚❚ Pause" : "▶ Auto-play"}
         </Btn>
+        </span>
         <label className="flex items-center gap-2 text-xs text-muted">
           Speed
           <select

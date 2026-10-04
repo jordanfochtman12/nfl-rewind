@@ -1,4 +1,5 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
+import { settingsNow } from "@/lib/settings-store";
 import { useEffect, useRef, useState } from "react";
 import type { PrimetimeShow } from "@/lib/game";
 import { Logo } from "./chrome";
@@ -28,11 +29,11 @@ export function StudioEpisode({
     [playing, setPlaying] = useState(false);
   const done = useRef(onDone);
   done.current = onDone;
-  const [narration, setNarration] = useState(true),
-    [music, setMusic] = useState(true),
+  const [narration, setNarration] = useState(() => settingsNow().narration),
+    [music, setMusic] = useState(() => settingsNow().music),
     [volume, setVolume] = useState(0.35);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]),
-    [voice, setVoice] = useState("");
+    [voice, setVoice] = useState(() => settingsNow().voiceName);
   const [error, setError] = useState("");
   const audio = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const chapter = episode.chapters[index]!;

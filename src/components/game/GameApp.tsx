@@ -94,6 +94,9 @@ import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { WatchTV } from "./WatchTV";
+import { Rulebook } from "./WatchStories";
+import { SettingsSheet } from "./SettingsSheet";
+import { Tour, WATCH_TOUR } from "./Tour";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, gradeTone, Logo } from "./chrome";
 import {
   AwardsNight,
@@ -1472,6 +1475,7 @@ function History() {
       {!save.sandbox && <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />}
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
+      <Rulebook save={save} />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{save.year} League leaders</h3>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -1749,6 +1753,7 @@ function WatchOffice({ event }: { event: boolean }) {
 function PlayShell() {
   const { save, tab, setTab, resign, exportJson } = useGameStore();
   const tv = useGameStore((s) => s.tv);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const event = useMemo(() => {
     if (!save) return false;
     return (
@@ -1799,12 +1804,20 @@ function PlayShell() {
             <Btn onClick={download} className="min-h-9 px-4 text-[13px] max-sm:hidden">
               Export
             </Btn>
+            <span data-tour="settings" className="contents">
+              <Btn onClick={() => setSettingsOpen(true)} className="min-h-9 px-3 text-[13px]" title="Settings">
+                <span aria-hidden>⚙</span>
+                <span className="sr-only">Settings</span>
+              </Btn>
+            </span>
             <Btn onClick={resign} className="min-h-9 px-4 text-[13px]">
               Title
             </Btn>
           </div>
         </div>
-        <TabStrip tabs={tabs} active={tab} onPick={setTab} />
+        <div data-tour="tabs">
+          <TabStrip tabs={tabs} active={tab} onPick={setTab} />
+        </div>
       </header>
       {watch && (
         <div className="mx-auto max-w-6xl px-3 pt-4 sm:px-4">
@@ -1840,6 +1853,8 @@ function PlayShell() {
         <TeamRosterModal />
         <CrunchCall />
       </main>
+      {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
+      {watch && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
     )}
