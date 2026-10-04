@@ -19,6 +19,11 @@ import {
 } from "./grok-pwa-shared.mjs";
 import { renderInstallPage } from "./grok-pwa-plugin.mjs";
 
+// These cases describe the plugin itself. Run them from an empty workspace so the app's own
+// share identity (src/lib/og/site.json, public/og.jpg) doesn't leak into every case that
+// doesn't name its own cwd. Files the suite reads on purpose go through TEMPLATE_ROOT.
+process.chdir(mkdtempSync(join(tmpdir(), "grok-pwa-test-")));
+
 const TEMPLATE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 test("injects before </head>", () => {

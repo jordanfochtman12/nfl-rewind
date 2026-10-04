@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -304,11 +304,16 @@ test("cli: a non-game with a compliant card passes", () => {
 // --- the prompts are the only enforcement here, so pin them to the code ---
 
 const readDoc = (rel) => readFileSync(join(TEMPLATE_ROOT, rel), "utf8");
+// The og skill sits in .grok/, which this repo gitignores: it exists in the builder's
+// workspace, not in a clone. Its checks run wherever it's present; AGENTS.md always is.
+const SKILL_DOC = ".grok/skills/og/SKILL.md";
+const hasSkillDoc = existsSync(join(TEMPLATE_ROOT, SKILL_DOC));
+const noSkillDoc = hasSkillDoc ? false : `${SKILL_DOC} is not in this checkout (.grok/ is gitignored)`;
 
 test("SKILL.md and AGENTS.md name the marker path and bound this script uses", () => {
   // Prose wraps, so the minute count may straddle a line break.
   const bound = new RegExp(`${OG_PENDING_MAX_AGE_MS / 60_000}\\s+minutes`);
-  for (const rel of [".grok/skills/og/SKILL.md", "AGENTS.md"]) {
+  for (const rel of [...(hasSkillDoc ? [SKILL_DOC] : []), "AGENTS.md"]) {
     const doc = readDoc(rel);
     assert.ok(doc.includes(`/workspace/${OG_PENDING_REL_PATH}`), `${rel}: marker path`);
     assert.ok(bound.test(doc), `${rel}: staleness bound`);
@@ -349,7 +354,7 @@ test("the sections that own the brand-task prohibition never affirm a wait", () 
   // keeps a negation in the sentence while instructing exactly the wait.
   const connectors = /(?:\s|[/,;]|\band\b|\bor\b|\bwait_tasks\b|\bget_task_output\b)+$/i;
   const negation = /\b(?:no|never|not|don['’]t)$/i;
-  for (const section of PROHIBITION_SECTIONS) {
+  for (const section of PROHIBITION_SECTIONS.filter((s) => hasSkillDoc || s.rel !== SKILL_DOC)) {
     const where = `${section.rel} ${section.label}`;
     const prose = prohibitionSection(section);
     const mentions = [...prose.matchAll(/wait_tasks|get_task_output/g)];
@@ -362,7 +367,7 @@ test("the sections that own the brand-task prohibition never affirm a wait", () 
   }
 });
 
-test("SKILL.md tells the pass to self-check with the flag this CLI accepts", () => {
+test("SKILL.md tells the pass to self-check with the flag this CLI accepts", { skip: noSkillDoc }, () => {
   const skill = readDoc(".grok/skills/og/SKILL.md");
   const invocations = skill.match(/node scripts\/brand-check\.mjs[^\n`]*/g) ?? [];
   assert.ok(invocations.length > 0);

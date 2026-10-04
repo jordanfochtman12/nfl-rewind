@@ -776,10 +776,15 @@ function passAnchor(save: DynastySave): number {
 function redZoneSqueeze(year: number): number {
   // Eased by ~0.02 when sacks were brought up to real rates: a sack ends drives the old
   // near-sackless calibration never lost, and scoring ran about a point a game light.
-  if (year <= 1977) return -0.02;
-  if (year <= 1989) return 0.005;
+  // The 60s and 70s finished more of their trips: scoring ran 1-3 points a game light.
+  if (year <= 1969) return -0.12;
+  if (year <= 1977) return -0.06;
+  if (year <= 1983) return -0.03;
+  if (year <= 1989) return 0.035;
+  if (year <= 1999) return 0.105;
   if (year <= 2009) return 0.075;
-  return 0.02;
+  // The spread era finished drives: scoring ran ~2 points a game light at 0.02.
+  return -0.08;
 }
 
 function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
@@ -787,7 +792,7 @@ function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, b
   // A catch across the stripe is six; getting dragged down at the one is a runner's fate far
   // more than a receiver's. Pinning passes as often as runs turned passing TDs into goal-line
   // rushing TDs (sim had ~2 rush TDs per pass TD; the real league is closer to 2 pass per rush).
-  const dive = ((year <= 1969 ? 0.32 : year <= 1977 ? 0.22 : 0.14) + (1 - brake) * 0.25) * (pass ? 0.35 : 1);
+  const dive = ((year <= 1969 ? 0.22 : year <= 1977 ? 0.18 : 0.14) + (1 - brake) * 0.25) * (pass ? 0.35 : 1);
   if (rand(save) < clamp(dive, pass ? 0.03 : 0.1, 0.55)) return Math.max(1, 99 - spot);
   return yds;
 }
@@ -1384,8 +1389,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (u.k) bumpBox(boxOf(id), u.k.id, { xpAtt: 1 });
     const xpYds = xpKickYards(year);
     const make = fgMakeP(u.k, xpYds, wx, year, 0, venue.altitude);
-    const block = rand(save) < 0.012 + (live(id === homeId ? awayId : homeId).defPass - 70) / 900;
-    const xp = !block && rand(save) < clamp(xpMakeBase(year) * (make / 0.9) + ((u.k?.ratings.kickAcc ?? 70) - 70) / 500 + u.kit.fg, 0.78, 0.99);
+    // Unit grades sit around 105, not 70: centred on 70 this blocked ~5% of tries (real ~1%).
+    const block = rand(save) < clamp(0.009 + (live(id === homeId ? awayId : homeId).defPass - 105) / 2500, 0.003, 0.02);
+    const xp = !block && rand(save) < clamp(xpMakeBase(year) + (make - 0.9) * 0.12 + ((u.k?.ratings.kickAcc ?? 70) - 70) / 600 + u.kit.fg * 0.5, 0.8, 0.997);
     if (xp) {
       addPts(id, 1);
       if (u.k) bumpBox(boxOf(id), u.k.id, { xpMade: 1 });
@@ -1645,7 +1651,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (q >= 4 && clock <= 28 && toOf(defId) > 0 && rand(save) < 0.55) {
         spendTO(defId);
       }
-      const blocked = rand(save) < 0.012 + (def.defRun - 72) / 800;
+      // Real field goals are blocked about 1.5-2% of the time; the unit grades centre near 100.
+      const blocked = rand(save) < clamp(0.016 + (def.defRun - 100) / 2000, 0.006, 0.035);
       const make = !blocked && rand(save) < fgMakeP(off.k, fgDist, wx, year, clutch, venue.altitude) * (q >= 4 && clock <= 28 ? 0.97 : 1);
       clock = Math.max(0, clock - 6);
       drivePlays += 1;
@@ -1974,7 +1981,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (hurried) intP += 0.014;
       if (wx === "rain") intP += 0.012;
       if (wx === "wind" && call === "deep") intP += 0.008;
-      if (year <= 1969) intP += 0.008;
+      // Real 60s passers threw ~1.7 picks a game (6% of throws); the sim ran ~1.25.
+      if (year <= 1969) intP += 0.02;
       intP += qbCliff(save, poss, off.qb);
       intP = clamp(intP, 0.018, 0.11);
       const roll = rand(save);
@@ -2005,7 +2013,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
         if (was3rd) mark3rd(poss, false);
         markTo(poss);
         const retYds = sampleYds(save, 8, 8, 0, 42);
-        const pickSix = rand(save) < 0.09 * big * ((thief?.ratings.speed ?? 70) / 85);
+        // Interception returns scored far more often before the 80s (open field, slower QBs).
+        const pickSix = rand(save) < (year <= 1977 ? 0.14 : 0.09) * big * ((thief?.ratings.speed ?? 70) / 85);
         if (thief) note(`${playerName(thief)} jumps it.`);
         if (pickSix && thief) {
           addPts(defId, 6);

@@ -33,9 +33,9 @@ export function eraProfile(year: number): EraProfile {
       ypc: 3.85,
       pointsMu: 21.4,
       teRecCap: 55,
-      recCap: 75,
+      recCap: 85,
       rushTdCap: 16,
-      passTdCap: 32,
+      passTdCap: 36,
       intCap: 28,
       sackCap: 18,
       teamSackCap: 42,
@@ -53,7 +53,7 @@ export function eraProfile(year: number): EraProfile {
       ypc: 3.8,
       pointsMu: 19.8,
       teRecCap: 60,
-      recCap: 80,
+      recCap: 85,
       rushTdCap: 16,
       passTdCap: 30,
       intCap: 24,
@@ -85,11 +85,11 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "nineties",
       cmpPct: 0.682,
-      passAtt: 35,
+      passAtt: 33.5,
       ypa: 6.9,
       intRate: 0.034,
       sackRate: 0.024,
-      rushAtt: 27,
+      rushAtt: 28.5,
       ypc: 3.8,
       pointsMu: 21.5,
       teRecCap: 94,
@@ -125,7 +125,7 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "spread",
       cmpPct: 0.697,
-      passAtt: 37,
+      passAtt: 35.5,
       ypa: 7.2,
       intRate: 0.025,
       sackRate: 0.027,
@@ -144,7 +144,7 @@ export function eraProfile(year: number): EraProfile {
   return {
     name: "modern",
     cmpPct: 0.72,
-    passAtt: 35,
+    passAtt: 34,
     ypa: 7.2,
     intRate: 0.023,
     sackRate: 0.052,
@@ -221,7 +221,13 @@ export function xpKickYards(year: number): number {
 }
 
 export function xpMakeBase(year: number): number {
-  return year >= 2015 ? 0.934 : year <= 1973 ? 0.94 : 0.965;
+  // The league's real extra-point rate in each era (the 33-yard try from 2015 on). The sim
+  // centres on it and lets the kicker move it a little; scaling it by his field-goal make
+  // rate left the wide-hash era near 89% against a real 96-97%.
+  if (year >= 2015) return 0.94;
+  if (year <= 1973) return 0.966;
+  if (year <= 1993) return 0.975;
+  return 0.988;
 }
 
 /** Wide hashes made FGs harder until they were moved in (1972 NFL / 1974). */
@@ -353,9 +359,10 @@ export function passGainScale(year: number): number {
   if (year <= 1969) return 1.2;
   if (year <= 1977) return 1.12;
   if (year <= 1989) return 1.08;
-  if (year <= 1999) return 1.04;
-  if (year <= 2009) return 0.955;
-  return 0.94;
+  if (year <= 1999) return 1.0;
+  if (year <= 2009) return 0.935;
+  if (year <= 2019) return 0.93;
+  return 0.9;
 }
 
 /** 1974 NFL: DPI becomes a spot foul. Before that (and AFL), 15 yards. */
