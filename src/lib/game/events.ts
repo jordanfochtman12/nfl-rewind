@@ -140,11 +140,13 @@ export function awardBallots(save: DynastySave, opts: { live?: boolean; top?: nu
   }
   // Defenders by job. A sack-heavy line scores more on any single scale than an interception
   // season does, so each group is put on the edge rushers' scale: the factors are each group's
-  // typical league leader measured over 60 simulated seasons, tilted so the winners split the
+  // typical league leader measured over simulated seasons, tilted so the winners split the
   // way the real award has (about half edge rushers, the rest inside linemen, linebackers and
   // the secondary).
   const group = (pos: Pos) => (pos === "DE" || pos === "OLB" ? "edge" : pos === "DT" ? "inside" : pos === "MLB" ? "backer" : "db");
-  const DEF_SCALE = { edge: 1, inside: 1.11, backer: 1.21, db: 1.82 } as const;
+  // Refit after tackles moved to the linebackers and secondary (where real tackles are):
+  // 114 simulated seasons, fit to the real award's split.
+  const DEF_SCALE = { edge: 1, inside: 1.1, backer: 1.04, db: 1.64 } as const;
   const edgeTop = def.filter((p) => group(p.pos) === "edge").map((p) => defPerf(p, year)).sort((a, b) => b - a).slice(0, 3);
   const edgeBar = Math.max(1, edgeTop.reduce((a, b) => a + b, 0) / Math.max(1, edgeTop.length));
   const rel = (p: Player) =>

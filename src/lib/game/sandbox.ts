@@ -33,9 +33,10 @@ export function pickFeaturedGame(save: DynastySave, games: GameResult[]): void {
   if (!save.sandbox) return;
   const open = games.filter((g) => !g.played);
   if (!open.length) return;
-  for (const g of [...save.schedule, ...save.playoffGames]) {
-    if (g.played && g.log && !g.featured) g.log = undefined;
-  }
+  // Played games are shared between save copies, so drop the film by replacing the game.
+  const drop = (g: GameResult) => (g.played && g.log && !g.featured ? { ...g, log: undefined } : g);
+  save.schedule = save.schedule.map(drop);
+  save.playoffGames = save.playoffGames.map(drop);
   const best = open
     .map((g) => ({ g, s: featuredScore(save, g) }))
     .sort((x, y) => y.s - x.s || x.g.id.localeCompare(y.g.id))[0]!.g;

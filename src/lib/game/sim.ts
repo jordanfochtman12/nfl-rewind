@@ -490,10 +490,19 @@ function pickRusher(
   return pool[dist(save, pool.map((x) => x.w))]!.p;
 }
 
+/**
+ * Who makes the stop, by where he lines up: linebackers fill against the run, the secondary
+ * tackles the catch, linemen get the plays that die at the line. Weighted on grades alone,
+ * a 4-3 end tackled as often as the middle linebacker (85 a year; real ends make ~45).
+ */
+const RUN_STOP: Partial<Record<Pos, number>> = { MLB: 1.4, OLB: 0.9, S: 0.7, CB: 0.55, DE: 0.8, DT: 0.7 };
+const PASS_STOP: Partial<Record<Pos, number>> = { CB: 1.6, S: 0.95, MLB: 0.8, OLB: 0.55, DE: 0.2, DT: 0.14 };
+
 function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean): Player | undefined {
   const pool = pass ? [...def.db, ...def.lb, ...def.dl] : [...def.lb, ...def.dl, ...def.db];
   if (!pool.length) return undefined;
-  return pool[dist(save, pool.map((p) => (p.ratings.tak + p.ratings.pur) * (pass ? p.ratings.cov / 80 : 1)))];
+  const role = pass ? PASS_STOP : RUN_STOP;
+  return pool[dist(save, pool.map((p) => (p.ratings.tak + p.ratings.pur) * (role[p.pos] ?? 0.6) * (pass ? p.ratings.cov / 80 : 1)))];
 }
 
 function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
@@ -2231,8 +2240,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     ot = true;
   }
 
+  // Assisted stops: the linebackers and safeties who arrive second.
   const padTackles = (box: BoxPlayer[], u: TeamUnits) => {
-    for (const p of [...u.lb, ...u.dl].slice(0, 5)) {
+    for (const p of [...u.lb, ...u.db.filter((d) => d.pos === "S")].slice(0, 5)) {
       bumpBox(box, p.id, { tackles: randInt(save, 0, 3) });
     }
   };

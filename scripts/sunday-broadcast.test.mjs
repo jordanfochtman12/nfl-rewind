@@ -255,3 +255,20 @@ test("watch TV: playoff picture, award ladders, record chases and bulletins hold
   assert.ok(G.leagueStorylines(s).length > 0);
   assert.ok(G.breakingNews(s).every((n) => n.year === s.year));
 });
+
+test("saves pack for disk and come back exactly the same", async () => {
+  const G = await import("../src/lib/game/index.ts");
+  let s = G.createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: 4 });
+  for (let i = 0; i < 500 && s.year < 1967; i++) s = G.advance(s, s.phase === "freeAgency" ? { closeFa: true } : s.phase === "draft" ? { auto: true } : {});
+  const canon = (v) => (Array.isArray(v) ? v.map(canon) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, canon(v[k])])) : v);
+  const same = (x) => JSON.stringify(canon(JSON.parse(JSON.stringify(x))));
+  // Loading a plain copy and loading the packed disk copy give the same dynasty.
+  const plain = G.hydrateSave(JSON.parse(JSON.stringify(s)));
+  const disk = JSON.stringify(G.compactSave(s));
+  const back = G.hydrateSave(JSON.parse(disk));
+  assert.equal(back.packed, undefined);
+  assert.ok(same(back.players) === same(plain.players), "players survive packing");
+  assert.ok(same(back.history) === same(plain.history), "history survives packing");
+  assert.ok(same(back.teams) === same(plain.teams), "clubs and picks survive packing");
+  assert.ok(disk.length < JSON.stringify(s).length * 0.75, `packed ${disk.length} vs ${JSON.stringify(s).length}`);
+});

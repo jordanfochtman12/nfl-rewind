@@ -21,6 +21,7 @@ import { setHomeOverride } from "./teams.ts";
 import { normalizeJerseys, reissueJerseysByEra, restoreVeteranNumbers, syncDepth } from "./players.ts";
 import { editsAgainst, NEUTRAL_PLAN, syncRealSchemes } from "./gameplans.ts";
 import { repairPlayerIdentities } from "./repairIdentities.ts";
+import { unpackPlayers } from "./compact.ts";
 
 export function emptyTeam(id: TeamId, active: boolean): TeamState {
   return {
@@ -133,6 +134,8 @@ export function blankState(userTeamId: TeamId, startingYear = STARTING_YEAR, see
 }
 
 export function hydrateSave(raw: unknown): DynastySave {
+  // Disk saves pack their players (see compact.ts); put them back before anything reads them.
+  if (raw && typeof raw === "object") unpackPlayers(raw as Parameters<typeof unpackPlayers>[0]);
   const r = (raw && typeof raw === "object" ? raw : {}) as Partial<DynastySave>;
   const userTeamId = (r.userTeamId as TeamId) || "gnb";
   const startingYear = r.startingYear ?? STARTING_YEAR;
@@ -418,24 +421,80 @@ function deepFreeze(o: unknown): void {
   for (const v of Object.values(o)) deepFreeze(v);
 }
 
+/** A season line from a finished year: nothing writes to it again, so copies share it. */
+function shareLines(rec: Record<number, SeasonStats>, year: number): Record<number, SeasonStats> {
+  const o: Record<number, SeasonStats> = {};
+  for (const y in rec) {
+    const line = rec[y]!;
+    if (+y < year) {
+      if (freezeSettled) deepFreeze(line);
+      o[y] = line;
+    } else o[y] = { ...line };
+  }
+  return o;
+}
+
+/** A living player's copy: his finished seasons are shared, everything else is his own. */
+function clonePlayer(p: Player, year: number): Player {
+  const q = { ...p } as Record<string, unknown>;
+  for (const k in q) {
+    const v = q[k];
+    if (!v || typeof v !== "object") continue;
+    if (k === "stats" || k === "playoffStats") q[k] = shareLines(v as Record<number, SeasonStats>, year);
+    else if (k === "career")
+      q[k] = (v as SeasonStats[]).map((c) => {
+        if (c.year < year) {
+          if (freezeSettled) deepFreeze(c);
+          return c;
+        }
+        return { ...c };
+      });
+    else if (k === "ratings") q[k] = { ...(v as object) };
+    else q[k] = structuredClone(v);
+  }
+  return q as unknown as Player;
+}
+
 /**
  * A working copy of the save. By a late dynasty nine players in ten are retired, and copying
  * them was most of the cost of every advance; they're shared by reference instead and only the
- * living part of the league is deep-copied. Code that changes a retired player takes its own
- * copy first with ownPlayer.
+ * living part of the league is copied. Code that changes a retired player takes its own copy
+ * first with ownPlayer. The rest of the save's history is shared the same way: finished games,
+ * used draft picks, the retirement log and every season line from a past year are never
+ * written again (finished games are replaced, not edited, when their film is dropped).
  */
 export function cloneSave(save: DynastySave): DynastySave {
-  const { players, ...rest } = save;
+  const { players, history, teams, schedule, ...rest } = save;
   const out = structuredClone(rest) as DynastySave;
-  const live: Record<string, Player> = {};
-  for (const id in players) if (!settled(players[id]!)) live[id] = players[id]!;
-  const copied = structuredClone(live);
+  const { retirements, ...hist } = history;
+  out.history = { ...(structuredClone(hist) as typeof hist), retirements: retirements.slice() };
+  if (freezeSettled) for (const r of retirements) deepFreeze(r);
+  const clubs = {} as DynastySave["teams"];
+  for (const id in teams) {
+    const { picks, ...t } = teams[id as TeamId];
+    clubs[id as TeamId] = {
+      ...(structuredClone(t) as typeof t),
+      picks: (picks ?? []).map((pk) => {
+        if (!pk.used) return { ...pk };
+        if (freezeSettled) deepFreeze(pk);
+        return pk;
+      }),
+    } as TeamState;
+  }
+  out.teams = clubs;
+  out.schedule = schedule.map((g) => {
+    if (!g.played) return structuredClone(g);
+    if (freezeSettled) deepFreeze(g);
+    return g;
+  });
   const next: Record<string, Player> = {};
   // Same key order as the original: iteration order feeds the deterministic sim.
   for (const id in players) {
-    const p = copied[id] ?? players[id]!;
-    if (freezeSettled && !copied[id]) deepFreeze(p);
-    next[id] = p;
+    const p = players[id]!;
+    if (settled(p)) {
+      if (freezeSettled) deepFreeze(p);
+      next[id] = p;
+    } else next[id] = clonePlayer(p, save.year);
   }
   out.players = next;
   return out;

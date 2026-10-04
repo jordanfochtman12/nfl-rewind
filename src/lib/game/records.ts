@@ -85,26 +85,40 @@ function teamCareerValue(p: Player, teamId: TeamId, cat: Cat): number {
   return n;
 }
 
+/**
+ * A retired player's career never changes, and save copies share his object, so his totals
+ * are worked out once. (Re-summing ~15k careers every week was a tenth of a late season.)
+ */
+const settledCareer = new WeakMap<Player, { totals: SeasonStats; lastYear: number }>();
+function careerOf(p: Player): { totals: SeasonStats; lastYear: number } {
+  const settled = p.teamId === "retired" || p.teamId === "hof";
+  const hit = settled ? settledCareer.get(p) : undefined;
+  if (hit) return hit;
+  let lastYear = 0;
+  for (const y in p.stats) lastYear = Math.max(lastYear, Number(y));
+  for (const s of p.career ?? []) lastYear = Math.max(lastYear, s.year);
+  const out = { totals: careerTotals(p), lastYear };
+  if (settled) settledCareer.set(p, out);
+  return out;
+}
+
 /** Career leaders across everyone who has ever taken a snap in this dynasty. Pass teamId for that franchise's career totals only. */
 export function careerRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): RecordCategory[] {
-  const totals = Object.values(save.players).map((p) => {
-    const years = [...Object.keys(p.stats).map(Number), ...(p.career ?? []).map((s) => s.year)];
-    const lastYear = years.length ? Math.max(...years) : 0;
-    return { p, totals: teamId ? undefined : careerTotals(p), lastYear };
-  });
+  const all = Object.values(save.players).map((p) => ({ p, c: teamId ? undefined : careerOf(p) }));
   return CATS.map((cat) => {
-    const rows = totals
-      .map(({ p, totals: t, lastYear }) => ({
-        playerId: p.id,
-        name: playerName(p),
-        team: teamLabel(save, p),
-        pos: p.pos,
-        value: teamId ? teamCareerValue(p, teamId, cat) : cat.of(t!),
-        year: lastYear,
-      }))
+    const ranked = all
+      .map(({ p, c }) => ({ p, c, value: teamId ? teamCareerValue(p, teamId, cat) : cat.of(c!.totals) }))
       .filter((r) => r.value > 0)
       .sort((a, b) => b.value - a.value)
       .slice(0, topN);
+    const rows = ranked.map(({ p, c, value }) => ({
+      playerId: p.id,
+      name: playerName(p),
+      team: teamLabel(save, p),
+      pos: p.pos,
+      value,
+      year: (c ?? careerOf(p)).lastYear,
+    }));
     return { id: cat.id, label: cat.label, rows };
   });
 }

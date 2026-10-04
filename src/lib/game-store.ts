@@ -97,6 +97,13 @@ function stepTo(
   else set({ save: next, rewind: null });
 }
 
+/**
+ * Saves are written packed (see compactSave) under their own key. An app shell still cached
+ * from before packing reads the old key and never sees a layout it can't load; this version
+ * reads the packed key first and falls back to the old one, so an existing dynasty carries over.
+ */
+const PACKED = (name: string) => `${name}:packed`;
+
 function persistStorage(): PersistStorage<Persisted> {
   let lastWritten: DynastySave | null | undefined;
   let pending: { name: string; value: StorageValue<Persisted> } | null = null;
@@ -111,7 +118,7 @@ function persistStorage(): PersistStorage<Persisted> {
     writing = writing.then(async () => {
       const save = job.value.state.save;
       const payload = JSON.stringify({ ...job.value, state: { save: save ? compactSave(save) : null } });
-      await dynastyStorage.setItem(job.name, payload);
+      await dynastyStorage.setItem(PACKED(job.name), payload);
     });
     return writing;
   };
@@ -123,7 +130,7 @@ function persistStorage(): PersistStorage<Persisted> {
   }
   return {
     getItem: async (name) => {
-      const raw = await dynastyStorage.getItem(name);
+      const raw = (await dynastyStorage.getItem(PACKED(name))) ?? (await dynastyStorage.getItem(name));
       if (!raw) return null;
       try {
         return JSON.parse(raw) as StorageValue<Persisted>;
@@ -142,6 +149,7 @@ function persistStorage(): PersistStorage<Persisted> {
     removeItem: async (name) => {
       pending = null;
       lastWritten = undefined;
+      await dynastyStorage.removeItem(PACKED(name));
       await dynastyStorage.removeItem(name);
     },
   };

@@ -369,21 +369,29 @@ const CHASE_CATS: { id: string; label: string; one?: string; of: (s: import("./t
   { id: "ints", label: "interceptions", one: "interception", of: (s) => s.ints },
 ];
 
-// Best single season per category, real pre-dynasty seasons included, cached per save-year.
-const realBest = new WeakMap<object, { year: number; best: Record<string, number> }>();
-function seasonBests(save: DynastySave): Record<string, number> {
-  const hit = realBest.get(save.players);
-  if (hit && hit.year === save.year) return hit.best;
-  const best: Record<string, number> = { ...(save.bestSeasonMarks ?? {}) };
-  for (const p of Object.values(save.players)) {
-    for (const row of p.career ?? []) {
-      for (const cat of CHASE_CATS) {
-        const v = cat.of(row as import("./types.ts").SeasonStats) || 0;
-        if (v > (best[cat.id] ?? 0)) best[cat.id] = v;
-      }
+// Best single season per category, real pre-dynasty seasons included. A retired player's
+// bests never change and save copies share his object, so they're worked out once.
+const settledBest = new WeakMap<Player, Record<string, number>>();
+function playerBests(p: Player): Record<string, number> {
+  const settled = p.teamId === "retired" || p.teamId === "hof";
+  const hit = settled ? settledBest.get(p) : undefined;
+  if (hit) return hit;
+  const best: Record<string, number> = {};
+  for (const row of p.career ?? []) {
+    for (const cat of CHASE_CATS) {
+      const v = cat.of(row as import("./types.ts").SeasonStats) || 0;
+      if (v > (best[cat.id] ?? 0)) best[cat.id] = v;
     }
   }
-  realBest.set(save.players, { year: save.year, best });
+  if (settled) settledBest.set(p, best);
+  return best;
+}
+function seasonBests(save: DynastySave): Record<string, number> {
+  const best: Record<string, number> = { ...(save.bestSeasonMarks ?? {}) };
+  for (const p of Object.values(save.players)) {
+    const b = playerBests(p);
+    for (const k in b) if (b[k]! > (best[k] ?? 0)) best[k] = b[k]!;
+  }
   return best;
 }
 
