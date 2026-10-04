@@ -3,7 +3,7 @@ import { playoffTeamCount } from "./era.ts";
 import { conferenceOf, displayName, roman, superBowlNumber, type Conference } from "./teams.ts";
 import { superBowlSite } from "./data/bowlSites.ts";
 import { simGame } from "./sim.ts";
-import { compareTeams, conferenceTeams, divisionWinner } from "./standings.ts";
+import { compareTeams, conferenceTeams, divisionWinner, playoffField } from "./standings.ts";
 import { addNews } from "./news.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
 
@@ -71,7 +71,7 @@ export function seedPlayoffs(save: DynastySave): void {
   }
   const n = playoffTeamCount(year).perConf;
   for (const conf of ["AFC", "NFC"] as Conference[]) {
-    const field = conferenceTeams(save, conf).slice(0, n).map((t) => t.id);
+    const field = playoffField(save, conf, n).map((t) => t.id);
     if (field.length < 2) continue;
     // Byes for the top seeds. 4: two divisional games. 5: one WC. 6+: WC pairings.
     if (n <= 4) {
@@ -127,7 +127,7 @@ function maybeAdvanceBracket(save: DynastySave): void {
   }
   const latestWeek = save.playoffGames.reduce((m, g) => Math.max(m, g.week), 0);
   for (const conf of ["AFC", "NFC"] as Conference[]) {
-    const field = conferenceTeams(save, conf).slice(0, n).map((t) => t.id);
+    const field = playoffField(save, conf, n).map((t) => t.id);
     const alive = field.filter((id) => !lost.has(id));
     if (alive.length <= 1) continue;
     const hasChamp = save.playoffGames.some((g) => g.round === `${conf} Championship`);

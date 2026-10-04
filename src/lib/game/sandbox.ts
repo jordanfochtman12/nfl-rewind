@@ -24,15 +24,23 @@ export function featuredScore(save: DynastySave, g: Pick<GameResult, "homeId" | 
   return a + b - Math.abs(a - b) * 0.5 + (g.night ? 0.12 : 0) + (g.phase !== "regular" ? 0.05 : 0);
 }
 
-/** Picks this week's featured game in a sandbox (no-op otherwise). No randomness consumed. */
+/**
+ * Picks this week's featured game in a sandbox (no-op otherwise). No randomness consumed.
+ * Every sandbox game is logged so the whip-around can show the whole slate; before a new week
+ * kicks off, last week's non-featured logs are dropped so the save stays small.
+ */
 export function pickFeaturedGame(save: DynastySave, games: GameResult[]): void {
   if (!save.sandbox) return;
   const open = games.filter((g) => !g.played);
   if (!open.length) return;
+  for (const g of [...save.schedule, ...save.playoffGames]) {
+    if (g.played && g.log && !g.featured) g.log = undefined;
+  }
   const best = open
     .map((g) => ({ g, s: featuredScore(save, g) }))
     .sort((x, y) => y.s - x.s || x.g.id.localeCompare(y.g.id))[0]!.g;
   save.featuredGameId = best.id;
+  best.featured = true;
 }
 
 /** The featured game of the slate just played, if the sandbox broadcast one. */

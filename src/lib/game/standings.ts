@@ -35,6 +35,16 @@ export function conferenceTeams(save: DynastySave, conf: Conference): TeamState[
     .sort(compareTeams);
 }
 
+/**
+ * A conference's playoff field, in seed order: every division winner first (they're in no
+ * matter their record), then the best of the rest as wild cards.
+ */
+export function playoffField(save: DynastySave, conf: Conference, n: number): TeamState[] {
+  const teams = conferenceTeams(save, conf);
+  const winners = new Set([...new Set(teams.map((t) => divisionKey(save.year, t.id)))].map((d) => sortedDivision(save, d)[0]?.id));
+  return [...teams.filter((t) => winners.has(t.id)), ...teams.filter((t) => !winners.has(t.id))].slice(0, n);
+}
+
 export function standingRows(save: DynastySave): { key: string; conf: string; div: string; teams: TeamState[] }[] {
   const year = save.year;
   const groups = new Map<string, TeamId[]>();

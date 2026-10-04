@@ -1182,3 +1182,10 @@
 .pt-show {
   scroll-margin-top: 140px;
 }
+
+/* Watch mode TV: the whip-around's cut-in cue and the breaking-news bulletin. */
+.whip-cue { animation: whip-cue 600ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes whip-cue { from { transform: translateX(24px) skewX(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.tv-bulletin { animation: tv-bulletin 500ms ease-out both; }
+@keyframes tv-bulletin { from { transform: scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .whip-cue, .tv-bulletin { animation: none; } }

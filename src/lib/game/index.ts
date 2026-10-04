@@ -243,3 +243,5 @@ export { realLine, realPostseason, realRecords, recordTimeline } from "./timelin
 export { staffPlan, staffSystems, playCallers, playbookOf } from "./gameplans.ts";
 export { franchiseTrophies, franchiseSeasons, franchiseSummary, jerseyFor, coachHome, hofWriteUp, coachWriteUp, franchiseHallOfFamers, honoredCount, type JerseyLook, type Trophy } from "./teamHistory.ts";
 export { featuredOf, featuredScore, pickFeaturedGame, ownerClub } from "./sandbox.ts";
+export { awardRaces, breakingNews, leagueStorylines, playoffPicture, recordChases } from "./leagueStories.ts";
+export type { AwardLadder, LadderRow, LeagueStory, RaceGroup, RaceMark, RaceRow, RecordChase } from "./leagueStories.ts";

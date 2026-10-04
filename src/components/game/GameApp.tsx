@@ -93,6 +93,7 @@ import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
+import { WatchTV } from "./WatchTV";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, gradeTone, Logo } from "./chrome";
 import {
   AwardsNight,
@@ -1747,6 +1748,7 @@ function WatchOffice({ event }: { event: boolean }) {
 
 function PlayShell() {
   const { save, tab, setTab, resign, exportJson } = useGameStore();
+  const tv = useGameStore((s) => s.tv);
   const event = useMemo(() => {
     if (!save) return false;
     return (
@@ -1777,6 +1779,13 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <DraftAnnouncerProvider>
+    {watch && tv ? (
+      <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
+        <WatchTV />
+        <PlayerProfile />
+        <TeamRosterModal />
+      </ClubDesk>
+    ) : (
     <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
       <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
       <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
@@ -1833,6 +1842,7 @@ function PlayShell() {
       </main>
       {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
+    )}
     </DraftAnnouncerProvider>
   );
 }

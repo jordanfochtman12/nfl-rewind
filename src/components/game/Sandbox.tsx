@@ -18,6 +18,8 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
+import { startTv } from "./WatchTV";
+import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
 
 type Speed = "slow" | "normal" | "fast";
 const SPEED_MS: Record<Speed, number> = { slow: 6000, normal: 3000, fast: 1000 };
@@ -126,6 +128,9 @@ export function WatchBar() {
         <Btn kind="primary" className="min-h-12 px-6 text-lg" disabled={done || !!busy} onClick={() => { setNote(null); once(); }}>
           {watchLabel(save)} <span aria-hidden>▸</span>
         </Btn>
+        <Btn kind="gold" className="min-h-12 px-4" disabled={done || !!busy} onClick={() => { setAuto(false); startTv(save.year); }}>
+          📺 TV mode
+        </Btn>
         <Btn
           className="min-h-12 px-4"
           disabled={done || !!busy}
@@ -178,7 +183,7 @@ export function WatchBar() {
   );
 }
 
-function GameRow({ save, g, tag }: { save: DynastySave; g: GameResult; tag?: string }) {
+export function GameRow({ save, g, tag }: { save: DynastySave; g: GameResult; tag?: string }) {
   const home = g.homeId as TeamId;
   const away = g.awayId as TeamId;
   const real = g.realHome !== undefined && g.realAway !== undefined && g.realHome >= 0;
@@ -248,6 +253,8 @@ export function HistoryCheck() {
   );
 }
 
+const DESK_AWARDS = ["mvp", "defPoy", "oroy", "droy"];
+
 /** The sandbox front page: no front office, just the league. */
 export function WatchDesk() {
   const save = useGameStore((s) => s.save)!;
@@ -304,6 +311,16 @@ export function WatchDesk() {
           </ul>
         </section>
       )}
+      {played && (save.phase === "regular" || save.phase === "deadline" || save.phase === "playoffs") && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <StoryBoard save={save} />
+          <div className="space-y-4">
+            <RecordChases save={save} />
+            <AwardLadders save={save} only={DESK_AWARDS} top={3} />
+          </div>
+        </div>
+      )}
+      {played && (save.phase === "regular" || save.phase === "deadline") && <PlayoffPicture save={save} />}
       <div className="grid gap-4 md:grid-cols-2">
         {played && (
           <section className="rounded-xl border border-line bg-surface p-4">

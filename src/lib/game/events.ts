@@ -103,18 +103,32 @@ const winPctOf = (save: DynastySave, p: Player, year: number): number => {
   return g ? (t.wins + t.ties / 2) / g : 0.5;
 };
 
-/** Share of the season a player was on the field for. */
-const playedShare = (p: Player, year: number): number => (p.stats[year]?.gp ?? 0) / gamesInSeason(year);
+/** One award's ballot, best first. */
+export interface AwardBallots {
+  mvp: Player[];
+  offPoy: Player[];
+  defPoy: Player[];
+  oroy: Player[];
+  droy: Player[];
+  cpoty: Player[];
+  coy: { teamId: TeamId; coachId: string }[];
+}
 
 /**
- * Pure ballot, also used by the regular-season studio special. Each award is judged the way
- * its real voters judge it: production relative to the best at the same position, the MVP
- * weighted to quarterbacks (overwhelmingly so since 2000) and to winning clubs, the defensive
- * award to sacks and takeaways, Comeback to a veteran back from an injury or a lost year.
+ * The ballots behind every award. Each award is judged the way its real voters judge it:
+ * production relative to the best at the same position, the MVP weighted to quarterbacks
+ * (overwhelmingly so since 2000) and to winning clubs, the defensive award to sacks and
+ * takeaways, Comeback to a veteran back from an injury or a lost year. `live` measures playing
+ * time against the games played so far, for the in-season race ladders.
  */
-export function calculateAwards(save: DynastySave): AwardsResult {
+export function awardBallots(save: DynastySave, opts: { live?: boolean; top?: number } = {}): AwardBallots {
   const year = save.year;
-  const players = seasonList(save).filter((p) => playedShare(p, year) >= 0.5);
+  const top = opts.top ?? 5;
+  const soFar = opts.live
+    ? Math.max(1, ...activeTeamIds(year).map((id) => { const t = save.teams[id]; return t ? t.wins + t.losses + t.ties : 0; }))
+    : gamesInSeason(year);
+  const share = (p: Player) => (p.stats[year]?.gp ?? 0) / soFar;
+  const players = seasonList(save).filter((p) => share(p) >= 0.5);
   const off = players.filter((p) => OFFENSE.includes(p.pos));
   const def = players.filter((p) => DEFENSE.includes(p.pos));
 
@@ -135,27 +149,30 @@ export function calculateAwards(save: DynastySave): AwardsResult {
   const edgeBar = Math.max(1, edgeTop.reduce((a, b) => a + b, 0) / Math.max(1, edgeTop.length));
   const rel = (p: Player) =>
     OFFENSE.includes(p.pos) ? offPerf(p, year) / bar.get(p.pos === "FB" ? "RB" : p.pos)! : (defPerf(p, year) * DEF_SCALE[group(p.pos)]) / edgeBar;
-  const defWeight = (_p: Player) => 1;
 
   const modern = year >= 2000;
   const mvpWeight: Partial<Record<Pos, number>> = { QB: 1, RB: modern ? 0.89 : 0.97, FB: 0.8, WR: modern ? 0.78 : 0.84, TE: 0.62 };
-  const best = <T,>(list: T[], score: (x: T) => number) => list.slice().sort((a, b) => score(b) - score(a))[0];
+  const rank = <T,>(list: T[], score: (x: T) => number, n = top) =>
+    list.map((x) => ({ x, s: score(x) })).sort((a, b) => b.s - a.s).slice(0, n).map((r) => r.x);
 
   const mvpScore = (p: Player) =>
     (OFFENSE.includes(p.pos) ? (mvpWeight[p.pos] ?? 0.7) * rel(p) : 0.74 * rel(p)) + 0.7 * (winPctOf(save, p, year) - 0.5);
-  const mvp = best(players.filter((p) => OFFENSE.includes(p.pos) || DEFENSE.includes(p.pos)), mvpScore);
+  const mvp = rank(players.filter((p) => OFFENSE.includes(p.pos) || DEFENSE.includes(p.pos)), mvpScore);
 
   // Tight ends are measured against tight ends, so a great one reads as dominant; no tight end
   // has won the real award, and this keeps them on the ballot without taking it.
   const opoyWeight: Partial<Record<Pos, number>> = { QB: 1, RB: 1, FB: 0.85, WR: 0.97, TE: 0.72 };
-  const offPoy = best(off, (p) => (opoyWeight[p.pos] ?? 0.8) * rel(p) + 0.25 * (winPctOf(save, p, year) - 0.5));
-  const defPoy = best(def, (p) => defWeight(p) * rel(p) + 0.2 * (winPctOf(save, p, year) - 0.5));
+  const offPoy = rank(off, (p) => (opoyWeight[p.pos] ?? 0.8) * rel(p) + 0.25 * (winPctOf(save, p, year) - 0.5));
+  const defPoy = rank(def, (p) => rel(p) + 0.2 * (winPctOf(save, p, year) - 0.5));
 
-  const rookies = seasonList(save).filter((p) => p.draftYear === year && playedShare(p, year) >= 0.4);
+  const rookies = seasonList(save).filter((p) => p.draftYear === year && share(p) >= 0.4);
   // Rookie ballots lean the way the real ones do: backs and quarterbacks first, tight ends rarely.
   const rookieWeight: Partial<Record<Pos, number>> = { QB: 1.24, RB: 1.24, FB: 0.8, WR: 1, TE: 0.8 };
-  const oroy = best(rookies.filter((p) => OFFENSE.includes(p.pos)), (p) => (rookieWeight[p.pos] ?? 0.8) * rel(p));
-  const droy = best(rookies.filter((p) => DEFENSE.includes(p.pos)), (p) => defWeight(p) * rel(p));
+  // 1957-66 the AP named one rookie of the year; it went to an offensive player every time.
+  const oroy = year >= FIRST_YEAR.oroy
+    ? rank(rookies.filter((p) => OFFENSE.includes(p.pos)), (p) => (rookieWeight[p.pos] ?? 0.8) * rel(p))
+    : rank(rookies, (p) => rel(p));
+  const droy = rank(rookies.filter((p) => DEFENSE.includes(p.pos)), (p) => rel(p));
 
   // Comeback: a veteran whose last season was lost to injury, or fell well short of what he
   // had shown before, and who is back among the best at his position.
@@ -173,11 +190,11 @@ export function calculateAwards(save: DynastySave): AwardsResult {
       return { p, down, now, score: w * now * (0.6 + down) };
     })
     // The MVP isn't also the year's comeback story; the writers give that one to someone else.
-    .filter((x) => x.down >= 0.45 && x.now >= 0.7 && yearScore(x.p, year) > 0 && ![mvp?.id, offPoy?.id, defPoy?.id].includes(x.p.id));
-  const cpoty = best(comeback, (x) => x.score)?.p;
+    .filter((x) => x.down >= 0.45 && x.now >= 0.7 && yearScore(x.p, year) > 0 && ![mvp[0]?.id, offPoy[0]?.id, defPoy[0]?.id].includes(x.p.id));
+  const cpoty = rank(comeback, (x) => x.score).map((x) => x.p);
 
   // Coach of the Year: the biggest turnaround among winning clubs, then the best record.
-  const coy = best(
+  const coy = rank(
     activeTeamIds(year)
       .map((id) => ({ id, t: save.teams[id], c: save.teams[id]?.coachId ? save.coaches[save.teams[id]!.coachId!] : undefined }))
       .filter((x) => x.t && x.c),
@@ -188,19 +205,30 @@ export function calculateAwards(save: DynastySave): AwardsResult {
       const prevPct = prev ? (prev.wins + prev.ties / 2) / Math.max(1, prev.wins + prev.losses + prev.ties) : 0.5;
       return (pct - prevPct) * 1.4 + pct + (pct > 0.5 && prevPct < 0.5 ? 0.15 : 0);
     },
-  );
+  ).map((x) => ({ teamId: x.id, coachId: x.c!.id }));
 
+  return { mvp, offPoy, defPoy, oroy, droy, cpoty, coy };
+}
+
+/** Which awards existed in a given season (AP; Comeback from the PFWA in 1972). */
+export function awardExists(year: number, k: keyof typeof FIRST_YEAR): boolean {
+  return year >= FIRST_YEAR[k];
+}
+
+/** Pure ballot, also used by the regular-season studio special. */
+export function calculateAwards(save: DynastySave): AwardsResult {
+  const year = save.year;
+  const b = awardBallots(save, { top: 1 });
   const has = (k: keyof typeof FIRST_YEAR) => year >= FIRST_YEAR[k];
   return {
     year,
-    mvp: mvp?.id,
-    offPoy: has("offPoy") ? offPoy?.id : undefined,
-    defPoy: has("defPoy") ? defPoy?.id : undefined,
-    // 1957-66 the AP named one rookie of the year; it went to an offensive player every time.
-    oroy: has("oroy") ? oroy?.id : best(rookies, (p) => rel(p))?.id,
-    droy: has("droy") ? droy?.id : undefined,
-    cpoty: has("cpoty") ? cpoty?.id : undefined,
-    coy: coy?.c?.id,
+    mvp: b.mvp[0]?.id,
+    offPoy: has("offPoy") ? b.offPoy[0]?.id : undefined,
+    defPoy: has("defPoy") ? b.defPoy[0]?.id : undefined,
+    oroy: b.oroy[0]?.id,
+    droy: has("droy") ? b.droy[0]?.id : undefined,
+    cpoty: has("cpoty") ? b.cpoty[0]?.id : undefined,
+    coy: b.coy[0]?.coachId,
     allPro: allProIds(seasonList(save), year),
   };
 }

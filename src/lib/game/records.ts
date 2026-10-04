@@ -38,6 +38,20 @@ const CATS: Cat[] = [
   { id: "ints", label: "Interceptions", of: (s) => s.ints },
 ];
 
+/** The single-season marks the league carried into 1966, so early chases have a target. */
+export const PRE_1966_MARKS: Record<string, { value: number; holder: string; year: number }> = {
+  passYds: { value: 3723, holder: "Sonny Jurgensen", year: 1961 },
+  passTd: { value: 36, holder: "George Blanda", year: 1961 },
+  rushYds: { value: 1863, holder: "Jim Brown", year: 1963 },
+  rushTd: { value: 19, holder: "Jim Taylor", year: 1962 },
+  rec: { value: 101, holder: "Charley Hennigan", year: 1964 },
+  recYds: { value: 1746, holder: "Charley Hennigan", year: 1961 },
+  recTd: { value: 18, holder: "Bill Groman", year: 1961 },
+  ints: { value: 14, holder: "Dick \"Night Train\" Lane", year: 1952 },
+  // Sacks weren't official until 1982; this is the researchers' count.
+  sacks: { value: 22, holder: "Deacon Jones", year: 1964 },
+};
+
 function teamLabel(save: DynastySave, p: Player): string {
   return p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof" ? "—" : displayName(save.year, p.teamId as TeamId);
 }
@@ -277,17 +291,21 @@ export function checkSeasonMilestones(save: DynastySave): void {
         holder = p;
       }
     }
-    const prior = save.bestSeasonMarks[cat.id] ?? 0;
+    // The marks the league carried into 1966 count too, so year one doesn't "break" every record.
+    const base = PRE_1966_MARKS[cat.id];
+    const sim = save.bestSeasonMarks[cat.id] ?? 0;
+    const prior = Math.max(sim, base?.value ?? 0);
     if (thisYearBest > prior && holder) {
+      const old = base && base.value >= sim ? ` (${base.holder}, ${base.year})` : "";
       addNews(save, {
         kind: "award",
         headline: `${playerName(holder)} sets the all-time single-season ${cat.label.toLowerCase()} record`,
-        body: `${thisYearBest} in ${save.year}${prior > 0 ? `, breaking the old mark of ${prior}.` : "."}`,
+        body: `${thisYearBest} in ${save.year}${prior > 0 ? `, breaking the old mark of ${prior}${old}.` : "."}`,
         teamIds:
           holder.teamId !== "fa" && holder.teamId !== "retired" && holder.teamId !== "hof" ? [holder.teamId as TeamId] : [],
         playerIds: [holder.id],
       });
     }
-    if (thisYearBest > prior) save.bestSeasonMarks[cat.id] = thisYearBest;
+    if (thisYearBest > sim) save.bestSeasonMarks[cat.id] = thisYearBest;
   }
 }

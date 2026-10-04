@@ -38,7 +38,7 @@ import {
 } from "./teams.ts";
 import { gameDateLabel, gamesInWeek } from "./schedule.ts";
 import { depthAt, playerName, rosterOf } from "./players.ts";
-import { conferenceTeams, divisionWinner, sortedDivision, winPct } from "./standings.ts";
+import { conferenceTeams, divisionWinner, playoffField, sortedDivision, winPct } from "./standings.ts";
 import { playoffTeamCount } from "./era.ts";
 import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
 import { calculateAwards } from "./events.ts";
@@ -321,7 +321,7 @@ function playoffOutlook(save: DynastySave): PrimetimeOutlook[] {
   const n = playoffTeamCount(year).perConf;
   return (["AFC", "NFC"] as const).map((conf) => {
     const teams = conferenceTeams(save, conf);
-    const field = teams.slice(0, n);
+    const field = playoffField(save, conf, n);
     const lastIn = field[field.length - 1]!;
     const leaders = new Set(
       [...new Set(teams.map((t) => divisionKey(year, t.id)))].map((d) => sortedDivision(save, d)[0]?.id),

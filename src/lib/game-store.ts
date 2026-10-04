@@ -70,6 +70,9 @@ interface GameStore {
   /** The owner's game currently on the live broadcast (hides spoilers elsewhere on screen). */
   liveGameId: string | null;
   setLiveGame: (id: string | null) => void;
+  /** Watch mode's TV channel: the whole season as one continuous broadcast. */
+  tv: boolean;
+  setTv: (on: boolean) => void;
   exportJson: () => string;
   importJson: (raw: string) => void;
   resign: () => void;
@@ -157,6 +160,8 @@ export const useGameStore = create<GameStore>()(
       hasHydrated: false,
       liveGameId: null,
       setLiveGame: (liveGameId) => set({ liveGameId }),
+      tv: false,
+      setTv: (tv) => set({ tv }),
       setScreen: (screen) => set({ screen }),
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
@@ -258,7 +263,7 @@ export const useGameStore = create<GameStore>()(
         const save = importDynasty(raw);
         set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
       },
-      resign: () => set({ screen: "title", profileId: null, viewTeamId: null }),
+      resign: () => set({ screen: "title", profileId: null, viewTeamId: null, tv: false }),
     }),
     {
       name: "nfl-rewind-dynasty",

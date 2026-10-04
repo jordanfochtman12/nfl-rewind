@@ -81,6 +81,7 @@ export function LiveBroadcast({
   compact = false,
   final = true,
   canCall = false,
+  autoHalftime = false,
 }: {
   game: GameResult;
   log: PlayLog[];
@@ -94,6 +95,8 @@ export function LiveBroadcast({
   final?: boolean;
   /** The owner can send calls down from his box (the game replays from that snap). */
   canCall?: boolean;
+  /** TV mode: the halftime report runs a few seconds and the second half starts on its own. */
+  autoHalftime?: boolean;
 }) {
   const save = useGameStore((s) => s.save)!;
   const home = game.homeId as TeamId;
@@ -135,6 +138,16 @@ export function LiveBroadcast({
     const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), playMs);
     return () => clearTimeout(t);
   }, [i, playing, playMs, atEnd, log, halftime, compact]);
+
+  useEffect(() => {
+    if (!halftime || !autoHalftime) return;
+    const t = setTimeout(() => {
+      setHalftime(false);
+      setI((n) => Math.min(log.length - 1, n + 1));
+      setPlaying(true);
+    }, 12000);
+    return () => clearTimeout(t);
+  }, [halftime, autoHalftime, log.length]);
 
   useEffect(() => {
     if (atEnd && !doneRef.current) {

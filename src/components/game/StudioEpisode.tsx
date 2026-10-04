@@ -8,11 +8,26 @@ import { crewFor, crewGender } from "@/lib/game/previewVoice";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
-/** A directed, chapter-by-chapter broadcast. The frozen script is also the accessible transcript. */
-export function StudioEpisode({ episode, year }: { episode: Episode; year: number }) {
+/**
+ * A directed, chapter-by-chapter broadcast. The frozen script is also the accessible transcript.
+ * `autoPlay` starts the show on mount and `onDone` fires when the last read ends (TV mode).
+ */
+export function StudioEpisode({
+  episode,
+  year,
+  autoPlay,
+  onDone,
+}: {
+  episode: Episode;
+  year: number;
+  autoPlay?: boolean;
+  onDone?: () => void;
+}) {
   const [index, setIndex] = useState(0),
     [line, setLine] = useState(0),
     [playing, setPlaying] = useState(false);
+  const done = useRef(onDone);
+  done.current = onDone;
   const [narration, setNarration] = useState(true),
     [music, setMusic] = useState(true),
     [volume, setVolume] = useState(0.35);
@@ -30,8 +45,25 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
     else if (index < episode.chapters.length - 1) {
       setIndex(index + 1);
       setLine(0);
-    } else setPlaying(false);
+    } else {
+      setPlaying(false);
+      done.current?.();
+    }
   };
+  const start = () => {
+    try {
+      if (!audio.current) audio.current = stadiumAudio();
+      void audio.current.context.resume();
+    } catch {
+      setError("Music is unavailable. The show transcript remains available.");
+    }
+  };
+  useEffect(() => {
+    if (!autoPlay) return;
+    start();
+    setPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     if (!("speechSynthesis" in window)) return;
     const load = () =>
@@ -48,6 +80,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
     return () => {
       document.removeEventListener("visibilitychange", hide);
       audio.current?.close();
+      audio.current = null;
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
   }, []);
@@ -118,12 +151,7 @@ export function StudioEpisode({ episode, year }: { episode: Episode; year: numbe
           className="bx-primary min-h-11 px-5"
           onClick={() => {
             if (!playing) {
-              try {
-                if (!audio.current) audio.current = stadiumAudio();
-                void audio.current.context.resume();
-              } catch {
-                setError("Music is unavailable. The show transcript remains available.");
-              }
+              start();
               if (end) {
                 setIndex(0);
                 setLine(0);

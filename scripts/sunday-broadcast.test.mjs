@@ -213,8 +213,45 @@ test("watch history: every club is the computer's, picks come one at a time, and
   for (let i = 0; i < 40 && !(s.phase === "regular" && s.week >= 3); i++) s = step(s, s.phase === "freeAgency" ? { closeFa: true } : {});
   const played = s.schedule.filter((g) => g.year === 1966 && g.played);
   assert.ok(played.length > 0);
-  const logged = played.filter((g) => g.log?.length);
   const weeks = new Set(played.map((g) => g.week));
-  assert.equal(logged.length, weeks.size, "exactly one featured broadcast per week played");
+  const last = Math.max(...weeks);
+  assert.equal(played.filter((g) => g.featured).length, weeks.size, "exactly one featured broadcast per week played");
+  assert.ok(played.filter((g) => g.week === last).every((g) => g.log?.length), "the latest slate is all on film for the whip-around");
+  assert.ok(played.filter((g) => g.week < last && g.log?.length).every((g) => g.featured), "older weeks keep only the featured film");
   assert.ok(!s.news.some((n) => /^A new dynasty/.test(n.headline)), "no owner's-club headline in a sandbox");
+});
+
+test("watch TV: playoff picture, award ladders, record chases and bulletins hold up over a season", async () => {
+  const G = await import("../src/lib/game/index.ts");
+  let s = G.createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: 11 });
+  const mid = [];
+  for (let i = 0; i < 400 && !(s.phase === "playoffs"); i++) {
+    s = G.advance(s, s.phase === "freeAgency" ? { closeFa: true } : s.phase === "draft" ? { auto: true } : {});
+    if (s.phase === "regular" && G.weekIsInTheBooks(s)) mid.push(G.playoffPicture(s));
+  }
+  assert.ok(mid.length >= 10, "weekly pictures were taken");
+  // A mark, once earned, never has to be taken back: clinched stays clinched, out stays out.
+  const marks = new Map();
+  for (const pic of mid)
+    for (const g of pic)
+      for (const r of g.rows) {
+        const was = marks.get(r.teamId);
+        if (was === "division") assert.equal(r.mark, "division", `${r.teamId} lost a division clinch`);
+        if (was === "out") assert.equal(r.mark, "out", `${r.teamId} came back from elimination`);
+        if (r.mark === "division" || r.mark === "out") marks.set(r.teamId, r.mark);
+      }
+  // The last regular-season picture names exactly the clubs that made the postseason.
+  const final = mid.at(-1).flatMap((g) => g.rows.filter((r) => r.mark === "division" || r.mark === "playoffs").map((r) => r.teamId)).sort();
+  const field = [...new Set(s.playoffGames.flatMap((g) => [g.homeId, g.awayId]))].sort();
+  assert.deepEqual(final, field);
+  // 1966: there was an MVP and one rookie award, nothing else yet.
+  const races = G.awardRaces(s);
+  assert.deepEqual(races.map((l) => l.key), ["mvp", "oroy", "coy"]);
+  assert.ok(races.every((l) => l.rows.length > 0 && l.rows.length <= 5));
+  // Records the league carried into 1966 count: nobody "breaks" a mark he didn't pass.
+  for (const n of s.news.filter((n) => /sets the all-time single-season/.test(n.headline))) {
+    assert.match(n.body, /breaking the old mark of \d+/);
+  }
+  assert.ok(G.leagueStorylines(s).length > 0);
+  assert.ok(G.breakingNews(s).every((n) => n.year === s.year));
 });

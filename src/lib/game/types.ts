@@ -466,6 +466,8 @@ export interface GameResult {
   attendance?: number;
   rivalry?: boolean;
   night?: boolean;
+  /** Watch mode: this was the week's featured broadcast, so its play-by-play is kept. */
+  featured?: boolean;
   /** Time of possession, seconds. */
   homePoss?: number;
   awayPoss?: number;
