@@ -727,7 +727,7 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
   const userPlayed = games.some((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId);
 
   const storyList = kind === "awards" ? [] : stories(save, games, kind, injuries);
-  if (kind === "regular" || (kind === "playoffs" && (userPlayed || userNext))) {
+  if (!save.sandbox && (kind === "regular" || (kind === "playoffs" && (userPlayed || userNext)))) {
     const mine = yourClub(save, games, userNext);
     if (mine) storyList.push(mine);
   }
@@ -774,7 +774,9 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
   const close =
     kind === "awards"
       ? `That's a wrap on ${year}. The draft is next, and every club gets a clean sheet. See you in the fall.`
-      : `${name(save, save.userTeamId)} sit ${user ? rec(user) : "—"}. ${title} is in the can. That's Primetime.`;
+      : save.sandbox
+        ? `${title} is in the can. That's Primetime.`
+        : `${name(save, save.userTeamId)} sit ${user ? rec(user) : "—"}. ${title} is in the can. That's Primetime.`;
 
   const show: PrimetimeShow = {
     v: 2,

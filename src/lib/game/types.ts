@@ -900,6 +900,13 @@ export interface DynastySave {
   seed: number;
   rng: number;
   cpuOnly: boolean;
+  /**
+   * Watch mode: no club of the owner's, the computer runs all of them, and the broadcast
+   * follows the whole league (one featured game a week gets the live call).
+   */
+  sandbox?: boolean;
+  /** Sandbox: the game of the week that gets the play-by-play call. */
+  featuredGameId?: string;
   players: Record<string, Player>;
   teams: Record<TeamId, TeamState>;
   coaches: Record<string, Coach>;
@@ -1246,6 +1253,8 @@ export interface CreateGameOpts {
   startingYear?: number;
   seed?: number;
   cpuOnly?: boolean;
+  /** Watch mode: implies cpuOnly, keeps the broadcast and steps one moment at a time. */
+  sandbox?: boolean;
 }
 
 export interface AdvanceOpts {

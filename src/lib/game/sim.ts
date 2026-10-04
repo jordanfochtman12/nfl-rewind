@@ -1022,7 +1022,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
 
   // Play-by-play for the owner's own games: each snap's stat events and booth notes become a line.
-  const logOn = !save.cpuOnly && (homeId === save.userTeamId || awayId === save.userTeamId || game.phase === "superBowl");
+  // In a sandbox, the featured game of the week and the Super Bowl get the call instead.
+  const logOn = save.sandbox
+    ? game.id === save.featuredGameId || game.phase === "superBowl"
+    : !save.cpuOnly && (homeId === save.userTeamId || awayId === save.userTeamId || game.phase === "superBowl");
   const log: PlayLog[] = [];
   let cur: OpenPlay | undefined;
   const flushPlay = () => {

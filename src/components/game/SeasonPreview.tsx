@@ -117,7 +117,7 @@ function ClubCard({ t, pv, open, onToggle }: { t: PreviewTeam; pv: SeasonPreview
   const save = useGameStore((s) => s.save)!;
   const year = save.year;
   const ink = clubInk(t.id, year);
-  const mine = t.id === save.userTeamId;
+  const mine = !save.sandbox && t.id === save.userTeamId;
   const games = gamesInSeason(year);
   const div = pv.divisions.find((d) => d.key === t.division);
   const place = div ? div.order.indexOf(t.id) + 1 : 0;
@@ -270,7 +270,9 @@ export function SeasonPreviewShow() {
   const pv = useMemo(() => buildSeasonPreview(save), [save]);
   const year = save.year;
   const games = gamesInSeason(year);
-  const u = save.userTeamId;
+  // A sandbox has no club of its own: nothing is highlighted and the owner's box doesn't air.
+  const u = save.sandbox ? pv.yours.teamId : save.userTeamId;
+  const hl = save.sandbox ? undefined : u;
   const T = new Map(pv.teams.map((t) => [t.id, t]));
   const [openIds, setOpenIds] = useState<Set<TeamId>>(() => new Set([u]));
   const [filter, setFilter] = useState<string>("all");
@@ -314,7 +316,7 @@ export function SeasonPreviewShow() {
                     </td>
                   </tr>
                 ) : null,
-                <tr key={t.id} className={`border-t border-white/5 ${t.id === u ? "bg-brass/10" : ""}`}>
+                <tr key={t.id} className={`border-t border-white/5 ${t.id === hl ? "bg-brass/10" : ""}`}>
                   <td className="bug-num px-2 py-1.5 text-lg text-white">{t.rank}</td>
                   <td className="px-2 py-1.5">
                     <button type="button" onClick={() => { setOpenIds((s) => new Set(s).add(t.id)); document.getElementById(`club-${t.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="flex items-center gap-2 text-left hover:text-brass">
@@ -362,7 +364,7 @@ export function SeasonPreviewShow() {
               {d.order.map((id, i) => {
                 const t = T.get(id)!;
                 return (
-                  <li key={id} className={`grid grid-cols-[1.25rem_auto_1fr_3.5rem_6.5rem] items-center gap-2 px-3 py-1.5 text-sm ${id === u ? "bg-brass/10" : ""}`}>
+                  <li key={id} className={`grid grid-cols-[1.25rem_auto_1fr_3.5rem_6.5rem] items-center gap-2 px-3 py-1.5 text-sm ${id === hl ? "bg-brass/10" : ""}`}>
                     <span className="bug-num text-white/70">{i + 1}</span>
                     <Logo id={id} size={22} />
                     <span className="truncate font-display font-bold uppercase italic">{nicknameOf(year, id)}</span>
@@ -386,7 +388,7 @@ export function SeasonPreviewShow() {
     node: (
       <div>
         <div className="mb-3 flex flex-wrap gap-1.5">
-          {["all", ...confs, T.get(u)!.division].map((f) => (
+          {["all", ...confs, ...(save.sandbox ? [] : [T.get(u)!.division])].map((f) => (
             <button key={f} type="button" onClick={() => setFilter(f)} className={`bx-chip min-h-8 px-3 text-[11px] ${filter === f ? "bx-chip-on" : ""}`}>
               {f === "all" ? "Every club" : f}
             </button>
@@ -733,22 +735,22 @@ export function SeasonPreviewShow() {
               );
             })}
           </ul>
-          <button type="button" onClick={() => document.getElementById("sp-yours")?.scrollIntoView({ behavior: "smooth" })} className="mt-4 flex items-center gap-2 text-left text-sm text-paper hover:text-brass">
+          {!save.sandbox && <button type="button" onClick={() => document.getElementById("sp-yours")?.scrollIntoView({ behavior: "smooth" })} className="mt-4 flex items-center gap-2 text-left text-sm text-paper hover:text-brass">
             <Logo id={u} size={26} />
             <span>
               <span className="font-display font-bold uppercase italic text-brass">Your club:</span> {pv.yours.headline}. Projected {mine.projW.toFixed(1)} wins, ranked {mine.rank}.
             </span>
-          </button>
+          </button>}
         </header>
         <StudioEpisode key={pv.episode.id} episode={pv.episode} year={year} />
         <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">
-          {segs.map((s) => (
+          {segs.filter((x) => !(save.sandbox && x.id === "yours")).map((s) => (
             <a key={s.id} href={`#sp-${s.id}`} className="bx-chip px-3 py-1.5 text-[12px]">
               {s.title.toUpperCase()}
             </a>
           ))}
         </nav>
-        {segs.map((s, i) => (
+        {segs.filter((x) => !(save.sandbox && x.id === "yours")).map((s, i) => (
           <Segment key={s.id} id={s.id} n={i + 1} title={s.title} kicker={s.kicker}>
             {s.node}
           </Segment>

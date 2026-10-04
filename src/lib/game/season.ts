@@ -56,6 +56,7 @@ import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCom
 import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
+import { pickFeaturedGame } from "./sandbox.ts";
 
 export function setLabel(save: DynastySave): void {
   const y = save.year;
@@ -159,7 +160,7 @@ function runFreeAgency(save: DynastySave): void {
 
 function startRegular(save: DynastySave): void {
   // The preview's calls go on the record before the records reset (it reads last season's).
-  if (!save.cpuOnly) save.previewPicks = freezePreviewPicks(save);
+  if (!save.cpuOnly || save.sandbox) save.previewPicks = freezePreviewPicks(save);
   for (const id of activeTeamIds(save.year)) resetSeasonRecord(save.teams[id]!);
   rebuildSchedule(save);
   save.waiverOrder = activeTeamIds(save.year).slice().sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!));
@@ -251,6 +252,7 @@ function simThisWeek(save: DynastySave): void {
   tickInjuries(save);
   processWaivers(save);
   const games = gamesInWeek(save, save.week);
+  pickFeaturedGame(save, games);
   for (const g of games) simGame(save, g);
   cpuInSeasonMoves(save);
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
@@ -361,7 +363,9 @@ function closeRelocation(save: DynastySave): void {
  * the deeper a save runs.
  */
 function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
-  const auto = opts.auto || s.cpuOnly;
+  // A sandbox steps one moment at a time like a dynasty does, so each Sunday and each pick can
+  // be watched; a plain cpu-only run (QA, batch sims) still rushes every phase.
+  const auto = opts.auto || (s.cpuOnly && !s.sandbox);
   switch (s.phase) {
     case "draft": {
       if (auto) {
@@ -389,9 +393,9 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.faOpened = true;
         break;
       }
-      if (team === s.userTeamId && opts.userPickPlayerId) {
+      if (team === s.userTeamId && !s.cpuOnly && opts.userPickPlayerId) {
         makeDraftPick(s, opts.userPickPlayerId);
-      } else if (team === s.userTeamId && !opts.userPickPlayerId) {
+      } else if (team === s.userTeamId && !s.cpuOnly && !opts.userPickPlayerId) {
         setLabel(s);
         return s;
       } else {

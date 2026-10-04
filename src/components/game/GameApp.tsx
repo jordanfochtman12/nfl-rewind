@@ -1,5 +1,5 @@
 import { DraftAnnouncerProvider } from "./DraftAnnouncer";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   ACTIVE_1966,
@@ -69,7 +69,7 @@ import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, s
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
-import { BottomLine, ClubPlate, NetworkBug, TabStrip } from "./Broadcast";
+import { BottomLine, ClubPlate, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
@@ -92,6 +92,7 @@ import { FreeAgencyNight } from "./FreeAgencyNight";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
+import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, gradeTone, Logo } from "./chrome";
 import {
   AwardsNight,
@@ -103,8 +104,10 @@ import {
 } from "./WinterNights";
 
 function TitleScreen() {
-  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated } = useGameStore();
+  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [watchReady, setWatchReady] = useState(false);
+  const watching = !!save?.sandbox;
   const [importError, setImportError] = useState('');
   const download = () => {
     const json = exportJson();
@@ -112,7 +115,7 @@ function TitleScreen() {
     const blob = new Blob([json], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `nfl-rewind-${save?.userTeamId ?? "dynasty"}-${save?.year ?? 1966}.json`;
+    a.download = `nfl-rewind-${save?.sandbox ? "watch" : save?.userTeamId ?? "dynasty"}-${save?.year ?? 1966}.json`;
     a.click();
   };
   const grade = save ? gradeDynasty(save) : null;
@@ -131,10 +134,27 @@ function TitleScreen() {
         <Btn kind="primary" onClick={() => setScreen("select")}>
           New dynasty <span aria-hidden>↗</span>
         </Btn>
+        <Btn
+          onClick={() => {
+            if (save && !watchReady) {
+              setWatchReady(true);
+              return;
+            }
+            newSandbox();
+          }}
+        >
+          {save && watchReady ? "Replace save and watch" : "Watch history"} <span aria-hidden>▸</span>
+        </Btn>
         <Btn onClick={continueGame} disabled={!save}>
           Continue
         </Btn>
       </div>
+      {watchReady && save && (
+        <p role="alert" className="text-sm text-brass">
+          Watching history starts a new league and replaces your current save. Export it first if you want to keep it.
+        </p>
+      )}
+      <p className="text-sm text-muted">Watch history: no team to run. The computer runs every club from 1966 on, and you watch it unfold.</p>
       <div className="next-file-actions">
         <Btn onClick={download} disabled={!save}>
           Export dynasty JSON
@@ -158,15 +178,15 @@ function TitleScreen() {
       {!hasHydrated && <p className="text-sm text-muted">Reading the file…</p>}
       {save && hasHydrated && (
         <p className="text-sm text-paper">
-          {displayName(save.year, save.userTeamId)} · {save.year} · {save.weekLabel}
-          {grade && grade.seasons > 0 ? ` · ${grade.letter}` : ""}
+          {watching ? "Watching history" : displayName(save.year, save.userTeamId)} · {save.year} · {save.weekLabel}
+          {!watching && grade && grade.seasons > 0 ? ` · ${grade.letter}` : ""}
           {bytes ? ` · ${formatBytes(bytes)}` : ""}
         </p>
       )}
       </div>
       <aside className="next-dynasty-card" aria-label="Your dynasty">
         <div className="next-card-label"><span>{save ? 'YOUR FRANCHISE' : 'THE OPENING CHAPTER'}</span><span className="next-status-dot" /></div>
-        {save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
+        {save && watching ? <><div className="next-resume-club"><div><span>{save.year} / {save.weekLabel}</span><h2>Watching history</h2></div></div><div className="next-resume-stats"><div><span>SEASONS</span><strong>{save.history.superBowls.length}</strong></div><div><span>LAST CHAMP</span><strong>{(() => { const b = save.history.superBowls.at(-1); return b ? nicknameOf(b.year, (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId) : '—'; })()}</strong></div></div><button className="next-card-action" onClick={continueGame}>Back to the broadcast <span aria-hidden>↗</span></button></> : save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
       </aside>
       </div>
       <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2027</span></div>
@@ -1012,7 +1032,7 @@ function Standings() {
                 {g.teams.map((t, i) => (
                   <tr
                     key={t.id}
-                    className={`cursor-pointer border-t border-line hover:bg-surface-2 ${i === 0 ? "lead-row" : ""} ${t.id === save.userTeamId ? "bg-club/20" : ""}`}
+                    className={`cursor-pointer border-t border-line hover:bg-surface-2 ${i === 0 ? "lead-row" : ""} ${!save.sandbox && t.id === save.userTeamId ? "bg-club/20" : ""}`}
                     onClick={() => openTeam(t.id)}
                   >
                     <td className="px-3 py-2">
@@ -1284,7 +1304,7 @@ function Stats() {
         >
           League
         </button>
-        <button
+        {!save.sandbox && <button
           type="button"
           onClick={() => setTeamFilter("mine")}
           className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
@@ -1292,7 +1312,7 @@ function Stats() {
           }`}
         >
           My club
-        </button>
+        </button>}
         {teams.map((id) => (
           <button
             key={id}
@@ -1444,11 +1464,11 @@ function History() {
   ] as const;
   return (
     <div className="space-y-8">
-      <FranchiseBook />
-      <TrophyCase />
-      <LegacySection />
-      <TimelineSection />
-      <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />
+      {!save.sandbox && <FranchiseBook />}
+      {!save.sandbox && <TrophyCase />}
+      {!save.sandbox && <LegacySection />}
+      {save.sandbox ? <HistoryCheck /> : <TimelineSection />}
+      {!save.sandbox && <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />}
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
       <section>
@@ -1696,6 +1716,32 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "hof", label: "Hall of Fame" },
 ];
 
+const WATCH_TABS: { id: Tab; label: string }[] = [
+  { id: "office", label: "Watch" },
+  { id: "primetime", label: "Primetime" },
+  { id: "standings", label: "Standings" },
+  { id: "league", label: "League" },
+  { id: "stats", label: "Stats" },
+  { id: "draft", label: "Draft" },
+  { id: "history", label: "History" },
+  { id: "team", label: "Team History" },
+  { id: "hof", label: "Hall of Fame" },
+];
+
+/** The sandbox's office tab: the league desk, or whatever night the calendar is on. */
+function WatchOffice({ event }: { event: boolean }) {
+  const save = useGameStore((s) => s.save)!;
+  if (save.phase === "preseason")
+    return <WatchMoves title="Training camp" kinds={["cut", "waive", "claim", "sign"]} blurb="Cut-down week around the league. Every club trims to the limit, and the season preview is up on Primetime." />;
+  if (event) return <EventPane />;
+  if (save.phase === "draft") return <DraftNight />;
+  if (save.phase === "freeAgency")
+    return <WatchMoves title={save.year < 1994 ? "Rozelle-rule winter" : "Free agency"} kinds={["sign", "trade"]} blurb={save.year < 1994 ? "Stars rarely move in this era. Watch who signs where." : "The market is open. Watch who signs where."} />;
+  if (save.phase === "deadline")
+    return <WatchMoves title={save.year < 1994 ? "Trading week" : "Trade deadline"} kinds={["trade"]} blurb="The window is open around the league. Here's who dealt." />;
+  return <WatchDesk />;
+}
+
 function PlayShell() {
   const { save, tab, setTab, resign, exportJson } = useGameStore();
   const event = useMemo(() => {
@@ -1706,6 +1752,11 @@ function PlayShell() {
       ) || weekIsInTheBooks(save)
     );
   }, [save]);
+  // A sandbox has no roster, depth, staff, market or schedule tabs; land on the desk instead.
+  const staleTab = !!save?.sandbox && !WATCH_TABS.some((t) => t.id === tab);
+  useEffect(() => {
+    if (staleTab) setTab("office");
+  }, [staleTab, setTab]);
   if (!save) return <TitleScreen />;
   const download = () => {
     const blob = new Blob([exportJson()], { type: "application/json" });
@@ -1714,19 +1765,23 @@ function PlayShell() {
     a.download = `nfl-rewind-${save.userTeamId}-${save.year}.json`;
     a.click();
   };
+  const watch = !!save.sandbox;
+  const tabs = watch ? WATCH_TABS : TABS;
+  const champ = save.history.superBowls.at(-1);
+  const deskId = watch && champ ? ((champ.homeScore >= champ.awayScore ? champ.homeId : champ.awayId) as TeamId) : save.userTeamId;
   const showDraft = save.phase === "draft" && !event;
   const showFa = save.phase === "freeAgency" && !event;
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <DraftAnnouncerProvider>
-    <ClubDesk id={save.userTeamId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
+    <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
       <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
       <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
             <NetworkBug className="max-md:hidden" />
-            <ClubPlate save={save} />
+            {watch ? <WatchPlate save={save} /> : <ClubPlate save={save} />}
           </div>
           <div className="flex shrink-0 gap-2">
             <Btn onClick={download} className="min-h-9 px-4 text-[13px] max-sm:hidden">
@@ -1737,24 +1792,30 @@ function PlayShell() {
             </Btn>
           </div>
         </div>
-        <TabStrip tabs={TABS} active={tab} onPick={setTab} />
+        <TabStrip tabs={tabs} active={tab} onPick={setTab} />
       </header>
+      {watch && (
+        <div className="mx-auto max-w-6xl px-3 pt-4 sm:px-4">
+          <WatchBar />
+        </div>
+      )}
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
       <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
-        <div className="next-section-context"><span>FRANCHISE / {TABS.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
-        {(event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
-        {event && tab === "office" ? <EventPane /> : null}
+        <div className="next-section-context"><span>{watch ? "LEAGUE" : "FRANCHISE"} / {tabs.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
+        {watch && tab === "office" ? <WatchOffice event={event} /> : null}
+        {!watch && (event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
+        {!watch && event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
-        {showDraft && (tab === "draft" || tab === "office") ? <DraftNight /> : null}
-        {showFa && tab === "office" ? <FreeAgencyNight /> : null}
-        {showDeadline && tab === "office" ? <DeadlineNight /> : null}
-        {!event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
-        {tab === "roster" && <Roster />}
-        {tab === "depth" && <Depth />}
-        {tab === "staff" && <Staff />}
-        {tab === "market" && <MarketDesk />}
+        {showDraft && (tab === "draft" || (!watch && tab === "office")) ? <DraftNight /> : null}
+        {!watch && showFa && tab === "office" ? <FreeAgencyNight /> : null}
+        {!watch && showDeadline && tab === "office" ? <DeadlineNight /> : null}
+        {!watch && !event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
+        {!watch && tab === "roster" && <Roster />}
+        {!watch && tab === "depth" && <Depth />}
+        {!watch && tab === "staff" && <Staff />}
+        {!watch && tab === "market" && <MarketDesk />}
         {tab === "standings" && <Standings />}
-        {tab === "schedule" && <Schedule />}
+        {!watch && tab === "schedule" && <Schedule />}
         {tab === "stats" && <Stats />}
         {tab === "draft" && !showDraft && <DraftNight />}
         {tab === "history" && <History />}

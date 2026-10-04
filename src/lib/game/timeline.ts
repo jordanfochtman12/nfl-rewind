@@ -169,7 +169,7 @@ export function recordTimeline(save: DynastySave): TimelineEntry | undefined {
 /** This week in real history, for the owner's game: "In real life, GB 24, BAL 3." */
 export function realLine(save: DynastySave, g: { homeId: string; awayId: string; realHome?: number; realAway?: number }): string | undefined {
   if (g.realHome === undefined || g.realAway === undefined || g.realHome < 0) return undefined;
-  const us = save.userTeamId;
+  const us = !save.sandbox && (g.homeId === save.userTeamId || g.awayId === save.userTeamId) ? save.userTeamId : (g.homeId as TeamId);
   const home = g.homeId === us;
   const ours = home ? g.realHome : g.realAway;
   const theirs = home ? g.realAway : g.realHome;

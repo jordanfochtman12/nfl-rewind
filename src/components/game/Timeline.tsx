@@ -33,15 +33,15 @@ export function TimelineCard({ entry }: { entry: TimelineEntry }) {
     <div className="space-y-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <Side label="Real history" champ={entry.realChamp} runner={entry.realRunnerUp} score={entry.realScore} year={entry.year} tone="text-muted" />
-        <Side label="Your timeline" champ={entry.simChamp} runner={entry.simRunnerUp} score={entry.simScore} year={entry.year} tone="text-brass" />
+        <Side label={save.sandbox ? "This timeline" : "Your timeline"} champ={entry.simChamp} runner={entry.simRunnerUp} score={entry.simScore} year={entry.year} tone="text-brass" />
       </div>
-      <p className="text-sm">
+      {!save.sandbox && <p className="text-sm">
         <span className="font-display font-bold uppercase italic text-white">{displayName(entry.year, save.userTeamId)}:</span>{" "}
         <span className="text-paper">
           {rec(entry.user.sim)} here{entry.user.simPlayoffs ? ", in the playoffs" : ""}
           {entry.user.real ? ` · ${rec(entry.user.real)} in real life${entry.user.realPlayoffs ? ", in the playoffs" : ""}` : ""}.
         </span>
-      </p>
+      </p>}
       {entry.notes.length > 0 && (
         <ul className="space-y-1.5">
           {entry.notes.map((n) => (

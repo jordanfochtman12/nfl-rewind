@@ -437,7 +437,7 @@ export function weekPrimetime(save: DynastySave): void {
       else save.lastPow.afc = best.id;
     }
   }
-  const injured = Object.values(save.players).find((p) => p.injuredWeeks > 0 && p.teamId === save.userTeamId);
+  const injured = save.sandbox ? undefined : Object.values(save.players).find((p) => p.injuredWeeks > 0 && p.teamId === save.userTeamId);
   if (injured) {
     addNews(save, {
       kind: "injury",

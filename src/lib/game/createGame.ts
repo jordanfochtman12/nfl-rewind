@@ -33,7 +33,8 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   const startingYear = o.startingYear ?? STARTING_YEAR;
   const seed = o.seed ?? (startingYear * 97 + o.userTeamId.charCodeAt(0));
   const save = blankState(o.userTeamId, startingYear, seed);
-  save.cpuOnly = o.cpuOnly ?? false;
+  save.cpuOnly = o.cpuOnly ?? !!o.sandbox;
+  if (o.sandbox) save.sandbox = true;
   for (const id of ACTIVE_1966) {
     save.teams[id].active = startingYear >= 1966;
   }
@@ -50,13 +51,21 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   save.phase = "draft";
   save.week = 0;
   setLabel(save);
-  addNews(save, {
-    kind: "headline",
-    headline: `A new dynasty in ${displayName(startingYear, o.userTeamId)}`,
-    body: `The ${startingYear} draft is open. Starr, Unitas, Namath, Sayers, Butkus — and a board with Tommy Nobis at the top. Rewrite football history.`,
-    teamIds: [o.userTeamId],
-    playerIds: [],
-  });
+  addNews(save, o.sandbox
+    ? {
+        kind: "headline",
+        headline: `The ${startingYear} season is about to begin`,
+        body: `Two leagues, ${ACTIVE_1966.length} clubs, and a draft board with Tommy Nobis at the top. Starr, Unitas, Namath, Sayers, Butkus. Sit back and watch it unfold.`,
+        teamIds: [],
+        playerIds: [],
+      }
+    : {
+        kind: "headline",
+        headline: `A new dynasty in ${displayName(startingYear, o.userTeamId)}`,
+        body: `The ${startingYear} draft is open. Starr, Unitas, Namath, Sayers, Butkus — and a board with Tommy Nobis at the top. Rewrite football history.`,
+        teamIds: [o.userTeamId],
+        playerIds: [],
+      });
   normalizeJerseys(save);
   save.jerseyEra = true;
   return save;

@@ -145,9 +145,10 @@ export function DraftNight() {
     : board[0]
       ? save.players[board[0].playerId]
       : undefined;
-  const isUser = save.phase === "draft" && onClock === save.userTeamId;
-  const myPicksLeft = draftQueue(save).slice(save.draftPickIndex).some((p) => p.owner === save.userTeamId);
-  const cpuUp = save.phase === "draft" && !!onClock && onClock !== save.userTeamId;
+  // In a sandbox every club is on autopilot; the room just watches the board.
+  const isUser = !save.sandbox && save.phase === "draft" && onClock === save.userTeamId;
+  const myPicksLeft = !save.sandbox && draftQueue(save).slice(save.draftPickIndex).some((p) => p.owner === save.userTeamId);
+  const cpuUp = save.phase === "draft" && !!onClock && (save.sandbox || onClock !== save.userTeamId);
   const done = save.phase !== "draft" || !onClock;
   const needs = onClock
     ? [...new Set(rosterOf(save, onClock).sort((a, b) => a.ovr - b.ovr).slice(0, 5).map((p) => p.pos))].join(" · ")
@@ -183,10 +184,10 @@ export function DraftNight() {
     <div className="space-y-4">
       <TalksReminder />
       {announcer.controls}
-      <section className="hq-panel p-4" aria-label="Prospect comparison">
+      {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
         <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades reflect scouting uncertainty.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
         {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{visibleOvr(p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Scout grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
-      </section>
+      </section>}
       <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
         <FilmStill still="draft" veil="full" />
         <div className="relative space-y-4 px-5 py-5">
@@ -224,7 +225,7 @@ export function DraftNight() {
                 const overallPickNo = (rnd - 1) * teamsN + i + 1;
                 const takenPick = taken.find((pr) => save.players[pr.playerId]?.draftPick === overallPickNo);
                 const takenPlayer = takenPick ? save.players[takenPick.playerId] : undefined;
-                const mine = id === save.userTeamId;
+                const mine = !save.sandbox && id === save.userTeamId;
                 const onNow = i === pickInRound - 1 && !done;
                 return (
                   <li
@@ -275,7 +276,7 @@ export function DraftNight() {
             </div>
           )}
 
-          {cpuUp && !myPicksLeft && (
+          {cpuUp && !myPicksLeft && !save.sandbox && (
             <p className="rounded-md border border-brass/40 bg-brass/10 px-4 py-3 text-sm">
               {sessionOf(save) === "nfl" && originalLeague(save.userTeamId) === "AFL"
                 ? "This is the NFL's draft, so your club doesn't pick here. In 1966 the leagues still drafted separately, and the AFL draft starts right after this one. Jump to my pick takes you straight to your first selection."
@@ -291,7 +292,7 @@ export function DraftNight() {
                 <Btn kind="primary" onClick={() => step({})}>
                   Watch this pick
                 </Btn>
-                <Btn onClick={() => step({ simToUser: true })}>Jump to my pick</Btn>
+                {!save.sandbox && <Btn onClick={() => step({ simToUser: true })}>Jump to my pick</Btn>}
                 <Btn onClick={() => setPaused((p) => !p)}>{paused ? "Resume clock" : "Hold clock"}</Btn>
               </>
             )}

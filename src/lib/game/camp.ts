@@ -152,14 +152,14 @@ export function resolveCamp(save: DynastySave): CampReport {
   const battles = battlesFor(save, save.userTeamId);
   const camp: CampReport = { year: save.year, cuts: cuts.slice(0, 18), injuries, battles };
   save.camp = camp;
-  const ours = injuries.filter((x) => x.teamId === save.userTeamId);
+  const ours = save.sandbox ? [] : injuries.filter((x) => x.teamId === save.userTeamId);
   addNews(save, {
     kind: "headline",
     headline: `${save.year} camp opens`,
     body: ours.length
       ? `${displayName(save.year, save.userTeamId)} already have names in the training room.`
       : "Cuts, nicks, and one job per jersey. September is a count, not a feeling.",
-    teamIds: [save.userTeamId],
+    teamIds: save.sandbox ? [] : [save.userTeamId],
     playerIds: ours.map((x) => x.playerId),
   });
   return camp;

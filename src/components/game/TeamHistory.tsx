@@ -51,7 +51,7 @@ export function TeamHistory({ records }: { records: (teamId: TeamId) => ReactNod
   const nums = retiredNumbers(save, club);
   const ring = ringOfHonor(save, club);
   const hof = franchiseHallOfFamers(save, club);
-  const waiting = club === save.userTeamId ? legacyCandidates(save) : [];
+  const waiting = !save.sandbox && club === save.userTeamId ? legacyCandidates(save) : [];
   const seasons = sum.seasons.slice().reverse();
   const firstBook = sum.seasons[0]?.year;
   const clubs = activeTeamIds(year)

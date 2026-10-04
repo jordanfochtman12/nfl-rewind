@@ -96,8 +96,9 @@ export function LiveBroadcast({
   canCall?: boolean;
 }) {
   const save = useGameStore((s) => s.save)!;
-  const us = save.userTeamId;
   const home = game.homeId as TeamId;
+  // Win probability is told from the owner's side when it's his game, else from the home side.
+  const us = !save.sandbox && (game.homeId === save.userTeamId || game.awayId === save.userTeamId) ? save.userTeamId : home;
   const away = game.awayId as TeamId;
   const [i, setI] = useState(Math.min(startAt, Math.max(0, log.length - 1)));
   const [playing, setPlaying] = useState(true);

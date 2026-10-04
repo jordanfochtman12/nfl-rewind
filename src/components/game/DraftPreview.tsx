@@ -71,7 +71,7 @@ export function DraftPreviewShow() {
         {d.mock.map((m) => {
           const id = m.actualId ?? m.mockId;
           const p = id ? P(id) : undefined;
-          const mine = m.teamId === save.userTeamId;
+          const mine = !save.sandbox && m.teamId === save.userTeamId;
           return (
             <li
               key={m.overall}
@@ -106,7 +106,7 @@ export function DraftPreviewShow() {
     ),
   });
 
-  if (d.warRoom.length) {
+  if (d.warRoom.length && !save.sandbox) {
     segs.push({
       id: "war",
       title: `Your war room · ${displayName(save.year, save.userTeamId)}`,

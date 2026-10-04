@@ -242,3 +242,4 @@ export { draftPreview, collegeLine, groupOf, POS_GROUPS, type DraftPreviewData, 
 export { realLine, realPostseason, realRecords, recordTimeline } from "./timeline.ts";
 export { staffPlan, staffSystems, playCallers, playbookOf } from "./gameplans.ts";
 export { franchiseTrophies, franchiseSeasons, franchiseSummary, jerseyFor, coachHome, hofWriteUp, coachWriteUp, franchiseHallOfFamers, honoredCount, type JerseyLook, type Trophy } from "./teamHistory.ts";
+export { featuredOf, featuredScore, pickFeaturedGame, ownerClub } from "./sandbox.ts";

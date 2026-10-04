@@ -12,7 +12,7 @@ export function findGame(save: DynastySave, id: string): GameResult | undefined 
   return save.schedule.find((g) => g.id === id) ?? save.playoffGames.find((g) => g.id === id);
 }
 
-const mine = (save: DynastySave, g: GameResult) => g.homeId === save.userTeamId || g.awayId === save.userTeamId;
+const mine = (save: DynastySave, g: GameResult) => !save.sandbox && (g.homeId === save.userTeamId || g.awayId === save.userTeamId);
 
 /** The owner's game that this step played, if any (the one a call could rewind). */
 export function ownerGameJustPlayed(prev: DynastySave, next: DynastySave): string | undefined {

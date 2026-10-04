@@ -104,7 +104,7 @@ export function LeagueDirectory() {
                               key={id}
                               type="button"
                               onClick={() => openTeam(id)}
-                              className={`flex min-h-11 items-center gap-2 border px-2 py-1.5 text-left hover:border-brass/60 ${id === save.userTeamId ? "border-brass/60 bg-brass/10" : "border-white/10 bg-black/40"}`}
+                              className={`flex min-h-11 items-center gap-2 border px-2 py-1.5 text-left hover:border-brass/60 ${!save.sandbox && id === save.userTeamId ? "border-brass/60 bg-brass/10" : "border-white/10 bg-black/40"}`}
                             >
                               <Logo id={id} size={26} year={year} />
                               <span className="min-w-0">
@@ -210,7 +210,7 @@ export function LeagueDirectory() {
               {players.slice(0, shown).map((p) => {
                 const retired = p.teamId === "retired" || p.teamId === "hof";
                 return (
-                  <tr key={p.id} className={`border-t border-white/5 ${p.teamId === save.userTeamId ? "bg-brass/5" : ""}`}>
+                  <tr key={p.id} className={`border-t border-white/5 ${!save.sandbox && p.teamId === save.userTeamId ? "bg-brass/5" : ""}`}>
                     <td className="px-2 py-1">
                       <button type="button" onClick={() => openProfile(p.id)} className="min-h-10 text-left font-display text-sm font-bold uppercase italic text-white hover:text-brass">
                         {playerName(p)}

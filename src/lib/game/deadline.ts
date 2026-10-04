@@ -107,7 +107,7 @@ export function openDeadline(save: DynastySave): DeadlineSession {
   const offers: TradeOffer[] = [];
   const clubs = activeTeamIds(save.year).filter((id) => id !== save.userTeamId);
   const shuffled = shuffle(save, clubs);
-  for (const id of shuffled) {
+  for (const id of save.cpuOnly ? [] : shuffled) {
     if (offers.length >= 3) break;
     const o = tryOffer(save, id, save.userTeamId);
     if (!o) continue;
@@ -129,11 +129,14 @@ export function openDeadline(save: DynastySave): DeadlineSession {
   addNews(save, {
     kind: "headline",
     headline: save.year < 1994 ? `${save.year} trading week` : `${save.year} trade deadline`,
-    body:
-      save.year < 1994
+    body: save.sandbox
+      ? cpuMoves.length
+        ? `The phones are busy around the league. ${cpuMoves.length === 1 ? "One deal" : `${cpuMoves.length} deals`} so far.`
+        : "The phones are quiet around the league. Nobody wants to blink first."
+      : save.year < 1994
         ? "Rozelle-rule winter still hangs over stars. Role players move. The phone works if you pick it up."
         : "The window is a day. After this, the roster you have is the roster you take to January.",
-    teamIds: [save.userTeamId],
+    teamIds: save.sandbox ? [] : [save.userTeamId],
     playerIds: [],
   });
   return session;

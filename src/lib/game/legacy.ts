@@ -171,7 +171,7 @@ function reissueWearers(save: DynastySave, teamId: TeamId, n: number, honoree: s
     if (p.id === honoree || p.jersey !== n) continue;
     const was = p.jersey;
     p.jersey = carryJersey(save, p, teamId);
-    if (teamId === save.userTeamId) {
+    if (teamId === save.userTeamId && !save.sandbox) {
       addNews(save, {
         kind: "transaction",
         headline: `${playerName(p)} gives up #${was}`,
@@ -263,7 +263,7 @@ export function honorInductees(save: DynastySave, playerIds: string[]): void {
     const p = save.players[id];
     if (!p) continue;
     const club = signatureClub(p);
-    if (!club || club.teamId === save.userTeamId || !save.teams[club.teamId]) continue;
+    if (!club || (club.teamId === save.userTeamId && !save.cpuOnly) || !save.teams[club.teamId]) continue;
     if (club.seasons >= 4) inductRing(save, id, club.teamId, true);
     if (club.seasons >= 6) retireNumber(save, id, club.teamId, true);
   }
@@ -278,7 +278,7 @@ export function honorRetirees(save: DynastySave, playerIds: string[]): void {
     const p = save.players[id];
     if (!p) continue;
     const club = signatureClub(p);
-    if (!club || club.teamId === save.userTeamId || !save.teams[club.teamId] || club.seasons < 8) continue;
+    if (!club || (club.teamId === save.userTeamId && !save.cpuOnly) || !save.teams[club.teamId] || club.seasons < 8) continue;
     const c = legacyCase(save, p, club.teamId);
     if (!c) continue;
     const pb = (p.honors?.proBowl ?? []).filter((y) => clubSeasons(p, club.teamId).some((s) => s.year === y)).length;

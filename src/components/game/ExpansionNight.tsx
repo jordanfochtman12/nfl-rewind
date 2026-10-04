@@ -30,7 +30,7 @@ export function ExpansionNight() {
   if (!exp || !spec) return null;
 
   const onClock = expansionOnClock(save);
-  const userPicking = !exp.done && onClock === save.userTeamId;
+  const userPicking = !save.sandbox && !exp.done && onClock === save.userTeamId;
   const capTotal = exp.pickCap * Math.max(1, exp.newTeamIds.length);
   const open = remainingExposed(save);
   const relocate = spec.kind === "relocate";

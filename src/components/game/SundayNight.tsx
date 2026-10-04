@@ -17,9 +17,11 @@ export function SundayNight() {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
   const slate = slateOf(save);
-  const mine =
-    slate.find((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId) ??
-    save.playoffGames.filter((g) => g.played && (g.homeId === save.userTeamId || g.awayId === save.userTeamId)).at(-1);
+  // In a sandbox the week's featured game takes the owner's seat.
+  const mine = save.sandbox
+    ? slate.find((g) => g.id === save.featuredGameId) ?? slate.find((g) => g.log?.length)
+    : slate.find((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId) ??
+      save.playoffGames.filter((g) => g.played && (g.homeId === save.userTeamId || g.awayId === save.userTeamId)).at(-1);
   const rest = slate.filter((g) => g.id !== mine?.id);
   const canLive = !!mine?.log?.length && save.liveOn !== false && !wasWatched(mine.id);
   const [live, setLive] = useState(canLive);
@@ -69,9 +71,11 @@ export function SundayNight() {
           <p className="font-display text-xs tracking-[0.4em] text-brass">
             {playoff ? save.weekLabel.toUpperCase() : `WEEK ${save.week}`}
           </p>
-          <h2 className="font-display text-4xl sm:text-5xl">{mine ? "Final" : "No game this weekend"}</h2>
+          <h2 className="font-display text-4xl sm:text-5xl">{save.sandbox ? (mine ? `Game of the week: ${displayName(save.year, mine.awayId as TeamId)} at ${displayName(save.year, mine.homeId as TeamId)}` : "Around the league") : mine ? "Final" : "No game this weekend"}</h2>
           <p className="max-w-xl text-paper">
-            {mine
+            {save.sandbox
+              ? `${mine ? `${mine.awayScore}–${mine.homeScore}, final. ` : ""}Every score from the weekend is below, next to how it really went.`
+              : mine
               ? "Sit with the film. The next Sunday is not on the clock until you say so."
               : byeNote(save)}
           </p>
@@ -118,8 +122,13 @@ export function SundayNight() {
                     <Logo id={away} size={28} year={save.year} />
                     <span className="text-sm">{displayName(save.year, away)}</span>
                   </span>
-                  <span className="bug-num shrink-0 whitespace-nowrap text-2xl">
-                    {g.awayScore}–{g.homeScore}
+                  <span className="shrink-0 text-center">
+                    <span className="bug-num block whitespace-nowrap text-2xl">
+                      {g.awayScore}–{g.homeScore}
+                    </span>
+                    {save.sandbox && g.realHome !== undefined && g.realAway !== undefined && g.realHome >= 0 ? (
+                      <span className="tabular block text-[10px] text-subtle">real {g.realAway}–{g.realHome}</span>
+                    ) : null}
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="text-sm">{displayName(save.year, home)}</span>

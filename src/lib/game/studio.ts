@@ -212,7 +212,7 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
   const previous = [...(save.primetimeArchive ?? []), ...(save.primetime ? [save.primetime] : [])].filter((s) => s.year === year && s.episode?.id !== id).at(-1);
   const season = save.schedule.filter((g) => g.year === year && g.played && g.phase === "regular");
   const featured = games.slice().sort((a, b) => {
-    const w = (g: GameResult) => 45 - Math.abs(g.homeScore - g.awayScore) * 2 + (g.ot ? 35 : 0) + (g.rivalry ? 12 : 0) + (involved(g, save.userTeamId) ? 6 : 0);
+    const w = (g: GameResult) => 45 - Math.abs(g.homeScore - g.awayScore) * 2 + (g.ot ? 35 : 0) + (g.rivalry ? 12 : 0) + (!save.sandbox && involved(g, save.userTeamId) ? 6 : 0);
     return w(b) - w(a);
   });
   const lead = featured[0];

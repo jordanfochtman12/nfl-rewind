@@ -51,6 +51,10 @@ interface GameStore {
   openTeam: (id: TeamId) => void;
   closeTeam: () => void;
   newGame: (teamId: TeamId) => void;
+  /** Watch mode: the computer runs every club and the owner just watches history unfold. */
+  newSandbox: () => void;
+  /** Sandbox fast-forward. Runs from any phase; the featured games still get their broadcast. */
+  watchSim: (target: "playoffs" | "superBowl" | "nextSeason") => void;
   continueGame: () => void;
   step: (opts?: AdvanceOpts) => void;
   simWeek: () => void;
@@ -162,6 +166,24 @@ export const useGameStore = create<GameStore>()(
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
         set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+      },
+      newSandbox: () => {
+        // The engine wants a club id for the owner's seat; in a sandbox nothing treats it as anyone's.
+        const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
+        set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+      },
+      watchSim: (target) => {
+        const { save } = get();
+        if (!save || save.phase === "complete") return;
+        const year = save.year;
+        const done = (s: DynastySave) =>
+          target === "playoffs"
+            ? s.year > year || ["playoffs", "superBowl", "awards", "proBowl", "retirement", "hof", "carousel", "relocation", "expansion"].includes(s.phase)
+            : target === "superBowl"
+              ? s.year > year || (s.phase === "superBowl" && !!s.superBowl?.played) || s.phase === "awards"
+              : s.year > year && s.phase === "draft";
+        // The live call belongs to the week it aired; a jump ahead leaves it in the archive.
+        set({ save: simUntil(save, done), rewind: null });
       },
       continueGame: () => {
         const { save } = get();

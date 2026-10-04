@@ -261,7 +261,8 @@ const GROUP_WORDS: Record<PreviewTeam["grades"][number]["key"], { good: string; 
 export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   const year = save.year;
   const ids = activeTeamIds(year).filter((id) => save.teams[id]);
-  const u = save.userTeamId;
+  // In a sandbox nobody's club gets the home-team treatment.
+  const u = (save.sandbox ? "" : save.userTeamId) as TeamId;
   const name = (id: TeamId) => displayName(year, id);
   const nick = (id: TeamId) => nicknameOf(year, id);
   const games = gamesInSeason(year);
@@ -850,20 +851,22 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
 
   /* -------------------------------------------------- your club */
 
-  const mine = T.get(u)!;
+  // A sandbox has no club of its own; the data still describes the favorite, but no chapter airs.
+  const mine = T.get(u) ?? [...T.values()].sort((a, b) => a.rank - b.rank)[0]!;
+  const me = mine.id;
   const gradeSorted = mine.grades.slice().sort((a, b) => a.pct - b.pct);
   const yours = {
-    teamId: u,
+    teamId: me,
     headline:
       mine.tier === "Contender"
-        ? `The ${nick(u)} are a Super Bowl contender`
+        ? `The ${nick(me)} are a Super Bowl contender`
         : mine.tier === "Playoff hopeful"
-          ? `The ${nick(u)} should be playing in January`
+          ? `The ${nick(me)} should be playing in January`
           : mine.tier === "In the mix"
-            ? `The ${nick(u)} are a coin flip`
+            ? `The ${nick(me)} are a coin flip`
             : mine.tier === "Long shot"
-              ? `The ${nick(u)} need things to break their way`
-              : `A building year for the ${nick(u)}`,
+              ? `The ${nick(me)} need things to break their way`
+              : `A building year for the ${nick(me)}`,
     lines: [
       `Projected ${mine.projW.toFixed(1)}-${mine.projL.toFixed(1)}, ranked ${ordinal(mine.rank)} of ${ids.length}. The range runs from ${mine.range[0]} to ${mine.range[1]} wins.`,
       `${pct(mine.playoffPct)} to make the playoffs, ${pct(mine.divisionPct)} to win the ${mine.division}, ${pct(mine.titlePct)} to win it all.`,
@@ -1332,7 +1335,7 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   }
   if (features[2]) featChap(features[2]);
   if (bold.length) chap("bold", "BOLD PREDICTIONS", v("bt", ["On the record", "Hold us to it", "Calls we'll regret"]), bold.slice(0, 2).flatMap((b) => b.teamIds.slice(0, 1)), [H(v("bi", P.boldIntro)), ...bold.slice(0, 5).map((b, i) => (i % 2 ? H(b.text) : A(b.text)))]);
-  chap("yours", "YOUR CLUB", yours.headline, [u], [
+  if (!save.sandbox) chap("yours", "YOUR CLUB", yours.headline, [u], [
     H(`${v("yo", ["Now to the", "Let's talk about the", "And then there's the", "Time for the"])} ${name(u)}. ${yours.lines[0]}`),
     A(`${yours.lines[1]} ${yours.keys.join(" ")} ${v("yc", ["The concern:", "What worries me:", "The question:"])} ${yours.concerns[0]?.toLowerCase() ?? "depth"}`),
     R(`${mine.toughStretch ? `Circle this: ${mine.toughStretch}. ` : ""}${mine.newcomers.length ? `${tic("REPORTER", "yours")} ${playerName(save.players[mine.newcomers[0]!]!)} is the newcomer the staff is most excited about.` : "Same core, one more year together."}`),

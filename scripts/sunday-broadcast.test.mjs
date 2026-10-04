@@ -199,3 +199,22 @@ test("every broadcaster gets a voice of their own that matches them", async () =
   const [a, b] = desk.slice(0, 2).map((p) => one.get(p.key));
   assert.ok(a.pitch !== b.pitch || a.rate !== b.rate);
 });
+
+test("watch history: every club is the computer's, picks come one at a time, and one game a week gets the call", async () => {
+  const { createNewGame: make, advance: step } = await import("../src/lib/game/index.ts");
+  let s = make({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: 7 });
+  assert.equal(s.sandbox, true);
+  assert.equal(s.cpuOnly, true);
+  const before = s.draftPickIndex;
+  s = step(s, {});
+  assert.equal(s.phase, "draft");
+  assert.equal(s.draftPickIndex, before + 1, "a sandbox step reads one pick, even when the placeholder club is on the clock");
+  s = step(s, { auto: true });
+  for (let i = 0; i < 40 && !(s.phase === "regular" && s.week >= 3); i++) s = step(s, s.phase === "freeAgency" ? { closeFa: true } : {});
+  const played = s.schedule.filter((g) => g.year === 1966 && g.played);
+  assert.ok(played.length > 0);
+  const logged = played.filter((g) => g.log?.length);
+  const weeks = new Set(played.map((g) => g.week));
+  assert.equal(logged.length, weeks.size, "exactly one featured broadcast per week played");
+  assert.ok(!s.news.some((n) => /^A new dynasty/.test(n.headline)), "no owner's-club headline in a sandbox");
+});

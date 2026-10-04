@@ -60,6 +60,26 @@ export function ClubPlate({ save, right }: { save: DynastySave; right?: ReactNod
   );
 }
 
+/** The sandbox's plate: no club of its own, just the league, the year and the week. */
+export function WatchPlate({ save }: { save: DynastySave }) {
+  return (
+    <div className="flex min-w-0 items-stretch">
+      <div
+        className="flex min-w-0 items-center gap-3 border border-white/10 bg-gradient-to-b from-[#1e2432] to-[#0a0d14] py-1 pl-4 pr-4"
+        style={{ transform: "skewX(-12deg)", boxShadow: "inset 0 1px 0 #ffffff22" }}
+      >
+        <div className="min-w-0" style={{ transform: "skewX(12deg)" }}>
+          <p className="truncate font-display text-[15px] font-bold uppercase italic leading-none tracking-wide text-white">Watch history</p>
+          <p className="mt-1 flex items-center gap-2 font-display text-xs font-semibold uppercase italic leading-none">
+            <span className="bg-brass px-1.5 py-0.5 text-[#140f00]">{save.year}</span>
+            <span className="truncate text-chrome">{save.weekLabel}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Broadcast menu strip. Skewed segments; the live tab is lit in network red with a gold sill. */
 export function TabStrip<T extends string>({
   tabs,
@@ -72,7 +92,7 @@ export function TabStrip<T extends string>({
 }) {
   return (
       <nav className="next-navigation relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
-        <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Franchise</span><select aria-label="Franchise section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
+        <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Section</span><select aria-label="Section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
         <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex">
         {tabs.map((t) => {
           const on = t.id === active;

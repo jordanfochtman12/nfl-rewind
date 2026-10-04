@@ -39,9 +39,9 @@ function Name({ id }: { id?: string }) {
   return <PlayerLink player={p} className="inline min-h-0" />;
 }
 
-function ours(save: { userTeamId: TeamId; players: Record<string, Player> }, id?: string): boolean {
+function ours(save: { userTeamId: TeamId; sandbox?: boolean; players: Record<string, Player> }, id?: string): boolean {
   const p = id ? save.players[id] : undefined;
-  return !!p && (p.teamId === save.userTeamId || p.userTied);
+  return !save.sandbox && !!p && (p.teamId === save.userTeamId || p.userTied);
 }
 
 export function AwardsNight() {
@@ -124,14 +124,14 @@ export function ProBowlNight() {
   const home = (g.homeRoster ?? []).map((id) => save.players[id]).filter(Boolean) as Player[];
   const away = (g.awayRoster ?? []).map((id) => save.players[id]).filter(Boolean) as Player[];
   const mvp = g.mvpPlayerId ? save.players[g.mvpPlayerId] : undefined;
-  const yours = [...home, ...away].filter((p) => p.teamId === save.userTeamId || p.userTied);
+  const yours = save.sandbox ? [] : [...home, ...away].filter((p) => p.teamId === save.userTeamId || p.userTied);
   const Col = ({ title, score, rows }: { title: string; score: number; rows: Player[] }) => (
     <section className="rounded-lg border border-line bg-black/55 p-4">
       <p className="text-xs tracking-[0.3em] text-brass">{title}</p>
       <p className="tabular font-display text-5xl">{score}</p>
       <ol className="mt-3 space-y-1 text-sm">
         {rows.slice(0, 14).map((p) => (
-          <li key={p.id} className={p.teamId === save.userTeamId ? "text-brass" : ""}>
+          <li key={p.id} className={!save.sandbox && p.teamId === save.userTeamId ? "text-brass" : ""}>
             <PlayerLink player={p} className="inline min-h-0" />{" "}
             <span className="text-muted">{p.pos}</span>
           </li>
@@ -146,9 +146,11 @@ export function ProBowlNight() {
         <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} PRO BOWL</p>
         <h2 className="font-display text-4xl sm:text-5xl">{g.stadium ?? "All-star game"}</h2>
         <p className="max-w-xl text-paper">
-          {yours.length
-            ? `${yours.length} from ${displayName(save.year, save.userTeamId)} in the game.`
-            : "Your club sent nobody. The leis still go on."}
+          {save.sandbox
+            ? "The best of the season, one more time, in the sun."
+            : yours.length
+              ? `${yours.length} from ${displayName(save.year, save.userTeamId)} in the game.`
+              : "Your club sent nobody. The leis still go on."}
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <Col title={homeLabel} score={g.homeScore} rows={home} />
@@ -217,13 +219,13 @@ export function RetirementNight() {
   const pending = save.pendingRetirees
     .map((id) => save.players[id])
     .filter(Boolean) as Player[];
-  const mine = pending.filter((p) => p.teamId === save.userTeamId || p.userTied);
+  const mine = save.sandbox ? [] : pending.filter((p) => p.teamId === save.userTeamId || p.userTied);
   const rest = pending.filter((p) => !mine.includes(p));
   const coaches = (save.pendingCoachRetirees ?? [])
     .map((id) => save.coaches[id])
     .filter(Boolean) as Coach[];
-  const myCoach = coaches.filter((c) => c.teamId === save.userTeamId);
-  const restCoach = coaches.filter((c) => c.teamId !== save.userTeamId);
+  const myCoach = save.sandbox ? [] : coaches.filter((c) => c.teamId === save.userTeamId);
+  const restCoach = coaches.filter((c) => !myCoach.includes(c));
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
       <FilmStill still="helmet" veil="full" />
@@ -271,15 +273,15 @@ export function HofNight() {
   const klass = save.pendingHof.map((id) => save.players[id]).filter(Boolean) as Player[];
   const coaches = (save.pendingCoachHof ?? []).map((id) => save.coaches[id]).filter(Boolean) as Coach[];
   // Coaches share the wall; only the players get a link here.
-  const honor = (save.history.teamOfHonor[save.userTeamId] ?? [])
+  const honor = (save.sandbox ? [] : save.history.teamOfHonor[save.userTeamId] ?? [])
     .map((id) => save.players[id])
     .filter(Boolean) as Player[];
   const u = save.userTeamId;
-  const yours = klass.filter((p) => clubSeasons(p, u).length > 0);
+  const yours = save.sandbox ? [] : klass.filter((p) => clubSeasons(p, u).length > 0);
   const league = klass.filter((p) => !yours.includes(p));
   const rafters = (p: Player) => {
     const club = signatureClub(p);
-    if (!club || club.teamId === u || club.seasons < 6 || !save.teams[club.teamId]) return undefined;
+    if (!club || (club.teamId === u && !save.sandbox) || club.seasons < 6 || !save.teams[club.teamId]) return undefined;
     const r = retiredNumbers(save, club.teamId);
     if (r.some((x) => x.playerId === p.id || x.n === p.jersey)) return undefined;
     return `The ${displayName(save.year, club.teamId)} retire his #${p.jersey}.`;
@@ -291,9 +293,11 @@ export function HofNight() {
         <p className="font-display text-xs tracking-[0.4em] text-brass">CLASS OF {save.year + 1}</p>
         <h2 className="font-display text-4xl sm:text-6xl">Hall of Fame</h2>
         <p className="max-w-xl text-paper">
-          {yours.length || coaches.some((c) => c.teamId === save.userTeamId)
-            ? "A bust with your club on the plaque. The wait after the last snap."
-            : "Canton opens the door. Your name is not on it this winter."}
+          {save.sandbox
+            ? "Canton opens the door. Here's who walks through it."
+            : yours.length || coaches.some((c) => c.teamId === save.userTeamId)
+              ? "A bust with your club on the plaque. The wait after the last snap."
+              : "Canton opens the door. Your name is not on it this winter."}
         </p>
         {yours.length > 0 && (
           <section>
@@ -357,7 +361,7 @@ export function CarouselNight() {
   const hc = t.coachId ? save.coaches[t.coachId] : undefined;
   const moves = (save.carousel ?? []).filter((m) => m.year === save.year);
   const pool = availableCoaches(save);
-  const vacant = !t.coachId;
+  const vacant = !save.sandbox && !t.coachId;
   const rec = `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}`;
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
@@ -366,7 +370,9 @@ export function CarouselNight() {
         <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} PINK SLIPS</p>
         <h2 className="font-display text-4xl sm:text-6xl">Coaching carousel</h2>
         <p className="max-w-xl text-paper">
-          {vacant
+          {save.sandbox
+            ? "Who got fired, who got hired, and who's still standing."
+            : vacant
             ? "The chair is empty. The league will not hire for you."
             : hc
               ? `${hc.name} stays. You were ${rec}. The board leaves it on your desk.`
@@ -417,11 +423,11 @@ export function RelocationNight() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
   const historic = save.owner?.historic;
-  const stayed = save.owner?.home?.teamId === save.userTeamId && save.owner.home.from === save.year;
+  const stayed = !save.sandbox && save.owner?.home?.teamId === save.userTeamId && save.owner.home.from === save.year;
   const moves = relocationsFor(save, save.year);
   if (!moves.length && !stayed) return null;
-  const oursMove = moves.find((m) => m.teamId === save.userTeamId);
-  const others = moves.filter((m) => m.teamId !== save.userTeamId || !historic);
+  const oursMove = save.sandbox ? undefined : moves.find((m) => m.teamId === save.userTeamId);
+  const others = moves.filter((m) => m !== oursMove || !historic);
   return (
     <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
       <FilmStill still="helmet" veil="full" />
