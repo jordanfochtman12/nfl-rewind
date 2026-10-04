@@ -816,7 +816,7 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
       award("Most Valuable Player", a.mvp),
       award("Offensive Player of the Year", a.offPoy),
       award("Defensive Player of the Year", a.defPoy),
-      award("Offensive Rookie of the Year", a.oroy),
+      award(year < 1967 ? "Rookie of the Year" : "Offensive Rookie of the Year", a.oroy),
       award("Defensive Rookie of the Year", a.droy),
       award("Comeback Player of the Year", a.cpoty),
     ].filter((x): x is NonNullable<typeof x> => !!x);
@@ -890,6 +890,7 @@ function deskGrade(save: DynastySave): PrimetimeShow["deskGrade"] {
     "Offensive Player of the Year": a?.offPoy,
     "Defensive Player of the Year": a?.defPoy,
     "Offensive Rookie of the Year": a?.oroy,
+    "Rookie of the Year": a?.oroy,
     "Defensive Rookie of the Year": a?.droy,
   };
   for (const w of pk.awards) {

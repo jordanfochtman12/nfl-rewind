@@ -1,6 +1,6 @@
 import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { recordAward, recordAwards, recordProBowl, recordRings } from "./honors.ts";
-import { activeTeamIds, conferenceOf, displayName, roman, superBowlNumber } from "./teams.ts";
+import { activeTeamIds, conferenceOf, displayName, gamesInSeason, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { generatePlayer, playerName, rosterOf } from "./players.ts";
 import { simGame } from "./sim.ts";
@@ -28,30 +28,37 @@ function seasonList(save: DynastySave): Player[] {
   return Object.values(save.players).filter((p) => p.teamId !== "retired" && p.teamId !== "hof" && p.stats[save.year]);
 }
 
-function offScore(p: Player, year: number): number {
+const OFFENSE: Pos[] = ["QB", "RB", "FB", "WR", "TE"];
+const DEFENSE: Pos[] = ["DE", "DT", "OLB", "MLB", "CB", "S"];
+
+/** What a player produced, scored the way voters weigh it at his position. */
+function offPerf(p: Player, year: number): number {
   const s = p.stats[year];
   if (!s) return 0;
-  return (
-    s.passYds * 0.04 +
-    s.passTd * 4 +
-    s.rushYds * 0.1 +
-    s.rushTd * 6 +
-    s.rec * 0.5 +
-    s.recYds * 0.1 +
-    s.recTd * 6 -
-    s.passInt * 2
-  );
+  if (p.pos === "QB")
+    return s.passYds / 25 + s.passTd * 4 - s.passInt * 2 + s.rushYds / 10 + s.rushTd * 6;
+  if (p.pos === "RB" || p.pos === "FB") return (s.rushYds + s.recYds) / 10 + (s.rushTd + s.recTd) * 6 + s.rec * 0.2;
+  if (p.pos === "WR" || p.pos === "TE") return s.recYds / 10 + s.recTd * 6 + s.rec * 0.25;
+  return 0;
 }
 
-function defScore(p: Player, year: number): number {
+/**
+ * Defensive ballots go to the plays that change games: sacks, takeaways, stops behind the
+ * line. Tackles count a little; a linebacker's 140 stops used to outvote every pass rusher.
+ */
+function defPerf(p: Player, year: number): number {
   const s = p.stats[year];
   if (!s) return 0;
-  return s.sacks * 4 + s.ints * 5 + s.tackles * 0.4 + p.ovr * 0.15;
+  return s.sacks * 4 + s.ints * 4.5 + s.ff * 3 + (s.fr ?? 0) * 2 + (s.tfl ?? 0) * 0.8 + (s.pd ?? 0) * 0.5 + s.tackles * 0.1;
 }
 
+/** Old name kept for the All-Pro and Pro Bowl helpers below. */
 function yearScore(p: Player, year: number): number {
-  return offScore(p, year) + defScore(p, year);
+  return OFFENSE.includes(p.pos) ? offPerf(p, year) : defPerf(p, year);
 }
+
+/** The year each award was first handed out (AP; Comeback from the PFWA in 1972). */
+const FIRST_YEAR = { mvp: 1957, oroy: 1967, droy: 1967, defPoy: 1971, offPoy: 1972, cpoty: 1972, coy: 1957 } as const;
 
 const ALLPRO_SLOTS: [Pos, number][] = [
   ["QB", 1],
@@ -72,61 +79,130 @@ const ALLPRO_SLOTS: [Pos, number][] = [
   ["K", 1],
 ];
 
+function kickPerf(p: Player, year: number): number {
+  const s = p.stats[year];
+  if (!s || !s.fgAtt) return 0;
+  return s.fgMade * 3 + (s.fgMade / s.fgAtt) * 40;
+}
+
 function allProIds(players: Player[], year: number): string[] {
   const ids: string[] = [];
+  const line = (p: Player) =>
+    p.pos === "K" ? kickPerf(p, year) : ["LT", "LG", "C", "RG", "RT"].includes(p.pos) ? p.ovr : yearScore(p, year) + p.ovr * 0.4;
   for (const [pos, n] of ALLPRO_SLOTS) {
-    const pool = players
-      .filter((p) => p.pos === pos)
-      .sort((a, b) => yearScore(b, year) + b.ovr * 0.2 - (yearScore(a, year) + a.ovr * 0.2));
+    const pool = players.filter((p) => p.pos === pos).sort((a, b) => line(b) - line(a));
     for (const p of pool.slice(0, n)) ids.push(p.id);
   }
   return ids;
 }
 
-/** Pure ballot, also used by the regular-season studio special. */
+const winPctOf = (save: DynastySave, p: Player, year: number): number => {
+  const t = save.teams[(p.stats[year]?.teamId ?? p.teamId) as TeamId];
+  if (!t) return 0.5;
+  const g = t.wins + t.losses + t.ties;
+  return g ? (t.wins + t.ties / 2) / g : 0.5;
+};
+
+/** Share of the season a player was on the field for. */
+const playedShare = (p: Player, year: number): number => (p.stats[year]?.gp ?? 0) / gamesInSeason(year);
+
+/**
+ * Pure ballot, also used by the regular-season studio special. Each award is judged the way
+ * its real voters judge it: production relative to the best at the same position, the MVP
+ * weighted to quarterbacks (overwhelmingly so since 2000) and to winning clubs, the defensive
+ * award to sacks and takeaways, Comeback to a veteran back from an injury or a lost year.
+ */
 export function calculateAwards(save: DynastySave): AwardsResult {
   const year = save.year;
-  const players = seasonList(save);
-  const off = players.slice().sort((a, b) => offScore(b, year) - offScore(a, year));
-  const def = players.slice().sort((a, b) => defScore(b, year) - defScore(a, year));
-  const rookies = players.filter((p) => p.draftYear === year);
-  const offRook = rookies
-    .slice()
-    .sort((a, b) => offScore(b, year) + defScore(b, year) - (offScore(a, year) + defScore(a, year)));
-  const defRook = rookies.slice().sort((a, b) => defScore(b, year) - defScore(a, year));
-  const mvpPool = [...off.slice(0, 8), ...def.slice(0, 4)];
-  mvpPool.sort((a, b) => yearScore(b, year) - yearScore(a, year));
+  const players = seasonList(save).filter((p) => playedShare(p, year) >= 0.5);
+  const off = players.filter((p) => OFFENSE.includes(p.pos));
+  const def = players.filter((p) => DEFENSE.includes(p.pos));
 
-  let cpoty: Player | undefined;
-  let bestJump = -999;
-  for (const p of players) {
-    const prev = yearScore(p, year - 1);
-    const now = yearScore(p, year);
-    if (now < 12) continue;
-    const jump = now - prev;
-    if (jump > bestJump) {
-      bestJump = jump;
-      cpoty = p;
-    }
+  // Each position's bar: the average of its three best seasons this year.
+  const bar = new Map<Pos, number>();
+  for (const pos of OFFENSE) {
+    const top = off.filter((p) => p.pos === pos).map((p) => offPerf(p, year)).sort((a, b) => b - a).slice(0, 3);
+    bar.set(pos, Math.max(1, top.reduce((a, b) => a + b, 0) / Math.max(1, top.length)));
   }
-  if (cpoty && mvpPool[0] && cpoty.id === mvpPool[0].id) {
-    const second = players
-      .filter((p) => p.id !== cpoty!.id)
-      .sort((a, b) => yearScore(b, year) - yearScore(b, year - 1) - (yearScore(a, year) - yearScore(a, year - 1)))[0];
-    cpoty = second ?? cpoty;
-  }
+  // Defenders by job. A sack-heavy line scores more on any single scale than an interception
+  // season does, so each group is put on the edge rushers' scale: the factors are each group's
+  // typical league leader measured over 60 simulated seasons, tilted so the winners split the
+  // way the real award has (about half edge rushers, the rest inside linemen, linebackers and
+  // the secondary).
+  const group = (pos: Pos) => (pos === "DE" || pos === "OLB" ? "edge" : pos === "DT" ? "inside" : pos === "MLB" ? "backer" : "db");
+  const DEF_SCALE = { edge: 1, inside: 1.11, backer: 1.21, db: 1.82 } as const;
+  const edgeTop = def.filter((p) => group(p.pos) === "edge").map((p) => defPerf(p, year)).sort((a, b) => b - a).slice(0, 3);
+  const edgeBar = Math.max(1, edgeTop.reduce((a, b) => a + b, 0) / Math.max(1, edgeTop.length));
+  const rel = (p: Player) =>
+    OFFENSE.includes(p.pos) ? offPerf(p, year) / bar.get(p.pos === "FB" ? "RB" : p.pos)! : (defPerf(p, year) * DEF_SCALE[group(p.pos)]) / edgeBar;
+  const defWeight = (_p: Player) => 1;
 
-  const awards: AwardsResult = {
+  const modern = year >= 2000;
+  const mvpWeight: Partial<Record<Pos, number>> = { QB: 1, RB: modern ? 0.89 : 0.97, FB: 0.8, WR: modern ? 0.78 : 0.84, TE: 0.62 };
+  const best = <T,>(list: T[], score: (x: T) => number) => list.slice().sort((a, b) => score(b) - score(a))[0];
+
+  const mvpScore = (p: Player) =>
+    (OFFENSE.includes(p.pos) ? (mvpWeight[p.pos] ?? 0.7) * rel(p) : 0.74 * rel(p)) + 0.7 * (winPctOf(save, p, year) - 0.5);
+  const mvp = best(players.filter((p) => OFFENSE.includes(p.pos) || DEFENSE.includes(p.pos)), mvpScore);
+
+  // Tight ends are measured against tight ends, so a great one reads as dominant; no tight end
+  // has won the real award, and this keeps them on the ballot without taking it.
+  const opoyWeight: Partial<Record<Pos, number>> = { QB: 1, RB: 1, FB: 0.85, WR: 0.97, TE: 0.72 };
+  const offPoy = best(off, (p) => (opoyWeight[p.pos] ?? 0.8) * rel(p) + 0.25 * (winPctOf(save, p, year) - 0.5));
+  const defPoy = best(def, (p) => defWeight(p) * rel(p) + 0.2 * (winPctOf(save, p, year) - 0.5));
+
+  const rookies = seasonList(save).filter((p) => p.draftYear === year && playedShare(p, year) >= 0.4);
+  // Rookie ballots lean the way the real ones do: backs and quarterbacks first, tight ends rarely.
+  const rookieWeight: Partial<Record<Pos, number>> = { QB: 1.24, RB: 1.24, FB: 0.8, WR: 1, TE: 0.8 };
+  const oroy = best(rookies.filter((p) => OFFENSE.includes(p.pos)), (p) => (rookieWeight[p.pos] ?? 0.8) * rel(p));
+  const droy = best(rookies.filter((p) => DEFENSE.includes(p.pos)), (p) => defWeight(p) * rel(p));
+
+  // Comeback: a veteran whose last season was lost to injury, or fell well short of what he
+  // had shown before, and who is back among the best at his position.
+  const comeback = players
+    .filter((p) => (p.draftYear ?? year) <= year - 2 && (OFFENSE.includes(p.pos) || DEFENSE.includes(p.pos)))
+    .map((p) => {
+      const last = p.stats[year - 1];
+      const missed = last ? 1 - Math.min(1, last.gp / gamesInSeason(year - 1)) : 1;
+      const prior = Object.keys(p.stats).map(Number).filter((y) => y < year - 1);
+      const peak = Math.max(0, ...prior.map((y) => yearScore(p, y)));
+      const slump = peak > 0 ? 1 - Math.min(1, yearScore(p, year - 1) / peak) : 0;
+      const down = Math.max(missed, slump * 0.9);
+      const now = rel(p);
+      const w = ({ QB: 1.12, RB: 1, FB: 0.8, WR: 0.95, TE: 0.8 } as Partial<Record<Pos, number>>)[p.pos] ?? 0.9;
+      return { p, down, now, score: w * now * (0.6 + down) };
+    })
+    // The MVP isn't also the year's comeback story; the writers give that one to someone else.
+    .filter((x) => x.down >= 0.45 && x.now >= 0.7 && yearScore(x.p, year) > 0 && ![mvp?.id, offPoy?.id, defPoy?.id].includes(x.p.id));
+  const cpoty = best(comeback, (x) => x.score)?.p;
+
+  // Coach of the Year: the biggest turnaround among winning clubs, then the best record.
+  const coy = best(
+    activeTeamIds(year)
+      .map((id) => ({ id, t: save.teams[id], c: save.teams[id]?.coachId ? save.coaches[save.teams[id]!.coachId!] : undefined }))
+      .filter((x) => x.t && x.c),
+    (x) => {
+      const g = Math.max(1, x.t!.wins + x.t!.losses + x.t!.ties);
+      const pct = (x.t!.wins + x.t!.ties / 2) / g;
+      const prev = save.history.seasons.find((c) => c.year === year - 1 && c.teamId === x.id);
+      const prevPct = prev ? (prev.wins + prev.ties / 2) / Math.max(1, prev.wins + prev.losses + prev.ties) : 0.5;
+      return (pct - prevPct) * 1.4 + pct + (pct > 0.5 && prevPct < 0.5 ? 0.15 : 0);
+    },
+  );
+
+  const has = (k: keyof typeof FIRST_YEAR) => year >= FIRST_YEAR[k];
+  return {
     year,
-    mvp: mvpPool[0]?.id,
-    offPoy: off[0]?.id,
-    defPoy: def[0]?.id,
-    oroy: offRook[0]?.id,
-    droy: defRook[0]?.id,
-    cpoty: cpoty?.id,
-    allPro: allProIds(players, year),
+    mvp: mvp?.id,
+    offPoy: has("offPoy") ? offPoy?.id : undefined,
+    defPoy: has("defPoy") ? defPoy?.id : undefined,
+    // 1957-66 the AP named one rookie of the year; it went to an offensive player every time.
+    oroy: has("oroy") ? oroy?.id : best(rookies, (p) => rel(p))?.id,
+    droy: has("droy") ? droy?.id : undefined,
+    cpoty: has("cpoty") ? cpoty?.id : undefined,
+    coy: coy?.c?.id,
+    allPro: allProIds(seasonList(save), year),
   };
-  return awards;
 }
 
 export function resolveAwards(save: DynastySave): AwardsResult {
@@ -150,9 +226,22 @@ export function resolveAwards(save: DynastySave): AwardsResult {
     addNews(save, {
       kind: "award",
       headline: `Comeback Player: ${playerName(cpoty)}`,
-      body: `Biggest year-over-year jump in the building — not a consolation prize.`,
+      body: (cpoty.stats[year - 1]?.gp ?? 0) < gamesInSeason(year - 1) / 2
+        ? `Last season ended early. This one ended with him among the best at his position.`
+        : `Written off after a down year. He answered with one of the best seasons at his position.`,
       teamIds: cpoty.teamId !== "fa" && cpoty.teamId !== "retired" && cpoty.teamId !== "hof" ? [cpoty.teamId] : [],
       playerIds: [cpoty.id],
+    });
+  }
+  const coach = awards.coy ? save.coaches[awards.coy] : undefined;
+  if (coach) {
+    coach.coyYears = [...(coach.coyYears ?? []).filter((y) => y !== year), year];
+    addNews(save, {
+      kind: "award",
+      headline: `${coach.name} named ${year} Coach of the Year`,
+      body: coach.teamId ? `The ${displayName(year, coach.teamId)} went ${save.teams[coach.teamId]?.wins}-${save.teams[coach.teamId]?.losses}.` : "",
+      teamIds: coach.teamId ? [coach.teamId] : [],
+      playerIds: [],
     });
   }
   checkSeasonMilestones(save);
@@ -170,20 +259,24 @@ export function resolveProBowl(save: DynastySave): void {
     if (c === "NFL" || c === "NFC") confA.push(id);
     else confB.push(id);
   }
-  const pool = (ids: TeamId[]) =>
-    ids
-      .flatMap((id) => rosterOf(save, id))
-      .sort(
-        (a, b) =>
-          offScore(b, year) + defScore(b, year) + b.ovr - (offScore(a, year) + defScore(a, year) + a.ovr),
-      )
-      .slice(0, 22);
+  // A real roster: each conference sends its best at every position, not its 22 biggest
+  // stat lines (which could leave the game without a lineman).
+  const SLOTS: [Pos, number][] = [
+    ["QB", 2], ["RB", 2], ["WR", 3], ["TE", 1], ["LT", 1], ["LG", 1], ["C", 1], ["RG", 1], ["RT", 1],
+    ["DE", 2], ["DT", 2], ["OLB", 2], ["MLB", 1], ["CB", 2], ["S", 2], ["K", 1],
+  ];
+  const vote = (p: Player) =>
+    p.pos === "K" ? kickPerf(p, year) : ["LT", "LG", "C", "RG", "RT"].includes(p.pos) ? p.ovr : yearScore(p, year) + p.ovr * 0.4;
+  const pool = (ids: TeamId[]) => {
+    const all = ids.flatMap((id) => rosterOf(save, id));
+    return SLOTS.flatMap(([pos, n]) => all.filter((p) => p.pos === pos).sort((x, y) => vote(y) - vote(x)).slice(0, n));
+  };
   const a = pool(confA);
   const b = pool(confB);
   const site = proBowlSite(year);
   const aScore = 14 + randInt(save, 0, 21);
   const bScore = 14 + randInt(save, 0, 21);
-  const mvp = (aScore >= bScore ? a : b)[0];
+  const mvp = (aScore >= bScore ? a : b).filter((p) => OFFENSE.includes(p.pos)).sort((x, y) => vote(y) - vote(x))[0];
   for (const p of [...a, ...b]) recordProBowl(p, year);
   save.proBowl = {
     id: `${year}-pb`,

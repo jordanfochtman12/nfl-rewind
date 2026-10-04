@@ -589,11 +589,12 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     }));
   })();
   const awards: SeasonPreview["awards"] = [
+    // Only the awards that existed that year: OPOY 1972, DPOY 1971, the split rookie awards 1967.
     { label: "Most Valuable Player", picks: mvp },
-    { label: "Offensive Player of the Year", picks: opoy },
-    { label: "Defensive Player of the Year", picks: dpoy },
-    { label: "Offensive Rookie of the Year", picks: oroy },
-    { label: "Defensive Rookie of the Year", picks: droy },
+    ...(year >= 1972 ? [{ label: "Offensive Player of the Year", picks: opoy }] : []),
+    ...(year >= 1971 ? [{ label: "Defensive Player of the Year", picks: dpoy }] : []),
+    { label: year >= 1967 ? "Offensive Rookie of the Year" : "Rookie of the Year", picks: oroy },
+    ...(year >= 1967 ? [{ label: "Defensive Rookie of the Year", picks: droy }] : []),
     { label: "Coach of the Year", picks: coy },
   ].filter((a) => a.picks.length);
 

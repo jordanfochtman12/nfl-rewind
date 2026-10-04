@@ -26,7 +26,11 @@ test("a complete season produces a finale, each playoff show, a factual Super Bo
   const all = [...(s.primetimeArchive ?? []), s.primetime];
   const finale = all.find((x) => x.episode?.edition === "seasonFinale");
   assert.ok(finale, "regular-season finale exists");
-  assert.ok(finale.awards.length >= 5);
+  // 1966 had an MVP and a single Rookie of the Year; the position awards came in 1971-72.
+  const labels = finale.awards.map((a) => a.label);
+  assert.ok(labels.includes("Most Valuable Player"), labels.join(", "));
+  assert.ok(labels.includes("Rookie of the Year"), labels.join(", "));
+  assert.ok(!labels.includes("Offensive Player of the Year") && !labels.includes("Defensive Player of the Year"), labels.join(", "));
   assert.ok(finale.previews.length >= 2);
   assert.match(finale.episode.chapters.map((c) => c.title).join(" "), /Most Valuable Player/);
   const championship = all.find((x) => x.episode?.edition === "championship");

@@ -52,10 +52,14 @@ export function AwardsNight() {
     ["Most Valuable Player", a.mvp],
     ["Offensive Player of the Year", a.offPoy],
     ["Defensive Player of the Year", a.defPoy],
-    ["Offensive Rookie", a.oroy],
+    [a.year < 1967 ? "Rookie of the Year" : "Offensive Rookie", a.oroy],
     ["Defensive Rookie", a.droy],
     ["Comeback Player", a.cpoty],
   ];
+  // Awards that didn't exist yet (OPOY 1972, DPOY 1971, the split rookie awards 1967, Comeback
+  // 1972) aren't announced in those years.
+  const shown = rows.filter(([, id]) => !!id);
+  const coach = a.coy ? save.coaches[a.coy] : undefined;
   const allPro = (a.allPro ?? []).map((id) => save.players[id]).filter(Boolean) as Player[];
   const yours = rows.filter(([, id]) => ours(save, id));
   return (
@@ -70,7 +74,7 @@ export function AwardsNight() {
             : "Nobody from your club takes a trophy home. The writers had other names."}
         </p>
         <ul className="space-y-3">
-          {rows.map(([label, id]) => {
+          {shown.map(([label, id]) => {
             const p = id ? save.players[id] : undefined;
             const mine = ours(save, id);
             return (
@@ -90,6 +94,15 @@ export function AwardsNight() {
               </li>
             );
           })}
+          {coach && (
+            <li className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-black/50 px-4 py-3">
+              <span className="text-xs tracking-[0.25em] text-muted">Coach of the Year</span>
+              <span className="font-display text-xl">
+                {coach.name}
+                {coach.teamId ? <span className="ml-2 text-sm text-muted">{displayName(save.year, coach.teamId)}</span> : null}
+              </span>
+            </li>
+          )}
         </ul>
         {allPro.length > 0 && (
           <section>

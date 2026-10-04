@@ -318,6 +318,8 @@ export interface Coach {
   careerTies: number;
   careerTitles: number;
   careerBowls: number;
+  /** Seasons he was named Coach of the Year. */
+  coyYears?: number[];
   yearsCoaching: number;
   age: number;
   born?: number;
@@ -663,6 +665,8 @@ export interface AwardsResult {
   oroy?: string;
   droy?: string;
   cpoty?: string;
+  /** Coach of the Year (a coach id). */
+  coy?: string;
   allPro: string[];
 }
 

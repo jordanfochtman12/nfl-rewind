@@ -64,6 +64,7 @@ export function coachHofScore(c: Coach): number {
   let n = c.careerWins * 0.28;
   n += (c.careerTitles ?? 0) * 16;
   n += (c.careerBowls ?? 0) * 5;
+  n += (c.coyYears?.length ?? 0) * 3;
   n += Math.min(18, (c.yearsCoaching ?? 0) * 0.45);
   if (pct >= 0.6 && games >= 80) n += 12;
   else if (pct >= 0.55 && games >= 60) n += 7;

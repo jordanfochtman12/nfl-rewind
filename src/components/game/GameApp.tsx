@@ -1511,8 +1511,11 @@ function History() {
               <li key={a.year} className="rounded-lg border border-line bg-surface p-3 text-sm">
                 <p className="font-display text-base">{a.year}</p>
                 <p className="text-muted">
-                  MVP <Nm id={a.mvp} /> · OPOY <Nm id={a.offPoy} /> · DPOY <Nm id={a.defPoy} /> · CPOTY{" "}
-                  <Nm id={a.cpoty} />
+                  MVP <Nm id={a.mvp} />
+                  {a.offPoy && <> · OPOY <Nm id={a.offPoy} /></>}
+                  {a.defPoy && <> · DPOY <Nm id={a.defPoy} /></>}
+                  {a.cpoty && <> · Comeback <Nm id={a.cpoty} /></>}
+                  {a.coy && save.coaches[a.coy] && <> · Coach {save.coaches[a.coy]!.name}</>}
                 </p>
               </li>
             );
