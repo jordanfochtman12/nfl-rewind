@@ -572,8 +572,8 @@ export function SeasonPreviewShow() {
       <div>
         <p className={`mb-2 font-display text-sm font-bold uppercase italic tracking-wide ${tone}`}>{title}</p>
         <ul className="space-y-2">
-          {rows.map((r) => (
-            <li key={(r.playerId ?? r.coachId) + title} className="flex items-start gap-2 border-l-2 border-white/15 pl-3">
+          {rows.map((r, i) => (
+            <li key={`${r.playerId ?? r.coachId}-${title}-${i}`} className="flex items-start gap-2 border-l-2 border-white/15 pl-3">
               <Logo id={r.teamId} size={20} />
               <span className="min-w-0">
                 {r.playerId ? <Who id={r.playerId} /> : <span className="font-display text-base font-bold uppercase italic text-white">{save.coaches[r.coachId!]?.name}</span>}

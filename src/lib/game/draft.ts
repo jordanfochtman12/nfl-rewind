@@ -76,24 +76,31 @@ export function allPicks(save: DynastySave): DraftPickAsset[] {
   return out;
 }
 
-export function issuePicks(save: DynastySave, year: number, teamId: TeamId): void {
+/**
+ * Gives a club its picks for a year. `existing` is every pick id already issued; pass one set
+ * when issuing in bulk, since every used pick of every past draft stays on the books and
+ * rebuilding the set per club per year made each selection of a late draft cost seconds.
+ */
+export function issuePicks(save: DynastySave, year: number, teamId: TeamId, existing?: Set<string>): void {
   const t = save.teams[teamId];
   if (!t) return;
   t.picks = t.picks ?? [];
   const rounds = roundsFor(year);
-  const existing = new Set(allPicks(save).map((p) => p.id));
+  const ids = existing ?? new Set(allPicks(save).map((p) => p.id));
   for (let r = 1; r <= rounds; r++) {
     const id = `${year}-r${r}-${teamId}`;
-    if (existing.has(id) || t.picks.some((p) => p.id === id)) continue;
+    if (ids.has(id)) continue;
     t.picks.push({ id, year, round: r, orig: teamId, owner: teamId });
+    ids.add(id);
   }
 }
 
 export function ensureSeasonPicks(save: DynastySave): void {
+  const ids = new Set(allPicks(save).map((p) => p.id));
   for (const id of activeTeamIds(save.year)) {
-    issuePicks(save, save.year, id);
-    issuePicks(save, save.year + 1, id);
-    issuePicks(save, save.year + 2, id);
+    issuePicks(save, save.year, id, ids);
+    issuePicks(save, save.year + 1, id, ids);
+    issuePicks(save, save.year + 2, id, ids);
   }
 }
 
@@ -143,13 +150,17 @@ export function draftQueue(save: DynastySave): DraftPickAsset[] {
   const teams = sessionTeams(save.year, session);
   const order = standingOrder(save, teams);
   const rounds = roundsFor(save.year);
+  // One pass over the books for this year's picks instead of a full scan per slot.
+  const slot = new Map<string, DraftPickAsset>();
+  for (const t of Object.values(save.teams))
+    for (const p of t.picks ?? []) if (p.year === save.year && !slot.has(`${p.round}|${p.orig}`)) slot.set(`${p.round}|${p.orig}`, p);
   const q: DraftPickAsset[] = [];
   for (let r = 1; r <= rounds; r++) {
     for (const orig of order) {
       // The order is fixed for the whole draft: picks already made stay in their slots.
       // (Dropping used picks here shifted the queue under draftPickIndex, so every other
       // selection in the draft was skipped.)
-      const asset = findPick(save, save.year, r, orig, true);
+      const asset = slot.get(`${r}|${orig}`);
       if (asset) q.push(asset);
     }
   }

@@ -12,7 +12,9 @@ const NEUTRAL: Gameplan = { attack: "balanced", fourth: "normal", tempo: "standa
 
 export function defaultPlan(offScheme?: string): Gameplan {
   if (offScheme === "smashmouth") return { ...NEUTRAL, attack: "run", fourth: "conservative", tempo: "chew", blitz: "rare", redZone: "power" };
-  if (offScheme === "vertical") return { ...NEUTRAL, attack: "pass", tempo: "hurry", redZone: "spread" };
+  // Vertical means stretching the field (Air Coryell, the Bombs Away teams), not a no-huddle:
+  // only the coaches who really ran one game-long (their playbooks say so) get the hurry-up.
+  if (offScheme === "vertical") return { ...NEUTRAL, attack: "pass", redZone: "spread" };
   if (offScheme === "westcoast") return { ...NEUTRAL, attack: "pass" };
   return { ...NEUTRAL };
 }

@@ -336,7 +336,7 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptemp
   if (tempo === "hurry") return year <= 1979 ? [16, 22] : [12, 17];
   // A game-long no-huddle (the K-Gun, Marchibroda's Colts) still lets the clock run between
   // snaps; it just skips the huddle. Real ones ran ten or fifteen percent more plays, not double.
-  if (tempo === "uptempo") return year <= 1979 ? [31, 37] : [27, 33];
+  if (tempo === "uptempo") return year <= 1979 ? [33, 39] : [32, 38];
   if (tempo === "chew") return year <= 1979 ? [38, 45] : [35, 42];
   // Snap-to-snap on a running clock: the play itself plus the huddle and most of the
   // play clock (30s from the ready signal before 1976, 40s from the previous whistle after).
@@ -399,3 +399,26 @@ export function playoffBrake(phase: string): number {
   return 1;
 }
 
+
+/**
+ * What a typical league leader did per game in each era (real leaders, averaged): passing,
+ * rushing and receiving yards. The sim's stars taper toward these instead of the all-time
+ * records, so a leader looks like a real leader and a record season stays a rarity.
+ */
+export function leaderPace(year: number): { pass: number; rush: number; recYds: number } {
+  if (year <= 1977) return { pass: 245, rush: 104, recYds: 88 };
+  if (year <= 1989) return { pass: 280, rush: 106, recYds: 90 };
+  if (year <= 2003) return { pass: 275, rush: 104, recYds: 94 };
+  if (year <= 2009) return { pass: 290, rush: 106, recYds: 96 };
+  return { pass: 310, rush: 100, recYds: 100 };
+}
+
+/**
+ * Usage multiplier for a player whose season pace runs past a typical leader's: 1 until 95%
+ * of it, then down toward half at 130% (defenses key on him, the staff spreads it around).
+ */
+export function starTaper(perGame: number, ref: number): number {
+  const r = perGame / ref;
+  if (r <= 0.95) return 1;
+  return Math.max(0.45, 1 - ((r - 0.95) / 0.35) * 0.55);
+}

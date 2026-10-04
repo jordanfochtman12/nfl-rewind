@@ -651,6 +651,8 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
       const need = step - have;
       if (need > per * 0.9) continue;
       milestones.push({ playerId: p.id, teamId: teamOf(p), note: `${comma(need)} from ${comma(step)} ${m.label}. Had ${comma(per)} last year.` });
+      // One mark per player, so six different names make the list.
+      break;
     }
   }
   milestones.sort((a, b) => save.players[b.playerId]!.ovr - save.players[a.playerId]!.ovr);

@@ -42,6 +42,8 @@ import {
   xpKickYards,
   xpMakeBase,
   passGainScale,
+  leaderPace,
+  starTaper,
 } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { ARC_DATA_LAST } from "./careerArc.ts";
@@ -406,10 +408,23 @@ function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number)
   const s = p.stats[year];
   if (!s || s.gp < 3) return 1;
   const pace = (s[key] / s.gp) * gamesInSeason(year);
-  const soft = eraRef * 0.8;
+  // The taper starts at a typical leader's pace (about three-quarters of the record), so
+  // leaders land where real leaders did and the record itself takes a rare season.
+  const soft = eraRef * 0.74;
   if (pace <= soft) return 1;
-  return clamp(1 - ((pace - soft) / (eraRef * 0.2)) * 0.55, 0.4, 1);
+  return clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
 }
+
+/** A player's season pace in one stat (per game), once he has a few games in the book. */
+function seasonPace(p: Player | undefined, key: "passYds" | "rushYds" | "recYds", year: number): number | undefined {
+  const s = p?.stats[year];
+  if (!s || s.gp < 3) return undefined;
+  return s[key] / s.gp;
+}
+const taperOf = (p: Player | undefined, key: "passYds" | "rushYds" | "recYds", year: number, ref: number): number => {
+  const pace = seasonPace(p, key, year);
+  return pace === undefined ? 1 : starTaper(pace, ref);
+};
 
 function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number, redZone: boolean): Player | undefined {
   const era = eraProfile(year);
@@ -434,7 +449,7 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
         const skill = Math.pow((s.p.ratings.catch + yac) / 150, 0.3);
         const kit = 1 + Math.min(0.3, kitShare(s.p, "recShare") - 1) * 0.5;
         const pace = paceDamp(s.p, "rec", year, s.p.pos === "TE" ? era.teRecCap : era.recCap);
-        return s.wt * skill * kit * pace;
+        return s.wt * skill * kit * pace * taperOf(s.p, "recYds", year, leaderPace(year).recYds);
       }),
     )
   ]!.p;
@@ -465,7 +480,8 @@ function pickRusher(
         (passingDown ? rb1 * 0.7 : rb1) *
         kitShare(off.rb, "rushShare") *
         (off.rb.ratings.stamina / 80) *
-        workloadDamp(off.rb.id),
+        workloadDamp(off.rb.id) *
+        taperOf(off.rb, "rushYds", year, leaderPace(year).rush),
     });
   if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
   if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? (year <= 1995 ? 0.22 : 0.08) : year <= 1995 ? 0.12 : 0.05 });
@@ -657,7 +673,9 @@ function snapClock(
   const stopFd = clockStopFirstDown(year) && firstDown;
   const stopped = oob || !complete || spiked || stopFd || twoMin && oob;
   if (spiked) return { used: 3, stopped: true };
-  if (oob || !complete) return { used: hurry || twoMin ? randInt(save, 4, 7) : randInt(save, 6, 9), stopped: true };
+  // Only the real drill rushes to the line after a stopped clock; a no-huddle plan still
+  // spends the usual few seconds getting the call in.
+  if (oob || !complete) return { used: urgent || twoMin ? randInt(save, 4, 7) : randInt(save, 6, 9), stopped: true };
   if (stopFd) return { used: randInt(save, 6, 9), stopped: true };
   const [lo, hi] = huddleSeconds(year, urgent ? "hurry" : hurry ? "uptempo" : chew ? "chew" : "standard");
   const used = randInt(save, lo, hi);
@@ -2034,7 +2052,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) yds += randInt(save, 8, Math.round(28 * big + 6));
       if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
       if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
-      yds = Math.round(yds * passGainScale(year));
+      // A passer on a record pace sees the coverage roll his way: fewer chunk gains.
+      yds = Math.round(yds * passGainScale(year) * (0.55 + 0.45 * taperOf(off.qb, "passYds", year, leaderPace(year).pass)));
       yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
