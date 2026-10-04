@@ -37,7 +37,7 @@ export function eraProfile(year: number): EraProfile {
       rushTdCap: 16,
       passTdCap: 36,
       intCap: 28,
-      sackCap: 18,
+      sackCap: 22,
       teamSackCap: 42,
     };
   }
@@ -57,18 +57,18 @@ export function eraProfile(year: number): EraProfile {
       rushTdCap: 16,
       passTdCap: 30,
       intCap: 24,
-      sackCap: 20,
+      sackCap: 22,
       teamSackCap: 48,
     };
   }
   if (year <= 1989) {
     return {
       name: "pass-boom",
-      cmpPct: 0.64,
+      cmpPct: 0.662,
       passAtt: 33,
       ypa: 6.9,
       intRate: 0.042,
-      sackRate: 0.044,
+      sackRate: 0.04,
       rushAtt: 31,
       ypc: 3.95,
       pointsMu: 20.8,
@@ -88,7 +88,7 @@ export function eraProfile(year: number): EraProfile {
       passAtt: 33.5,
       ypa: 6.9,
       intRate: 0.034,
-      sackRate: 0.024,
+      sackRate: 0.016,
       rushAtt: 28.5,
       ypc: 3.8,
       pointsMu: 21.5,
@@ -97,18 +97,18 @@ export function eraProfile(year: number): EraProfile {
       rushTdCap: 18,
       passTdCap: 40,
       intCap: 20,
-      sackCap: 20,
+      sackCap: 21,
       teamSackCap: 52,
     };
   }
   if (year <= 2009) {
     return {
       name: "aughts",
-      cmpPct: 0.716,
+      cmpPct: 0.695,
       passAtt: 32.5,
       ypa: 7.0,
       intRate: 0.03,
-      sackRate: 0.019,
+      sackRate: 0.011,
       rushAtt: 28,
       ypc: 3.95,
       pointsMu: 21.8,
@@ -117,14 +117,14 @@ export function eraProfile(year: number): EraProfile {
       rushTdCap: 20,
       passTdCap: 42,
       intCap: 18,
-      sackCap: 20,
+      sackCap: 22,
       teamSackCap: 50,
     };
   }
   if (year <= 2019) {
     return {
       name: "spread",
-      cmpPct: 0.697,
+      cmpPct: 0.683,
       passAtt: 35.5,
       ypa: 7.2,
       intRate: 0.025,
@@ -137,17 +137,17 @@ export function eraProfile(year: number): EraProfile {
       rushTdCap: 20,
       passTdCap: 48,
       intCap: 16,
-      sackCap: 20,
+      sackCap: 22,
       teamSackCap: 50,
     };
   }
   return {
     name: "modern",
-    cmpPct: 0.72,
+    cmpPct: 0.685,
     passAtt: 34,
     ypa: 7.2,
     intRate: 0.023,
-    sackRate: 0.052,
+    sackRate: 0.072,
     rushAtt: 27,
     ypc: 4.1,
     pointsMu: 23.0,
@@ -156,7 +156,7 @@ export function eraProfile(year: number): EraProfile {
     rushTdCap: 20,
     passTdCap: 50,
     intCap: 15,
-    sackCap: 19,
+    sackCap: 22,
     teamSackCap: 52,
   };
 }
@@ -188,10 +188,20 @@ export function twoPointOk(year: number, teamId: TeamId): boolean {
   return false;
 }
 
+/**
+ * Field-goal accuracy by era, as a multiplier on a kick's make chance. Measured against the
+ * real league: ~58% in the late '60s, ~62% through the '70s, ~71% in the '80s, ~77% in the
+ * '90s, ~81% in the 2000s, ~85% since.
+ */
 export function fgEraMod(year: number): number {
-  if (year <= 1973) return 0.88;
-  if (year <= 1993) return 0.94;
-  return 1;
+  if (year <= 1969) return 0.79;
+  if (year <= 1973) return 0.8;
+  if (year <= 1977) return 0.82;
+  if (year <= 1985) return 0.88;
+  if (year <= 1993) return 0.91;
+  if (year <= 1999) return 0.97;
+  if (year <= 2009) return 1;
+  return 1.07;
 }
 
 /** College football stops the clock to move the chains; the NFL never did. */

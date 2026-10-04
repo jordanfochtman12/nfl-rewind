@@ -4,6 +4,7 @@ import type {
   PlayLog,
   DriveResult,
   DriveSummary,
+  DefScheme,
   DynastySave,
   Gameplan,
   GameResult,
@@ -409,10 +410,14 @@ function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number)
   if (!s || s.gp < 3) return 1;
   const pace = (s[key] / s.gp) * gamesInSeason(year);
   // The taper starts at a typical leader's pace (about three-quarters of the record), so
-  // leaders land where real leaders did and the record itself takes a rare season.
-  const soft = eraRef * 0.74;
+  // leaders land where real leaders did and the record itself takes a rare season. Sacks
+  // brake harder: with the rush concentrated on the true edge players, the gentler curve let
+  // five ends a year run into the cap.
+  const soft = eraRef * (key === "sacks" ? 0.62 : 0.74);
   if (pace <= soft) return 1;
-  return clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
+  return key === "sacks"
+    ? clamp(1 - ((pace - soft) / (eraRef * 0.3)) * 0.85, 0.2, 1)
+    : clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
 }
 
 /** A player's season pace in one stat (per game), once he has a few games in the book. */
@@ -495,17 +500,42 @@ function pickRusher(
  * tackles the catch, linemen get the plays that die at the line. Weighted on grades alone,
  * a 4-3 end tackled as often as the middle linebacker (85 a year; real ends make ~45).
  */
-const RUN_STOP: Partial<Record<Pos, number>> = { MLB: 1.4, OLB: 0.9, S: 0.7, CB: 0.55, DE: 0.8, DT: 0.7 };
-const PASS_STOP: Partial<Record<Pos, number>> = { CB: 1.6, S: 0.95, MLB: 0.8, OLB: 0.55, DE: 0.2, DT: 0.14 };
+const RUN_STOP: Partial<Record<Pos, number>> = { MLB: 1.25, OLB: 0.95, S: 0.7, CB: 0.55, DE: 0.8, DT: 0.7 };
+const PASS_STOP: Partial<Record<Pos, number>> = { CB: 1.2, S: 0.85, MLB: 0.8, OLB: 0.55, DE: 0.2, DT: 0.14 };
 
 function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean): Player | undefined {
   const pool = pass ? [...def.db, ...def.lb, ...def.dl] : [...def.lb, ...def.dl, ...def.db];
   if (!pool.length) return undefined;
   const role = pass ? PASS_STOP : RUN_STOP;
-  return pool[dist(save, pool.map((p) => (p.ratings.tak + p.ratings.pur) * (role[p.pos] ?? 0.6) * (pass ? p.ratings.cov / 80 : 1)))];
+  // An edge-rushing outside linebacker plays the down like an end.
+  const job = (p: Player): Pos => (p.pos === "OLB" && p.arch === "edge" ? "DE" : p.pos);
+  return pool[dist(save, pool.map((p) => (p.ratings.tak + p.ratings.pur) * (role[job(p)] ?? 0.6) * (pass ? p.ratings.cov / 80 : 1)))];
 }
 
-function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
+/**
+ * How much of a club's pass rush runs through each job. Ends and edge linebackers take most of
+ * it; interior linemen some; an off-ball linebacker gets home on the odd blitz. On grades
+ * alone, coverage linebackers with a decent rush grade ran up 12-16 sacks a year (real: 2-5).
+ */
+const RUSH_ROLE: Partial<Record<Pos, Partial<Record<string, number>> & { base: number }>> = {
+  DE: { base: 0.85, edge: 1, finisher: 0.85, "two-gap": 0.65 },
+  DT: { base: 0.55, finisher: 0.65, "two-gap": 0.5, anchor: 0.4 },
+  OLB: { base: 0.26, edge: 0.95, finisher: 0.28, "cover-lb": 0.16 },
+  MLB: { base: 0.17, finisher: 0.2, thumper: 0.17, "cover-lb": 0.11 },
+};
+function rushRole(p: Player, scheme: DefScheme | undefined): number {
+  const r = RUSH_ROLE[p.pos];
+  if (!r) return 0.1;
+  let w = (p.arch ? r[p.arch] : undefined) ?? r.base;
+  // In a 3-4 the outside linebackers are the rushers and the ends play inside.
+  if (scheme === "3-4") {
+    if (p.pos === "OLB") w = Math.max(w, p.arch === "cover-lb" ? 0.3 : 0.75);
+    if (p.pos === "DE") w *= 0.7;
+  }
+  return w;
+}
+
+function pickRusherDef(save: DynastySave, def: TeamUnits, scheme?: DefScheme): Player | undefined {
   const pool = [...def.dl, ...def.lb];
   if (!pool.length) return undefined;
   const ref = eraProfile(save.year).sackCap;
@@ -515,7 +545,7 @@ function pickRusherDef(save: DynastySave, def: TeamUnits): Player | undefined {
   return pool[
     dist(
       save,
-      pool.map((p) => Math.pow(p.ratings.prs / 70, 2) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
+      pool.map((p) => Math.pow(p.ratings.prs / 70, 1.4) * rushRole(p, scheme) * kitShare(p, "sackShare") * paceDamp(p, "sacks", save.year, ref)),
     )
   ];
 }
@@ -596,6 +626,8 @@ function callPlay(
     fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0));
   if (finalCall) return finalCall;
   if (canKneelOut(q, clock, down, spot, trail, defensiveTimeouts)) return "kneel";
+  // Pinned deep with the half nearly gone: take a knee rather than risk a giveaway.
+  if (q === 2 && clock <= 35 && down < 4 && spot <= 25) return "kneel";
   if (down === 4) {
     const fgDist = 100 - spot + 17;
     const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0);
@@ -642,7 +674,7 @@ function callPlay(
   if (wx === "snow" || wx === "rain") passW -= 0.08;
   if (wx === "wind") passW -= 0.04;
   if (desperate) passW += 0.18;
-  if (twoMin && trail >= 1) passW += 0.16;
+  if (twoMin && (trail >= 1 || q === 2)) passW += 0.16;
   passW = clamp(passW, 0.2, 0.8);
   if (rand(save) > passW) {
     if (down === 3 && togo >= 6 && rand(save) < 0.22) return "draw";
@@ -650,7 +682,7 @@ function callPlay(
     return "run";
   }
   if (last && trail >= 3 && spot < 65) return "deep";
-  if (twoMin && trail >= 1 && togo >= 8) return rand(save) < 0.4 ? "deep" : "med";
+  if (twoMin && (trail >= 1 || q === 2) && togo >= 8) return rand(save) < 0.4 ? "deep" : "med";
   if (down === 3 && togo >= 12) return rand(save) < 0.45 ? "deep" : "med";
   if (spot >= 88) return rand(save) < 0.35 ? "screen" : "short";
   if (lastRun && down <= 2 && togo >= 6 && rand(save) < 0.28) return "pa";
@@ -676,7 +708,9 @@ function snapClock(
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
   // Racing the clock (late and behind) is the true two-minute drill; a hurry-up game plan
   // otherwise means a no-huddle pace, not a drill for sixty minutes.
-  const urgent = (q >= 4 && trail >= 4 && clock <= 240) || (twoMin && trail > 0);
+  // Before the half every offense works the drill to steal points; late in the game only
+  // the trailing side does.
+  const urgent = (q >= 4 && trail >= 4 && clock <= 240) || (twoMin && (trail > 0 || q === 2));
   const hurry = urgent || plan.tempo === "hurry";
   const chew = plan.tempo === "chew" && trail <= 0 && !(q >= 4 && clock <= 180 && trail >= 1);
   const stopFd = clockStopFirstDown(year) && firstDown;
@@ -786,14 +820,17 @@ function redZoneSqueeze(year: number): number {
   // Eased by ~0.02 when sacks were brought up to real rates: a sack ends drives the old
   // near-sackless calibration never lost, and scoring ran about a point a game light.
   // The 60s and 70s finished more of their trips: scoring ran 1-3 points a game light.
-  if (year <= 1969) return -0.12;
-  if (year <= 1977) return -0.06;
-  if (year <= 1983) return -0.03;
-  if (year <= 1989) return 0.035;
-  if (year <= 1999) return 0.105;
-  if (year <= 2009) return 0.075;
+  // Retuned once both teams ran the drill before the half (more second-quarter points) and
+  // field goals and completions were set to each era's real rates.
+  if (year <= 1969) return -0.24;
+  if (year <= 1977) return -0.055;
+  if (year <= 1983) return 0.03;
+  if (year <= 1989) return 0.1;
+  if (year <= 1999) return 0.15;
+  if (year <= 2009) return 0.095;
+  if (year <= 2019) return -0.04;
   // The spread era finished drives: scoring ran ~2 points a game light at 0.02.
-  return -0.08;
+  return -0.12;
 }
 
 function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
@@ -1431,7 +1468,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (toOf(id) <= 0) return;
     const trail = trailOf(id);
     const twoMin = (q === 2 || q >= 4) && clock <= 120;
-    if (twoMin && trail >= 1 && clock > 8) {
+    if (twoMin && (trail >= 1 || q === 2) && clock > 8) {
       spendTO(id);
     }
   };
@@ -1638,6 +1675,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       down += 1;
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: -1 });
       lastRun = true;
+      // A kneel before the half just runs out the second quarter; the loop takes it to halftime.
+      if (q < 4) continue;
       if (down > 4 || clock <= 0) {
         closeDrive("end");
         break;
@@ -1860,7 +1899,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const loss = sampleYds(save, 6.3, 2, 3, 14);
         if (cur) cur.sackYards = -loss;
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
-        const rusher = pickRusherDef(save, def);
+        const rusher = pickRusherDef(save, def, defClub?.defScheme);
         if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
         const used = snapClock(save, plan, year, q, clock, trail, true, false, false, false);
         tickClock(poss, Math.max(used.used, 18));
@@ -1955,7 +1994,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const hurryP = clamp((sackP - 0.057) * 1.7 + 0.06 + pressure, 0.05, 0.32);
       const hurried = rand(save) < hurryP;
       if (hurried) {
-        const hitter = pickRusherDef(save, def);
+        const hitter = pickRusherDef(save, def, defClub?.defScheme);
         if (hitter) bumpBox(boxOf(defId), hitter.id, { qbHits: 1 });
       }
       let cmpP =
@@ -2077,7 +2116,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
       const t = pickTackler(save, def, true);
       if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
-      const sideline = call === "deep" || ((q === 2 || q >= 4) && clock <= 120 && trail >= 1);
+      const sideline = call === "deep" || ((q === 2 || q >= 4) && clock <= 120 && (trail >= 1 || q === 2));
       const oob = rand(save) < (sideline ? 0.42 : 0.16);
       const used = snapClock(save, plan, year, q, clock, trail, true, oob, yds >= togo, false);
       tickClock(poss, used.used);
@@ -2121,7 +2160,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (yds >= togo) {
         addFd(poss);
         newSet();
-        tryTimeout(poss, !used.stopped && trail >= 1);
+        tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120)));
       } else {
         down += 1;
         togo -= yds;
@@ -2222,7 +2261,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (yds >= togo) {
       addFd(poss);
       newSet();
-      tryTimeout(poss, !used.stopped && trail >= 1);
+      tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120)));
     } else {
       down += 1;
       togo -= yds;
@@ -2242,7 +2281,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
   // Assisted stops: the linebackers and safeties who arrive second.
   const padTackles = (box: BoxPlayer[], u: TeamUnits) => {
-    for (const p of [...u.lb, ...u.db.filter((d) => d.pos === "S")].slice(0, 5)) {
+    for (const p of [...u.lb.filter((l) => !(l.pos === "OLB" && l.arch === "edge")), ...u.db.filter((d) => d.pos === "S").slice(0, 1)].slice(0, 5)) {
       bumpBox(box, p.id, { tackles: randInt(save, 0, 3) });
     }
   };
