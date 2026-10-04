@@ -8,6 +8,8 @@ import {
   draftAnnouncementParts,
   announceDraftPick,
   draftCrowdReaction,
+  draftDeskTake,
+  draftOnClock,
 } from "../src/lib/game/draftAnnouncement.ts";
 import { footballSpeech, footballPosition } from "../src/lib/game/footballSpeech.ts";
 import { draftScoreStep, DRAFT_BPM } from "../src/components/game/draftScore.ts";
@@ -51,7 +53,7 @@ test("a real pick announces its actual slot, full position, college, and next cl
     line,
     /With the 1st pick in the 1966 NFL draft, the Atlanta Falcons select Tom Mack, left guard, from Michigan/,
   );
-  assert.match(line, /Los Angeles Rams are on the clock with pick number 2/);
+  assert.match(line, /Los Angeles Rams/);
   assert.equal(footballSpeech(line, 1966), line);
   assert.equal(draftCrowdReaction(before, after).kind, "applause");
 });
@@ -156,7 +158,9 @@ test("the podium and next-team call are separate so the crowd fits between them"
   const parts = draftAnnouncementParts(before, after);
   assert.match(parts.podium, /Pittsburgh Steelers select Test Prospect, quarterback/);
   assert.doesNotMatch(parts.podium, /on the clock/);
-  assert.equal(parts.onClock, "The Los Angeles Rams are on the clock with pick number 2.");
+  assert.match(parts.onClock, /Los Angeles Rams/);
+  assert.match(parts.onClock, /clock|up next/);
+  assert.ok(parts.desk && parts.desk.length > 10);
   assert.equal(draftAnnouncement(before, after), parts.podium + " " + parts.onClock);
 });
 test("the draft music has four sections and a seamless bounded score", () => {
@@ -172,4 +176,16 @@ test("the draft music has four sections and a seamless bounded score", () => {
     steps.slice(0, 16).map((s) => s.melody),
     steps.slice(192, 208).map((s) => s.melody),
   );
+});
+
+test("round one keeps the commissioner's formula; later rounds and the desk don't repeat back to back", () => {
+  const first = announceDraftPick(selection("x", 5), 1980);
+  assert.match(first, /^With the 5th pick in the 1980 NFL draft, the .+ select Test Prospect/);
+  assert.doesNotMatch(first, /Round 1, pick number/);
+  const later = Array.from({ length: 12 }, (_, i) => announceDraftPick(selection(`p${i}`, 60 + i, { round: 3 }), 1980).replace(/\d+(st|nd|rd|th)?/g, "#").split(" ").slice(0, 3).join(" "));
+  for (let i = 1; i < later.length; i++) assert.notEqual(later[i], later[i - 1]);
+  const takes = Array.from({ length: 6 }, (_, i) => draftDeskTake(selection(`d${i}`, 10 + i), { kind: "murmur", label: "", reason: "" }, 1980));
+  assert.equal(new Set(takes).size, takes.length);
+  const clocks = Array.from({ length: 5 }, (_, i) => draftOnClock(snapshot({ onClock: "ram", nextPick: 30 + i })).replace(/\d+/g, "#"));
+  assert.equal(new Set(clocks).size, 5);
 });

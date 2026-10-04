@@ -1,5 +1,5 @@
 import { castVoices } from "@/lib/voiceCast";
-import { commissionerFor } from "@/lib/game/broadcastCrew";
+import { commissionerFor, draftAnalystFor, pickReaderFor } from "@/lib/game/broadcastCrew";
 import {
   createContext,
   useCallback,
@@ -43,6 +43,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const tab = useGameStore((s) => s.tab);
   const inRoom = tab === "draft" || tab === "office";
   const previous = useRef<DraftAudioSnapshot | null>(null);
+  // The desk's last few takes, so the analyst doesn't say the same thing two picks apart.
+  const recentDesk = useRef<string[]>([]);
   const snapshot = useMemo(
     () => (save.phase === "draft" || previous.current?.drafting ? draftAudioSnapshot(save) : null),
     [save],
@@ -62,6 +64,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     text: string;
     response?: DraftReaction | null;
     nextLine?: string;
+    desk?: string;
+    round?: number;
   } | null>(null);
   const [crowd, setCrowd] = useState(false);
   const crowdEnabled = useRef(crowd);
@@ -127,22 +131,35 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     }
   };
   const speak = useCallback(
-    (text: string, response?: DraftReaction | null, nextLine?: string) => {
+    (text: string, response?: DraftReaction | null, nextLine?: string, desk?: string, round = 1) => {
       stop();
       if (!("speechSynthesis" in window)) {
         setError("Draft narration is unavailable in this browser.");
         setEnabled(false);
         return;
       }
-      replay.current = { text, response, nextLine };
-      setLine([text, nextLine].filter(Boolean).join(" "));
+      replay.current = { text, response, nextLine, desk, round };
+      setLine([text, desk, nextLine].filter(Boolean).join(" "));
       setError("");
       const token = serial.current;
-      // The commissioner reads the picks: Rozelle, Tagliabue, Goodell. A man's voice, his own.
-      const reader = castVoices(voices, [{ key: "COMM", gender: commissionerFor(save.year).gender, rate: 0.98 }], voice).get("COMM");
-      const chosen = reader?.voice;
+      // The commissioner reads round one (Rozelle, Tagliabue, Goodell); a league official reads
+      // the later rounds; the desk analyst reacts. Each gets a voice of their own.
+      const official = pickReaderFor(save.year, 2);
+      const analyst = draftAnalystFor(save.year);
+      const cast = castVoices(
+        voices,
+        [
+          { key: "COMM", gender: commissionerFor(save.year).gender, rate: 0.98 },
+          { key: "DESK", gender: analyst.gender, rate: 1.04 },
+          { key: official.key, gender: official.gender, rate: 1.02 },
+        ],
+        voice,
+      );
+      const readerKey = pickReaderFor(save.year, round).key;
       setBusy(true);
-      const read = (words: string, onEnd: () => void) => {
+      const read = (words: string, onEnd: () => void, who = readerKey) => {
+        const reader = cast.get(who);
+        const chosen = reader?.voice;
         if (serial.current !== token) return;
         if (!words) {
           onEnd();
@@ -179,8 +196,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         void (async () => {
           if (response) await playReaction(response, token, true);
           if (serial.current !== token) return;
-          if (nextLine) read(nextLine, () => setBusy(false));
-          else setBusy(false);
+          if (serial.current !== token) return;
+          const clock = () => (nextLine ? read(nextLine, () => setBusy(false)) : setBusy(false));
+          if (desk) read(desk, clock, "DESK");
+          else clock();
         })();
       });
     },
@@ -236,7 +255,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   }, [inRoom, stop, stopMusic]);
   useEffect(() => {
     const parts =
-      previous.current && snapshot ? draftAnnouncementParts(previous.current, snapshot) : null;
+      previous.current && snapshot ? draftAnnouncementParts(previous.current, snapshot, recentDesk.current) : null;
+    if (parts?.desk) recentDesk.current = [...recentDesk.current, parts.desk.replace(/ (Good find this late|Day-two picks like that build a roster)\.$/, "")].slice(-6);
     const response =
       previous.current && snapshot ? draftCrowdReaction(previous.current, snapshot) : null;
     previous.current = snapshot;
@@ -246,10 +266,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       setCrowd(false);
     }
     if (inRoom && !document.hidden && parts) {
-      setLine([parts.podium, parts.onClock].filter(Boolean).join(" "));
-      replay.current = { text: parts.podium, response, nextLine: parts.onClock };
+      setLine([parts.podium, parts.desk, parts.onClock].filter(Boolean).join(" "));
+      replay.current = { text: parts.podium, response, nextLine: parts.onClock, desk: parts.desk, round: parts.round };
       setReaction(response);
-      if (enabled) speak(parts.podium, response, parts.onClock);
+      if (enabled) speak(parts.podium, response, parts.onClock, parts.desk, parts.round);
       else if (crowd && response) {
         stop();
         void playReaction(response, serial.current);
@@ -330,7 +350,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
               disabled={!line}
               onClick={() => {
                 const r = replay.current;
-                if (r) speak(r.text, r.response, r.nextLine);
+                if (r) speak(r.text, r.response, r.nextLine, r.desk, r.round);
               }}
             >
               Replay announcement

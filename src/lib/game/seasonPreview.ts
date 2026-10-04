@@ -355,7 +355,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
       const v = avg(three.map((g) => rating.get(oppOf(g, id)) ?? 0));
       if (v > worst) {
         worst = v;
-        stretch = `Weeks ${three[0]!.week}-${three[2]!.week}: ${three.map((g) => `${g.homeId === id ? "vs" : "at"} ${teamAbbr(oppOf(g, id))}`).join(", ")}`;
+        // Said the way a broadcaster would: "weeks 10 through 12: the Raiders at home, then at the Broncos and at the 49ers".
+        const leg = (g: (typeof three)[number]) => (g.homeId === id ? `the ${nick(oppOf(g, id))} at home` : `at the ${nick(oppOf(g, id))}`);
+        stretch = `weeks ${three[0]!.week} through ${three[2]!.week}: ${leg(three[0]!)}, then ${leg(three[1]!)} and ${leg(three[2]!)}`;
       }
     }
     const first = sch[0];
@@ -425,7 +427,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
           ]);
     const hotSeatTail = hc && (hc.yearsOnJob ?? 0) >= 3 && lo <= games * 0.35;
     const worstCase = compose(k + "wc", year, [
-      [`${lo} wins`, `A ${lo}-win slog`, `Just ${lo} wins`, `${lo} wins, maybe fewer`, `Only ${lo} wins`],
+      lo <= 1
+        ? [`A winless season`, `One win, maybe none`, `A long, winless fall`]
+        : [`${lo} wins`, `A ${lo}-win slog`, `Just ${lo} wins`, `${lo} wins, maybe fewer`, `Only ${lo} wins`],
       hotSeatTail
         ? [`, and ${hc!.name} is coaching for his job by Thanksgiving`, `, and ${hc!.name}'s seat gets hot`, `, and ownership starts asking ${hc!.name} hard questions`]
         : tier === "Contender"
@@ -1122,17 +1126,25 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   const hostN = cast.HOST.tenure;
   const intro = hostN === 1 ? `I'm ${crew.HOST.name}, and this is my first preview on this desk.` : `I'm ${crew.HOST.name}, back for my ${ORD_WORDS[hostN - 1] ?? `${hostN}th`} season preview.`;
   const analystN = cast.ANALYST.tenure;
-  const withCrew = analystN === 1 ? `Joining us for the first time, ${crew.ANALYST.name}, and as always, ${crew.REPORTER.name}.` : `With me, ${first(crew.ANALYST.name)} ${crew.ANALYST.name.split(" ").at(-1)} and ${crew.REPORTER.name}.`;
+  const withCrew =
+    analystN === 1
+      ? `Joining us for the first time, ${crew.ANALYST.name}, and as always, ${crew.REPORTER.name}.`
+      : v("with", [
+          `With me, ${first(crew.ANALYST.name)} ${crew.ANALYST.name.split(" ").at(-1)} and ${crew.REPORTER.name}.`,
+          `${crew.ANALYST.name} is here, and so is ${crew.REPORTER.name}.`,
+          `Alongside me as always, ${crew.ANALYST.name} and ${crew.REPORTER.name}.`,
+          `${crew.ANALYST.name} and ${crew.REPORTER.name} are back with me on the desk.`,
+        ]);
   chap("open", "SEASON PREVIEW", v("ttl", [`${year}: here we go`, `The ${year} season starts now`, `Welcome to ${year}`, `${year}: everybody's undefeated`, `Kickoff ${year}`]), [favorite.id], [
     H(`${v("hello", P.hello)} ${intro} ${withCrew} ${v("era", eraColor(year))} ${ids.length} teams, ${games} games apiece, one trophy. ${v("prom", P.promise)}`),
     A(
       `${tic("ANALYST", "open")} ${v("ft", P.firstTake)} ${fill(v("fav", P.favorite), { T: name(favorite.id), P: pct(favorite.titlePct) })} ${favorite.titlePct < 0.15 ? v("fw", P.favoriteWide) : v("fn", P.favoriteNarrow)}`,
     ),
-    ...(rules ? [R(`${tic("REPORTER", "rules")} the rulebook changed this year: ${rules[0]!.toLowerCase()}${rules.slice(1)}`)] : []),
+    ...(rules ? [R(`${tic("REPORTER", "rules")} The rulebook changed this year: ${rules[0]!.toLowerCase()}${rules.slice(1)}`)] : []),
   ]);
   if (receipts) {
     chap("receipts", "THE RECEIPTS", receipts.headline, lastChamp ? [lastChamp] : [], [
-      H(`${tic("HOST", "rc")} before the new picks, the old ones. ${receipts.lines.slice(0, 2).join(" ")}`),
+      H(`${tic("HOST", "rc")} Before the new picks, the old ones. ${receipts.lines.slice(0, 2).join(" ")}`),
       A(receipts.lines.slice(2).join(" ") || v("rcA", P.receiptsBad)),
     ]);
   }
@@ -1143,15 +1155,105 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   for (const st of orderedStories.slice(0, storyCount)) {
     chap(`story-${st.id}`, st.kicker, st.title, st.teamIds.slice(0, 2), [H(st.body), A(`${tic("ANALYST", st.id)} ${v("sr" + st.id, P.storyReply)}`)]);
   }
+  // Features are talked through, not read off the table: the desk works the list in sentences.
+  const listOf = (xs: string[]) => (xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs[0] ?? "");
+  const words = (t: string) => t.replace(/\byds\b/g, "yards").replace(/\bTD\b/g, "touchdowns").replace(/\bproj\. wins\b/g, "projected wins");
+  const speakFeature = (f: Feature): Line[] => {
+    const rows = f.rows;
+    const who = (r: Feature["rows"][number]) => (r.playerId ? playerName(save.players[r.playerId]!) : r.value ?? r.label);
+    switch (f.id) {
+      case "qbs": {
+        const q = rows.map((r) => `${who(r)} of the ${nick(r.teamId!)}`);
+        return [
+          H(f.intro),
+          A(`Number one: ${q[0]}. ${words(rows[0]!.note ?? "")}.${q[1] ? ` Then ${q[1]}${q[2] ? `, and ${q[2]} at three` : ""}.` : ""}`),
+          q.length > 3 ? H(`Four through seven: ${listOf(rows.slice(3, 7).map(who))}.`) : undefined,
+          q.length > 7 ? R(`And rounding out the ten, ${listOf(rows.slice(7, 10).map(who))}.`) : undefined,
+          A(v("qbr", ["I'd take any one of those guys and build a team around him.", "You could argue the order. You can't argue the names.", "Number one isn't close, in my opinion.", "Watch the young ones on that list. They'll climb."])),
+        ].filter((x): x is Line => !!x);
+      }
+      case "ou": {
+        const out: Line[] = [H(f.intro)];
+        for (const [i, r] of rows.slice(0, 5).entries()) {
+          const [side, n] = (r.value ?? "").split(" ");
+          out.push(H(i === 0 ? `The ${r.label}, ${n} wins.` : v(`ouq${i}`, [`The ${r.label}, ${n}.`, `${r.label}: ${n}.`, `How about the ${r.label} at ${n}?`])));
+          const why = /propping/.test(r.note ?? "")
+            ? v(`ouw${i}`, ["Last year's record is propping up that number.", "They overachieved last year. That's baked into the line.", "I don't trust last year's record."])
+            : /questions/.test(r.note ?? "")
+              ? v(`ouw${i}`, ["Too many questions for that many wins.", "I need to see it first.", "There's a lot that has to go right for that."])
+              : /better than the line/.test(r.note ?? "")
+                ? v(`ouw${i}`, ["The roster is better than the line.", "That number's too low. They're good.", "I like this team more than the oddsmakers do."])
+                : r.note ?? "";
+          out.push(A(`${side}. ${why}`));
+        }
+        return out;
+      }
+      case "questions":
+        return [H(f.intro), ...rows.flatMap((r, i) => [i % 2 ? R(r.value ?? "") : H(r.value ?? ""), A(r.note ?? "")])];
+      case "rivalry": {
+        const [x, y, series] = rows;
+        return [
+          H(`${f.intro} ${f.title}.`),
+          A(`The ${x!.label}: ${x!.note} The ${y!.label}: ${y!.note}`),
+          series ? R(`${series.value}. ${series.note ?? ""}`) : undefined,
+        ].filter((l): l is Line => !!l);
+      }
+      case "anniversary":
+        return [
+          H(f.intro),
+          ...rows.map((r, i) => (i % 2 ? A : R)(`${r.label} ago: the ${r.value}. ${r.note}`)),
+          A(v("ann", ["Feels like yesterday.", "What a team that was.", "They don't make them like that anymore."])),
+        ];
+      case "trenches": {
+        const ol = rows.filter((r) => r.label.startsWith("OL"));
+        const dl = rows.filter((r) => r.label.startsWith("DL"));
+        return [
+          H(f.intro),
+          A(`The best offensive lines in football: the ${listOf(ol.map((r) => r.value!))}. The ${ol[0]!.value} grade out at ${ol[0]!.note!.split(" ").at(-1)}.`),
+          R(`On the other side of the ball, the best fronts belong to the ${listOf(dl.map((r) => r.value!))}.`),
+          A(v("trn", ["Win up front and everything else gets easier.", "That's where championships start.", "Nobody talks about it, but that's the whole game."])),
+        ];
+      }
+      case "coaches": {
+        const by = (l: string) => rows.filter((r) => r.label === l);
+        const tenure = by("Longest tenure")[0];
+        const most = by("Most wins")[0];
+        const rings = by("Rings")[0];
+        const fresh = by("New");
+        return [
+          H(f.intro),
+          tenure ? H(`${tenure.value} has been on the job longest. ${tenure.note}`) : undefined,
+          most ? A(`${most.value} has won more than anybody on a sideline right now: ${most.note!.replace(" career.", "")} for his career.${rings && rings.value === most.value ? ` And ${rings.note!.replace(".", "")} to go with it.` : ""}`) : undefined,
+          rings && rings.value !== most?.value ? A(`${rings.value} has the hardware: ${rings.note}`) : undefined,
+          fresh.length ? R(`New faces: ${listOf(fresh.map((r) => `${r.value}, who ${r.note!.replace("Takes", "takes").replace(/\.$/, "")}`))}.`) : undefined,
+        ].filter((l): l is Line => !!l);
+      }
+      case "ages": {
+        const young = rows.filter((r) => r.label === "Young");
+        const old = rows.filter((r) => r.label === "Veteran");
+        const age = (r: Feature["rows"][number]) => r.note!.match(/[\d.]+/)?.[0] ?? "";
+        return [
+          H(f.intro),
+          A(`The youngest lineups in football: the ${listOf(young.map((r) => r.value!))}. The ${young[0]!.value} start guys averaging ${age(young[0]!)}.`),
+          R(`And the most experienced: the ${listOf(old.map((r) => r.value!))}, up around ${age(old[0]!)}.`),
+          A(v("agr", ["Young legs win in December. Old heads win in January.", "Experience matters, until the hamstrings start going.", "I'll take the veterans in a big game every time."])),
+        ];
+      }
+      case "schedules": {
+        const tough = rows.filter((r) => r.label === "Toughest");
+        const soft = rows.filter((r) => r.label === "Softest");
+        return [
+          H(f.intro),
+          R(`The toughest schedules belong to the ${listOf(tough.map((r) => r.value!))}.${tough[0]?.note ? ` Look at the ${tough[0].value} in ${tough[0].note}.` : ""}`),
+          A(`The easiest: the ${listOf(soft.map((r) => r.value!))}. With that slate, the ${soft[0]!.value} make the playoffs ${soft[0]!.note!.replace(" to make the playoffs with it.", "")} of the time.`),
+        ];
+      }
+      default:
+        return [H(f.intro), ...rows.slice(0, 6).map((r, i) => (i % 2 ? H : A)(words(`${r.label}: ${who(r)}${r.value && r.value !== who(r) ? `, ${r.value}` : ""}. ${r.note ?? ""}`)))];
+    }
+  };
   const featChap = (f: Feature) =>
-    chap(`feature-${f.id}`, f.kicker.toUpperCase(), f.title, f.rows.map((r) => r.teamId).filter((x): x is TeamId => !!x).slice(0, 2), [
-      H(f.intro),
-      ...f.rows.slice(0, 6).map((r, i) => {
-        const who = r.playerId ? playerName(save.players[r.playerId]!) : r.value ?? r.label;
-        const text = f.id === "questions" ? `${r.value} ${r.note}` : f.id === "qbs" ? `Number ${r.label}: ${who}, ${nick(r.teamId!)}. ${r.note}.` : `${r.label}: ${who}${r.value && r.value !== who ? `, ${r.value}` : ""}. ${r.note ?? ""}`;
-        return i % 2 ? H(text) : A(text);
-      }),
-    ]);
+    chap(`feature-${f.id}`, f.kicker.toUpperCase(), f.title, f.rows.map((r) => r.teamId).filter((x): x is TeamId => !!x).slice(0, 2), speakFeature(f));
   if (features[0]) featChap(features[0]);
   const divFmt = (d: (typeof divisions)[number], idx: number) => {
     const order = d.order.map((id) => T.get(id)!);
@@ -1159,7 +1261,7 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     const second = order[1];
     const sleeperD = order.slice(1).sort((a, b) => b.playoffPct - a.playoffPct)[0];
     const camp = order.flatMap((t) => t.newcomers.slice(0, 1)).map((id) => save.players[id]!).filter(Boolean).sort((a, b) => b.ovr - a.ovr)[0];
-    const finish = `${order.map((t, i) => `${i + 1}, the ${nick(t.id)}`).join("; ")}.`;
+    const finish = `${order.slice(0, -1).map((t) => `the ${nick(t.id)}`).join(", ")}, and the ${nick(order[order.length - 1]!.id)}, in that order.`;
     const reason = top.outlook.split(". ").slice(0, 2).join(". ") + ".";
     const campLine = camp ? `${tic("REPORTER", d.key)} ${fill(v("rc" + d.key, P.reporterCamp), { P: playerName(camp), T: nick(teamOf(camp)) })} ${camp.draftYear === year ? v("rk" + d.key, ["Rookie or not, they expect him to play.", "He'll play early.", "The rookie isn't waiting his turn."]) : v("vt" + d.key, ["He fits what they do.", "He's already a leader in that room.", "The coaches love the fit.", "Expect him on the field a lot."])}` : "";
     const opener = fill(v("do" + d.key, P.divOpen), { D: d.key });
@@ -1186,11 +1288,27 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     if (i === half - 1 && features[1]) featChap(features[1]);
   });
   if (year % 2) {
-    chap("lightning", "LIGHTNING ROUND", v("lt", ["Every club in one breath", "All of them, fast", "Around the league in sixty seconds"]), [], ranked.map((id, i) => {
-      const t = T.get(id)!;
-      const line = `${i + 1}. The ${name(id)}: ${t.projW.toFixed(1)} wins. ${t.verdict}`;
-      return i % 2 ? A(line) : H(line);
-    }));
+    // Fast, but still a conversation: the board in five tiers, a different take on each.
+    const groups = [
+      { at: 0, n: 5, lead: v("lt0", ["At the top of the board", "The heavyweights", "Our top five"]) },
+      { at: 5, n: 7, lead: v("lt1", ["Next up", "The next tier", "Right behind them"]) },
+      { at: 12, n: 7, lead: v("lt2", ["The middle of the pack", "The muddle in the middle", "The coin flips"]) },
+      { at: 19, n: 6, lead: v("lt3", ["Long shots", "Needing some luck", "The hopefuls"]) },
+      { at: 25, n: 99, lead: v("lt4", ["And the bottom of the board", "Rebuilding", "The long road"]) },
+    ];
+    const spoken = new Set<string>();
+    chap("lightning", "LIGHTNING ROUND", v("lt", ["Every club in one breath", "All of them, fast", "Around the league in sixty seconds"]), [], [
+      H(v("lth", ["Lightning round. Every team, our projected wins, as fast as we can.", "Let's go fast. All of them.", "Thirty seconds on the clock. Every club."]).replace("Every team", "Every team").replace("Thirty", ids.length > 30 ? "Forty" : "Thirty")),
+      ...groups.flatMap((gr, i) => {
+        const part = ranked.slice(gr.at, gr.at + gr.n);
+        if (!part.length) return [];
+        const list = listOf(part.map((id, j) => `the ${nick(id)}${j < 2 ? ` at ${T.get(id)!.projW.toFixed(1)}` : ""}`));
+        const take = part.map((id) => T.get(id)!.verdict).find((x) => !spoken.has(x));
+        if (take) spoken.add(take);
+        const speak = [A, R, A, R, A][i]!;
+        return [speak(`${gr.lead}: ${list}.`), ...(take ? [H(`${take}`)] : [])];
+      }),
+    ]);
   } else {
     const tiers = ["Contender", "Playoff hopeful", "In the mix", "Long shot", "Rebuilding"] as const;
     chap("tiers", "THE TIERS", v("tt", ["Sorting the league", "Where everybody stands", "Tier by tier"]), [], tiers

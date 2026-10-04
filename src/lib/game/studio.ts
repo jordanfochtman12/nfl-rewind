@@ -93,6 +93,30 @@ const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "e
 const num = (n: number) => (n >= 0 && n <= 10 ? WORDS[n]! : String(n));
 const plural = (n: number, w: string, pl = `${w}s`) => `${num(n)} ${n === 1 ? w : pl}`;
 
+function gcd(a: number, b: number): number {
+  return b ? gcd(b, a % b) : a;
+}
+
+/** "1,530 rush yds · 12 TD · 52 rec" said out loud: "1,530 rushing yards, 12 touchdowns and 52 catches". */
+function spokenStats(line: string): string {
+  const map: [RegExp, string][] = [
+    [/\brush yds\b/g, "rushing yards"],
+    [/\brec yds\b/g, "receiving yards"],
+    [/\bpass yds\b/g, "passing yards"],
+    [/\byds\b/g, "yards"],
+    [/\bTDs?\b/g, "touchdowns"],
+    [/\bINTs?\b/g, "interceptions"],
+    [/\brec\b/g, "catches"],
+    [/\btkl\b/g, "tackles"],
+    [/\bFF\b/g, "forced fumbles"],
+    [/\bFGs?\b/g, "field goals"],
+  ];
+  const parts = line.split(/\s*·\s*/).map((x) => map.reduce((t, [re, w]) => t.replace(re, w), x.trim())).filter(Boolean);
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0] ?? line;
+}
+
+const theSite = (site: string) => (/bowl|coliseum|dome/i.test(site) && !/^the /i.test(site) ? `the ${site}` : site);
+
 function hash(s: string): number {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) {
@@ -155,8 +179,15 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
       .slice(-3)
       .flatMap((x) => (x.episode!.chapters ?? []).flatMap((c) => (c.lines ?? []).map((l) => l.text.slice(0, 24)))),
   );
+  // The big shows air once a year, so a slot steps to a different choice each season (the
+  // stride is coprime to the pool size); weekly shows also step by the week.
+  const isWeekly = edition === "weekly" || edition === "playoffs";
   const say = (slot: string, list: readonly string[]): string => {
-    const start = hash(`${id}|${slot}`) % list.length;
+    const n = list.length;
+    const key = `${edition}|${slot}`;
+    let stride = n > 1 ? (hash(key + "s") % (n - 1)) + 1 : 1;
+    while (n > 1 && gcd(stride, n) !== 1) stride = (stride % (n - 1)) + 1;
+    const start = (hash(isWeekly ? `${id}|${slot}` : key) + (isWeekly ? 0 : year * stride)) % n;
     for (let k = 0; k < list.length; k++) {
       const t = list[(start + k) % list.length]!;
       const stem = t.slice(0, 24);
@@ -258,12 +289,29 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
       ? `${show.title}: ${plural(games.length, "game")}, ${total} points, and ${close ? `${num(close)} of them came down to one possession` : "not a lot of drama, frankly"}.`
       : `${show.title}, and one game worth the whole night.`
     : edition === "seasonFinale"
-      ? "The regular season is in the books, the playoff field is set, and we hand out our own awards tonight."
+      ? say("what-f", [
+          "The regular season is in the books, the playoff field is set, and we hand out our own awards tonight.",
+          "That's the regular season. Tonight: who's in, who's out, and our picks for the hardware.",
+          "The standings are final. We'll set the playoff field and hand out a few awards of our own.",
+          "Every team has played its last regular-season game. Now the real fun starts.",
+        ])
       : edition === "championship"
-        ? `Two teams left. We'll look back at how they got here and ahead to Super Bowl ${roman(superBowlNumber(year))}.`
+        ? say("what-c", [
+            `Two teams left. We'll look back at how they got here and ahead to Super Bowl ${roman(superBowlNumber(year))}.`,
+            `It's down to two. Super Bowl ${roman(superBowlNumber(year))} is set, and we'll break it all down.`,
+            `The conference champions are crowned, and the matchup for Super Bowl ${roman(superBowlNumber(year))} is locked in.`,
+          ])
         : edition === "superBowl"
-          ? "A champion has been crowned. We'll celebrate them and look back on the whole season."
-          : "Awards night. The league has handed out its honors, and we've got thoughts.";
+          ? say("what-s", [
+              "A champion has been crowned. We'll celebrate them and look back on the whole season.",
+              "The confetti is still coming down. Let's talk about the champions, and the season that got them there.",
+              "It's over. We have a champion, and we have a lot to say about how they did it.",
+            ])
+          : say("what-a", [
+              "Awards night. The league has handed out its honors, and we've got thoughts.",
+              "The votes are in and the trophies are handed out. Let's go through all of it.",
+              "It's honors night around the league. Some easy calls, and a couple of arguments.",
+            ]);
   const tease =
     lead && weekly
       ? lead.ot
@@ -290,10 +338,14 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
               ]),
         )
       : edition === "seasonFinale"
-        ? analyst(`${seasonLen} games, ${H}, and now it's single elimination. Everything resets.`)
+        ? analyst(say("open-f", [`${seasonLen} games, ${H}, and now it's single elimination. Everything resets.`, `Now it's lose and go home, ${H}. I love this time of year.`, `The regular season tells you who's good. The playoffs tell you who's great.`, `Everybody's record is zero and zero again, ${H}. One bad afternoon and you're done.`]))
         : edition === "championship"
-          ? analyst(`Both of these teams earned it, ${H}. No flukes in this matchup.`)
-          : undefined,
+          ? analyst(say("open-c", [`Both of these teams earned it, ${H}. No flukes in this matchup.`, `Best two teams in football, ${H}. I really believe that.`, `Two very different teams, and I can't wait to see how this one plays out.`, `It's the matchup a lot of us wanted, ${H}.`]))
+          : edition === "superBowl"
+            ? analyst(say("open-s", [`What a game, ${H}. What a season.`, `I'm still a little hoarse from that one.`, `Champions, ${H}. Nobody can take that away from them now.`]))
+            : edition === "awards"
+              ? analyst(say("open-w", [`I've got a few bones to pick, ${H}. Fair warning.`, `Some deserving winners tonight.`, `Let's hand out some hardware.`]))
+              : undefined,
   ]);
 
   /* ---------- the games ---------- */
@@ -357,7 +409,7 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     if (g.phase !== "regular")
       means =
         g.phase === "superBowl"
-          ? `The ${nick(winner)} are champions. The ${nick(loser)} come up one game short.`
+          ? say(`sbm${k}`, [`The ${nick(winner)} are champions. The ${nick(loser)} come up one game short.`, `It's the ${nick(winner)}'s trophy. The ${nick(loser)} were one win away.`, `Champions: the ${nick(winner)}. And a tough way for the ${nick(loser)} to end it.`])
           : say(`po${k}`, [
               `The ${nick(winner)} keep going. The ${nick(loser)}' season is over.`,
               `The ${nick(winner)} advance, and for the ${nick(loser)}, that's the end of the road.`,
@@ -480,7 +532,7 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     for (const [k, a] of (show.awards ?? []).entries())
       add(`award-${a.label}`, finale ? "STUDIO AWARDS BALLOT" : "OFFICIAL SEASON HONORS", a.label, [a.honoree.teamId], [
         host(finale ? say(`aw${k}`, [`Our pick for ${a.label}: ${a.honoree.name}, ${name(a.honoree.teamId)}.`, `${a.label}. The desk went with ${a.honoree.name}.`]) : say(`aw${k}`, [`The ${a.label} goes to ${a.honoree.name}.`, `${a.label}: ${a.honoree.name}, ${name(a.honoree.teamId)}.`])),
-        analyst(`${a.honoree.line}. ${say(`awa${k}`, [`Easy call, ${H}.`, `Not even close, in my opinion.`, `I had a couple of guys in mind, but he earned it.`, `That's a season people are going to remember.`, `Well deserved.`, `Nobody was better at his job this year.`])}`),
+        analyst(`${cap(spokenStats(a.honoree.line))}. ${say(`awa${k}`, [`Easy call, ${H}.`, `Not even close, in my opinion.`, `I had a couple of guys in mind, but he earned it.`, `That's a season people are going to remember.`, `Well deserved.`, `Nobody was better at his job this year.`, `I'd have voted the same way.`, `He made it an easy ballot.`, `That's the one I was pulling for, ${H}.`, `Good for him. He's put in the work.`, `You could see this one coming in October.`])}`),
       ]);
 
   /* ---------- what's next ---------- */
@@ -504,7 +556,7 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     const disagree = !!pick && chance(`dis${k}`, 3);
     add(`preview-${g.id}`, neutral ? "SUPER BOWL / THE MATCHUP" : "NEXT ON THE SCHEDULE", `${name(away)} vs. ${name(home)}`, [away, home], [
       host(
-        `${neutral ? `Super Bowl ${roman(superBowlNumber(year))}, from ${site!.site} in ${site!.city}. Neutral field, so neither side gets a home crowd.` : say(`pv${k}`, [`Looking ahead: ${name(away)} at ${name(home)}.`, `Next up, the ${nick(away)} visit the ${nick(home)}.`, `Circle this one: ${name(away)} at ${name(home)}.`, `Here's the one we're watching next: ${name(away)} at ${name(home)}.`])} ${[p?.series, p?.last].filter(Boolean).map((x) => `${x!.replace(/\.$/, "")}.`).join(" ")} ${say(`pvq${k}`, [`${A}, break it down.`, `${A}, how do you see it?`, `What's the matchup, ${A}?`, `${A}, set it up for us.`])}`,
+        `${neutral ? `Super Bowl ${roman(superBowlNumber(year))}, from ${theSite(site!.site)} in ${site!.city}. ${say("neutral", ["Neutral field, so neither side gets a home crowd.", "Neutral field, two fan bases, one trophy.", "Neutral field. No home-field edge for anybody."])}` : say(`pv${k}`, [`Looking ahead: ${name(away)} at ${name(home)}.`, `Next up, the ${nick(away)} visit the ${nick(home)}.`, `Circle this one: ${name(away)} at ${name(home)}.`, `Here's the one we're watching next: ${name(away)} at ${name(home)}.`])} ${[p?.series, p?.last].filter(Boolean).map((x) => `${x!.replace(/\.$/, "")}.`).join(" ")} ${say(`pvq${k}`, [`${A}, break it down.`, `${A}, how do you see it?`, `What's the matchup, ${A}?`, `${A}, set it up for us.`])}`,
       ),
       analyst(`${teamCase(away)} ${teamCase(home)}${pick ? ` ${say(`pk${k}`, [`I'm taking the ${nick(pick)}.`, `Give me the ${nick(pick)}.`, `I like the ${nick(pick)} in this one.`, `My pick? The ${nick(pick)}.`])} ${p?.note ?? ""}` : ""}`),
       pick
@@ -548,27 +600,46 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     const mvpBox = mvp && [...(lead.boxHome ?? []), ...(lead.boxAway ?? [])].find((b) => b.playerId === mvp.id);
     const mvpLine = mvpBox && mvp ? spokenLine(mvpBox, mvp.pos) : undefined;
     add("champions", "THE TROPHY PRESENTATION", `${name(champion)} own ${year}`, [champion], [
-      host(`From ${site.site} in ${site.city}, the ${name(champion)} are your Super Bowl ${roman(superBowlNumber(year))} champions. ${score(lead)}.`),
+      host(
+        say("champ", [
+          `From ${theSite(site.site)} in ${site.city}, the ${name(champion)} are your Super Bowl ${roman(superBowlNumber(year))} champions.`,
+          `Super Bowl ${roman(superBowlNumber(year))} belongs to the ${name(champion)}. Here comes the trophy.`,
+          `The ${name(champion)} are champions of professional football, and the celebration in ${site.city} is just getting started.`,
+        ]),
+      ),
       mvp
-        ? analyst(`And the MVP is ${playerName(mvp)}${mvpLine ? `: ${mvpLine}` : ""}. ${say("mvp", [`He was the best player on the biggest stage, ${H}.`, `When it mattered most, he was there.`, `That's a career-defining night.`])}`)
+        ? analyst(`${say("mvpi", [`And the MVP is ${playerName(mvp)}`, `Your Super Bowl MVP: ${playerName(mvp)}`, `The MVP award goes to ${playerName(mvp)}`])}${mvpLine ? `: ${mvpLine}` : ""}. ${say("mvp", [`He was the best player on the biggest stage, ${H}.`, `When it mattered most, he was there.`, `That's a career-defining night.`, `He'll be telling his grandkids about this one.`, `You dream about a game like that as a kid.`])}`)
         : analyst(`What a performance, ${H}. They earned every bit of it.`),
     ]);
     const path = save.playoffGames.filter((x) => x.played && involved(x, champion));
     const old = save.history.superBowls.filter((b) => b.year < save.year && (b.homeScore > b.awayScore ? b.homeId : b.awayId) === champion);
     add("legacy", "THE YEAR IN REVIEW", "The championship road", [champion], [
       host(`The ${nick(champion)} went ${record(save, champion)} in the regular season. ${path.map((x) => `${x.round}, ${score(x)}`).join(". ")}. And tonight, ${score(lead)}.`),
-      reporter(old.length ? `That's ${plural(old.length + 1, "Super Bowl title")} for this franchise in our books now.` : `It's the first Super Bowl title for this franchise in our books.`),
-      analyst(`And credit to the ${nick(runner)}. A ${record(save, runner)} season and they made it to the last game. Nothing to hang their heads about.`),
+      reporter(
+        old.length
+          ? say("titles", [`That's ${plural(old.length + 1, "Super Bowl title")} for this franchise in our books now.`, `Title number ${num(old.length + 1)} for this franchise.`, `They've done this before. That's ${plural(old.length + 1, "championship")} now.`])
+          : say("titles", [`It's the first Super Bowl title for this franchise in our books.`, `A first championship for this franchise. They'll remember this one forever.`, `Never done it before. They've done it now.`]),
+      ),
+      analyst(say("runner", [`And credit to the ${nick(runner)}. A ${record(save, runner)} season and they made it to the last game. Nothing to hang their heads about.`, `Don't forget the ${nick(runner)}, ${H}. ${record(save, runner)}, and one game from a title.`, `The ${nick(runner)} will be back. That's a good football team.`])),
     ]);
     const best = season.slice().sort((a, b) => b.homeScore + b.awayScore - (a.homeScore + a.awayScore))[0];
     if (best)
       add("season-moment", "SEASON REWIND", "The highest-scoring Sunday", [best.awayId as TeamId, best.homeId as TeamId], [
         host(`One more look back. Week ${best.week}: ${score(best)}. ${best.homeScore + best.awayScore} points, the highest-scoring game of the year.`),
-        best.highlights?.[0] ? analyst(`I still think about this one. ${best.highlights[0]}`) : undefined,
+        best.highlights?.[0] ? analyst(`${say("rew", [`I still think about this one.`, `What a game that was.`, `I remember exactly where I was for this one, ${H}.`, `That one stuck with me.`])} ${best.highlights[0]}`) : undefined,
       ]);
     for (const b of show.leaders?.slice(0, 3) ?? []) {
       const r = b.rows[0];
-      if (r) add(`leader-${b.label}`, "THE SEASON'S STANDARD", b.label, [r.teamId], [host(`${b.label}: ${r.name}, ${r.value.toLocaleString("en-US")}.`), analyst(say(`ld${b.label}`, [`Nobody did it better this year.`, `That's an outstanding season, ${H}.`, `Remember that number.`]))]);
+      if (r) add(`leader-${b.label}`, "THE SEASON'S STANDARD", b.label, [r.teamId], [
+          host(
+            say(`ldh${b.label}`, [
+              `${spokenStats(b.label)}: ${r.name}, ${r.value.toLocaleString("en-US")}.`,
+              `The league leader in ${spokenStats(b.label).toLowerCase()}: ${r.name}, with ${r.value.toLocaleString("en-US")}.`,
+              `Nobody had more ${spokenStats(b.label).toLowerCase()} than ${r.name}. ${r.value.toLocaleString("en-US")}.`,
+            ]),
+          ),
+          analyst(say(`ld${b.label}`, [`Nobody did it better this year.`, `That's an outstanding season, ${H}.`, `Remember that number.`, `That's a career year.`, `He was the best in the league at it, and it wasn't close.`, `Put that one on the resume.`])),
+        ]);
     }
   }
 
@@ -586,11 +657,11 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     host(
       `${
         edition === "superBowl"
-          ? `The ${name(win(lead!))} are champions of ${year}. Next come the awards, the Pro Bowl, retirements, and the work of building next year's roster.`
+          ? say("so-s", [`The ${name(win(lead!))} are champions of ${year}. Next come the awards, the Pro Bowl, retirements, and the work of building next year's roster.`, `Enjoy it, ${nick(win(lead!))} fans. For everybody else, the offseason starts tonight.`, `That's the ${year} season, and the ${name(win(lead!))} own it. The chase for next year starts now.`])
           : edition === "championship"
-            ? `The matchup is set. One game for the trophy.`
+            ? say("so-c", [`The matchup is set. One game for the trophy.`, `Two teams, one trophy. We'll see you on the other side of it.`, `That's the setup. Enjoy the big game.`])
             : finale
-              ? `The regular season is closed. We'll be back after the first round.`
+              ? say("so-f", [`The regular season is closed. We'll be back after the first round.`, `The bracket is set. We'll see you after the first round.`, `Enjoy the playoffs. We'll be back after the first weekend.`])
               : upcoming.length
                 ? `${cap(plural(upcoming.length, "game"))} on the next slate, and we'll check our picks after.`
                 : ""

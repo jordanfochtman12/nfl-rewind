@@ -63,3 +63,20 @@ export function commissionerFor(year: number): { name: string; gender: Gender } 
 }
 
 export const firstName = (n: string) => n.replace(/ “.*”/, "").split(" ")[0]!;
+
+/**
+ * Past the first round the commissioner hands the podium to a league official, the way the
+ * real draft does, so day two has a voice of its own.
+ */
+export function pickReaderFor(year: number, round: number): { key: string; name: string; gender: Gender } {
+  if (round <= 1) return { key: "COMM", ...commissionerFor(year) };
+  return { key: "DEPUTY", name: year < 1990 ? "Ed Carrow" : "Mike Ansel", gender: "m" };
+}
+
+/** The draft-night desk analyst who reacts to every pick. */
+export function draftAnalystFor(year: number): BoothMember {
+  if (year <= 1979) return { name: "Walt Brody", gender: "m", background: "personnel man" };
+  if (year <= 1995) return { name: "Ron Kessel", gender: "m", background: "former scout" };
+  if (year <= 2011) return { name: "Mark Delacroix", gender: "m", background: "draft analyst" };
+  return { name: "Dana Ruiz", gender: "f", background: "draft analyst" };
+}

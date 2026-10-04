@@ -126,22 +126,126 @@ const league = (session: DraftSession) => (session === "afl" ? "AFL" : "NFL");
 const ordinal = (n: number) =>
   `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th")}`;
 
-export function draftOnClock(s: DraftAudioSnapshot): string {
-  return s.drafting && s.onClock
-    ? `The ${displayName(s.year, s.onClock)} are on the clock with pick number ${s.nextPick}.`
-    : `That concludes the ${s.year} ${league(s.session)} draft.`;
+function hash(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+/** Consecutive picks walk the pool with a stride coprime to its size, so no line repeats back to back. */
+function rotate<T>(list: readonly T[], slot: string, year: number, n: number): T {
+  const size = list.length;
+  let stride = 1 + (hash(`${slot}|${year}`) % Math.max(1, size - 1));
+  const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+  while (size > 1 && gcd(stride, size) !== 1) stride = (stride % (size - 1)) + 1;
+  return list[(hash(`${slot}|${year}|0`) + n * stride) % size]!;
 }
 
+export function draftOnClock(s: DraftAudioSnapshot): string {
+  if (!s.drafting || !s.onClock)
+    return `That concludes the ${s.year} ${league(s.session)} draft.`;
+  const team = displayName(s.year, s.onClock);
+  if (s.nextPick === 1) return `The ${team} are on the clock with pick number 1.`;
+  return rotate(
+    [
+      `The ${team} are on the clock with pick number ${s.nextPick}.`,
+      `The ${team} are now on the clock.`,
+      `Pick number ${s.nextPick} belongs to the ${team}. They're on the clock.`,
+      `The ${team} are up next, at number ${s.nextPick}.`,
+      `On the clock: the ${team}.`,
+    ],
+    "clock",
+    s.year,
+    s.nextPick,
+  );
+}
+
+const collegeOf = (p: DraftSelection) => (p.college && p.college !== "Campus" ? p.college : "");
+
+/**
+ * Round one is read the way the commissioner always reads it. After that a league official
+ * reads the picks quickly, round and number first, in a handful of different shapes.
+ */
 export function announceDraftPick(p: DraftSelection, year: number): string {
   const position = footballPosition(p.pos);
-  return `With the ${ordinal(p.pick)} pick in the ${year} ${league(p.session)} draft, the ${displayName(year, p.team)} select ${p.name}, ${position}${p.college && p.college !== "Campus" ? `, from ${p.college}` : ""}. Round ${p.round}, pick number ${p.pick}.`;
+  const college = collegeOf(p);
+  const team = displayName(year, p.team);
+  // The AFL and NFL drafted separately through 1966, so those years always name the league.
+  if (p.round <= 1 || year <= 1966 || p.session === "afl")
+    return `With the ${ordinal(p.pick)} pick in the ${year} ${league(p.session)} draft, the ${team} select ${p.name}, ${position}${college ? `, from ${college}` : ""}.`;
+  return rotate(
+    [
+      `Round ${p.round}, pick ${p.pick}. The ${team} select ${p.name}, ${position}${college ? `, ${college}` : ""}.`,
+      `With the ${ordinal(p.pick)} pick, the ${team} select ${p.name}${college ? ` of ${college}` : ""}, ${position}.`,
+      `The ${team} take ${p.name}, ${position}${college ? `, from ${college}` : ""}, with the ${ordinal(p.pick)} pick.`,
+      `Pick ${p.pick}, round ${p.round}: ${p.name}, ${position}${college ? `, ${college}` : ""}, to the ${team}.`,
+    ],
+    "podium",
+    year,
+    p.pick,
+  );
+}
+
+/** The draft desk's take on a pick, keyed to how the room heard it and where it came. */
+export function draftDeskTake(p: DraftSelection, reaction: DraftReaction | null, year: number, recent: readonly string[] = []): string {
+  const nickname = displayName(year, p.team).split(" ").slice(-1)[0]!;
+  const position = footballPosition(p.pos);
+  const need = !!reaction && /needs help/.test(reaction.reason);
+  const pools: Record<string, string[]> = {
+    boos: [
+      `That's a reach. There were better players on the board.`,
+      `I had him going a lot later than this. The ${nickname} must see something the rest of us don't.`,
+      `You can hear the room. I'm with them on this one.`,
+      `That one surprised me. I'd have taken the best player available there.`,
+      `Bold pick. They'd better be right about him.`,
+      `Not where I had him. Not close, honestly.`,
+    ],
+    need: [
+      `That's a need filled. The ${nickname} had to have a ${position}.`,
+      `Perfect fit. He walks right into the starting lineup.`,
+      `They didn't overthink it. Biggest hole on the roster, and they filled it.`,
+      `Smart pick. That position was a problem for them last year.`,
+      `He'll be on the field from day one for the ${nickname}.`,
+      `They needed help at ${position}, and they got a good one.`,
+      `Talent and need lined up. That's how you want it.`,
+    ],
+    applause: [
+      `Great value. He was the best player left on my board.`,
+      `I love this pick. Easy call for the ${nickname}.`,
+      `They let the board come to them, and it paid off.`,
+      `That's a steal right there.`,
+      `You don't overthink that one. Take the talent.`,
+      `The room likes it, and so do I.`,
+      `He's going to be a good pro. I'd bet on it.`,
+      `I had him in my top ten. Good for them.`,
+      `That's the kind of player you win with.`,
+    ],
+    murmur: [
+      `I can live with that. Not my first choice, but I see it.`,
+      `A solid football player. Maybe a little early.`,
+      `It's a fair pick. We'll know in three years.`,
+      `Some people will like it, some won't. That's the draft.`,
+      `I'd call that a safe pick. Nothing flashy.`,
+      `Defensible. Not the guy I'd have taken, but defensible.`,
+      `Interesting. I want to see how he fits in that scheme.`,
+      `There's some upside there. He's raw, though.`,
+      `That's a coaching-staff pick. They clearly love him.`,
+    ],
+  };
+  const kind = reaction?.kind === "applause" && need ? "need" : reaction?.kind ?? "murmur";
+  const late = p.round >= 3 && kind !== "boos" ? rotate([``, ``, ` Good find this late.`, ` Day-two picks like that build a roster.`], "late", year, p.pick) : "";
+  // Walk the pool from this pick's spot and skip anything the desk said in the last few picks.
+  const pool = pools[kind]!;
+  const at = pool.indexOf(rotate(pool, `desk-${kind}`, year, p.pick));
+  const take = pool.map((_, i) => pool[(at + i) % pool.length]!).find((t) => !recent.includes(t)) ?? pool[at]!;
+  return take + late;
 }
 
 /** Batched skips get one catch-up; a normal selection gets the podium announcement. */
 export function draftAnnouncementParts(
   previous: DraftAudioSnapshot,
   next: DraftAudioSnapshot,
-): { podium: string; onClock: string } | null {
+  recentDesk: readonly string[] = [],
+): { podium: string; onClock: string; desk?: string; round: number } | null {
   if (!previous.drafting || previous.year !== next.year) return null;
   const heard = new Set(previous.selections.map((p) => p.id));
   const added = next.selections
@@ -160,7 +264,8 @@ export function draftAnnouncementParts(
       `The ${league(previous.session)} draft is complete. We now move to the ${league(next.session)} draft.`,
     );
   nextLines.push(draftOnClock(next));
-  return { podium: parts.join(" "), onClock: nextLines.join(" ") };
+  const desk = last && added.length === 1 ? draftDeskTake(last, draftCrowdReaction(previous, next), next.year, recentDesk) : undefined;
+  return { podium: parts.join(" "), onClock: nextLines.join(" "), desk, round: last?.round ?? 1 };
 }
 
 export function draftAnnouncement(
