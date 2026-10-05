@@ -87,9 +87,24 @@ test("real stat lines", () => {
 });
 
 test("a stat the record doesn't keep is unknown, not zero", () => {
-  // The 1992-98 passing tables carry no completions.
-  assert.equal(one("Brett", "Favre", 1995).stats[1995].passCmp, -1);
-  assert.ok(one("Brett", "Favre", 2005).stats[2005].passCmp > 0);
+  // Tackles and forced fumbles aren't in the record before 1999.
+  const blount = one("Mel", "Blount", 1975).stats[1975];
+  assert.ok(blount.unknown?.includes("tackles"));
+  assert.ok(blount.unknown?.includes("ff"));
+  assert.equal(one("Ray", "Lewis", 2003).stats[2003].unknown, undefined);
+});
+
+test("pre-1999 lines from the team-season archive: 1966-69 offense, defense, kicking, returns", () => {
+  const line = (f, l, y) => one(f, l, y).stats[y];
+  assert.equal(line("Joe", "Namath", 1967).passYds, 4007);
+  assert.equal(line("Bart", "Starr", 1966).passCmp, 156);
+  assert.equal(line("Bart", "Starr", 1966).gp, 14);
+  assert.equal(line("Jim", "Nance", 1966).rushYds, 1458);
+  assert.equal(line("O.J.", "Simpson", 1975).rushYds, 1817);
+  assert.equal(line("Mel", "Blount", 1975).ints, 11);
+  assert.equal(line("Jan", "Stenerud", 1975).fgMade, 22);
+  // Completions for 1992-98 now come from the archive, not left unknown.
+  assert.ok(line("Brett", "Favre", 1995).passCmp > 0);
 });
 
 test("awards, co-winners included", () => {

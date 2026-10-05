@@ -108,12 +108,13 @@ export function replayHistory(steps: number): DynastySave {
 
 /** What the record keeps for a season, said plainly. */
 export function coverageNote(year: number): string {
+  const base = "Rosters, every score, the playoffs, the draft, the awards and the Hall of Fame classes are real.";
   if (year < 1970)
-    return "Rosters, every score, the playoffs, the draft, the awards and the Hall of Fame classes are real. No individual stat lines for this season are in the record yet, so none are shown.";
-  if (year < 1992)
-    return "Rosters, scores, playoffs, the draft, awards and Hall of Fame classes are real. Stat lines cover passing, rushing and receiving. Defense, kicking and returns aren't in the record for this era, so they're left blank.";
+    return `${base} Stat lines are real too: passing, rushing, receiving, interceptions, fumble recoveries, kicking, punting and returns. Sacks, tackles and forced fumbles weren't counted yet, so they're left blank.`;
+  if (year < 1982)
+    return `${base} Stat lines are real: offense, interceptions, sacks, fumble recoveries, kicking, punting and returns. Sacks weren't official until 1982; these are researchers' counts from game film. Tackles and forced fumbles aren't in the record, so they're left blank.`;
   if (year < 1999)
-    return "Rosters, scores, playoffs, the draft, awards and Hall of Fame classes are real. Stat lines cover passing, rushing and receiving (completions aren't in the record for these seasons, shown as —). Defense, kicking and returns are left blank.";
+    return `${base} Stat lines are real: offense, interceptions, sacks, fumble recoveries, kicking, punting and returns. Tackles and forced fumbles aren't in the record before 1999, so they're left blank.`;
   return "Every roster, score, playoff game, draft pick, award and Hall of Fame class is real, and so is every stat line: offense, defense, kicking and returns.";
 }
 
@@ -317,6 +318,9 @@ function closeRegularSeason(save: DynastySave): void {
   for (const { person, team, line } of data().stats(y)) {
     const p = playerFor(save, person, y, (team || "fa") as Player["teamId"]);
     const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
+    // Tackles, forced fumbles, tackles for loss and passes defensed weren't kept before 1999,
+    // and sacks (unofficial until 1982) aren't in the record before 1970.
+    if (y < 1999) st.unknown = y < 1970 ? ["tackles", "ff", "tfl", "pd", "sacks"] : ["tackles", "ff", "tfl", "pd"];
     p.stats[y] = st;
   }
   save.phase = "playoffs";

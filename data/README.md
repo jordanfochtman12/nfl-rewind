@@ -47,6 +47,7 @@ it covers and only generates a schedule for years past the data (2027).
 | `data/history/rosters/roster_YYYY.csv` | nflverse rosters | 1966–2025 |
 | `data/history/stats/stats_player_reg_YYYY.csv` | nflverse regular-season player stats (offense, defense, kicking, returns) | 1999–2025 |
 | `data/history/fdp/YYYY.csv` | Pro-Football-Reference season tables (offense), via fantasydatapros/data | 1970–1998 |
+| `data/history/pfa/YYYY.csv` | Pro Football Archives team-season stat tables (rosters with games played, offense, interceptions, sacks from 1970, fumbles, kicking, punting, returns), extracted by `scripts/fetch-pfa.py` | 1966–1998 |
 | `data/history/wiki/*.wikitext` | Wikipedia award and Hall of Fame pages | 1966–2026 |
 | `data/history/trades.csv` | nflverse trades (not used yet) | 2002– |
 
@@ -58,6 +59,14 @@ python3 scripts/ingest-history.py
 ```
 
 That writes `src/lib/game/data/history/*.ts`, loaded on demand when History mode opens.
-Nothing is estimated: a stat with no source is left out (completions for 1992–98 are marked
-unknown, shown as —). Not yet in the record: individual stats for 1966–69, and defense,
-kicking and returns before 1999.
+Nothing is estimated: a stat with no source is left out and shows as —. Before 1999 there
+are no tackles or forced fumbles, and before 1970 no sacks; sacks before 1982 are
+researchers' film counts (the league made them official in 1982). Where PFR's tables and
+the archive both have a passing, rushing or receiving number, PFR's is used.
+
+Refresh the archive tables (polite: one request at a time, raw pages cached in the
+git-ignored `data/history/pfa_html/`):
+
+```
+python3 scripts/fetch-pfa.py
+```

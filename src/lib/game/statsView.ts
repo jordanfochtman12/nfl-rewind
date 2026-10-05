@@ -34,6 +34,9 @@ function num(n: number): string | number {
   return n || "—";
 }
 
+/** A stat the record didn't keep that season (History mode) reads —, not 0. */
+const kept = (s: SeasonStats, k: keyof SeasonStats, v: string | number): string | number => (s.unknown?.includes(k) ? "—" : v);
+
 const PASS_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
   { key: "cmpatt", label: "Cmp/Att", of: (s) => (s.passAtt ? `${s.passCmp < 0 ? "—" : s.passCmp}/${s.passAtt}` : "—") },
@@ -79,12 +82,12 @@ const REC_COLS: StatCol[] = [
 
 const DEF_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "tackles", label: "Tkl", of: (s) => s.tackles },
-  { key: "tfl", label: "TFL", of: (s) => num(s.tfl ?? 0) },
-  { key: "sacks", label: "Sk", of: (s) => s.sacks },
+  { key: "tackles", label: "Tkl", of: (s) => kept(s, "tackles", s.tackles) },
+  { key: "tfl", label: "TFL", of: (s) => kept(s, "tfl", num(s.tfl ?? 0)) },
+  { key: "sacks", label: "Sk", of: (s) => kept(s, "sacks", s.sacks) },
   { key: "ints", label: "INT", of: (s) => s.ints },
-  { key: "pd", label: "PD", of: (s) => num(s.pd ?? 0) },
-  { key: "ff", label: "FF", of: (s) => s.ff },
+  { key: "pd", label: "PD", of: (s) => kept(s, "pd", num(s.pd ?? 0)) },
+  { key: "ff", label: "FF", of: (s) => kept(s, "ff", s.ff) },
   { key: "fr", label: "FR", of: (s) => num(s.fr ?? 0) },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
@@ -92,7 +95,7 @@ const DEF_COLS: StatCol[] = [
 
 const OL_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "tackles", label: "Tkl", of: (s) => num(s.tackles) },
+  { key: "tackles", label: "Tkl", of: (s) => kept(s, "tackles", num(s.tackles)) },
 ];
 
 const K_COLS: StatCol[] = [
@@ -267,5 +270,5 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   if (f === "ol") {
     return [games, yrs, { label: "Age", value: String(p.age) }, { label: "Exp", value: `${p.yearsPro} yr` }];
   }
-  return [games, { label: "Tackles", value: comma(s.tackles) }, { label: "Sacks", value: comma(s.sacks) }, { label: "INT", value: comma(s.ints) }];
+  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }];
 }

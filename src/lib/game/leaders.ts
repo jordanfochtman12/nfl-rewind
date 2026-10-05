@@ -137,5 +137,7 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
   // History mode marks a season whose source kept no completions as -1; a career that
   // includes one has no known completion total either.
   if (lines.some((s) => s.passCmp < 0)) acc.passCmp = -1;
+  const unknown = [...new Set(lines.flatMap((s) => s.unknown ?? []))];
+  if (unknown.length) acc.unknown = unknown;
   return acc;
 }

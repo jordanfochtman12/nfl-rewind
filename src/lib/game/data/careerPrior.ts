@@ -126,7 +126,7 @@ function realSeasons(first: string, last: string, throughYear: number): SeasonSt
 }
 
 
-type Totals = Partial<Omit<SeasonStats, "year" | "teamId">> & { from: number };
+type Totals = Partial<Omit<SeasonStats, "year" | "teamId" | "unknown">> & { from: number };
 
 /** Approximate NFL/AFL production through the season before the dynasty starts. */
 const STAR_PRIOR: Record<string, Totals> = {

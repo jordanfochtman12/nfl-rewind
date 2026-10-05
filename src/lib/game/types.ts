@@ -166,6 +166,8 @@ export type Ratings = Record<RatingKey, number>;
 export interface SeasonStats {
   year: number;
   teamId: TeamId | "two";
+  /** History mode: stats the record didn't keep that season (shown as —, never as 0). */
+  unknown?: string[];
   gp: number;
   passAtt: number;
   passCmp: number;
