@@ -66,6 +66,7 @@ import { MarketDesk } from "./MarketDesk";
 import { TeamHistory } from "./TeamHistory";
 import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
+import { DraftReportCard } from "./DraftReportCard";
 import { HallOfFame } from "./HallOfFame";
 import { leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
@@ -1903,6 +1904,7 @@ function PlayShell() {
         {!watch && tab === "schedule" && <Schedule />}
         {tab === "stats" && <Stats />}
         {tab === "draft" && !showDraft && <DraftNight />}
+        {tab === "draft" && !showDraft && <DraftReportCard />}
         {tab === "history" && <History />}
         {tab === "team" && (
           <TeamHistory records={(id) => <RecordBookSection title={`${displayName(save.year, id)} franchise records`} teamId={id} />} />

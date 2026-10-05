@@ -52,6 +52,7 @@ import { phoneRings, resolveAllBids } from "./market.ts";
 import { freezePreviewPicks } from "./seasonPreview.ts";
 import { closeTalks } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
+import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
@@ -312,6 +313,7 @@ function openDraft(save: DynastySave): void {
   save.faOpened = false;
   save.waivers = [];
   draftRetrospective(save);
+  regradeClasses(save);
 }
 
 function finishOffseason(save: DynastySave): void {
