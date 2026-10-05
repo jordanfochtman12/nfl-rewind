@@ -1,0 +1,129 @@
+{{Short description|American football award given by the Associated Press}}
+{{Use mdy dates|date=November 2024}}
+{{for|similar awards by other publications|List of NFL Comeback Player of the Year awards}}
+{{Infobox sports award
+| name        = AP NFL Comeback Player of the Year
+| image       = 
+| image_size  =
+| alt         =
+| caption     = [[Joe Burrow]], 2024 recipient
+| givenfor    = Comeback player of the year in the [[National Football League]]
+| presenter   = [[Associated Press]]
+| first       = 1963; 1998
+| mostwins    = [[Chad Pennington]] and [[Joe Burrow]] (2)
+| mostrecent  = [[Christian McCaffrey]]
+| url         = <!-- {{URL|example.com}} -->
+}}
+
+The '''AP NFL Comeback Player of the Year (CBPOY)''' is an annual award presented by the [[Associated Press]] (AP) to a player in the [[National Football League]] (NFL). While the criteria for the award is imprecise,<ref>{{cite magazine|last1=Burke|first1=Chris|title=Why Melvin Gordon deserves to win NFL's Comeback Player of the Year award|url=https://www.si.com/nfl/2016/11/07/melvin-gordon-san-diego-chargers-comeback-player-of-the-year|access-date=March 20, 2017|magazine=Sports Illustrated|date=November 7, 2016|quote=This is a good spot for a reminder that the Comeback Player of the Year criteria is, well, not exactly precise.|archive-date=March 21, 2017|archive-url=https://web.archive.org/web/20170321165829/http://www.si.com/nfl/2016/11/07/melvin-gordon-san-diego-chargers-comeback-player-of-the-year|url-status=live}}</ref> it is typically given to a player who overcomes adversity to return to play.<ref>{{cite news|title=NFL Comeback Player of the Year Award |url=http://www.football-almanac.com/awards/NFL_Comeback_Player_of_the_Year_Award.shtml |access-date=March 20, 2017 |publisher=Football Almanac |url-status=bot: unknown |archive-url=https://web.archive.org/web/20100113081439/http://www.football-almanac.com/awards/NFL_Comeback_Player_of_the_Year_Award.shtml |archive-date=January 13, 2010 }}</ref> The winner is selected by a nationwide panel of media personnel.<ref>{{cite news |title=NFL Comeback Player of the Year |url=http://www.sandiegouniontribune.com/sdut-nfl-comeback-player-of-the-year-2014feb01-story.html |date=February 1, 2014 |work=[[The San Diego Union-Tribune]] |access-date=March 20, 2017 |agency=[[Associated Press]] |archive-date=March 21, 2017 |archive-url=https://web.archive.org/web/20170321171609/http://www.sandiegouniontribune.com/sdut-nfl-comeback-player-of-the-year-2014feb01-story.html |url-status=live }}</ref> Since 2011, the award has been presented at the [[NFL Honors]] ceremony held in the days leading up to the [[Super Bowl]]. Beginning with the 2024 season, the criteria for the award was changed to emphasize players coming back from "illness, physical injury, or other circumstances that led him to miss playing time the previous season", as opposed to players having resurgent performances or "coming back from sucking".<ref>{{cite web|last=Dubin|first=Jared|url=https://www.cbssports.com/nfl/news/nfl-comeback-player-of-the-year-award-criteria-clarified-to-emphasize-injury-illness-after-joe-flaccos-win/|title= NFL Comeback Player of the Year award criteria clarified to emphasize injury, illness after Joe Flacco's win |work=[[CBS Sports]]|date=June 19, 2024|accessdate=January 6, 2025}}</ref><ref>{{cite web|last=Florio|first=Mike|author-link=Mike Florio|url=https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/new-comeback-player-of-the-year-guidelines-could-frustrate-some-gamblers|title=New Comeback Player of the Year guidelines could frustrate some gamblers|publisher=[[NBC Sports]]|work=[[Pro Football Talk]]|date=June 19, 2024|accessdate=January 6, 2025}}</ref>
+
+The AP first recognized an NFL comeback player of the year from 1963 to 1966, but these players are typically not included in overall lists of winners.<ref>{{cite book|title=2015 Official NFL Record and Fact Book|date=2015|publisher=National Football League|page=527|url=https://nflcommunications.com/Documents/2015%20NFL%20Record%20and%20Fact%20Book.pdf|access-date=August 1, 2016|editor1-last=Lee|editor1-first=Brenden|editor2-last=Gellerman|editor2-first=Jacob|editor3-last=King|editor3-first=Robert|archive-date=October 1, 2015|archive-url=https://web.archive.org/web/20151001192546/http://www.nfl.com/static/content/public/photo/2015/07/21/0ap3000000502939.pdf|url-status=live}}</ref> The AP did not give the award again until the 1998 season. Only two players have received the award more than once since the [[AFL–NFL merger]]: quarterbacks [[Chad Pennington]] (2006 and 2008) and [[Joe Burrow]] (2021 and 2024).<ref>{{Cite news|last=Rolfe|first=Ben|date=February 7, 2021|title=2020 NFL Comeback Player of the Year: Alex Smith, Washington Football Team|language=en-US|website=Pro Football Network|url=https://www.profootballnetwork.com/who-won-2020-nfl-comeback-player-of-the-year-award/|access-date=February 20, 2021|quote=Since the award’s reinstatement in 1998, only Chad Pennington has won the award twice. However, the award was also briefly awarded by the Associated Press between 1963 and 1966. During that period, two awards were given each year. One for the NFL, and one for the AFL. During that time, RB Paul Lowe of the Chargers was also named Comeback Player of the Year twice (1963 and 1965).|archive-date=February 7, 2021|archive-url=https://web.archive.org/web/20210207030847/https://www.profootballnetwork.com/who-won-2020-nfl-comeback-player-of-the-year-award/|url-status=live}}</ref>
+
+[[File:ChadPennington1-crop.jpg|thumb|[[Chad Pennington]] (''pictured'') along with [[Joe Burrow]] each won two Comeback Player of the Year awards, the most in NFL history.]]
+
+== Winners ==
+===1963–1966===
+{| class="wikitable"
+|-
+!colspan=4|NFL
+!colspan=4|AFL
+|-
+! Season !! Player !! Position !! Team !! Season !! Player !! Position !! Team
+|-
+| {{center|[[1963 NFL season|1963]]}} ||style="background-color:#D0E7FF"| [[Jim Martin (American football)|Jim Martin]] ||align="center"|[[Placekicker|K]] || [[1963 Baltimore Colts season|Baltimore]] || {{center|[[1963 American Football League season|1963]]}} ||style="background-color:#fcc"| [[Paul Lowe]] ||align="center"|[[Running back|RB]] || [[1963 San Diego Chargers season|San Diego]]
+|-
+| {{center|[[1964 NFL season|1964]]}} ||style="background-color:#D0E7FF"| [[Lenny Moore]] ||align="center"|[[Running back|RB]] || [[1964 Baltimore Colts season|Baltimore]] || {{center|[[1964 American Football League season|1964]]}} ||style="background-color:#fcc"| [[Abner Haynes]] ||align="center"|[[Running back|RB]] || [[1964 Kansas City Chiefs season|Kansas City]]
+|-
+| {{center|[[1965 NFL season|1965]]}} ||style="background-color:#D0E7FF"| [[John Brodie]] ||align="center"|[[Quarterback|QB]] || [[1965 San Francisco 49ers season|San Francisco]] || {{center|[[1965 American Football League season|1965]]}} ||style="background-color:#fcc"| [[Paul Lowe]] ||align="center"|[[Running back|RB]] || [[1965 San Diego Chargers season|San Diego]]
+|-
+| {{center|[[1966 NFL season|1966]]}} ||style="background-color:#D0E7FF"| [[Dick Bass]] ||align="center"|[[Running back|RB]] || [[1966 Los Angeles Rams season|LA Rams]] || {{center|[[1966 American Football League season|1966]]}} ||style="background-color:#fcc"| [[Babe Parilli]]||align="center"|[[Quarterback|QB]] || [[1966 Boston Patriots season|Boston]]
+|}
+
+===1998–2025===
+{| class="wikitable"
+|-
+! Season
+! Player
+! Position
+! Team
+|-
+| {{center|[[1998 NFL season|1998]]}} ||style="background:#ffb;"| [[Doug Flutie]] ||align="center"|[[Quarterback|QB]] || [[1998 Buffalo Bills season|Buffalo]]
+|-
+| {{center|[[1999 NFL season|1999]]}} ||style="background:#ffb;"| [[Bryant Young]] ||align="center"|[[Defensive tackle|DT]] || [[1999 San Francisco 49ers season|San Francisco]]
+|-
+| {{center|[[2000 NFL season|2000]]}} ||style="background:#ffb;"| [[Joe Johnson (defensive end)|Joe Johnson]] ||align="center"|[[Defensive end|DE]] || [[2000 New Orleans Saints season|New Orleans]]
+|-
+| {{center|[[2001 NFL season|2001]]}} ||style="background:#ffb;"| [[Garrison Hearst]] ||align="center"|[[Running back|RB]] || [[2001 San Francisco 49ers season|San Francisco]]
+|-
+| {{center|[[2002 NFL season|2002]]}} ||style="background:#ffb;"| [[Tommy Maddox]] ||align="center"|[[Quarterback|QB]] || [[2002 Pittsburgh Steelers season|Pittsburgh]]
+|-
+| {{center|[[2003 NFL season|2003]]}} ||style="background:#ffb;"| [[Jon Kitna]] ||align="center"|[[Quarterback|QB]] || [[2003 Cincinnati Bengals season|Cincinnati]]
+|-
+| {{center|[[2004 NFL season|2004]]}} ||style="background:#ffb;"| [[Drew Brees]] ||align="center"|[[Quarterback|QB]] || [[2004 San Diego Chargers season|San Diego]]
+|-
+| rowspan="2" |{{center|[[2005 NFL season|2005]]}} ||style="background:#ffb;"| [[Tedy Bruschi]] ||align="center"|[[Linebacker|LB]] || |[[2005 New England Patriots season|New England]]
+|-
+|style="background:#ffb;"| [[Steve Smith Sr.]] ||align="center"|[[Wide receiver|WR]] || [[2005 Carolina Panthers season|Carolina]]
+|- 
+| {{center|[[2006 NFL season|2006]]}} ||style="background:#ffb;"| [[Chad Pennington]] ||align="center"|[[Quarterback|QB]] || [[2006 New York Jets season|NY Jets]]
+|-
+| {{center|[[2007 NFL season|2007]]}} ||style="background:#ffb;"| [[Greg Ellis (American football)|Greg Ellis]] ||align="center"|[[Defensive end|DE]] || [[2007 Dallas Cowboys season|Dallas]]
+|-
+| {{center|[[2008 NFL season|2008]]}} ||style="background:#ffb;"| [[Chad Pennington]] (2) ||align="center"|[[Quarterback|QB]] || [[2008 Miami Dolphins season|Miami]]
+|-
+| {{center|[[2009 NFL season|2009]]}} ||style="background:#ffb;"| [[Tom Brady]] ||align="center"|[[Quarterback|QB]] || [[2009 New England Patriots season|New England]]
+|-
+| {{center|[[2010 NFL season|2010]]}} ||style="background:#ffb;"| [[Michael Vick]] ||align="center"|[[Quarterback|QB]] || [[2010 Philadelphia Eagles season|Philadelphia]]
+|-
+| {{center|[[2011 NFL season|2011]]}} ||style="background:#ffb;"| [[Matthew Stafford]] ||align="center"|[[Quarterback|QB]] || [[2011 Detroit Lions season|Detroit]]
+|-
+| {{center|[[2012 NFL season|2012]]}} ||style="background:#ffb;"| [[Peyton Manning]] ||align="center"|[[Quarterback|QB]] || [[2012 Denver Broncos season|Denver]]
+|-
+| {{center|[[2013 NFL season|2013]]}} ||style="background:#ffb;"| [[Philip Rivers]] ||align="center"|[[Quarterback|QB]] || [[2013 San Diego Chargers season|San Diego]]
+|-
+| {{center|[[2014 NFL season|2014]]}} ||style="background:#ffb;"| [[Rob Gronkowski]] ||align="center"|[[Tight end|TE]] || [[2014 New England Patriots season|New England]]
+|-
+| {{center|[[2015 NFL season|2015]]}} ||style="background:#ffb;"| [[Eric Berry]] ||align="center"|[[Safety (gridiron football position)|S]] || [[2015 Kansas City Chiefs season|Kansas City]]
+|-
+| {{center|[[2016 NFL season|2016]]}} ||style="background:#ffb;"| [[Jordy Nelson]] ||align="center"|[[Wide receiver|WR]] || [[2016 Green Bay Packers season|Green Bay]]
+|-
+| {{center|[[2017 NFL season|2017]]}} ||style="background:#ffb;"| [[Keenan Allen]] ||align="center"|[[Wide receiver|WR]] || [[2017 Los Angeles Chargers season|LA Chargers]]
+|-
+| {{center|[[2018 NFL season|2018]]}} ||style="background:#ffb;"| [[Andrew Luck]] ||align="center"|[[Quarterback|QB]] || [[2018 Indianapolis Colts season|Indianapolis]]
+|-
+| {{center|[[2019 NFL season|2019]]}} ||style="background:#ffb;"| [[Ryan Tannehill]] ||align="center"|[[Quarterback|QB]] || [[2019 Tennessee Titans season|Tennessee]]
+|-
+| {{center|[[2020 NFL season|2020]]}} ||style="background:#ffb;"| [[Alex Smith]] ||align="center"|[[Quarterback|QB]] || [[2020 Washington Football Team season|Washington]]
+|-
+| {{center|[[2021 NFL season|2021]]}} ||style="background:#ffb;"| [[Joe Burrow]] ||align="center"|[[Quarterback|QB]] || [[2021 Cincinnati Bengals season|Cincinnati]]
+|-
+| {{center|[[2022 NFL season|2022]]}} ||style="background:#ffb;"| [[Geno Smith]] ||align="center"|[[Quarterback|QB]] || [[2022 Seattle Seahawks season|Seattle]]
+|-
+| {{center|[[2023 NFL season|2023]]}} ||style="background:#ffb;"| [[Joe Flacco]] ||align="center"|[[Quarterback|QB]] || [[2023 Cleveland Browns season|Cleveland]]
+|-
+| {{center|[[2024 NFL season|2024]]}} ||style="background:#ffb;"| [[Joe Burrow]] (2)  ||align="center"|[[Quarterback|QB]] || [[2024 Cincinnati Bengals season|Cincinnati]]
+|-
+| {{center|[[2025 NFL season|2025]]}} ||style="background:#ffb;"| [[Christian McCaffrey]] ||align="center"|[[Running back|RB]] || [[2025 San Francisco 49ers season|San Francisco]]
+|}
+
+==Multiple-time winners==
+{| class="wikitable sortable"
+|+ List of multiple-time winners
+!Awards!!Player!!Team(s)!!Years
+|-align=center
+| rowspan="2” |2||[[Chad Pennington]]||[[Miami Dolphins]] (1) / [[New York Jets]] (1)||[[2006 NFL season|2006]], [[2008 NFL season|2008]]
+|-align=center
+|[[Joe Burrow]]||[[Cincinnati Bengals]]||[[2021 NFL season|2021]], [[2024 NFL season|2024]]
+|}
+
+==See also==
+* [[List of NFL Comeback Player of the Year awards]] for an overview of similar awards from other organizations
+
+==References==
+{{reflist}}
+
+{{AP NFL Comeback Player}}
+{{NFL Honors}}
+
+[[Category:NFL trophies and awards]]
+[[Category:Associated Press awards]]

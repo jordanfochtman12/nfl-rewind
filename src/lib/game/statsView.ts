@@ -17,7 +17,8 @@ export function avg(n: number, d: number, digits = 1): string {
 
 export function passerRating(s: SeasonStats): string {
   const att = s.passAtt;
-  if (!att) return "—";
+  // History mode: some seasons' sources kept no completions (passCmp -1), so no rating either.
+  if (!att || s.passCmp < 0) return "—";
   const a = Math.max(0, Math.min(2.375, ((s.passCmp / att) - 0.3) * 5));
   const b = Math.max(0, Math.min(2.375, ((s.passYds / att) - 3) * 0.25));
   const c = Math.max(0, Math.min(2.375, (s.passTd / att) * 20));
@@ -35,8 +36,8 @@ function num(n: number): string | number {
 
 const PASS_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "cmpatt", label: "Cmp/Att", of: (s) => (s.passAtt ? `${s.passCmp}/${s.passAtt}` : "—") },
-  { key: "pct", label: "Pct", of: (s) => pct(s.passCmp, s.passAtt) },
+  { key: "cmpatt", label: "Cmp/Att", of: (s) => (s.passAtt ? `${s.passCmp < 0 ? "—" : s.passCmp}/${s.passAtt}` : "—") },
+  { key: "pct", label: "Pct", of: (s) => (s.passCmp < 0 ? "—" : pct(s.passCmp, s.passAtt)) },
   { key: "passYds", label: "Yds", of: (s) => s.passYds },
   { key: "ypa", label: "Y/A", of: (s) => avg(s.passYds, s.passAtt) },
   { key: "passTd", label: "TD", of: (s) => s.passTd },

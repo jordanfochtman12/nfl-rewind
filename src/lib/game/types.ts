@@ -696,6 +696,10 @@ export interface AwardsResult {
   /** Coach of the Year (a coach id). */
   coy?: string;
   allPro: string[];
+  /** History mode: co-winners beyond the first, by award field (1997 MVP: Favre and Sanders). */
+  co?: Record<string, string[]>;
+  /** History mode: the real Coach of the Year, by name. */
+  coyName?: string;
 }
 
 export interface BowlAlmanacEntry {
@@ -715,10 +719,12 @@ export interface BowlAlmanacEntry {
 export interface HofMember {
   playerId?: string;
   coachId?: string;
+  /** History mode: a coach, contributor or pre-1966 player known by name only. */
+  name?: string;
   year: number;
   teamId: TeamId;
   blurb: string;
-  kind?: "player" | "coach";
+  kind?: "player" | "coach" | "contributor";
 }
 
 export interface RetireeEvent {
@@ -937,6 +943,10 @@ export interface DynastySave {
    * follows the whole league (one featured game a week gets the live call).
    */
   sandbox?: boolean;
+  /** History mode: the real league, replayed from the record (see historyMode.ts). */
+  realHistory?: boolean;
+  /** History mode: steps taken from the 1966 draft. The record replays to here on load. */
+  historyStep?: number;
   /** Sandbox: the game of the week that gets the play-by-play call. */
   featuredGameId?: string;
   players: Record<string, Player>;

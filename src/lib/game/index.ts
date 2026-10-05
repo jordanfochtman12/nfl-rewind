@@ -251,3 +251,5 @@ export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
 export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";
 export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree.ts";
 export { careerValue, draftClassReport, gradableClasses, type ClassPick, type ClassReport } from "./draftGrades.ts";
+export { advanceHistory, coverageNote, createHistoryGame, historyCursor, historyLabel, replayHistory, setHistoryData, HISTORY_FIRST, HISTORY_LAST } from "./historyMode.ts";
+export { loadHistoryData, parseHistory, type HistoryData } from "./historyData.ts";

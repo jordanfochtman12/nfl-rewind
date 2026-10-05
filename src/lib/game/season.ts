@@ -60,6 +60,7 @@ import { sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
+import { advanceHistory } from "./historyMode.ts";
 
 export function setLabel(save: DynastySave): void {
   const y = save.year;
@@ -372,6 +373,11 @@ function closeRelocation(save: DynastySave): void {
  * the deeper a save runs.
  */
 function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
+  // History mode doesn't simulate anything: each step lays down what really happened.
+  if (s.realHistory) {
+    advanceHistory(s);
+    return s;
+  }
   // A sandbox steps one moment at a time like a dynasty does, so each Sunday and each pick can
   // be watched; a plain cpu-only run (QA, batch sims) still rushes every phase.
   const auto = opts.auto || (s.cpuOnly && !s.sandbox);
@@ -573,6 +579,7 @@ export function simUntil(
     const prevSbPlayed = s.superBowl?.played;
     const prevSession = s.draftSession;
     const prevFaOpened = s.faOpened;
+    const prevHistoryStep = s.historyStep;
     advanceInPlace(s, { auto: true });
     if (
       s.year === prevYear &&
@@ -581,7 +588,8 @@ export function simUntil(
       s.draftPickIndex === prevPickIndex &&
       s.superBowl?.played === prevSbPlayed &&
       s.draftSession === prevSession &&
-      s.faOpened === prevFaOpened
+      s.faOpened === prevFaOpened &&
+      s.historyStep === prevHistoryStep
     ) {
       throw new Error(`simUntil stalled at ${s.year} ${s.phase} week ${s.week}`);
     }

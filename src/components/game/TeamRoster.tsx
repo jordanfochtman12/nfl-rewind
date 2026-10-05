@@ -61,7 +61,7 @@ export function TeamRosterModal() {
   const rows = roster
     .filter((p) => !pos || p.pos === pos)
     .slice()
-    .sort((a, b) => visibleOvr(b) - visibleOvr(a));
+    .sort((a, b) => (save.realHistory ? a.pos.localeCompare(b.pos) || a.lastName.localeCompare(b.lastName) : visibleOvr(b) - visibleOvr(a)));
   const div = divisionKey(year, id);
   const divTeams = activeTeamIds(year)
     .filter((x) => save.teams[x] && divisionKey(year, x) === div)
@@ -161,6 +161,8 @@ export function TeamRosterModal() {
                       </span>
                     ) : null}
                   </dd>
+                  {!save.realHistory && (
+                  <>
                   <dt className="text-muted">Offense</dt>
                   <dd className="text-paper">
                     {staffSystems(save, id).offense} <span className="text-muted">· {staffSystems(save, id).offBy ?? oc?.name ?? "—"}</span>
@@ -174,6 +176,8 @@ export function TeamRosterModal() {
                     {formatMoney(payroll, year)}
                     {cap ? <span className="text-muted"> of {formatMoney(cap, year)} cap</span> : null}
                   </dd>
+                  </>
+                  )}
                   <dt className="text-muted">Points</dt>
                   <dd className="text-paper">
                     {t.pf} for, {t.pa} against
@@ -196,6 +200,7 @@ export function TeamRosterModal() {
                   <p className="mt-2 text-sm text-muted">No games played yet this season.</p>
                 )}
               </section>
+{!save.realHistory && (
               <section className="rounded-lg border border-line bg-surface p-3 md:col-span-2">
                 <p className="text-xs tracking-[0.25em] text-muted">Starting lineup</p>
                 <div className="mt-2 grid gap-3 sm:grid-cols-3">
@@ -209,7 +214,7 @@ export function TeamRosterModal() {
                             <li key={r.pos} className="flex items-center gap-2">
                               <span className="w-9 shrink-0 text-xs text-muted">{r.pos}</span>
                               <PlayerLink player={r.players[0]!} className="min-h-0 truncate text-paper" />
-                              <span className="tabular ml-auto text-xs text-subtle">{visibleOvr(r.players[0]!)}</span>
+                              {!save.realHistory && <span className="tabular ml-auto text-xs text-subtle">{visibleOvr(r.players[0]!)}</span>}
                             </li>
                           ))}
                       </ul>
@@ -217,6 +222,7 @@ export function TeamRosterModal() {
                   ))}
                 </div>
               </section>
+              )}
               {(nums.length > 0 || ring.length > 0 || titles.length > 0) && (
                 <section className="rounded-lg border border-brass/30 bg-surface p-3 md:col-span-2">
                   <p className="text-xs tracking-[0.25em] text-brass">Legacy</p>
@@ -266,7 +272,7 @@ export function TeamRosterModal() {
                   <tr>
                     <th className="sticky top-0 left-0 z-20 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
                     <th className="sticky top-0 left-12 z-20 bg-surface-2 px-3 py-2 font-medium">Player</th>
-                    {["Pos", "Grade", "Age", "Contract", "Kit", "Status"].map((h) => (
+                    {(save.realHistory ? ["Pos", "Age", "Exp"] : ["Pos", "Grade", "Age", "Contract", "Kit", "Status"]).map((h) => (
                       <th key={h} className="sticky top-0 z-10 bg-surface-2 px-3 py-2 font-medium">
                         {h}
                       </th>
@@ -282,17 +288,26 @@ export function TeamRosterModal() {
                         <span className="block text-[11px] text-subtle">{p.college ?? ""}</span>
                       </td>
                       <td className="px-3 py-2">{p.pos}</td>
-                      <td className="tabular px-3 py-2">{p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}</td>
-                      <td className="tabular px-3 py-2">{p.age}</td>
-                      <td className="tabular px-3 py-2 text-muted">
-                        {formatMoney(p.salary ?? 0, year)} · {p.contractYears ?? 0}y
-                      </td>
-                      <td className="px-3 py-2">
-                        <KitChips player={p} compact />
-                      </td>
-                      <td className="px-3 py-2 text-xs">
-                        {p.onIR ? <span className="text-brick">IR</span> : p.injuredWeeks > 0 ? <span className="text-brick">hurt · {p.injuredWeeks}w</span> : <span className="text-good">active</span>}
-                      </td>
+                      {save.realHistory ? (
+                        <>
+                          <td className="tabular px-3 py-2">{p.age}</td>
+                          <td className="tabular px-3 py-2">{p.yearsPro}</td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="tabular px-3 py-2">{p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}</td>
+                          <td className="tabular px-3 py-2">{p.age}</td>
+                          <td className="tabular px-3 py-2 text-muted">
+                            {formatMoney(p.salary ?? 0, year)} · {p.contractYears ?? 0}y
+                          </td>
+                          <td className="px-3 py-2">
+                            <KitChips player={p} compact />
+                          </td>
+                          <td className="px-3 py-2 text-xs">
+                            {p.onIR ? <span className="text-brick">IR</span> : p.injuredWeeks > 0 ? <span className="text-brick">hurt · {p.injuredWeeks}w</span> : <span className="text-good">active</span>}
+                          </td>
+                        </>
+                      )}
                     </tr>
                   ))}
                   {!rows.length && (

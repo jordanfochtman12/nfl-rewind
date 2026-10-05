@@ -151,6 +151,7 @@ export function ProfileExtras({ p }: { p: Player }) {
         </section>
       )}
 
+{!save.realHistory && (
       <section className="rounded-lg border border-line bg-surface p-4">
         <div className="flex items-baseline justify-between">
           <p className="text-xs tracking-[0.25em] text-muted">{year} game by game</p>
@@ -190,8 +191,9 @@ export function ProfileExtras({ p }: { p: Player }) {
           </p>
         )}
       </section>
+      )}
 
-      <section className="rounded-lg border border-brass/30 bg-surface p-4">
+      {!save.realHistory && <section className="rounded-lg border border-brass/30 bg-surface p-4">
         <p className="text-xs tracking-[0.25em] text-brass">{p.revealed ? `Every attribute · overall ${p.ovr}` : `Every attribute · scout grade ${visibleOvr(p)} ${scoutLetter(visibleOvr(p))}`}</p>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
           {groups.map((grp) => (
@@ -216,7 +218,7 @@ export function ProfileExtras({ p }: { p: Player }) {
           ))}
         </div>
         <p className="mt-3 text-[11px] text-subtle">Gold labels are the ratings his position is graded on.</p>
-      </section>
+      </section>}
     </>
   );
 }

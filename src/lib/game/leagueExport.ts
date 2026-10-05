@@ -104,7 +104,7 @@ export function leagueHistoryHtml(save: DynastySave): string {
     .slice()
     .sort((a, b) => b.year - a.year)
     .reduce<Record<number, string[]>>((acc, h) => {
-      const name = personName(save, h.playerId, h.coachId) || h.blurb;
+      const name = personName(save, h.playerId, h.coachId) || h.name || h.blurb;
       (acc[h.year] ??= []).push(`${esc(name)} <small>${team(h.teamId, h.year)}</small>`);
       return acc;
     }, {});

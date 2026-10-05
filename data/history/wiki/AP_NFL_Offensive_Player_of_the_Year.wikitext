@@ -1,0 +1,292 @@
+{{Short description|American football award given by the Associated Press}}
+{{Use American English|date=December 2025}}
+{{Use mdy dates|date=December 2024}}
+{{for|similar awards by other publications|List of NFL Offensive Player of the Year awards}}
+{{Infobox sports award
+| name        = AP NFL Offensive Player of the Year
+| image       = Jaxon Smith-Njigba FanDuel Interview (cropped).png
+| alt         =
+| caption     = [[Seattle Seahawks]] wide receiver [[Jaxon Smith-Njigba]], 2025 recipient
+| givenfor    = Offensive player of the year in the [[NFL]]
+| presenter   = [[Associated Press]]
+| first       = 1972
+| mostwins    = [[Earl Campbell]], [[Marshall Faulk]] (3 each)
+| mostrecent  = [[Jaxon Smith-Njigba]]
+| url         = <!-- {{URL|example.com}} -->
+}}
+
+The '''AP NFL Offensive Player of the Year (OPOY)''' is an annual award presented by the [[Associated Press]] (AP) to the [[offense (sports)|offensive]] player in the [[National Football League]] (NFL) deemed to have had the most outstanding season. The winner is chosen by votes from a nationwide panel of sportswriters who regularly follow the NFL. [[Marshall Faulk]] and [[Earl Campbell]] are the only players to have won the award three times, in three consecutive seasons. [[Jerry Rice]], [[Barry Sanders]], [[Terrell Davis]], [[Tom Brady]], [[Drew Brees]], and [[Peyton Manning]] have each won it twice. Campbell is the only player to win the award as a [[rookie]], doing so in 1978. [[Warren Moon]] and [[Priest Holmes]] are the only undrafted players to win the award. Manning is the only player to win the award with two different teams, doing so in 2004 with the [[Indianapolis Colts]] and in 2013 with the [[Denver Broncos]]. The most recent winner is wide receiver [[Jaxon Smith-Njigba]] of the [[Seattle Seahawks]], who received it for the [[2025 NFL season]].
+
+Every winner of the award has been either a [[running back]] or a [[quarterback]], with the exception of [[wide receiver]]s Jerry Rice, Michael Thomas, Cooper Kupp, Justin Jefferson, and Jaxon Smith-Njigba.<ref>{{cite news|last1=Hope|first1=Dan|title=Ranking the Top 25 NFL Offensive Player of the Year Candidates|url=https://bleacherreport.com/articles/1695960-ranking-the-top-25-nfl-offensive-player-of-the-year-candidates|access-date=May 26, 2017|publisher=Bleacher Report|date=July 7, 2013|quote=The award is typically given to the league's most productive quarterback or running back. Of the 41 times it has been given, it's been won 39 times by either a quarterback or running back. The exception is San Francisco 49ers wide receiver Jerry Rice, who won the award in both 1987 and 1993}}.</ref> Running backs have been awarded 26 times, followed by quarterbacks, with 20 awards. Of the 53 winners, 28 were also named the [[AP NFL Most Valuable Player]] in the same season. Since 2011, both awards have been given out at the annual [[NFL Honors]] ceremony along with other AP awards, including the [[AP NFL Defensive Player of the Year award|Defensive Player of the Year]] and [[AP NFL Rookie of the Year award|Rookie of the Year awards]].<ref>{{cite web|title=First-ever 'NFL Honors' show will be hosted by Baldwin in Indy|url=https://www.nfl.com/news/first-ever-nfl-honors-show-will-be-hosted-by-baldwin-in-indy-09000d5d825af687|website=NFL.com|publisher=National Football League|access-date=July 10, 2016|date=January 3, 2012|archive-date=June 20, 2020|archive-url=https://web.archive.org/web/20200620192936/https://www.nfl.com/news/first-ever-nfl-honors-show-will-be-hosted-by-baldwin-in-indy-09000d5d825af687|url-status=live}}</ref>
+
+Players are often awarded after record-breaking or near-record-breaking offensive seasons. Running back [[O. J. Simpson]] won the award for 1973 after rushing for a record 2,003 yards, becoming the first NFL player to rush for 2,000 yards in a season.<ref name=Simpson/> When his record was broken by [[Eric Dickerson]] in 1984, Dickerson placed second in voting behind quarterback [[Dan Marino]], who that year was the first to [[List of NFL quarterbacks with 5,000 passing yards in a season|pass for 5,000 yards in a season]].<ref name=Marino/> Marino's 5,084 yards stood as the record for 27 years before being broken by [[Drew Brees]] in 2011, who won that season's award.<ref name=Brees2/> In turn, 2013 winner [[Peyton Manning]] set league single-season records for passing yards (5,477) and passing touchdowns (55).<ref name=Manning2013/>
+
+==Winners==
+[[File:LaDainian Tomlinson vs Cleveland (cropped).jpg|thumb|upright|280px|alt=Tomlinson running with the football, attempting to evade two defenders|2006 winner [[LaDainian Tomlinson]] set NFL single-season records for rushing touchdowns (28), touchdowns from scrimmage (31), and points scored (186).<ref name=Tomlinson/>]]
+[[File:Adrian Peterson.jpg|thumb|alt=Peterson in full uniform walking on the field|[[Adrian Peterson]] won the award in 2012 after rushing for 2,097 yards, the second-most all time by a player in a single season.<ref name=Peterson/>]]
+
+{|class="wikitable sortable plainrowheaders"
+|+ List of AP NFL Offensive Player of the Year winners
+!scope="col"|Season
+!scope="col"|Player
+!scope="col"|Position
+!scope="col"|Team
+!scope="col" class="unsortable"|{{Ref.}}
+|-
+|[[1972 NFL season|1972]]
+!scope="row"|{{sortname|Larry|Brown|Larry Brown (running back)}}
+| rowspan="2" |[[Running back]]||[[Washington Redskins]]||<ref>{{cite news|title=Top NFL Offensive Player: Larry Brown Doesn't Like Comparisons With Others|url=https://news.google.com/newspapers?nid=2519&dat=19730105&id=AshdAAAAIBAJ&sjid=eF4NAAAAIBAJ&pg=3593,766083&hl=en|access-date=July 5, 2016|work=Observer-Reporter|agency=Associated Press|date=January 5, 1973|page=B-4|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225171231/https://news.google.com/newspapers?nid=2519&dat=19730105&id=AshdAAAAIBAJ&sjid=eF4NAAAAIBAJ&pg=3593,766083&hl=en|url-status=live}}</ref>
+|-
+|[[1973 NFL season|1973]]
+!scope="row"|{{sortname|O. J.|Simpson}}
+|[[Buffalo Bills]]||<ref name=Simpson>{{cite news|title=Simpson Offensive Winner|url=https://news.google.com/newspapers?nid=266&dat=19740102&id=FO4rAAAAIBAJ&sjid=42gFAAAAIBAJ&pg=2699,288542&hl=en|access-date=July 5, 2016|work=Kentucky New Era|agency=Associated Press|date=January 4, 1974|page=11|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225160407/https://news.google.com/newspapers?nid=266&dat=19740102&id=FO4rAAAAIBAJ&sjid=42gFAAAAIBAJ&pg=2699,288542&hl=en|url-status=live}}</ref>
+|-
+|[[1974 NFL season|1974]]
+!scope="row"|{{sortname|Ken|Stabler}}
+| rowspan="3" |[[Quarterback]]||[[Oakland Raiders]]||<ref>{{cite news|title=Ken Stabler Named NFL's Offensive Player Of Year|url=https://news.google.com/newspapers?nid=1755&dat=19750108&id=IrEqAAAAIBAJ&sjid=8WYEAAAAIBAJ&pg=1608,3045057&hl=en|access-date=July 5, 2016|work=Sarasota Herald Tribune|agency=Associated Press|date=January 8, 1975|page=1C|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225081612/https://news.google.com/newspapers?nid=1755&dat=19750108&id=IrEqAAAAIBAJ&sjid=8WYEAAAAIBAJ&pg=1608,3045057&hl=en|url-status=live}}</ref>
+|-
+|[[1975 NFL season|1975]]
+!scope="row"|{{sortname|Fran|Tarkenton}}
+|[[Minnesota Vikings]]||<ref>{{cite news|title=Tarkenton Honored|url=https://news.google.com/newspapers?nid=861&dat=19760113&id=ShRZAAAAIBAJ&sjid=YEYNAAAAIBAJ&pg=2581,1990027&hl=en|access-date=July 5, 2016|work=The Victoria Advocate|agency=Associated Press|date=January 13, 1976|page=2B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225172220/https://news.google.com/newspapers?nid=861&dat=19760113&id=ShRZAAAAIBAJ&sjid=YEYNAAAAIBAJ&pg=2581,1990027&hl=en|url-status=live}}</ref>
+|-
+|[[1976 NFL season|1976]]
+!scope="row"|{{sortname|Bert|Jones}}
+|[[Baltimore Colts]]||<ref>{{cite news|title=Offensive Award to Bert Jones|url=https://news.google.com/newspapers?nid=861&dat=19761230&id=YAJaAAAAIBAJ&sjid=FUsNAAAAIBAJ&pg=7016,6587720&hl=en|access-date=July 5, 2016|work=The Victoria Advocate|agency=Associated Press|date=December 30, 1976|page=1B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225044306/https://news.google.com/newspapers?nid=861&dat=19761230&id=YAJaAAAAIBAJ&sjid=FUsNAAAAIBAJ&pg=7016,6587720&hl=en|url-status=live}}</ref>
+|-
+|[[1977 NFL season|1977]]
+!scope="row"|{{sortname|Walter|Payton}}
+| rowspan="4" |[[Running back]]||[[Chicago Bears]]||<ref>{{cite news|title=Chicago's Payton Picked Offensive Player Of Year|url=https://news.google.com/newspapers?nid=1876&dat=19780103&id=0DMsAAAAIBAJ&sjid=48sEAAAAIBAJ&pg=6802,1025991&hl=en|access-date=July 5, 2016|work=Herald-Journal|agency=Associated Press|date=January 5, 1978|page=C3|archive-date=February 28, 2021|archive-url=https://web.archive.org/web/20210228130938/https://news.google.com/newspapers?nid=1876&dat=19780103&id=0DMsAAAAIBAJ&sjid=48sEAAAAIBAJ&pg=6802,1025991&hl=en|url-status=live}}</ref>
+|-
+|[[1978 NFL season|1978]]
+!scope="row"|{{sortname|Earl|Campbell}}
+|[[Houston Oilers]]||<ref>{{cite news|title=Campbell Wins Offensive Title|url=https://news.google.com/newspapers?nid=1873&dat=19790112&id=6QIpAAAAIBAJ&sjid=C9MEAAAAIBAJ&pg=1765,4772971&hl=en|access-date=July 5, 2016|work=Daytona Beach Morning Journal|agency=Associated Press|date=January 12, 1979|page=6B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225055346/https://news.google.com/newspapers?nid=1873&dat=19790112&id=6QIpAAAAIBAJ&sjid=C9MEAAAAIBAJ&pg=1765,4772971&hl=en|url-status=live}}</ref>
+|-
+|[[1979 NFL season|1979]]
+!scope="row"|{{sortname|Earl|Campbell}} {{small|(2)}}
+|[[Houston Oilers]]||<ref>{{cite news|title=Campbell Walks With Second Offensive Title|url=https://news.google.com/newspapers?nid=757&dat=19791222&id=TzZkAAAAIBAJ&sjid=vkYDAAAAIBAJ&pg=3805,4172533&hl=en|access-date=July 5, 2016|work=The Virgin Islands Daily News|agency=Associated Press|date=December 24, 1979|page=33|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225211453/https://news.google.com/newspapers?nid=757&dat=19791222&id=TzZkAAAAIBAJ&sjid=vkYDAAAAIBAJ&pg=3805,4172533&hl=en|url-status=live}}</ref>
+|-
+|[[1980 NFL season|1980]]
+!scope="row"|{{sortname|Earl|Campbell}} {{small|(3)}}
+|[[Houston Oilers]]||<ref>{{cite news|last1=Olderman|first1=Murray|title=Earl Campbell: a triple champ|url=https://news.google.com/newspapers?nid=1908&dat=19810116&id=pswhAAAAIBAJ&sjid=YJ4FAAAAIBAJ&pg=1959,1569350&hl=en|access-date=July 5, 2016|work=The Nevada Daily Mail|agency=Newspaper Enterprise Association|date=January 18, 1981|page=10|archive-date=February 26, 2021|archive-url=https://web.archive.org/web/20210226200321/https://news.google.com/newspapers?nid=1908&dat=19810116&id=pswhAAAAIBAJ&sjid=YJ4FAAAAIBAJ&pg=1959,1569350&hl=en|url-status=live}}</ref>
+|-
+|[[1981 NFL season|1981]]
+!scope="row"|{{sortname|Ken|Anderson|Ken Anderson (quarterback)}}
+| rowspan="4" |[[Quarterback]]||[[Cincinnati Bengals]]||<ref>{{cite news|title=Anderson is top offensive player|url=https://news.google.com/newspapers?nid=2209&dat=19820108&id=JqMrAAAAIBAJ&sjid=oPwFAAAAIBAJ&pg=5044,1268363&hl=en|access-date=July 6, 2016|work=The Telegraph|agency=Associated Press|date=January 8, 1982|page=18|archive-date=February 26, 2021|archive-url=https://web.archive.org/web/20210226013948/https://news.google.com/newspapers?nid=2209&dat=19820108&id=JqMrAAAAIBAJ&sjid=oPwFAAAAIBAJ&pg=5044,1268363&hl=en|url-status=live}}</ref>
+|-
+|[[1982 NFL season|1982]]
+!scope="row"|{{sortname|Dan|Fouts}}
+|[[San Diego Chargers]]||<ref>{{cite news|title=Fouts Tops On Offense|url=https://news.google.com/newspapers?nid=1350&dat=19830107&id=8E5PAAAAIBAJ&sjid=tQIEAAAAIBAJ&pg=5565,1922683&hl=en|access-date=July 6, 2016|work=Toledo Blade|agency=Associated Press|date=January 7, 1983|page=18|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225180435/https://news.google.com/newspapers?nid=1350&dat=19830107&id=8E5PAAAAIBAJ&sjid=tQIEAAAAIBAJ&pg=5565,1922683&hl=en|url-status=live}}</ref>
+|-
+|[[1983 NFL season|1983]]
+!scope="row"|{{sortname|Joe|Theismann}}
+|[[Washington Redskins]]||<ref>{{cite news|last1=Lowitt|first1=Bruce|title=Theismann crowned as top offensive player|url=https://news.google.com/newspapers?nid=1696&dat=19831222&id=__gaAAAAIBAJ&sjid=SUcEAAAAIBAJ&pg=6701,5060607&hl=en|access-date=July 6, 2016|work=Daily News|agency=Associated Press|date=December 23, 1983|page=3B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225225614/https://news.google.com/newspapers?nid=1696&dat=19831222&id=__gaAAAAIBAJ&sjid=SUcEAAAAIBAJ&pg=6701,5060607&hl=en|url-status=live}}</ref>
+|-
+|[[1984 NFL season|1984]]
+!scope="row"|{{sortname|Dan|Marino}}
+|[[Miami Dolphins]]||<ref name=Marino>{{cite news|title=Record-breaking Marino wins top offensive honor|url=https://news.google.com/newspapers?nid=1891&dat=19841217&id=9rYfAAAAIBAJ&sjid=lNcEAAAAIBAJ&pg=1360,5095380&hl=en|access-date=July 6, 2016|work=Gadsden Times|agency=Associated Press|date=December 19, 1984|page=D2|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225165607/https://news.google.com/newspapers?nid=1891&dat=19841217&id=9rYfAAAAIBAJ&sjid=lNcEAAAAIBAJ&pg=1360,5095380&hl=en|url-status=live}}</ref>
+|-
+|[[1985 NFL season|1985]]
+!scope="row"|{{sortname|Marcus|Allen}}
+| rowspan="2" |[[Running back]]||[[Los Angeles Raiders]]||<ref>{{cite news|last1=Nadel|first1=John|title=Allen sweeps offensive honors|url=https://news.google.com/newspapers?nid=1298&dat=19851230&id=olUQAAAAIBAJ&sjid=cIsDAAAAIBAJ&pg=2254,4888561&hl=en|access-date=July 6, 2016|work=The Free Lance-Star|agency=Associated Press|date=December 30, 1983|page=5|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225205607/https://news.google.com/newspapers?nid=1298&dat=19851230&id=olUQAAAAIBAJ&sjid=cIsDAAAAIBAJ&pg=2254,4888561&hl=en|url-status=live}}</ref>
+|-
+|[[1986 NFL season|1986]]
+!scope="row"|{{sortname|Eric|Dickerson}}
+|[[Los Angeles Rams]]||<ref>{{cite news|title=Dickerson earns offensive honor|url=https://news.google.com/newspapers?nid=1298&dat=19861230&id=LuBLAAAAIBAJ&sjid=UosDAAAAIBAJ&pg=3047,5201856&hl=en|access-date=July 6, 2016|work=The Free Lance-Star|agency=Associated Press|date=December 30, 1986|page=10|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225113222/https://news.google.com/newspapers?nid=1298&dat=19861230&id=LuBLAAAAIBAJ&sjid=UosDAAAAIBAJ&pg=3047,5201856&hl=en|url-status=live}}</ref>
+|-
+|[[1987 NFL season|1987]]
+!scope="row"|{{sortname|Jerry|Rice}}
+|[[Wide receiver]]||[[San Francisco 49ers]]||<ref>{{cite news|title=Rice is Offensive Player of the year|url=https://news.google.com/newspapers?nid=1982&dat=19871230&id=XUlRAAAAIBAJ&sjid=kTMNAAAAIBAJ&pg=3788,3387210&hl=en|access-date=July 6, 2016|work=The Evening News|agency=Associated Press|date=December 30, 1987|page=2B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225014602/https://news.google.com/newspapers?nid=1982&dat=19871230&id=XUlRAAAAIBAJ&sjid=kTMNAAAAIBAJ&pg=3788,3387210&hl=en|url-status=live}}</ref>
+|-
+|[[1988 NFL season|1988]]
+!scope="row"|{{sortname|Roger|Craig|Roger Craig (American football)}}
+|[[Running back]]||[[San Francisco 49ers]]||<ref>{{cite news|last1=Wilner|first1=Barry|title=Craig earns offensive award|url=https://news.google.com/newspapers?nid=1665&dat=19881229&id=mj5PAAAAIBAJ&sjid=TyQEAAAAIBAJ&pg=4854,6159216&hl=en|access-date=July 6, 2016|work=The Times-News|agency=Associated Press|date=December 29, 1988|page=20|archive-date=February 24, 2021|archive-url=https://web.archive.org/web/20210224193749/https://news.google.com/newspapers?nid=1665&dat=19881229&id=mj5PAAAAIBAJ&sjid=TyQEAAAAIBAJ&pg=4854,6159216&hl=en|url-status=live}}</ref>
+|-
+|[[1989 NFL season|1989]]
+!scope="row"|{{sortname|Joe|Montana}}
+| rowspan="2" |[[Quarterback]]||[[San Francisco 49ers]]||<ref name=Young/>
+|-
+|[[1990 NFL season|1990]]
+!scope="row"|{{sortname|Warren|Moon}}
+|[[Houston Oilers]]||<ref>{{cite news|title=Moon top offensive player|url=https://news.google.com/newspapers?nid=2457&dat=19910110&id=9LBJAAAAIBAJ&sjid=yw4NAAAAIBAJ&pg=2734,2733460&hl=en|access-date=July 6, 2016|work=Bangor Daily News|agency=Associated Press|date=January 10, 1991|page=11|archive-date=February 27, 2021|archive-url=https://web.archive.org/web/20210227010242/https://news.google.com/newspapers?nid=2457&dat=19910110&id=9LBJAAAAIBAJ&sjid=yw4NAAAAIBAJ&pg=2734,2733460&hl=en|url-status=live}}</ref>
+|-
+|[[1991 NFL season|1991]]
+!scope="row"|{{sortname|Thurman|Thomas}}
+|[[Running back]]||[[Buffalo Bills]]||<ref>{{cite news|title=No more doubting Thomas: Bills' back selected as Offensive Player of Year|url=https://news.google.com/newspapers?nid=861&dat=19911230&id=p2tIAAAAIBAJ&sjid=RFYDAAAAIBAJ&pg=3683,6396366&hl=en|access-date=July 6, 2016|work=The Victoria Advocate|agency=Associated Press|date=December 30, 1991|page=B1|archive-date=January 24, 2020|archive-url=https://web.archive.org/web/20200124231837/https://news.google.com/newspapers?nid=861&dat=19911230&id=p2tIAAAAIBAJ&sjid=RFYDAAAAIBAJ&pg=3683,6396366&hl=en|url-status=live}}</ref>
+|-
+|[[1992 NFL season|1992]]
+!scope="row"|{{sortname|Steve|Young}}
+|[[Quarterback]]||[[San Francisco 49ers]]||<ref name=Young>{{cite news|title=Young named Offensive Player of the Year|url=https://news.google.com/newspapers?nid=1665&dat=19930105&id=3DIaAAAAIBAJ&sjid=VyUEAAAAIBAJ&pg=3705,1139572&hl=en|access-date=July 6, 2016|work=The Times-News|agency=Associated Press|date=January 5, 1993|page=1B|archive-date=February 24, 2021|archive-url=https://web.archive.org/web/20210224160839/https://news.google.com/newspapers?nid=1665&dat=19930105&id=3DIaAAAAIBAJ&sjid=VyUEAAAAIBAJ&pg=3705,1139572&hl=en|url-status=live}}</ref>
+|-
+|[[1993 NFL season|1993]]
+!scope="row"|{{sortname|Jerry|Rice}} {{small|(2)}}
+|[[Wide receiver]]||[[San Francisco 49ers]]||<ref>{{cite news|last1=Wilner|first1=Barry|title=Rice Offensive Player of the Year|url=https://news.google.com/newspapers?nid=1356&dat=19940106&id=tcFPAAAAIBAJ&sjid=7AcEAAAAIBAJ&pg=2296,3451098&hl=en|access-date=July 6, 2016|work=Ocala Star-Banner|agency=Associated Press|date=January 6, 1994|page=1B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225001240/https://news.google.com/newspapers?nid=1356&dat=19940106&id=tcFPAAAAIBAJ&sjid=7AcEAAAAIBAJ&pg=2296,3451098&hl=en|url-status=live}}</ref>
+|-
+|[[1994 NFL season|1994]]
+!scope="row"|{{sortname|Barry|Sanders}}
+|[[Running back]]||[[Detroit Lions]]||<ref>{{cite news|title=Sanders are players of the year|url=https://news.google.com/newspapers?nid=1817&dat=19941229&id=cjUdAAAAIBAJ&sjid=nKUEAAAAIBAJ&pg=4191,4099759&hl=en|access-date=July 6, 2016|work=The Tuscaloosa News|agency=Associated Press|date=December 29, 1994|page=3C|archive-date=March 3, 2021|archive-url=https://web.archive.org/web/20210303222320/https://news.google.com/newspapers?nid=1817&dat=19941229&id=cjUdAAAAIBAJ&sjid=nKUEAAAAIBAJ&pg=4191,4099759&hl=en|url-status=live}}</ref>
+|-
+|[[1995 NFL season|1995]]
+!scope="row"|{{sortname|Brett|Favre}}
+|[[Quarterback]]||[[Green Bay Packers]]||<ref>{{cite news|title=Favre voted best on offense|url=https://news.google.com/newspapers?nid=1290&dat=19951230&id=LTNUAAAAIBAJ&sjid=R44DAAAAIBAJ&pg=1832,4924283&hl=en|access-date=July 6, 2016|work=The News|agency=Associated Press|date=December 30, 1995|page=3C|archive-date=March 6, 2021|archive-url=https://web.archive.org/web/20210306211338/https://news.google.com/newspapers?nid=1290&dat=19951230&id=LTNUAAAAIBAJ&sjid=R44DAAAAIBAJ&pg=1832,4924283&hl=en|url-status=live}}</ref>
+|-
+|[[1996 NFL season|1996]]
+!scope="row"|{{sortname|Terrell|Davis}}
+| rowspan="8" |[[Running back]]||[[Denver Broncos]]||<ref>{{cite news|title=Denver running back Davis is Offensive Player of the Year|url=https://news.google.com/newspapers?nid=1988&dat=19961227&id=OXciAAAAIBAJ&sjid=jKwFAAAAIBAJ&pg=3057,5188306&hl=en|access-date=July 6, 2016|work=The Argus-Press|agency=Associated Press|date=December 27, 1996|page=10|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225083439/https://news.google.com/newspapers?nid=1988&dat=19961227&id=OXciAAAAIBAJ&sjid=jKwFAAAAIBAJ&pg=3057,5188306&hl=en|url-status=live}}</ref>
+|-
+|[[1997 NFL season|1997]]
+!scope="row"|{{sortname|Barry|Sanders}} {{small|(2)}}
+|[[Detroit Lions]]||<ref>{{cite news|last1=Barry|first1=Wilner|title=Detroit's Sanders named Offensive Player of Year|url=https://news.google.com/newspapers?nid=1696&dat=19971226&id=pQsbAAAAIBAJ&sjid=CEgEAAAAIBAJ&pg=3264,3452526&hl=en|access-date=July 6, 2016|work=Daily News|agency=Associated Press|date=December 26, 1997|page=1B|archive-date=April 11, 2022|archive-url=https://web.archive.org/web/20220411172802/https://news.google.com/newspapers?nid=1696&dat=19971226&id=pQsbAAAAIBAJ&sjid=CEgEAAAAIBAJ&pg=3264,3452526&hl=en|url-status=live}}</ref>
+|-
+|[[1998 NFL season|1998]]
+!scope="row"|{{sortname|Terrell|Davis}} {{small|(2)}}
+|[[Denver Broncos]]||<ref>{{cite news|last1=Wilner|first1=Barry|title=Davis named Offensive Player of the Year|url=https://news.google.com/newspapers?nid=1291&dat=19990106&id=PUlUAAAAIBAJ&sjid=bI4DAAAAIBAJ&pg=2953,1863114&hl=en|access-date=July 6, 2016|work=Boca Raton News|agency=Associated Press|date=January 6, 1999|page=4B|archive-date=March 2, 2021|archive-url=https://web.archive.org/web/20210302021638/https://news.google.com/newspapers?nid=1291&dat=19990106&id=PUlUAAAAIBAJ&sjid=bI4DAAAAIBAJ&pg=2953,1863114&hl=en|url-status=live}}</ref>
+|-
+|[[1999 NFL season|1999]]
+!scope="row"|{{sortname|Marshall|Faulk}}
+|[[St. Louis Rams]]||<ref>{{cite news|title=Faulk is overwhelming choice for offensive player of the year|url=https://news.google.com/newspapers?nid=1893&dat=20000113&id=fR8vAAAAIBAJ&sjid=9NwFAAAAIBAJ&pg=1623,1871127&hl=en|access-date=July 6, 2016|work=The Southeast Missourian|agency=Associated Press|date=January 13, 2000|page=1B|archive-date=February 24, 2021|archive-url=https://web.archive.org/web/20210224171459/https://news.google.com/newspapers?nid=1893&dat=20000113&id=fR8vAAAAIBAJ&sjid=9NwFAAAAIBAJ&pg=1623,1871127&hl=en|url-status=live}}</ref>
+|-
+|[[2000 NFL season|2000]]
+!scope="row"|{{sortname|Marshall|Faulk}} {{small|(2)}}
+|[[St. Louis Rams]]||<ref>{{cite news|title=Faulk: Offensive Player of Year|url=https://news.google.com/newspapers?nid=1891&dat=20010105&id=rgAuAAAAIBAJ&sjid=fd0FAAAAIBAJ&pg=3075,389007&hl=en|access-date=July 6, 2016|work=Gadsden Times|date=January 5, 2001|page=D3|archive-date=March 4, 2021|archive-url=https://web.archive.org/web/20210304161417/https://news.google.com/newspapers?nid=1891&dat=20010105&id=rgAuAAAAIBAJ&sjid=fd0FAAAAIBAJ&pg=3075,389007&hl=en|url-status=live}}</ref>
+|-
+|[[2001 NFL season|2001]]
+!scope="row"|{{sortname|Marshall|Faulk}} {{small|(3)}}
+|[[St. Louis Rams]]||<ref>{{cite news|title=Marshall Faulk wins Offensive Player of the Year|url=https://news.google.com/newspapers?nid=1988&dat=20020118&id=F1AiAAAAIBAJ&sjid=Ga0FAAAAIBAJ&pg=1205,1326694&hl=en|access-date=July 6, 2016|work=The Argus-Press|agency=Associated Press|date=January 18, 2002|page=11|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225092022/https://news.google.com/newspapers?nid=1988&dat=20020118&id=F1AiAAAAIBAJ&sjid=Ga0FAAAAIBAJ&pg=1205,1326694&hl=en|url-status=live}}</ref>
+|-
+|[[2002 NFL season|2002]]
+!scope="row"|{{sortname|Priest|Holmes}}
+|[[Kansas City Chiefs]]||<ref>{{cite news|last1=Wilner|first1=Barry|title=Honored Holmes: Chiefs back voted top offensive player|url=https://news.google.com/newspapers?nid=861&dat=20030110&id=zBhZAAAAIBAJ&sjid=gUYNAAAAIBAJ&pg=5181,2234424&hl=en|access-date=July 5, 2016|work=The Victoria Advocate|agency=Associated Press|date=January 10, 2003|page=5B|archive-date=February 25, 2021|archive-url=https://web.archive.org/web/20210225044333/https://news.google.com/newspapers?nid=861&dat=20030110&id=zBhZAAAAIBAJ&sjid=gUYNAAAAIBAJ&pg=5181,2234424&hl=en|url-status=live}}</ref>
+|-
+|[[2003 NFL season|2003]]
+!scope="row"|{{sortname|Jamal|Lewis|dab=American football}}
+|[[Baltimore Ravens]]||<ref>{{cite news|title=Ravens' Lewis named AP's offensive player of the year|url=http://onlineathens.com/stories/010104/spo_20040101057.shtml|access-date=July 5, 2016|work=Athens Banner-Herald|agency=Associated Press|date=January 1, 2004|url-status=dead|archive-url=https://web.archive.org/web/20160819155841/http://onlineathens.com/stories/010104/spo_20040101057.shtml|archive-date=August 19, 2016}}</ref>
+|-
+|[[2004 NFL season|2004]]
+!scope="row"|{{sortname|Peyton|Manning}}
+|[[Quarterback]]||[[Indianapolis Colts]]||<ref>{{cite news|title=Manning claims offensive award|url=https://news.google.com/newspapers?nid=1842&dat=20050105&id=3f0hAAAAIBAJ&sjid=26MFAAAAIBAJ&pg=1282,668505&hl=en|access-date=July 5, 2016|work=TimesDaily|agency=Associated Press|date=January 6, 2005|page=3C|archive-date=March 1, 2021|archive-url=https://web.archive.org/web/20210301021730/https://news.google.com/newspapers?nid=1842&dat=20050105&id=3f0hAAAAIBAJ&sjid=26MFAAAAIBAJ&pg=1282,668505&hl=en|url-status=live}}</ref>
+|-
+|[[2005 NFL season|2005]]
+!scope="row"|{{sortname|Shaun|Alexander}}
+| rowspan="2" |[[Running back]]||[[Seattle Seahawks]]||<ref>{{cite news|last1=Wilner|first1=Barry|title=Alexander named NFL MVP, top offensive player|url=http://usatoday30.usatoday.com/sports/football/nfl/seahawks/2006-01-05-alexander-mvp_x.htm|access-date=July 5, 2016|work=USA Today|agency=Associated Press|date=January 5, 2006|archive-date=October 10, 2016|archive-url=https://web.archive.org/web/20161010215236/http://usatoday30.usatoday.com/sports/football/nfl/seahawks/2006-01-05-alexander-mvp_x.htm|url-status=live}}</ref>
+|-
+|[[2006 NFL season|2006]]
+!scope="row"|{{sortname|LaDainian|Tomlinson}}
+|[[San Diego Chargers]]||<ref name=Tomlinson>{{cite news|last1=Wilner|first1=Barry|title=L.T. Wins AP Offensive Player Award|url=https://www.washingtonpost.com/wp-dyn/content/article/2007/01/05/AR2007010500835.html|access-date=February 2, 2017|work=The Washington Post|agency=Associated Press|date=January 5, 2007|archive-date=September 12, 2017|archive-url=https://web.archive.org/web/20170912105307/http://www.washingtonpost.com/wp-dyn/content/article/2007/01/05/AR2007010500835.html|url-status=live}}</ref>
+|-
+|[[2007 NFL season|2007]]
+!scope="row"|{{sortname|Tom|Brady}}
+| rowspan="2" |[[Quarterback]]||[[New England Patriots]]||<ref>{{cite news|title=Brady adds AP Offensive Player of Year to MVP|url=https://www.nfl.com/news/brady-adds-ap-offensive-player-of-year-to-mvp-09000d5d805d48be|access-date=July 5, 2016|work=NFL.com|agency=Associated Press|date=January 8, 2008|archive-date=August 4, 2020|archive-url=https://web.archive.org/web/20200804194146/https://www.nfl.com/news/brady-adds-ap-offensive-player-of-year-to-mvp-09000d5d805d48be|url-status=live}}</ref>
+|-
+|[[2008 NFL season|2008]]
+!scope="row"|{{sortname|Drew|Brees}}
+|[[New Orleans Saints]]||<ref>{{cite news|title=Brees named AP offensive player of year|url=https://www.espn.com/nfl/news/story?id=3813555|access-date=July 5, 2016|work=ESPN.com|agency=Associated Press|date=January 6, 2009}}</ref>
+|-
+|[[2009 NFL season|2009]]
+!scope="row"|{{sortname|Chris|Johnson|Chris Johnson (running back)}}
+|[[Running back]]||[[Tennessee Titans]]||<ref>{{cite news|title=Johnson makes fast impression|url=https://www.espn.com/nfl/news/story?id=4821833|access-date=July 5, 2016|work=ESPN.com|agency=Associated Press|date=January 13, 2010}}</ref>
+|-
+|[[2010 NFL season|2010]]
+!scope="row"|{{sortname|Tom|Brady}} {{small|(2)}}
+| rowspan="2" |[[Quarterback]]||[[New England Patriots]]||<ref>{{cite news|title=Brady wins AP offensive player of year award|url=http://www.denverpost.com/2011/02/01/brady-wins-ap-offensive-player-of-year-award/|access-date=July 5, 2016|work=The Denver Post|date=February 1, 2011|archive-date=August 17, 2016|archive-url=https://web.archive.org/web/20160817222146/http://www.denverpost.com/2011/02/01/brady-wins-ap-offensive-player-of-year-award/|url-status=live}}</ref>
+|-
+|[[2011 NFL season|2011]]
+!scope="row"|{{sortname|Drew|Brees}} {{small|(2)}} 
+|[[New Orleans Saints]]||<ref name=Brees2>{{cite web|title=Saints' Brees wins AP Offensive Player of the Year award|url=https://www.nfl.com/news/saints-brees-wins-ap-offensive-player-of-the-year-award-09000d5d8269e4fe|website=NFL.com|publisher=NFL|access-date=July 5, 2016|date=February 4, 2012|archive-date=December 8, 2016|archive-url=https://web.archive.org/web/20161208145625/http://www.nfl.com/news/story/09000d5d8269e4fe/article/saints-brees-wins-ap-offensive-player-of-the-year-award|url-status=live}}</ref>
+|-
+|[[2012 NFL season|2012]]
+!scope="row"|{{sortname|Adrian|Peterson}}
+|[[Running back]]||[[Minnesota Vikings]]||<ref name=Peterson>{{cite web|title=Adrian Peterson tabbed AP Offensive Player of the Year|url=https://www.nfl.com/news/adrian-peterson-tabbed-ap-offensive-player-of-the-year-0ap1000000134506|website=NFL.com|publisher=NFL|access-date=July 5, 2016|date=February 2, 2013|archive-date=June 7, 2020|archive-url=https://web.archive.org/web/20200607075424/https://www.nfl.com/news/adrian-peterson-tabbed-ap-offensive-player-of-the-year-0ap1000000134506|url-status=live}}</ref>
+|-
+|[[2013 NFL season|2013]]
+!scope="row"|{{sortname|Peyton|Manning}} {{small|(2)}}
+|[[Quarterback]]||[[Denver Broncos]]||<ref name=Manning2013>{{cite web|title=Broncos' Peyton Manning earns Offensive Player of the Year|url=https://www.nfl.com/news/broncos-peyton-manning-earns-offensive-player-of-the-year-0ap2000000321672|website=NFL.com|publisher=NFL|access-date=July 5, 2016|date=February 2, 2014|archive-date=August 5, 2020|archive-url=https://web.archive.org/web/20200805150520/https://www.nfl.com/news/broncos-peyton-manning-earns-offensive-player-of-the-year-0ap2000000321672|url-status=live}}</ref>
+|-
+|[[2014 NFL season|2014]]
+!scope="row"|{{sortname|DeMarco|Murray}}
+|[[Running back]]||[[Dallas Cowboys]]||<ref>{{cite news|last1=Brinson|first1=Will|title=NFL Offensive Player of the Year: DeMarco Murray beats Aaron Rodgers|url=http://www.cbssports.com/nfl/eye-on-football/25013785/demarco-murray-wins-2014-offensive-player-of-the-year|access-date=July 5, 2016|work=CBS Sports|date=January 31, 2015|archive-date=September 18, 2016|archive-url=https://web.archive.org/web/20160918204456/http://www.cbssports.com/nfl/eye-on-football/25013785/demarco-murray-wins-2014-offensive-player-of-the-year|url-status=live}}</ref>
+|-
+|[[2015 NFL season|2015]]
+!scope="row"|{{sortname|Cam|Newton}}
+| rowspan="2" |[[Quarterback]]||[[Carolina Panthers]]||<ref>{{cite news|title=Cam Newton named NFL MVP and offensive player of the year|url=https://www.theguardian.com/sport/2016/feb/06/cam-newton-named-nfl-mvp-and-offensive-player-of-the-year|access-date=July 5, 2016|work=The Guardian|agency=Associated Press|date=February 6, 2016}}</ref>
+|-
+|[[2016 NFL season|2016]]
+!scope="row"|{{sortname|Matt|Ryan|Matt Ryan (American football)}}
+|[[Atlanta Falcons]]||<ref name=Ryan>{{cite news|last1=McClure|first1=Vaughn|title=Falcons QB Matt Ryan wins NFL MVP, Offensive Player of Year|url=https://abcnews.go.com/Sports/falcons-qb-matt-ryan-wins-nfl-mvp-offensive/story?id=45275657|access-date=April 23, 2017|agency=ABC News|date=February 4, 2017|archive-date=April 24, 2017|archive-url=https://web.archive.org/web/20170424174547/http://abcnews.go.com/Sports/falcons-qb-matt-ryan-wins-nfl-mvp-offensive/story?id=45275657|url-status=live}}</ref>
+|-
+|[[2017 NFL season|2017]]
+!scope="row"|{{sortname|Todd|Gurley}}
+|[[Running back]]||[[Los Angeles Rams]]||<ref name="Gurley">{{cite web|url=http://www.nfl.com/news/story/0ap3000000913839/article/todd-gurley-named-nfl-offensive-player-of-the-year|archive-url=https://web.archive.org/web/20180204052237/http://www.nfl.com/news/story/0ap3000000913839/article/todd-gurley-named-nfl-offensive-player-of-the-year|url-status=dead|archive-date=February 4, 2018|title=Todd Gurley named NFL Offensive Player of the Year|author=Knoblauch, Austin|date=February 3, 2018|website=NFL.com}}</ref>
+|-
+|[[2018 NFL season|2018]]
+!scope="row"|{{sortname|Patrick|Mahomes}}
+|[[Quarterback]]||[[Kansas City Chiefs]]||<ref name=":0">{{Cite web|url=https://www.nfl.com/news/patrick-mahomes-named-nfl-offensive-player-of-year-0ap3000001015490|title=Patrick Mahomes named NFL Offensive Player of Year|last=Gordon|first=Grant|date=February 2, 2019|website=NFL.com|access-date=June 4, 2024|archive-date=February 23, 2024|archive-url=https://web.archive.org/web/20240223190034/https://www.nfl.com/news/patrick-mahomes-named-nfl-offensive-player-of-year-0ap3000001015490|url-status=live}}</ref>
+|-
+|[[2019 NFL season|2019]]
+!scope="row"|{{sortname|Michael|Thomas|Michael Thomas (wide receiver, born 1993)}}
+|[[Wide receiver]]||[[New Orleans Saints]]||<ref>{{Cite web |url=https://www.nfl.com/news/saints-wr-michael-thomas-named-2019-nfl-opoy-0ap3000001100165 |title=Saints WR Michael Thomas named 2019 NFL OPOY |website=NFL.com |first=Jelani |last=Scott |date=February 1, 2020 |access-date=February 1, 2020 |archive-date=June 6, 2020 |archive-url=https://web.archive.org/web/20200606145935/https://www.nfl.com/news/saints-wr-michael-thomas-named-2019-nfl-opoy-0ap3000001100165 |url-status=live }}</ref>
+|-
+|[[2020 NFL season|2020]]
+!scope="row"|{{sortname|Derrick|Henry}}
+|[[Running back]]||[[Tennessee Titans]]||| <ref>{{cite web |url=https://www.nfl.com/news/titans-rb-derrick-henry-named-ap-offensive-player-of-the-year |title=Titans RB Derrick Henry named NFL AP Offensive Player of the Year |website=NFL.com |first=Adam |last=Maya |date=February 6, 2021 |access-date=February 6, 2021 |archive-date=February 7, 2021 |archive-url=https://web.archive.org/web/20210207024440/https://www.nfl.com/news/titans-rb-derrick-henry-named-ap-offensive-player-of-the-year |url-status=live }}</ref>
+|-
+|[[2021 NFL season|2021]]
+!scope="row"|{{sortname|Cooper|Kupp}}
+| rowspan="2" |[[Wide receiver]]||[[Los Angeles Rams]]||| <ref>{{cite web |url=https://www.nfl.com/news/rams-wr-cooper-kupp-named-2021-ap-nfl-offensive-player-of-the-year |title=Rams WR Cooper Kupp named 2021 AP NFL Offensive Player of the Year |website=NFL.com |first=Adam |last=Maya |date=February 10, 2022 |access-date=February 10, 2022 |archive-date=February 11, 2022 |archive-url=https://web.archive.org/web/20220211034338/https://www.nfl.com/news/rams-wr-cooper-kupp-named-2021-ap-nfl-offensive-player-of-the-year |url-status=live }}</ref>
+|-
+|[[2022 NFL season|2022]]
+!scope="row"|{{sortname|Justin|Jefferson}}
+|[[Minnesota Vikings]]||| <ref>{{cite web |url=https://www.nfl.com/news/vikings-wr-justin-jefferson-named-ap-nfl-offensive-player-of-the-year |title=Vikings WR Justin Jefferson named AP NFL Offensive Player of the Year |website=NFL.com |first=Eric |last=Edholm |date=February 9, 2023 |access-date=February 9, 2023 |archive-date=February 10, 2023 |archive-url=https://web.archive.org/web/20230210021715/https://www.nfl.com/news/vikings-wr-justin-jefferson-named-ap-nfl-offensive-player-of-the-year |url-status=live }}</ref>
+|-
+|[[2023 NFL season|2023]]
+!scope="row"|{{sortname|Christian|McCaffrey}}
+|rowspan="2" |[[Running back]]||[[San Francisco 49ers]]||| <ref>{{cite web |url=https://www.nfl.com/news/niners-rb-christian-mccaffrey-named-ap-2023-nfl-offensive-player-of-the-year |title=Niners RB Christian McCaffrey named AP 2023 NFL Offensive Player of the Year |website=NFL.com |first=Eric |last=Edholm |date=February 9, 2024 |access-date=February 8, 2024 |archive-date=February 9, 2024 |archive-url=https://web.archive.org/web/20240209032851/https://www.nfl.com/news/niners-rb-christian-mccaffrey-named-ap-2023-nfl-offensive-player-of-the-year |url-status=live }}</ref>
+|-
+|[[2024 NFL season|2024]]
+!scope="row"|{{sortname|Saquon|Barkley}}
+|[[Philadelphia Eagles]]||| <ref>{{Cite web |title=Eagles RB Saquon Barkley named 2024 AP NFL Offensive Player of the Year |url=https://www.nfl.com/news/eagles-rb-saquon-barkley-named-2024-ap-nfl-offensive-player-of-the-year |access-date=2025-02-07 |website=NFL.com |language=en-US}}</ref>
+|-
+|[[2025 NFL season|2025]]
+!scope="row"|{{sortname|Jaxon|Smith-Njigba}}
+|[[Wide receiver]]||[[Seattle Seahawks]]|||<ref>{{Cite web |title=Seahawks WR Jaxon Smith-Njigba named 2025 AP NFL Offensive Player of Year|url=https://www.nfl.com/news/jaxon-smith-njigba-seahawks-wr-offensive-player-of-the-year-2025 |access-date=2025-02-05 |website=NFL.com |language=en-US}}</ref>
+|}
+
+==Multiple-time winners==
+{| class="wikitable sortable"
+|+ List of multiple-time winners
+!Awards!!Player!!Team(s)!!Years
+|-align=center
+| rowspan="2” |3||[[Earl Campbell]]||[[Houston Oilers]]||[[1978 NFL season|1978]], [[1979 NFL season|1979]], [[1980 NFL season|1980]]
+|-align=center
+|[[Marshall Faulk]]||[[St. Louis Rams]]||[[1999 NFL season|1999]], [[2000 NFL season|2000]], [[2001 NFL season|2001]]
+|-align=center
+| rowspan="6” |2||[[Barry Sanders]]||[[Detroit Lions]]||[[1994 NFL season|1994]], [[1997 NFL season|1997]]
+|-align=center
+|[[Drew Brees]]||[[New Orleans Saints]]||[[2008 NFL season|2008]], [[2011 NFL season|2011]]
+|-align=center
+|[[Jerry Rice]]||[[San Francisco 49ers]]||[[1987 NFL season|1987]], [[1993 NFL season|1993]]
+|-align=center
+|[[Peyton Manning]]||[[Indianapolis Colts]] (1) / [[Denver Broncos]] (1)||[[2004 NFL season|2004]], [[2013 NFL season|2013]]
+|-align=center
+|[[Terrell Davis]]||[[Denver Broncos]]||[[1996 NFL season|1996]], [[1998 NFL season|1998]]
+|-align=center
+|[[Tom Brady]]||[[New England Patriots]]||[[2007 NFL season|2007]], [[2010 NFL season|2010]]
+|}
+
+==See also==
+* [[AP NFL Defensive Player of the Year]]
+
+==References==
+;General
+* {{cite book |title=2018 Official NFL Record and Fact Book |date=2016 |publisher=National Football League |page=524 |url=https://nflcommunications.com/Documents/2018%20Record%20and%20Fact%20Book%20(8.6.18).pdf |access-date=August 14, 2018 |editor1-last=Gellerman |editor1-first=Jacob |editor2-last=Drexler |editor2-first=Sam |editor3-last=Marini |editor3-first=Matt |editor4-last=Cocchiaro |editor4-first=Nicolas |editor5-last=Zerkel |editor5-first=Alex |archive-date=March 15, 2021 |archive-url=https://web.archive.org/web/20210315154820/https://nflcommunications.com/Documents/2018%20Record%20and%20Fact%20Book%20(8.6.18).pdf |url-status=live }}
+* {{cite web|title=AP Offensive Player of the Year Winners|url=https://www.pro-football-reference.com/awards/ap-offensive-player-of-the-year.htm|website=Pro-Football-Reference.com|publisher=Sports Reference LLC|access-date=July 5, 2016|archive-date=November 6, 2018|archive-url=https://web.archive.org/web/20181106132520/https://www.pro-football-reference.com/awards/ap-offensive-player-of-the-year.htm|url-status=live}}
+
+;Footnotes
+{{Reflist|30em}}
+
+{{AP Offensive Players of the Year}}
+{{NFL Honors}}
+{{featured list}}
+[[Category:NFL trophies and awards]]
+[[Category:Associated Press awards]]
+[[Category:Awards established in 1972]]
+[[Category:NFL Offensive Player of the Year winners]]

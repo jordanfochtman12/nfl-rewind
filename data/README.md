@@ -39,3 +39,25 @@ python3 scripts/ingest-schedules.py
 
 That writes `src/lib/game/data/realSchedules.ts`; `rebuildSchedule` uses it for every season
 it covers and only generates a schedule for years past the data (2027).
+
+## History mode
+
+| Path | Source | Years |
+|------|--------|-------|
+| `data/history/rosters/roster_YYYY.csv` | nflverse rosters | 1966–2025 |
+| `data/history/stats/stats_player_reg_YYYY.csv` | nflverse regular-season player stats (offense, defense, kicking, returns) | 1999–2025 |
+| `data/history/fdp/YYYY.csv` | Pro-Football-Reference season tables (offense), via fantasydatapros/data | 1970–1998 |
+| `data/history/wiki/*.wikitext` | Wikipedia award and Hall of Fame pages | 1966–2026 |
+| `data/history/trades.csv` | nflverse trades (not used yet) | 2002– |
+
+History mode replays the real league from these (plus the playoff games and drafts above).
+Rebuild its tables:
+
+```
+python3 scripts/ingest-history.py
+```
+
+That writes `src/lib/game/data/history/*.ts`, loaded on demand when History mode opens.
+Nothing is estimated: a stat with no source is left out (completions for 1992–98 are marked
+unknown, shown as —). Not yet in the record: individual stats for 1966–69, and defense,
+kicking and returns before 1999.

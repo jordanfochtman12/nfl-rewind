@@ -1,0 +1,165 @@
+/**
+ * History mode's record of what really happened, loaded on demand (the tables are a few
+ * megabytes, so they stay out of the main bundle until someone opens History mode).
+ * Built by scripts/ingest-history.py from nflverse, Pro-Football-Reference tables, the
+ * FiveThirtyEight game file and Wikipedia; nothing in it is estimated. No React.
+ */
+import type { Pos, SeasonStats, TeamId } from "./types.ts";
+
+export interface HistoryPerson {
+  first: string;
+  last: string;
+  pos: Pos;
+  /** YYYYMMDD, when the source has it. */
+  birth?: string;
+  college?: string;
+}
+
+export interface HistoryPlayoffGame {
+  mmdd: string;
+  round: string;
+  home: TeamId;
+  away: TeamId;
+  homeScore: number;
+  awayScore: number;
+  neutral: boolean;
+}
+
+export interface HistoryPick {
+  round: number;
+  pick: number;
+  team: TeamId;
+  person: number;
+  league?: "afl" | "nfl";
+}
+
+/** A real season line; -1 marks a stat the source didn't keep that year (shown as —). */
+export type HistoryLine = Partial<Record<keyof SeasonStats, number>>;
+
+export interface HistoryData {
+  people: HistoryPerson[];
+  rosters(year: number): Map<TeamId, { person: number; jersey?: number }[]>;
+  stats(year: number): { person: number; team: TeamId | ""; line: HistoryLine }[];
+  playoffs(year: number): HistoryPlayoffGame[];
+  drafts(year: number): HistoryPick[];
+  /** award key -> person ids, or names (coaches, unmatched) */
+  awards(year: number): Record<string, (number | string)[]>;
+  /** Hall of Fame class of that year: person ids or names (coaches, contributors, pre-1966 players). */
+  hof(year: number): (number | string)[];
+  /** Seasons each person appears on a roster, for retirement. */
+  lastSeason(person: number): number | undefined;
+  firstSeason(person: number): number | undefined;
+}
+
+const id36 = (s: string) => parseInt(s, 36);
+const ref = (s: string): number | string => (s.startsWith("~") ? s.slice(1) : id36(s));
+
+function memo<T>(f: (y: number) => T): (y: number) => T {
+  const cache = new Map<number, T>();
+  return (y) => {
+    if (!cache.has(y)) cache.set(y, f(y));
+    return cache.get(y)!;
+  };
+}
+
+/** Parse the generated tables into the shape the engine reads. */
+export function parseHistory(mods: {
+  PEOPLE: string;
+  ROSTERS: Record<number, string>;
+  STATS: Record<number, string>;
+  STAT_FIELDS: readonly string[];
+  PLAYOFFS: Record<number, string>;
+  DRAFTS: Record<number, string>;
+  AWARDS: Record<number, string>;
+  HOF_CLASSES: Record<number, string>;
+}): HistoryData {
+  const people = mods.PEOPLE.split("\n").map((l) => {
+    const [first, last, pos, birth, college] = l.split("|");
+    return { first: first!, last: last!, pos: pos as Pos, birth: birth || undefined, college: college || undefined };
+  });
+  const rosters = memo((y) => {
+    const out = new Map<TeamId, { person: number; jersey?: number }[]>();
+    for (const chunk of (mods.ROSTERS[y] ?? "").split(";")) {
+      if (!chunk) continue;
+      const [team, list] = chunk.split(":");
+      out.set(
+        team as TeamId,
+        (list ?? "").split(",").filter(Boolean).map((e) => {
+          const [i, j] = e.split(".");
+          return { person: id36(i!), jersey: j ? Number(j) : undefined };
+        }),
+      );
+    }
+    return out;
+  });
+  // First and last roster season per person, from every season's rosters.
+  const first = new Map<number, number>();
+  const last = new Map<number, number>();
+  for (const y of Object.keys(mods.ROSTERS).map(Number).sort((a, b) => a - b))
+    for (const list of rosters(y).values())
+      for (const { person } of list) {
+        if (!first.has(person)) first.set(person, y);
+        last.set(person, y);
+      }
+  const stats = memo((y) =>
+    (mods.STATS[y] ?? "")
+      .split("|")
+      .filter(Boolean)
+      .map((row) => {
+        const c = row.split(",");
+        const line: HistoryLine = {};
+        mods.STAT_FIELDS.forEach((k, j) => {
+          const v = c[j + 2];
+          if (v === undefined || v === "") return;
+          line[k as keyof SeasonStats] = v === "?" ? -1 : Number(v);
+        });
+        return { person: id36(c[0]!), team: (c[1] ?? "") as TeamId | "", line };
+      }),
+  );
+  const playoffs = memo((y) =>
+    (mods.PLAYOFFS[y] ?? "")
+      .split("|")
+      .filter(Boolean)
+      .map((g) => {
+        const [mmdd, round, home, away, hs, as, n] = g.split(",");
+        return { mmdd: mmdd!, round: round!, home: home as TeamId, away: away as TeamId, homeScore: Number(hs), awayScore: Number(as), neutral: n === "N" };
+      }),
+  );
+  const drafts = memo((y) =>
+    (mods.DRAFTS[y] ?? "")
+      .split("|")
+      .filter(Boolean)
+      .map((d) => {
+        const [round, pick, team, person, league] = d.split(",");
+        return { round: Number(round), pick: Number(pick), team: team as TeamId, person: id36(person!), league: (league || undefined) as HistoryPick["league"] };
+      }),
+  );
+  const awards = memo((y) => {
+    const out: Record<string, (number | string)[]> = {};
+    for (const part of (mods.AWARDS[y] ?? "").split(";")) {
+      const [k, v] = part.split(":");
+      if (k && v) out[k] = v.split("/").map(ref);
+    }
+    return out;
+  });
+  const hof = memo((y) => (mods.HOF_CLASSES[y] ?? "").split("/").filter(Boolean).map(ref));
+  return { people, rosters, stats, playoffs, drafts, awards, hof, lastSeason: (p) => last.get(p), firstSeason: (p) => first.get(p) };
+}
+
+let loaded: Promise<HistoryData> | undefined;
+
+/** Load (once) and parse History mode's tables. */
+export function loadHistoryData(): Promise<HistoryData> {
+  loaded ??= Promise.all([
+    import("./data/history/people.ts"),
+    import("./data/history/rosters.ts"),
+    import("./data/history/stats.ts"),
+    import("./data/history/playoffs.ts"),
+    import("./data/history/drafts.ts"),
+    import("./data/history/awards.ts"),
+    import("./data/history/hof.ts"),
+  ]).then(([p, r, s, po, d, a, h]) =>
+    parseHistory({ PEOPLE: p.PEOPLE, ROSTERS: r.ROSTERS, STATS: s.STATS, STAT_FIELDS: s.STAT_FIELDS, PLAYOFFS: po.PLAYOFFS, DRAFTS: d.DRAFTS, AWARDS: a.AWARDS, HOF_CLASSES: h.HOF_CLASSES }),
+  );
+  return loaded;
+}

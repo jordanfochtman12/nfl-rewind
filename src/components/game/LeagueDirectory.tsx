@@ -220,12 +220,12 @@ export function LeagueDirectory() {
                     <td className="px-2 py-1 text-paper">{p.pos}</td>
                     <td className="px-2 py-1">{clubCell(p)}</td>
                     <td className="tabular px-2 py-1 text-right text-white">
-                      {retired ? <span title="Career peak">{p.peakOvr ?? p.ovr}</span> : p.revealed ? p.ovr : <span className="text-paper">sc {visibleOvr(p)}</span>}
+                      {save.realHistory ? "—" : retired ? <span title="Career peak">{p.peakOvr ?? p.ovr}</span> : p.revealed ? p.ovr : <span className="text-paper">sc {visibleOvr(p)}</span>}
                     </td>
                     <td className="tabular px-2 py-1 text-right text-paper">{p.age}</td>
                     <td className="tabular px-2 py-1 text-right text-paper">{p.yearsPro}</td>
                     <td className="tabular px-2 py-1 text-right text-muted">
-                      {retired ? "—" : p.teamId === "fa" ? "Available" : `${formatMoney(p.salary ?? 0, year)} · ${p.contractYears ?? 0}y`}
+                      {retired || save.realHistory ? "—" : p.teamId === "fa" ? "Available" : `${formatMoney(p.salary ?? 0, year)} · ${p.contractYears ?? 0}y`}
                     </td>
                   </tr>
                 );

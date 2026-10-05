@@ -68,7 +68,7 @@ import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
 import { DraftReportCard } from "./DraftReportCard";
 import { HallOfFame } from "./HallOfFame";
-import { leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
+import { HISTORY_LAST, leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
@@ -95,6 +95,7 @@ import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
+import { HistoryDesk, HistoryDraft } from "./HistoryMode";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
@@ -112,10 +113,13 @@ import {
 } from "./WinterNights";
 
 function TitleScreen() {
-  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox } = useGameStore();
+  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox, newHistory, historyLoading } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [watchReady, setWatchReady] = useState(false);
+  const [historyReady, setHistoryReady] = useState(false);
+  const [historyError, setHistoryError] = useState("");
   const watching = !!save?.sandbox;
+  const realHistory = !!save?.realHistory;
   const [importError, setImportError] = useState('');
   const download = () => {
     const json = exportJson();
@@ -153,6 +157,19 @@ function TitleScreen() {
         >
           {save && watchReady ? "Replace save and watch" : "Watch history"} <span aria-hidden>▸</span>
         </Btn>
+        <Btn
+          disabled={historyLoading}
+          onClick={() => {
+            if (save && !historyReady) {
+              setHistoryReady(true);
+              return;
+            }
+            setHistoryError("");
+            newHistory().catch(() => setHistoryError("History mode's record couldn't be loaded. Check your connection and try again."));
+          }}
+        >
+          {historyLoading ? "Loading the record…" : save && historyReady ? "Replace save and open History mode" : "History mode"} <span aria-hidden>⏮</span>
+        </Btn>
         <Btn onClick={continueGame} disabled={!save}>
           Continue
         </Btn>
@@ -162,7 +179,14 @@ function TitleScreen() {
           Watching history starts a new league and replaces your current save. Export it first if you want to keep it.
         </p>
       )}
+      {historyReady && save && (
+        <p role="alert" className="text-sm text-brass">
+          History mode starts at the 1966 draft and replaces your current save. Export it first if you want to keep it.
+        </p>
+      )}
+      {historyError && <p role="alert" className="text-sm text-brick">{historyError}</p>}
       <p className="text-sm text-muted">Watch history: no team to run. The computer runs every club from 1966 on, and you watch it unfold.</p>
+      <p className="text-sm text-muted">History mode: the NFL exactly as it happened, 1966 to {HISTORY_LAST}. Real rosters, scores, playoffs, drafts, awards, stats and Hall of Fame classes, step by step. Nothing simulated.</p>
       <div className="next-file-actions">
         <Btn onClick={download} disabled={!save}>
           Export dynasty JSON
@@ -184,9 +208,10 @@ function TitleScreen() {
       </div>
       {importError && <p role="alert" className="text-sm text-brick">{importError}</p>}
       {!hasHydrated && <p className="text-sm text-muted">Reading the file…</p>}
+      {hasHydrated && historyLoading && !save && <p className="text-sm text-muted">Rewinding History mode to where you left it…</p>}
       {save && hasHydrated && (
         <p className="text-sm text-paper">
-          {watching ? "Watching history" : displayName(save.year, save.userTeamId)} · {save.year} · {save.weekLabel}
+          {realHistory ? "History mode" : watching ? "Watching history" : displayName(save.year, save.userTeamId)} · {save.year} · {save.weekLabel}
           {!watching && grade && grade.seasons > 0 ? ` · ${grade.letter}` : ""}
           {bytes ? ` · ${formatBytes(bytes)}` : ""}
         </p>
@@ -194,7 +219,7 @@ function TitleScreen() {
       </div>
       <aside className="next-dynasty-card" aria-label="Your dynasty">
         <div className="next-card-label"><span>{save ? 'YOUR FRANCHISE' : 'THE OPENING CHAPTER'}</span><span className="next-status-dot" /></div>
-        {save && watching ? <><div className="next-resume-club"><div><span>{save.year} / {save.weekLabel}</span><h2>Watching history</h2></div></div><div className="next-resume-stats"><div><span>SEASONS</span><strong>{save.history.superBowls.length}</strong></div><div><span>LAST CHAMP</span><strong>{(() => { const b = save.history.superBowls.at(-1); return b ? nicknameOf(b.year, (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId) : '—'; })()}</strong></div></div><button className="next-card-action" onClick={continueGame}>Back to the broadcast <span aria-hidden>↗</span></button></> : save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
+        {save && watching ? <><div className="next-resume-club"><div><span>{save.year} / {save.weekLabel}</span><h2>{realHistory ? "History mode" : "Watching history"}</h2></div></div><div className="next-resume-stats"><div><span>SEASONS</span><strong>{save.history.superBowls.length}</strong></div><div><span>LAST CHAMP</span><strong>{(() => { const b = save.history.superBowls.at(-1); return b ? nicknameOf(b.year, (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId) : '—'; })()}</strong></div></div><button className="next-card-action" onClick={continueGame}>Back to the broadcast <span aria-hidden>↗</span></button></> : save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
       </aside>
       </div>
       <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2027</span></div>
@@ -1264,7 +1289,10 @@ function Stats() {
             ["playoffs", poYear ? `${poYear} playoffs` : "Playoffs"],
             ["poCareer", "Playoff careers"],
           ] as const
-        ).map(([k, label]) => (
+        )
+          // History mode has no dynasty of its own; its careers are the real ones.
+          .filter(([k]) => !(save.realHistory && k === "dynastyCareer"))
+          .map(([k, label]) => (
           <button
             key={k}
             type="button"
@@ -1578,10 +1606,15 @@ function History() {
                 <p className="font-display text-base">{a.year}</p>
                 <p className="text-muted">
                   MVP <Nm id={a.mvp} />
+                  {a.co?.mvp?.map((id) => <span key={id}> &amp; <Nm id={id} /></span>)}
                   {a.offPoy && <> · OPOY <Nm id={a.offPoy} /></>}
+                  {a.co?.offPoy?.map((id) => <span key={id}> &amp; <Nm id={id} /></span>)}
                   {a.defPoy && <> · DPOY <Nm id={a.defPoy} /></>}
+                  {a.co?.defPoy?.map((id) => <span key={id}> &amp; <Nm id={id} /></span>)}
                   {a.cpoty && <> · Comeback <Nm id={a.cpoty} /></>}
+                  {a.co?.cpoty?.map((id) => <span key={id}> &amp; <Nm id={id} /></span>)}
                   {a.coy && save.coaches[a.coy] && <> · Coach {save.coaches[a.coy]!.name}</>}
+                  {a.coyName && <> · Coach {a.coyName}</>}
                 </p>
               </li>
             );
@@ -1614,7 +1647,7 @@ function History() {
             .slice()
             .reverse()
             .map((h) => (
-              <HofPlaque key={`${h.kind ?? "player"}-${h.playerId ?? h.coachId}-${h.year}`} h={h} />
+              <HofPlaque key={`${h.kind ?? "player"}-${h.playerId ?? h.coachId ?? h.name}-${h.year}`} h={h} />
             ))}
           {!save.history.hof.length && <p className="text-muted">No class yet. Five-year wait after retirement.</p>}
         </ul>
@@ -1629,7 +1662,7 @@ function HofPlaque({ h }: { h: HofMember }) {
   const coach = h.coachId ? save.coaches[h.coachId] : undefined;
   return (
     <li className="chrome-bevel flex items-start gap-3 rounded-lg border border-brass/40 bg-gradient-to-b from-brass/10 to-transparent p-3">
-      <Logo id={h.teamId} size={32} year={h.year} />
+      {(h.playerId || h.coachId) && <Logo id={h.teamId} size={32} year={h.year} />}
       <div className="min-w-0">
         <p className="font-display text-lg leading-tight">
           {h.kind === "coach" ? (
@@ -1639,7 +1672,7 @@ function HofPlaque({ h }: { h: HofMember }) {
           ) : player ? (
             <PlayerLink player={player} className="inline min-h-0 font-display text-lg" />
           ) : (
-            h.playerId
+            (h.playerId ?? h.name)
           )}
           <span className="ml-2 text-xs tracking-widest text-brass">CLASS OF {h.year}</span>
         </p>
@@ -1653,10 +1686,10 @@ function TeamOfHonor() {
   const save = useGameStore((s) => s.save)!;
   const [club, setClub] = useState<TeamId>(save.userTeamId);
   const entries = save.history.hof
-    .filter((h) => h.teamId === club)
+    .filter((h) => h.teamId === club && (h.playerId || h.coachId))
     .slice()
     .reverse();
-  const count = (id: TeamId) => save.history.hof.filter((h) => h.teamId === id).length;
+  const count = (id: TeamId) => save.history.hof.filter((h) => h.teamId === id && (h.playerId || h.coachId)).length;
   const clubs = activeTeamIds(save.year)
     .slice()
     .sort((a, b) => Number(b === save.userTeamId) - Number(a === save.userTeamId) || displayName(save.year, a).localeCompare(displayName(save.year, b)));
@@ -1797,6 +1830,10 @@ const WATCH_TABS: { id: Tab; label: string }[] = [
   { id: "hof", label: "Hall of Fame" },
 ];
 
+const HISTORY_TABS: { id: Tab; label: string }[] = WATCH_TABS.filter((t) => t.id !== "primetime").map((t) =>
+  t.id === "office" ? { id: t.id, label: "Rewind" } : t,
+);
+
 /** The sandbox's office tab: the league desk, or whatever night the calendar is on. */
 function WatchOffice({ event }: { event: boolean }) {
   const save = useGameStore((s) => s.save)!;
@@ -1824,7 +1861,7 @@ function PlayShell() {
     );
   }, [save]);
   // A sandbox has no roster, depth, staff, market or schedule tabs; land on the desk instead.
-  const staleTab = !!save?.sandbox && !WATCH_TABS.some((t) => t.id === tab);
+  const staleTab = !!save?.sandbox && !(save.realHistory ? HISTORY_TABS : WATCH_TABS).some((t) => t.id === tab);
   useEffect(() => {
     if (staleTab) setTab("office");
   }, [staleTab, setTab]);
@@ -1837,7 +1874,8 @@ function PlayShell() {
     a.click();
   };
   const watch = !!save.sandbox;
-  const tabs = watch ? WATCH_TABS : TABS;
+  const real = !!save.realHistory;
+  const tabs = real ? HISTORY_TABS : watch ? WATCH_TABS : TABS;
   const champ = save.history.superBowls.at(-1);
   const deskId = watch && champ ? ((champ.homeScore >= champ.awayScore ? champ.homeId : champ.awayId) as TeamId) : save.userTeamId;
   const showDraft = save.phase === "draft" && !event;
@@ -1845,7 +1883,7 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <DraftAnnouncerProvider>
-    {watch && tv ? (
+    {watch && tv && !real ? (
       <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
         <WatchTV />
         <PlayerProfile />
@@ -1888,11 +1926,12 @@ function PlayShell() {
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
       <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
         <div className="next-section-context"><span>{watch ? "LEAGUE" : "FRANCHISE"} / {tabs.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
-        {watch && tab === "office" ? <WatchOffice event={event} /> : null}
+        {real && tab === "office" ? <HistoryDesk /> : null}
+        {watch && !real && tab === "office" ? <WatchOffice event={event} /> : null}
         {!watch && (event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
         {!watch && event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
-        {showDraft && (tab === "draft" || (!watch && tab === "office")) ? <DraftNight /> : null}
+        {showDraft && !real && (tab === "draft" || (!watch && tab === "office")) ? <DraftNight /> : null}
         {!watch && showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {!watch && showDeadline && tab === "office" ? <DeadlineNight /> : null}
         {!watch && !event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
@@ -1903,8 +1942,9 @@ function PlayShell() {
         {tab === "standings" && <Standings />}
         {!watch && tab === "schedule" && <Schedule />}
         {tab === "stats" && <Stats />}
-        {tab === "draft" && !showDraft && <DraftNight />}
-        {tab === "draft" && !showDraft && <DraftReportCard />}
+        {tab === "draft" && real && <HistoryDraft />}
+        {tab === "draft" && !showDraft && !real && <DraftNight />}
+        {tab === "draft" && (!showDraft || real) && <DraftReportCard />}
         {tab === "history" && <History />}
         {tab === "team" && (
           <TeamHistory records={(id) => <RecordBookSection title={`${displayName(save.year, id)} franchise records`} teamId={id} />} />
@@ -1916,7 +1956,7 @@ function PlayShell() {
         <CrunchCall />
       </main>
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
-      {watch && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
+      {watch && !real && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
     )}

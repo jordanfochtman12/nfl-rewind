@@ -231,6 +231,8 @@ export function HallOfFame() {
   const classes = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const shown = members.filter((m) => {
+      // History mode enshrines coaches, contributors and pre-1966 players by name alone.
+      if (m.name && !m.playerId && !m.coachId) return who === "all" && !club && !pos && (!needle || m.name.toLowerCase().includes(needle));
       if (who === "players" && !m.playerId) return false;
       if (who === "coaches" && !m.coachId) return false;
       if (club && homeOf(m) !== club) return false;
@@ -247,7 +249,7 @@ export function HallOfFame() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [save, who, club, pos, q]);
 
-  const clubs = [...new Set(members.map(homeOf).filter((x): x is TeamId => !!x))].sort((a, b) => displayName(save.year, a).localeCompare(displayName(save.year, b)));
+  const clubs = [...new Set(members.filter((m) => m.playerId || m.coachId).map(homeOf).filter((x): x is TeamId => !!x))].sort((a, b) => displayName(save.year, a).localeCompare(displayName(save.year, b)));
   const positions = [...new Set(members.map((m) => (m.playerId ? save.players[m.playerId]?.pos : undefined)).filter((x): x is NonNullable<typeof x> => !!x))].sort();
   const total = members.length;
 
@@ -307,6 +309,12 @@ export function HallOfFame() {
             <div className="absolute inset-x-4 top-4 h-1 rounded-full bg-gradient-to-r from-[#5c626b] via-[#c4c9d0] to-[#5c626b]" aria-hidden />
             <div className="relative flex flex-wrap justify-center gap-x-2 gap-y-5 sm:justify-start">
               {list.map((m) => {
+                if (m.name && !m.playerId && !m.coachId)
+                  return (
+                    <span key={`n-${m.name}`} className="self-end rounded-sm border border-brass/40 bg-black/60 px-3 py-2 font-display text-sm uppercase italic text-paper">
+                      {m.name}
+                    </span>
+                  );
                 if (m.playerId) {
                   const p = save.players[m.playerId];
                   return p ? <HangingJersey key={m.playerId} player={p} onOpen={() => setPlaque({ kind: "player", id: p.id })} /> : null;

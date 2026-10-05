@@ -10,6 +10,8 @@ import {
   displayName,
   featuredScore,
   gamesInWeek,
+  historyLabel,
+  HISTORY_LAST,
   realPostseason,
   type DynastySave,
   type GameResult,
@@ -67,7 +69,8 @@ export function WatchBar() {
   onceRef.current = once;
 
   // The draft room makes its own picks on a clock, so auto-play waits for it there.
-  const draftRunsItself = save.phase === "draft" && stopBig && (tab === "office" || tab === "draft");
+  const real = !!save.realHistory;
+  const draftRunsItself = !real && save.phase === "draft" && stopBig && (tab === "office" || tab === "draft");
   useEffect(() => {
     if (!auto || done || live || draftRunsItself) return;
     const t = setTimeout(() => onceRef.current(), SPEED_MS[speed]);
@@ -90,14 +93,16 @@ export function WatchBar() {
       <div className="flex flex-wrap items-center gap-2">
         <span data-tour="watch-next" className="contents">
         <Btn kind="primary" className="min-h-12 px-6 text-lg" disabled={done || !!busy} onClick={() => { setNote(null); once(); }}>
-          {watchLabel(save)} <span aria-hidden>▸</span>
+          {real ? historyLabel(save) : watchLabel(save)} <span aria-hidden>▸</span>
         </Btn>
         </span>
+        {!real && (
         <span data-tour="watch-tv" className="contents">
         <Btn kind="gold" className="min-h-12 px-4" disabled={done || !!busy} onClick={() => { setAuto(false); startTv(save.year); }}>
           📺 TV mode
         </Btn>
         </span>
+        )}
         <span data-tour="watch-auto" className="contents">
         <Btn
           className="min-h-12 px-4"
@@ -131,17 +136,17 @@ export function WatchBar() {
       <div className="flex flex-wrap gap-2">
         {inSeason && (
           <Btn className="min-h-10 px-4 text-sm" disabled={!!busy} onClick={() => jump("playoffs")}>
-            {busy === "playoffs" ? "Simming…" : "Sim to the playoffs ▸▸"}
+            {busy === "playoffs" ? (real ? "Rewinding…" : "Simming…") : real ? "Skip to the playoffs ▸▸" : "Sim to the playoffs ▸▸"}
           </Btn>
         )}
         {!done && !["superBowl", "awards", "proBowl", "retirement", "hof", "carousel", "relocation"].includes(save.phase) && (
           <Btn className="min-h-10 px-4 text-sm" disabled={!!busy} onClick={() => jump("superBowl")}>
-            {busy === "superBowl" ? "Simming…" : "Sim to the Super Bowl ▸▸"}
+            {busy === "superBowl" ? (real ? "Rewinding…" : "Simming…") : real ? "Skip to the Super Bowl ▸▸" : "Sim to the Super Bowl ▸▸"}
           </Btn>
         )}
-        {!done && (
+        {!done && !(real && save.year >= HISTORY_LAST) && (
           <Btn className="min-h-10 px-4 text-sm" disabled={!!busy} onClick={() => jump("nextSeason")}>
-            {busy === "nextSeason" ? "Simming the year…" : `Sim to the ${save.year + 1} draft ▸▸`}
+            {busy === "nextSeason" ? (real ? "Rewinding…" : "Simming the year…") : `${real ? "Skip" : "Sim"} to the ${save.year + 1} draft ▸▸`}
           </Btn>
         )}
       </div>

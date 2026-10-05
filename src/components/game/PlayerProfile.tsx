@@ -190,6 +190,8 @@ export function PlayerProfile() {
   const closeProfile = useGameStore((s) => s.closeProfile);
   const openTeam = useGameStore((s) => s.openTeam);
   const p = save && profileId ? save.players[profileId] : undefined;
+  // History mode shows only the record: no grades, kits, contracts or morale (none are real).
+  const real = !!save?.realHistory;
   const [view, setView] = useState<"regular" | "playoffs">("regular");
   useEffect(() => setView("regular"), [profileId]);
 
@@ -243,7 +245,7 @@ export function PlayerProfile() {
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs tracking-[0.3em] text-brass">
-              {p.pos} · {archLabel(p)}
+              {real ? p.pos : `${p.pos} · ${archLabel(p)}`}
             </p>
             <h2 id="player-profile-name" className="font-display text-3xl leading-none sm:text-4xl">
               {playerName(p)}
@@ -257,7 +259,7 @@ export function PlayerProfile() {
               ) : (
                 <span>{club}</span>
               )}
-              <span>· {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`}</span>
+              {!real && <span>· {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`}</span>}
             </p>
           </div>
           <Btn onClick={closeProfile} className="shrink-0">
@@ -272,29 +274,37 @@ export function PlayerProfile() {
               <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
                 <dt className="text-muted">College</dt>
                 <dd className="font-medium">{p.college || "—"}</dd>
-                <dt className="text-muted">Measurables</dt>
-                <dd>{measLine(p) || "—"}</dd>
+                {!real && (
+                  <>
+                    <dt className="text-muted">Measurables</dt>
+                    <dd>{measLine(p) || "—"}</dd>
+                  </>
+                )}
                 <dt className="text-muted">Age / exp</dt>
                 <dd>
                   {p.age} · {p.yearsPro} yr{p.yearsPro === 1 ? "" : "s"}
                 </dd>
                 <dt className="text-muted">Came from</dt>
                 <dd>{draftLine(p)}</dd>
-                <dt className="text-muted">Contract</dt>
-                <dd>
-                  {p.contractYears} yr · {formatMoney(p.salary ?? 0, save.year)}
-                </dd>
-                <dt className="text-muted">Potential</dt>
-                <dd className="tabular">{p.revealed ? p.potential : "—"}</dd>
-                <dt className="text-muted">Morale</dt>
-                <dd className="tabular">{p.morale ?? "—"}</dd>
+                {!real && (
+                  <>
+                    <dt className="text-muted">Contract</dt>
+                    <dd>
+                      {p.contractYears} yr · {formatMoney(p.salary ?? 0, save.year)}
+                    </dd>
+                    <dt className="text-muted">Potential</dt>
+                    <dd className="tabular">{p.revealed ? p.potential : "—"}</dd>
+                    <dt className="text-muted">Morale</dt>
+                    <dd className="tabular">{p.morale ?? "—"}</dd>
+                  </>
+                )}
                 <dt className="text-muted">Status</dt>
                 <dd>
                   <Status p={p} />
                 </dd>
               </dl>
             </div>
-            <div className="rounded-lg border border-line bg-surface p-4">
+            {!real && <div className="rounded-lg border border-line bg-surface p-4">
               <p className="text-xs tracking-[0.25em] text-muted">Kit</p>
               <div className="mt-2">
                 <KitChips player={p} showDesc />
@@ -305,7 +315,7 @@ export function PlayerProfile() {
                   ? "Overall is derived from the attribute kit."
                   : "Scouts have a grade. The true kit is sealed until he plays."}
               </p>
-            </div>
+            </div>}
           </section>
 
           {honors.length > 0 && (

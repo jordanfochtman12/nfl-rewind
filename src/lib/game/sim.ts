@@ -1015,6 +1015,75 @@ export function setCrunchHook(h: typeof crunchHook): void {
   crunchHook = h;
 }
 
+/** A finished regular-season game into the standings: records, points, streaks, division and conference marks. */
+export function creditStandings(save: DynastySave, game: GameResult, coaches = true): void {
+  const year = game.year;
+  const homeId = game.homeId as TeamId;
+  const awayId = game.awayId as TeamId;
+  const ht = save.teams[homeId];
+  const at = save.teams[awayId];
+  if (!ht || !at) return;
+  // Standings, streaks and head-to-head records are the regular season. Playoff results live
+  // in the bracket; counting them here gave 14-game champions 16-2 records, and since each
+  // playoff round re-reads the standings to order its field, it could reshuffle the bracket.
+  if (game.phase === "regular") {
+    ht.pf += game.homeScore;
+    ht.pa += game.awayScore;
+    at.pf += game.awayScore;
+    at.pa += game.homeScore;
+    const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
+    const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
+    if (game.homeScore > game.awayScore) {
+      ht.wins += 1;
+      at.losses += 1;
+      if (game.phase === "regular") {
+        ht.careerWins = (ht.careerWins ?? 0) + 1;
+        at.careerLosses = (at.careerLosses ?? 0) + 1;
+        if (coaches) creditCoachWl(save, homeId, "W");
+        if (coaches) creditCoachWl(save, awayId, "L");
+      }
+      ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
+      at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
+      if (sameDiv) {
+        ht.divWins += 1;
+        at.divLosses += 1;
+      }
+      if (sameConf) {
+        ht.confWins += 1;
+        at.confLosses += 1;
+      }
+    } else if (game.awayScore > game.homeScore) {
+      at.wins += 1;
+      ht.losses += 1;
+      if (game.phase === "regular") {
+        at.careerWins = (at.careerWins ?? 0) + 1;
+        ht.careerLosses = (ht.careerLosses ?? 0) + 1;
+        if (coaches) creditCoachWl(save, awayId, "W");
+        if (coaches) creditCoachWl(save, homeId, "L");
+      }
+      at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
+      ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
+      if (sameDiv) {
+        at.divWins += 1;
+        ht.divLosses += 1;
+      }
+      if (sameConf) {
+        at.confWins += 1;
+        ht.confLosses += 1;
+      }
+    } else {
+      ht.ties += 1;
+      at.ties += 1;
+      if (game.phase === "regular") {
+        ht.careerTies = (ht.careerTies ?? 0) + 1;
+        at.careerTies = (at.careerTies ?? 0) + 1;
+        if (coaches) creditCoachWl(save, homeId, "T");
+        if (coaches) creditCoachWl(save, awayId, "T");
+      }
+    }
+  }
+}
+
 export function simGame(save: DynastySave, game: GameResult): void {
   if (game.played) return;
   const year = save.year;
@@ -2412,67 +2481,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
   ownerAfterGame(save, game);
   recordMeeting(save, game);
 
-  const at = save.teams[awayId];
-  if (!ht || !at) return;
-  // Standings, streaks and head-to-head records are the regular season. Playoff results live
-  // in the bracket; counting them here gave 14-game champions 16-2 records, and since each
-  // playoff round re-reads the standings to order its field, it could reshuffle the bracket.
-  if (game.phase === "regular") {
-    ht.pf += game.homeScore;
-    ht.pa += game.awayScore;
-    at.pf += game.awayScore;
-    at.pa += game.homeScore;
-    const sameDiv = divisionKey(year, homeId) === divisionKey(year, awayId);
-    const sameConf = conferenceOf(year, homeId) === conferenceOf(year, awayId);
-    if (game.homeScore > game.awayScore) {
-      ht.wins += 1;
-      at.losses += 1;
-      if (game.phase === "regular") {
-        ht.careerWins = (ht.careerWins ?? 0) + 1;
-        at.careerLosses = (at.careerLosses ?? 0) + 1;
-        creditCoachWl(save, homeId, "W");
-        creditCoachWl(save, awayId, "L");
-      }
-      ht.streak = ht.streak.startsWith("W") ? `W${Number(ht.streak.slice(1)) + 1}` : "W1";
-      at.streak = at.streak.startsWith("L") ? `L${Number(at.streak.slice(1)) + 1}` : "L1";
-      if (sameDiv) {
-        ht.divWins += 1;
-        at.divLosses += 1;
-      }
-      if (sameConf) {
-        ht.confWins += 1;
-        at.confLosses += 1;
-      }
-    } else if (game.awayScore > game.homeScore) {
-      at.wins += 1;
-      ht.losses += 1;
-      if (game.phase === "regular") {
-        at.careerWins = (at.careerWins ?? 0) + 1;
-        ht.careerLosses = (ht.careerLosses ?? 0) + 1;
-        creditCoachWl(save, awayId, "W");
-        creditCoachWl(save, homeId, "L");
-      }
-      at.streak = at.streak.startsWith("W") ? `W${Number(at.streak.slice(1)) + 1}` : "W1";
-      ht.streak = ht.streak.startsWith("L") ? `L${Number(ht.streak.slice(1)) + 1}` : "L1";
-      if (sameDiv) {
-        at.divWins += 1;
-        ht.divLosses += 1;
-      }
-      if (sameConf) {
-        at.confWins += 1;
-        ht.confLosses += 1;
-      }
-    } else {
-      ht.ties += 1;
-      at.ties += 1;
-      if (game.phase === "regular") {
-        ht.careerTies = (ht.careerTies ?? 0) + 1;
-        at.careerTies = (at.careerTies ?? 0) + 1;
-        creditCoachWl(save, homeId, "T");
-        creditCoachWl(save, awayId, "T");
-      }
-    }
-  }
+  if (!ht || !save.teams[awayId]) return;
+  creditStandings(save, game);
   rollInjuries(save, homeId);
   rollInjuries(save, awayId);
 }

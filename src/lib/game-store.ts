@@ -6,6 +6,11 @@ import {
   compactSave,
   createNewGame,
   hydrateSave,
+  createHistoryGame,
+  historyCursor,
+  loadHistoryData,
+  replayHistory,
+  setHistoryData,
   openCalls,
   ownerGameJustPlayed,
   simUntil,
@@ -53,6 +58,10 @@ interface GameStore {
   newGame: (teamId: TeamId) => void;
   /** Watch mode: the computer runs every club and the owner just watches history unfold. */
   newSandbox: () => void;
+  /** History mode: the real league, step by step from the 1966 draft. Loads its tables first. */
+  newHistory: () => Promise<void>;
+  /** True while History mode's tables load (and a saved History game replays to where it was). */
+  historyLoading: boolean;
   /** Sandbox fast-forward. Runs from any phase; the featured games still get their broadcast. */
   watchSim: (target: "playoffs" | "superBowl" | "nextSeason") => void;
   continueGame: () => void;
@@ -117,7 +126,9 @@ function persistStorage(): PersistStorage<Persisted> {
     if (!job) return writing;
     writing = writing.then(async () => {
       const save = job.value.state.save;
-      const payload = JSON.stringify({ ...job.value, state: { save: save ? compactSave(save) : null } });
+      // A History mode save is only its place in the record; the league is rebuilt on load.
+      const disk = save ? (save.realHistory ? historyCursor(save) : compactSave(save)) : null;
+      const payload = JSON.stringify({ ...job.value, state: { save: disk } });
       await dynastyStorage.setItem(PACKED(job.name), payload);
     });
     return writing;
@@ -155,6 +166,24 @@ function persistStorage(): PersistStorage<Persisted> {
   };
 }
 
+/** The step count of a History mode disk save, or undefined for anything else. */
+function historyStub(raw: unknown): number | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const r = raw as { realHistory?: boolean; historyStep?: number; teams?: unknown };
+  return r.realHistory && !r.teams ? (r.historyStep ?? 0) : undefined;
+}
+
+/** Load the record and replay it to a saved History mode step. */
+async function restoreHistory(steps: number): Promise<void> {
+  useGameStore.setState({ historyLoading: true });
+  try {
+    setHistoryData(await loadHistoryData());
+    useGameStore.setState({ save: replayHistory(steps), rewind: null });
+  } finally {
+    useGameStore.setState({ historyLoading: false });
+  }
+}
+
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
@@ -179,6 +208,17 @@ export const useGameStore = create<GameStore>()(
       newGame: (teamId) => {
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
         set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+      },
+      historyLoading: false,
+      newHistory: async () => {
+        set({ historyLoading: true });
+        try {
+          setHistoryData(await loadHistoryData());
+          const save = createHistoryGame();
+          set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null, tv: false });
+        } finally {
+          set({ historyLoading: false });
+        }
       },
       newSandbox: () => {
         // The engine wants a club id for the owner's seat; in a sandbox nothing treats it as anyone's.
@@ -265,9 +305,14 @@ export const useGameStore = create<GameStore>()(
       exportJson: () => {
         const { save } = get();
         if (!save) return "null";
-        return JSON.stringify(compactSave(save), null, 2);
+        return JSON.stringify(save.realHistory ? historyCursor(save) : compactSave(save), null, 2);
       },
       importJson: (raw) => {
+        const cursor = historyStub(JSON.parse(raw));
+        if (cursor !== undefined) {
+          void restoreHistory(cursor).then(() => set({ screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null }));
+          return;
+        }
         const save = importDynasty(raw);
         set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
       },
@@ -278,7 +323,11 @@ export const useGameStore = create<GameStore>()(
       storage: persistStorage(),
       partialize: (s) => ({ save: s.save }),
       onRehydrateStorage: () => (state) => {
-        if (state?.save) state.save = hydrateSave(state.save);
+        const cursor = historyStub(state?.save);
+        if (state && cursor !== undefined) {
+          state.save = null;
+          void restoreHistory(cursor);
+        } else if (state?.save) state.save = hydrateSave(state.save);
         if (state) state.hasHydrated = true;
         queueMicrotask(() => useGameStore.setState({ hasHydrated: true }));
       },

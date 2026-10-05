@@ -69,7 +69,7 @@ export function WatchPlate({ save }: { save: DynastySave }) {
         style={{ transform: "skewX(-12deg)", boxShadow: "inset 0 1px 0 #ffffff22" }}
       >
         <div className="min-w-0" style={{ transform: "skewX(12deg)" }}>
-          <p className="truncate font-display text-[15px] font-bold uppercase italic leading-none tracking-wide text-white">Watch history</p>
+          <p className="truncate font-display text-[15px] font-bold uppercase italic leading-none tracking-wide text-white">{save.realHistory ? "History mode" : "Watch history"}</p>
           <p className="mt-1 flex items-center gap-2 font-display text-xs font-semibold uppercase italic leading-none">
             <span className="bg-brass px-1.5 py-0.5 text-[#140f00]">{save.year}</span>
             <span className="truncate text-chrome">{save.weekLabel}</span>

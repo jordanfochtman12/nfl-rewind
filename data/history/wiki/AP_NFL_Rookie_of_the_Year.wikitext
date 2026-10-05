@@ -1,0 +1,564 @@
+{{Short description|American football award given by the Associated Press}}
+{{Use American English|date=December 2025}}
+{{Use mdy dates|date=December 2024}}
+{{for|similar awards by other publications|List of NFL Rookie of the Year awards}}
+{{Infobox sports award
+| name        = AP NFL Rookie of the Year
+| image       = File:Carson Schwesinger 2025 Browns Camp (cropped).jpg
+| alt         =
+| caption     = [[Cleveland Browns]] linebacker [[Carson Schwesinger]], 2025 defensive recipient
+| givenfor    = Rookie of the year in the [[NFL]]
+| presenter   = [[Associated Press]]
+| first       = {{ubl|1957 (Offensive)|1967 (Defensive)}}
+| mostrecent  = {{ubl|[[Tetairoa McMillan]] (Offensive)|[[Carson Schwesinger]] (Defensive)}}
+| url         = <!-- {{URL|example.com}} -->
+}}
+
+The '''AP NFL Rookie of the Year (ROTY)''' is an annual award presented by the [[Associated Press]] (AP) to the top first-year offensive and defensive players in the [[National Football League]] (NFL). Winners are selected by a nationwide panel of 50 members of the AP who regularly cover the league.<ref>{{cite web|url=https://www.nfl.com/news/panthers-newton-voted-ap-offensive-rookie-of-the-year-09000d5d8269d38a |title=Panthers' Newton voted AP Offensive Rookie of the Year |work=NFL.com |agency=Associated Press |date=February 4, 2012 |access-date=January 29, 2013}}</ref> The AP has chosen an offensive rookie of the year since 1957 and a defensive rookie of the year since 1967. For the 2025 season, [[Carolina Panthers]] wide receiver [[Tetairoa McMillan]] and [[Cleveland Browns]] linebacker [[Carson Schwesinger]] were respectively named the offensive and defensive winners.
+
+Ballots are cast at the end of the [[National Football League regular season|regular season]] and before the [[NFL playoffs|playoffs]]. Since 2011, winners of the AP Rookie of the Year awards are announced at the [[NFL Honors]] presentation the night before the [[Super Bowl]] along with other AP awards.<ref name="a">{{cite web|url=https://www.nfl.com/news/alec-baldwin-to-host-2nd-annual-nfl-honors-super-bowl-eve-0ap1000000123753 |title=Alec Baldwin to host '2nd Annual NFL Honors' Super Bowl Eve |work=NFL.com |publisher=National Football League |date=January 8, 2013 |access-date=January 29, 2013}}</ref> While several organizations recognize their own [[NFL Rookie of the Year]], the NFL considers the award given by the AP to be its official honor,<ref>{{cite news|last1=Demovsky|first1=Rob|title=Lacy is PFWA's top rookie; AP award next?|url=https://www.espn.com/blog/green-bay-packers/post/_/id/6534/lacy-is-pfwas-top-rookie-ap-award-next|access-date=April 16, 2017|work=ESPN.com|date=January 14, 2014}}</ref> with the winners listed in the league's annual ''Record and Fact Book''.<ref>{{cite news|last1=Birkett|first1=Dave|title=Lions' Ndamukong Suh: Another rookie of year|url=http://www.freep.com/article/20110118/SPORTS01/110118048//1049/sports01|archive-url=https://web.archive.org/web/20110121125655/http://www.freep.com/article/20110118/SPORTS01/110118048//1049/sports01|url-status=dead|archive-date=January 21, 2011|access-date=December 28, 2017|work=Detroit Free Press|date=January 18, 2011}}</ref>
+
+==Winners==
+===Offensive===
+{| class="wikitable sortable plainrowheaders"
+|+ List of AP NFL Offensive Rookie of the Year winners
+! Season !! Player !! Position !! Team !! class="unsortable"|{{Ref.}}
+|- 
+| [[1957 NFL season|1957]] 
+!scope="row"|{{sortname|Jim|Brown}}
+|[[Running back]] || [[1957 Cleveland Browns season|Cleveland Browns]] ||<ref>{{cite news|title=Jim Brown of Cleveland is Grid Laurels Voted Top Pro|url=https://www.newspapers.com/clip/10718775/jim_brown_of_cleveland_is_grid_laurels/|access-date=May 3, 2017|work=The Gettysburg Times|agency=Associated Press|date=January 8, 1958|page=5|via=Newspapers.com}}</ref>
+|-
+| [[1958 NFL season|1958]] 
+!scope="row"|{{sortname|Jimmy|Orr}} 
+|[[Wide receiver]] || [[1958 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref>{{cite news|title=Jimmy Orr is rookie of year|url=https://www.newspapers.com/clip/10718933/jimmy_orr_is_rookie_of_year/|access-date=May 3, 2017|work=Port Angeles Evening News|agency=Associated Press|date=January 13, 1959|page=5|via=Newspapers.com}}</ref>
+|-
+| [[1959 NFL season|1959]]
+!scope="row"|{{sortname|Boyd|Dowler}} 
+|[[Wide receiver]] || [[1959 Green Bay Packers season|Green Bay Packers]] ||<ref>{{cite news|title=Packer End, Boyd Dowler, Is Named Rookie of Year in NFL|url=https://www.newspapers.com/clip/10719169/packer_end_boyd_dowler_is_named/|access-date=May 3, 2017|work=The Oshkosh Northwestern|agency=Associated Press|date=December 29, 1959|page=19|via=Newspapers.com}}</ref>
+|-
+| [[1960 NFL season|1960]] 
+!scope="row"|{{sortname|Gail|Cogdill}}
+|[[Split end]] || [[1960 Detroit Lions season|Detroit Lions]] ||<ref>{{cite news|title=NFL Offensive Rookie Of The Year|url=https://www.sandiegouniontribune.com/sdut-nfl-offensive-rookie-of-the-year-2016feb06-story.html|access-date=May 29, 2017|work=The San Diego Union-Tribune|agency=Associated Press|date=February 6, 2016}}</ref>
+|-
+| [[1961 NFL season|1961]] 
+!scope="row"|{{sortname|Mike|Ditka}} 
+|[[Tight end]] || [[1961 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news|title=Bears' Mike Ditka Rookie Of Year|url=https://www.newspapers.com/clip/9748140/bears_mike_ditka_rookie_of_year/|access-date=March 23, 2017|work=Daily Independent Journal|agency=Associated Press|date=December 21, 1961|page=14|via=Newspapers.com}}</ref>
+|-
+| [[1962 NFL season|1962]] 
+!scope="row"|{{sortname|Ron|Bull}} 
+|[[Running back]] || [[1962 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news|title=Ron Bull NFL Rookie Of the Year|url=https://www.newspapers.com/clip/9979800/ron_bull_nfl_rookie_of_the_year/|access-date=April 2, 2017|work=Warren Times Mirror|agency=Associated Press|date=December 12, 1962|page=13|via=Newspapers.com}}</ref>
+|-
+| [[1963 NFL season|1963]] 
+!scope="row"|{{sortname|Paul|Flatley}} 
+|[[Wide receiver]] || [[1963 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news|last1=Hand|first1=Jack|title=Paul Flatley NFL Rookie Of the Year|url=https://www.newspapers.com/clip/9979907/paul_flatley_nfl_rookie_of_the_year/|access-date=April 2, 2017|work=Moberly Monitor-Index|agency=Associated Press|date=December 12, 1963|page=14|via=Newspapers.cm}}</ref>
+|-
+| [[1964 NFL season|1964]] 
+!scope="row"|{{sortname|Charley|Taylor}} 
+|[[Running back]] || [[1964 Washington Redskins season|Washington Redskins]] ||<ref>{{cite news|title=Washington's Charley Taylor Voted NFL's Rookie Of Year|url=https://www.newspapers.com/clip/10303207/washingtons_charley_taylor_voted_nfls/|access-date=April 16, 2017|work=Freeport Journal-Standard|agency=Associated Press|date=December 10, 1964|page=13|via=Newspapers.com}}</ref>
+|-
+| [[1965 NFL season|1965]] 
+!scope="row"|{{sortname|Gale|Sayers}} 
+|[[Running back]] || [[1965 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news|title=Gale Sayers NFL Rookie Of The Year|url=https://www.newspapers.com/clip/10303928/gale_sayers_nfl_rookie_of_the_year/|access-date=April 16, 2017|work=The Cumberland News|agency=Associated Press|date=December 23, 1965|page=11|via=Newspapers.com}}</ref>
+|-
+| [[1966 NFL season|1966]] 
+!scope="row"|{{sortname|Johnny|Roland}} 
+|[[Running back]] || [[1966 St. Louis Cardinals season|St. Louis Cardinals]] ||<ref>{{cite news|last1=Curry|first1=Jerry|title=Johnny Roland Picked as NFL Rookie of the Year|url=https://www.newspapers.com/clip/10303991/johnny_roland_picked_as_nfl_rookie_of/|access-date=April 16, 2017|work=The Chillicothe Constitution-Tribune|agency=Associated Press|date=December 15, 1966|page=13|via=Newspapers.com}}</ref>
+|- 
+| [[1967 NFL season|1967]] 
+!scope="row"|{{sortname|Mel|Farr}} 
+|[[Running back]] || [[1967 Detroit Lions season|Detroit Lions]] ||<ref name=AP1967>{{cite news|title=Farr, Barney Best Rookies|url=https://www.newspapers.com/clip/8750238/farr_barney_best_rookies/|access-date=February 4, 2017|work=Alton Evening Telegraph|agency=Associated Press|date=December 15, 1967|page=21|via=Newspapers.com}}</ref>
+|- 
+| [[1968 NFL season|1968]] 
+!scope="row"|{{sortname|Earl |McCullouch}} 
+|[[Wide receiver]] || [[1968 Detroit Lions season|Detroit Lions]] ||<ref name=AP1968>{{cite news|title=NFL's Top 2 Rookies Of Year Are Named|url=https://www.newspapers.com/clip/8750194/nfls_top_2_rookies_of_year_are_named/|access-date=February 4, 2017|work=Ironwood Daily Globe|agency=Associated Press|date=December 20, 1968|page=5|via=Newspapers.com}}</ref>
+|-
+| [[1969 NFL season|1969]] 
+!scope="row"|{{sortname|Calvin |Hill}} 
+|[[Running back]] || [[1969 Dallas Cowboys season|Dallas Cowboys]] ||<ref>{{cite news|title=Hill Is Top Offensive Rookie Capping Great Cowboy Year|url=https://www.newspapers.com/clip/10520584/hill_is_top_offensive_rookie_capping/|access-date=April 25, 2017|work=The Odessa American|agency=Associated Press|date=December 20, 1969|page=15|via=Newspapers.com}}</ref>
+|-
+| [[1970 NFL season|1970]] 
+!scope="row"|{{sortname|Dennis |Shaw}} 
+|[[Quarterback]] || [[1970 Buffalo Bills season|Buffalo Bills]] ||<ref>{{cite news|last1=Rathet|first1=Mike|title=Buffalo QB Dennis Shaw NFL Rookie of the Year|url=https://www.newspapers.com/clip/10522816/buffalo_qb_dennis_shaw_nfl_rookie_of/|access-date=April 25, 2017|work=Standard-Speaker|agency=Associated Press|date=January 6, 1971|page=28|via=Newspapers.com}}</ref>
+|-
+| [[1971 NFL season|1971]] 
+!scope="row"|{{sortname|John |Brockington}} 
+|[[Running back]] || [[1971 Green Bay Packers season|Green Bay Packers]] ||<ref>{{cite news|last1=Lowitt|first1=Bruce|title=Packers' John Brockington Is Named Offensive Rookie Of Year In NFL By AP Poll|url=https://www.newspapers.com/clip/10523013/packers_john_brockington_is_named/|access-date=April 25, 2017|work=The Danville Register|agency=Associated Press|date=January 5, 1972|page=9|via=Newspapers.com}}</ref>
+|-
+| [[1972 NFL season|1972]] 
+!scope="row"|{{sortname|Franco |Harris}} 
+|[[Running back]] || [[1972 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref name=AP1972>{{cite news|title=Franco Harris AP offensive rookie of year; Green Bay's Willie Buchanon defensive rookie of year|url=https://www.newspapers.com/clip/10523676/franco_harris_ap_offensive_rookie_of/|access-date=April 25, 2017|work=The Salina Journal|agency=Associated Press|date=January 3, 1973|page=14|via=Newspapers.com}}</ref>
+|-
+| [[1973 NFL season|1973]] 
+!scope="row"|{{sortname|Chuck|Foreman}} 
+|[[Running back]] || [[1973 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news|title=Chuck Foreman Rookie Of Year|url=https://www.newspapers.com/clip/11325025/chuck_foreman_rookie_of_year/|access-date=May 29, 2017|work=The Cumberland News|agency=Associated Press|date=January 4, 1974|page=19|via=Newspapers.com}}</ref>
+|-
+| [[1974 NFL season|1974]] 
+!scope="row"|{{sortname|Don|Woods|Don Woods (American football)}} 
+|[[Running back]] || [[1974 San Diego Chargers season|San Diego Chargers]] ||<ref>{{cite news|last1=McElroy|first1=Jim|title=Don Woods, receives NFL's Rookie of the Year award|url=https://www.newspapers.com/clip/11325685/don_woods_receives_nfls_rookie_of_the/|access-date=May 29, 2017|work=Las Vegas Optic|agency=Associated Press|date=January 3, 1975|page=4|via=Newspapers.com}}</ref>
+|-
+| [[1975 NFL season|1975]] 
+!scope="row"|{{sortname|Mike|Thomas|Mike Thomas (running back)}}
+|[[Running back]] || [[1975 Washington Redskins season|Washington Redskins]] ||<ref>{{cite news|last1=Seppy|first1=Tom|title=Mike Thomas Rookie of Year|url=https://www.newspapers.com/clip/11443812/mike_thomas_rookie_of_year/|access-date=June 3, 2017|work=Del Rio News-Herald|agency=Associated Press|date=January 8, 1976|page=8|via=Newspapers.com}}</ref>
+|-
+| [[1976 NFL season|1976]] 
+!scope="row"|{{sortname|Sammy|White|Sammy White (American football)}}
+|[[Wide receiver]] || [[1976 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news|title=Sammy White Rookie of Year|url=https://www.newspapers.com/clip/11443988/sammy_white_rookie_of_year/|access-date=June 3, 2017|work=The Terre Haute Tribune|agency=Associated Press|date=December 28, 1976|page=21|via=Newspapers.com}}</ref>
+|-
+| [[1977 NFL season|1977]] 
+!scope="row"|{{sortname|Tony |Dorsett}} 
+|[[Running back]] || [[1977 Dallas Cowboys season|Dallas Cowboys]] ||<ref>{{cite news|title=Dorsett NFL Rookie of Year|url=https://www.newspapers.com/clip/11465413/dorsett_nfl_rookie_of_year/|access-date=June 4, 2017|work=The Vernon Daily Record|agency=Associated Press|date=January 4, 1978|page=8|via=Newspapers.com}}</ref>
+|-
+| [[1978 NFL season|1978]] 
+!scope="row"|{{sortname|Earl|Campbell}}
+|[[Running back]] || [[1978 Houston Oilers season|Houston Oilers]] ||<ref>{{cite news|title=Campbell Offensive Rookie of the Year|url=https://news.google.com/newspapers?nid=2519&dat=19790111&id=tw5eAAAAIBAJ&sjid=nl8NAAAAIBAJ&pg=1368,1463232&hl=en|access-date=June 29, 2016|work=Observer-Reporter|agency=Associated Press|date=January 11, 1979|page=C-2}}</ref>
+|-
+| [[1979 NFL season|1979]] 
+!scope="row"|{{sortname|Ottis|Anderson}}
+|[[Running back]] || [[1979 St. Louis Cardinals (NFL) season|St. Louis Cardinals]] ||<ref name=AP1979>{{cite news|title=Anderson, Haslett named top rookies|url=https://www.newspapers.com/clip/11639342/anderson_haslett_named_top_rookies/|access-date=June 12, 2017|work=The San Bernardino County Sun|agency=Associated Press|date=December 22, 1979|page=51|via=Newspapers.com}}</ref>
+|-
+| [[1980 NFL season|1980]] 
+!scope="row"|{{sortname|Billy|Sims}}
+|[[Running back]] || [[1980 Detroit Lions season|Detroit Lions]] ||<ref name=AP1980>{{cite news|title=Offensive, Defensive Rookies Named|url=https://www.newspapers.com/clip/11639491/offensive_defensive_rookies_named/|access-date=June 12, 2017|work=Santa Cruz Sentinel|agency=Associated Press|date=January 9, 1981|page=48|via=Newspapers.com}}</ref>
+|-
+| [[1981 NFL season|1981]] 
+!scope="row"|{{sortname|George|Rogers|George Rogers (American football)}}
+|[[Running back]] || [[1981 New Orleans Saints season|New Orleans Saints]] ||<ref>{{cite news|title=Rogers is AP Rookie of Year|url=https://www.newspapers.com/clip/11640226/rogers_is_ap_rookie_of_year/|access-date=June 12, 2017|work=The Galveston Daily News|agency=Associated Press|date=January 7, 1982|page=15|via=Newspapers.com}}</ref>
+|-
+| [[1982 NFL season|1982]] 
+!scope="row"|{{sortname|Marcus|Allen}}
+|[[Running back]] || [[1982 Los Angeles Raiders season|Los Angeles Raiders]] ||<ref>{{cite news|title=AP names Marcus Allen offensive rookie of year|url=https://www.newspapers.com/clip/14512016/ap_names_marcus_allen_offensive_rookie/|access-date=October 19, 2017|work=The Index-Journal|agency=Associated Press|date=January 6, 1983|page=10|via=Newspapers.com}}</ref>
+|-
+| [[1983 NFL season|1983]] 
+!scope="row"|{{sortname|Eric|Dickerson}}
+|[[Running back]] || [[1983 Los Angeles Rams season|Los Angeles Rams]] ||<ref name=AP1983>{{cite news|title=Maxwell, Dickerson top rookies|url=https://www.newspapers.com/clip/14512507/maxwell_dickerson_top_rookies/|access-date=October 19, 2017|work=Indiana Gazette|agency=Associated Press|date=April 24, 1999|page=16|via=Newspapers.com}}</ref>
+|-
+| [[1984 NFL season|1984]] 
+!scope="row"|{{sortname|Louis|Lipps}}
+|[[Wide receiver]] || [[1984 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref name=AP1984>{{cite news|last1=Robinson|first1=Alan|title=Lipps, Maas named NFL Rookies of Year|url=https://www.newspapers.com/clip/14512569/lipps_maas_named_nfl_rookies_of_year/|access-date=October 19, 2017|work=The Paris News|agency=Associated Press|date=December 20, 1984|page=16|via=Newspapers.com}}</ref>
+|-
+| [[1985 NFL season|1985]] 
+!scope="row"|{{sortname|Eddie|Brown|Eddie Brown (wide receiver)}}
+|[[Wide receiver]] || [[1985 Cincinnati Bengals season|Cincinnati Bengals]] ||<ref>{{cite news|title=Brown Top Offensive Rookie|url=https://www.newspapers.com/clip/14512880/brown_top_offensive_rookie/|access-date=October 19, 2017|work=Daily Sitka Sentinel|agency=Associated Press|date=January 2, 1986|page=6|via=Newspapers.com}}</ref>
+|-
+| [[1986 NFL season|1986]] 
+!scope="row"|{{sortname|Rueben|Mayes}}
+|[[Running back]] || [[1986 New Orleans Saints season|New Orleans Saints]] ||<ref name=AP1986>{{cite news|title=Chargers' O'Neal, Saints' Mayes named top rookies|url=https://www.newspapers.com/clip/16056880/chargers_oneal_saints_mayes_named/|access-date=December 28, 2017|work=The Galveston Daily News|agency=Associated Press|date=December 30, 1986|page=15|via=Newspapers.com}}</ref>
+|-
+| [[1987 NFL season|1987]] 
+!scope="row"|{{sortname|Troy|Stradford}}
+|[[Running back]] || [[1987 Miami Dolphins season|Miami Dolphins]] ||<ref name=AP1987>{{cite news|title=Stradford, Conlan named NFL's best rookies|url=https://www.newspapers.com/clip/16056982/stradford_conlan_named_nfls_best/|access-date=December 28, 2017|work=The Salina Journal|agency=Associated Press|date=December 30, 1987|page=13|via=Newspapers.com}}</ref>
+|-
+| [[1988 NFL season|1988]] 
+!scope="row"|{{sortname|John|Stephens|John Stephens (American football)}}
+|[[Running back]] || [[1988 New England Patriots season|New England Patriots]] ||<ref name=AP1988>{{cite news|title=Stephens, McMillan capture NFL rookie awards|url=https://www.newspapers.com/clip/16058538/stephens_mcmillan_capture_nfl_rookie/|access-date=December 28, 2017|work=The Salina Journal|agency=Associated Press|date=December 28, 1988|page=16|via=Newspapers.com}}</ref>
+|-
+| [[1989 NFL season|1989]] 
+!scope="row"|{{sortname|Barry|Sanders}}
+|[[Running back]] || [[1989 Detroit Lions season|Detroit Lions]] ||<ref name=AP1989>{{cite news|title=Sanders, Thomas honored as top rookies|url=https://www.newspapers.com/clip/16058671/sanders_thomas_honored_as_top_rookies/|access-date=December 28, 2017|work=Santa Cruz Sentinel|agency=Associated Press|date=December 29, 1989|page=19|via=Newspapers.com}}</ref>
+|-
+| [[1990 NFL season|1990]] 
+!scope="row"|{{sortname|Emmitt|Smith}}
+|[[Running back]] || [[1990 Dallas Cowboys season|Dallas Cowboys]] ||<ref name=AP1990>{{cite news|title=NFL Rookies Of The Year Named|url=https://www.newspapers.com/clip/16058859/nfl_rookies_of_the_year_named/|access-date=December 28, 2017|work=Logansport Pharos-Tribune|agency=Associated Press|date=January 11, 1991|page=9|via=Newspapers.com}}</ref>
+|-
+| [[1991 NFL season|1991]] 
+!scope="row"|{{sortname|Leonard|Russell|dab=American football}}
+|[[Running back]] || [[1991 New England Patriots season|New England Patriots]] ||<ref name=AP1991>{{cite news|title=NFL Rookies Of The Year Named|url=https://www.newspapers.com/clip/16366087/nfl_rookies_of_the_year_named/|access-date=January 8, 2018|work=Logansport Pharos-Tribune|agency=Associated Press|date=December 27, 1991|page=9|via=Newspapers.com}}</ref>
+|-
+| [[1992 NFL season|1992]] 
+!scope="row"|{{sortname|Carl|Pickens}}
+|[[Wide receiver]] || [[1992 Cincinnati Bengals season|Cincinnati Bengals]] ||<ref name=AP1992>{{cite news |title=Carter named top rookie; 2 plays enough for Pickens |url=https://www.newspapers.com/clip/23211668/carter_named_top_rookie_2_plays_enough/ |access-date=August 28, 2018 |work=The Marion Star |agency=Associated Press |date=January 1, 1993 |page=14|via=Newspapers.com}}</ref>
+|-
+| [[1993 NFL season|1993]] 
+!scope="row"|{{sortname|Jerome|Bettis}}
+|[[Running back]] || [[1993 Los Angeles Rams season|Los Angeles Rams]] ||<ref name=AP1993>{{cite news |title=Bettis, Stubblefield voted NFL's top rookies |url=https://www.newspapers.com/clip/23211743/bettis_stubblefield_voted_nfls_top/ |access-date=August 28, 2018 |work=Mansfield News-Journal |agency=Associated Press |date=January 5, 1994 |page=13|via=Newspapers.com}}</ref>
+|-
+| [[1994 NFL season|1994]] 
+!scope="row"|{{sortname|Marshall|Faulk}}
+|[[Running back]] || [[1994 Indianapolis Colts season|Indianapolis Colts]] ||<ref name=AP1994>{{cite news |title=Faulk, Bowens win rookie of year awards |url=https://www.newspapers.com/clip/23211790/faulk_bowens_win_rookie_of_year_awards/ |access-date=August 28, 2018 |work=The Daily Spectrum |agency=Associated Press |date=December 28, 1994 |page=6|via=Newspapers.com}}</ref>
+|-
+| [[1995 NFL season|1995]] 
+!scope="row"|{{sortname|Curtis|Martin}}
+|[[Running back]] || [[1995 New England Patriots season|New England Patriots]] ||<ref name=AP1995>{{cite news |title=Martin, Douglas take top rookie honors in NFL |url=https://www.newspapers.com/clip/23212067/martin_douglas_take_top_rookie_honors/ |access-date=August 28, 2018 |work=The Sentinel |agency=Associated Press |date=December 28, 1995 |page=25|via=Newspapers.com}}</ref>
+|-
+| [[1996 NFL season|1996]] 
+!scope="row"|{{sortname|Eddie|George}}
+|[[Running back]] || [[1996 Houston Oilers season|Houston Oilers]] ||<ref name=AP1996>{{cite news |title=Top rookies |url=https://www.newspapers.com/clip/23212128/top_rookies/ |access-date=August 28, 2018 |work=The Vincennes Sun-Commercial |agency=Associated Press |date=December 26, 1996 |page=11|via=Newspapers.com}}</ref>
+|-
+| [[1997 NFL season|1997]] 
+!scope="row"|{{sortname|Warrick|Dunn}}
+|[[Running back]] || [[1997 Tampa Bay Buccaneers season|Tampa Bay Buccaneers]] ||<ref name=AP1997>{{cite news |title=Dunn, Boulware tabbed as NFL's top rookies |url=https://www.newspapers.com/clip/23212201/dunn_boulware_tabbed_as_nfls_top/ |access-date=August 28, 2018 |work=The Vincennes Sun-Commercial |agency=Associated Press |date=December 24, 1997 |page=11|via=Newspapers.com}}</ref>
+|-
+| [[1998 NFL season|1998]] 
+!scope="row"|{{sortname|Randy|Moss}}
+|[[Wide receiver]] || [[1998 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news |last1=Lesko |first1=Ron |title=Vikings' Randy Moss gathers Offensive Rookie of the Year |url=https://www.newspapers.com/clip/23212289/raiders_woodson_adds_defensive_rookie/ |access-date=August 28, 2018 |work=Del Rio News Herald |agency=Associated Press |date=January 4, 1999 |page=5|via=Newspapers.com}}</ref>
+|-
+| [[1999 NFL season|1999]] 
+!scope="row"|{{sortname|Edgerrin|James}}
+|[[Running back]] || [[1999 Indianapolis Colts season|Indianapolis Colts]] ||<ref>{{cite news |title=James named NFL's Offensive Rookie of Year |url=https://www.newspapers.com/clip/23212372/james_named_nfls_offensive_rookie_of/ |access-date=August 28, 2018 |work=St. Cloud Times |agency=Associated Press |date=January 11, 2000 |page=26|via=Newspapers.com}}</ref>
+|-
+| [[2000 NFL season|2000]] 
+!scope="row"|{{sortname|Mike|Anderson|dab=running back}} 
+|[[Running back]] || [[2000 Denver Broncos season|Denver Broncos]] ||<ref>{{cite news |title=Ex-Marine Anderson is NFL's top offensive rookie |url=https://a.espncdn.com/nfl/news/2001/0101/986974.html |access-date=August 29, 2018 |work=ESPN.com |agency=Associated Press |date=January 1, 2001}}</ref>
+|-
+| [[2001 NFL season|2001]] 
+!scope="row"|{{sortname|Anthony|Thomas|dab=American football}} 
+|[[Running back]] || [[2001 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news |last1=Isaacson |first1=Melissa |title=Rookie award goes to A-Train |url=https://www.chicagotribune.com/2002/01/16/rookie-award-goes-to-a-train/ |access-date=August 29, 2018 |work=Chicago Tribune |date=January 16, 2002}}</ref>
+|-
+| [[2002 NFL season|2002]] 
+!scope="row"|{{sortname|Clinton|Portis}} 
+|[[Running back]] || [[2002 Denver Broncos season|Denver Broncos]] ||<ref name=AP2002>{{cite news |last1=Wilner |first1=Barry |title=Julius Peppers sacks his way to rookie honor; Portis edges ex-teammate Shockey for rookie honor |url=https://www.newspapers.com/clip/23241257/julius_peppers_sacks_his_way_to_rookie/ |access-date=August 29, 2018 |work=The Daily Journal |agency=Associated Press |date=January 9, 2003 |page=5|via=Newspapers.com}}</ref>
+|-
+| [[2003 NFL season|2003]] 
+!scope="row"|{{sortname|Anquan|Boldin}} 
+|[[Wide receiver]] || [[2003 Arizona Cardinals season|Arizona Cardinals]] ||<ref name=AP2003>{{cite news |title=Boldin, Suggs are top rookies |url=https://www.newspapers.com/clip/23241566/boldin_suggs_are_top_rookies/ |access-date=August 29, 2018 |work=The Orlando Sentinel |agency=Associated Press |date=December 31, 2004 |page=D3|via=Newspapers.com}}</ref>
+|-
+| [[2004 NFL season|2004]]
+!scope="row"|{{sortname|Ben|Roethlisberger}} 
+|[[Quarterback]] || [[2004 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref>{{cite news |title=Roethlisberger named top offensive rookie |url=https://www.newspapers.com/clip/23241932/roethlisberger_named_top_offensive/ |access-date=August 29, 2018 |work=The Shreveport Times |agency=Associated Press |date=January 6, 2005 |page=24|via=Newspapers.com}}</ref>
+|-
+| [[2005 NFL season|2005]] 
+!scope="row"|{{sortname|Cadillac|Williams}} 
+|[[Running back]] || [[2005 Tampa Bay Buccaneers season|Tampa Bay Buccaneers]] ||<ref>{{cite news |title=Bucs' back Williams wins offensive top rookie award |url=https://www.espn.com/nfl/news/story?id=2279923 |access-date=August 29, 2018 |work=ESPN.com |agency=Associated Press |date=January 4, 2006}}</ref>
+|-
+| [[2006 NFL season|2006]] 
+!scope="row"|{{sortname|Vince|Young}} 
+|[[Quarterback]] || [[2006 Tennessee Titans season|Tennessee Titans]] ||<ref>{{cite news |title=Young outruns the field, is top offensive rookie |url=https://www.espn.com/nfl/news/story?id=2718595 |access-date=August 29, 2018 |work=ESPN.com |agency=Associated Press |date=January 3, 2007}}</ref>
+|-
+| [[2007 NFL season|2007]] 
+!scope="row"|{{sortname|Adrian|Peterson}} 
+|[[Running back]] || [[2007 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news|title=Vikings' Peterson voted AP Offensive Rookie of the Year|url=http://www.nfl.com/news/story/09000d5d805ade5f/article/vikings-peterson-voted-ap-offensive-rookie-of-the-year|archive-url=https://web.archive.org/web/20180118011547/http://www.nfl.com/news/story/09000d5d805ade5f/article/vikings-peterson-voted-ap-offensive-rookie-of-the-year|url-status=dead|archive-date=January 18, 2018|access-date=January 17, 2018|work=NFL.com|agency=Associated Press|date=January 2, 2008}}</ref>
+|-
+| [[2008 NFL season|2008]] 
+!scope="row"|{{sortname|Matt|Ryan|dab=American football}} 
+|[[Quarterback]] || [[2008 Atlanta Falcons season|Atlanta Falcons]] ||<ref>{{cite news|title=Falcons' Matt Ryan wins offensive Rookie of the Year|url=http://usatoday30.usatoday.com/sports/football/nfl/falcons/2008-12-30-ryan-roy_N.htm|access-date=April 25, 2017|work=USA Today|agency=Associated Press|date=December 31, 2008}}</ref>
+|-
+| [[2009 NFL season|2009]] 
+!scope="row"|{{sortname|Percy|Harvin}} 
+|[[Wide receiver]] || [[2009 Minnesota Vikings season|Minnesota Vikings]] ||<ref>{{cite news|title=Vikings' Harvin voted top AP offensive rookie|url=https://usatoday30.usatoday.com/sports/football/nfl/vikings/2010-01-06-harvin-offensive-rookie_N.htm|access-date=April 25, 2017|work=USA Today|agency=Associated Press|date=January 6, 2010}}</ref>
+|-
+| [[2010 NFL season|2010]] 
+!scope="row"|{{sortname|Sam|Bradford}} 
+|[[Quarterback]] || [[2010 St. Louis Rams season|St. Louis Rams]] ||<ref>{{cite news|title=Rams QB Bradford picked as NFL Offensive Rookie of the Year|url=https://www.nfl.com/news/rams-qb-bradford-picked-as-nfl-offensive-rookie-of-the-year-09000d5d81e21a00|access-date=April 25, 2017|work=NFL.com|publisher=National Football League|date=February 4, 2011}}</ref>
+|-
+| [[2011 NFL season|2011]] 
+!scope="row"|{{sortname|Cam|Newton}} 
+|[[Quarterback]] || [[2011 Carolina Panthers season|Carolina Panthers]] ||<ref>{{cite news|title=Panthers' Newton voted AP Offensive Rookie of the Year|url=https://www.nfl.com/news/panthers-newton-voted-ap-offensive-rookie-of-the-year-09000d5d8269d38a|access-date=February 16, 2017|agency=Associated Press |work=NFL.com |publisher=National Football League|date=February 4, 2012}}</ref>
+|-
+| [[2012 NFL season|2012]] 
+!scope="row"|{{sortname|Robert|Griffin III}} 
+|[[Quarterback]] || [[2012 Washington Redskins season|Washington Redskins]] ||<ref>{{cite web|url=https://www.nfl.com/news/robert-griffin-iii-wins-offensive-rookie-of-the-year-0ap1000000134287|title=Robert Griffin III wins Offensive Rookie of the Year |work=NFL.com |publisher=National Football League |date=February 2, 2012 |access-date=February 16, 2017}}</ref>
+|-
+| [[2013 NFL season|2013]] 
+!scope="row"|{{sortname|Eddie|Lacy}} 
+|[[Running back]] || [[2013 Green Bay Packers season|Green Bay Packers]] ||<ref>{{cite news|last1=Silverstein|first1=Tom|title=Packers RB Eddie Lacy named AP NFL offensive rookie of the year|url=https://archive.jsonline.com/sports/packers/packers-rb-eddie-lacy-named-ap-nfl-offensive-rookie-of-the-year-b99196259z1-243142501.html|access-date=February 4, 2017|work=Milwaukee Journal-Sentinel|date=February 1, 2014}}</ref>
+|-
+| [[2014 NFL season|2014]] 
+!scope="row"|{{sortname|Odell|Beckham Jr.}} 
+|[[Wide receiver]] || [[2014 New York Giants season|New York Giants]] ||<ref>{{cite news|last1=Wilner|first1=Barry|title=Giants WR Odell Beckham Jr. is top offensive rookie|url=https://www.sandiegouniontribune.com/sdut-giants-wr-odell-beckham-jr-is-top-offensive-rookie-2015feb01-story.html|access-date=February 4, 2017|work=The San Diego Union-Tribune|agency=Associated Press|date=February 1, 2015}}</ref>
+|-
+| [[2015 NFL season|2015]] 
+!scope="row"|{{sortname|Todd|Gurley}} 
+|[[Running back]] || [[2015 St. Louis Rams season|St. Louis Rams]] ||<ref>{{cite news|last1=Klein|first1=Gary|title=Rams' Todd Gurley is NFL's offensive rookie of the year|url=https://www.latimes.com/sports/nfl/la-sp-offensive-rookie-gurley-20160207-story.html|access-date=February 4, 2017|work=Los Angeles Times|date=February 6, 2016}}</ref>
+|-
+|[[2016 NFL season|2016]] 
+!scope="row"|{{sortname|Dak|Prescott}} 
+|[[Quarterback]] || [[2016 Dallas Cowboys season|Dallas Cowboys]] ||<ref>{{cite news|title=Dak Prescott named NFL Offensive Rookie of the Year|url=http://www.foxsports.com/southwest/story/dak-prescott-named-nfl-offensive-rookie-of-the-year-020417|access-date=February 16, 2017|agency=Associated Press|work=Fox Sports|date=February 4, 2017}}</ref>
+|-
+| [[2017 NFL season|2017]] 
+!scope="row"|{{sortname|Alvin|Kamara}} 
+|[[Running back]] || [[2017 New Orleans Saints season|New Orleans Saints]] ||<ref name=AP2017/>
+|-
+| [[2018 NFL season|2018]] 
+!scope="row"|{{sortname|Saquon|Barkley}} 
+|[[Running back]] || [[2018 New York Giants season|New York Giants]] ||<ref name=AP2018/>
+|-
+| [[2019 NFL season|2019]] 
+!scope="row"|{{sortname|Kyler|Murray}} 
+|[[Quarterback]] || [[2019 Arizona Cardinals season|Arizona Cardinals]] ||<ref>{{cite news|last1=Patra|first1=Kevin|title=Cards' Kyler Murray named Offensive Rookie of Year|url=https://www.nfl.com/news/cards-kyler-murray-named-offensive-rookie-of-year-0ap3000001100145|work=NFL.com|publisher=National Football League|date=February 1, 2020|access-date=February 1, 2020}}</ref>
+|-
+| [[2020 NFL season|2020]] 
+!scope="row"|{{sortname|Justin|Herbert}} 
+|[[Quarterback]] || [[2020 Los Angeles Chargers season|Los Angeles Chargers]] || <ref>{{cite web |url=https://www.nfl.com/news/chargers-qb-justin-herbert-ap-offensive-rookie-of-the-year |title=Chargers QB Justin Herbert tabbed as AP Offensive Rookie of the Year |website=NFL.com |first=Nick |last=Shook |date=February 6, 2021 |accessdate=February 6, 2021}}</ref>
+|-
+| [[2021 NFL season|2021]] 
+!scope="row"|{{sortname|Ja'Marr|Chase}} 
+|[[Wide receiver]] || [[2021 Cincinnati Bengals season|Cincinnati Bengals]] || <ref>{{cite web |title=Bengals WR Ja'Marr Chase named 2021 AP Offensive Rookie of the Year |url=https://www.nfl.com/news/bengals-wr-ja-marr-chase-named-2021-ap-offensive-rookie-of-the-year |website=NFL.com |access-date=February 11, 2022}}</ref>
+|-
+| [[2022 NFL season|2022]] 
+!scope="row"|{{sortname|Garrett|Wilson}} 
+|[[Wide receiver]] || [[2022 New York Jets season|New York Jets]] || <ref>{{cite web |title= Jets WR Garrett Wilson named AP NFL Offensive Rookie of the Year |url= https://www.nfl.com/news/jets-wr-garrett-wilson-named-ap-nfl-offensive-rookie-of-the-year-award |website=NFL.com |access-date=February 9, 2023}}</ref>
+|-
+| [[2023 NFL season|2023]] 
+!scope="row"|{{sortname|C. J.|Stroud}} 
+|[[Quarterback]] || [[2023 Houston Texans season|Houston Texans]] || <ref>{{Cite web |last=Patra |first=Kevin |title=Texans QB C.J. Stroud named AP 2023 NFL Offensive Rookie of the Year |url=https://www.nfl.com/news/texans-qb-c-j-stroud-named-ap-2023-nfl-offensive-rookie-of-the-year |date=February 8, 2024 |access-date=February 8, 2024 |website=NFL.com}}</ref>
+|-
+| [[2024 NFL season|2024]] 
+!scope="row"|{{sortname|Jayden|Daniels}} 
+|[[Quarterback]] || [[2024 Washington Commanders season|Washington Commanders]] || <ref>{{Cite web |title=Commanders QB Jayden Daniels named 2024 AP NFL Offensive Rookie of the Year |url=https://www.nfl.com/news/commanders-qb-jayden-daniels-named-2024-ap-nfl-offensive-rookie-of-the-year |access-date=2025-02-07 |website=NFL.com |language=en-US}}</ref>
+|-
+| [[2025 NFL season|2025]] 
+!scope="row"|{{sortname|Tetairoa|McMillan}} 
+|[[Wide receiver]] || [[2025 Carolina Panthers season|Carolina Panthers]] || <ref>{{Cite web |title=Panthers WR Tetairoa McMillan named 2025 AP NFL Offensive Rookie of Year |url=https://www.nfl.com/news/tetairoa-mcmillan-panthers-wr-offensive-rookie-of-the-year-2025 |access-date=2026-02-05 |website=NFL.com |language=en-US}}</ref>
+|}
+
+===Defensive===
+{| class="wikitable sortable plainrowheaders"
+|+ List of AP NFL Defensive Rookie of the Year winners
+! Season !! Player !! Position !! Team !! class="unsortable"|{{Ref.}}
+|- 
+| [[1967 NFL season|1967]] 
+!scope="row"|{{sortname|Lem|Barney}}
+|[[Cornerback]] || [[1967 Detroit Lions season|Detroit Lions]] ||<ref name=AP1967/>
+|- 
+| [[1968 NFL season|1968]] 
+!scope="row"|{{sortname|Claude|Humphrey}}
+|[[Defensive end]] || [[1968 Atlanta Falcons season|Atlanta Falcons]] ||<ref name=AP1968/>
+|-
+| [[1969 NFL season|1969]] 
+!scope="row"|{{sortname|Joe|Greene}}
+|[[Defensive tackle]] || [[1969 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref>{{cite news|title=Greene Top Defensive Rookie|url=https://www.newspapers.com/clip/10520566/greene_top_defensive_rookie/|access-date=April 25, 2017|work=The Odessa American|agency=Associated Press|date=December 20, 1969|page=15|via=Newspapers.com}}</ref>
+|-
+| [[1970 NFL season|1970]] 
+!scope="row"|{{sortname|Bruce|Taylor|Bruce Taylor (American football)}}
+|[[Cornerback]] || [[1970 San Francisco 49ers season|San Francisco 49ers]] ||<ref>{{cite news|title=Bruce Taylor Defensive Rookie of Year in NFL|url=https://www.newspapers.com/clip/10523725/bruce_taylor_defensive_rookie_of_year/|access-date=April 25, 2017|work=Standard-Speaker|agency=Associated Press|date=January 7, 1971|page=21|via=Newspapers.com}}</ref>
+|-
+| [[1971 NFL season|1971]] 
+!scope="row"|{{sortname|Isiah|Robertson}}
+|[[Linebacker]] || [[1971 Los Angeles Rams season|Los Angeles Rams]] ||<ref>{{cite news|title=Isiah Robertson Ram linebacker defensive rookie of year|url=https://www.newspapers.com/clip/10523776/isiah_robertson_ram_linebacker/|access-date=April 25, 2017|work=Jefferson City Post-Tribune|agency=Associated Press|date=January 5, 1972|page=20|via=Newspapers.com}}</ref>
+|-
+| [[1972 NFL season|1972]] 
+!scope="row"|{{sortname|Willie|Buchanon}}
+|[[Cornerback]] || [[1972 Green Bay Packers season|Green Bay Packers]] ||<ref name=AP1972/>
+|-
+| [[1973 NFL season|1973]] 
+!scope="row"|{{sortname|Wally|Chambers}}
+|[[Defensive tackle]] || [[1973 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news|last1=Bock|first1=Hal|title=Eastern's Wally Chambers Is NFL Rookie Of Year|url=https://www.newspapers.com/clip/11219332/easterns_wally_chambers_is_nfl_rookie/|access-date=May 24, 2017|work=The Corbin Times-Tribune|agency=Associated Press|date=January 4, 1974|page=3|via=Newspapers.com}}</ref>
+|-
+| [[1974 NFL season|1974]] 
+!scope="row"|{{sortname|Jack|Lambert|Jack Lambert (American football)}}
+|[[Linebacker]] || [[1974 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref>{{cite news|title=Jack Lambert NFL Defensive Rookie Of Year|url=https://www.newspapers.com/clip/11219437/jack_lambert_nfl_defensive_rookie_of/|access-date=May 24, 2017|work=The La Crosse Tribune|agency=Associated Press|date=January 3, 1975|page=11|via=Newspapers.com}}</ref>
+|-
+| [[1975 NFL season|1975]] 
+!scope="row"|{{sortname|Robert|Brazile}}
+|[[Linebacker]] || [[1975 Houston Oilers season|Houston Oilers]] ||<ref>{{cite news|last1=Lowitt|first1=Bruce|title=Brazile Garners Rookie Honors|url=https://www.newspapers.com/clip/11443800/brazile_garners_rookie_honors/|access-date=June 3, 2017|work=Del Rio News-Herald|agency=Associated Press|date=January 8, 1976|page=8|via=Newspapers.com}}</ref>
+|-
+| [[1976 NFL season|1976]] 
+!scope="row"|{{sortname|Mike|Haynes|Mike Haynes (cornerback)}}
+|[[Cornerback]] || [[1976 New England Patriots season|New England Patriots]] ||<ref>{{cite news|title=Patriot's Cornerback Haynes Gets Rookie Defense Award|url=https://www.newspapers.com/clip/11640340/patriots_cornerback_haynes_gets_rookie/|access-date=June 12, 2017|work=Idaho State Journal|agency=Associated Press|date=December 29, 1976|page=13|via=Newspapers.com}}</ref>
+|-
+| [[1977 NFL season|1977]] 
+!scope="row"|{{sortname|A. J.|Duhe}}
+|[[Defensive end]] || [[Miami Dolphins]] ||<ref>{{cite news|title=Miami's Duhe Gets Defensive Honor|url=https://www.newspapers.com/clip/11640426/miamis_duhe_gets_defensive_honor/|access-date=June 12, 2017|work=The Vernon Daily Record|agency=Associated Press|date=January 4, 1978|page=8|via=Newspapers.com}}</ref>
+|-
+| [[1978 NFL season|1978]] 
+!scope="row"|{{sortname|Al|Baker}}
+|[[Defensive end]] || [[1978 Detroit Lions season|Detroit Lions]] ||<ref>{{cite news|title='Bubba' Baker Named Defensive Rookie|url=https://www.newspapers.com/clip/11640501/bubba_baker_named_defensive_rookie/|access-date=June 12, 2017|work=The Kane Republican|agency=Associated Press|date=January 11, 1979|page=4|via=Newspapers.com}}</ref>
+|-
+| [[1979 NFL season|1979]] 
+!scope="row"|{{sortname|Jim|Haslett}}
+|[[Linebacker]] || [[1979 Buffalo Bills season|Buffalo Bills]] ||<ref name=AP1979/>
+|-
+| [[1980 NFL season|1980]] 
+!scope="row"|{{sortname|Buddy|Curry}}<br/>{{sortname|Al|Richardson|Al Richardson (linebacker)}}
+|[[Linebacker]] || [[1980 Atlanta Falcons season|Atlanta Falcons]] ||<ref name=AP1980/>
+|-
+| [[1981 NFL season|1981]] 
+!scope="row"|{{sortname|Lawrence|Taylor}}
+|[[Linebacker]] || [[1981 New York Giants season|New York Giants]] ||<ref>{{cite news|title=Taylor wins rookie award|url=https://www.newspapers.com/clip/11640142/taylor_wins_rookie_award/|access-date=June 12, 2017|work=The Gettysburg Times|agency=Associated Press|date=January 8, 1982|page=9|via=Newspapers.com}}</ref>
+|-
+| [[1982 NFL season|1982]] 
+!scope="row"|{{sortname|Chip|Banks}}
+|[[Linebacker]] || [[1982 Cleveland Browns season|Cleveland Browns]] ||<ref>{{cite news|title=Browns linebacker named defensive rookie of year|url=https://www.newspapers.com/clip/14512029/browns_linebacker_named_defensive/|access-date=October 19, 2017|work=The Index-Journal|agency=Associated Press|date=January 6, 1983|page=10|via=Newspapers.com}}</ref>
+|-
+| [[1983 NFL season|1983]] 
+!scope="row"|{{sortname|Vernon|Maxwell|Vernon Maxwell (American football)}}
+|[[Linebacker]] || [[1983 Baltimore Colts season|Baltimore Colts]] ||<ref name=AP1983/>
+|-
+| [[1984 NFL season|1984]] 
+!scope="row"|{{sortname|Bill|Maas}}
+|[[Defensive tackle]] || [[1984 Kansas City Chiefs season|Kansas City Chiefs]] ||<ref name=AP1984/>
+|-
+| [[1985 NFL season|1985]] 
+!scope="row"|{{sortname|Duane|Bickett}}
+|[[Linebacker]] || [[1985 Indianapolis Colts season|Indianapolis Colts]] ||<ref>{{cite news|title=Colts' Bickett top defensive rookie in NFL|url=https://www.newspapers.com/clip/14512934/colts_bickett_top_defensive_rookie_in/|access-date=October 19, 2017|work=The Salina Journal|agency=Associated Press|date=January 3, 1986|page=11|via=Newspapers.com}}</ref>
+|-
+| [[1986 NFL season|1986]] 
+!scope="row"|{{sortname|Leslie|O'Neal}}
+|[[Defensive end]] || [[1986 San Diego Chargers season|San Diego Chargers]] ||<ref name=AP1986/>
+|-
+| [[1987 NFL season|1987]] 
+!scope="row"|{{sortname|Shane|Conlan}}
+|[[Linebacker]] || [[1987 Buffalo Bills season|Buffalo Bills]] ||<ref name=AP1987/>
+|-
+| [[1988 NFL season|1988]] 
+!scope="row"|{{sortname|Erik|McMillan}}
+|[[Safety (American football position)|Safety]] || [[1988 New York Jets season|New York Jets]] ||<ref name=AP1988/>
+|-
+| [[1989 NFL season|1989]] 
+!scope="row"|{{sortname|Derrick|Thomas}}
+|[[Linebacker]] || [[1989 Kansas City Chiefs season|Kansas City Chiefs]] ||<ref name=AP1989/>
+|-
+| [[1990 NFL season|1990]] 
+!scope="row"|{{sortname|Mark|Carrier|Mark Carrier (safety)}}
+|[[Safety (American football position)|Safety]] || [[1990 Chicago Bears season|Chicago Bears]] ||<ref name=AP1990/>
+|-
+| [[1991 NFL season|1991]] 
+!scope="row"|{{sortname|Mike|Croel}}
+|[[Linebacker]] || [[1991 Denver Broncos season|Denver Broncos]] ||<ref name=AP1991/>
+|-
+| [[1992 NFL season|1992]] 
+!scope="row"|{{sortname|Dale|Carter}}
+|[[Cornerback]] || [[1992 Kansas City Chiefs season|Kansas City Chiefs]] ||<ref name=AP1992/>
+|-
+| [[1993 NFL season|1993]] 
+!scope="row"|{{sortname|Dana|Stubblefield}}
+|[[Defensive tackle]] || [[1993 San Francisco 49ers season|San Francisco 49ers]] ||<ref name=AP1993/>
+|-
+| [[1994 NFL season|1994]] 
+!scope="row"|{{sortname|Tim|Bowens}}
+|[[Defensive tackle]] || [[1994 Miami Dolphins season|Miami Dolphins]] ||<ref name=AP1994/>
+|-
+| [[1995 NFL season|1995]] 
+!scope="row"|{{sortname|Hugh|Douglas|Hugh Douglas (American football)}}
+|[[Defensive end]] || [[1995 New York Jets season|New York Jets]] ||<ref name=AP1995/>
+|-
+| [[1996 NFL season|1996]] 
+!scope="row"|{{sortname|Simeon|Rice}}
+|[[Defensive end]] || [[1996 Arizona Cardinals season|Arizona Cardinals]] ||<ref name=AP1996/>
+|-
+| [[1997 NFL season|1997]] 
+!scope="row"|{{sortname|Peter|Boulware}}
+|[[Linebacker]] || [[1997 Baltimore Ravens season|Baltimore Ravens]] ||<ref name=AP1997/>
+|-
+| [[1998 NFL season|1998]] 
+!scope="row"|{{sortname|Charles|Woodson}}
+|[[Cornerback]] || [[1998 Oakland Raiders season|Oakland Raiders]] ||<ref>{{cite news |last1=Wilner |first1=Barry |title=Raiders' Woodson adds Defensive Rookie of the Year to trophy case |url=https://www.newspapers.com/clip/23212289/raiders_woodson_adds_defensive_rookie/ |access-date=August 28, 2018 |work=Del Rio News Herald |agency=Associated Press |date=January 4, 1999 |page=5|via=Newspapers.com}}</ref>
+|-
+| [[1999 NFL season|1999]] 
+!scope="row"|{{sortname|Jevon|Kearse}}
+|[[Defensive end]] || [[1999 Tennessee Titans season|Tennessee Titans]] ||<ref>{{cite news|last1=Wilner|first1=Barry|title=Titans' 'Freak Show' earns NFL rookie honor|url=http://onlineathens.com/stories/011200/spo_0112000041.shtml|access-date=May 29, 2017|work=Athens Banner-Herald|agency=Associated Press|date=January 12, 2000}}</ref>
+|-
+| [[2000 NFL season|2000]] 
+!scope="row"|{{sortname|Brian|Urlacher}}
+|[[Linebacker]] || [[2000 Chicago Bears season|Chicago Bears]] ||<ref>{{cite news |title=Urlacher makes huge strides in season |url=https://a.espncdn.com/nfl/news/2000/1231/985679.html |access-date=August 29, 2018 |work=ESPN.com |agency=Associated Press |date=December 31, 2000}}</ref>
+|-
+| [[2001 NFL season|2001]] 
+!scope="row"|{{sortname|Kendrell|Bell}}
+|[[Linebacker]] || [[2001 Pittsburgh Steelers season|Pittsburgh Steelers]] ||<ref>{{cite news |last1=Wilner |first1=Barry |title=Kendrell Bell Takes Rookie Honors |url=https://www.mrt.com/news/article/Kendrell-Bell-Takes-Rookie-Honors-7728326.php |access-date=August 29, 2018 |work=Midland Reporter-Telegram |agency=Associated Press |date=January 13, 2002}}</ref>
+|-
+| [[2002 NFL season|2002]] 
+!scope="row"|{{sortname|Julius|Peppers}}
+|[[Defensive end]] || [[2002 Carolina Panthers season|Carolina Panthers]] ||<ref name=AP2002/>
+|-
+| [[2003 NFL season|2003]] 
+!scope="row"|{{sortname|Terrell|Suggs}}
+|[[Linebacker]] || [[2003 Baltimore Ravens season|Baltimore Ravens]] ||<ref name=AP2003/>
+|-
+| [[2004 NFL season|2004]] 
+!scope="row"|{{sortname|Jonathan|Vilma}}
+|[[Linebacker]] || [[2004 New York Jets season|New York Jets]] ||<ref>{{cite news |title=Jets' Vilma wins top defensive rookie of year |url=https://www.newspapers.com/clip/23242061/jets_vilma_wins_top_defensive_rookie/ |access-date=August 29, 2018 |work=Palladium-Item |agency=Associated Press |date=January 7, 2005 |page=9|via=Newspapers.com}}</ref>
+|-
+| [[2005 NFL season|2005]] 
+!scope="row"|{{sortname|Shawne|Merriman}}
+|[[Linebacker]] || [[2005 San Diego Chargers season|San Diego Chargers]] ||<ref>{{cite news |title=Merriman top defensive rookie of year |url=https://www.newspapers.com/clip/23242139/merriman_top_defensive_rookie_of_year/ |access-date=August 29, 2018 |work=Sioux City Journal |agency=Associated Press |date=January 5, 2006 |page=10|via=Newspapers.com}}</ref>
+|-
+| [[2006 NFL season|2006]] 
+!scope="row"|{{sortname|DeMeco|Ryans}}
+|[[Linebacker]] || [[2006 Houston Texans season|Houston Texans]] ||<ref>{{cite news |title=Ryans named AP Defensive Rookie of the Year |url=https://www.espn.com/nfl/news/story?id=2718180 |access-date=August 29, 2018 |work=ESPN.com |agency=Associated Press |date=January 3, 2007}}</ref>
+|-
+| [[2007 NFL season|2007]] 
+!scope="row"|{{sortname|Patrick|Willis}}
+|[[Linebacker]] || [[2007 San Francisco 49ers season|San Francisco 49ers]] ||<ref>{{cite news|title=49ers linebacker named AP's top defensive rookie|url=https://www.newspapers.com/clip/16614010/49ers_linebacker_named_aps_top/|access-date=January 17, 2018|work=The Index-Journal|agency=Associated Press|date=January 5, 2008|page=15|via=Newspapers.com}}</ref>
+|-
+| [[2008 NFL season|2008]] 
+!scope="row"|{{sortname|Jerod|Mayo}}
+|[[Linebacker]] || [[2008 New England Patriots season|New England Patriots]] ||<ref>{{cite news|title=Mayo is AP's top defensive rookie|url=https://www.espn.com/nfl/news/story?id=3801728|access-date=December 28, 2017|work=ESPN.com|agency=Associated Press|date=January 1, 2009}}</ref>
+|-
+| [[2009 NFL season|2009]] 
+!scope="row"|{{sortname|Brian|Cushing}}
+|[[Linebacker]] || [[2009 Houston Texans season|Houston Texans]] ||<ref>{{cite news|last1=Battista|first1=Judy|title=In Revote, Cushing Keeps Award|url=https://www.nytimes.com/2010/05/13/sports/football/13drugs.html|access-date=December 28, 2017|work=The New York Times|date=May 12, 2010}}</ref>
+|-
+| [[2010 NFL season|2010]] 
+!scope="row"|{{sortname|Ndamukong|Suh}}
+|[[Defensive tackle]] || [[2010 Detroit Lions season|Detroit Lions]] ||<ref>{{cite news|title=Suh named NFL defensive rookie of the year|url=http://onlineathens.com/stories/020511/spo_781119830.shtml|access-date=December 28, 2017|work=Athens Banner-Herald|date=February 5, 2011}}</ref>
+|-
+| [[2011 NFL season|2011]] 
+!scope="row"|{{sortname|Von|Miller}}
+|[[Linebacker]] || [[2011 Denver Broncos season|Denver Broncos]] ||<ref>{{cite news|title=Miller wins Defensive Rookie of Year|url=https://www.foxsports.com/nfl/story/denver-broncos-lb-von-miller-wins-defensive-rookie-of-year-020412|access-date=February 16, 2017|issue=February 4, 2012|work=Fox Sports}}</ref>
+|-
+| [[2012 NFL season|2012]] 
+!scope="row"|{{sortname|Luke|Kuechly}} 
+|[[Linebacker]] || [[2012 Carolina Panthers season|Carolina Panthers]] ||<ref>{{cite web|url=https://www.nfl.com/news/luke-kuechly-wins-defensive-rookie-of-the-year-honors-0ap1000000134289|title=Luke Kuechly wins Defensive Rookie of the Year honors |work=NFL.com |publisher=National Football League |date=February 2, 2013 |access-date=February 16, 2017}}</ref>
+|-
+| [[2013 NFL season|2013]] 
+!scope="row"|{{sortname|Sheldon|Richardson}}
+|[[Defensive end]] || [[2013 New York Jets season|New York Jets]] ||<ref>{{cite news|last1=Rock|first1=Tim|title=Jets DT Sheldon Richardson named AP NFL Defensive Rookie of the Year|url=http://www.newsday.com/sports/football/jets/sheldon-richardson-jets-dt-named-ap-nfl-defensive-rookie-of-the-year-1.6925591|archive-url=https://web.archive.org/web/20170205100557/http://www.newsday.com/sports/football/jets/sheldon-richardson-jets-dt-named-ap-nfl-defensive-rookie-of-the-year-1.6925591|url-status=dead|archive-date=February 5, 2017|access-date=February 4, 2017|work=Newsday|date=February 1, 2014}}</ref>
+|- 
+| [[2014 NFL season|2014]] 
+!scope="row"|{{sortname|Aaron|Donald}}
+|[[Defensive tackle]] || [[2014 St. Louis Rams season|St. Louis Rams]] ||<ref>{{cite news|last1=Wilson|first1=Aaron|title=Aaron Donald named Defensive Rookie of the Year, beating out Ravens' C.J. Mosley|url=https://www.baltimoresun.com/2015/01/31/aaron-donald-named-defensive-rookie-of-the-year-beating-out-ravens-cj-mosley/|access-date=February 4, 2017|work=The Baltimore Sun|date=January 31, 2015}}</ref>
+|- 
+| [[2015 NFL season|2015]] 
+!scope="row"|{{sortname|Marcus|Peters}} 
+|[[Cornerback]] || [[2015 Kansas City Chiefs season|Kansas City Chiefs]] ||<ref>{{cite news|last1=Orr|first1=Conor|title=Marcus Peters named Defensive Rookie of the Year|url=https://www.nfl.com/news/marcus-peters-named-defensive-rookie-of-the-year-0ap3000000633358|access-date=February 4, 2017|work=NFL.com|publisher=National Football League|date=February 6, 2016}}</ref>
+|-
+| [[2016 NFL season|2016]] 
+!scope="row"|{{sortname|Joey|Bosa}} 
+|[[Defensive end]] || [[2016 San Diego Chargers season|San Diego Chargers]] ||<ref>{{cite news|last1=Gehlken|first1=Michael|title=Honored Joey Bosa sees 'scary' potential for 2017|url=https://www.sandiegouniontribune.com/sports/chargers/sd-sp-chargers-joey-bosa-rookie-year-20170204-story.html|access-date=February 16, 2017|work=The San Diego Union-Tribune|date=February 4, 2017}}</ref>
+|-
+| [[2017 NFL season|2017]] 
+!scope="row"|{{sortname|Marshon|Lattimore}} 
+|[[Cornerback]] || [[2017 New Orleans Saints season|New Orleans Saints]] ||<ref name=AP2017>{{cite news |title=Alvin Kamara, Marshon Lattimore gives Saints sweep of rookie of the year awards |url=https://www.usatoday.com/story/sports/nfl/saints/2018/02/03/nfl-rookie-year-alvin-kamara-marshon-lattimore-saints/303823002/ |access-date=August 30, 2018 |work=USA Today |date=February 3, 2018}}</ref>
+|-
+| [[2018 NFL season|2018]] 
+!scope="row"|{{sortname|Shaquille|Leonard}} 
+|[[Linebacker]] || [[2018 Indianapolis Colts season|Indianapolis Colts]] ||<ref name=AP2018>{{cite web|url=https://www.si.com/nfl/2019/02/02/saquon-barkley-giants-running-back-ap-offensive-rookie-year|publisher=Sports Illustrated|title=Saquon Barkley and Darius Leonard Take Home Rookie of the Year Honors|author=Michael Shapiro|date=February 2, 2019|access-date=August 16, 2019}}</ref>
+|-
+| [[2019 NFL season|2019]] 
+!scope="row"|{{sortname|Nick|Bosa}} 
+|[[Defensive end]] || [[2019 San Francisco 49ers season|San Francisco 49ers]] ||<ref>{{cite news|last1=Patra|first1=Kevin|title=49ers DE Nick Bosa named Defensive Rookie of Year|url=https://www.nfl.com/news/49ers-de-nick-bosa-named-defensive-rookie-of-year-0ap3000001100146|work=NFL.com|publisher=National Football League|date=February 1, 2020|access-date=February 1, 2020}}</ref>
+|-
+| [[2020 NFL season|2020]] 
+!scope="row"|{{sortname|Chase|Young}} 
+|[[Defensive end]] || [[2020 Washington Football Team season|Washington Football Team]] || <ref>{{cite web |url=https://www.nfl.com/news/washington-de-chase-young-ap-defensive-rookie-of-the-year |title=Washington DE Chase Young wins AP Defensive Rookie of the Year |website=NFL.com |first=Kevin |last=Patra |date=February 6, 2021 |accessdate=February 6, 2021}}</ref>
+|-
+| [[2021 NFL season|2021]]
+!scope="row"|{{sortname|Micah|Parsons}}
+|[[Linebacker]] || [[2021 Dallas Cowboys season|Dallas Cowboys]] || <ref>{{cite web |url=https://www.nfl.com/news/cowboys-lb-micah-parsons-named-2021-ap-nfl-defensive-rookie-of-the-year |title=Cowboys LB Micah Parsons named 2021 AP NFL Defensive Rookie of the Year |website=NFL.com |first=Kevin |last=Patra |date=February 10, 2022 |accessdate=February 11, 2022}}</ref>
+|-
+| [[2022 NFL season|2022]]
+!scope="row"|{{sortname|Sauce|Gardner}}
+|[[Cornerback]] || [[2022 New York Jets season|New York Jets]] || <ref>{{cite web |url= https://www.nfl.com/news/jets-cb-sauce-gardner-wins-ap-nfl-defensive-rookie-of-the-year |title= Jets CB Sauce Gardner wins AP NFL Defensive Rookie of the Year |website=NFL.com |first=Kevin |last=Patra |date=February 9, 2023 |accessdate=February 9, 2023}}</ref>
+|-
+| [[2023 NFL season|2023]]
+!scope="row"|{{sortname|Will|Anderson Jr.}}
+|[[Defensive end]] || [[2023 Houston Texans season|Houston Texans]] || <ref>{{Cite web |last=Patra |first=Kevin |title=Texans DE Will Anderson Jr. wins AP 2023 NFL Defensive Rookie of the Year |url=https://www.nfl.com/news/texans-de-will-anderson-jr-wins-ap-2023-nfl-defensive-rookie-of-the-year |date=February 8, 2024 |access-date=February 8, 2024 |website=NFL.com}}</ref>
+|-
+| [[2024 NFL season|2024]]
+!scope="row"|{{sortname|Jared|Verse}}
+|[[Linebacker]] || [[2024 Los Angeles Rams season|Los Angeles Rams]] || <ref>{{Cite web |last=Shook |first=Nick |title=Rams pass rusher Jared Verse named 2024 AP NFL Defensive Rookie of the Year |url=https://www.nfl.com/news/rams-pass-rusher-jared-verse-named-2024-ap-nfl-defensive-rookie-of-the-year|date=February 7, 2025 |access-date=February 7, 2025 |website=NFL.com}}</ref>
+|-
+| [[2025 NFL season|2025]]
+!scope="row"|{{sortname|Carson|Schwesinger}}
+|[[Linebacker]] || [[2025 Cleveland Browns season|Cleveland Browns]] || <ref>{{Cite web |last=Shook |first=Nick |title=Browns LB Carson Schwesinger named 2025 AP NFL Defensive Rookie of Year |url=https://www.nfl.com/news/carson-schwesinger-browns-lb-defensive-rookie-of-the-year-2025|date=February 5, 2026 |access-date=February 5, 2026 |website=NFL.com}}</ref>
+|}
+
+==See also==
+* [[AP NFL Offensive Player of the Year]]
+* [[AP NFL Defensive Player of the Year]]
+
+==References==
+;General
+* {{cite book|title=2018 Official NFL Record and Fact Book|date=2016|publisher=National Football League|pages=525|url=https://nflcommunications.com/Documents/2018%20Record%20and%20Fact%20Book%20(8.6.18).pdf|access-date=August 14, 2018|editor1-last=Gellerman |editor1-first=Jacob |editor2-last=Drexler |editor2-first=Sam |editor3-last=Marini |editor3-first=Matt |editor4-last=Cocchiaro |editor4-first=Nicolas |editor5-last=Zerkel |editor5-first=Alex}}
+* {{cite web|title=AP Offensive Rookie of the Year Winners|url=https://www.pro-football-reference.com/awards/ap-offensive-rookie-of-the-year-award.htm|website=Pro-Football-Reference.com|publisher=Sports Reference|access-date=April 25, 2017}}
+* {{cite web|title=AP Defensive Rookie of the Year Winners|url=https://www.pro-football-reference.com/awards/ap-defensive-rookie-of-the-year-award.htm|website=Pro-Football-Reference.com|publisher=Sports Reference|access-date=April 25, 2017}}
+
+;Footnotes
+{{reflist}}
+
+{{AP Offensive Rookies of the Year}}
+{{AP Defensive Rookies of the Year}}
+{{NFL Honors}}
+
+[[Category:NFL trophies and awards]]
+[[Category:Associated Press awards]]
