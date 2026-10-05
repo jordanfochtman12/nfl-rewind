@@ -63,13 +63,6 @@ export function ClubHash({
   return <span className={`inline-block shrink-0 ${className}`} style={{ background: c.primary }} aria-hidden />;
 }
 
-export function gradeTone(ovr: number): string {
-  if (ovr >= 90) return "text-brass";
-  if (ovr >= 80) return "text-club-2";
-  if (ovr >= 65) return "text-fg";
-  return "text-muted";
-}
-
 export function Btn({
   children,
   onClick,

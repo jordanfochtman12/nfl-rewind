@@ -1,4 +1,4 @@
-import { useDraftAnnouncer } from "./DraftAnnouncer";
+import { useDraftAnnouncer } from "./draftAudio";
 import { TalksReminder } from "./ContractTalks";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -107,13 +107,14 @@ export function DraftNight() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const compared = compareIds.map(id => save.players[id]).filter((p): p is Player => !!p);
 
-  const order = useMemo(() => draftOrder(save), [save.year, save.draftPickIndex, save.phase]);
+  // Keyed on the whole save: a draft-day trade changes who owns a pick without moving the index.
+  const order = useMemo(() => draftOrder(save), [save]);
   const teamsN = order.length || 24;
   const onClock = currentDraftTeam(save);
   const rnd = Math.floor(save.draftPickIndex / teamsN) + 1;
   const pickInRound = (save.draftPickIndex % teamsN) + 1;
   const overall = save.draftPickIndex + 1;
-  const totalPicks = useMemo(() => draftQueue(save).length, [save.year, save.draftSession, save.phase]);
+  const totalPicks = useMemo(() => draftQueue(save).length, [save]);
   const openAll = save.draftBoard.filter((p) => !p.taken);
   const taken = save.draftBoard.filter((p) => p.taken);
   // draftBoard order is big-board rank, not pick order — find the actual most recent

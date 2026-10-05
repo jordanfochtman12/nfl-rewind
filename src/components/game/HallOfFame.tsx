@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  treeLine,
   coachHome,
   coachWriteUp,
   displayName,
@@ -166,6 +167,7 @@ export function HofPlaque({ target, onClose }: { target: PlaqueTarget | null; on
             </p>
           </div>
           <p className="text-sm leading-relaxed text-paper">{coachWriteUp(save, coach, home)}</p>
+          {treeLine(save, coach) && <p className="text-sm text-muted">{treeLine(save, coach)}</p>}
           {book && (
             <div className="rounded-md border border-line bg-black/40 px-3 py-2 text-sm">
               <p className="text-[11px] tracking-[0.25em] text-muted">HIS SYSTEM</p>

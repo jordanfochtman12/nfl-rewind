@@ -3,7 +3,8 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { GameNight } from "./GameNight";
-import { LiveBroadcast, wasWatched } from "./LiveBroadcast";
+import {LiveBroadcast } from "./LiveBroadcast";
+import { wasWatched } from "./liveWatch";
 import { useState } from "react";
 
 function slateOf(save: NonNullable<ReturnType<typeof useGameStore.getState>["save"]>): GameResult[] {

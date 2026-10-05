@@ -21,6 +21,7 @@ import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import { CoachChips } from "./KitChips";
 import { HonorButtons, InductionCard } from "./Legacy";
+import { HotNames } from "./HotNames";
 
 function Continue({ label }: { label: string }) {
   const step = useGameStore((s) => s.step);
@@ -390,6 +391,7 @@ export function CarouselNight() {
               ? `${hc.name} stays. You were ${rec}. The board leaves it on your desk.`
               : "A quiet winter in your building."}
         </p>
+        {vacant && <HotNames />}
         {vacant && (
           <label className="block max-w-md text-sm">
             <span className="text-xs tracking-[0.25em] text-brass">HIRE A HEAD COACH</span>

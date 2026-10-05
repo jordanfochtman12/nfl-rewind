@@ -19,7 +19,8 @@ import {
   type TradePiece,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
-import { Btn, gradeTone, Logo } from "./chrome";
+import { Btn, Logo } from "./chrome";
+import { gradeTone } from "./tone";
 import { PlayerLink } from "./PlayerProfile";
 import { KitChips } from "./KitChips";
 

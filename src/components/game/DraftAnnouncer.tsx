@@ -1,9 +1,7 @@
 import { castVoices } from "@/lib/voiceCast";
 import { commissionerFor, draftAnalystFor, pickReaderFor } from "@/lib/game/broadcastCrew";
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -23,19 +21,8 @@ import { footballSpeech } from "@/lib/game/footballSpeech";
 import { draftCrowdAudio } from "./draftCrowdAudio";
 import { stadiumAudio } from "./stadiumAudio";
 
-interface DraftAudio {
-  enabled: boolean;
-  busy: boolean;
-  hidden: boolean;
-  controls: ReactNode;
-}
-const DraftAudioContext = createContext<DraftAudio>({
-  enabled: false,
-  busy: false,
-  hidden: false,
-  controls: null,
-});
-export const useDraftAnnouncer = () => useContext(DraftAudioContext);
+import { DraftAudioContext } from "./draftAudio";
+
 
 /** Stays mounted through the last pick so the closing announcement can finish. */
 export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {

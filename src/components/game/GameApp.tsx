@@ -64,6 +64,8 @@ import {
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
 import { TeamHistory } from "./TeamHistory";
+import { CoachingTrees } from "./CoachingTrees";
+import { HotNames } from "./HotNames";
 import { HallOfFame } from "./HallOfFame";
 import { leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
@@ -95,8 +97,10 @@ import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
-import { Tour, WATCH_TOUR } from "./Tour";
-import { Btn, ClubDesk, ClubHash, ClubRibbon, gradeTone, Logo } from "./chrome";
+import { Tour } from "./Tour";
+import { WATCH_TOUR } from "./tours";
+import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
+import { gradeTone } from "./tone";
 import {
   AwardsNight,
   CarouselNight,
@@ -992,6 +996,7 @@ function Staff() {
         {row("OC", t.ocId)}
         {row("DC", t.dcId)}
       </div>
+      {!save.sandbox && !t.coachId && <HotNames />}
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Coaching carousel</h3>
         {carousel.length === 0 && <p className="text-muted">No pink slips this winter — yet.</p>}
@@ -1528,6 +1533,7 @@ function History() {
       {!save.sandbox && <RecordBookSection title={`${displayName(save.year, save.userTeamId)} franchise records`} teamId={save.userTeamId} />}
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
+      <CoachingTrees />
       <Rulebook save={save} />
       <ShareHistory />
       <section>

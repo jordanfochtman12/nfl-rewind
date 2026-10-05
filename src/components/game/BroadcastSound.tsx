@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
-import { crewFor } from "@/lib/game/previewVoice";
 import type { BoothLine } from "@/lib/game/commentary";
 
 export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number) {
@@ -182,54 +181,4 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
       </div>
     ),
   };
-}
-
-export function StudioRecapAudio({ text, year }: { text: string; year: number }) {
-  const [playing, setPlaying] = useState(false);
-  const [unavailable, setUnavailable] = useState(false);
-  useEffect(() => {
-    const stop = () => {
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      setPlaying(false);
-    };
-    const hide = () => {
-      if (document.hidden) stop();
-    };
-    document.addEventListener("visibilitychange", hide);
-    return () => {
-      document.removeEventListener("visibilitychange", hide);
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    };
-  }, [text]);
-  return (
-    <div className="my-3">
-      <button
-        className="bx-chip min-h-11 px-4 text-sm"
-        type="button"
-        onClick={() => {
-          if (!("speechSynthesis" in window)) {
-            setUnavailable(true);
-            return;
-          }
-          window.speechSynthesis.cancel();
-          if (playing) {
-            setPlaying(false);
-            return;
-          }
-          const speech = new SpeechSynthesisUtterance(footballSpeech(text, year));
-          const host = crewFor(year).HOST;
-          const c = castVoices(window.speechSynthesis.getVoices(), [{ key: "HOST", gender: host.gender }]).get("HOST");
-          if (c?.voice) speech.voice = c.voice;
-          speech.pitch = c?.pitch ?? 1;
-          speech.rate = 0.96 * (c?.rate ?? 1);
-          speech.onend = speech.onerror = () => setPlaying(false);
-          window.speechSynthesis.speak(speech);
-          setPlaying(true);
-        }}
-      >
-        {playing ? "Stop studio recap" : "Listen to studio recap"}
-      </button>
-      {unavailable && <p className="text-xs">Voice is unavailable in this browser.</p>}
-    </div>
-  );
 }

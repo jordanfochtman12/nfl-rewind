@@ -20,6 +20,7 @@ import { syncDepth } from "./players.ts";
 import { applyStaffSchemes, syncRealSchemes } from "./gameplans.ts";
 import { playbookFor } from "./data/coachPlans.ts";
 import { EXPANSION_SPECS } from "./data/expansions.ts";
+import { mentorOf } from "./coachingTree.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -326,13 +327,55 @@ export function fireCoach(save: DynastySave, teamId: TeamId, role: CoachRole): G
   return { ok: true };
 }
 
+const IN_SEASON = new Set<string>(["preseason", "regular", "deadline", "playoffs", "superBowl"]);
+
+/** This winter's hot names with what the owner needs to judge them: their job, their unit, who they've met. */
+export function hotNamesBoard(save: DynastySave): { coach: Coach; teamId?: TeamId; role?: "OC" | "DC"; unitRank?: number; met: TeamId[] }[] {
+  const search = save.coachSearch?.year === save.year ? save.coachSearch : undefined;
+  const ids = search?.hot.length ? search.hot : hotNames(save);
+  const teams = activeTeamIds(save.year);
+  const played = teams.some((id) => save.teams[id]!.wins + save.teams[id]!.losses + save.teams[id]!.ties > 0);
+  const rankBy = (k: "pf" | "pa", id: TeamId) =>
+    teams.slice().sort((a, b) => (k === "pf" ? save.teams[b]!.pf - save.teams[a]!.pf : save.teams[a]!.pa - save.teams[b]!.pa)).indexOf(id) + 1;
+  return ids
+    .map((id) => save.coaches[id])
+    .filter((c): c is Coach => !!c && !c.retiredYear && !headCoachOf(save, c))
+    .map((c) => {
+      const t = c.teamId && sittingOn(save, c) ? c.teamId : undefined;
+      const role = t ? (save.teams[t]?.ocId === c.id ? "OC" : "DC") : undefined;
+      return {
+        coach: c,
+        teamId: t,
+        role,
+        unitRank: played && t && role ? rankBy(role === "OC" ? "pf" : "pa", t) : undefined,
+        met: (search?.interviews ?? []).filter((x) => x.coachId === c.id).map((x) => x.teamId),
+      };
+    });
+}
+
 export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, role: CoachRole): GmResult {
   const t = save.teams[teamId];
   if (!t) return { ok: false, reason: "No club." };
   const c = save.coaches[coachId];
   if (!c) return { ok: false, reason: "That coach is not in the pool." };
   if (c.retiredYear || c.hofYear) return { ok: false, reason: "He is not coming back." };
-  if (c.teamId && c.teamId !== teamId && sittingOn(save, c)) return { ok: false, reason: "He already has a job." };
+  // A coordinator elsewhere can be hired away to be a head coach, once his season is over.
+  const poach = role === "HC" && !!c.teamId && c.teamId !== teamId && sittingOn(save, c) && !headCoachOf(save, c) ? c.teamId : undefined;
+  if (poach && IN_SEASON.has(save.phase)) return { ok: false, reason: `${c.name} is coaching the ${displayName(save.year, poach)} through the season. Ask again in the winter.` };
+  if (c.teamId && c.teamId !== teamId && sittingOn(save, c) && !poach) return { ok: false, reason: "He already has a job." };
+  // Promoting his own coordinator: the old job opens and someone fills it for now.
+  const ownWas = c.teamId === teamId && role === "HC" ? (t.ocId === c.id ? "OC" : t.dcId === c.id ? "DC" : undefined) : undefined;
+  // Jobs he leaves are refilled once he holds the new one, so the refill can't pick him again.
+  const refill: [TeamId, "OC" | "DC"][] = [];
+  if (ownWas) {
+    vacate(save, c, ownWas, teamId);
+    refill.push([teamId, ownWas]);
+  }
+  if (poach) {
+    const was = save.teams[poach]?.ocId === c.id ? "OC" : "DC";
+    vacate(save, c, was, poach);
+    refill.push([poach, was]);
+  }
   const prevId = role === "HC" ? t.coachId : role === "OC" ? t.ocId : t.dcId;
   if (prevId && prevId !== coachId) {
     const prev = save.coaches[prevId];
@@ -348,6 +391,10 @@ export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, ro
     t.defScheme = c.defScheme;
   } else if (role === "OC") t.ocId = c.id;
   else t.dcId = c.id;
+  for (const [club, r] of refill) {
+    const fill = autoHireCoord(save, club, r);
+    if (club !== teamId) noteCarousel(save, club, r, c.name, fill.name, `${displayName(save.year, club)} lose ${c.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${r}.`);
+  }
   // A new play-caller brings his own system with him.
   applyStaffSchemes(save, teamId, (id) => {
     save.teams[id].depth = {};
@@ -600,6 +647,7 @@ function creditTenure(c: Coach, teamId: TeamId, weight: number): void {
 export function runCoachingCarousel(save: DynastySave): void {
   save.carousel = save.carousel ?? [];
   const search = save.coachSearch?.year === save.year ? save.coachSearch : undefined;
+  const headCoached = new Set(Object.values(save.coaches).filter((c) => c.careerWins + c.careerLosses + (c.careerTies ?? 0) > 0).map((c) => c.name));
   const ids = activeTeamIds(save.year);
   let leaguePf = 0;
   let leaguePa = 0;
@@ -620,6 +668,11 @@ export function runCoachingCarousel(save: DynastySave): void {
       creditTenure(hc, id, 2);
       progressCoach(save, hc, id);
     }
+    // A season on a head coach's staff puts a coordinator on his coaching tree, while he's still
+    // coming up: a former head coach running someone's defense isn't that man's protégé.
+    if (hc)
+      for (const coord of [oc, dc])
+        if (coord && coord.id !== hc.id && !headCoached.has(coord.name)) (coord.mentors ??= {})[hc.id] = (coord.mentors?.[hc.id] ?? 0) + 1;
     if (oc) {
       oc.yearsOnJob += 1;
       creditTenure(oc, id, 1);
@@ -648,7 +701,7 @@ export function runCoachingCarousel(save: DynastySave): void {
         kind: "headline",
         headline: search?.monday ? `${team} hire ${hired.name}` : fired ? `${fired} out in ${team}` : `${hired.name} takes over ${team}`,
         body: from
-          ? `The hottest name on the market: ${hired.name} ran the ${from.role === "OC" ? "offense" : "defense"} for the ${displayName(save.year, from.teamId)}.${fired ? ` He replaces ${fired}.` : ""}`
+          ? `The hottest name on the market: ${hired.name} ran the ${from.role === "OC" ? "offense" : "defense"} for the ${displayName(save.year, from.teamId)}.${treeBranch(save, hired)}${fired ? ` He replaces ${fired}.` : ""}`
           : fired
             ? `${search?.monday ? `${fired} is replaced` : `After ${t.wins}-${t.losses}, the club turns the page`}. ${hired.name} (${hired.offScheme} / ${hired.defScheme}) is the new head coach.`
             : `${hired.name} (${hired.offScheme} / ${hired.defScheme}) is the new head coach.`,
@@ -677,7 +730,37 @@ export function runCoachingCarousel(save: DynastySave): void {
   }
 }
 
+/**
+ * One man, one job. Saves from before the coordinator-hiring fix could carry a coach on two
+ * staffs at once; keep his head-coaching post (or his first one) and open the rest.
+ */
+function repairDoubleJobs(save: DynastySave): void {
+  const held = new Map<string, { teamId: TeamId; role: CoachRole }[]>();
+  for (const id of activeTeamIds(save.year)) {
+    const t = save.teams[id];
+    if (!t) continue;
+    for (const [role, cid] of [["HC", t.coachId], ["OC", t.ocId], ["DC", t.dcId]] as const) if (cid) held.set(cid, [...(held.get(cid) ?? []), { teamId: id, role }]);
+  }
+  for (const [cid, posts] of held) {
+    if (posts.length < 2) continue;
+    const keep = posts.find((p) => p.role === "HC") ?? posts[0]!;
+    for (const p of posts) {
+      if (p === keep) continue;
+      const t = save.teams[p.teamId];
+      if (p.role === "HC" && t.coachId === cid) t.coachId = null;
+      if (p.role === "OC" && t.ocId === cid) t.ocId = null;
+      if (p.role === "DC" && t.dcId === cid) t.dcId = null;
+    }
+    const c = save.coaches[cid];
+    if (c) {
+      c.teamId = keep.teamId;
+      c.role = keep.role;
+    }
+  }
+}
+
 export function ensureStaff(save: DynastySave): void {
+  repairDoubleJobs(save);
   for (const id of activeTeamIds(save.year)) {
     const t = save.teams[id];
     if (!t) continue;
@@ -886,8 +969,10 @@ export function blackMonday(save: DynastySave): void {
 /** Coordinators of the league's best units and proven head coaches out of work, best first. */
 function hotNames(save: DynastySave): string[] {
   const ids = activeTeamIds(save.year);
-  const byPf = ids.slice().sort((a, b) => save.teams[b]!.pf - save.teams[a]!.pf);
-  const byPa = ids.slice().sort((a, b) => save.teams[a]!.pa - save.teams[b]!.pa);
+  const played = ids.some((id) => save.teams[id]!.wins + save.teams[id]!.losses + save.teams[id]!.ties > 0);
+  // Before a down is played the units have no record yet; rank every staff on its coaches' grades.
+  const byPf = ids.slice().sort((a, b) => (played ? save.teams[b]!.pf - save.teams[a]!.pf : (save.coaches[save.teams[b]!.ocId ?? ""]?.offense ?? 0) - (save.coaches[save.teams[a]!.ocId ?? ""]?.offense ?? 0)));
+  const byPa = ids.slice().sort((a, b) => (played ? save.teams[a]!.pa - save.teams[b]!.pa : (save.coaches[save.teams[b]!.dcId ?? ""]?.defense ?? 0) - (save.coaches[save.teams[a]!.dcId ?? ""]?.defense ?? 0)));
   const out: { id: string; score: number }[] = [];
   const fresh = (c: Coach | undefined): c is Coach => !!c && !c.retiredYear && c.age <= 62 && !otherJob(save, c);
   byPf.slice(0, 6).forEach((id, i) => {
@@ -947,11 +1032,7 @@ function hireForVacancy(
     const t = save.teams[teamId];
     const was = pick.teamId && save.teams[pick.teamId]?.ocId === pick.id ? "OC" : pick.teamId && save.teams[pick.teamId]?.dcId === pick.id ? "DC" : undefined;
     const fromTeam = pick.teamId;
-    if (was && fromTeam) {
-      vacate(save, pick, was, fromTeam);
-      const fill = autoHireCoord(save, fromTeam, was);
-      noteCarousel(save, fromTeam, was, pick.name, fill.name, `${displayName(save.year, fromTeam)} lose ${pick.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${was}.`);
-    }
+    if (was && fromTeam) vacate(save, pick, was, fromTeam);
     pick.role = "HC";
     pick.teamId = teamId;
     pick.yearsOnJob = 1;
@@ -961,8 +1042,19 @@ function hireForVacancy(
     t.offScheme = pick.offScheme;
     t.defScheme = pick.defScheme;
     leaveOtherPosts(save, pick);
+    // His old club refills the job once he's gone, so the refill can't pick him again.
+    if (was && fromTeam) {
+      const fill = autoHireCoord(save, fromTeam, was);
+      noteCarousel(save, fromTeam, was, pick.name, fill.name, `${displayName(save.year, fromTeam)} lose ${pick.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${was}.`);
+    }
     if (search) search.hot = search.hot.filter((id) => id !== pick.id);
     return { coach: pick, from: was && fromTeam ? { teamId: fromTeam, role: was } : undefined };
   }
   return { coach: autoHireHeadCoach(save, teamId, exclude) };
+}
+
+/** " Another branch of the Walsh tree." when the new man came up under a head coach. */
+function treeBranch(save: DynastySave, c: Coach): string {
+  const m = mentorOf(save, c.name);
+  return m ? ` Another branch of the ${m.name.split(" ").slice(-1)[0]} tree.` : "";
 }

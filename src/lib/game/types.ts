@@ -340,6 +340,8 @@ export interface Coach {
   schemeLocked?: boolean;
   retiredYear?: number;
   hofYear?: number;
+  /** Seasons on each head coach's staff, by that coach's id (the coaching tree). */
+  mentors?: Record<string, number>;
   /** The season the papers put him on the hot seat. */
   hotSeat?: number;
   /** Interim head coach this season, and the club's record when he took over. */

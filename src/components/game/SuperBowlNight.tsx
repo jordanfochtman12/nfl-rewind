@@ -3,7 +3,8 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
-import { LiveBroadcast, wasWatched } from "./LiveBroadcast";
+import {LiveBroadcast } from "./LiveBroadcast";
+import { wasWatched } from "./liveWatch";
 import { useRef, useState } from "react";
 
 export function SuperBowlNight() {

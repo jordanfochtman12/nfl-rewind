@@ -138,7 +138,7 @@ const RESULT_TEXT: Record<string, string> = {
 };
 
 /** The index of the go-ahead score the winner never gave back. */
-export function turningPoint(game: GameResult): number {
+function turningPoint(game: GameResult): number {
   const drives = game.drives ?? [];
   if (game.homeScore === game.awayScore) return -1;
   const winnerHome = game.homeScore > game.awayScore;
@@ -225,7 +225,7 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
   const home = game.homeId as TeamId;
   const away = game.awayId as TeamId;
   const [side, setSide] = useState<TeamId>(home);
-  const box = side === home ? (game.boxHome ?? []) : (game.boxAway ?? []);
+  const box = useMemo(() => (side === home ? (game.boxHome ?? []) : (game.boxAway ?? [])), [side, home, game]);
   const mvp = game.mvpPlayerId ? save.players[game.mvpPlayerId] : undefined;
   const awayInk = clubInk(away, save.year);
   const homeInk = clubInk(home, save.year);

@@ -11,7 +11,6 @@ import {
   featuredScore,
   gamesInWeek,
   realPostseason,
-  weekIsInTheBooks,
   type DynastySave,
   type GameResult,
   type TeamId,
@@ -19,49 +18,12 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
-import { startTv } from "./WatchTV";
+import { startTv } from "./tvStart";
+import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
 
 type Speed = "slow" | "normal" | "fast";
 const SPEED_MS: Record<Speed, number> = { slow: 6000, normal: 3000, fast: 1000 };
-
-/** What the next press does, said the way a viewer would. */
-export function watchLabel(save: DynastySave): string {
-  switch (save.phase) {
-    case "draft":
-      return "Next pick";
-    case "freeAgency":
-      return "Close free agency";
-    case "expansion":
-      return save.expansion?.done ? "On to the college draft" : "Finish the expansion draft";
-    case "preseason":
-      return save.camp?.year === save.year ? "Kick off the season" : "Open training camp";
-    case "regular":
-      return weekIsInTheBooks(save) ? "Next week" : `Play week ${save.week}`;
-    case "deadline":
-      return "Close the trade window";
-    case "playoffs":
-      return save.weekFilm ? (save.playoffGames.some((g) => !g.played) ? "Next round" : "On to the Super Bowl") : "Play the round";
-    case "superBowl":
-      return save.superBowl?.played ? "On to awards night" : "Play the Super Bowl";
-    case "awards":
-      return "The Pro Bowl";
-    case "proBowl":
-      return "Retirements";
-    case "retirement":
-      return "The Hall of Fame";
-    case "hof":
-      return "The coaching carousel";
-    case "carousel":
-      return "Turn the calendar";
-    case "relocation":
-      return "Continue";
-    case "complete":
-      return "The end of the line";
-    default:
-      return "Continue";
-  }
-}
 
 /** The moments auto-play stops for, so the big nights don't fly past. */
 function bigNight(prev: DynastySave, next: DynastySave): string | null {
@@ -270,7 +232,10 @@ export function WatchDesk() {
   const champ = save.history.superBowls.at(-1);
   const champId = champ ? ((champ.homeScore >= champ.awayScore ? champ.homeId : champ.awayId) as TeamId) : undefined;
   const real = realPostseason(save.year);
-  const slate = save.phase === "regular" ? gamesInWeek(save, save.week) : save.phase === "playoffs" ? save.playoffGames.filter((g) => g.week === save.week) : [];
+  const slate = useMemo(
+    () => (save.phase === "regular" ? gamesInWeek(save, save.week) : save.phase === "playoffs" ? save.playoffGames.filter((g) => g.week === save.week) : []),
+    [save],
+  );
   const featured = useMemo(() => {
     const open = slate.filter((g) => !g.played);
     return open.length ? open.slice().sort((a, b) => featuredScore(save, b) - featuredScore(save, a) || a.id.localeCompare(b.id))[0] : undefined;

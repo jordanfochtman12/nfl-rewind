@@ -8,7 +8,7 @@ import { useGameStore } from "@/lib/game-store";
 import { dynastyStorage } from "@/lib/save-idb";
 import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
 import { Btn } from "./chrome";
-import { useOfflineStatus } from "../offline";
+import { useOfflineStatus } from "../offline-status";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (

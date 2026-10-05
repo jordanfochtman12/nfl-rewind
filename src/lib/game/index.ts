@@ -122,7 +122,7 @@ export type { Arch } from "./profiles.ts";
 export { buildPrimetime, depthChart, previewGame, projectWins } from "./primetime.ts";
 export { goalProgress, endHoldout, holdoutAsk, milestoneChases, type Chase } from "./storylines.ts";
 export { seriesNote } from "./h2h.ts";
-export { draftStyleOf, availableCoaches, hireCoach, fireCoach, setTeamScheme, fillCoachFields, staffOf } from "./staff.ts";
+export { draftStyleOf, availableCoaches, hireCoach, fireCoach, setTeamScheme, fillCoachFields, staffOf, hotNamesBoard } from "./staff.ts";
 export { assignCoachKit, coachAbilityLine, coachKitLine, coachKitDef, COACH_ABILITY_DEFS, COACH_TRAIT_DEFS } from "./coachKit.ts";
 export { playerHofScore, coachHofScore } from "./hof.ts";
 
@@ -249,3 +249,4 @@ export { RULE_CHANGES, rulebookThrough, rulesTakingEffect } from "./rulebook.ts"
 export type { RuleChange } from "./rulebook.ts";
 export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
 export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";
+export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree.ts";

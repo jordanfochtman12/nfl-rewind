@@ -50,7 +50,10 @@ export function StudioEpisode({
       setPlaying(false);
       done.current?.();
     }
-  };
+  };  // The narration effect calls the latest advance without restarting on every render.
+  const advanceRef = useRef(advance);
+  advanceRef.current = advance;
+
   const start = () => {
     try {
       if (!audio.current) audio.current = stadiumAudio();
@@ -94,7 +97,7 @@ export function StudioEpisode({
     if (!playing) return;
     let active = true;
     const next = () => {
-      if (active) advance();
+      if (active) advanceRef.current();
     };
     if (narration && "speechSynthesis" in window) {
       const speech = new SpeechSynthesisUtterance(footballSpeech(current.text, year));
@@ -135,7 +138,7 @@ export function StudioEpisode({
       active = false;
       window.clearTimeout(timer);
     };
-  }, [playing, index, line, narration, voice, voices, year, episode.cast]);
+  }, [playing, index, line, narration, voice, voices, year, episode.cast, current.speaker, current.text]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);

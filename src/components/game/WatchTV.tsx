@@ -32,11 +32,13 @@ import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { StudioEpisode } from "./StudioEpisode";
 import { SettingsSheet } from "./SettingsSheet";
-import { TV_TOUR, Tour } from "./Tour";
+import { Tour } from "./Tour";
+import { TV_TOUR } from "./tours";
 import { WhipAround } from "./WhipAround";
 import { LiveBroadcast } from "./LiveBroadcast";
 import { DraftNight } from "./DraftNight";
-import { GameRow, watchLabel } from "./Sandbox";
+import { GameRow } from "./Sandbox";
+import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
@@ -205,19 +207,6 @@ function useWakeLock() {
       void lock?.release().catch(() => undefined);
     };
   }, []);
-}
-
-/** Starts the channel from a tap, which also unlocks speech on phones. */
-export function startTv(year: number): void {
-  try {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(footballSpeech(`Welcome to Rewind TV. The ${year} season, all of it, starts now.`, year)));
-    }
-  } catch {
-    /* no speech on this device */
-  }
-  useGameStore.getState().setTv(true);
 }
 
 export function WatchTV() {

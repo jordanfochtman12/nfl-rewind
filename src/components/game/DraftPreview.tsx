@@ -52,7 +52,7 @@ export function DraftPreviewShow() {
   const save = useGameStore((s) => s.save)!;
   const setTab = useGameStore((s) => s.setTab);
   const [group, setGroup] = useState<PosGroup>("QB");
-  const d = useMemo(() => draftPreview(save), [save.year, save.draftSession, save.draftPickIndex, save.phase]);
+  const d = useMemo(() => draftPreview(save), [save]);
   const P = (id: string) => save.players[id];
   const meas = (id: string) => {
     const p = P(id);
