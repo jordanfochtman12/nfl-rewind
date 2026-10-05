@@ -60,11 +60,6 @@ function mulberry(seed: number): () => number {
   };
 }
 
-/** A stable choice from a list: same save, same words. */
-function pick<T>(key: string, list: readonly T[]): T {
-  return list[hash(key) % list.length]!;
-}
-
 const recText = (w: number, l: number, t = 0) => `${w}-${l}${t ? `-${t}` : ""}`;
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const ordinal = (n: number) => `${n}${n % 10 === 1 && n % 100 !== 11 ? "st" : n % 10 === 2 && n % 100 !== 12 ? "nd" : n % 10 === 3 && n % 100 !== 13 ? "rd" : "th"}`;
@@ -278,8 +273,15 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
   const lastChamp = lastSb ? ((lastSb.homeScore >= lastSb.awayScore ? lastSb.homeId : lastSb.awayId) as TeamId) : undefined;
   const lastRunner = lastSb ? ((lastSb.homeScore >= lastSb.awayScore ? lastSb.awayId : lastSb.homeId) as TeamId) : undefined;
   const lastPlayoff = new Set<TeamId>();
-  for (const g of save.playoffGames) if (g.year === year - 1) lastPlayoff.add(g.homeId as TeamId), lastPlayoff.add(g.awayId as TeamId);
-  if (lastSb) lastPlayoff.add(lastSb.homeId as TeamId), lastPlayoff.add(lastSb.awayId as TeamId);
+  for (const g of save.playoffGames) {
+    if (g.year !== year - 1) continue;
+    lastPlayoff.add(g.homeId as TeamId);
+    lastPlayoff.add(g.awayId as TeamId);
+  }
+  if (lastSb) {
+    lastPlayoff.add(lastSb.homeId as TeamId);
+    lastPlayoff.add(lastSb.awayId as TeamId);
+  }
   const lastRec = (id: TeamId) => {
     const t = save.teams[id]!;
     return { w: t.wins, l: t.losses, t: t.ties, playoffs: lastPlayoff.has(id) || undefined };

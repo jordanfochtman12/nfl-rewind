@@ -448,11 +448,12 @@ function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number)
   // leaders land where real leaders did and the record itself takes a rare season. Sacks
   // brake harder: with the rush concentrated on the true edge players, the gentler curve let
   // five ends a year run into the cap.
-  const soft = eraRef * (key === "sacks" ? 0.5 : 0.74);
+  const soft = eraRef * (key === "sacks" ? 0.5 : 0.7);
   if (pace <= soft) return 1;
-  // A gradual slope, not a wall: a steep one bunched leaders on the same total.
+  // Sacks taper by ratio, not a straight slope: a slope flattened everyone past the knee onto
+  // the same 14-16 and left three ends tied for the lead; a ratio keeps the best rusher ahead.
   return key === "sacks"
-    ? clamp(1 - ((pace - soft) / (eraRef * 0.3)) * 0.8, 0.22, 1)
+    ? Math.max(0.12, Math.pow(soft / pace, 2))
     : clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
 }
 
@@ -471,10 +472,10 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
   const era = eraProfile(year);
   const w = eraTargetWeights(year);
   const slots: { p: Player | undefined; wt: number }[] = [
-    { p: off.wr[0], wt: w.wr1 * (deep ? 1.1 : 1) * (redZone ? 0.9 : 1) },
+    { p: off.wr[0], wt: w.wr1 * (deep ? 1.1 : 1) * (redZone ? 1.6 : 1) },
     { p: off.wr[1], wt: w.wr2 },
     { p: off.wr[2], wt: w.wr3 * (deep ? 0.65 : 1.15) },
-    { p: off.te, wt: w.te * (deep ? 0.55 : 1.15) * (redZone ? 1.35 : 1) },
+    { p: off.te, wt: w.te * (deep ? 0.55 : 1.15) * (redZone ? 1.45 : 1) },
     { p: off.rb, wt: w.rb * (deep ? 0.3 : 1.25) * (redZone ? 0.7 : 1) },
   ];
   const pool = slots.filter((s): s is { p: Player; wt: number } => !!s.p);
@@ -487,10 +488,12 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
         // Talent and target-hog traits tilt the split, but gently: the raw product of ratings
         // and stacked recShare traits sent ~47% of a team's targets to its WR1 (2,800-yard
         // seasons). Real top targets draw 25-30%, a true alpha a bit more.
-        const skill = Math.pow((s.p.ratings.catch + yac) / 150, 0.3);
+        // Near the goal line the ball goes to the best hands on the field (real scoring leaders
+        // catch 40% of their team's touchdown passes), so talent counts for more there.
+        const skill = Math.pow((s.p.ratings.catch + yac) / 150, redZone ? 1.1 : 0.3);
         const kit = 1 + Math.min(0.3, kitShare(s.p, "recShare") - 1) * 0.5;
         const pace = paceDamp(s.p, "rec", year, s.p.pos === "TE" ? era.teRecCap : era.recCap);
-        return s.wt * skill * kit * pace * taperOf(s.p, "recYds", year, leaderPace(year).recYds);
+        return s.wt * skill * kit * pace * (redZone ? 1 : taperOf(s.p, "recYds", year, leaderPace(year).recYds));
       }),
     )
   ]!.p;
@@ -589,7 +592,9 @@ function pickRusherDef(save: DynastySave, def: TeamUnits, scheme?: DefScheme): P
 function pickThief(save: DynastySave, def: TeamUnits): Player | undefined {
   const pool = [...def.db, ...def.lb];
   if (!pool.length) return undefined;
-  return pool[dist(save, pool.map((p) => (p.ratings.cov + p.ratings.catch * 0.35 + p.ratings.awareness * 0.2) * kitShare(p, "intShare")))];
+  // Ball skills compound: on a linear weight every corner and safety split a club's picks
+  // evenly and three of them tied for the league lead most years.
+  return pool[dist(save, pool.map((p) => Math.pow((p.ratings.cov + p.ratings.catch * 0.35 + p.ratings.awareness * 0.2) / 100, 2.5) * kitShare(p, "intShare")))];
 }
 
 function fgRange(k: Player | undefined, year: number, altitude: number): number {
@@ -750,7 +755,6 @@ function snapClock(
   const hurry = urgent || plan.tempo === "hurry";
   const chew = plan.tempo === "chew" && trail <= 0 && !(q >= 4 && clock <= 180 && trail >= 1);
   const stopFd = clockStopFirstDown(year) && firstDown;
-  const stopped = oob || !complete || spiked || stopFd || twoMin && oob;
   if (spiked) return { used: 3, stopped: true };
   // Only the real drill rushes to the line after a stopped clock; a no-huddle plan still
   // spends the usual few seconds getting the call in.
@@ -858,9 +862,9 @@ function redZoneSqueeze(year: number): number {
   // The 60s and 70s finished more of their trips: scoring ran 1-3 points a game light.
   // Retuned once both teams ran the drill before the half (more second-quarter points) and
   // field goals and completions were set to each era's real rates.
-  if (year <= 1969) return -0.24;
-  if (year <= 1977) return -0.055;
-  if (year <= 1983) return 0.03;
+  if (year <= 1969) return -0.31;
+  if (year <= 1977) return -0.11;
+  if (year <= 1983) return 0.0;
   if (year <= 1989) return 0.1;
   if (year <= 1999) return 0.15;
   if (year <= 2009) return 0.095;
@@ -1253,7 +1257,6 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let driveRz = false;
   let lastRun = false;
   let plays = 0;
-  let justScored = false;
 
   const closeDrive = (result: DriveResult) => {
     drives.push({
@@ -1459,7 +1462,6 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (go2) {
       const ok = rand(save) < clamp(twoPointMakeP(year) + (u.offPass - 70) / 220 + u.kit.td, 0.28, 0.58);
       if (ok) addPts(id, 2);
-      justScored = true;
       return;
     }
     if (u.k) bumpBox(boxOf(id), u.k.id, { xpAtt: 1 });
@@ -1474,7 +1476,6 @@ export function simGame(save: DynastySave, game: GameResult): void {
     } else if (block) {
       note("The extra point is blocked.");
     }
-    justScored = true;
   };
 
   kickoffTo(poss, false);

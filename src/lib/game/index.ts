@@ -248,3 +248,4 @@ export type { AwardLadder, LadderRow, LeagueStory, RaceGroup, RaceMark, RaceRow,
 export { RULE_CHANGES, rulebookThrough, rulesTakingEffect } from "./rulebook.ts";
 export type { RuleChange } from "./rulebook.ts";
 export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
+export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";

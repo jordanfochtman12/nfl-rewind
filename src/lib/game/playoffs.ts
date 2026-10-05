@@ -1,6 +1,6 @@
 import type { DynastySave, GameResult, TeamId } from "./types.ts";
 import { playoffTeamCount } from "./era.ts";
-import { conferenceOf, displayName, roman, superBowlNumber, type Conference } from "./teams.ts";
+import { displayName, roman, superBowlNumber, type Conference } from "./teams.ts";
 import { superBowlSite } from "./data/bowlSites.ts";
 import { simGame } from "./sim.ts";
 import { compareTeams, conferenceTeams, divisionWinner, playoffField } from "./standings.ts";
@@ -94,13 +94,6 @@ function unfinished(save: DynastySave): GameResult[] {
   return save.playoffGames.filter((g) => !g.played);
 }
 
-function currentRoundName(save: DynastySave): string {
-  const u = unfinished(save);
-  if (u.length) return u[0]!.round ?? "Playoffs";
-  const last = save.playoffGames[save.playoffGames.length - 1];
-  return last?.round ?? "Playoffs";
-}
-
 function maybeAdvanceBracket(save: DynastySave): void {
   const year = save.year;
   const un = unfinished(save);
@@ -130,7 +123,6 @@ function maybeAdvanceBracket(save: DynastySave): void {
     const field = playoffField(save, conf, n).map((t) => t.id);
     const alive = field.filter((id) => !lost.has(id));
     if (alive.length <= 1) continue;
-    const hasChamp = save.playoffGames.some((g) => g.round === `${conf} Championship`);
     const hasDiv = save.playoffGames.some((g) => g.round === `${conf} Divisional`);
     let round: string;
     if (alive.length === 2) round = `${conf} Championship`;

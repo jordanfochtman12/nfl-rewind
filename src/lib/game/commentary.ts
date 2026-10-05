@@ -94,7 +94,6 @@ export function boothCall(play: PlayLog, index: number, ctx: BoothContext): Boot
   const yards = play.snap?.yards ?? 0;
   const moved = !!play.snap && yards >= play.togo && play.down > 0;
   const lead = (play.down === 3 || play.down === 4) && (index + play.spot) % 3 === 0 ? `${situation(play, ctx)} ` : "";
-  const C = ctx.colorFirst;
   const P = ctx.pbpFirst;
 
   if (play.tag === "td") {

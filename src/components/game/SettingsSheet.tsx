@@ -8,6 +8,7 @@ import { useGameStore } from "@/lib/game-store";
 import { dynastyStorage } from "@/lib/save-idb";
 import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
 import { Btn } from "./chrome";
+import { useOfflineStatus } from "../offline";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -53,6 +54,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
   const [note, setNote] = useState("");
   const [hasOld, setHasOld] = useState(false);
   const size = save ? saveByteLength(save) : 0;
+  const offline = useOfflineStatus();
 
   useEffect(() => {
     if ("speechSynthesis" in window) {
@@ -156,6 +158,15 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
                 </Btn>
               )}
             </div>
+            <p className="pb-3 text-xs text-muted">
+              {offline === "ready"
+                ? "Offline play is ready: the game opens on this device with no connection. Add it to your home screen to launch it like an app."
+                : offline === "preparing"
+                  ? "Getting offline play ready. Keep the page open a moment while online."
+                  : offline === "dev"
+                    ? "Offline play turns on in the published app."
+                    : "This browser can't keep the game for offline play."}
+            </p>
             {note && <p className="pb-3 text-xs text-brass">{note}</p>}
           </Section>
           <Section title="HELP">

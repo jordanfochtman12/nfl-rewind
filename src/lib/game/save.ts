@@ -221,6 +221,7 @@ export function hydrateSave(raw: unknown): DynastySave {
     faBids: r.faBids,
     powerRanks: r.powerRanks,
     h2h: r.h2h,
+    coachSearch: r.coachSearch,
     seasonPlan: r.seasonPlan,
     lastPlan: r.lastPlan,
     achievements: r.achievements,

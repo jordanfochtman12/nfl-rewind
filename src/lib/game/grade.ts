@@ -48,7 +48,6 @@ export function gradeDynasty(save: DynastySave): DynastyGrade {
     return w === teamId;
   }).length;
   const titles = save.history.championships.filter((c) => c.teamId === teamId).length;
-  const winningSeasons = Math.round(winningPct * Math.max(1, seasons) * (wins >= losses ? 1 : 0.35));
   const estWinningYears = seasons === 0 ? 0 : Math.round(((wins + ties * 0.5) / Math.max(1, games)) * seasons);
 
   const honor = (save.history.teamOfHonor[teamId] ?? []).length;

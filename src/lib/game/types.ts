@@ -340,6 +340,25 @@ export interface Coach {
   schemeLocked?: boolean;
   retiredYear?: number;
   hofYear?: number;
+  /** The season the papers put him on the hot seat. */
+  hotSeat?: number;
+  /** Interim head coach this season, and the club's record when he took over. */
+  interimYear?: number;
+  interimFrom?: { w: number; l: number };
+}
+
+/** One winter's coaching cycle: who was cut on Black Monday, the hot names, who talked to whom. */
+export interface CoachSearch {
+  year: number;
+  /** Black Monday has been decided. */
+  monday?: boolean;
+  /** Clubs that fired their head coach on Black Monday. */
+  cuts: TeamId[];
+  /** The coaches everyone wants to talk to, best first. */
+  hot: string[];
+  interviews: { coachId: string; teamId: TeamId }[];
+  /** Head coaches fired during the season. */
+  midseason: number;
 }
 
 
@@ -964,6 +983,7 @@ export interface DynastySave {
   salaryModel?: number;
   /** All-time head-to-head between every pair of clubs, keyed "a|b" (sorted). */
   h2h?: Record<string, HeadToHead>;
+  coachSearch?: CoachSearch;
   /** This season's expectations and the owner's goals; graded when the season ends. */
   seasonPlan?: SeasonPlan;
   /** Last season's graded plan (the report card). */

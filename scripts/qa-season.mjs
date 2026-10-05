@@ -193,11 +193,6 @@ for (const y of [1980, 1985, 1989, 1996, 1998]) {
   const fat = cls.filter((s) => kitN(s) >= 5).length;
   assert(fat / cls.length >= 0.85, `${y} full kits ${fat}/${cls.length}`);
 }
-const starHits = ["Jerry|Rice", "Lawrence|Taylor", "Barry|Sanders", "Thurman|Thomas", "Warren|Sapp", "Champ|Bailey"].every((k) => {
-  const [f, l] = k.split("|");
-  const p = g.lookupProfile("WR", f, l);
-  return (p.rt && Object.keys(p.rt).length >= 4) || true;
-});
 assert(g.lookupProfile("WR", "Sterling", "Sharpe").rt?.catch >= 92, "Sterling Sharpe has locked hands");
 assert(g.lookupProfile("WR", "Tim", "Brown").arch === "possession", "Tim Brown is a possession receiver");
 assert(g.lookupProfile("TE", "Shannon", "Sharpe").arch === "move-te", "Shannon Sharpe is a move TE");

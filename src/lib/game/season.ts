@@ -52,7 +52,7 @@ import { phoneRings, resolveAllBids } from "./market.ts";
 import { freezePreviewPicks } from "./seasonPreview.ts";
 import { closeTalks } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
-import { ensureStaff, runCoachingCarousel, ageStaff } from "./staff.ts";
+import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
 import { sessionLabel } from "./draft.ts";
@@ -261,6 +261,7 @@ function simThisWeek(save: DynastySave): void {
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
   tradeDemands(save);
   honorTradeRequests(save);
+  hotSeatWeek(save);
   phoneRings(save);
   weekPrimetime(save);
   // The finale's ballot and stat boards must use the same era-bounded season totals as awards night.
@@ -283,6 +284,7 @@ function leaveRegularWeek(save: DynastySave): void {
   if (save.week >= last) {
     clampSeasonStats(save);
     seedPlayoffs(save);
+    blackMonday(save);
     save.phase = "playoffs";
     save.week = 1;
   } else {
@@ -465,6 +467,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         }
         const after = s.playoffGames.filter((g) => g.played).length;
         if (after > before) {
+          interviewWeek(s);
           buildPrimetime(s, "playoffs");
           s.weekFilm = true;
           if (!auto) break;

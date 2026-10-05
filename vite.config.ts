@@ -22,6 +22,28 @@ function hasGlobbedMigrations(root: string): boolean {
 }
 
 /**
+ * Lists the client build's own files (scripts, styles, fonts) as /offline-manifest.json, which
+ * public/sw.js caches at install so the game opens with no connection. The version changes
+ * whenever a file name does, so each deploy replaces the last one's cache.
+ */
+function offlineManifestPlugin(): Plugin {
+  return {
+    name: "nfl-rewind:offline-manifest",
+    apply: "build",
+    generateBundle(_opts, bundle) {
+      if (this.environment?.name !== "client") return;
+      const files = Object.keys(bundle)
+        .filter((f) => /\.(js|css|woff2)$/.test(f))
+        .sort()
+        .map((f) => `/${f}`);
+      let h = 0;
+      for (const ch of files.join("|")) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
+      this.emitFile({ type: "asset", fileName: "offline-manifest.json", source: JSON.stringify({ version: (h >>> 0).toString(36), files }) });
+    },
+  };
+}
+
+/**
  * Finish PGLite bootstrap during dev-server setup (before traffic). Vite awaits
  * async `configureServer` hooks. Production: `src/lib/db` kicks `ensureDbReady`
  * on import.
@@ -165,6 +187,7 @@ export default defineConfig(({ command, isPreview }) => ({
     appEnvPlugin(),
     // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
     grokPwaPlugin(),
+    offlineManifestPlugin(),
     tailwindcss(),
     tanstackStart(),
     ...(command === "build" || isPreview

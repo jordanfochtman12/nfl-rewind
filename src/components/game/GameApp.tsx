@@ -65,7 +65,7 @@ import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
 import { TeamHistory } from "./TeamHistory";
 import { HallOfFame } from "./HallOfFame";
-import { proBowlSite, roman, superBowlNumber, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
+import { leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
@@ -74,7 +74,6 @@ import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
 import { PhoneLine } from "./MarketLife";
-import { TalksReminder } from "./ContractTalks";
 import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
@@ -484,8 +483,6 @@ function ThisSunday() {
   const opp = home === save.userTeamId ? away : home;
   const site = save.phase === "superBowl" ? superBowlSite(save.year) : null;
   const venue = site ? { stadium: site.site } : venueOf(save.year, home);
-  const us = save.teams[save.userTeamId];
-  const them = save.teams[opp];
   const homeGame = home === save.userTeamId;
   return (
     <section className="overflow-hidden rounded-xl border border-line bg-surface">
@@ -1454,6 +1451,62 @@ function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }
   );
 }
 
+/** Save the whole timeline as one web page: champions, awards, records, Hall of Fame. */
+function ShareHistory() {
+  const save = useGameStore((s) => s.save)!;
+  const [note, setNote] = useState("");
+  const file = () => {
+    const html = leagueHistoryHtml(save);
+    const name = `nfl-rewind-${save.startingYear}-${save.year}.html`;
+    return { html, name, f: new File([html], name, { type: "text/html" }) };
+  };
+  const download = () => {
+    const { html, name } = file();
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    setNote(`Saved ${name}. It opens in any browser, no app needed.`);
+  };
+  const share = async () => {
+    const { f } = file();
+    try {
+      await navigator.share({ files: [f], title: "NFL Rewind history" });
+      setNote("Shared.");
+    } catch (e) {
+      if ((e as Error)?.name !== "AbortError") download();
+    }
+  };
+  const canShare = typeof navigator !== "undefined" && !!navigator.canShare && (() => {
+    try {
+      return navigator.canShare({ files: [new File(["x"], "x.html", { type: "text/html" })] });
+    } catch {
+      return false;
+    }
+  })();
+  return (
+    <section className="rounded-xl border border-line bg-surface p-4" aria-label="Share your league history">
+      <p className="text-xs tracking-[0.25em] text-muted">SHARE THIS TIMELINE</p>
+      <p className="mt-1 text-sm text-paper">One page with every champion, award winner, record and Hall of Famer from {save.startingYear} to {save.year}.</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Btn kind="primary" className="min-h-10 px-4 text-xs" onClick={download}>
+          Download history page
+        </Btn>
+        {canShare && (
+          <Btn className="min-h-10 px-4 text-xs" onClick={() => void share()}>
+            Share
+          </Btn>
+        )}
+      </div>
+      {note && <p className="mt-2 text-xs text-brass">{note}</p>}
+    </section>
+  );
+}
+
 function History() {
   const save = useGameStore((s) => s.save)!;
   const leaders = seasonLeaders(save);
@@ -1476,6 +1529,7 @@ function History() {
       <RecordBookSection title="NFL record book" />
       <AllDecadeTeams />
       <Rulebook save={save} />
+      <ShareHistory />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{save.year} League leaders</h3>
         <div className="grid gap-3 sm:grid-cols-2">

@@ -1,5 +1,5 @@
 /** Franchise book. No React. */
-import type { DynastySave, Pos, SeasonChapter, TeamId } from "./types.ts";
+import type { DynastySave, SeasonChapter, TeamId } from "./types.ts";
 import { activeTeamIds, displayName, roman, superBowlNumber } from "./teams.ts";
 import { playerName } from "./players.ts";
 

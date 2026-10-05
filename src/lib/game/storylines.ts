@@ -5,7 +5,7 @@
  * on the hot seat, free-agent splashes, draft steals looked back on, and the milestone chases
  * the booth tracks every week.
  */
-import type { Achievement, DynastySave, Player, PrimetimeStory, SeasonGoal, SeasonPlan, TeamId } from "./types.ts";
+import type { Achievement, DynastySave, Player, PrimetimeStory, SeasonGoal, TeamId } from "./types.ts";
 import { activeTeamIds, displayName, divisionKey, gamesInSeason } from "./teams.ts";
 import { addNews } from "./news.ts";
 import { playerName, rosterOf } from "./players.ts";

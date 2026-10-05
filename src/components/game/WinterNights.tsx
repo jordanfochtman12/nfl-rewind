@@ -7,7 +7,6 @@ import {
   signatureClub,
   displayName,
   END_YEAR,
-  playerName,
   relocationsFor,
   followHistory,
   stayHome,
@@ -418,6 +417,7 @@ export function CarouselNight() {
           </label>
         )}
         <ul className="space-y-2">
+          <CoachSearchBoard />
           {moves.map((m, i) => (
             <li key={`${m.teamId}-${i}`} className="flex items-center gap-3 rounded-lg border border-line bg-black/50 px-3 py-2">
               <Logo id={m.teamId} size={36} year={save.year} />
@@ -429,6 +429,55 @@ export function CarouselNight() {
         <Continue label="Turn the calendar" />
       </div>
     </article>
+  );
+}
+
+/** Black Monday's cuts, the hot names and who they talked to, ahead of the hires. */
+function CoachSearchBoard() {
+  const save = useGameStore((s) => s.save)!;
+  const search = save.coachSearch?.year === save.year ? save.coachSearch : undefined;
+  if (!search?.monday || (!search.cuts.length && !search.midseason)) return null;
+  const hotEver = new Set([...search.hot, ...search.interviews.map((x) => x.coachId)]);
+  const names = [...hotEver].map((id) => save.coaches[id]).filter((c) => !!c);
+  return (
+    <li className="list-none space-y-3 rounded-lg border border-brass/30 bg-black/60 px-4 py-3" aria-label="Coaching search">
+      <p className="text-xs tracking-[0.3em] text-brass">BLACK MONDAY</p>
+      <p className="text-sm text-paper">
+        {search.cuts.length
+          ? `${search.cuts.length} ${search.cuts.length === 1 ? "club" : "clubs"} fired the head coach the day after the season${search.midseason ? `, after ${search.midseason} midseason ${search.midseason === 1 ? "firing" : "firings"}` : ""}.`
+          : `${search.midseason} midseason ${search.midseason === 1 ? "firing" : "firings"}; nobody else was cut.`}
+      </p>
+      {search.cuts.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {search.cuts.map((id) => (
+            <span key={id} className="flex items-center gap-1.5 rounded-md border border-line px-2 py-1 text-xs">
+              <Logo id={id} size={20} year={save.year} />
+              {displayName(save.year, id)}
+            </span>
+          ))}
+        </div>
+      )}
+      {names.length > 0 && (
+        <div>
+          <p className="text-xs tracking-[0.25em] text-muted">THE HOT NAMES</p>
+          <ul className="mt-1 space-y-1 text-sm">
+            {names.map((c) => {
+              const met = search.interviews.filter((x) => x.coachId === c.id).map((x) => displayName(save.year, x.teamId));
+              const landed = c.role === "HC" && c.teamId && save.teams[c.teamId]?.coachId === c.id && search.cuts.includes(c.teamId);
+              return (
+                <li key={c.id} className="text-paper">
+                  <span className="font-medium">{c.name}</span>
+                  <span className="text-muted">
+                    {landed ? ` · hired by ${displayName(save.year, c.teamId!)}` : c.teamId && save.teams[c.teamId] ? ` · ${c.role}, ${displayName(save.year, c.teamId)}` : " · out of work"}
+                    {met.length ? ` · met with ${met.join(", ")}` : ""}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </li>
   );
 }
 

@@ -14,6 +14,7 @@ import { playerName } from "./players.ts";
 import { realPostseason, realRecords } from "./timeline.ts";
 import { contractYearBreakouts } from "./careerMoments.ts";
 import { risingRivalries } from "./h2h.ts";
+import { maxWeek } from "./schedule.ts";
 
 const rec = (t: { wins: number; losses: number; ties: number }) => `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}`;
 /** Standings points: two for a win, one for a tie, so ties never need fractions. */
@@ -417,8 +418,14 @@ export function leagueStorylines(save: DynastySave, max = 8): LeagueStory[] {
  * an all-time record falling. Newest first, current season only.
  */
 export function breakingNews(save: DynastySave): NewsItem[] {
+  // On Black Monday one bulletin covers every firing.
+  const monday = save.news.some((n) => n.year === save.year && n.headline.startsWith("Black Monday"));
   return save.news.filter((n) => {
     if (n.year !== save.year) return false;
+    if (n.headline.startsWith("Black Monday")) return true;
+    // Black Monday's summary stands in for its firings; a midseason firing breaks in on its own.
+    if (/^.+ fire .+$/.test(n.headline) && n.phase === "regular") return !(monday && n.week >= maxWeek(save));
+
     if (/ deal with /.test(n.headline)) return true;
     if (/ asks the .* for a trade$/.test(n.headline)) return true;
     if (/sets the all-time/.test(n.headline)) return true;
