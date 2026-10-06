@@ -37,7 +37,7 @@ import {
   teamAbbr,
 } from "./teams.ts";
 import { gameDateLabel, gamesInWeek } from "./schedule.ts";
-import { depthAt, playerName, rosterOf } from "./players.ts";
+import { depthAt, livingPlayers, playerName, rosterOf } from "./players.ts";
 import { conferenceTeams, divisionWinner, playoffField, sortedDivision, winPct } from "./standings.ts";
 import { playoffTeamCount } from "./era.ts";
 import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
@@ -242,7 +242,7 @@ function seasonLine(p: Player, s: SeasonStats | undefined): string {
 
 function statLeaders(save: DynastySave): PrimetimeLeaderBoard[] {
   const year = save.year;
-  const pool = Object.values(save.players).filter((p) => p.stats[year] && clubOf(p));
+  const pool = livingPlayers(save).filter((p) => p.stats[year] && clubOf(p));
   const board = (label: string, of: (s: SeasonStats) => number): PrimetimeLeaderBoard => ({
     label,
     rows: pool
@@ -263,7 +263,7 @@ function statLeaders(save: DynastySave): PrimetimeLeaderBoard[] {
 }
 
 function injuryReport(save: DynastySave, fresh: (p: Player) => boolean): PrimetimeInjury[] {
-  return Object.values(save.players)
+  return livingPlayers(save)
     .filter((p) => clubOf(p) && (p.injuredWeeks > 0 || p.onIR) && p.injuryName)
     .filter((p) => p.ovr >= 74 || p.teamId === save.userTeamId)
     .sort((a, b) => Number(fresh(b)) - Number(fresh(a)) || b.ovr - a.ovr)

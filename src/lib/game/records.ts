@@ -102,12 +102,47 @@ function careerOf(p: Player): { totals: SeasonStats; lastYear: number } {
   return out;
 }
 
+type Ranked = { p: Player; c?: { totals: SeasonStats; lastYear: number }; value: number };
+
+/**
+ * The league-wide leaders among retired players, by category. Their careers are frozen, so the
+ * list only changes when someone retires or goes into the Hall; until then each week merges
+ * the ~2k active players into it instead of re-sorting all ~20k careers per category.
+ */
+const settledBooks = new Map<string, Map<string, Ranked[]>>();
+function settledLeaders(save: DynastySave, topN: number, settledPlayers: Player[], hofCount: number): Map<string, Ranked[]> {
+  const key = `${save.seed}|${save.year}|${settledPlayers.length}|${hofCount}|${topN}`;
+  const hit = settledBooks.get(key);
+  if (hit) return hit;
+  const rows = settledPlayers.map((p) => ({ p, c: careerOf(p) }));
+  const out = new Map<string, Ranked[]>();
+  for (const cat of CATS)
+    out.set(
+      cat.id,
+      rows
+        .map(({ p, c }) => ({ p, c, value: cat.of(c.totals) }))
+        .filter((r) => r.value > 0)
+        .sort((a, b) => b.value - a.value)
+        .slice(0, topN),
+    );
+  if (settledBooks.size > 8) settledBooks.clear();
+  settledBooks.set(key, out);
+  return out;
+}
+
 /** Career leaders across everyone who has ever taken a snap in this dynasty. Pass teamId for that franchise's career totals only. */
 export function careerRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): RecordCategory[] {
-  const all = Object.values(save.players).map((p) => ({ p, c: teamId ? undefined : careerOf(p) }));
+  const players = Object.values(save.players);
+  let byCat: ((cat: Cat) => Ranked[]) | undefined;
+  if (!teamId) {
+    const settled = players.filter((p) => p.teamId === "retired" || p.teamId === "hof");
+    const living = players.filter((p) => p.teamId !== "retired" && p.teamId !== "hof").map((p) => ({ p, c: careerOf(p) }));
+    const frozen = settledLeaders(save, topN, settled, settled.filter((p) => p.teamId === "hof").length);
+    byCat = (cat) => [...(frozen.get(cat.id) ?? []), ...living.map(({ p, c }) => ({ p, c, value: cat.of(c.totals) }))];
+  }
+  const all = teamId ? players.map((p) => ({ p })) : [];
   return CATS.map((cat) => {
-    const ranked = all
-      .map(({ p, c }) => ({ p, c, value: teamId ? teamCareerValue(p, teamId, cat) : cat.of(c!.totals) }))
+    const ranked = (byCat ? byCat(cat) : all.map(({ p }): Ranked => ({ p, value: teamCareerValue(p, teamId!, cat) })))
       .filter((r) => r.value > 0)
       .sort((a, b) => b.value - a.value)
       .slice(0, topN);

@@ -4,8 +4,11 @@ import {
   claimWaiver,
   cutPlayer,
   displayName,
+  clubWindow,
+  evaluateTrade,
   executeTrade,
   formatMoney,
+  whatWouldItTake,
   freeAgents,
   playerName,
   rosterOf,
@@ -42,6 +45,7 @@ export function MarketDesk() {
   const [other, setOther] = useState<TeamId | "">("");
   const [give, setGive] = useState<string[]>([]);
   const [get, setGet] = useState<string[]>([]);
+  const [askNote, setAskNote] = useState<string>("");
   const mine = rosterOf(save, save.userTeamId);
   const fa = useMemo(
     () =>
@@ -287,6 +291,20 @@ export function MarketDesk() {
           </div>
         )}
         {other && windowOpen && (
+          <TradeRead
+            save={save}
+            other={other as TeamId}
+            give={pieces(give, true)}
+            get={pieces(get, false)}
+            onAsk={() => {
+              const r = whatWouldItTake(save, other as TeamId, pieces(get, false));
+              setAskNote(r.reason);
+              if (r.pieces) setGive(r.pieces.map((x) => x.playerId ?? x.pickId!));
+            }}
+            note={askNote}
+          />
+        )}
+        {other && windowOpen && (
           <Btn
             kind="primary"
             onClick={() =>
@@ -337,6 +355,42 @@ export function MarketDesk() {
             ))}
         </ul>
       </section>
+    </div>
+  );
+}
+
+const WINDOW_LABEL = { contend: "Contending", middle: "In the middle", rebuild: "Rebuilding" } as const;
+
+/** The other club's read on the deal as it stands, and the "what would it take" ask. */
+function TradeRead({
+  save,
+  other,
+  give,
+  get,
+  onAsk,
+  note,
+}: {
+  save: Parameters<typeof evaluateTrade>[0];
+  other: TeamId;
+  give: TradePiece[];
+  get: TradePiece[];
+  onAsk: () => void;
+  note: string;
+}) {
+  const w = clubWindow(save, other);
+  const verdict = give.length && get.length ? evaluateTrade(save, other, give, get) : null;
+  return (
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+      <span className="text-xs tracking-[0.2em] text-muted">{displayName(save.year, other).toUpperCase()} · {WINDOW_LABEL[w].toUpperCase()}</span>
+      {verdict ? (
+        <span className={verdict.accept ? "text-good" : "text-brass"}>{verdict.reason}</span>
+      ) : (
+        <span className="text-muted">Pick what you want from them, then ask what it would take.</span>
+      )}
+      <Btn className="ml-auto min-h-10 px-3 text-xs" disabled={!get.length} onClick={onAsk}>
+        What would it take?
+      </Btn>
+      {note && <p className="w-full text-xs text-muted">{note}</p>}
     </div>
   );
 }

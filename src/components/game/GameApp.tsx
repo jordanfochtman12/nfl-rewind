@@ -96,6 +96,7 @@ import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { HistoryDesk, HistoryDraft } from "./HistoryMode";
+import { SaveSlots } from "./SaveSlots";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
@@ -176,17 +177,18 @@ function TitleScreen() {
       </div>
       {watchReady && save && (
         <p role="alert" className="text-sm text-brass">
-          Watching history starts a new league and replaces your current save. Export it first if you want to keep it.
+          Watching history starts a new league and replaces the save in this slot. Pick an empty slot below to keep it.
         </p>
       )}
       {historyReady && save && (
         <p role="alert" className="text-sm text-brass">
-          History mode starts at the 1966 draft and replaces your current save. Export it first if you want to keep it.
+          History mode starts at the 1966 draft and replaces the save in this slot. Pick an empty slot below to keep it.
         </p>
       )}
       {historyError && <p role="alert" className="text-sm text-brick">{historyError}</p>}
       <p className="text-sm text-muted">Watch history: no team to run. The computer runs every club from 1966 on, and you watch it unfold.</p>
       <p className="text-sm text-muted">History mode: the NFL exactly as it happened, 1966 to {HISTORY_LAST}. Real rosters, scores, playoffs, drafts, awards, stats and Hall of Fame classes, step by step. Nothing simulated.</p>
+      <SaveSlots />
       <div className="next-file-actions">
         <Btn onClick={download} disabled={!save}>
           Export dynasty JSON
@@ -279,7 +281,7 @@ function TeamSelect() {
       <Group title="American Football League" ids={afl} />
       {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
         <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
-        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">Starting replaces your current {displayName(save.year, save.userTeamId)} dynasty. Return to the title and export it first if you want to keep it.</p>}
+        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">Starting replaces the {displayName(save.year, save.userTeamId)} dynasty in this slot. Go back to the title and pick an empty save slot to keep it.</p>}
       </section>}
       <p className="text-xs text-subtle">
         Club marks are original designs in each club&apos;s colors, not official NFL logos. Mascot icons by Lorc,

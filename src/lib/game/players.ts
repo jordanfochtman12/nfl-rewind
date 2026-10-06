@@ -173,6 +173,7 @@ export function makePlayer(
   };
   applyScout(save, p);
   save.players[p.id] = p;
+  touchPlayers();
   return p;
 }
 
@@ -180,6 +181,27 @@ export function makePlayer(
  * This save's own copy of a player, safe to change. Retired players are shared between save
  * copies (see cloneSave), so anything that changes one takes its own copy first.
  */
+/** Bumped whenever a player is added to or removed from any save (see livingPlayers). */
+let playersVersion = 0;
+export function touchPlayers(): void {
+  playersVersion += 1;
+}
+const livingCache = new WeakMap<object, { v: number; list: Player[] }>();
+
+/**
+ * Everyone not retired or enshrined, in the save's own order (the deterministic sim depends on
+ * it). By 2025 nine players in ten are retired, and the weekly bookkeeping scanned all ~20k
+ * several times a week; this list is built once per save copy and kept until a player is added
+ * or removed. It can still hold someone who retired since, so callers keep their own checks.
+ */
+export function livingPlayers(save: DynastySave): Player[] {
+  const hit = livingCache.get(save.players);
+  if (hit && hit.v === playersVersion) return hit.list;
+  const list = Object.values(save.players).filter((p) => p.teamId !== "retired" && p.teamId !== "hof");
+  livingCache.set(save.players, { v: playersVersion, list });
+  return list;
+}
+
 export function ownPlayer(save: DynastySave, id: string): Player | undefined {
   const p = save.players[id];
   if (!p || (p.teamId !== "retired" && p.teamId !== "hof")) return p;

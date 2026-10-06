@@ -3,6 +3,7 @@ import { draftSeedsFor } from "./data/draftClasses.ts";
 import { HISTORICAL_ALIASES } from "./data/playerAliases.ts";
 import { cleanNameParts, historicalNameKey, normalizedName } from "./identity.ts";
 import { historicalYear } from "./historicalYears.ts";
+import { touchPlayers } from "./players.ts";
 
 let yearsByName: Map<string, Set<number>> | undefined;
 function catalogYears(): Map<string, Set<number>> {
@@ -131,7 +132,7 @@ export function repairPlayerIdentities(save: DynastySave): void {
     for (const other of group.slice(1)) {
       mergePlayer(keep, other, save.startingYear);
       redirects.set(other.id, keep.id);
-      delete save.players[other.id];
+      delete save.players[other.id]; touchPlayers();
     }
   }
   if (!redirects.size) return;

@@ -1,7 +1,7 @@
 import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
 import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
-import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, usedJerseys } from "./players.ts";
+import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
 import { eraCollege, jerseyFor } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { randInt } from "./rng.ts";
@@ -9,7 +9,7 @@ import { kitBoost } from "./abilities.ts";
 import { addNews, addTx } from "./news.ts";
 import { winPct } from "./standings.ts";
 import { applyScout, visibleOvr } from "./scout.ts";
-import { salaryFor } from "./salary.ts";
+import { rookieContract } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
 import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
@@ -134,6 +134,13 @@ export function transferPick(save: DynastySave, pickId: string, to: TeamId): boo
     return true;
   }
   return false;
+}
+
+/** Drafts that are done: their picks are spent history nothing reads again. Keeps saves and every advance lighter. */
+export function prunePastPicks(save: DynastySave): void {
+  for (const t of Object.values(save.teams)) {
+    if (t.picks?.some((p) => p.year < save.year)) t.picks = t.picks.filter((p) => p.year >= save.year);
+  }
 }
 
 export function pickValue(save: DynastySave, pickId: string): number {
@@ -282,7 +289,7 @@ export function pruneUndraftedProspects(save: DynastySave): void {
   for (const pr of save.draftBoard) {
     if (pr.taken) continue;
     const p = save.players[pr.playerId];
-    if (p && !p.historical) delete save.players[pr.playerId];
+    if (p && !p.historical) delete save.players[pr.playerId]; touchPlayers();
   }
   const protectedIds = recordProtectedIds(save);
   for (const [id, p] of Object.entries(save.players)) {
@@ -291,7 +298,7 @@ export function pruneUndraftedProspects(save: DynastySave): void {
     // player on the wire, so a generated FA nobody signed by the next draft realistically
     // never gets picked up - no age gate needed, this was the dominant source of growth.
     if (!p.historical && p.teamId === "fa") {
-      delete save.players[id];
+      delete save.players[id]; touchPlayers();
       continue;
     }
     // Retired filler with no shot at ever ranking in a leaderboard or HOF ballot (peak
@@ -304,7 +311,7 @@ export function pruneUndraftedProspects(save: DynastySave): void {
       p.retiredYear != null &&
       save.year - p.retiredYear >= 3
     ) {
-      delete save.players[id];
+      delete save.players[id]; touchPlayers();
     }
   }
 }
@@ -457,8 +464,10 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftPick = save.draftPickIndex + 1;
     p.draftTeam = teamId;
     p.jersey = jerseyFor(save, p.pos, usedJerseys(save, teamId));
-    p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
-    p.contractYears = round <= 2 ? 4 : round <= 4 ? 3 : 2;
+    // Rookies are paid by slot (see rookieContract), not by grade.
+    const deal = rookieContract(save.year, save.draftPickIndex + 1, round);
+    p.salary = deal.salary;
+    p.contractYears = deal.years;
     addToRoster(save, teamId, p.id);
     syncDepth(save, teamId);
     addTx(save, "draft", p.id, "draft", teamId, `Round ${round} pick ${save.draftPickIndex + 1}`);

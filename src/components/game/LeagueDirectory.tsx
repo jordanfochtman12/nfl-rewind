@@ -65,7 +65,7 @@ export function LeagueDirectory() {
   const clubCell = (p: Player) => {
     if (isClub(p))
       return (
-        <button type="button" onClick={() => openTeam(p.teamId as TeamId)} className="flex items-center gap-1.5 hover:text-brass">
+        <button type="button" onClick={() => openTeam(p.teamId as TeamId)} className="flex min-h-10 items-center gap-1.5 hover:text-brass">
           <Logo id={p.teamId as TeamId} size={18} year={year} />
           <span className="font-display text-xs font-bold uppercase italic">{nicknameOf(year, p.teamId as TeamId)}</span>
         </button>

@@ -16,15 +16,26 @@ export function starScale(year: number): number {
   return 45_000_000;
 }
 
+/**
+ * The league's salary cap, year by year as it was set (1994 on). 2010 was the uncapped year;
+ * the game keeps the 2009 figure as a ceiling that season so contracts still have a frame.
+ * Past 2025 it grows about 6% a year, close to the recent pace.
+ */
+const CAP_BY_YEAR: Record<number, number> = {
+  1994: 34_608_000, 1995: 37_100_000, 1996: 40_753_000, 1997: 41_454_000, 1998: 52_388_000,
+  1999: 57_288_000, 2000: 62_172_000, 2001: 67_405_000, 2002: 71_101_000, 2003: 75_007_000,
+  2004: 80_582_000, 2005: 85_500_000, 2006: 102_000_000, 2007: 109_000_000, 2008: 116_000_000,
+  2009: 123_000_000, 2010: 123_000_000, 2011: 120_000_000, 2012: 120_600_000, 2013: 123_000_000,
+  2014: 133_000_000, 2015: 143_280_000, 2016: 155_270_000, 2017: 167_000_000, 2018: 177_200_000,
+  2019: 188_200_000, 2020: 198_200_000, 2021: 182_500_000, 2022: 208_200_000, 2023: 224_800_000,
+  2024: 255_400_000, 2025: 279_200_000,
+};
+
 export function salaryCapFor(year: number): number | null {
   if (year < 1994) return null;
-  if (year <= 1994) return 34_600_000;
-  if (year <= 1999) return 57_000_000;
-  if (year <= 2005) return 85_500_000;
-  if (year <= 2010) return 128_000_000;
-  if (year <= 2015) return 143_000_000;
-  if (year <= 2020) return 198_000_000;
-  return 255_000_000;
+  const known = CAP_BY_YEAR[year];
+  if (known) return known;
+  return Math.round((279_200_000 * Math.pow(1.06, year - 2025)) / 100_000) * 100_000;
 }
 
 export function salaryFor(year: number, ovr: number, age: number, pos?: Pos): number {
@@ -47,6 +58,38 @@ export function salaryFor(year: number, ovr: number, age: number, pos?: Pos): nu
   if (year <= 1969) return Math.round(raw / 500) * 500;
   if (year <= 1988) return Math.round(raw / 1000) * 1000;
   return Math.round(raw / 10_000) * 10_000;
+}
+
+/**
+ * A drafted rookie's deal, priced by where he went, not how good he is (that's how the league
+ * has always paid rookies). Three eras:
+ * - before the cap: top picks earned like good veterans, the late rounds near the bottom;
+ * - 1994-2010: the cap with no rookie limit, so the top of round one got huge guarantees
+ *   (the first pick took a bigger slice of the cap than most stars);
+ * - 2011 on: the rookie wage scale - slotted pay, much flatter at the top, four years for all.
+ */
+export function rookieContract(year: number, overall: number, round: number): { salary: number; years: number } {
+  const n = Math.max(1, overall);
+  const cap = salaryCapFor(year);
+  if (cap == null) {
+    // e.g. 1989: Troy Aikman, No. 1, about $1.9M a year on a six-year deal, near the top QB pay.
+    const star = starScale(year);
+    const raw = star * (0.05 + 0.55 * Math.exp(-(n - 1) / 24));
+    const step = year <= 1969 ? 500 : year <= 1988 ? 1000 : 10_000;
+    return { salary: Math.round(raw / step) * step, years: round === 1 ? 4 : round <= 3 ? 3 : 2 };
+  }
+  if (year <= 2010) {
+    // Fitted to real deals: No. 1 near 9-10% of the cap (Stafford 2009, $12M a year on $123M),
+    // No. 10 about 4%, No. 32 about 1.2%, the late rounds near the minimum. After the 2006
+    // agreement, picks 1-16 could sign for six years and the rest of round one for five.
+    const raw = cap * (0.003 + 0.085 * Math.exp(-(n - 1) / 12) + 0.006 * Math.exp(-(n - 1) / 60));
+    const years = round === 1 ? (n <= 16 ? 6 : 5) : round === 2 ? 4 : 3;
+    return { salary: Math.round(raw / 10_000) * 10_000, years };
+  }
+  // Rookie wage scale: No. 1 about 4.4% of the cap (Newton 2011, Williams 2024), No. 32 about
+  // 1.2%, seventh-rounders just over the minimum. Four years for all (round one has a fifth-year option).
+  const raw = cap * (0.0035 + 0.025 * Math.exp(-(n - 1) / 9) + 0.013 * Math.exp(-(n - 1) / 60));
+  return { salary: Math.round(raw / 10_000) * 10_000, years: 4 };
 }
 
 export function formatMoney(n: number, year: number): string {

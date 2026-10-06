@@ -582,13 +582,33 @@ const SIGNATURES: Record<string, Sig> = {
   "pat|swilling": { abilities: ["Edge", "Bend"], traits: [] },
 };
 
+const SIGNATURE_CACHE = new Map<string, Sig | undefined>();
+let BY_SURNAME: Map<string, [string, Sig][]> | undefined;
+function signaturesBySurname(): Map<string, [string, Sig][]> {
+  if (!BY_SURNAME) {
+    BY_SURNAME = new Map();
+    for (const e of Object.entries(SIGNATURES)) {
+      const word = (e[0].split("|")[1] ?? "").split(" ")[0] ?? "";
+      BY_SURNAME.set(word, [...(BY_SURNAME.get(word) ?? []), e]);
+    }
+  }
+  return BY_SURNAME;
+}
+
 export function signatureKit(first: string, last: string, _pos?: Pos): { abilities: string[]; traits: string[] } {
   const key = `${first}|${last}`.toLowerCase().replace(/\./g, "");
-  const hit =
-    SIGNATURES[key] ??
-    SIGNATURES[`${first.split(" ").pop() ?? first}|${last}`.toLowerCase()] ??
-    Object.entries(SIGNATURES).find(([k]) => key.includes(k) || k === key)?.[1];
-  return { abilities: hit?.abilities ?? [], traits: hit?.traits ?? [] };
+  // Every new body runs this, and the fallback scans the whole table; remember the answer.
+  let hit = SIGNATURE_CACHE.get(key);
+  if (!SIGNATURE_CACHE.has(key)) {
+    hit =
+      SIGNATURES[key] ??
+      SIGNATURES[`${first.split(" ").pop() ?? first}|${last}`.toLowerCase()] ??
+      // A signature inside the name ("emmitt|smith" in "emmitt|smith jr"): only entries
+      // sharing the surname's first word can match, so look there instead of the whole table.
+      (signaturesBySurname().get((key.split("|")[1] ?? "").split(" ")[0] ?? "") ?? []).find(([k]) => key.includes(k))?.[1];
+    SIGNATURE_CACHE.set(key, hit);
+  }
+  return { abilities: hit?.abilities?.slice() ?? [], traits: hit?.traits?.slice() ?? [] };
 }
 
 export function assignKit(pos: Pos, ratings: Ratings, first: string, last: string): { abilities: string[]; traits: string[] } {

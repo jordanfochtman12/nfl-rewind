@@ -20,6 +20,17 @@ import {
   type Player,
   type Pos,
   type TeamId,
+  executePickDeal,
+  tradeDownOffers,
+  tradeUpPackage,
+  type PickDeal,
+  BUDGETS,
+  COMBINE_FROM,
+  ownerGrade,
+  proDayVisit,
+  scoutState,
+  setScoutBudget,
+  visitsLeft,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -98,6 +109,7 @@ export function DraftNight() {
   const step = useGameStore((s) => s.step);
   const setTab = useGameStore((s) => s.setTab);
   const openProfile = useGameStore((s) => s.openProfile);
+  const desk = useGameStore((s) => s.desk);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(8);
   const [scoutId, setScoutId] = useState<string | null>(null);
@@ -186,8 +198,8 @@ export function DraftNight() {
       <TalksReminder />
       {announcer.controls}
       {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
-        <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades reflect scouting uncertainty.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
-        {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{visibleOvr(p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Scout grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
+        <ScoutDesk /><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades are your scouts' read, not the truth.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
+        {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
       </section>}
       <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
         <FilmStill still="draft" veil="full" />
@@ -260,7 +272,7 @@ export function DraftNight() {
                   </p>
                   <p className="text-sm text-muted">
                     {lastPlayer.pos} · {archLabel(lastPlayer)} · {lastPlayer.college} · {measLine(lastPlayer)} ·{" "}
-                    {lastPlayer.revealed ? `${lastPlayer.ovr} OVR` : `Scout ${visibleOvr(lastPlayer)}`}
+                    {lastPlayer.revealed ? `${lastPlayer.ovr} OVR` : `Scout ${ownerGrade(save, lastPlayer)}`}
                   </p>
                   <div className="mt-1">
                     <KitChips player={lastPlayer} compact />
@@ -311,6 +323,8 @@ export function DraftNight() {
         </div>
       </section>
 
+      {!save.sandbox && (isUser || myPicksLeft) && <DraftDeals onClock={isUser} paused={() => setPaused(true)} />}
+
       <div className="flex flex-wrap items-center gap-2">
         {POS_FILTERS.map((pos) => (
           <button
@@ -353,7 +367,7 @@ export function DraftNight() {
                     </span>
                   </p>
                   <p className="text-sm text-muted">
-                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
+                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
                   <div className="mt-1.5">
@@ -400,11 +414,17 @@ export function DraftNight() {
               <p className="text-sm text-muted">
                 {scout.pos} · {archLabel(scout)} · {scout.college ?? "campus"}
               </p>
-              <p className="mt-1 font-display text-3xl tabular text-brass">{visibleOvr(scout)}</p>
+              <p className="mt-1 font-display text-3xl tabular text-brass">{ownerGrade(save, scout)}</p>
               <p className="text-xs tracking-widest text-muted">
-                {scout.revealed ? "OVERALL — derived from the kit" : `SCOUT GRADE · ${scoutLetter(visibleOvr(scout))} — true kit sealed`}
+                {scout.revealed
+                  ? "OVERALL — derived from the kit"
+                  : `${save.sandbox ? "SCOUT GRADE" : "YOUR GRADE"} · ${scoutLetter(ownerGrade(save, scout))} — true kit sealed`}
               </p>
+              {!scout.revealed && !save.sandbox && ownerGrade(save, scout) !== visibleOvr(scout) && (
+                <p className="text-xs text-muted">League consensus: {visibleOvr(scout)}</p>
+              )}
               <p className="mt-2 text-sm text-muted">{measLine(scout)}</p>
+              <CombineLine p={scout} />
               <div className="mt-3">
                 <KitChips player={scout} showDesc />
               </div>
@@ -415,6 +435,15 @@ export function DraftNight() {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Btn onClick={() => openProfile(scout.id)}>Full profile</Btn>
+                {!save.sandbox && !scout.revealed && !scoutState(save).visits.includes(scout.id) && (
+                  <Btn
+                    disabled={!visitsLeft(save)}
+                    onClick={() => desk((s) => proDayVisit(s, scout.id))}
+                    title={visitsLeft(save) ? "Send your scouts to his pro day" : "No visits left on this budget"}
+                  >
+                    Pro day ({visitsLeft(save)} left)
+                  </Btn>
+                )}
                 {isUser && (
                   <Btn kind="primary" onClick={() => step({ userPickPlayerId: scout.id })}>
                     Draft
@@ -453,6 +482,151 @@ export function DraftNight() {
           </div>
         </aside>
       </div>
+    </div>
+  );
+}
+
+/** Draft-day trades: the phone while you're on the clock, and moving up to a club's pick. */
+function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void }) {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const note = useGameStore((s) => s.lastDeskNote);
+  const [target, setTarget] = useState<string>("");
+  const calls = useMemo(() => (onClock ? tradeDownOffers(save) : []), [save, onClock]);
+  const upcoming = useMemo(() => {
+    const q = draftQueue(save);
+    return q.slice(save.draftPickIndex + (onClock ? 1 : 0), save.draftPickIndex + 13).map((p, i) => ({ p, slot: save.draftPickIndex + (onClock ? 2 : 1) + i }));
+  }, [save, onClock]);
+  const deal = target ? tradeUpPackage(save, target) : undefined;
+  const run = (d: PickDeal) =>
+    desk((s) => {
+      const r = executePickDeal(s, { partner: d.partner, give: d.give.map((p) => p.id), get: d.get.map((p) => p.id) });
+      return r.ok ? "Deal done. The picks have moved." : r.reason;
+    });
+  return (
+    <section className="hq-panel space-y-3 p-4" aria-label="Draft-day trades">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-xl">Draft-day trades</h3>
+        <p className="text-xs text-muted">Picks priced on the trade chart. Moving up costs a premium.</p>
+      </div>
+      {onClock && (
+        <div className="space-y-2">
+          <p className="text-xs tracking-[0.25em] text-brass">THE PHONE · TRADE DOWN</p>
+          {calls.length ? (
+            <ul className="space-y-2">
+              {calls.map((c) => (
+                <li key={c.partner} className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+                  <Logo id={c.partner} size={28} year={save.year} />
+                  <span className="min-w-0 flex-1 text-paper">{c.pitch}</span>
+                  <span className="tabular text-xs text-muted">
+                    chart {Math.round(c.getValue)} for {Math.round(c.giveValue)}
+                  </span>
+                  <Btn kind="primary" className="min-h-10 px-3 text-xs" onClick={() => run(c)}>
+                    Take it
+                  </Btn>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted">Nobody behind you is calling. They think their man will be there.</p>
+          )}
+        </div>
+      )}
+      <div className="space-y-2">
+        <p className="text-xs tracking-[0.25em] text-brass">MOVE UP</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            aria-label="Pick to trade up to"
+            className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-2 text-sm"
+            value={target}
+            onChange={(e) => {
+              setTarget(e.target.value);
+              if (e.target.value) paused();
+            }}
+          >
+            <option value="">Choose a pick to move up to</option>
+            {upcoming
+              .filter(({ p }) => p.owner !== save.userTeamId)
+              .map(({ p, slot }) => (
+                <option key={p.id} value={p.id}>
+                  No. {slot} · {displayName(save.year, p.owner)}
+                </option>
+              ))}
+          </select>
+        </div>
+        {deal && "error" in deal && <p className="text-sm text-brass">{deal.error}</p>}
+        {deal && !("error" in deal) && (
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+            <Logo id={deal.partner} size={28} year={save.year} />
+            <span className="min-w-0 flex-1 text-paper">{deal.pitch}</span>
+            <span className="tabular text-xs text-muted">
+              chart {Math.round(deal.giveValue)} for {Math.round(deal.getValue)}
+            </span>
+            <Btn
+              kind="primary"
+              className="min-h-10 px-3 text-xs"
+              onClick={() => {
+                run(deal);
+                setTarget("");
+              }}
+            >
+              Make the trade
+            </Btn>
+          </div>
+        )}
+      </div>
+      {note && <p className="text-xs text-muted">{note}</p>}
+    </section>
+  );
+}
+
+/** Combine (or pro-day) numbers for a prospect, era permitting. */
+function CombineLine({ p }: { p: Player }) {
+  const c = p.combine;
+  if (!c) return null;
+  if (c.satOut && !c.proDay) return <p className="text-xs text-muted">Sat out the combine drills.</p>;
+  const bits = [
+    c.forty ? `40: ${c.forty.toFixed(2)}` : "",
+    c.bench ? `Bench: ${c.bench}` : "",
+    c.vertical ? `Vert: ${c.vertical}"` : "",
+    c.cone ? `3-cone: ${c.cone.toFixed(2)}` : "",
+  ].filter(Boolean);
+  return (
+    <p className="text-xs text-paper">
+      <span className="text-muted">{c.proDay ? "Pro day" : "Combine"} · </span>
+      {bits.join(" · ")}
+    </p>
+  );
+}
+
+/** The owner's scouting budget and pro-day visits for this draft. */
+function ScoutDesk() {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const st = scoutState(save);
+  return (
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface-2 p-3 text-sm">
+      <span className="text-xs tracking-[0.25em] text-brass">SCOUTING</span>
+      <label className="flex items-center gap-2 text-xs text-muted">
+        Budget
+        <select
+          aria-label="Scouting budget"
+          className="min-h-10 rounded-md border border-line bg-surface px-2 text-sm text-fg"
+          value={st.budget}
+          onChange={(e) => desk((s) => setScoutBudget(s, e.target.value as keyof typeof BUDGETS))}
+        >
+          {(Object.keys(BUDGETS) as (keyof typeof BUDGETS)[]).map((k) => (
+            <option key={k} value={k}>
+              {BUDGETS[k].label} · {BUDGETS[k].visits} pro days
+            </option>
+          ))}
+        </select>
+      </label>
+      <span className="text-xs text-muted">{BUDGETS[st.budget].blurb}</span>
+      <span className="text-xs text-muted">
+        {visitsLeft(save)} pro-day visit{visitsLeft(save) === 1 ? "" : "s"} left
+        {save.year < COMBINE_FROM ? " · no combine yet (it starts in 1982)" : ""}
+      </span>
     </div>
   );
 }

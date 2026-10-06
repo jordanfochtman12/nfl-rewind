@@ -8,7 +8,7 @@
 import type { Achievement, DynastySave, Player, PrimetimeStory, SeasonGoal, TeamId } from "./types.ts";
 import { activeTeamIds, displayName, divisionKey, gamesInSeason } from "./teams.ts";
 import { addNews } from "./news.ts";
-import { playerName, rosterOf } from "./players.ts";
+import { livingPlayers, playerName, rosterOf } from "./players.ts";
 import { sortedDivision, winPct } from "./standings.ts";
 import { projectWins, strengthRank } from "./primetime.ts";
 import { careerRecordBook } from "./records.ts";
@@ -400,7 +400,7 @@ export function milestoneChases(save: DynastySave, limit = 6): Chase[] {
   const year = save.year;
   const total = gamesInSeason(year);
   const out: (Chase & { score: number })[] = [];
-  const active = Object.values(save.players).filter((p) => clubOf(p));
+  const active = livingPlayers(save).filter((p) => clubOf(p));
   const bests = seasonBests(save);
   for (const cat of CHASE_CATS) {
     const record = bests[cat.id] ?? 0;

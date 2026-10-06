@@ -40,7 +40,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { fillRoster, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
@@ -56,11 +56,12 @@ import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
-import { sessionLabel } from "./draft.ts";
+import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
 import { advanceHistory } from "./historyMode.ts";
+import { clearCombine, runCombine } from "./scouting.ts";
 
 export function setLabel(save: DynastySave): void {
   const y = save.year;
@@ -200,7 +201,7 @@ function closeSeasonBooks(s: DynastySave): void {
 }
 
 function tickInjuries(save: DynastySave): void {
-  for (const p of Object.values(save.players)) {
+  for (const p of livingPlayers(save)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     if (p.injuredWeeks > 0) {
       p.injuredWeeks -= 1;
@@ -308,6 +309,7 @@ function openDraft(save: DynastySave): void {
   save.draftSession = save.year === 1966 ? "nfl" : "common";
   ensureSeasonPicks(save);
   buildDraftBoard(save);
+  runCombine(save);
   save.phase = "draft";
   save.week = 0;
   save.draftPickIndex = 0;
@@ -321,6 +323,7 @@ function finishOffseason(save: DynastySave): void {
   closeOwnerSeason(save);
   save.year += 1;
   compactSaveInPlace(save);
+  prunePastPicks(save);
   ageAndRegen(save);
   const exp = expansionForYear(save.year);
   applyYearExpansion(save);
@@ -386,6 +389,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       if (auto) {
         autoDraftRest(s);
         s.phase = "freeAgency";
+        clearCombine(s);
         runCpuFreeAgency(s);
         s.faOpened = true;
         break;
@@ -395,6 +399,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         if (!currentDraftTeam(s)) {
           if (maybeStartAflDraft(s)) break;
           s.phase = "freeAgency";
+        clearCombine(s);
           runCpuFreeAgency(s);
           s.faOpened = true;
         }
@@ -404,6 +409,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       if (!team) {
         if (maybeStartAflDraft(s)) break;
         s.phase = "freeAgency";
+        clearCombine(s);
         runCpuFreeAgency(s);
         s.faOpened = true;
         break;
@@ -419,6 +425,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       if (!currentDraftTeam(s)) {
         if (maybeStartAflDraft(s)) break;
         s.phase = "freeAgency";
+        clearCombine(s);
         runCpuFreeAgency(s);
         s.faOpened = true;
       }

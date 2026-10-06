@@ -21,6 +21,7 @@ import {
   type TeamId,
 } from "@/lib/game/index.ts";
 import { dynastyStorage } from "@/lib/save-idb.ts";
+import { activeSlot, recordSlot, setActiveSlot, slotIndex, slotKey } from "@/lib/save-slots.ts";
 import { importDynasty } from '@/lib/game/importSave';
 
 export type Screen = "title" | "select" | "play";
@@ -85,6 +86,12 @@ interface GameStore {
   exportJson: () => string;
   importJson: (raw: string) => void;
   resign: () => void;
+  /** The save slot in use (1..SLOT_COUNT). */
+  slot: number;
+  /** Switch to another slot: the current one is written first, then the other one loads. */
+  switchSlot: (slot: number) => Promise<void>;
+  /** Empty a slot for good. */
+  clearSlot: (slot: number) => Promise<void>;
 }
 
 type Persisted = { save: DynastySave | null };
@@ -112,10 +119,16 @@ function stepTo(
  * reads the packed key first and falls back to the old one, so an existing dynasty carries over.
  */
 const PACKED = (name: string) => `${name}:packed`;
+const SAVE_NAME = "nfl-rewind-dynasty";
+
+/** Write any save waiting on the debounce now (set by persistStorage). */
+let flushPending: () => Promise<void> = () => Promise.resolve();
+/** Forget what was last written, so the next save in a freshly loaded slot is written. */
+let resetWritten: () => void = () => {};
 
 function persistStorage(): PersistStorage<Persisted> {
   let lastWritten: DynastySave | null | undefined;
-  let pending: { name: string; value: StorageValue<Persisted> } | null = null;
+  let pending: { name: string; slot: number; value: StorageValue<Persisted> } | null = null;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let writing: Promise<void> = Promise.resolve();
   const flush = () => {
@@ -129,9 +142,14 @@ function persistStorage(): PersistStorage<Persisted> {
       // A History mode save is only its place in the record; the league is rebuilt on load.
       const disk = save ? (save.realHistory ? historyCursor(save) : compactSave(save)) : null;
       const payload = JSON.stringify({ ...job.value, state: { save: disk } });
-      await dynastyStorage.setItem(PACKED(job.name), payload);
+      await dynastyStorage.setItem(PACKED(slotKey(job.name, job.slot)), payload);
+      recordSlot(job.slot, save);
     });
     return writing;
+  };
+  flushPending = flush;
+  resetWritten = () => {
+    lastWritten = undefined;
   };
   if (typeof document !== "undefined") {
     document.addEventListener("visibilitychange", () => {
@@ -141,7 +159,8 @@ function persistStorage(): PersistStorage<Persisted> {
   }
   return {
     getItem: async (name) => {
-      const raw = (await dynastyStorage.getItem(PACKED(name))) ?? (await dynastyStorage.getItem(name));
+      const key = slotKey(name);
+      const raw = (await dynastyStorage.getItem(PACKED(key))) ?? (await dynastyStorage.getItem(key));
       if (!raw) return null;
       try {
         return JSON.parse(raw) as StorageValue<Persisted>;
@@ -153,15 +172,15 @@ function persistStorage(): PersistStorage<Persisted> {
       const save = value.state.save;
       if (save === lastWritten) return;
       lastWritten = save;
-      pending = { name, value };
+      pending = { name, slot: activeSlot(), value };
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => void flush(), 350);
     },
     removeItem: async (name) => {
       pending = null;
       lastWritten = undefined;
-      await dynastyStorage.removeItem(PACKED(name));
-      await dynastyStorage.removeItem(name);
+      await dynastyStorage.removeItem(PACKED(slotKey(name)));
+      await dynastyStorage.removeItem(slotKey(name));
     },
   };
 }
@@ -317,9 +336,28 @@ export const useGameStore = create<GameStore>()(
         set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
       },
       resign: () => set({ screen: "title", profileId: null, viewTeamId: null, tv: false }),
+      slot: activeSlot(),
+      switchSlot: async (slot) => {
+        if (slot === get().slot) return;
+        await flushPending();
+        setActiveSlot(slot);
+        resetWritten();
+        set({ slot, save: null, screen: "title", profileId: null, viewTeamId: null, rewind: null, liveGameId: null, tv: false });
+        await useGameStore.persist.rehydrate();
+      },
+      clearSlot: async (slot) => {
+        await flushPending();
+        await dynastyStorage.removeItem(PACKED(slotKey(SAVE_NAME, slot)));
+        await dynastyStorage.removeItem(slotKey(SAVE_NAME, slot));
+        recordSlot(slot, null);
+        if (slot === get().slot) {
+          resetWritten();
+          set({ save: null, screen: "title", rewind: null });
+        }
+      },
     }),
     {
-      name: "nfl-rewind-dynasty",
+      name: SAVE_NAME,
       storage: persistStorage(),
       partialize: (s) => ({ save: s.save }),
       onRehydrateStorage: () => (state) => {
@@ -327,7 +365,11 @@ export const useGameStore = create<GameStore>()(
         if (state && cursor !== undefined) {
           state.save = null;
           void restoreHistory(cursor);
-        } else if (state?.save) state.save = hydrateSave(state.save);
+        } else if (state?.save) {
+          state.save = hydrateSave(state.save);
+          // A dynasty saved before slots existed is slot 1; put it on the slot list.
+          if (!slotIndex()[activeSlot()]) recordSlot(activeSlot(), state.save);
+        }
         if (state) state.hasHydrated = true;
         queueMicrotask(() => useGameStore.setState({ hasHydrated: true }));
       },

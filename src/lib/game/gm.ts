@@ -24,6 +24,7 @@ import { editsAgainst, staffPlan } from "./gameplans.ts";
 import { planFor } from "./sim.ts";
 import { visibleOvr } from "./scout.ts";
 import { winPct } from "./standings.ts";
+import { evaluateTrade } from "./tradeAi.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
 
@@ -329,10 +330,12 @@ export function executeTrade(
       return fail(`${playerName(p)} is a Rozelle-rule era star — clubs don't move players like that.`);
     }
   }
-  const valA = give.reduce((n, x) => n + tradeValue(save, x), 0);
-  const valB = get.reduce((n, x) => n + tradeValue(save, x), 0);
-  if (!opts?.force && valB < valA * 0.82) {
-    return fail("The other club hung up. Offer more.");
+  // The other club weighs the deal through its own needs, window, cap and contracts (see
+  // tradeAi.ts). (This used to compare raw values the wrong way round: it turned down deals
+  // the owner overpaid for and waved through a late pick for a star.)
+  if (!opts?.force) {
+    const verdict = evaluateTrade(save, sideB, give, get);
+    if (!verdict.accept) return fail(verdict.reason);
   }
   if (!fitsRosterAfterTrade(save, sideA, givePlayers.map((p) => p.id), getPlayers.length)) {
     return fail(`${displayName(save.year, sideA)} would be over the 53-man limit. Cut someone first.`);

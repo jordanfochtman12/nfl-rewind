@@ -115,7 +115,7 @@ export { expansionForYear, EXPANSION_SPECS } from "./data/expansions.ts";
 export { DRAFT_CLASSES, draftSeedsFor } from "./data/draftClasses.ts";
 export { superBowlSite, proBowlSite } from "./data/bowlSites.ts";
 
-export { formatMoney, salaryCapFor, teamPayroll } from "./salary.ts";
+export { formatMoney, rookieContract, salaryCapFor, teamPayroll } from "./salary.ts";
 export { abilitiesFrom, abilityLine, assignKit, kitBoost, kitDef, kitImpactLine, kitInjMult, ABILITY_DEFS, TRAIT_DEFS } from "./abilities.ts";
 export { lookupProfile, ratingsFromProfile, SCOUT_KEYS, RATING_GROUPS, ARCH_LABEL, inferArch } from "./profiles.ts";
 export type { Arch } from "./profiles.ts";
@@ -253,3 +253,6 @@ export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree
 export { careerValue, draftClassReport, gradableClasses, type ClassPick, type ClassReport } from "./draftGrades.ts";
 export { advanceHistory, coverageNote, createHistoryGame, historyCursor, historyLabel, replayHistory, setHistoryData, HISTORY_FIRST, HISTORY_LAST } from "./historyMode.ts";
 export { loadHistoryData, parseHistory, type HistoryData } from "./historyData.ts";
+export { clubWindow, evaluateTrade, untouchable, whatWouldItTake } from "./tradeAi.ts";
+export { draftPickValue, executePickDeal, slotValue, tradeDownOffers, tradeUpPackage, type PickDeal } from "./draftTrades.ts";
+export { BUDGETS, COMBINE_FROM, ownerGrade, proDayVisit, runCombine, scoutState, setScoutBudget, visitsLeft } from "./scouting.ts";

@@ -226,6 +226,8 @@ export interface Player {
   heightIn?: number;
   weight?: number;
   forty?: number;
+  /** Combine (or pro-day) numbers; satOut when he skipped the drills. */
+  combine?: { forty?: number; bench?: number; vertical?: number; cone?: number; satOut?: boolean; proDay?: boolean };
   historical: boolean;
   generated: boolean;
   draftYear?: number;
@@ -301,6 +303,7 @@ export interface Gameplan {
 }
 
 export type CoachRole = "HC" | "OC" | "DC";
+export type ScoutBudget = "low" | "standard" | "high";
 export type OffScheme = "smashmouth" | "vertical" | "westcoast" | "multiple";
 export type DefScheme = "4-3" | "3-4" | "wide-9" | "cover-2";
 export type DraftStyle = "bpa" | "need" | "speed" | "trench" | "defense" | "qb";
@@ -947,6 +950,8 @@ export interface DynastySave {
    * follows the whole league (one featured game a week gets the live call).
    */
   sandbox?: boolean;
+  /** The owner's scouting department this draft season (see scouting.ts). */
+  scouting?: { year: number; budget: ScoutBudget; visits: string[] };
   /** History mode: the real league, replayed from the record (see historyMode.ts). */
   realHistory?: boolean;
   /** History mode: steps taken from the 1966 draft. The record replays to here on load. */

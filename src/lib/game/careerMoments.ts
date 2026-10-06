@@ -6,7 +6,7 @@
 import type { BoxPlayer, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
 import { addNews } from "./news.ts";
 import { careerTotals } from "./leaders.ts";
-import { playerName } from "./players.ts";
+import { livingPlayers, playerName } from "./players.ts";
 import { displayName, gamesInSeason } from "./teams.ts";
 import { winPct } from "./standings.ts";
 import { executeTrade, tradeWindowOpen } from "./gm.ts";
@@ -104,10 +104,10 @@ export function weeklyMoments(save: DynastySave, games: GameResult[]): void {
 export function tradeDemands(save: DynastySave): void {
   const year = save.year;
   // A public request is rare: a handful a season at most, one per club.
-  const asked = Object.values(save.players).filter((p) => p.tradeRequest === year);
+  const asked = livingPlayers(save).filter((p) => p.tradeRequest === year);
   if (asked.length >= 3) return;
   const clubsAsked = new Set(asked.map((p) => clubOf(p)));
-  const candidates = Object.values(save.players)
+  const candidates = livingPlayers(save)
     .filter((p) => {
       const club = clubOf(p);
       if (!club || p.tradeRequest === year || clubsAsked.has(club)) return false;
@@ -140,7 +140,7 @@ export function contractYearBreakouts(save: DynastySave): { player: Player; line
   const out: { player: Player; line: string; jump: number }[] = [];
   const score = (s: SeasonStats | undefined, gp: number) =>
     s && gp ? (s.passYds / 25 + s.passTd * 4 + (s.rushYds + s.recYds) / 10 + (s.rushTd + s.recTd) * 6 + s.sacks * 4 + s.ints * 4) / gp : 0;
-  for (const p of Object.values(save.players)) {
+  for (const p of livingPlayers(save)) {
     if (!clubOf(p) || p.contractYears > 1 || p.yearsPro < 3) continue;
     const now = p.stats[year];
     const prev = p.stats[year - 1];
@@ -160,7 +160,7 @@ export function contractYearBreakouts(save: DynastySave): { player: Player; line
 export function honorTradeRequests(save: DynastySave): void {
   const year = save.year;
   if (!tradeWindowOpen(save)) return;
-  for (const p of Object.values(save.players)) {
+  for (const p of livingPlayers(save)) {
     const from = clubOf(p);
     if (!from || p.tradeRequest !== year) continue;
     if (!save.cpuOnly && from === save.userTeamId) continue;

@@ -19,7 +19,7 @@ function Who({ id }: { id: string }) {
   const p = save.players[id];
   if (!p) return <span>—</span>;
   return (
-    <button type="button" onClick={() => open(id)} className="text-left font-display text-base font-bold uppercase italic leading-tight hover:text-brass">
+    <button type="button" onClick={() => open(id)} className="min-h-9 text-left font-display text-base font-bold uppercase italic leading-tight hover:text-brass">
       {p.firstName} {p.lastName}
     </button>
   );
@@ -187,7 +187,7 @@ export function DraftPreviewShow() {
       <div className="space-y-3">
         <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [&>button]:shrink-0">
           {POS_GROUPS.map((g) => (
-            <button key={g} type="button" onClick={() => setGroup(g)} className={`min-h-9 px-3 text-xs ${group === g ? "bx-chip bx-chip-on" : "bx-chip"}`}>
+            <button key={g} type="button" onClick={() => setGroup(g)} className={`min-h-11 px-3 text-xs ${group === g ? "bx-chip bx-chip-on" : "bx-chip"}`}>
               {g}
             </button>
           ))}

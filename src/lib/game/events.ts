@@ -2,7 +2,7 @@ import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts"
 import { recordAward, recordAwards, recordProBowl, recordRings } from "./honors.ts";
 import { activeTeamIds, conferenceOf, displayName, gamesInSeason, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
-import { generatePlayer, playerName, rosterOf } from "./players.ts";
+import { generatePlayer, livingPlayers, playerName, rosterOf } from "./players.ts";
 import { simGame } from "./sim.ts";
 import { addNews } from "./news.ts";
 import { rand, randInt } from "./rng.ts";
@@ -25,7 +25,7 @@ import {
 } from "./hof.ts";
 
 function seasonList(save: DynastySave): Player[] {
-  return Object.values(save.players).filter((p) => p.teamId !== "retired" && p.teamId !== "hof" && p.stats[save.year]);
+  return livingPlayers(save).filter((p) => p.teamId !== "retired" && p.teamId !== "hof" && p.stats[save.year]);
 }
 
 const OFFENSE: Pos[] = ["QB", "RB", "FB", "WR", "TE"];

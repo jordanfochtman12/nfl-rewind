@@ -3,6 +3,7 @@ import type { DeadlineSession, DynastySave, Player, TeamId, TradeOffer, TradePie
 import { activeTeamIds, displayName, gamesInSeason } from "./teams.ts";
 import { playerName, rosterOf } from "./players.ts";
 import { cpuTrades, executeTrade, playerValue, rozelleLock, tradeValue } from "./gm.ts";
+import { evaluateTrade } from "./tradeAi.ts";
 import { allPicks } from "./draft.ts";
 import { randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
@@ -82,6 +83,8 @@ export function tryOffer(save: DynastySave, from: TeamId, user: TeamId): TradeOf
   const vb = get.reduce((n, x) => n + tradeValue(save, x), 0);
   if (vb < va * 0.8 || va < vb * 0.8) return undefined;
   if (needFor(save, from, want.pos).length <= 1 && want.ovr >= 78) return undefined;
+  // A club only calls with a deal it wants, through its own needs and window.
+  if (!evaluateTrade(save, from, get, give).accept) return undefined;
   return {
     id: `off-${save.year}-${save.week}-${from}-${send.id}`,
     from,
