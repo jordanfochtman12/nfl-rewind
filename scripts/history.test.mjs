@@ -8,6 +8,8 @@
  */
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
   advanceHistory,
   createHistoryGame,
@@ -180,4 +182,36 @@ test("real trades move players midseason", () => {
   assert.equal(midSeason.lynch2010, "sea");
   assert.equal(midSeason.lynchTx?.from, "buf");
   assert.equal(midSeason.lynchTx?.to, "sea");
+});
+
+test("History mode stays out of the regular game", () => {
+  // The same seeded dynasty, played with and without History mode's tables loaded, must come
+  // out identical: nothing History mode adds may reach the regular game's sim.
+  const index = fileURLToPath(new URL("../src/lib/game/index.ts", import.meta.url));
+  const run = (load) =>
+    execFileSync(
+      process.execPath,
+      [
+        "--experimental-strip-types",
+        "--no-warnings",
+        "--input-type=module",
+        "-e",
+        `const G = await import(${JSON.stringify(index)});
+         if (${load}) G.setHistoryData(await G.loadHistoryData());
+         const s0 = G.createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 4242 });
+         s0.cpuOnly = true;
+         const s = G.simUntil(s0, (x) => x.year >= 1968 && x.phase === "draft");
+         if (s.realHistory) throw new Error("a regular game turned into History mode");
+         const p = Object.values(s.players).sort((a, b) => a.id.localeCompare(b.id));
+         console.log(JSON.stringify({
+           teams: Object.entries(s.teams).map(([id, t]) => [id, t.wins, t.losses, t.ties, t.pf, t.pa]),
+           bowls: s.history.superBowls, awards: s.history.awards,
+           players: p.length, lines: p.slice(0, 400).map((x) => [x.id, x.ovr, JSON.stringify(x.stats)]),
+         }));`,
+      ],
+      { encoding: "utf8", maxBuffer: 1 << 28 },
+    );
+  const plain = run(false);
+  assert.ok(plain.length > 1000);
+  assert.equal(run(true), plain);
 });

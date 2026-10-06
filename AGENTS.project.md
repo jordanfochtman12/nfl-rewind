@@ -187,6 +187,28 @@ Prefer nflverse / PFR (cache HTML, respect rate limits). If you cannot fetch, ge
 
 Raw dumps go in `data/`. Engine catalogs in `src/lib/game/data/`.
 
+## History mode is its own game
+
+History mode (`save.realHistory`, `src/lib/game/historyMode.ts`, `historyData.ts`, the
+`data/history/` tables) is a separate game from the dynasty and Watch history. Always treat
+the two apart:
+
+- The regular game (dynasty, owner mode, Watch history) never reads History mode's data or
+  logic. Don't feed the real record (`loadHistoryData`, `data/history/*`) into the sim,
+  ratings, carousel, drafts, awards or UI of the regular game unless the user asks for that
+  by name.
+- History mode never simulates. Everything it shows is the real record; where the record has
+  no number, show — (never a generated or estimated value), and never show the regular
+  game's fictions there (grades, kits, contracts, morale, schemes, sim broadcasts).
+- A change made for one mode must not change the other. Shared code (stats views, Hall of
+  Fame, rosters, profiles) branches on `save.realHistory` or on fields only History mode
+  sets (`SeasonStats.unknown`, `Coach.recordFrom`, name-only `HofMember`), so the regular
+  game's behavior stays exactly as it was.
+- Each mode keeps its own tests: `scripts/realism.test.mjs` and the QA scripts for the
+  regular game, `scripts/history.test.mjs` for History mode. The separation test in
+  `history.test.mjs` fails if loading History mode's data changes a regular game.
+- Ideas and work for one mode are proposed and shipped for that mode alone.
+
 ## Git / repo
 
 Repo name: `nfl-rewind`. Commit often with searchable messages:
@@ -207,3 +229,4 @@ Never commit secrets. No old-man player headshots.
 - Do not add player photos of old men.
 - Do not hide source only in a minified index.html zip.
 - Do not use chat as the source of truth after the first commit.
+- Do not mix History mode (the real record) into the regular game, or the regular game's sim into History mode.
