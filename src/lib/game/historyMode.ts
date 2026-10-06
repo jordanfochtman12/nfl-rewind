@@ -6,7 +6,7 @@
  * them (see historyData.ts); where none does, the line is left out rather than invented.
  * No React.
  */
-import type { AwardsResult, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
+import type { AwardsResult, Coach, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
 import type { HistoryData } from "./historyData.ts";
 import { createNewGame } from "./createGame.ts";
 import { activeTeamIds, displayName, gamesInSeason, roman, superBowlNumber } from "./teams.ts";
@@ -17,7 +17,7 @@ import { creditStandings } from "./sim.ts";
 import { resolveSuperBowl } from "./events.ts";
 import { recordAward } from "./honors.ts";
 import { writeSeasonChapter } from "./almanac.ts";
-import { addNews } from "./news.ts";
+import { addNews, addTx } from "./news.ts";
 import { rulesTakingEffect } from "./rulebook.ts";
 
 export const HISTORY_FIRST = 1966;
@@ -68,6 +68,7 @@ export function createHistoryGame(): DynastySave {
   s.sandbox = true;
   // Everyone in the league comes from the real rosters, not the game's generated pool.
   s.players = {};
+  s.coaches = {};
   s.draftBoard = [];
   s.transactions = [];
   s.news = [];
@@ -215,6 +216,180 @@ function labelFor(save: DynastySave): string {
   }
 }
 
+const coachId = (name: string) => `rc-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+
+/** The save's coach for a real head coach, made the first time he's on a sideline. */
+function coachFor(save: DynastySave, name: string, year: number): Coach {
+  const id = coachId(name);
+  const have = save.coaches[id];
+  if (have) return have;
+  const c: Coach = {
+    id,
+    name,
+    teamId: null,
+    yearAvail: year,
+    offense: 0,
+    defense: 0,
+    historical: true,
+    role: "HC",
+    offScheme: "multiple",
+    defScheme: "4-3",
+    yearsOnJob: 0,
+    careerWins: 0,
+    careerLosses: 0,
+    careerTies: 0,
+    careerTitles: 0,
+    careerBowls: 0,
+    yearsCoaching: 0,
+    age: 0,
+    potential: 0,
+    peakOffense: 0,
+    peakDefense: 0,
+    leadership: 0,
+    development: 0,
+    evaluation: 0,
+    abilities: [],
+    traits: [],
+    firedCount: 0,
+    tenure: {},
+    // A coach already on a sideline in 1966 had a career before the record starts.
+    ...(year <= HISTORY_FIRST ? { recordFrom: HISTORY_FIRST } : {}),
+  };
+  save.coaches[id] = c;
+  return c;
+}
+
+/** Who's on the sideline after a club's first `played` games of the season. */
+function coachAfter(list: { name: string; games: number }[], played: number): string | undefined {
+  let n = 0;
+  for (const c of list) {
+    n += c.games;
+    if (played < n) return c.name;
+  }
+  return list.at(-1)?.name;
+}
+
+/** Put the season's real head coaches on the sidelines (and note the new ones). */
+function seatCoaches(save: DynastySave): void {
+  const y = save.year;
+  const real = data().coaches(y);
+  const hired: string[] = [];
+  for (const c of Object.values(save.coaches)) c.teamId = null;
+  for (const id of activeTeamIds(y)) {
+    const t = save.teams[id];
+    const list = real.get(id);
+    if (!t || !list?.length) continue;
+    const before = t.coachId;
+    const c = coachFor(save, list[0]!.name, y);
+    c.teamId = id;
+    c.yearsOnJob = before === c.id ? c.yearsOnJob + 1 : 1;
+    c.yearsCoaching += 1;
+    for (const x of list) {
+      const k = coachFor(save, x.name, y);
+      k.tenure = { ...k.tenure, [id]: (k.tenure?.[id] ?? 0) + 2 };
+    }
+    t.coachId = c.id;
+    if (before !== c.id && y > HISTORY_FIRST) hired.push(`${c.name} (${displayName(y, id)})`);
+  }
+  if (hired.length)
+    addNews(save, {
+      kind: "headline",
+      headline: `New head coaches for ${y}`,
+      body: hired.join(", ") + ".",
+      teamIds: [],
+      playerIds: [],
+    });
+}
+
+/** A club's record so far this season. */
+const playedBy = (save: DynastySave, id: TeamId) => {
+  const t = save.teams[id]!;
+  return t.wins + t.losses + t.ties;
+};
+
+/** Credit a real result to the coaches on each sideline, then make any midseason change. */
+function creditCoaches(save: DynastySave, g: GameResult): void {
+  for (const [id, us, them] of [
+    [g.homeId, g.homeScore, g.awayScore],
+    [g.awayId, g.awayScore, g.homeScore],
+  ] as [TeamId, number, number][]) {
+    const t = save.teams[id];
+    const c = t?.coachId ? save.coaches[t.coachId] : undefined;
+    if (!c) continue;
+    if (us > them) c.careerWins += 1;
+    else if (us < them) c.careerLosses += 1;
+    else c.careerTies += 1;
+  }
+}
+
+function midseasonChanges(save: DynastySave): void {
+  const y = save.year;
+  const real = data().coaches(y);
+  for (const id of activeTeamIds(y)) {
+    const t = save.teams[id];
+    const list = real.get(id);
+    if (!t || !list || list.length < 2) continue;
+    const name = coachAfter(list, playedBy(save, id));
+    if (!name || coachId(name) === t.coachId) continue;
+    const out = t.coachId ? save.coaches[t.coachId] : undefined;
+    const c = coachFor(save, name, y);
+    if (out) {
+      out.teamId = null;
+      out.firedCount += 1;
+    }
+    c.teamId = id;
+    c.yearsOnJob = 1;
+    t.coachId = c.id;
+    addNews(save, {
+      kind: "headline",
+      headline: `${displayName(y, id)}: ${c.name} takes over`,
+      body: `${out ? `${out.name} is out after ${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}. ` : ""}${c.name} will coach the rest of the season.`,
+      teamIds: [id],
+      playerIds: [],
+    });
+  }
+}
+
+/** The real trades that land before this week's games (week 0: the offseason's). */
+function applyTrades(save: DynastySave, week: number, move: boolean): void {
+  const y = save.year;
+  for (const tr of data().trades(y)) {
+    if (tr.week !== week) continue;
+    const got = new Map<TeamId, string[]>();
+    const players: string[] = [];
+    for (const part of tr.parts) {
+      let what = part.pick ? `a ${part.pick} pick${part.name ? ` (${part.name})` : ""}` : part.name ?? "";
+      if (part.person !== undefined && !part.pick) {
+        const p = playerFor(save, part.person, y, part.gave);
+        what = `${playerName(p)} (${p.pos})`;
+        players.push(p.id);
+        if (move && p.teamId === part.gave) {
+          const from = save.teams[part.gave];
+          const to = save.teams[part.received];
+          if (from) from.roster = from.roster.filter((x) => x !== p.id);
+          if (to && !to.roster.includes(p.id)) to.roster.push(p.id);
+          p.teamId = part.received;
+        }
+      }
+      if (what) got.set(part.received, [...(got.get(part.received) ?? []), what]);
+    }
+    if (!players.length) continue;
+    const sides = [...got.entries()].map(([id, list]) => `The ${displayName(y, id)} get ${list.join(", ")}.`);
+    for (const pid of players) {
+      const part = tr.parts.find((x) => x.person !== undefined && `r-${x.person.toString(36)}` === pid)!;
+      addTx(save, "trade", pid, part.gave, part.received, sides.join(" "));
+    }
+    const lead = tr.parts.find((x) => x.person !== undefined && !x.pick)!;
+    addNews(save, {
+      kind: "headline",
+      headline: `Trade: ${playerName(save.players[players[0]!]!)} to the ${displayName(y, lead.received)}`,
+      body: sides.join(" "),
+      teamIds: [...new Set(tr.parts.flatMap((x) => [x.gave, x.received]))],
+      playerIds: players,
+    });
+  }
+}
+
 function applyDraft(save: DynastySave): void {
   const picks = data().drafts(save.year);
   for (const pk of picks) {
@@ -277,6 +452,9 @@ function openSeason(save: DynastySave): void {
     } else p.teamId = "fa";
   }
   for (const id of activeTeamIds(y)) resetSeasonRecord(save.teams[id]!);
+  seatCoaches(save);
+  // Offseason deals are already in the season's rosters; they go on the wire.
+  applyTrades(save, 0, false);
   rebuildSchedule(save);
   save.playoffGames = [];
   save.superBowl = undefined;
@@ -296,6 +474,8 @@ function openSeason(save: DynastySave): void {
 
 /** The real final scores for this week's games, into the standings. */
 function playWeek(save: DynastySave): void {
+  // Deals made since last week's games move the players before this week's.
+  if (save.week > 1) applyTrades(save, save.week, true);
   const games = gamesInWeek(save, save.week);
   for (const g of games) {
     if (g.played) continue;
@@ -304,8 +484,11 @@ function playWeek(save: DynastySave): void {
     g.awayScore = g.realAway;
     g.played = true;
     creditStandings(save, g, false);
+    creditCoaches(save, g);
   }
+  midseasonChanges(save);
   if (save.week >= maxWeek(save)) {
+    applyTrades(save, save.week + 1, false);
     closeRegularSeason(save);
     return;
   }
@@ -392,7 +575,14 @@ function giveAwards(save: DynastySave): void {
   }
   if (Object.keys(co).length) a.co = co;
   const coy = real.coy?.find((x): x is string => typeof x === "string");
-  if (coy) a.coyName = coy;
+  if (coy) {
+    a.coyName = coy;
+    const c = save.coaches[coachId(coy)];
+    if (c) {
+      a.coy = c.id;
+      c.coyYears = [...(c.coyYears ?? []), y];
+    }
+  }
   save.awards = a;
   save.history.awards = save.history.awards.filter((x) => x.year !== y);
   save.history.awards.push(a);
@@ -426,7 +616,12 @@ function inductHallOfFame(save: DynastySave): void {
       save.history.hof.push({ playerId: p.id, year: classYear, teamId, blurb: `Class of ${classYear}.`, kind: "player" });
       names.push(playerName(p));
     } else {
-      save.history.hof.push({ name: x, year: classYear, teamId: "pit", blurb: `Class of ${classYear}.`, kind: "contributor" });
+      const c = save.coaches[coachId(x)];
+      const home = c && Object.entries(c.tenure ?? {}).sort((a, b) => b[1] - a[1])[0]?.[0];
+      if (c && home) {
+        c.hofYear = classYear;
+        save.history.hof.push({ coachId: c.id, year: classYear, teamId: home as TeamId, blurb: `Class of ${classYear}.`, kind: "coach" });
+      } else save.history.hof.push({ name: x, year: classYear, teamId: "pit", blurb: `Class of ${classYear}.`, kind: "contributor" });
       names.push(x);
     }
   }

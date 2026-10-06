@@ -33,6 +33,13 @@ export interface HistoryPick {
   league?: "afl" | "nfl";
 }
 
+/** A real trade: what each club sent. A side is a person, a name (no roster match), or a pick. */
+export interface HistoryTrade {
+  /** The week it lands before (0 = offseason; past the last week = after the season). */
+  week: number;
+  parts: { gave: TeamId; received: TeamId; person?: number; name?: string; pick?: string }[];
+}
+
 /** A real season line; -1 marks a stat the source didn't keep that year (shown as —). */
 export type HistoryLine = Partial<Record<keyof SeasonStats, number>>;
 
@@ -44,6 +51,9 @@ export interface HistoryData {
   drafts(year: number): HistoryPick[];
   /** award key -> person ids, or names (coaches, unmatched) */
   awards(year: number): Record<string, (number | string)[]>;
+  /** Head coaches per club, in order, with the regular-season games each coached (99 = all). */
+  coaches(year: number): Map<TeamId, { name: string; games: number }[]>;
+  trades(year: number): HistoryTrade[];
   /** Hall of Fame class of that year: person ids or names (coaches, contributors, pre-1966 players). */
   hof(year: number): (number | string)[];
   /** Seasons each person appears on a roster, for retirement. */
@@ -72,6 +82,8 @@ export function parseHistory(mods: {
   DRAFTS: Record<number, string>;
   AWARDS: Record<number, string>;
   HOF_CLASSES: Record<number, string>;
+  COACHES?: Record<number, string>;
+  TRADES?: Record<number, string>;
 }): HistoryData {
   const people = mods.PEOPLE.split("\n").map((l) => {
     const [first, last, pos, birth, college] = l.split("|");
@@ -142,8 +154,52 @@ export function parseHistory(mods: {
     }
     return out;
   });
+  const coaches = memo((y) => {
+    const out = new Map<TeamId, { name: string; games: number }[]>();
+    for (const chunk of (mods.COACHES?.[y] ?? "").split(";")) {
+      const at = chunk.indexOf(":");
+      if (at < 0) continue;
+      out.set(
+        chunk.slice(0, at) as TeamId,
+        chunk
+          .slice(at + 1)
+          .split("/")
+          .filter(Boolean)
+          .map((c) => {
+            const star = c.lastIndexOf("*");
+            return { name: c.slice(0, star), games: Number(c.slice(star + 1)) };
+          }),
+      );
+    }
+    return out;
+  });
+  const trades = memo((y) =>
+    (mods.TRADES?.[y] ?? "")
+      .split("#")
+      .filter(Boolean)
+      .map((t): HistoryTrade => {
+        const at = t.indexOf(":");
+        return {
+          week: Number(t.slice(0, at)),
+          parts: t
+            .slice(at + 1)
+            .split("/")
+            .filter(Boolean)
+            .map((p) => {
+              const [gave, received, who, pick] = p.split(",");
+              return {
+                gave: gave as TeamId,
+                received: received as TeamId,
+                person: who && !who.startsWith("~") ? id36(who) : undefined,
+                name: who?.startsWith("~") ? who.slice(1) : undefined,
+                pick: pick || undefined,
+              };
+            }),
+        };
+      }),
+  );
   const hof = memo((y) => (mods.HOF_CLASSES[y] ?? "").split("/").filter(Boolean).map(ref));
-  return { people, rosters, stats, playoffs, drafts, awards, hof, lastSeason: (p) => last.get(p), firstSeason: (p) => first.get(p) };
+  return { people, rosters, stats, playoffs, drafts, awards, coaches, trades, hof, lastSeason: (p) => last.get(p), firstSeason: (p) => first.get(p) };
 }
 
 let loaded: Promise<HistoryData> | undefined;
@@ -158,8 +214,10 @@ export function loadHistoryData(): Promise<HistoryData> {
     import("./data/history/drafts.ts"),
     import("./data/history/awards.ts"),
     import("./data/history/hof.ts"),
-  ]).then(([p, r, s, po, d, a, h]) =>
-    parseHistory({ PEOPLE: p.PEOPLE, ROSTERS: r.ROSTERS, STATS: s.STATS, STAT_FIELDS: s.STAT_FIELDS, PLAYOFFS: po.PLAYOFFS, DRAFTS: d.DRAFTS, AWARDS: a.AWARDS, HOF_CLASSES: h.HOF_CLASSES }),
+    import("./data/history/coaches.ts"),
+    import("./data/history/trades.ts"),
+  ]).then(([p, r, s, po, d, a, h, c, t]) =>
+    parseHistory({ PEOPLE: p.PEOPLE, ROSTERS: r.ROSTERS, STATS: s.STATS, STAT_FIELDS: s.STAT_FIELDS, PLAYOFFS: po.PLAYOFFS, DRAFTS: d.DRAFTS, AWARDS: a.AWARDS, HOF_CLASSES: h.HOF_CLASSES, COACHES: c.COACHES, TRADES: t.TRADES }),
   );
   return loaded;
 }

@@ -157,7 +157,9 @@ export function TeamRosterModal() {
                     {hc ? (
                       <span className="text-muted">
                         {" "}
-                        · {hc.careerWins}-{hc.careerLosses} career
+                        · {hc.careerWins}-{hc.careerLosses}
+                        {hc.careerTies ? `-${hc.careerTies}` : ""}{" "}
+                        {hc.recordFrom ? `since ${hc.recordFrom}` : "career"}
                       </span>
                     ) : null}
                   </dd>

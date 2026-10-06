@@ -115,6 +115,7 @@ rosters: dict[int, dict[str, list[int]]] = defaultdict(lambda: defaultdict(list)
 jerseys: dict[tuple[int, int, str], int] = {}
 seasons_of: dict[int, set[int]] = defaultdict(set)
 team_in: dict[tuple[int, int], set[str]] = defaultdict(set)
+by_pfr: dict[str, int] = {}
 
 
 def load_rosters() -> None:
@@ -135,6 +136,8 @@ def load_rosters() -> None:
                 continue
             birth = (r["birth_date"] or "").replace("-", "")
             i = person(first, last, pos_of(r["position"], r["depth_chart_position"]), birth, (r["college"] or "").strip(), (r["gsis_id"] or "").strip())
+            if (r.get("pfr_id") or "").strip() not in ("", "NA"):
+                by_pfr.setdefault(r["pfr_id"].strip(), i)
             if status == "CUT":
                 cut_pool[y].append((i, t))
                 continue
@@ -538,6 +541,119 @@ def load_playoffs() -> None:
             playoffs[y].append((g["date"].replace("-", "")[4:], g["round"], g["home"], g["away"], g["hs"], g["as"], "N" if g["neutral"] else ""))
 
 
+# ---------- coaches and trades ----------
+
+# Per season: club -> [(head coach, regular-season games he coached), ...] in order.
+coaches: dict[int, dict[str, list[tuple[str, int]]]] = defaultdict(dict)
+# Per season: [(trade id, week, [(gave, received, person id or -1, pick text, name)])]
+trades: dict[int, list[tuple]] = defaultdict(list)
+
+
+def load_coaches() -> None:
+    """Head coaches: Pro Football Archives team pages through 1998 (each coach with his record
+    when a club changed coaches midseason), the nflverse game file from 1999 (game by game)."""
+    folder = DATA / "history" / "pfa_html"
+    for y in range(FIRST, 1999):
+        for f in sorted(folder.glob(f"{y}[na]fl?*.html")):
+            m = re.match(rf"{y}(nfl|afl)([a-z]+)\.html", f.name)
+            t = m and pfa_team(m.group(2), y)
+            if not t:
+                continue
+            page = f.read_text(encoding="latin-1")
+            hc = re.search(r"Head Coach[^<]*</[^>]+>(.*?)</table>", page, re.S)
+            if not hc:
+                continue
+            text = re.sub(r"\s+", " ", htmllib.unescape(re.sub(r"<[^>]+>", " ", hc.group(1)))).strip()
+            parts = [p.strip() for p in text.split(";") if p.strip()]
+            out = []
+            for part in parts:
+                rec = re.search(r"\((\d+)-(\d+)-(\d+)\)", part)
+                name = re.sub(r"\(.*?\)", "", part).strip()
+                out.append((name, sum(int(x) for x in rec.groups()) if rec else 0))
+            if len(out) == 1 and not out[0][1]:
+                out = [(out[0][0], 99)]
+            if out and t not in coaches[y]:
+                coaches[y][t] = out
+    games: dict[tuple[int, str], list[tuple[int, str]]] = defaultdict(list)
+    for r in csv.DictReader(open(DATA / "schedules" / "nflverse_games.csv", encoding="utf-8")):
+        y = int(r["season"])
+        if y < 1999 or y > LAST or r["game_type"] != "REG":
+            continue
+        for side in ("home", "away"):
+            t = team_of(r[f"{side}_team"], y)
+            c = (r.get(f"{side}_coach") or "").strip()
+            if t and c and c != "NA":
+                games[(y, t)].append((int(r["week"]), c))
+    for (y, t), gl in games.items():
+        out: list[tuple[str, int]] = []
+        for _, c in sorted(gl):
+            if out and out[-1][0] == c:
+                out[-1] = (c, out[-1][1] + 1)
+            else:
+                out.append((c, 1))
+        coaches[y][t] = out
+
+
+def load_trades() -> None:
+    """nflverse trades, 2002 on: who went where, and in which week (by the season's game dates)."""
+    first_game: dict[int, list[tuple[str, int]]] = defaultdict(list)
+    for r in csv.DictReader(open(DATA / "schedules" / "nflverse_games.csv", encoding="utf-8")):
+        if r["game_type"] == "REG":
+            first_game[int(r["season"])].append((r["gameday"], int(r["week"])))
+    week_start: dict[int, list[tuple[str, int]]] = {}
+    for y, gl in first_game.items():
+        starts: dict[int, str] = {}
+        for d, w in gl:
+            starts[w] = min(starts.get(w, d), d)
+        week_start[y] = sorted((d, w) for w, d in starts.items())
+    by_id: dict[str, list[dict]] = defaultdict(list)
+    for r in csv.DictReader(open(DATA / "history" / "trades.csv", encoding="utf-8")):
+        by_id[r["trade_id"]].append(r)
+    for tid, rows in by_id.items():
+        y = int(rows[0]["season"])
+        if not (FIRST <= y <= LAST):
+            continue
+        date = rows[0]["trade_date"]
+        # The week a trade lands in: before the next slate of games; 0 is the offseason.
+        week = 0
+        for d, w in week_start.get(y, []):
+            if d <= date:
+                week = w + 1
+        maxw = max((w for _, w in week_start.get(y, [])), default=17)
+        if week > maxw:
+            week = maxw + 1
+        parts = []
+        for r in rows:
+            gave, rec = team_of(r["gave"], y), team_of(r["received"], y)
+            if not gave or not rec:
+                continue
+            name = (r.get("pfr_name") or "").strip()
+            pick = ""
+            if r.get("pick_round") not in (None, "", "NA"):
+                pick = f"{r['pick_season']} round {r['pick_round']}" + (" (conditional)" if r.get("conditional") in ("1", "TRUE", "True") else "")
+            i = by_pfr.get((r.get("pfr_id") or "").strip(), -1) if not pick else -1
+            if i < 0 and name and name != "NA" and not pick:
+                key = norm(name)
+                same = lambda js: [j for j in dict.fromkeys(js) if norm(people[j]["f"] + people[j]["l"]) == key]  # noqa: E731
+                # On either club that season, else either club the season before (an offseason
+                # deal), else cut in camp by either, else anyone in the league that season.
+                for pool in (
+                    rosters[y].get(gave, []) + rosters[y].get(rec, []),
+                    rosters[y - 1].get(gave, []) + rosters[y - 1].get(rec, []),
+                    [j for j, t in cut_pool[y] + cut_pool[y - 1] if t in (gave, rec)],
+                    [j for ids in rosters[y].values() for j in ids],
+                ):
+                    cands = same(pool)
+                    if len(cands) == 1:
+                        i = cands[0]
+                        break
+                    if len(cands) > 1:
+                        break
+            parts.append((gave, rec, i, pick, name if name != "NA" else ""))
+        if parts:
+            trades[y].append((tid, week, parts))
+
+
 # ---------- drafts ----------
 
 drafts: dict[int, list[tuple]] = defaultdict(list)
@@ -789,6 +905,14 @@ def write() -> None:
         return r if played and max(played) <= y - 5 else "~" + n
     hf = [f'  {y}: "' + esc("/".join(inductee(n, y) for n in names)).replace("|", "/") + '",' for y, names in sorted(hof.items()) if FIRST <= y <= LAST + 1]
     (OUT / "hof.ts").write_text(head + "/** Per Hall of Fame class: inductees as base-36 person ids, or ~Name for coaches, contributors and pre-1966 players. */\nexport const HOF_CLASSES: Record<number, string> = {\n" + "\n".join(hf) + "\n};\n")
+    co = [f'  {y}: "' + esc(";".join(f"{t}:" + "/".join(f"{n.replace('/', ' ')}*{g}" for n, g in lst) for t, lst in sorted(coaches[y].items()))) + '",' for y in sorted(coaches)]
+    (OUT / "coaches.ts").write_text(head + "/** Per season: team:Head Coach*games/Next Coach*games;... (games = regular-season games he coached, in order; 99 = all). */\nexport const COACHES: Record<number, string> = {\n" + "\n".join(co) + "\n};\n")
+    def part(g, r, i, pick, name):
+        who = b36(i) if i >= 0 else ("~" + re.sub(r"[/,#:]", " ", name) if name else "")
+        return f"{g},{r},{who},{pick}"
+    tr = [f'  {y}: "' + esc("#".join(f"{w}:" + "/".join(part(*p) for p in parts) for _, w, parts in sorted(trades[y], key=lambda x: (x[1], x[0])))) + '",' for y in sorted(trades)]
+    (OUT / "trades.ts").write_text(head + "/** Per season: week:gave,received,person (base 36, or ~Name),pick/...#... (week 0 = offseason; one entry per trade). */\nexport const TRADES: Record<number, string> = {\n" + "\n".join(tr) + "\n};\n")
+    print(f"coach seasons {len(coaches)}, trade seasons {len(trades)} ({sum(len(v) for v in trades.values())} trades)")
     print(f"people {len(people)}, roster seasons {len(rosters)}, stat seasons {len(stats)}, playoff seasons {len(playoffs)}, drafts {len(drafts)}")
 
 
@@ -798,6 +922,8 @@ def main() -> None:
     load_fdp_stats()
     load_pfa_stats()
     load_playoffs()
+    load_coaches()
+    load_trades()
     load_drafts()
     load_awards()
     write()

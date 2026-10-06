@@ -32,6 +32,12 @@ before(async () => {
     if (phase === "regular" && save.phase === "playoffs")
       records[year] = Object.fromEntries(Object.entries(save.teams).map(([id, t]) => [id, `${t.wins}-${t.losses}-${t.ties}`]));
     if (year === 1990 && phase === "regular" && save.week === 9) midSeason.step = save.historyStep;
+    if (year === 2007 && phase === "regular" && save.phase === "playoffs") midSeason.atl2007 = save.teams.atl.coachId;
+    if (year === 2010 && phase === "regular" && save.phase === "playoffs") {
+      const lynch = Object.values(save.players).find((p) => p.firstName === "Marshawn" && p.lastName === "Lynch");
+      midSeason.lynch2010 = lynch?.teamId;
+      midSeason.lynchTx = save.transactions.find((t) => t.playerId === lynch?.id && t.kind === "trade");
+    }
   }
 });
 
@@ -155,4 +161,23 @@ test("the watch bar's skips run through History mode", () => {
   const s = simUntil(createHistoryGame(), (x) => x.year > 1966 && x.phase === "draft");
   assert.equal(s.year, 1967);
   assert.equal(s.history.superBowls.length, 1);
+});
+
+test("real head coaches: careers, midseason changes, honors", () => {
+  const c = (name) => Object.values(save.coaches).find((x) => x.name === name);
+  // Belichick's whole head-coaching career is inside the record: 302-165 in the regular season.
+  assert.equal(`${c("Bill Belichick").careerWins}-${c("Bill Belichick").careerLosses}`, "302-165");
+  assert.equal(c("Bill Belichick").careerTitles, 6);
+  assert.ok(c("Bill Belichick").coyYears.includes(2003));
+  // Atlanta, 2007: Bobby Petrino quit in December; Emmitt Thomas finished the season.
+  assert.equal(save.coaches[midSeason.atl2007].name, "Emmitt Thomas");
+  assert.equal(c("Tom Landry").hofYear, 1990);
+  assert.ok(save.history.hof.some((m) => m.coachId === c("Chuck Noll").id && m.year === 1993));
+});
+
+test("real trades move players midseason", () => {
+  // Marshawn Lynch, traded from Buffalo to Seattle in October 2010.
+  assert.equal(midSeason.lynch2010, "sea");
+  assert.equal(midSeason.lynchTx?.from, "buf");
+  assert.equal(midSeason.lynchTx?.to, "sea");
 });

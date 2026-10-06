@@ -217,7 +217,9 @@ export function coachWriteUp(save: DynastySave, c: Coach, homeClub?: TeamId): st
   const book = playbookFor(c.id, c.retiredYear ?? save.year);
   const rec = `${c.careerWins}-${c.careerLosses}${c.careerTies ? `-${c.careerTies}` : ""}`;
   const parts = [
-    `${c.name} coached ${plural(c.yearsCoaching || 1, "season")}, most memorably with the ${displayName(c.retiredYear ?? save.year, home)}, and went ${rec} as a head coach.`,
+    c.recordFrom
+      ? `From ${c.recordFrom} on, ${c.name} coached ${plural(c.yearsCoaching || 1, "season")}, most memorably with the ${displayName(c.retiredYear ?? save.year, home)}, and went ${rec} as a head coach.`
+      : `${c.name} coached ${plural(c.yearsCoaching || 1, "season")}, most memorably with the ${displayName(c.retiredYear ?? save.year, home)}, and went ${rec} as a head coach.`,
   ];
   if (c.careerTitles) parts.push(`His clubs won ${plural(c.careerTitles, "championship")}.`);
   if (book) parts.push(`His teams ran the ${book.offense} on offense and the ${book.defense} on defense.`);

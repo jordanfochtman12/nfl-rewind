@@ -344,6 +344,8 @@ export interface Coach {
   hofYear?: number;
   /** Seasons on each head coach's staff, by that coach's id (the coaching tree). */
   mentors?: Record<string, number>;
+  /** History mode: his record here only counts from this season (he was coaching before 1966). */
+  recordFrom?: number;
   /** The season the papers put him on the hot seat. */
   hotSeat?: number;
   /** Interim head coach this season, and the club's record when he took over. */

@@ -163,7 +163,7 @@ export function HofPlaque({ target, onClose }: { target: PlaqueTarget | null; on
             <h3 className="font-display text-3xl font-bold uppercase italic leading-tight text-white">{coach.name}</h3>
             <p className="text-sm text-muted">
               {coach.careerWins}-{coach.careerLosses}
-              {coach.careerTies ? `-${coach.careerTies}` : ""} · {coach.careerTitles} title{coach.careerTitles === 1 ? "" : "s"} · {coach.yearsCoaching} seasons
+              {coach.careerTies ? `-${coach.careerTies}` : ""} · {coach.careerTitles} title{coach.careerTitles === 1 ? "" : "s"} · {coach.yearsCoaching} seasons{coach.recordFrom ? ` since ${coach.recordFrom}` : ""}
             </p>
           </div>
           <p className="text-sm leading-relaxed text-paper">{coachWriteUp(save, coach, home)}</p>

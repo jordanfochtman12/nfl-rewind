@@ -49,9 +49,11 @@ it covers and only generates a schedule for years past the data (2027).
 | `data/history/fdp/YYYY.csv` | Pro-Football-Reference season tables (offense), via fantasydatapros/data | 1970–1998 |
 | `data/history/pfa/YYYY.csv` | Pro Football Archives team-season stat tables (rosters with games played, offense, interceptions, sacks from 1970, fumbles, kicking, punting, returns), extracted by `scripts/fetch-pfa.py` | 1966–1998 |
 | `data/history/wiki/*.wikitext` | Wikipedia award and Hall of Fame pages | 1966–2026 |
-| `data/history/trades.csv` | nflverse trades (not used yet) | 2002– |
+| `data/history/trades.csv` | nflverse trades (players and picks, by date) | 2002–2025 |
 
 History mode replays the real league from these (plus the playoff games and drafts above).
+Head coaches come from the archive's team pages through 1998 (with each coach's games when a
+club changed midseason) and from the nflverse game file's sideline coaches from 1999.
 Rebuild its tables:
 
 ```
