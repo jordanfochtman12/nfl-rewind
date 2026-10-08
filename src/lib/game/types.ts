@@ -168,6 +168,8 @@ export interface SeasonStats {
   teamId: TeamId | "two";
   /** History mode: stats the record didn't keep that season (shown as —, never as 0). */
   unknown?: string[];
+  /** History mode: a running total from this season's box scores, replaced by the official line at season's end. */
+  live?: boolean;
   gp: number;
   passAtt: number;
   passCmp: number;
@@ -956,6 +958,14 @@ export interface DynastySave {
   realHistory?: boolean;
   /** History mode: steps taken from the 1966 draft. The record replays to here on load. */
   historyStep?: number;
+  /** History mode: each franchise's all-time ledger (from 1920): wins, losses, ties, playoff wins, playoff losses, titles. */
+  historyLedger?: Record<string, [number, number, number, number, number, number[]]>;
+  /** History mode: the clubs and players the viewer follows. */
+  historyFollow?: { teams: TeamId[]; players: string[] };
+  /** History mode: the viewer's calls before the results: game id -> winner, "sb:YYYY" -> club, "mvp:YYYY" -> player id. */
+  historyCalls?: Record<string, string>;
+  /** History mode: graded calls, id -> [season, right (1) or wrong (0)], in calendar order. Rebuilt on replay. */
+  historyGraded?: Record<string, [number, 0 | 1]>;
   /** Sandbox: the game of the week that gets the play-by-play call. */
   featuredGameId?: string;
   players: Record<string, Player>;

@@ -9127,7 +9127,7 @@ Clarence|Jones|LT|19680506|Maryland
 David|Jones|WR|19681109|Delaware State
 Henry|Jones|CB|19671229|Illinois
 James|Jones|DT|19690206|Northern Iowa
-Mike A.|Jones|MLB|19690415|
+Mike A.|Jones|MLB|19690415|Missouri
 Mike D.|Jones|DE|19690825|North Carolina State
 Reggie|Jones|CB|19690111|Memphis
 Roger|Jones|CB|19690422|Tennessee State
@@ -10702,7 +10702,7 @@ Oscar|Sturgis|DE|19710112|North Carolina
 Lorenzo|Styles|MLB|19740131|Ohio State
 Corey|Swinson|DT|19691215|
 Ben|Talley|MLB|19720714|Tennessee
-Josh|Taves|DE|19720513|
+Josh|Taves|DE|19720513|Northeastern
 Bobby|Taylor|CB|19731228|Notre Dame
 Ryan|Terry|RB|19710920|Iowa
 Chris|Thomas|WR|19710716|Cal Poly (San Luis Obispo)
@@ -10781,7 +10781,7 @@ Henry|Bailey|WR|19730228|Nevada-Las Vegas
 Donnell|Baker|WR|19731221|
 Chris|Banks|LG|19730404|Kansas
 Tony|Banks|QB|19730405|Michigan State
-Kantroy|Barber|RB|19731004|
+Kantroy|Barber|RB|19731004|West Virginia
 Reggie|Barlow|WR|19730122|Alabama State
 Tom|Barndt|LG|19720314|Pittsburgh
 Robert|Barr|LT|19730607|
@@ -10820,7 +10820,7 @@ Keif|Bryant|DT|19730312|
 Jeff|Buckey|LT|19740807|Stanford
 Kendricke|Bullard|WR|19720430|Arkansas State
 Paul|Burke|TE|19690216|
-Dialleo|Burks|WR|19740707|
+Dialleo|Burks|WR|19740707|Eastern Kentucky
 Sammie|Burroughs|MLB|19730621|Portland State
 Kendrick|Burton|DE|19730907|Alabama
 Shane|Burton|DE|19740118|Tennessee
@@ -11147,7 +11147,7 @@ Antonio|Banks|CB|19730312|Virginia Tech
 Ronde|Barber|CB|19750407|Virginia
 Tiki|Barber|RB|19750407|Virginia
 Derrick|Barnes|MLB|19740911|Oregon
-Pat|Barnes|QB|19750223|
+Pat|Barnes|QB|19750223|California
 Terry|Battle|RB|19760207|
 Chris|Bayne|CB|19750322|Fresno State
 Greg|Bellisari|MLB|19750621|Ohio State
@@ -11162,7 +11162,7 @@ Orlando|Bobo|LG|19740209|Louisiana-Monroe
 Michael|Booker|CB|19750427|Nebraska
 Ben|Bordelon|LG|19740409|Louisiana State
 Peter|Boulware|OLB|19741218|Florida State
-Todd|Bouman|QB|19720801|
+Todd|Bouman|QB|19720801|St. Cloud State
 Tommie|Boyd|WR|19711221|Toledo
 Paul|Bradford|CB|19740420|Portland State
 Vincent|Bradford|MLB|19730122|
@@ -11171,7 +11171,7 @@ Will|Brice|P|19741024|Virginia
 Eddie|Britton|WR|19681201|
 Fred|Brock|WR|19741115|Southern Mississippi
 Zack|Bronson|CB|19740128|McNeese State
-Macey|Brooks|WR|19750202|
+Macey|Brooks|WR|19750202|James Madison
 Luther|Broughton|TE|19741130|Furman
 Cornell|Brown|MLB|19750315|Virginia Tech
 DeAuntae|Brown|CB|19740428|Central State (Ohio)
@@ -11257,7 +11257,7 @@ Jay|Graham|RB|19750714|Tennessee
 Billy|Granville|MLB|19740311|Duke
 Torrian|Gray|S|19740318|Virginia Tech
 Tony|Graziani|QB|19731223|Oregon
-Yatil|Green|WR|19731125|
+Yatil|Green|WR|19731125|Miami (Florida)
 Donovan|Greer|CB|19740911|Texas A&M
 Thomas|Guynes|LT|19740909|Michigan
 Jay|Hagood|LT|19730809|Virginia Tech
@@ -11302,7 +11302,7 @@ Damon|Jones|TE|19740918|Southern Illinois
 Freddie|Jones|TE|19740916|North Carolina
 George|Jones|RB|19731231|San Diego State
 Greg|Jones|MLB|19740522|Colorado
-K.C.|Jones|C|19740328|
+K.C.|Jones|C|19740328|Miami (Florida)
 Walter|Jones|LT|19740119|Florida State
 Richard|Jordan|MLB|19741201|Missouri Southern State
 N. D.|Kalu|DE|19750803|Rice
@@ -11328,7 +11328,7 @@ Kevin|Lockett|WR|19740908|Kansas State
 Mike|Logan|CB|19740915|West Virginia
 Ryan|Longwell|K|19740816|California
 Anthone|Lott|CB|19740722|Florida
-Ben|Lynch|C|19721118|
+Ben|Lynch|C|19721118|California
 Pratt|Lyons|DE|19740917|Troy
 Tremain|Mack|S|19741121|Miami (Florida)
 Sam|Madison|CB|19740423|Louisville
@@ -11372,7 +11372,7 @@ Orlando|Pace|LT|19751104|Ohio State
 Chris|Parker|RB|19721231|Marshall
 Ricky|Parker|CB|19741204|San Diego State
 Riddick|Parker|DT|19721120|North Carolina
-Nathan|Parks|LT|19741024|
+Nathan|Parks|LT|19741024|Stanford
 David|Patten|WR|19740819|Western Carolina
 Rod|Payne|C|19740614|Michigan
 Seth|Payne|DT|19750212|Cornell
@@ -11467,7 +11467,7 @@ Adam|Treu|LG|19740624|Nebraska
 Ryan|Tucker|C|19750612|Texas Christian
 Van|Tuinei|DE|19710216|Arizona
 Gunnard|Twynner|WR|19730714|Western Illinois
-Artie|Ulmer|MLB|19730730|
+Artie|Ulmer|MLB|19730730|Valdosta State
 Eric|Vance|CB|19750714|Vanderbilt
 Lee|Vaughn|CB|19741127|
 Tony|Veland|CB|19730311|Nebraska
@@ -11497,7 +11497,7 @@ Pat|Williams|DT|19721024|Texas A&M
 Tony|Williams|DT|19750709|Memphis
 Tyrone M.|Williams|DE|19721022|
 Abu|Wilson|RB|19730102|
-Jamie|Wilson|LT|19730606|
+Jamie|Wilson|LT|19730606|Marshall
 Reinard|Wilson|OLB|19731214|Florida State
 Robert|Wilson|WR|19740623|Florida A&M
 Sir Mawn|Wilson|WR|19730604|
@@ -11517,7 +11517,7 @@ Dell|McGee|CB|19730907|Auburn
 Eric|Lane|RB|19740317|Tennessee
 Curtis|Anderson|WR|19730929|Pittsburgh
 Chris|Sanders|TE|19730422|
-Rabih|Abdullah|RB|19750427|
+Rabih|Abdullah|RB|19750427|Lehigh
 Flozell|Adams|LG|19750518|Michigan State
 David|Akers|K|19741209|Louisville
 Chris|Akins|DT|19760107|
@@ -11525,8 +11525,8 @@ Stephen|Alexander|TE|19751107|Oklahoma
 Brian|Alford|WR|19750607|Purdue
 Victor|Allotey|LG|19750408|
 Vince|Amey|DE|19750209|Arizona State
-Jason|Andersen|C|19750903|
-Ken|Anderson|DT|19751004|
+Jason|Andersen|C|19750903|Brigham Young
+Ken|Anderson|DT|19751004|Arkansas
 Billy|Austin|CB|19750308|New Mexico
 John|Avery|RB|19760111|Mississippi
 Obafemi|Ayanbadejo|RB|19750305|San Diego State
@@ -11543,7 +11543,7 @@ Matt|Birk|LT|19760723|Harvard
 Jon|Blackman|TE|19751008|
 Roosevelt|Blackmon|CB|19740910|Morris Brown
 Michael|Blair|RB|19741126|Ball State
-Kerlin|Blaise|LG|19741225|
+Kerlin|Blaise|LG|19741225|Miami (Florida)
 Tony|Blevins|CB|19750129|Kansas
 Rob|Bohlinger|LT|19750614|Wyoming
 Dorian|Boose|DE|19740129|Washington State
@@ -11557,14 +11557,14 @@ Doug|Brown|DT|19740929|Simon Fraser
 Eric|Brown|S|19750320|Mississippi State
 Jonathan|Brown|DE|19751128|Tennessee
 Omar|Brown|CB|19750328|North Carolina
-Jim|Bundren|LG|19741006|
+Jim|Bundren|LG|19741006|Clemson
 Chester|Burnett|MLB|19750415|Arizona
 Hillary|Butler|MLB|19710105|Washington
 Lamar|Campbell|CB|19760829|Wisconsin
 James|Cannida|DT|19750103|Nevada-Reno
 Chad|Carpenter|WR|19730717|
-Roger|Chanoine|LT|19760911|
-Martin|Chase|DT|19741219|
+Roger|Chanoine|LT|19760911|Temple
+Martin|Chase|DT|19741219|Oklahoma
 Corey|Chavous|CB|19760105|Vanderbilt
 Larry|Chester|DT|19751017|Temple
 Jason|Chorak|MLB|19740923|Washington
@@ -11582,17 +11582,17 @@ Dana|Cottrell|MLB|19740111|Syracuse
 Keith|Council|DT|19741203|
 Jomo|Cousins|DE|19740904|
 Sam|Cowart|MLB|19750226|Florida State
-Dameyune|Craig|QB|19740419|
+Dameyune|Craig|QB|19740419|Auburn
 Germane|Crowell|WR|19760913|Virginia
 Buddy|Crutchfield|CB|19760307|North Carolina Central
-Casey|Dailey|MLB|19750611|
+Casey|Dailey|MLB|19750611|Northwestern
 Lional|Dalton|DT|19750221|Eastern Michigan
-Tony|Darden|CB|19750811|
+Tony|Darden|CB|19750811|Texas Tech
 Donovin|Darius|S|19750812|Syracuse
-Jerome|Davis|DE|19740304|
+Jerome|Davis|DE|19740304|Minnesota
 Wendell|Davis|TE|19751024|Temple
-Jake|Delhomme|QB|19750110|
-Gennaro|DiNapoli|LG|19750525|
+Jake|Delhomme|QB|19750110|Louisiana-Lafayette
+Gennaro|DiNapoli|LG|19750525|Virginia Tech
 Chris|Dittoe|QB|19730801|
 Mark|Dixon|LG|19701126|Virginia
 Todd|Doxzon|QB|19750328|Iowa State
@@ -11624,8 +11624,8 @@ Damon|Gibson|WR|19750225|Iowa
 Reggie|Givens|MLB|19711003|Penn State
 Mike|Goff|LG|19760106|Iowa
 Dan|Gonzalez|QB|19740920|
-Pete|Gonzalez|QB|19740704|
-DeMingo|Graham|LT|19730910|
+Pete|Gonzalez|QB|19740704|Pittsburgh
+DeMingo|Graham|LT|19730910|Hofstra
 Ahman|Green|RB|19770216|Nebraska
 E.G.|Green|WR|19750628|Florida State
 Jacquez|Green|WR|19760115|Florida
@@ -11635,8 +11635,8 @@ Az-Zahir|Hakim|WR|19770603|San Diego State
 Bob|Hallen|C|19750309|Kent State
 Darren|Hambrick|MLB|19750830|South Carolina
 Malcolm|Hamilton|MLB|19721231|Baylor
-Uhuru|Hamiter|DE|19730314|
-Cedric|Harden|DE|19741019|
+Uhuru|Hamiter|DE|19730314|Delaware State
+Cedric|Harden|DE|19741019|Florida A&M
 Terry|Hardy|TE|19760531|Southern Mississippi
 Al|Harris|CB|19741207|Texas A&M-Kingsville
 Jon|Haskins|MLB|19751006|Stanford
@@ -11649,7 +11649,7 @@ Eric|Hicks|DE|19760617|Maryland
 Robert|Hicks|LT|19741117|Mississippi State
 Skip|Hicks|RB|19741013|UCLA
 Ray|Hill|CB|19750807|Michigan State
-Nate|Hobgood-Chittick|DT|19741130|
+Nate|Hobgood-Chittick|DT|19741130|North Carolina
 David|Hoelscher|DE|19751127|Eastern Kentucky
 Robert|Holcombe|RB|19751211|Illinois
 Vonnie|Holliday|DE|19751211|North Carolina
@@ -11657,7 +11657,7 @@ Tony|Horne|WR|19760321|Clemson
 Chris|Howard|RB|19750502|Michigan
 Eddie|Howard|P|19721016|Idaho
 Kevin|Huntley|WR|19760731|
-Brad|Jackson|MLB|19750111|
+Brad|Jackson|MLB|19750111|Cincinnati
 Waverly|Jackson|LT|19721219|Virginia Tech
 Kendyl|Jacox|LG|19750610|Kansas State
 Ron|Janes|RB|19750214|
@@ -11673,9 +11673,9 @@ Jason|Kaiser|CB|19731109|Culver-Stockton
 Doug|Karczewski|LG|19750206|
 Brian|Kelly|CB|19760114|Southern California
 Marchant|Kenney|MLB|19741117|
-Danny|Kight|K|19710818|
+Danny|Kight|K|19710818|Augusta State
 Carlos|King|RB|19731125|North Carolina State
-Charles|Kirby|RB|19741127|
+Charles|Kirby|RB|19741127|Virginia
 Mike|Kiselak|C|19670309|Maryland
 Olin|Kreutz|C|19770609|Washington
 Brad|Kubik|LG|19750331|
@@ -11700,13 +11700,13 @@ Kivuusama|Mays|MLB|19750107|North Carolina
 Ramos|McDonald|CB|19760430|New Mexico
 Jason|McEndoo|C|19750225|Washington State
 Scott|McGarrahan|CB|19740212|New Mexico
-Kevin|McKenzie|WR|19750920|
-Jeremy|McKinney|LT|19760106|
+Kevin|McKenzie|WR|19750920|Washington State
+Jeremy|McKinney|LT|19760106|Iowa
 Steve|McKinney|LG|19751015|Texas A&M
 R.W.|McQuarters|CB|19761221|Oklahoma State
 Ron|Merkerson|MLB|19750830|
 Kenny|Mixon|DE|19750531|Louisiana State
-Rod|Monroe|TE|19760730|
+Rod|Monroe|TE|19760730|Cincinnati
 Denis|Montana|WR|19720106|
 Kelvin|Moore|CB|19750307|Morgan State
 Larry|Moore|LG|19750601|Brigham Young
@@ -11716,17 +11716,17 @@ Mike|Moten|DT|19740312|Florida
 Jim|Murphy|QB|19750223|
 Michael|Myers|DT|19760120|Alabama
 DeShone|Myles|MLB|19741031|Nevada-Reno
-Toby|Myles|LT|19750723|
+Toby|Myles|LT|19750723|Jackson State
 Marcus|Nash|WR|19760201|Tennessee
-Jim|Nelson|MLB|19750416|
-Jeremy|Newberry|C|19760323|
+Jim|Nelson|MLB|19750416|Penn State
+Jeremy|Newberry|C|19760323|California
 Kevin|O'Neill|MLB|19750414|Bowling Green State
 Eric|Ogbogu|DE|19750718|Maryland
 Jeff|Ogden|WR|19750222|Eastern Washington
 Brock|Olivo|RB|19760624|Missouri
 Benji|Olson|LG|19750605|Washington
-Phil|Ostrowski|LG|19750923|
-Chad|Overhauser|LT|19750617|
+Phil|Ostrowski|LG|19750923|Penn State
+Chad|Overhauser|LT|19750617|UCLA
 Ken|Oxendine|RB|19751004|Virginia Tech
 Mitch|Palmer|MLB|19730902|Colorado State
 Tony|Parrish|S|19751123|Washington
@@ -11760,7 +11760,7 @@ Steve|Rosga|CB|19740710|
 Adrian|Ross|MLB|19750219|Colorado State
 Oliver|Ross|LT|19740927|Iowa State
 Allen|Rossum|CB|19751022|Notre Dame
-Angel|Rubio|DE|19750412|
+Angel|Rubio|DE|19750412|Southeast Missouri State
 Chris|Ruhman|LT|19741219|Texas A&M
 Rod|Rutledge|TE|19750812|Alabama
 Ephraim|Salaam|LT|19760619|San Diego State
@@ -11769,10 +11769,10 @@ Trey|Sartin|LT|19750319|
 Phil|Savoy|WR|19750216|
 Lance|Schulters|CB|19750527|Hofstra
 Mike|Sellers|TE|19750721|Walla Walla CC
-Kato|Serwanga|CB|19760723|
+Kato|Serwanga|CB|19760723|California
 Tawambi|Settles|CB|19760119|Duke
-Larry|Shannon|WR|19750202|
-Bobby|Shaw|WR|19730423|
+Larry|Shannon|WR|19750202|East Carolina
+Bobby|Shaw|WR|19730423|California
 Harold|Shaw|RB|19740903|Southern Mississippi
 Scott|Shaw|LG|19740602|Michigan State
 Kevin|Sheahan|DT|19750619|
@@ -11805,13 +11805,13 @@ Kywin|Supernaw|CB|19750602|Indiana
 Patrick|Surtain|CB|19760619|Southern Mississippi
 Ryan|Sutter|CB|19740914|Colorado
 Mike|Sutton|DE|19750425|Louisiana State
-Pete|Swanson|LT|19740326|
+Pete|Swanson|LT|19740326|Stanford
 Shawn|Swayda|DE|19740904|Arizona State
 Aaron|Taylor|LG|19750121|
 Cordell|Taylor|CB|19731222|Hampton
 Fred|Taylor|RB|19760127|Florida
 Henry|Taylor|DT|19751129|South Carolina
-Trey|Teague|LT|19741227|
+Trey|Teague|LT|19741227|Tennessee
 Ryan|Thelwell|WR|19730406|Minnesota
 Corey|Thomas|WR|19750606|Duke
 Melvin|Thomas|LG|19750611|
@@ -11835,7 +11835,7 @@ Eric|Warfield|CB|19760303|Nebraska
 Kurt|Warner|QB|19710622|Northern Iowa
 Ron|Warner|MLB|19750926|Kansas
 Todd|Washington|C|19760719|Virginia Tech
-Edwin|Watson|RB|19760929|
+Edwin|Watson|RB|19760929|Purdue
 Nate|Wayne|MLB|19750112|Mississippi
 Fred|Weary|CB|19740412|Florida
 Todd|Weiner|LT|19750916|Kansas State
@@ -11843,7 +11843,7 @@ Brandon|Whiting|DT|19760730|California
 Alvis|Whitted|WR|19740904|North Carolina State
 Jason|Whittle|LG|19750307|Missouri State
 Josh|Wilcox|TE|19740605|Oregon
-Chuck|Wiley|DE|19750306|
+Chuck|Wiley|DE|19750306|Louisiana State
 Ben|Williams|DT|19700528|Minnesota
 Clarence|Williams|RB|19750120|Florida State
 Elijah|Williams|CB|19750820|Florida
@@ -11855,7 +11855,7 @@ Lamanzer|Williams|DE|19741117|Minnesota
 Robert|Williams|CB|19770529|North Carolina
 Rodney A.|Williams|WR|19730815|
 Roland|Williams|TE|19750427|Syracuse
-Sammy|Williams|LT|19741214|
+Sammy|Williams|LT|19741214|Oklahoma
 Shaun|Williams|CB|19761010|UCLA
 Grant|Wistrom|DE|19760703|Nebraska
 Kailee|Wong|MLB|19760523|Stanford
@@ -11864,4205 +11864,4205 @@ Mike|Reed|RB|19750106|Washington
 Carl|Hansen|DT|19750125|Stanford
 Rob|Robertson|RB|19751106|
 Allen|DeGraffenreid|LT|19740603|Vanderbilt
-Rahim|Abdullah|OLB|19760322|
-Chris|Akins|CB|19761129|
-JoJuan|Armour|MLB|19760710|
-Phil|Armour|C|19761209|
-Rodney|Artmore|S|19740614|
-Larry|Atkins|CB|19750721|
-Jerry|Azumah|CB|19770901|
-Champ|Bailey|CB|19780622|
-Karsten|Bailey|WR|19770426|
-Eugene|Baker|WR|19760318|
-Lionel|Barnes|DT|19760419|
-Brent|Bartholomew|P|19761022|
-Eric|Barton|MLB|19770929|
-Michael|Basnight|RB|19770903|
-D'Wayne|Bates|WR|19751204|
-Shonn|Bell|TE|19741025|
+Rahim|Abdullah|OLB|19760322|Clemson
+Chris|Akins|CB|19761129|Arkansas-Pine Bluff
+JoJuan|Armour|MLB|19760710|Miami (Ohio)
+Phil|Armour|C|19761209|North Texas
+Rodney|Artmore|S|19740614|Baylor
+Larry|Atkins|CB|19750721|UCLA
+Jerry|Azumah|CB|19770901|New Hampshire
+Champ|Bailey|CB|19780622|Georgia
+Karsten|Bailey|WR|19770426|Auburn
+Eugene|Baker|WR|19760318|Kent State
+Lionel|Barnes|DT|19760419|Louisiana-Monroe
+Brent|Bartholomew|P|19761022|Ohio State
+Eric|Barton|MLB|19770929|Maryland
+Michael|Basnight|RB|19770903|North Carolina A&T State
+D'Wayne|Bates|WR|19751204|Northwestern
+Shonn|Bell|TE|19741025|Virginia-Wise
 Jimmie|Bell|DE|19731120|
-Tyrone|Bell|CB|19741020|
-Sean|Bennett|RB|19770317|
-Josh|Bidwell|P|19760313|
-Michael|Bishop|QB|19760515|
-Dre'|Bly|CB|19770522|
+Tyrone|Bell|CB|19741020|North Alabama
+Sean|Bennett|RB|19770317|Northwestern
+Josh|Bidwell|P|19760313|Oregon
+Michael|Bishop|QB|19760515|Kansas State
+Dre'|Bly|CB|19770522|North Carolina
 Trevor|Bollers|RB|19740924|
 Sherdrick|Bonner|QB|19681019|
-Marty|Booker|WR|19760731|
+Marty|Booker|WR|19760731|Louisiana-Monroe
 Tony|Booth|CB|19750803|
-Jason|Bostic|CB|19760630|
-David|Boston|WR|19780819|
-David|Bowens|MLB|19770703|
+Jason|Bostic|CB|19760630|Georgia Tech
+David|Boston|WR|19780819|Ohio State
+David|Bowens|MLB|19770703|Western Illinois
 Josh|Bradley|TE|19740327|
-Melvin|Bradley|MLB|19760815|
-Chris|Brazzell|WR|19760522|
-Aaron|Brooks|QB|19760324|
-Bobby|Brooks|MLB|19760303|
-Ernie|Brown|DE|19710314|
-Fakhir|Brown|CB|19770921|
-Kris|Brown|K|19761223|
-Larry|Brown|TE|19760901|
-Na|Brown|WR|19770222|
-Wilbert|Brown|LG|19770509|
-Fernando|Bryant|CB|19770326|
-Tony|Bryant|DE|19760903|
+Melvin|Bradley|MLB|19760815|Arkansas
+Chris|Brazzell|WR|19760522|Angelo State
+Aaron|Brooks|QB|19760324|Virginia
+Bobby|Brooks|MLB|19760303|Fresno State
+Ernie|Brown|DE|19710314|Syracuse
+Fakhir|Brown|CB|19770921|Grambling State
+Kris|Brown|K|19761223|Nebraska
+Larry|Brown|TE|19760901|Georgia
+Na|Brown|WR|19770222|North Carolina
+Wilbert|Brown|LG|19770509|Houston
+Fernando|Bryant|CB|19770326|Alabama
+Tony|Bryant|DE|19760903|Florida State
 Chris|Brymer|LG|19741129|
-Shawn|Bryson|RB|19761130|
-Doug|Brzezinski|LG|19760311|
-Tom|Burke|DT|19761012|
+Shawn|Bryson|RB|19761130|Tennessee
+Doug|Brzezinski|LG|19760311|Boston College
+Tom|Burke|DT|19761012|Wisconsin
 Justin|Burroughs|C|19760522|
-Dan|Campbell|TE|19760413|
-Mark|Campbell|TE|19751206|
+Dan|Campbell|TE|19760413|Texas A&M
+Mark|Campbell|TE|19751206|Michigan
 Jim|Cantelupe|CB|19740312|
-Keion|Carpenter|CB|19771031|
-Johndale|Carty|CB|19770827|
+Keion|Carpenter|CB|19771031|Virginia Tech
+Johndale|Carty|CB|19770827|Utah State
 Anthony|Cesario|LG|19760719|
-Corey|Chamblin|CB|19770529|
-Darrin|Chiaverini|WR|19771012|
-O.J.|Childress|MLB|19761206|
-Chris|Claiborne|OLB|19780726|
-Desmond|Clark|TE|19770420|
-Mike|Cloud|RB|19750701|
-Rich|Coady|CB|19760126|
+Corey|Chamblin|CB|19770529|Tennessee Tech
+Darrin|Chiaverini|WR|19771012|Colorado
+O.J.|Childress|MLB|19761206|Clemson
+Chris|Claiborne|OLB|19780726|Southern California
+Desmond|Clark|TE|19770420|Wake Forest
+Mike|Cloud|RB|19750701|Boston College
+Rich|Coady|CB|19760126|Texas A&M
 Tony|Coats|LG|19751005|
-Antonio|Cochran|DE|19760621|
-Mac|Cody|WR|19720807|
-Rod|Coleman|DT|19760816|
-Bobby|Collins|TE|19760820|
-Cecil|Collins|RB|19761119|
-Ryan|Collins|TE|19751101|
-Rosevelt|Colvin|MLB|19770905|
-Rashard|Cook|CB|19770418|
-Andre|Cooper|WR|19750621|
+Antonio|Cochran|DE|19760621|Georgia
+Mac|Cody|WR|19720807|Memphis
+Rod|Coleman|DT|19760816|East Carolina
+Bobby|Collins|TE|19760820|North Alabama
+Cecil|Collins|RB|19761119|McNeese State
+Ryan|Collins|TE|19751101|St. Thomas (Minnesota)
+Rosevelt|Colvin|MLB|19770905|Purdue
+Rashard|Cook|CB|19770418|Southern California
+Andre|Cooper|WR|19750621|Florida State
 Mondell|Corbett|LG|19770211|
-Jose|Cortez|K|19750527|
-Tim|Couch|QB|19770731|
-Scott|Covington|QB|19760117|
-Jason|Craft|CB|19760213|
-Clifton|Crosby|CB|19740917|
-Daunte|Culpepper|QB|19770128|
-DeMarcus|Curry|LT|19750430|
-Scott|Curry|LT|19751225|
-Matt|Cushing|TE|19750702|
+Jose|Cortez|K|19750527|Oregon State
+Tim|Couch|QB|19770731|Kentucky
+Scott|Covington|QB|19760117|Miami (Florida)
+Jason|Craft|CB|19760213|Colorado State
+Clifton|Crosby|CB|19740917|Maryland
+Daunte|Culpepper|QB|19770128|Central Florida
+DeMarcus|Curry|LT|19750430|Auburn
+Scott|Curry|LT|19751225|Montana
+Matt|Cushing|TE|19750702|Illinois
 Kevin|Daft|QB|19751119|
-Antico|Dalton|MLB|19751231|
+Antico|Dalton|MLB|19751231|Hampton
 Robert|Daniel|DE|19751019|
-Pernell|Davis|DT|19760519|
-Russell|Davis|DE|19750328|
-Zola|Davis|WR|19750116|
+Pernell|Davis|DT|19760519|Alabama-Birmingham
+Russell|Davis|DE|19750328|North Carolina
+Zola|Davis|WR|19750116|South Carolina
 Phil|Dawson|K|19750123|Texas
-James|Dearth|TE|19760122|
-Autry|Denson|RB|19761208|
-Dan|Dercher|LT|19760602|
-Jared|DeVries|DE|19760611|
-Adrian|Dingle|DE|19770625|
-Antonio|Dingle|DT|19761007|
-Andre|Dixon|CB|19751204|
+James|Dearth|TE|19760122|Tarleton State
+Autry|Denson|RB|19761208|Notre Dame
+Dan|Dercher|LT|19760602|Kansas
+Jared|DeVries|DE|19760611|Iowa
+Adrian|Dingle|DE|19770625|Clemson
+Antonio|Dingle|DT|19761007|Virginia
+Andre|Dixon|CB|19751204|Northeastern
 Mike|Doughty|LT|19750218|
-Dameane|Douglas|WR|19760315|
-Marques|Douglas|DE|19770315|
+Dameane|Douglas|WR|19760315|California
+Marques|Douglas|DE|19770315|Howard
 Scott|Dreisbach|QB|19751216|
-Donald|Driver|WR|19750202|
-Bill|Duff|DT|19740224|
-Damon|Dunn|WR|19760315|
-Antuan|Edwards|CB|19770526|
+Donald|Driver|WR|19750202|Alcorn State
+Bill|Duff|DT|19740224|Tennessee
+Damon|Dunn|WR|19760315|Stanford
+Antuan|Edwards|CB|19770526|Clemson
 Brian|Edwards|RB|19760606|
-Troy|Edwards|WR|19770407|
-Ebenezer|Ekuban|DE|19760529|
+Troy|Edwards|WR|19770407|Louisiana Tech
+Ebenezer|Ekuban|DE|19760529|North Carolina
 Justin|Ernest|DT|19721217|
-Robert|Farmer|RB|19740304|
-Kris|Farris|LT|19770327|
-Kevin|Faulk|RB|19760605|
-Jermaine|Fazande|RB|19750114|
+Robert|Farmer|RB|19740304|Notre Dame
+Kris|Farris|LT|19770327|UCLA
+Kevin|Faulk|RB|19760605|Louisiana State
+Jermaine|Fazande|RB|19750114|Oklahoma
 Dan|Finn|LG|19760823|
-Brian|Finneran|WR|19760131|
-Charles|Fisher|CB|19760202|
-Derrick|Fletcher|LT|19750909|
-Jay|Foreman|MLB|19760218|
+Brian|Finneran|WR|19760131|Villanova
+Charles|Fisher|CB|19760202|West Virginia
+Derrick|Fletcher|LT|19750909|Baylor
+Jay|Foreman|MLB|19760218|Nebraska
 Rufus|French|TE|19780315|
-Ben|Fricke|C|19751103|
-Lennie|Friedman|C|19761013|
+Ben|Fricke|C|19751103|Houston
+Lennie|Friedman|C|19761013|Duke
 Todd|Frohbieter|LT|19750307|
-Jeff|Garcia|QB|19700224|
-Barry|Gardner|OLB|19761213|
-Kelvin|Garmon|LG|19761026|
-Olandis|Gary|RB|19750518|
-Tony|George|CB|19750810|
-Joe|Germaine|QB|19751116|
-Aaron|Gibson|LT|19770927|
-Phil|Glover|MLB|19751217|
+Jeff|Garcia|QB|19700224|San Jose State
+Barry|Gardner|OLB|19761213|Northwestern
+Kelvin|Garmon|LG|19761026|Baylor
+Olandis|Gary|RB|19750518|Georgia
+Tony|George|CB|19750810|Florida
+Joe|Germaine|QB|19751116|Ohio State
+Aaron|Gibson|LT|19770927|Wisconsin
+Phil|Glover|MLB|19751217|Utah
 Tyrone|Goodson|WR|19740224|
-Lennox|Gordon|RB|19780909|
-Brian|Gowins|K|19760603|
-Martin|Gramatica|K|19751127|
-Lamont|Green|MLB|19760710|
-Kelly|Gregg|DT|19761101|
-Chris|Greisen|QB|19760702|
-Damon|Griffin|WR|19760614|
-Ryan|Hale|DT|19750710|
-Cory|Hall|S|19761205|
-Lamont|Hall|TE|19741116|
-Chris|Hanson|P|19761025|
-Johnnie|Harris|CB|19720821|
+Lennox|Gordon|RB|19780909|New Mexico
+Brian|Gowins|K|19760603|Northwestern
+Martin|Gramatica|K|19751127|Kansas State
+Lamont|Green|MLB|19760710|Florida State
+Kelly|Gregg|DT|19761101|Oklahoma
+Chris|Greisen|QB|19760702|Northwest Missouri State
+Damon|Griffin|WR|19760614|Oregon
+Ryan|Hale|DT|19750710|Arkansas
+Cory|Hall|S|19761205|Fresno State
+Lamont|Hall|TE|19741116|Clemson
+Chris|Hanson|P|19761025|Marshall
+Johnnie|Harris|CB|19720821|Mississippi State
 Matt|Hasselbeck|QB|19750925|Boston College
-Rodney|Heath|CB|19741029|
-Steve|Heiden|TE|19760921|
-Craig|Heimburger|C|19770203|
-Madre|Hill|RB|19760102|
-James|Hodgins|RB|19770430|
-Warrick|Holdman|MLB|19751122|
-Jaret|Holmes|K|19760303|
-Torry|Holt|WR|19760605|
-Tyrone|Hopson|LG|19760528|
-Brock|Huard|QB|19760415|
+Rodney|Heath|CB|19741029|Minnesota
+Steve|Heiden|TE|19760921|South Dakota State
+Craig|Heimburger|C|19770203|Missouri
+Madre|Hill|RB|19760102|Arkansas
+James|Hodgins|RB|19770430|San Jose State
+Warrick|Holdman|MLB|19751122|Texas A&M
+Jaret|Holmes|K|19760303|Auburn
+Torry|Holt|WR|19760605|North Carolina State
+Tyrone|Hopson|LG|19760528|Eastern Kentucky
+Brock|Huard|QB|19760415|Washington
 Ben|Huff|DT|19750221|
 Jay|Humphrey|LT|19760620|
-Cletidus|Hunt|DE|19760102|
+Cletidus|Hunt|DE|19760102|Kentucky State
 Robert|Hunt|LG|19750722|
-Sedrick|Irvin|RB|19780330|
-Dexter|Jackson|CB|19770728|
-Lenzie|Jackson|WR|19770617|
-Sheldon|Jackson|TE|19760724|
-Terry|Jackson|RB|19760110|
+Sedrick|Irvin|RB|19780330|Michigan State
+Dexter|Jackson|CB|19770728|Florida State
+Lenzie|Jackson|WR|19770617|Arizona State
+Sheldon|Jackson|TE|19760724|Nebraska
+Terry|Jackson|RB|19760110|Florida
 Vershan|Jackson|RB|19750227|
-Edgerrin|James|RB|19780801|
-Jon|Jansen|LT|19760128|
-MarTay|Jenkins|WR|19750228|
-Dustin|Johnson|RB|19730805|
-J.J.|Johnson|RB|19740420|
-Kevin|Johnson|WR|19760715|
-Malcolm|Johnson|WR|19770827|
-Olrick|Johnson|MLB|19770820|
+Edgerrin|James|RB|19780801|Miami (Florida)
+Jon|Jansen|LT|19760128|Michigan
+MarTay|Jenkins|WR|19750228|Nebraska-Omaha
+Dustin|Johnson|RB|19730805|Brigham Young
+J.J.|Johnson|RB|19740420|Mississippi State
+Kevin|Johnson|WR|19760715|Syracuse
+Malcolm|Johnson|WR|19770827|Notre Dame
+Olrick|Johnson|MLB|19770820|Florida A&M
 Paris|Johnson|CB|19760118|
-Isaac|Jones|WR|19751207|
-Jermaine|Jones|CB|19760725|
-Andy|Katzenmoyer|MLB|19771202|
-Jevon|Kearse|DE|19760903|
-Jeff|Kelly|MLB|19751213|
-Reggie|Kelly|TE|19770222|
-Chad|Kelsay|MLB|19770409|
-Matt|Keneley|DT|19731201|
-Patrick|Kerney|DE|19761230|
-Lamar|King|DE|19750810|
-Shaun|King|QB|19770529|
-Jimmy|Kleinsasser|FB|19770131|
-Rob|Konrad|FB|19761112|
-Clint|Kriewaldt|MLB|19760316|
-Kevin|Landolt|DT|19751025|
-Dwayne|Ledford|LT|19761102|
-Del|Lee|CB|19760119|
-Emarlos|Leroy|DT|19750731|
-Ron|Leshinski|TE|19740306|
-Bashir|Levingston|CB|19761002|
+Isaac|Jones|WR|19751207|Purdue
+Jermaine|Jones|CB|19760725|Northwestern State (Louisiana)
+Andy|Katzenmoyer|MLB|19771202|Ohio State
+Jevon|Kearse|DE|19760903|Florida
+Jeff|Kelly|MLB|19751213|Kansas State
+Reggie|Kelly|TE|19770222|Mississippi State
+Chad|Kelsay|MLB|19770409|Nebraska
+Matt|Keneley|DT|19731201|Southern California
+Patrick|Kerney|DE|19761230|Virginia
+Lamar|King|DE|19750810|Saginaw Valley State
+Shaun|King|QB|19770529|Tulane
+Jimmy|Kleinsasser|FB|19770131|North Dakota
+Rob|Konrad|FB|19761112|Syracuse
+Clint|Kriewaldt|MLB|19760316|Wisconsin-Stevens Point
+Kevin|Landolt|DT|19751025|West Virginia
+Dwayne|Ledford|LT|19761102|East Carolina
+Del|Lee|CB|19760119|McNeese State
+Emarlos|Leroy|DT|19750731|Georgia
+Ron|Leshinski|TE|19740306|Army
+Bashir|Levingston|CB|19761002|Eastern Washington
 Marc|Lillibridge|MLB|19720218|
-Steve|Lindsey|K|19741125|
-David|Loverne|LG|19760522|
-Mike|Lucky|TE|19751123|
-J.P.|Machado|LG|19760106|
-Stacey|Mack|RB|19750626|
-Joel|Makovicka|FB|19751006|
-Cecil|Martin|FB|19750708|
-Mike|Maslowski|MLB|19740711|
-Vili|Maumau|DT|19750403|
-Chris|McAlister|CB|19770614|
-Tod|McBride|CB|19760126|
-Todd|McClure|C|19770216|
-Andy|McCullough|WR|19751111|
-Daylon|McCutcheon|CB|19761209|
-Jeremy|McDaniel|WR|19760502|
-Darnell|McDonald|WR|19760526|
-Anthony|McFarland|DT|19771218|
-Wane|McGarity|WR|19760930|
-Reggie|McGrew|DT|19761216|
-Travis|McGriff|WR|19760624|
-Mike|McKenzie|CB|19760426|
-Dennis|McKinley|FB|19761103|
-John|McLaughlin|MLB|19751113|
-Kevin|McLeod|RB|19741017|
-Donovan|McNabb|QB|19761125|
-Cade|McNown|QB|19770112|
-Marc|Megna|MLB|19760730|
-Arnold|Miller|DE|19750103|
-Billy|Miller|WR|19770424|
-Kory|Minor|MLB|19761214|
-Paul|Miranda|CB|19760502|
-Anthony|Mitchell|CB|19741213|
-Basil|Mitchell|RB|19750907|
-Donald|Mitchell|CB|19761214|
-Joe|Montgomery|RB|19760608|
-Damon|Moore|S|19760915|
-Jason|Moore|CB|19760115|
-Sean|Morey|WR|19760226|
+Steve|Lindsey|K|19741125|Mississippi
+David|Loverne|LG|19760522|San Jose State
+Mike|Lucky|TE|19751123|Arizona
+J.P.|Machado|LG|19760106|Illinois
+Stacey|Mack|RB|19750626|Temple
+Joel|Makovicka|FB|19751006|Nebraska
+Cecil|Martin|FB|19750708|Wisconsin
+Mike|Maslowski|MLB|19740711|Wisconsin-La Crosse
+Vili|Maumau|DT|19750403|Colorado
+Chris|McAlister|CB|19770614|Arizona
+Tod|McBride|CB|19760126|UCLA
+Todd|McClure|C|19770216|Louisiana State
+Andy|McCullough|WR|19751111|Tennessee
+Daylon|McCutcheon|CB|19761209|Southern California
+Jeremy|McDaniel|WR|19760502|Arizona
+Darnell|McDonald|WR|19760526|Kansas State
+Anthony|McFarland|DT|19771218|Louisiana State
+Wane|McGarity|WR|19760930|Texas
+Reggie|McGrew|DT|19761216|Florida
+Travis|McGriff|WR|19760624|Florida
+Mike|McKenzie|CB|19760426|Memphis
+Dennis|McKinley|FB|19761103|Mississippi State
+John|McLaughlin|MLB|19751113|California
+Kevin|McLeod|RB|19741017|Auburn
+Donovan|McNabb|QB|19761125|Syracuse
+Cade|McNown|QB|19770112|UCLA
+Marc|Megna|MLB|19760730|Richmond
+Arnold|Miller|DE|19750103|Louisiana State
+Billy|Miller|WR|19770424|Southern California
+Kory|Minor|MLB|19761214|Notre Dame
+Paul|Miranda|CB|19760502|Central Florida
+Anthony|Mitchell|CB|19741213|Tuskegee
+Basil|Mitchell|RB|19750907|Texas Christian
+Donald|Mitchell|CB|19761214|Southern Methodist
+Joe|Montgomery|RB|19760608|Ohio State
+Damon|Moore|S|19760915|Ohio State
+Jason|Moore|CB|19760115|San Diego State
+Sean|Morey|WR|19760226|Brown
 Dee|Moronkola|CB|19770701|
-Mustafah|Muhammad|CB|19731019|
-Edwin|Mulitalo|LG|19740901|
-Yo|Murphy|WR|19730511|
-Hannibal|Navies|MLB|19770719|
-Reggie|Nelson|LG|19760623|
-Jamar|Nesbit|C|19761217|
+Mustafah|Muhammad|CB|19731019|Fresno State
+Edwin|Mulitalo|LG|19740901|Arizona
+Yo|Murphy|WR|19730511|Idaho
+Hannibal|Navies|MLB|19770719|Colorado
+Reggie|Nelson|LG|19760623|McNeese State
+Jamar|Nesbit|C|19761217|South Carolina
 Jason|Nevadomsky|MLB|19751108|
 Mike|Newell|C|19760722|
-Keith|Newman|MLB|19770119|
-Dat|Nguyen|MLB|19750925|
-Brandon|Noble|DT|19740410|
+Keith|Newman|MLB|19770119|North Carolina
+Dat|Nguyen|MLB|19750925|Texas A&M
+Brandon|Noble|DT|19740410|Penn State
 Tori|Noel|CB|19750217|
-Chukie|Nwokorie|DT|19750710|
-Dennis|O'Sullivan|DT|19760128|
-Kendall|Ogle|MLB|19751125|
-Chike|Okeafor|MLB|19760327|
+Chukie|Nwokorie|DT|19750710|Purdue
+Dennis|O'Sullivan|DT|19760128|Tulane
+Kendall|Ogle|MLB|19751125|Maryland
+Chike|Okeafor|MLB|19760327|Purdue
 Chris|Ortiz|WR|19740925|
-Craig|Page|C|19760117|
-Solomon|Page|LG|19760227|
+Craig|Page|C|19760117|Georgia Tech
+Solomon|Page|LG|19760227|West Virginia
 Dan|Palmer|C|19730824|
-Randy|Palmer|TE|19751112|
-Anthony|Parker|CB|19751204|
-De'Mond|Parker|RB|19761224|
-Larry|Parker|WR|19760714|
-Jeff|Paulk|RB|19760426|
-Troy|Pelshak|MLB|19770306|
-Jason|Perry|CB|19760801|
-Ben|Peterson|MLB|19770328|
-Mike|Peterson|OLB|19760617|
-Luke|Petitgout|LG|19760616|
-Zach|Piller|LT|19760502|
-Chad|Plummer|WR|19751130|
-Anthony|Poindexter|CB|19760728|
-Daniel|Pope|P|19750328|
-Joey|Porter|MLB|19770322|
-Marvin|Powell|RB|19760606|
-Ronnie|Powell|WR|19741103|
-Peerless|Price|WR|19761027|
+Randy|Palmer|TE|19751112|Texas A&M-Kingsville
+Anthony|Parker|CB|19751204|Weber State
+De'Mond|Parker|RB|19761224|Oklahoma
+Larry|Parker|WR|19760714|Southern California
+Jeff|Paulk|RB|19760426|Arizona State
+Troy|Pelshak|MLB|19770306|North Carolina A&T State
+Jason|Perry|CB|19760801|North Carolina State
+Ben|Peterson|MLB|19770328|Pittsburg State
+Mike|Peterson|OLB|19760617|Florida
+Luke|Petitgout|LG|19760616|Notre Dame
+Zach|Piller|LT|19760502|Florida
+Chad|Plummer|WR|19751130|Cincinnati
+Anthony|Poindexter|CB|19760728|Virginia
+Daniel|Pope|P|19750328|Alabama
+Joey|Porter|MLB|19770322|Colorado State
+Marvin|Powell|RB|19760606|Southern California
+Ronnie|Powell|WR|19741103|Northwestern State (Louisiana)
+Peerless|Price|WR|19761027|Tennessee
 Raymond|Priester|RB|19750203|
-Mike|Pringley|DE|19760522|
-Pierson|Prioleau|CB|19770806|
-Ian|Rafferty|LT|19760902|
-Wali|Rainer|MLB|19770419|
-Marcus|Ray|CB|19760814|
-Montae|Reagor|DE|19770629|
-Robert|Reed|WR|19750114|
-John|Reeves|MLB|19750223|
-Coby|Rhinehart|CB|19770207|
-Charlie|Rogers|WR|19760619|
-Chris|Rogers|CB|19770103|
-Tyrone|Rogers|MLB|19740309|
-Mike|Rosenthal|LG|19770610|
-Mike|Rucker|DE|19750228|
-Grey|Ruegamer|C|19760611|
-Orlando|Ruff|MLB|19760928|
-Johnny|Rutledge|MLB|19770104|
-Khari|Samuel|MLB|19761014|
+Mike|Pringley|DE|19760522|North Carolina
+Pierson|Prioleau|CB|19770806|Virginia Tech
+Ian|Rafferty|LT|19760902|North Carolina State
+Wali|Rainer|MLB|19770419|Virginia
+Marcus|Ray|CB|19760814|Michigan
+Montae|Reagor|DE|19770629|Texas Tech
+Robert|Reed|WR|19750114|Lambuth
+John|Reeves|MLB|19750223|Purdue
+Coby|Rhinehart|CB|19770207|Southern Methodist
+Charlie|Rogers|WR|19760619|Georgia Tech
+Chris|Rogers|CB|19770103|Howard
+Tyrone|Rogers|MLB|19740309|Alabama State
+Mike|Rosenthal|LG|19770610|Notre Dame
+Mike|Rucker|DE|19750228|Nebraska
+Grey|Ruegamer|C|19760611|Arizona State
+Orlando|Ruff|MLB|19760928|Furman
+Johnny|Rutledge|MLB|19770104|Florida
+Khari|Samuel|MLB|19761014|Massachusetts
 Kio|Sanford|WR|19750108|
 Sulecio|Sanford|WR|19760323|
-Jeff|Saturday|LG|19750618|
-Cory|Sauter|QB|19741121|
-Talance|Sawyer|DE|19760614|
-Ryan|Schau|LG|19751230|
-Brad|Scioli|DE|19760906|
-Yusuf|Scott|LG|19761130|
-Wasswa|Serwanga|CB|19760723|
-L.J.|Shelton|LT|19760321|
-Paul|Shields|FB|19760131|
-Scott|Shields|CB|19760329|
-Antoine|Simpson|DT|19761207|
-Aaron|Smith|DE|19760419|
-Akili|Smith|QB|19750821|
+Jeff|Saturday|LG|19750618|North Carolina
+Cory|Sauter|QB|19741121|Minnesota
+Talance|Sawyer|DE|19760614|Nevada-Las Vegas
+Ryan|Schau|LG|19751230|Illinois
+Brad|Scioli|DE|19760906|Penn State
+Yusuf|Scott|LG|19761130|Arizona
+Wasswa|Serwanga|CB|19760723|UCLA
+L.J.|Shelton|LT|19760321|Eastern Michigan
+Paul|Shields|FB|19760131|Arizona
+Scott|Shields|CB|19760329|Weber State
+Antoine|Simpson|DT|19761207|Houston
+Aaron|Smith|DE|19760419|Northern Colorado
+Akili|Smith|QB|19750821|Oregon
 Derek G.|Smith|LG|19760413|
 Devon|Smith|TE|19760117|
-Hunter|Smith|P|19770809|
-Larry|Smith|DT|19741204|
-Marquis|Smith|CB|19750113|
-Troy|Smith|WR|19770730|
-Matt|Snider|FB|19760126|
-Paul|Spicer|DE|19750818|
-Cameron|Spikes|LG|19761106|
-Donnie|Spragan|MLB|19760712|
-Marcus|Spriggs|DT|19760726|
-Chad|Stanley|P|19760129|
-Reggie|Stephens|CB|19750221|
-Gary|Stills|MLB|19740711|
-Matt|Stinchcomb|LT|19770603|
-Brandon|Stokley|WR|19760623|
-Tai|Streets|WR|19770420|
+Hunter|Smith|P|19770809|Notre Dame
+Larry|Smith|DT|19741204|Florida State
+Marquis|Smith|CB|19750113|California
+Troy|Smith|WR|19770730|East Carolina
+Matt|Snider|FB|19760126|Richmond
+Paul|Spicer|DE|19750818|Saginaw Valley State
+Cameron|Spikes|LG|19761106|Texas A&M
+Donnie|Spragan|MLB|19760712|Stanford
+Marcus|Spriggs|DT|19760726|Houston
+Chad|Stanley|P|19760129|Stephen F. Austin State
+Reggie|Stephens|CB|19750221|Rutgers
+Gary|Stills|MLB|19740711|West Virginia
+Matt|Stinchcomb|LT|19770603|Georgia
+Brandon|Stokley|WR|19760623|Louisiana-Lafayette
+Tai|Streets|WR|19770420|Michigan
 Kelvin|Suggs|CB|19760107|
-Jason|Suttle|CB|19741202|
-Justin|Swift|TE|19750814|
-Sam|Sword|OLB|19741204|
-J.J.|Syvrud|MLB|19770510|
-John|Tait|LT|19750126|
-Tyree|Talton|CB|19760510|
-Daryl|Terrell|LT|19750125|
-Chris|Terry|LT|19750808|
-Corey|Terry|DE|19760306|
-Mark|Thomas|TE|19760426|
-Randy|Thomas|LG|19760119|
-Derrius|Thompson|WR|19770705|
-John|Thornton|DT|19761002|
-Jason|Tucker|WR|19760624|
-Rex|Tucker|LT|19761220|
-Jerame|Tuman|TE|19760324|
-Dimitrius|Underwood|DE|19770329|
-Fred|Vinson|CB|19770402|
-Chris|Watson|CB|19770630|
-Justin|Watson|RB|19750107|
-Andre|Weathers|CB|19760806|
-Jed|Weaver|TE|19760811|
-Floyd|Wedderburn|LT|19760505|
-John|Welbourn|LT|19760330|
-Joe|Wesley|MLB|19761110|
-Lyle|West|CB|19761220|
-Chris|White|DE|19760928|
-Willie|Whitehead|DE|19730126|
-Terrence|Wilkins|WR|19750729|
-K.D.|Williams|OLB|19730422|
-Nicolas|Luchey|FB|19770330|
-Ricky|Williams|RB|19770521|
+Jason|Suttle|CB|19741202|Wisconsin
+Justin|Swift|TE|19750814|Kansas State
+Sam|Sword|OLB|19741204|Michigan
+J.J.|Syvrud|MLB|19770510|Jamestown
+John|Tait|LT|19750126|Brigham Young
+Tyree|Talton|CB|19760510|Northern Iowa
+Daryl|Terrell|LT|19750125|Southern Mississippi
+Chris|Terry|LT|19750808|Georgia
+Corey|Terry|DE|19760306|Tennessee
+Mark|Thomas|TE|19760426|North Carolina State
+Randy|Thomas|LG|19760119|Mississippi State
+Derrius|Thompson|WR|19770705|Baylor
+John|Thornton|DT|19761002|West Virginia
+Jason|Tucker|WR|19760624|Texas Christian
+Rex|Tucker|LT|19761220|Texas A&M
+Jerame|Tuman|TE|19760324|Michigan
+Dimitrius|Underwood|DE|19770329|Michigan State
+Fred|Vinson|CB|19770402|Vanderbilt
+Chris|Watson|CB|19770630|Eastern Illinois
+Justin|Watson|RB|19750107|San Diego State
+Andre|Weathers|CB|19760806|Michigan
+Jed|Weaver|TE|19760811|Oregon
+Floyd|Wedderburn|LT|19760505|Penn State
+John|Welbourn|LT|19760330|California
+Joe|Wesley|MLB|19761110|Louisiana State
+Lyle|West|CB|19761220|San Jose State
+Chris|White|DE|19760928|Southern University
+Willie|Whitehead|DE|19730126|Auburn
+Terrence|Wilkins|WR|19750729|Virginia
+K.D.|Williams|OLB|19730422|Henderson State
+Nicolas|Luchey|FB|19770330|Miami (Florida)
+Ricky|Williams|RB|19770521|Texas
 Sean|Williams|CB|19750611|
-Al|Wilson|MLB|19770621|
-Jason|Wiltz|DT|19761123|
-Antoine|Winfield|CB|19770624|
-Jerry|Wisne|LG|19760728|
-Cory|Withrow|C|19750405|
-Joe|Wong|LT|19760224|
-Damien|Woody|C|19771103|
-Mark|Word|DE|19751123|
-Anthony|Wright|QB|19760214|
-Kenny|Wright|CB|19770914|
-Craig|Yeast|WR|19761120|
+Al|Wilson|MLB|19770621|Tennessee
+Jason|Wiltz|DT|19761123|Nebraska
+Antoine|Winfield|CB|19770624|Ohio State
+Jerry|Wisne|LG|19760728|Notre Dame
+Cory|Withrow|C|19750405|Washington State
+Joe|Wong|LT|19760224|Brigham Young
+Damien|Woody|C|19771103|Boston College
+Mark|Word|DE|19751123|Jacksonville State
+Anthony|Wright|QB|19760214|South Carolina
+Kenny|Wright|CB|19770914|Northwestern State (Louisiana)
+Craig|Yeast|WR|19761120|Kentucky
 Glenn|Young|DE|19750910|
-Ryan|Young|LT|19760628|
-Steve|Zahursky|LG|19760902|
-Joe|Zelenka|TE|19760309|
-Peppi|Zellner|DE|19750314|
-Amos|Zereoue|RB|19761008|
-Justin|Lucas|CB|19760715|
-Willie|Jones|LT|19751217|
-Duane|Hawthorne|CB|19760826|
-Ryan|Neufeld|TE|19751122|
-Robert|Newkirk|DT|19770306|
-Don|Morgan|CB|19750918|
+Ryan|Young|LT|19760628|Kansas State
+Steve|Zahursky|LG|19760902|Kent State
+Joe|Zelenka|TE|19760309|Wake Forest
+Peppi|Zellner|DE|19750314|Fort Valley State
+Amos|Zereoue|RB|19761008|West Virginia
+Justin|Lucas|CB|19760715|Abilene Christian
+Willie|Jones|LT|19751217|Grambling State
+Duane|Hawthorne|CB|19760826|Northern Illinois
+Ryan|Neufeld|TE|19751122|UCLA
+Robert|Newkirk|DT|19770306|Michigan State
+Don|Morgan|CB|19750918|Nevada-Reno
 Ted|White|QB|19760529|
 David|Stroshine|MLB|19760603|
-Joe|Tuipala|MLB|19760913|
-Corey|Ivy|CB|19770321|
-Reggie|Davis|TE|19760903|
-Phil|Clarke|MLB|19770119|
-Corey|Harris|CB|19761128|
+Joe|Tuipala|MLB|19760913|San Diego State
+Corey|Ivy|CB|19770321|Oklahoma
+Reggie|Davis|TE|19760903|Washington
+Phil|Clarke|MLB|19770119|Pittsburgh
+Corey|Harris|CB|19761128|North Alabama
 Bryan|LaBelle|LT|19760412|
-Barry|Sims|LG|19741201|
-Mike|Schneck|CB|19770804|
-Gaylon|Hyder|DT|19741018|
+Barry|Sims|LG|19741201|Utah
+Mike|Schneck|CB|19770804|Wisconsin
+Gaylon|Hyder|DT|19741018|Texas Christian
 J'Juan|Cherry|CB|19761028|
-Robert|Baker|WR|19760514|
-Derrick|Gardner|CB|19770310|
+Robert|Baker|WR|19760514|Auburn
+Derrick|Gardner|CB|19770310|California
 Jeff|Fox|QB||
 Jermaine|Chaney|RB|19730406|
-Tre|Thomas|CB|19750912|
-P.J.|Franklin|WR|19770928|
-Marlon|Barnes|RB|19760313|
+Tre|Thomas|CB|19750912|Texas
+P.J.|Franklin|WR|19770928|Tulane
+Marlon|Barnes|RB|19760313|Colorado
 Donald|Broomfield|DT|19760610|
-Barry|Cantrell|P|19761102|
-Matt|Cercone|TE|19751130|
-Matt|Chatham|MLB|19770628|
-Nakia|Codie|CB|19760120|
-Thabiti|Davis|WR|19750324|
+Barry|Cantrell|P|19761102|Fordham
+Matt|Cercone|TE|19751130|Arizona State
+Matt|Chatham|MLB|19770628|South Dakota
+Nakia|Codie|CB|19760120|Baylor
+Thabiti|Davis|WR|19750324|Wake Forest
 Cedric|Donaldson|CB|19760212|
-Scott|Dragos|TE|19751028|
-Chad|Dukes|RB|19711229|
+Scott|Dragos|TE|19751028|Boston College
+Chad|Dukes|RB|19711229|Pittsburgh
 Emil|Ekiyor|DE|19741225|
-Keith|Embray|DE|19691129|
-Nick|Ferguson|CB|19741127|
-Jim|Finn|RB|19761209|
-Cory|Geason|TE|19750812|
-Chris|Gizzi|MLB|19750308|
-Jermaine|Haley|DT|19730213|
-Jeff|Hall|K|19760730|
-Derrick|Ham|DE|19750323|
-Mark|Hartsell|QB|19731207|
-Armon|Hatcher|CB|19760715|
-James|Hill|TE|19741025|
-Raion|Hill|S|19760902|
-Bobbie|Howard|MLB|19770614|
-Deon|Humphrey|MLB|19760507|
-Chris|Jackson|WR|19750226|
+Keith|Embray|DE|19691129|Utah
+Nick|Ferguson|CB|19741127|Georgia Tech
+Jim|Finn|RB|19761209|Pennsylvania
+Cory|Geason|TE|19750812|Tulane
+Chris|Gizzi|MLB|19750308|Air Force
+Jermaine|Haley|DT|19730213|Butte CC
+Jeff|Hall|K|19760730|Tennessee
+Derrick|Ham|DE|19750323|Miami (Florida)
+Mark|Hartsell|QB|19731207|Boston College
+Armon|Hatcher|CB|19760715|Oregon State
+James|Hill|TE|19741025|Abilene Christian
+Raion|Hill|S|19760902|Louisiana State
+Bobbie|Howard|MLB|19770614|Notre Dame
+Deon|Humphrey|MLB|19760507|Florida State
+Chris|Jackson|WR|19750226|Washington State
 Marcus|Jenkins|LG|19750912|
-Garrett|Johnson|DT|19751231|
+Garrett|Johnson|DT|19751231|Illinois
 Chris|Jones|MLB|19760930|
-Maurice|Kelly|S|19721009|
+Maurice|Kelly|S|19721009|East Tennessee State
 Joshua|Keur|TE|19760904|
-Courtney|Ledyard|MLB|19770309|
+Courtney|Ledyard|MLB|19770309|Michigan State
 Greg|Lotysz|LT|19740409|
-Matt|Lytle|QB|19750904|
+Matt|Lytle|QB|19750904|Pittsburgh
 Chad|Mackey|WR|19740321|
 Michael|Mason|DE|19740304|
-Craig|Miller|CB|19771004|
-Tywan|Mitchell|WR|19751210|
+Craig|Miller|CB|19771004|Utah State
+Tywan|Mitchell|WR|19751210|Minnesota State
 Tony|Orlandini|LT|19750813|
-Sirr|Parker|WR|19771031|
+Sirr|Parker|WR|19771031|Texas A&M
 Ron|Powlus|QB|19740716|
 Dawud|Rasheed|RB|19770122|
 Tim|Ridder|LG|19761217|
-Noel|Scarlett|DT|19740121|
+Noel|Scarlett|DT|19740121|Langston
 Brian|Smith|MLB|19780225|
 Paul|Snellings|LT|19751105|
-Aaron|Stecker|RB|19751113|
+Aaron|Stecker|RB|19751113|Western Illinois
 Rahmaan|Streater|DE|19750423|
 Vernon|Strickland|MLB|19730409|
 Pene|Talamaivao|DT|19750614|
-Jim|Tarle|K|19721227|
-Ryan|Taylor|MLB|19761211|
-David|Terrell|CB|19750708|
-Craig|Walendy|RB|19770711|
-Rod|Walker|DT|19760204|
+Jim|Tarle|K|19721227|Arkansas State
+Ryan|Taylor|MLB|19761211|Auburn
+David|Terrell|CB|19750708|Texas-El Paso
+Craig|Walendy|RB|19770711|UCLA
+Rod|Walker|DT|19760204|Troy
 Brad|Ware|S|19780326|
-Damon|Washington|RB|19770220|
-Jermaine|Wiggins|TE|19750118|
+Damon|Washington|RB|19770220|Colorado State
+Jermaine|Wiggins|TE|19750118|Georgia
 Tony|Hamler|WR|19750813|
-Clarence|Williams|RB|19770516|
-Brian|Waters|C|19770218|
+Clarence|Williams|RB|19770516|Michigan
+Brian|Waters|C|19770218|North Texas
 Greg|Wilkins|DT|19731101|
-Cornell|Green|LT|19760825|
-Darrius|Blevins|WR|19760421|
-Rob|Murphy|LG|19770118|
-Shadwick|Criss|CB|19760111|
-Todd|McMillon|CB|19740926|
-Tim|Seder|K|19740917|
-Courtney|Brown|DE|19780214|
-Travis|Claridge|LG|19780323|
-Brad|Meester|LG|19770323|
-Mark|Simoneau|MLB|19770116|
-Laveranues|Coles|WR|19771229|
-T.J.|Slaughter|MLB|19770220|
-Michael|Thompson|LT|19770211|
+Cornell|Green|LT|19760825|Central Florida
+Darrius|Blevins|WR|19760421|Memphis
+Rob|Murphy|LG|19770118|Ohio State
+Shadwick|Criss|CB|19760111|Missouri
+Todd|McMillon|CB|19740926|Northern Arizona
+Tim|Seder|K|19740917|Ashland
+Courtney|Brown|DE|19780214|Penn State
+Travis|Claridge|LG|19780323|Southern California
+Brad|Meester|LG|19770323|Northern Iowa
+Mark|Simoneau|MLB|19770116|Kansas State
+Laveranues|Coles|WR|19771229|Florida State
+T.J.|Slaughter|MLB|19770220|Southern Mississippi
+Michael|Thompson|LT|19770211|Tennessee State
 Joey|Chustz|LT|19770118|
-Tony|Scott|CB|19761003|
-Darrick|Vaughn|CB|19781002|
-Delbert|Cowsette|DE|19770903|
-Erik|Olson|S|19770104|
-Rob|Meier|DE|19770829|
-Shyrone|Stith|RB|19780402|
-Lewis|Kelly|LG|19770421|
-Maurice|Smith|RB|19760907|
-Eric|Johnson|S|19760430|
-Dwight|Johnson|DT|19770130|
-Earl|Riley|S|19770113|
+Tony|Scott|CB|19761003|North Carolina State
+Darrick|Vaughn|CB|19781002|Texas State
+Delbert|Cowsette|DE|19770903|Maryland
+Erik|Olson|S|19770104|Colorado State
+Rob|Meier|DE|19770829|Washington State
+Shyrone|Stith|RB|19780402|Virginia Tech
+Lewis|Kelly|LG|19770421|South Carolina State
+Maurice|Smith|RB|19760907|North Carolina A&T State
+Eric|Johnson|S|19760430|Nebraska
+Dwight|Johnson|DT|19770130|Baylor
+Earl|Riley|S|19770113|Washington State
 Wayne|Hampton|DE|19770522|
 Roger|Roesler|LG|19771005|
-Josh|Symonette|S|19780508|
-Micah|Knorr|P|19750109|
-Bashir|Yamini|WR|19770910|
-Ronney|Jenkins|RB|19770525|
-Bobby|Brown|WR|19770326|
-Herbert|Goodman|RB|19770831|
-Keith|Miller|MLB|19760709|
-Chris|Coleman|WR|19770508|
-Billy|Volek|QB|19760428|
-Chris|Bober|LT|19761224|
-Jack|Golden|MLB|19770128|
-Chris|Ziemann|LT|19760920|
-John|Baker|P|19770422|
-Steve|Gleason|MLB|19770319|
-Trevor|Insley|WR|19771225|
-Jamel|White|RB|19780211|
-Jake|Moreland|TE|19770118|
+Josh|Symonette|S|19780508|Tennessee Tech
+Micah|Knorr|P|19750109|Utah State
+Bashir|Yamini|WR|19770910|Iowa
+Ronney|Jenkins|RB|19770525|Northern Arizona
+Bobby|Brown|WR|19770326|Notre Dame
+Herbert|Goodman|RB|19770831|Graceland
+Keith|Miller|MLB|19760709|California
+Chris|Coleman|WR|19770508|North Carolina State
+Billy|Volek|QB|19760428|Fresno State
+Chris|Bober|LT|19761224|Nebraska-Omaha
+Jack|Golden|MLB|19770128|Oklahoma State
+Chris|Ziemann|LT|19760920|Michigan
+John|Baker|P|19770422|North Texas
+Steve|Gleason|MLB|19770319|Washington State
+Trevor|Insley|WR|19771225|Nevada-Reno
+Jamel|White|RB|19780211|South Dakota
+Jake|Moreland|TE|19770118|Western Michigan
 Terrence|Dupree|TE|19771109|
-Ronnie|Heard|CB|19761005|
+Ronnie|Heard|CB|19761005|Mississippi
 Thomas|Washington|DT|19761212|
 Joe|Perez|WR|19770521|
 Josh|Rawlings|LT|19770411|
 Ryan|Johanningmeier|LT|19770122|
-Doug|Johnson|QB|19771027|
-Dallas|Neil|P|19760930|
+Doug|Johnson|QB|19771027|Florida
+Dallas|Neil|P|19760930|Montana
 Matt|O'Neal|C|19770505|
-Casey|Crawford|TE|19770801|
-Ray|Green|S|19770322|
-Deveron|Harper|CB|19771115|
-Michael|Hawkes|MLB|19770411|
+Casey|Crawford|TE|19770801|Virginia
+Ray|Green|S|19770322|South Carolina
+Deveron|Harper|CB|19771115|Notre Dame
+Michael|Hawkes|MLB|19770411|Virginia Tech
 Kerry|Hood|WR|19761216|
-Brad|Hoover|RB|19761111|
-Reggie|Howard|CB|19770517|
-Giradie|Mercer|DT|19760319|
-Scottie|Montgomery|WR|19780526|
-LaVell|Boyd|WR|19760912|
-Armegis|Spearman|MLB|19780405|
+Brad|Hoover|RB|19761111|Western Carolina
+Reggie|Howard|CB|19770517|Memphis
+Giradie|Mercer|DT|19760319|Marshall
+Scottie|Montgomery|WR|19780526|Duke
+LaVell|Boyd|WR|19760912|Louisville
+Armegis|Spearman|MLB|19780405|Mississippi
 Chris|Daniels|WR|19770330|
-Earthwind|Moreland|CB|19770613|
-Todd|Yoder|TE|19780318|
-Ainsley|Battles|S|19781106|
-Hank|Fraley|LG|19770921|
-Dan|Kreider|FB|19770311|
-Al|Lucas|DT|19780901|
-Donnel|Thompson|MLB|19780217|
+Earthwind|Moreland|CB|19770613|Georgia Southern
+Todd|Yoder|TE|19780318|Vanderbilt
+Ainsley|Battles|S|19781106|Vanderbilt
+Hank|Fraley|LG|19770921|Robert Morris
+Dan|Kreider|FB|19770311|New Hampshire
+Al|Lucas|DT|19780901|Troy
+Donnel|Thompson|MLB|19780217|Wisconsin
 Destry|Wright|RB|19770709|
-Derek|Rackley|TE|19770718|
-Marlion|Jackson|RB|19771011|
-Kevin|Lewis|MLB|19781006|
-Darius|Clark|CB|19770413|
-Bryan|Johnson|RB|19780118|
+Derek|Rackley|TE|19770718|Minnesota
+Marlion|Jackson|RB|19771011|Saginaw Valley State
+Kevin|Lewis|MLB|19781006|Duke
+Darius|Clark|CB|19770413|Duke
+Bryan|Johnson|RB|19780118|Boise State
 Ben|Gilbert|LG|19780606|
 Brandon|Miller|DT|19751127|
-Justin|Snow|TE|19761221|
-Payton|Williams|CB|19781119|
-Travis|Brown|QB|19770717|
+Justin|Snow|TE|19761221|Baylor
+Payton|Williams|CB|19781119|Fresno State
+Travis|Brown|QB|19770717|Northern Arizona
 Ty|Wise|C|19770309|
-Brody|Liddiard|TE|19770612|
+Brody|Liddiard|TE|19770612|Colorado
 Andy|Vincent|LT|19780611|
 Maurice|Anderson|DE|19750119|
 Terrance|Beadles|LG|19760427|
 Adam|Davis|LG|19770111|
-Shockmain|Davis|WR|19770820|
-Chris|Eitzmann|TE|19770401|
-Reggie|Grimes|DT|19761107|
-Lonie|Paxton|MLB|19780313|
-Ula|Tuitele|MLB|19780526|
-Jimmy|Wyrick|CB|19761231|
-Larry|Foster|WR|19761107|
+Shockmain|Davis|WR|19770820|Angelo State
+Chris|Eitzmann|TE|19770401|Harvard
+Reggie|Grimes|DT|19761107|Alabama
+Lonie|Paxton|MLB|19780313|Sacramento State
+Ula|Tuitele|MLB|19780526|Colorado State
+Jimmy|Wyrick|CB|19761231|Minnesota
+Larry|Foster|WR|19761107|Louisiana State
 London|Dunlap|MLB|19770710|
-Jonas|Lewis|RB|19761227|
-Dane|Looker|WR|19760505|
-Adewale|Ogunleye|DE|19770809|
-Tommy|Hendricks|MLB|19781023|
-Trent|Gamble|S|19770724|
-Curtis|Jackson|WR|19730922|
+Jonas|Lewis|RB|19761227|San Diego State
+Dane|Looker|WR|19760505|Washington
+Adewale|Ogunleye|DE|19770809|Indiana
+Tommy|Hendricks|MLB|19781023|Michigan
+Trent|Gamble|S|19770724|Wyoming
+Curtis|Jackson|WR|19730922|Texas
 Chafie|Fields|WR|19770204|
-Kevin|McDougal|RB|19770518|
-Shaun|O'Hara|C|19770623|
-Kevin|Thompson|QB|19770727|
+Kevin|McDougal|RB|19770518|Colorado State
+Shaun|O'Hara|C|19770623|Rutgers
+Kevin|Thompson|QB|19770727|Penn State
 John|Eskridge|MLB|19760503|
-Zeron|Flemister|TE|19760908|
+Zeron|Flemister|TE|19760908|Iowa
 Sean|Keenan|QB|19770102|
 Randall|Lane|WR|19761015|
 Jordan|Younger|CB|19780124|
-Bryan|Gilmore|WR|19780721|
-Rian|Lindell|K|19770120|
+Bryan|Gilmore|WR|19780721|Midwestern State
+Rian|Lindell|K|19770120|Washington State
 DeMario|Brown|RB|19770306|
-Aaron|Koch|LG|19780221|
+Aaron|Koch|LG|19780221|Oregon State
 Lenny|Ware|WR|19770505|
 Jerard|White|S|19771027|
-Andre|O'Neal|MLB|19751212|
-Damian|Gregory|DT|19770121|
+Andre|O'Neal|MLB|19751212|Marshall
+Damian|Gregory|DT|19770121|Illinois State
 Brandon|McLemore|S|19770502|
-Corey|Atkins|MLB|19761111|
-Chad|Slaughter|LT|19780604|
+Corey|Atkins|MLB|19761111|South Carolina
+Chad|Slaughter|LT|19780604|Alcorn State
 Sean|Key|S|19770625|
-Damon|Hodge|WR|19770216|
-Cedric|Killings|DT|19771214|
-Kwame|Cavil|WR|19790503|
-Dustin|Cohen|MLB|19761222|
-Fred|Jones|MLB|19771018|
-Kenyatta|Wright|MLB|19780219|
-Jon|Carman|LT|19760114|
-KaRon|Coleman|RB|19780522|
-James|Hall|DE|19770204|
+Damon|Hodge|WR|19770216|Alabama State
+Cedric|Killings|DT|19771214|Carson-Newman
+Kwame|Cavil|WR|19790503|Texas
+Dustin|Cohen|MLB|19761222|Miami (Ohio)
+Fred|Jones|MLB|19771018|Colorado
+Kenyatta|Wright|MLB|19780219|Oklahoma State
+Jon|Carman|LT|19760114|Georgia Tech
+KaRon|Coleman|RB|19780522|Stephen F. Austin State
+James|Hall|DE|19770204|Michigan
 Leroy|Hodge|WR|19770205|
-Brandon|Jennings|CB|19780715|
-Al|Jackson|LG|19770518|
-Noel|LaMontagne|LT|19770309|
-John|Jones|TE|19750404|
+Brandon|Jennings|CB|19780715|Texas A&M
+Al|Jackson|LG|19770518|Louisiana State
+Noel|LaMontagne|LT|19770309|Virginia
+John|Jones|TE|19750404|Indiana (Pennsylvania)
 Germany|Thompson|WR|19760131|
 Calvin|Wilkinson|DE|19770505|
 Dwan|Epps|MLB|19770118|
-Gannon|Shepherd|LT|19770104|
-Aaron|Fields|DE|19760109|
+Gannon|Shepherd|LT|19770104|Duke
+Aaron|Fields|DE|19760109|Troy
 Courtney|Jackson|CB|19761215|
 Nick|Sudano|RB|19770319|
 Mike|Leach|TE|19761018|William & Mary
 Damon|Savage|WR|19760201|
-Kris|Heppner|K|19770118|
-Clint|Stoerner|QB|19771229|
-J.P.|Darche|C|19750228|
+Kris|Heppner|K|19770118|Montana
+Clint|Stoerner|QB|19771229|Arkansas
+J.P.|Darche|C|19750228|McGill
 Pedro|Edison|TE|19760128|
-Peter|Warrick|WR|19770619|
-Brian|Urlacher|MLB|19780525|
-Anthony|Becht|TE|19770808|
-Kenoy|Kennedy|S|19771115|
-Darwin|Walker|DT|19770615|
-Steve|Warren|DT|19780122|
-JaJuan|Dawson|WR|19771105|
-Leander|Jordan|LG|19770915|
-Greg|Wesley|S|19780319|
-Dustin|Lyman|TE|19760805|
-Lewis|Sanders|CB|19780622|
-Curtis|Keaton|RB|19761018|
-Na'il|Diggs|OLB|19780708|
-Gari|Scott|WR|19780602|
-David|Barrett|CB|19771222|
-Junior|Ioane|DT|19770721|
-Frank|Moreau|RB|19760909|
-Marcus|Bell|MLB|19770719|
-Deon|Dyer|FB|19771002|
-Isaiah|Kacyvenski|MLB|19771003|
-Alvin|McKinley|DT|19780609|
-Reggie|Austin|CB|19770121|
-Mookie|Moore|LG|19761101|
-Anthony|Malbrough|CB|19761209|
-Robert|Bean|CB|19780106|
-Mao|Tosi|DT|19761212|
-Windrell|Hayes|WR|19761214|
-Lamar|Chapman|CB|19761106|
-Gillis|Wilson|DE|19771015|
-Sammy|Morris|RB|19770323|
-Kiwaukee|Thomas|CB|19770619|
-Jay|Tant|TE|19771204|
-Frank|Murphy|RB|19770211|
-Mareno|Philyaw|WR|19771219|
+Peter|Warrick|WR|19770619|Florida State
+Brian|Urlacher|MLB|19780525|New Mexico
+Anthony|Becht|TE|19770808|West Virginia
+Kenoy|Kennedy|S|19771115|Arkansas
+Darwin|Walker|DT|19770615|Tennessee
+Steve|Warren|DT|19780122|Nebraska
+JaJuan|Dawson|WR|19771105|Tulane
+Leander|Jordan|LG|19770915|Indiana (Pennsylvania)
+Greg|Wesley|S|19780319|Arkansas-Pine Bluff
+Dustin|Lyman|TE|19760805|Wake Forest
+Lewis|Sanders|CB|19780622|Maryland
+Curtis|Keaton|RB|19761018|James Madison
+Na'il|Diggs|OLB|19780708|Ohio State
+Gari|Scott|WR|19780602|Michigan State
+David|Barrett|CB|19771222|Arkansas
+Junior|Ioane|DT|19770721|Arizona State
+Frank|Moreau|RB|19760909|Louisville
+Marcus|Bell|MLB|19770719|Arizona
+Deon|Dyer|FB|19771002|North Carolina
+Isaiah|Kacyvenski|MLB|19771003|Harvard
+Alvin|McKinley|DT|19780609|Mississippi State
+Reggie|Austin|CB|19770121|Wake Forest
+Mookie|Moore|LG|19761101|Troy
+Anthony|Malbrough|CB|19761209|Texas Tech
+Robert|Bean|CB|19780106|Mississippi State
+Mao|Tosi|DT|19761212|Idaho
+Windrell|Hayes|WR|19761214|Southern California
+Lamar|Chapman|CB|19761106|Kansas State
+Gillis|Wilson|DE|19771015|Southern University
+Sammy|Morris|RB|19770323|Texas Tech
+Kiwaukee|Thomas|CB|19770619|Georgia Southern
+Jay|Tant|TE|19771204|Northwestern
+Frank|Murphy|RB|19770211|Kansas State
+Mareno|Philyaw|WR|19771219|Troy
 Thomas|Hamner|RB|19761225|
-Paul|Edinger|K|19780117|
-James|Williams|WR|19780306|
-Jabari|Issa|DT|19780418|
-Jeno|James|LT|19770112|
-Shannon|Taylor|MLB|19750216|
+Paul|Edinger|K|19780117|Michigan State
+James|Williams|WR|19780306|Cheyney
+Jabari|Issa|DT|19780418|Washington
+Jeno|James|LT|19770112|Auburn
+Shannon|Taylor|MLB|19750216|Virginia
 Tim|Watson|DT|19741223|
-Cedric|Woodard|DE|19770905|
-Leif|Larsen|DT|19750403|
-Michael|Hawthorne|CB|19770126|
-Emanuel|Smith|WR|19760203|
-Sekou|Sanyika|MLB|19780317|
-Mark|Tauscher|LT|19770617|
-Kevin|Houser|FB|19770823|
-Charles|Lee|WR|19771119|
-Danny|Clark|MLB|19770509|
+Cedric|Woodard|DE|19770905|Texas
+Leif|Larsen|DT|19750403|Texas-El Paso
+Michael|Hawthorne|CB|19770126|Purdue
+Emanuel|Smith|WR|19760203|Arkansas
+Sekou|Sanyika|MLB|19780317|California
+Mark|Tauscher|LT|19770617|Wisconsin
+Kevin|Houser|FB|19770823|Ohio State
+Charles|Lee|WR|19771119|Central Florida
+Danny|Clark|MLB|19770509|Illinois
 Mark|Baniewicz|LT|19770324|
-DaShon|Polk|MLB|19770313|
-Michael|Green|S|19761206|
-Troy|Hambrick|RB|19761106|
-Jason|Starkey|C|19770715|
-Norris|McCleary|DT|19770510|
-Edward|Thomas|MLB|19750927|
-Josh|Williams|DT|19760809|
-Rodregis|Brooks|CB|19780830|
-Patrick|Pass|RB|19771231|
-Rondell|Mealey|RB|19770224|
-Raynoch|Thompson|OLB|19771121|
-Tyrone|Carter|S|19760331|
-Clark|Haggans|MLB|19770110|
-Dante|Hall|RB|19780920|
+DaShon|Polk|MLB|19770313|Arizona
+Michael|Green|S|19761206|Northwestern State (Louisiana)
+Troy|Hambrick|RB|19761106|Savannah State
+Jason|Starkey|C|19770715|Marshall
+Norris|McCleary|DT|19770510|East Carolina
+Edward|Thomas|MLB|19750927|Georgia Southern
+Josh|Williams|DT|19760809|Michigan
+Rodregis|Brooks|CB|19780830|Alabama-Birmingham
+Patrick|Pass|RB|19771231|Georgia
+Rondell|Mealey|RB|19770224|Louisiana State
+Raynoch|Thompson|OLB|19771121|Tennessee
+Tyrone|Carter|S|19760331|Minnesota
+Clark|Haggans|MLB|19770110|Colorado State
+Dante|Hall|RB|19780920|Texas A&M
 Mike|Malano|LG|19761016|
-Danny|Farmer|WR|19770521|
-John|Hilliard|DT|19760416|
-Shaun|Ellis|DE|19770624|
-John|Abraham|MLB|19780506|
-Avion|Black|WR|19770424|
-Brian|Jennings|TE|19761014|
-Eugene|McCaslin|MLB|19770712|
-Arturo|Freeman|S|19761027|
-Troy|Walters|WR|19761215|
-Spergon|Wynn|QB|19780810|
-Brad|Bedell|LT|19770212|
-Rashidi|Barnes|CB|19780626|
-Mondriel|Fulcher|TE|19761015|
-Chad|Pennington|QB|19760626|
-Deon|Grant|S|19790314|
-Lloyd|Harrison|CB|19770621|
-Nate|Webster|MLB|19771129|
-David|Macklin|CB|19780714|
-Aaron|Shea|TE|19761205|
-Bobby|Myers|S|19761110|
-Greg|Randall|LT|19780623|
-Aric|Morris|S|19770722|
+Danny|Farmer|WR|19770521|UCLA
+John|Hilliard|DT|19760416|Mississippi State
+Shaun|Ellis|DE|19770624|Tennessee
+John|Abraham|MLB|19780506|South Carolina
+Avion|Black|WR|19770424|Tennessee State
+Brian|Jennings|TE|19761014|Arizona State
+Eugene|McCaslin|MLB|19770712|Florida
+Arturo|Freeman|S|19761027|South Carolina
+Troy|Walters|WR|19761215|Stanford
+Spergon|Wynn|QB|19780810|Texas State
+Brad|Bedell|LT|19770212|Colorado
+Rashidi|Barnes|CB|19780626|Colorado
+Mondriel|Fulcher|TE|19761015|Miami (Florida)
+Chad|Pennington|QB|19760626|Marshall
+Deon|Grant|S|19790314|Tennessee
+Lloyd|Harrison|CB|19770621|North Carolina State
+Nate|Webster|MLB|19771129|Miami (Florida)
+David|Macklin|CB|19780714|Penn State
+Aaron|Shea|TE|19761205|Michigan
+Bobby|Myers|S|19761110|Wisconsin
+Greg|Randall|LT|19780623|Michigan State
+Aric|Morris|S|19770722|Michigan State
 Muneer|Moore|WR|19770315|
-James|Whalen|TE|19771211|
-Frank|Chamberlin|MLB|19780102|
-David|Gibson|S|19771105|
-Robaire|Smith|DE|19771115|
-Matt|Bowen|CB|19761112|
-David|Nugent|DT|19771027|
-Mike|Green|RB|19760902|
+James|Whalen|TE|19771211|Kentucky
+Frank|Chamberlin|MLB|19780102|Boston College
+David|Gibson|S|19771105|Southern California
+Robaire|Smith|DE|19771115|Michigan State
+Matt|Bowen|CB|19761112|Iowa
+David|Nugent|DT|19771027|Purdue
+Mike|Green|RB|19760902|Houston
 Andrew|Kline|LG|19761005|
-Joe|Hamilton|QB|19770313|
+Joe|Hamilton|QB|19770313|Georgia Tech
 Rob|Renes|DT|19770328|
-Adrian|Klemm|LG|19770521|
-Marcus|Washington|MLB|19771017|
-Jeff|Ulbrich|MLB|19770217|
-Terrelle|Smith|FB|19780312|
-Peter|Sirmon|MLB|19770218|
-Austin|Wheatley|TE|19771116|
-Chad|Morton|RB|19770404|
-Antwan|Harris|CB|19770529|
-Adalius|Thomas|DE|19770818|
-Mike|Anderson|RB|19730921|
+Adrian|Klemm|LG|19770521|Hawaii
+Marcus|Washington|MLB|19771017|Auburn
+Jeff|Ulbrich|MLB|19770217|Hawaii
+Terrelle|Smith|FB|19780312|Arizona State
+Peter|Sirmon|MLB|19770218|Oregon
+Austin|Wheatley|TE|19771116|Iowa
+Chad|Morton|RB|19770404|Southern California
+Antwan|Harris|CB|19770529|Virginia
+Adalius|Thomas|DE|19770818|Southern Mississippi
+Mike|Anderson|RB|19730921|Utah
 Tom|Brady|QB|19770803|Michigan
-Tutan|Reyes|LT|19771028|
-Dave|Stachelski|TE|19770301|
-Stockar|McDougle|LT|19770111|
-Rashard|Anderson|S|19770614|
-Ahmed|Plummer|CB|19760326|
-R.Jay|Soward|WR|19780116|
-Darren|Howard|DE|19761119|
-Todd|Pinkston|WR|19770423|
-Dwayne|Goodrich|CB|19780529|
-Barrett|Green|MLB|19771029|
-Travis|Prentice|RB|19761208|
-Reuben|Droughns|RB|19780821|
-Corey|Moore|OLB|19770320|
-John|Keith|S|19770204|
-Ralph|Brown|CB|19780916|
-Michael|Wiley|RB|19780105|
-Todd|Franz|CB|19760412|
+Tutan|Reyes|LT|19771028|Mississippi
+Dave|Stachelski|TE|19770301|Boise State
+Stockar|McDougle|LT|19770111|Oklahoma
+Rashard|Anderson|S|19770614|Jackson State
+Ahmed|Plummer|CB|19760326|Ohio State
+R.Jay|Soward|WR|19780116|Southern California
+Darren|Howard|DE|19761119|Kansas State
+Todd|Pinkston|WR|19770423|Southern Mississippi
+Dwayne|Goodrich|CB|19780529|Tennessee
+Barrett|Green|MLB|19771029|West Virginia
+Travis|Prentice|RB|19761208|Miami (Ohio)
+Reuben|Droughns|RB|19780821|Oregon
+Corey|Moore|OLB|19770320|Virginia Tech
+John|Keith|S|19770204|Furman
+Ralph|Brown|CB|19780916|Nebraska
+Michael|Wiley|RB|19780105|Ohio State
+Todd|Franz|CB|19760412|Tulsa
 Richard|Mercier|LG|19750513|
-Kabeer|Gbaja-Biamila|DE|19770924|
-John|Milem|DE|19750609|
-Ernest|Grant|DT|19760517|
-Mario|Edwards|CB|19751201|
-Todd|Husak|QB|19780706|
-Tim|Rattay|QB|19770315|
-Lester|Towns|MLB|19770828|
-Alfonso|Boone|DE|19760111|
-Marvel|Smith|LT|19780806|
-Bobbie|Williams|LG|19760925|
-Kendrick|Clancy|DT|19780817|
-Kareem|Larrimore|CB|19760421|
-Cooper|Carlisle|LG|19770811|
-Tee|Martin|QB|19780725|
-Chris|Combs|DE|19761215|
-Dhani|Jones|MLB|19780222|
+Kabeer|Gbaja-Biamila|DE|19770924|San Diego State
+John|Milem|DE|19750609|Lenoir-Rhyne
+Ernest|Grant|DT|19760517|Arkansas-Pine Bluff
+Mario|Edwards|CB|19751201|Florida State
+Todd|Husak|QB|19780706|Stanford
+Tim|Rattay|QB|19770315|Louisiana Tech
+Lester|Towns|MLB|19770828|Washington
+Alfonso|Boone|DE|19760111|Mount San Antonio JC
+Marvel|Smith|LT|19780806|Arizona State
+Bobbie|Williams|LG|19760925|Arkansas
+Kendrick|Clancy|DT|19780817|Mississippi
+Kareem|Larrimore|CB|19760421|West Texas A&M
+Cooper|Carlisle|LG|19770811|Florida
+Tee|Martin|QB|19780725|Tennessee
+Chris|Combs|DE|19761215|Duke
+Dhani|Jones|MLB|19780222|Michigan
 Jason|Gavadza|TE|19760131|
-Orantes|Grant|MLB|19780318|
-Chris|Samuels|LT|19770728|
-Thomas|Jones|RB|19780819|
-Plaxico|Burress|WR|19770812|
-Ron|Dayne|RB|19780314|
-Bubba|Franks|TE|19780106|
-Deltha|O'Neal|CB|19770130|
+Orantes|Grant|MLB|19780318|Georgia
+Chris|Samuels|LT|19770728|Alabama
+Thomas|Jones|RB|19780819|Virginia
+Plaxico|Burress|WR|19770812|Michigan State
+Ron|Dayne|RB|19780314|Wisconsin
+Bubba|Franks|TE|19780106|Miami (Florida)
+Deltha|O'Neal|CB|19770130|California
 Sebastian|Janikowski|K|19780302|Florida State
-Shaun|Alexander|RB|19770830|
-Keith|Bulluck|MLB|19770404|
-Trung|Canidate|RB|19770303|
-Dennis|Northcutt|WR|19771222|
-John|Engelberger|DE|19761018|
-Ian|Gold|MLB|19780823|
-Jason|Webster|CB|19770908|
-Ike|Charlton|CB|19771006|
-William|Bartee|CB|19770625|
-Travares|Tillman|S|19771008|
-Jacoby|Shepherd|CB|19790831|
+Shaun|Alexander|RB|19770830|Alabama
+Keith|Bulluck|MLB|19770404|Syracuse
+Trung|Canidate|RB|19770303|Arizona
+Dennis|Northcutt|WR|19771222|Arizona
+John|Engelberger|DE|19761018|Virginia Tech
+Ian|Gold|MLB|19780823|Michigan
+Jason|Webster|CB|19770908|Texas A&M
+Ike|Charlton|CB|19771006|Virginia Tech
+William|Bartee|CB|19770625|Oklahoma
+Travares|Tillman|S|19771008|Georgia Tech
+Jacoby|Shepherd|CB|19790831|Oklahoma State
 Giovanni|Carmazzi|QB|19770414|
-Erron|Kinney|TE|19770728|
-Dez|White|WR|19790823|
-Chris|Cole|WR|19771112|
-Ron|Dixon|WR|19760528|
-Darrell|Jackson|WR|19781206|
-Damion|McIntosh|LT|19770325|
-Byron|Frisch|DE|19761217|
-John|St. Clair|C|19770715|
-Jerry|Johnson|DT|19770711|
+Erron|Kinney|TE|19770728|Florida
+Dez|White|WR|19790823|Georgia Tech
+Chris|Cole|WR|19771112|Texas A&M
+Ron|Dixon|WR|19760528|Lambuth
+Darrell|Jackson|WR|19781206|Florida
+Damion|McIntosh|LT|19770325|Kansas State
+Byron|Frisch|DE|19761217|Brigham Young
+John|St. Clair|C|19770715|Virginia
+Jerry|Johnson|DT|19770711|Florida State
 Kaulana|Noa|LT|19761229|
-Brandon|Short|MLB|19770711|
-Trevor|Gaylor|WR|19771103|
-Leonardo|Carson|DT|19770211|
-Gary|Berry|S|19771024|
-Paul|Smith|RB|19780131|
-Brian|Young|DE|19770708|
-Pat|Dennis|CB|19780630|
-Neil|Rackers|K|19760816|
-Darnell|Alford|LT|19770611|
+Brandon|Short|MLB|19770711|Penn State
+Trevor|Gaylor|WR|19771103|Miami (Ohio)
+Leonardo|Carson|DT|19770211|Auburn
+Gary|Berry|S|19771024|Ohio State
+Paul|Smith|RB|19780131|Texas-El Paso
+Brian|Young|DE|19770708|Texas-El Paso
+Pat|Dennis|CB|19780630|Louisiana-Monroe
+Neil|Rackers|K|19760816|Illinois
+Darnell|Alford|LT|19770611|Boston College
 Desmond|Kitchings|WR|19780719|
-Brad|St. Louis|TE|19760819|
-Jarious|Jackson|QB|19770503|
-Jeremiah|Parker|DE|19771115|
-Jason|Thomas|LG|19770610|
+Brad|St. Louis|TE|19760819|Missouri State
+Jarious|Jackson|QB|19770503|Notre Dame
+Jeremiah|Parker|DE|19771115|California
+Jason|Thomas|LG|19770610|Hampton
 Jeff|Harris|CB|19770719|
-Wes|Shivers|LG|19770308|
-LaVar|Arrington|OLB|19780620|
-Jamal|Lewis|RB|19790826|
-Corey|Simon|DT|19770302|
-Julian|Peterson|OLB|19780728|
-Chris|Hovan|DT|19780512|
-Erik|Flowers|DE|19780301|
-Rob|Morris|MLB|19750118|
-Mike|Brown|S|19780213|
-Cornelius|Griffin|DT|19761203|
-Rogers|Beckett|S|19770131|
-Chad|Clifton|LT|19760626|
-Jerry|Porter|WR|19780714|
-Cosey|Coleman|LG|19781027|
-Todd|Wade|LT|19761030|
-Fred|Robbins|DT|19770326|
+Wes|Shivers|LG|19770308|Mississippi State
+LaVar|Arrington|OLB|19780620|Penn State
+Jamal|Lewis|RB|19790826|Tennessee
+Corey|Simon|DT|19770302|Florida State
+Julian|Peterson|OLB|19780728|Michigan State
+Chris|Hovan|DT|19780512|Boston College
+Erik|Flowers|DE|19780301|Arizona State
+Rob|Morris|MLB|19750118|Brigham Young
+Mike|Brown|S|19780213|Nebraska
+Cornelius|Griffin|DT|19761203|Alabama
+Rogers|Beckett|S|19770131|Marshall
+Chad|Clifton|LT|19760626|Tennessee
+Jerry|Porter|WR|19780714|West Virginia
+Cosey|Coleman|LG|19781027|Tennessee
+Todd|Wade|LT|19761030|Mississippi
+Fred|Robbins|DT|19770326|Wake Forest
 Michael|Boireau|DE|19780724|
-Ron|Dugans|WR|19770427|
-Chris|Redman|QB|19770707|
-Hank|Poteat|CB|19770831|
-Ben|Kelly|CB|19780915|
-Doug|Chapman|RB|19770822|
-Antonio|Wilson|MLB|19771229|
+Ron|Dugans|WR|19770427|Florida State
+Chris|Redman|QB|19770707|Louisville
+Hank|Poteat|CB|19770831|Pittsburgh
+Ben|Kelly|CB|19780915|Colorado
+Doug|Chapman|RB|19770822|Marshall
+Antonio|Wilson|MLB|19771229|East Texas A&M
 Shane|Lechler|P|19760807|Texas A&M
 Gerard|Arnold|RB|19771005|
-Travis|Taylor|WR|19790330|
-J.R.|Redmond|RB|19770928|
-Mark|Roman|CB|19770326|
-Sylvester|Morris|WR|19771006|
-Chris|McIntosh|LT|19770220|
+Travis|Taylor|WR|19790330|Florida
+J.R.|Redmond|RB|19770928|Arizona State
+Mark|Roman|CB|19770326|Louisiana State
+Sylvester|Morris|WR|19771006|Jackson State
+Chris|McIntosh|LT|19770220|Wisconsin
 Otis|English|DT|19761013|
 Anthony|Lucas|WR|19761120|
 Matt|Beck|MLB|19770216|
 Jason|Watts|C|19770419|
 Darwin|Brown|CB|19770706|
-Fred|Coleman|WR|19750131|
-Chartric|Darby|DT|19751022|
+Fred|Coleman|WR|19750131|Washington
+Chartric|Darby|DT|19751022|South Carolina State
 Michael|Early|C|19770602|
-Frank|Ferrara|DE|19751207|
-Bryce|Fisher|DE|19770512|
-Winfield|Garnett|DT|19760724|
-William|Hampton|CB|19750307|
-Lawrence|Hart|TE|19760919|
-Corey|Hulsey|LG|19770726|
+Frank|Ferrara|DE|19751207|Rhode Island
+Bryce|Fisher|DE|19770512|Air Force
+Winfield|Garnett|DT|19760724|Ohio State
+William|Hampton|CB|19750307|Murray State
+Lawrence|Hart|TE|19760919|Southern University
+Corey|Hulsey|LG|19770726|Clemson
 Gana|Joseph|CB|19770420|
-Zebbie|Lethridge|CB|19750131|
+Zebbie|Lethridge|CB|19750131|Texas Tech
 Kendell|Mack|LT|19750718|
-Lemar|Marshall|MLB|19761217|
-Central|McClellion|CB|19750915|
-Brian|Moorman|P|19760205|
-Jamie|Reader|RB|19740504|
+Lemar|Marshall|MLB|19761217|Michigan State
+Central|McClellion|CB|19750915|Ohio State
+Brian|Moorman|P|19760205|Pittsburg State
+Jamie|Reader|RB|19740504|Akron
 Rod|Robinson|QB|19760517|
-Kevin|Swayne|WR|19750117|
-Reggie|Swinton|WR|19750724|
+Kevin|Swayne|WR|19750117|Wayne State (Nebraska)
+Reggie|Swinton|WR|19750724|Murray State
 T.J.|Washington|LT|19740701|
-Rodney|Williams|P|19770425|
+Rodney|Williams|P|19770425|Georgia Tech
 Gabe|Lindstrom|P|19760525|
-Alan|Ricard|RB|19770117|
+Alan|Ricard|RB|19770117|Louisiana-Monroe
 John|Jacobs|LG|19721201|
-Bobby|Setzer|DE|19760616|
+Bobby|Setzer|DE|19760616|Boise State
 Adam|Young|TE|19770415|
-Ron|Moore|DE|19770810|
+Ron|Moore|DE|19770810|Northwestern Oklahoma State
 Jim|Goff|LT|19771207|
-J.J.|Huggins|TE|19760329|
-Marcus|Knight|WR|19780619|
-Jamal|Brooks|MLB|19761109|
-Kirk|McMullen|TE|19770719|
-John|Waerig|TE|19760408|
-Kelvin|Moses|MLB|19760903|
-Joe Dean|Davenport|TE|19761029|
-Dan|Goodspeed|LT|19770520|
-Jake|Arians|K|19780126|
+J.J.|Huggins|TE|19760329|Alabama State
+Marcus|Knight|WR|19780619|Michigan
+Jamal|Brooks|MLB|19761109|Hampton
+Kirk|McMullen|TE|19770719|Pittsburgh
+John|Waerig|TE|19760408|Maryland
+Kelvin|Moses|MLB|19760903|Wake Forest
+Joe Dean|Davenport|TE|19761029|Arkansas
+Dan|Goodspeed|LT|19770520|Kent State
+Jake|Arians|K|19780126|Alabama-Birmingham
 John|Blick|LT|19780210|
 Ashley|Cooper|CB|19780111|
 Timothy|Strickland|CB|19770113|
-Jonathan|Jackson|MLB|19770902|
-Pat|Batteaux|WR|19780418|
+Jonathan|Jackson|MLB|19770902|Oregon State
+Pat|Batteaux|WR|19780418|Texas Christian
 Anthony|Green|RB|19770813|
 Josh|Tucker|LT|19780805|
 Lonny|Mitchell|WR|19770114|
-Steve|Herndon|LG|19770525|
+Steve|Herndon|LG|19770525|Georgia
 Mikki|Allen|CB|19771115|
-Tommy|Parks|P|19681014|
+Tommy|Parks|P|19681014|Mississippi State
 Scot|Osborne|TE|19771030|
 Ike|Reid|DE|19751221|
-Jerry|DeLoach|DT|19770717|
-Renard|Cox|CB|19780303|
+Jerry|DeLoach|DT|19770717|California
+Renard|Cox|CB|19780303|Maryland
 Kenny|Coutain|WR|19770312|
-Jon|Hilbert|K|19750715|
-Phillip|Crosby|RB|19761105|
+Jon|Hilbert|K|19750715|Louisville
+Phillip|Crosby|RB|19761105|Tennessee
 Phil|Stambaugh|QB|19780810|
 Ricky|Brown|RB|19761206|
 Jermaine|Smith|CB|19771110|
 Lloyd|Clemons|RB|19760529|
-Jason|Brookins|RB|19760105|
-Bennie|Anderson|LG|19770217|
-Rod|Smart|RB|19770109|
-Ahmad|Merritt|WR|19770205|
-Shayne|Graham|K|19771209|
-James|Tuthill|K|19760325|
-Marc|Bulger|QB|19770405|
-Michael L.|Lewis|WR|19711114|
-Drew|Haddad|WR|19780815|
-Damen|Wheeler|CB|19770903|
-Nick|Harper|CB|19740910|
+Jason|Brookins|RB|19760105|Lane
+Bennie|Anderson|LG|19770217|Tennessee State
+Rod|Smart|RB|19770109|Western Kentucky
+Ahmad|Merritt|WR|19770205|Wisconsin
+Shayne|Graham|K|19771209|Virginia Tech
+James|Tuthill|K|19760325|Cal Poly (San Luis Obispo)
+Marc|Bulger|QB|19770405|West Virginia
+Michael L.|Lewis|WR|19711114|none
+Drew|Haddad|WR|19780815|Buffalo
+Damen|Wheeler|CB|19770903|Colorado
+Nick|Harper|CB|19740910|Fort Valley State
 Martavius|Houston|CB|19760308|
-Terrance|Simmons|DT|19760503|
-Albert|Johnson|WR|19771111|
-Davis|Sanchez|CB|19740807|
-Clarence|LeBlanc|CB|19770326|
-Henry|Burris|QB|19750604|
+Terrance|Simmons|DT|19760503|Alabama State
+Albert|Johnson|WR|19771111|Southern Methodist
+Davis|Sanchez|CB|19740807|Oregon
+Clarence|LeBlanc|CB|19770326|Louisiana State
+Henry|Burris|QB|19750604|Temple
 Dave|Dickenson|QB|19730111|
-Cedric|Oglesby|K|19770726|
-Jay|Feely|K|19760523|
-Chris|Edmonds|MLB|19780101|
+Cedric|Oglesby|K|19770726|South Carolina State
+Jay|Feely|K|19760523|Michigan
+Chris|Edmonds|MLB|19780101|West Virginia
 Al|Blades|CB|19770319|
-John|Schlecht|DT|19780523|
-Quincy|Stewart|MLB|19780327|
-Aveion|Cason|RB|19790712|
-David|Brandt|LG|19770925|
-Ross|Tucker|LT|19790302|
-Kenny|Watson|RB|19780313|
-Donny|Green|MLB|19770918|
-Kendrick|Office|DE|19780802|
-Josh|Whitman|TE|19780805|
-R.J.|Bowers|RB|19740210|
+John|Schlecht|DT|19780523|Minnesota
+Quincy|Stewart|MLB|19780327|Louisiana Tech
+Aveion|Cason|RB|19790712|Illinois State
+David|Brandt|LG|19770925|Michigan
+Ross|Tucker|LT|19790302|Princeton
+Kenny|Watson|RB|19780313|Penn State
+Donny|Green|MLB|19770918|Virginia
+Kendrick|Office|DE|19780802|West Alabama
+Josh|Whitman|TE|19780805|Illinois
+R.J.|Bowers|RB|19740210|Grove City
 Derrick|Chambers|DE|19780128|
-Nick|Goings|RB|19780126|
-Nathan|Hodel|C|19771112|
+Nick|Goings|RB|19780126|Pittsburgh
+Nathan|Hodel|C|19771112|Illinois
 David|Mitchell|CB|19791018|
 Conrad|Emmerich|RB|19780427|
 Kevin|Jordan|LT|19781107|
-Donte|Curry|MLB|19780722|
+Donte|Curry|MLB|19780722|Morris Brown
 Troy|Albea|WR|19780430|
-Wes|Ours|RB|19771230|
-Dominic|Rhodes|RB|19790117|
-Hans|Olsen|DT|19770731|
-Jermaine|Hampton|CB|19790612|
-Delvin|Brown|CB|19790917|
-Elvis|Joseph|RB|19780830|
-Jeff|Hazuga|DE|19780429|
-Mike|Solwold|TE|19770930|
-Justin|Skaggs|WR|19790422|
-Jimmy|Farris|WR|19780413|
-Shane|Elam|MLB|19771106|
-Ryan|Prince|TE|19770516|
+Wes|Ours|RB|19771230|West Virginia
+Dominic|Rhodes|RB|19790117|Midwestern State
+Hans|Olsen|DT|19770731|Brigham Young
+Jermaine|Hampton|CB|19790612|Northern Illinois
+Delvin|Brown|CB|19790917|Miami (Florida)
+Elvis|Joseph|RB|19780830|Southern University
+Jeff|Hazuga|DE|19780429|Wisconsin-Stout
+Mike|Solwold|TE|19770930|Wisconsin
+Justin|Skaggs|WR|19790422|Evangel
+Jimmy|Farris|WR|19780413|Montana
+Shane|Elam|MLB|19771106|Mississippi
+Ryan|Prince|TE|19770516|Weber State
 Patrick|Venzke|LT|19750406|
-Patrick|Washington|FB|19780304|
-Randal|Williams|WR|19780521|
-Jason|Baker|P|19780517|
+Patrick|Washington|FB|19780304|Virginia
+Randal|Williams|WR|19780521|New Hampshire
+Jason|Baker|P|19780517|Iowa
 Terrence|Carroll|CB|19780818|
-Darrel|Crutchfield|CB|19790226|
-Julian|Jones|CB|19780608|
-Tim|Baker|WR|19771023|
+Darrel|Crutchfield|CB|19790226|Clemson
+Julian|Jones|CB|19780608|Missouri
+Tim|Baker|WR|19771023|Texas Tech
 David|Bobo|LG|19771028|
-Chris|Hoke|DT|19760406|
-Dyshod|Carter|CB|19780618|
-Justin|Kurpeikis|MLB|19770717|
-Keydrick|Vincent|LG|19780413|
-Ryan|Benjamin|C|19771111|
-Marq|Cerqua|MLB|19770403|
-Shane|Grice|LG|19761220|
+Chris|Hoke|DT|19760406|Brigham Young
+Dyshod|Carter|CB|19780618|Kansas State
+Justin|Kurpeikis|MLB|19770717|Penn State
+Keydrick|Vincent|LG|19780413|Mississippi
+Ryan|Benjamin|C|19771111|South Florida
+Marq|Cerqua|MLB|19770403|Carson-Newman
+Shane|Grice|LG|19761220|Mississippi
 Leon|Hires|LG|19771206|
-Byron|Thweatt|MLB|19770321|
-Drew|Bennett|WR|19780826|
+Byron|Thweatt|MLB|19770321|Virginia
+Drew|Bennett|WR|19780826|UCLA
 Barry|Hall|LT|19771123|
 Donovan|Arp|DT|19780112|
-Juqua|Parker|DE|19780515|
+Juqua|Parker|DE|19780515|Oklahoma State
 Dante|Marsh|CB|19790226|
-Joe|Walker|CB|19770319|
-Kevin|Kaesviharn|CB|19760829|
-Dave|Costa|LG|19780908|
+Joe|Walker|CB|19770319|Nebraska
+Kevin|Kaesviharn|CB|19760829|Augustana (South Dakota)
+Dave|Costa|LG|19780908|Wisconsin
 Milford|Stephenson|LT|19770208|
-Ifeanyi|Ohalete|CB|19790522|
-Antonio|Pierce|OLB|19781026|
+Ifeanyi|Ohalete|CB|19790522|Southern California
+Antonio|Pierce|OLB|19781026|Arizona
 Anthony|Sessions|MLB|19790216|
 Jauron|Dailey|MLB|19780522|
-Jarvis|Borum|LT|19780916|
-Andy|Bowers|DE|19760222|
-Felipe|Claybrooks|DE|19780122|
+Jarvis|Borum|LT|19780916|North Carolina State
+Andy|Bowers|DE|19760222|Utah
+Felipe|Claybrooks|DE|19780122|Georgia Tech
 Mike|Cook|LT|19780623|
-Arnold|Jackson|WR|19770409|
-Marcel|Shipp|RB|19780808|
-Fred|Wakefield|DE|19780917|
-LeVar|Woods|MLB|19780315|
-Michael|Young|MLB|19780601|
-Michael|Keathley|LT|19780309|
-Jace|Sayler|DE|19790227|
-Walter|Williams|WR|19770908|
-Matt|Dominguez|TE|19780627|
-Javiar|Collins|DT|19780413|
-Demetric|Evans|DE|19790903|
+Arnold|Jackson|WR|19770409|Louisville
+Marcel|Shipp|RB|19780808|Massachusetts
+Fred|Wakefield|DE|19780917|Illinois
+LeVar|Woods|MLB|19780315|Iowa
+Michael|Young|MLB|19780601|Illinois
+Michael|Keathley|LT|19780309|Texas Christian
+Jace|Sayler|DE|19790227|Michigan State
+Walter|Williams|WR|19770908|Grambling State
+Matt|Dominguez|TE|19780627|Sam Houston State
+Javiar|Collins|DT|19780413|Northwestern
+Demetric|Evans|DE|19790903|Georgia
 Jeff|McCurley|C|19790625|
-Joe|Brown|DT|19770305|
+Joe|Brown|DT|19770305|Ohio State
 Kerwin|Cook|WR|19791221|
-Anthony|Herron|DE|19790924|
-Chidi|Iwuoma|CB|19780219|
-Ligarius|Jennings|CB|19771103|
-Brian|Natkin|TE|19780103|
-Stephen|Trejo|RB|19771120|
-Troy|Andrew|C|19771212|
-Nick|Sorensen|CB|19780731|
-Jason|Bell|CB|19780401|
-Lynn|Scott|CB|19770623|
-Tony|Taylor|RB|19780309|
-Phil|McGeoghan|WR|19790708|
+Anthony|Herron|DE|19790924|Iowa
+Chidi|Iwuoma|CB|19780219|California
+Ligarius|Jennings|CB|19771103|Tennessee State
+Brian|Natkin|TE|19780103|Texas-El Paso
+Stephen|Trejo|RB|19771120|Arizona State
+Troy|Andrew|C|19771212|Duke
+Nick|Sorensen|CB|19780731|Virginia Tech
+Jason|Bell|CB|19780401|UCLA
+Lynn|Scott|CB|19770623|Northwestern Oklahoma State
+Tony|Taylor|RB|19780309|Northwestern State (Louisiana)
+Phil|McGeoghan|WR|19790708|Maine
 James|Rooths|CB|19760903|
-Reggie|White|RB|19790711|
-Tory|Woodbury|QB|19780712|
-Daniel|Wilcox|TE|19770323|
+Reggie|White|RB|19790711|Oklahoma State
+Tory|Woodbury|QB|19780712|Winston-Salem State
+Daniel|Wilcox|TE|19770323|Appalachian State
 Frank|Rice|WR|19780202|
-Rich|Seubert|LT|19790330|
+Rich|Seubert|LT|19790330|Western Illinois
 Adam|Wright|RB|19771218|
-Damion|Cook|DT|19790416|
+Damion|Cook|DT|19790416|Bethune-Cookman
 Delvin|Hughley|CB|19780418|
-Alvin|Porter|CB|19770510|
-Tim|Carter|CB|19780715|
-Richard|Newsome|CB|19771206|
+Alvin|Porter|CB|19770510|Oklahoma State
+Tim|Carter|CB|19780715|Tulane
+Richard|Newsome|CB|19771206|Michigan State
 Albert|Traylor|LG|19780604|
-Boo|Williams|TE|19790622|
-James|Fenderson|RB|19761024|
+Boo|Williams|TE|19790622|Arkansas
+James|Fenderson|RB|19761024|Hawaii
 Albert|Horsey|WR|19790102|
 Terrance|Sykes|LT|19790224|
-Terry|Witherspoon|RB|19770822|
-Lance|Legree|DT|19771222|
-Brady|McDonnell|TE|19770724|
-DeWayne|Patmon|CB|19790425|
-Marcellus|Rivers|TE|19781026|
-Clayton|White|MLB|19771202|
+Terry|Witherspoon|RB|19770822|Clemson
+Lance|Legree|DT|19771222|Notre Dame
+Brady|McDonnell|TE|19770724|Colorado
+DeWayne|Patmon|CB|19790425|Michigan
+Marcellus|Rivers|TE|19781026|Oklahoma State
+Clayton|White|MLB|19771202|North Carolina State
 Pat|Woodcock|WR|19770427|
 Freddie|Moore|LT|19770827|
-Joe|Todd|MLB|19790417|
+Joe|Todd|MLB|19790417|Hofstra
 Russell|Stewart|TE|19770925|
-Reggie|Waddell|CB|19771114|
+Reggie|Waddell|CB|19771114|Western Illinois
 Bennitte|Waddell|LT|19770526|
 Corey|Brown|WR|19780812|
-Dave|Kadela|LT|19780506|
+Dave|Kadela|LT|19780506|Virginia Tech
 Shawn|Mills|WR|19770210|
-Carl|Fair|RB|19770608|
-Nate|Turner|WR|19780526|
-Willie|Gary|CB|19781101|
-Kole|Ayi|MLB|19780927|
+Carl|Fair|RB|19770608|Alabama-Birmingham
+Nate|Turner|WR|19780526|Nevada-Las Vegas
+Willie|Gary|CB|19781101|Kentucky
+Kole|Ayi|MLB|19780927|Massachusetts
 Mike|Vick|QB|19800626|Virginia Tech
 Romaro|Miller|QB|19780912|
-Carey|Clayton|C|19770831|
-Chukky|Okobi|C|19781018|
-Kevin|Kasper|WR|19771223|
-DeVone|Claybrooks|DT|19770915|
-Roberto|Garza|LG|19790326|
-Mathias|Nkwenti|LT|19780511|
-Kynan|Forney|LG|19780908|
-Ronald|Flemons|DE|19791020|
-Nick|Harris|P|19780723|
-Tony|Stewart|TE|19790809|
-Eric|Downing|DT|19780916|
-Correll|Buckhalter|RB|19781006|
-Snoop|Minnis|WR|19770206|
-Vinny|Sutherland|WR|19780422|
-Billy|Baber|TE|19790117|
-Michael|Jameson|CB|19790714|
-Matt|Stewart|MLB|19790831|
-Marlon|McCree|S|19770317|
-Isaac|Keys|MLB|19780606|
-Fearon|Wright|MLB|19780930|
-Alge|Crumpler|TE|19771223|
-Ron|Edwards|DT|19790712|
+Carey|Clayton|C|19770831|Texas-El Paso
+Chukky|Okobi|C|19781018|Purdue
+Kevin|Kasper|WR|19771223|Iowa
+DeVone|Claybrooks|DT|19770915|East Carolina
+Roberto|Garza|LG|19790326|Texas A&M-Kingsville
+Mathias|Nkwenti|LT|19780511|Temple
+Kynan|Forney|LG|19780908|Hawaii
+Ronald|Flemons|DE|19791020|Texas A&M
+Nick|Harris|P|19780723|California
+Tony|Stewart|TE|19790809|Penn State
+Eric|Downing|DT|19780916|Syracuse
+Correll|Buckhalter|RB|19781006|Nebraska
+Snoop|Minnis|WR|19770206|Florida State
+Vinny|Sutherland|WR|19780422|Purdue
+Billy|Baber|TE|19790117|Virginia
+Michael|Jameson|CB|19790714|Texas A&M
+Matt|Stewart|MLB|19790831|Vanderbilt
+Marlon|McCree|S|19770317|Kentucky
+Isaac|Keys|MLB|19780606|Morehouse
+Fearon|Wright|MLB|19780930|Rhode Island
+Alge|Crumpler|TE|19771223|North Carolina
+Ron|Edwards|DT|19790712|Texas A&M
 Chad|Ward|LG|19770112|
-Sean|McDermott|TE|19761205|
-Sedrick|Hodge|MLB|19780913|
-Brian|Allen|MLB|19780401|
-Bill|Gramatica|K|19780710|
-Marcus|Bell|DT|19790601|
-Rodney|Bailey|DE|19791007|
-Renaldo|Hill|CB|19781112|
-Edgerton|Hartwell|MLB|19780527|
-A.J.|Feeley|QB|19770516|
-Roger|Knight|MLB|19781011|
-Mario|Fatafehi|DT|19790127|
-Mike|McMahon|QB|19790208|
+Sean|McDermott|TE|19761205|Kansas
+Sedrick|Hodge|MLB|19780913|North Carolina
+Brian|Allen|MLB|19780401|Florida State
+Bill|Gramatica|K|19780710|South Florida
+Marcus|Bell|DT|19790601|Memphis
+Rodney|Bailey|DE|19791007|Ohio State
+Renaldo|Hill|CB|19781112|Michigan State
+Edgerton|Hartwell|MLB|19780527|Western Illinois
+A.J.|Feeley|QB|19770516|Oregon
+Roger|Knight|MLB|19781011|Wisconsin
+Mario|Fatafehi|DT|19790127|Kansas State
+Mike|McMahon|QB|19790208|Rutgers
 Mitch|White|LT|19780325|
-Jason|Doering|CB|19780422|
-Randy|Chevrier|DT|19760606|
-Curtis|Fuller|CB|19780725|
-Derrick|Blaylock|RB|19790823|
-Tyrone|Robertson|DT|19790815|
-Kendrell|Bell|MLB|19800702|
-Marques|Sullivan|LT|19780202|
-Mario|Monds|DT|19761110|
-Reggie|Germany|WR|19780319|
-Josh|Lovelady|LG|19780128|
-Brandon|Spoon|MLB|19780705|
-Raymond|Walls|CB|19790724|
-Joe|Maese|C|19781202|
-Dan|O'Leary|TE|19770901|
-Jimmy|Williams|CB|19790310|
-James|Boyd|CB|19771017|
-Anthony|Henry|CB|19761103|
-Hakim|Akbar|CB|19800811|
-Brandon|Winey|LT|19780127|
-David|Martin|TE|19790313|
-Rick|DeMulling|LG|19770721|
-Karon|Riley|DE|19780823|
+Jason|Doering|CB|19780422|Wisconsin
+Randy|Chevrier|DT|19760606|McGill
+Curtis|Fuller|CB|19780725|Texas Christian
+Derrick|Blaylock|RB|19790823|Stephen F. Austin State
+Tyrone|Robertson|DT|19790815|Hinds CC
+Kendrell|Bell|MLB|19800702|Georgia
+Marques|Sullivan|LT|19780202|Illinois
+Mario|Monds|DT|19761110|Cincinnati
+Reggie|Germany|WR|19780319|Ohio State
+Josh|Lovelady|LG|19780128|Houston
+Brandon|Spoon|MLB|19780705|North Carolina
+Raymond|Walls|CB|19790724|Southern Mississippi
+Joe|Maese|C|19781202|New Mexico
+Dan|O'Leary|TE|19770901|Notre Dame
+Jimmy|Williams|CB|19790310|Vanderbilt
+James|Boyd|CB|19771017|Penn State
+Anthony|Henry|CB|19761103|South Florida
+Hakim|Akbar|CB|19800811|Washington
+Brandon|Winey|LT|19780127|Louisiana State
+David|Martin|TE|19790313|Tennessee
+Rick|DeMulling|LG|19770721|Idaho
+Karon|Riley|DE|19780823|Minnesota
 Elliot|Silvers|LT|19780219|
-Tony|Driver|CB|19770804|
+Tony|Driver|CB|19770804|Notre Dame
 Steve|Smith|WR|19790512|Utah
-Corey|Hall|CB|19790117|
-Carlos|Polk|MLB|19770222|
-Quentin|McCord|WR|19780626|
-Robert|Carswell|CB|19781026|
-Brandon|Manumaleuna|TE|19800104|
-Jonathan|Carter|WR|19790320|
-Brandon|Gorin|LT|19780817|
-Mike|Roberg|TE|19770918|
-Kris|Kocurek|DT|19781115|
-Jonas|Jennings|LT|19771121|
-Floyd|Womack|LG|19781115|
-Anthony|Denman|MLB|19791030|
-Jamie|Henderson|CB|19790101|
-Bill|Ferrario|LG|19780922|
-Jerametrius|Butler|CB|19781128|
-James|Reed|DT|19770203|
-Eric|Westmoreland|MLB|19770311|
-Shaunard|Harts|CB|19780804|
-Leonard|Myers|CB|19781218|
-Orlando|Huff|MLB|19780814|
-Alex|Bannister|WR|19790423|
-T.J.|Turner|MLB|19781001|
+Corey|Hall|CB|19790117|Appalachian State
+Carlos|Polk|MLB|19770222|Nebraska
+Quentin|McCord|WR|19780626|Kentucky
+Robert|Carswell|CB|19781026|Clemson
+Brandon|Manumaleuna|TE|19800104|Arizona
+Jonathan|Carter|WR|19790320|Troy
+Brandon|Gorin|LT|19780817|Purdue
+Mike|Roberg|TE|19770918|Idaho
+Kris|Kocurek|DT|19781115|Texas Tech
+Jonas|Jennings|LT|19771121|Georgia
+Floyd|Womack|LG|19781115|Mississippi State
+Anthony|Denman|MLB|19791030|Notre Dame
+Jamie|Henderson|CB|19790101|Georgia
+Bill|Ferrario|LG|19780922|Wisconsin
+Jerametrius|Butler|CB|19781128|Kansas State
+James|Reed|DT|19770203|Iowa State
+Eric|Westmoreland|MLB|19770311|Tennessee
+Shaunard|Harts|CB|19780804|Boise State
+Leonard|Myers|CB|19781218|Miami (Florida)
+Orlando|Huff|MLB|19780814|Fresno State
+Alex|Bannister|WR|19790423|Eastern Kentucky
+T.J.|Turner|MLB|19781001|Michigan State
 Shawn|Draper|LT|19790405|
-Bhawoh|Jue|S|19790524|
-Ben|Hamilton|C|19770818|
-Dennis|Norman|LT|19800126|
-Scotty|Anderson|WR|19791124|
-Harold|Blackmon|CB|19780520|
-Otis|Leverette|DE|19780531|
-Jabari|Holloway|TE|19781218|
-Victor|Leyva|LG|19771218|
-Riall|Johnson|MLB|19780420|
-Dee|Brown|RB|19780512|
+Bhawoh|Jue|S|19790524|Penn State
+Ben|Hamilton|C|19770818|Minnesota
+Dennis|Norman|LT|19800126|Princeton
+Scotty|Anderson|WR|19791124|Grambling State
+Harold|Blackmon|CB|19780520|Northwestern
+Otis|Leverette|DE|19780531|Alabama-Birmingham
+Jabari|Holloway|TE|19781218|Notre Dame
+Victor|Leyva|LG|19771218|Arizona State
+Riall|Johnson|MLB|19780420|Stanford
+Dee|Brown|RB|19780512|Syracuse
 Arther|Love|TE|19770918|
-Adam|Haayer|LT|19770222|
-Owen|Pochman|K|19770802|
-Kris|Jenkins|DT|19790803|
-Justin|McCareins|WR|19781201|
-Kyle|Vanden Bosch|DE|19781117|
-Michael|Stone|CB|19780213|
-William|James|CB|19790615|
-Dwight|Smith|CB|19780813|
-Kenyatta|Jones|LT|19790118|
-Milton|Wynn|WR|19780921|
-Bernard|Robertson|LG|19790609|
-Russ|Hochstein|LG|19771007|
+Adam|Haayer|LT|19770222|Minnesota
+Owen|Pochman|K|19770802|Brigham Young
+Kris|Jenkins|DT|19790803|Maryland
+Justin|McCareins|WR|19781201|Northern Illinois
+Kyle|Vanden Bosch|DE|19781117|Nebraska
+Michael|Stone|CB|19780213|Memphis
+William|James|CB|19790615|Western Illinois
+Dwight|Smith|CB|19780813|Akron
+Kenyatta|Jones|LT|19790118|South Florida
+Milton|Wynn|WR|19780921|Washington State
+Bernard|Robertson|LG|19790609|Tulane
+Russ|Hochstein|LG|19771007|Nebraska
 Onome|Ojo|WR|19770603|
-Jameel|Cook|RB|19790208|
-Ellis|Wyms|DT|19790412|
-Louis|Williams|C|19790411|
-Than|Merrill|CB|19771222|
-Char-ron|Dorsey|LT|19771105|
-Chad|Johnson|WR|19780109|
-Sean|Brewer|TE|19771005|
-Ryan|Diem|LG|19790701|
-Zeke|Moreno|MLB|19781010|
-Jason|Glenn|MLB|19790820|
-Joe|Tafoya|DE|19780906|
-Anthony|Thomas|RB|19771107|
-Quincy|Carter|QB|19771013|
-Marques|Tuiasosopo|QB|19790322|
-Mike|Gandy|LG|19790103|
-Rudi|Johnson|RB|19791001|
-Markus|Steele|OLB|19790724|
-Jarrod|Cooper|CB|19780331|
-Ross|Kolodziej|DT|19780511|
-John|Nix|DT|19761124|
-Terdell|Sands|DT|19791031|
-Andre|King|WR|19731126|
-Benjamin|Gay|RB|19800228|
-Derrick|Gibson|CB|19790322|
-Tony|Dixon|CB|19790618|
-Matt|Lehr|C|19790425|
-Raymond|Perryman|CB|19781127|
-Chris|Cooper|DT|19770227|
+Jameel|Cook|RB|19790208|Illinois
+Ellis|Wyms|DT|19790412|Mississippi State
+Louis|Williams|C|19790411|Louisiana State
+Than|Merrill|CB|19771222|Yale
+Char-ron|Dorsey|LT|19771105|Florida State
+Chad|Johnson|WR|19780109|Oregon State
+Sean|Brewer|TE|19771005|San Jose State
+Ryan|Diem|LG|19790701|Northern Illinois
+Zeke|Moreno|MLB|19781010|Southern California
+Jason|Glenn|MLB|19790820|Texas A&M
+Joe|Tafoya|DE|19780906|Arizona
+Anthony|Thomas|RB|19771107|Michigan
+Quincy|Carter|QB|19771013|Georgia
+Marques|Tuiasosopo|QB|19790322|Washington
+Mike|Gandy|LG|19790103|Notre Dame
+Rudi|Johnson|RB|19791001|Auburn
+Markus|Steele|OLB|19790724|Southern California
+Jarrod|Cooper|CB|19780331|Kansas State
+Ross|Kolodziej|DT|19780511|Wisconsin
+John|Nix|DT|19761124|Southern Mississippi
+Terdell|Sands|DT|19791031|Tennessee-Chattanooga
+Andre|King|WR|19731126|Miami (Florida)
+Benjamin|Gay|RB|19800228|Garden City CC
+Derrick|Gibson|CB|19790322|Florida State
+Tony|Dixon|CB|19790618|Alabama
+Matt|Lehr|C|19790425|Virginia Tech
+Raymond|Perryman|CB|19781127|Northern Arizona
+Chris|Cooper|DT|19770227|Nebraska-Omaha
 Menson|Holloway|DT|19780712|
-Ken-Yon|Rambo|WR|19781004|
-Casey|Hampton|DT|19770903|
-Quincy|Morgan|WR|19770923|
-Robert|Ferguson|WR|19791217|
-Tommy|Polley|OLB|19780118|
-James|Jackson|RB|19760804|
-Torrance|Marshall|MLB|19770612|
-DeLawrence|Grant|DE|19791118|
-Willie|Blade|DT|19790207|
-Chris|Weinke|QB|19720731|
+Ken-Yon|Rambo|WR|19781004|Ohio State
+Casey|Hampton|DT|19770903|Texas
+Quincy|Morgan|WR|19770923|Kansas State
+Robert|Ferguson|WR|19791217|Texas A&M
+Tommy|Polley|OLB|19780118|Florida State
+James|Jackson|RB|19760804|Miami (Florida)
+Torrance|Marshall|MLB|19770612|Oklahoma
+DeLawrence|Grant|DE|19791118|Oregon State
+Willie|Blade|DT|19790207|Mississippi State
+Chris|Weinke|QB|19720731|Florida State
 Josh|Heupel|QB|19780322|
-Paul|Zukauskas|LG|19790712|
-T.J.|Houshmandzadeh|WR|19770926|
+Paul|Zukauskas|LG|19790712|Boston College
+T.J.|Houshmandzadeh|WR|19770926|Oregon State
 Brian|Crawford|LT|19770927|
-Richard|Seymour|DT|19791006|
-Dan|Morgan|OLB|19781219|
-Jeff|Backus|LT|19770921|
-Dominic|Raiola|C|19781230|
-Chris|Chambers|WR|19780812|
-Tay|Cody|CB|19771006|
-Travis|Minor|RB|19790630|
-Morlon|Greenwood|OLB|19780717|
-Casey|Rabach|C|19770924|
-Patrick|Chukwurah|MLB|19790301|
-Cedrick|Wilson|WR|19781217|
-Alex|Sulfsted|LT|19771221|
-Rashad|Holman|CB|19780117|
-Eric|Johnson|TE|19790915|
-Dwayne|Missouri|DE|19781223|
-Stephen|Neal|DT|19761009|
+Richard|Seymour|DT|19791006|Georgia
+Dan|Morgan|OLB|19781219|Miami (Florida)
+Jeff|Backus|LT|19770921|Michigan
+Dominic|Raiola|C|19781230|Nebraska
+Chris|Chambers|WR|19780812|Wisconsin
+Tay|Cody|CB|19771006|Florida State
+Travis|Minor|RB|19790630|Florida State
+Morlon|Greenwood|OLB|19780717|Syracuse
+Casey|Rabach|C|19770924|Wisconsin
+Patrick|Chukwurah|MLB|19790301|Wyoming
+Cedrick|Wilson|WR|19781217|Tennessee
+Alex|Sulfsted|LT|19771221|Miami (Ohio)
+Rashad|Holman|CB|19780117|Louisville
+Eric|Johnson|TE|19790915|Yale
+Dwayne|Missouri|DE|19781223|Northwestern
+Stephen|Neal|DT|19761009|Bakersfield State
 Jimmy|Robinson|MLB|19760504|
-Jamal|Reynolds|DE|19790220|
-Jamar|Fletcher|CB|19790828|
-Maurice|Williams|LT|19790126|
-LaMont|Jordan|RB|19781111|
-Kareem|McKenzie|LT|19790524|
-Darnerien|McCants|WR|19780801|
-Curtis|Holden|MLB|19790317|
-Steve|Hutchinson|LG|19771101|
-Will|Allen|CB|19780805|
-Idrees|Bashir|S|19781207|
-Aaron|Schobel|DE|19770901|
-Jamie|Winborn|OLB|19790514|
-Travis|Henry|RB|19781029|
-Gary|Baxter|CB|19781124|
-Eric|Kelly|CB|19770115|
-Kevan|Barlow|RB|19790107|
-Reggie|Hayward|DE|19790314|
-Shad|Meier|TE|19780607|
-Cory|Bird|CB|19780810|
-Monty|Beisel|DE|19780820|
-George|Layne|RB|19781009|
-Sage|Rosenfels|QB|19780306|
-Cedric|Scott|DE|19771019|
-John|Howell|CB|19780428|
-Jesse|Palmer|QB|19781005|
-Cedric|James|WR|19790319|
-Eddie|Berlin|WR|19780114|
+Jamal|Reynolds|DE|19790220|Florida State
+Jamar|Fletcher|CB|19790828|Wisconsin
+Maurice|Williams|LT|19790126|Michigan
+LaMont|Jordan|RB|19781111|Maryland
+Kareem|McKenzie|LT|19790524|Penn State
+Darnerien|McCants|WR|19780801|Delaware State
+Curtis|Holden|MLB|19790317|Washington State
+Steve|Hutchinson|LG|19771101|Michigan
+Will|Allen|CB|19780805|Syracuse
+Idrees|Bashir|S|19781207|Memphis
+Aaron|Schobel|DE|19770901|Texas Christian
+Jamie|Winborn|OLB|19790514|Vanderbilt
+Travis|Henry|RB|19781029|Tennessee
+Gary|Baxter|CB|19781124|Baylor
+Eric|Kelly|CB|19770115|Kentucky
+Kevan|Barlow|RB|19790107|Pittsburgh
+Reggie|Hayward|DE|19790314|Iowa State
+Shad|Meier|TE|19780607|Kansas State
+Cory|Bird|CB|19780810|Virginia Tech
+Monty|Beisel|DE|19780820|Kansas State
+George|Layne|RB|19781009|Texas Christian
+Sage|Rosenfels|QB|19780306|Iowa State
+Cedric|Scott|DE|19771019|Southern Mississippi
+John|Howell|CB|19780428|Colorado State
+Jesse|Palmer|QB|19781005|Florida
+Cedric|James|WR|19790319|Texas Christian
+Eddie|Berlin|WR|19780114|Northern Iowa
 Josh|Booty|QB|19750429|
-Dan|Alexander|RB|19780317|
-Keith|Adams|MLB|19791122|
-Andre|Carter|DE|19790512|
-Koren|Robinson|WR|19800319|
-Damione|Lewis|DT|19780301|
-Marcus|Stroud|DT|19780625|
-Kenyatta|Walker|LT|19790201|
-Santana|Moss|WR|19790601|
-Nate|Clements|CB|19791212|
-Willie|Middlebrooks|CB|19790212|
-Freddie|Mitchell|WR|19781128|
-Reggie|Wayne|WR|19781117|
-Ken|Lucas|CB|19790123|
+Dan|Alexander|RB|19780317|Nebraska
+Keith|Adams|MLB|19791122|Clemson
+Andre|Carter|DE|19790512|California
+Koren|Robinson|WR|19800319|North Carolina State
+Damione|Lewis|DT|19780301|Miami (Florida)
+Marcus|Stroud|DT|19780625|Georgia
+Kenyatta|Walker|LT|19790201|Florida
+Santana|Moss|WR|19790601|Miami (Florida)
+Nate|Clements|CB|19791212|Ohio State
+Willie|Middlebrooks|CB|19790212|Minnesota
+Freddie|Mitchell|WR|19781128|UCLA
+Reggie|Wayne|WR|19781117|Miami (Florida)
+Ken|Lucas|CB|19790123|Mississippi
 Paul|Toviessi|DE|19780226|
-Quinton|Caver|MLB|19780822|
-Willie|Howard|DT|19771226|
-Andre|Dyson|CB|19790525|
-Derrick|Burgess|DE|19780812|
-Adrian|Wilson|CB|19791012|
-Kenny|Smith|DT|19770908|
-Heath|Evans|RB|19781230|
-Moran|Norris|RB|19780616|
+Quinton|Caver|MLB|19780822|Arkansas
+Willie|Howard|DT|19771226|Stanford
+Andre|Dyson|CB|19790525|Utah
+Derrick|Burgess|DE|19780812|Mississippi
+Adrian|Wilson|CB|19791012|North Carolina State
+Kenny|Smith|DT|19770908|Alabama
+Heath|Evans|RB|19781230|Auburn
+Moran|Norris|RB|19780616|Kansas
 Jonathan|Burrough|TE|19780830|
 Kenyon|Hambrick|WR|19780502|
 Ricky|Ray|QB|19791022|
-David|Terrell|WR|19790313|
-Michael|Bennett|RB|19780813|
-Ryan|Pickett|DT|19791008|
-Todd|Heap|TE|19800316|
-Shawn|Worthen|DT|19751202|
-Carey|Scott|CB|19780811|
+David|Terrell|WR|19790313|Michigan
+Michael|Bennett|RB|19780813|Wisconsin
+Ryan|Pickett|DT|19791008|Ohio State
+Todd|Heap|TE|19800316|Arizona State
+Shawn|Worthen|DT|19751202|Texas Christian
+Carey|Scott|CB|19780811|Kentucky State
 Mike|Cecere|DE|19780510|
-Adam|Archuleta|S|19771127|
-Fred|Smoot|CB|19790417|
-Gerard|Warren|DT|19780725|
-Rod|Gardner|WR|19771026|
-Deuce|McAllister|RB|19781227|
-Shaun|Rogers|DT|19790312|
+Adam|Archuleta|S|19771127|Arizona State
+Fred|Smoot|CB|19790417|Mississippi State
+Gerard|Warren|DT|19780725|Florida
+Rod|Gardner|WR|19771026|Clemson
+Deuce|McAllister|RB|19781227|Mississippi
+Shaun|Rogers|DT|19790312|Texas
 Drew|Brees|QB|19790115|Purdue
-Leonard|Davis|LG|19780905|
-Justin|Smith|DE|19790930|
-LaDainian|Tomlinson|RB|19790623|
-Brock|Williams|CB|19790811|
-Daleroy|Stewart|DT|19781101|
+Leonard|Davis|LG|19780905|Texas
+Justin|Smith|DE|19790930|Missouri
+LaDainian|Tomlinson|RB|19790623|Texas Christian
+Brock|Williams|CB|19790811|Notre Dame
+Daleroy|Stewart|DT|19781101|Southern Mississippi
 Alex|Lincoln|MLB|19771117|
-Louis|Mackey|MLB|19771229|
-Micah|Ross|WR|19760113|
-Matt|Light|LT|19780623|
+Louis|Mackey|MLB|19771229|Akron
+Micah|Ross|WR|19760113|Jacksonville
+Matt|Light|LT|19780623|Purdue
 Alvin|Morrow|TE|19780428|
 Riley|Kleinhesselink|DE|19770927|
 Henry|Douglas|WR|19770303|
 Pat|Downey|C|19740621|
-Kelly|Herndon|CB|19761103|
-Dirk|Johnson|P|19750601|
-Jody|Littleton|MLB|19741023|
+Kelly|Herndon|CB|19761103|Toledo
+Dirk|Johnson|P|19750601|Northern Colorado
+Jody|Littleton|MLB|19741023|Baylor
 Andre|Rone|WR|19760414|
-R-Kal|Truluck|DE|19740930|
+R-Kal|Truluck|DE|19740930|Cortland State
 Brandon|Christenson|TE|19770510|
-Leonard|Stephens|TE|19780709|
-Bill|LaFleur|P|19760225|
-Paris|Lenon|OLB|19771126|
-Joey|Goodspeed|FB|19780222|
-Deke|Cooper|S|19771018|
+Leonard|Stephens|TE|19780709|Howard
+Bill|LaFleur|P|19760225|Nebraska
+Paris|Lenon|OLB|19771126|Richmond
+Joey|Goodspeed|FB|19780222|Notre Dame
+Deke|Cooper|S|19771018|Notre Dame
 Sherrod|Gideon|WR|19770221|
-Jason|Lamar|MLB|19781110|
-Rafael|Cooper|RB|19750108|
-J.J.|Moses|WR|19790912|
-Troy|Evans|MLB|19771203|
-Tim|Hasselbeck|QB|19780406|
-Marques|McFadden|LT|19780912|
-Kevin|Stemke|P|19781123|
-Marcus|Williams|WR|19771212|
-Cornelius|Anthony|MLB|19780703|
+Jason|Lamar|MLB|19781110|Toledo
+Rafael|Cooper|RB|19750108|Louisville
+J.J.|Moses|WR|19790912|Iowa State
+Troy|Evans|MLB|19771203|Cincinnati
+Tim|Hasselbeck|QB|19780406|Boston College
+Marques|McFadden|LT|19780912|Arizona
+Kevin|Stemke|P|19781123|Wisconsin
+Marcus|Williams|WR|19771212|Washington State
+Cornelius|Anthony|MLB|19780703|Texas A&M
 Tarlos|Thomas|LT|19770823|
-Jimmy|Redmond|WR|19770818|
-Tom|Ashworth|LT|19771010|
-Tam|Hopkins|LG|19780322|
-Nijrell|Eason|CB|19790520|
-Nate|Poole|WR|19770201|
-Dondre|Gilliam|WR|19770209|
+Jimmy|Redmond|WR|19770818|McNeese State
+Tom|Ashworth|LT|19771010|Colorado
+Tam|Hopkins|LG|19780322|Ohio State
+Nijrell|Eason|CB|19790520|Arizona State
+Nate|Poole|WR|19770201|Marshall
+Dondre|Gilliam|WR|19770209|Millersville
 Tim|Stuber|LG|19780202|
 Drew|Inzer|LG|19791205|
-J.J.|Jones|MLB|19780607|
-James|Jordan|WR|19780611|
-LaDairis|Jackson|DE|19790616|
-Buck|Gurley|DT|19780407|
-Josh|Warner|LG|19790515|
-Derek|Dorris|WR|19781201|
+J.J.|Jones|MLB|19780607|Arkansas
+James|Jordan|WR|19780611|Louisiana Tech
+LaDairis|Jackson|DE|19790616|Oregon State
+Buck|Gurley|DT|19780407|Florida
+Josh|Warner|LG|19790515|SUNY Brockport
+Derek|Dorris|WR|19781201|Texas Tech
 Kendrick|Rogers|LT|19761010|
-Brian|Russell|S|19780205|
-Ian|Allen|LT|19780722|
-DeQuincy|Scott|DT|19780305|
-James|Wofford|RB|19780606|
-Matt|Allen|P|19771023|
-Tim|Johnson|MLB|19780207|
-Omar|Smith|C|19770908|
-Walter|Bernard|CB|19780503|
-Tupe|Peko|LG|19780919|
-Brian|Leigeb|S|19781002|
+Brian|Russell|S|19780205|San Diego State
+Ian|Allen|LT|19780722|Purdue
+DeQuincy|Scott|DT|19780305|Southern Mississippi
+James|Wofford|RB|19780606|Nevada-Las Vegas
+Matt|Allen|P|19771023|Troy
+Tim|Johnson|MLB|19780207|Youngstown State
+Omar|Smith|C|19770908|Kentucky
+Walter|Bernard|CB|19780503|New Mexico
+Tupe|Peko|LG|19780919|Michigan State
+Brian|Leigeb|S|19781002|Central Michigan
 Richmond|Flowers|WR|19780504|
-Colston|Weatherington|DT|19771029|
-Derek|Combs|CB|19790228|
-Anthony|Bright|WR|19770328|
-Darnell|Dinkins|S|19770120|
+Colston|Weatherington|DT|19771029|Central Missouri
+Derek|Combs|CB|19790228|Ohio State
+Anthony|Bright|WR|19770328|Valencia JC
+Darnell|Dinkins|S|19770120|Pittsburgh
 Ronald|Smith|DT|19780818|
-Chad|Hutchinson|QB|19770221|
-Delvin|Joyce|RB|19780921|
-Danny|Boyd|K|19780601|
+Chad|Hutchinson|QB|19770221|Stanford
+Delvin|Joyce|RB|19780921|James Madison
+Danny|Boyd|K|19780601|Louisiana State
 Matt|Bryant|K|19750529|Baylor
-Marc|Boerigter|WR|19780504|
-Jamal|Robertson|RB|19770110|
-Clint|Finley|CB|19770327|
-Dario|Romero|DT|19780413|
-James|Whitley|CB|19790513|
-David|Carr|QB|19790721|
-Bruce|Branch|CB|19780914|
-Javor|Mills|DE|19790511|
-Thatcher|Szalay|LG|19790118|
+Marc|Boerigter|WR|19780504|Hastings
+Jamal|Robertson|RB|19770110|Ohio Northern
+Clint|Finley|CB|19770327|Nebraska
+Dario|Romero|DT|19780413|Eastern Washington
+James|Whitley|CB|19790513|Michigan
+David|Carr|QB|19790721|Fresno State
+Bruce|Branch|CB|19780914|Penn State
+Javor|Mills|DE|19790511|Auburn
+Thatcher|Szalay|LG|19790118|Montana
 Robert|Gillespie|RB|19791102|
-Bernard|Jackson|DE|19800510|
-Frank|Strong|OLB|19800114|
-Jack|Brewer|S|19790108|
-Kalvin|Pearson|CB|19781022|
-Reggie|Myles|CB|19791010|
-Brandon|Moore|MLB|19790116|
-Kevin|Aldridge|DE|19800303|
+Bernard|Jackson|DE|19800510|Tennessee
+Frank|Strong|OLB|19800114|Southern California
+Jack|Brewer|S|19790108|Minnesota
+Kalvin|Pearson|CB|19781022|Grambling State
+Reggie|Myles|CB|19791010|Alabama
+Brandon|Moore|MLB|19790116|Oklahoma
+Kevin|Aldridge|DE|19800303|Southern Methodist
 J.R.|Niklos|RB|19790619|
-Nick|Davis|WR|19791006|
-Kyries|Hebert|CB|19801009|
+Nick|Davis|WR|19791006|Wisconsin
+Kyries|Hebert|CB|19801009|Louisiana-Lafayette
 Shaun|Hill|QB|19800109|Maryland
-J.R.|Jenkins|K|19790131|
-Ricot|Joseph|CB|19780616|
-Eddie|Drummond|WR|19800412|
-Antwan|Lake|DT|19790710|
-James|Mungro|RB|19780213|
-Josh|Thornhill|MLB|19800119|
+J.R.|Jenkins|K|19790131|Marshall
+Ricot|Joseph|CB|19780616|Central Florida
+Eddie|Drummond|WR|19800412|Penn State
+Antwan|Lake|DT|19790710|West Virginia
+James|Mungro|RB|19780213|Syracuse
+Josh|Thornhill|MLB|19800119|Michigan State
 James|Harrison|MLB|19780504|Kent State
-Bob|Jones|DE|19780903|
-Erik|Totten|CB|19800121|
-Dwayne|Levels|MLB|19790509|
-Travis|Carroll|OLB|19781026|
-Kevin|House|CB|19790109|
-Derrick|Lewis|WR|19751030|
-Jeff|Reed|K|19790409|
-Ricky|Williams|RB|19780829|
-Ryan|Nece|OLB|19790224|
-Corey|Smith|DE|19791002|
-Justin|Smith|MLB|19790605|
-Kelly|Campbell|WR|19800723|
+Bob|Jones|DE|19780903|Penn State
+Erik|Totten|CB|19800121|Western Washington
+Dwayne|Levels|MLB|19790509|Oklahoma State
+Travis|Carroll|OLB|19781026|Florida
+Kevin|House|CB|19790109|South Carolina
+Derrick|Lewis|WR|19751030|San Diego State
+Jeff|Reed|K|19790409|North Carolina
+Ricky|Williams|RB|19780829|Texas Tech
+Ryan|Nece|OLB|19790224|UCLA
+Corey|Smith|DE|19791002|North Carolina State
+Justin|Smith|MLB|19790605|Indiana
+Kelly|Campbell|WR|19800723|Georgia Tech
 Konrad|Dean|LG|19790606|
 Adam|Herzing|WR|19800923|
-Kurt|Vollers|LT|19790404|
-Tony|Newson|MLB|19790911|
-Frisman|Jackson|WR|19790612|
+Kurt|Vollers|LT|19790404|Notre Dame
+Tony|Newson|MLB|19790911|Utah State
+Frisman|Jackson|WR|19790612|Western Illinois
 Mike|Collins|LG|19780827|
-Steve|Edwards|LT|19790220|
-Justin|Ena|MLB|19771120|
-Artis|Hicks|LT|19781128|
-Jason|McKie|RB|19800522|
+Steve|Edwards|LT|19790220|Central Florida
+Justin|Ena|MLB|19771120|Brigham Young
+Artis|Hicks|LT|19781128|Memphis
+Jason|McKie|RB|19800522|Temple
 Frank|Romero|LG|19791124|
-Jeremy|Slechta|DT|19800512|
-James|Atkins|DT|19780623|
-Greg|Jerman|LT|19790124|
+Jeremy|Slechta|DT|19800512|Nebraska
+James|Atkins|DT|19780623|Virginia Union
+Greg|Jerman|LT|19790124|Baylor
 Justin|Seaverns|MLB|19800702|
-Jason|Ball|LG|19790321|
-Jesse|Chatman|RB|19790922|
-Chris|Demaree|DE|19800312|
-Vernon|Fox|S|19791009|
-Josh|Norman|TE|19800727|
-Tony|Okanlawon|CB|19790304|
-Craig|Osika|LG|19791204|
-Brad|Kassell|MLB|19800107|
-Matt|Martin|LT|19791012|
-Ryan|Clark|S|19791012|
-Matt|Mitrione|DT|19780715|
-Charles|Stackhouse|FB|19800411|
-Andy|King|LG|19781109|
-Shawn|Byrdsong|CB|19791002|
-Will|Demps|S|19791107|
-Dameon|Hunter|FB|19790218|
-J.R.|Johnson|OLB|19790620|
-Ma'ake|Kemoeatu|DT|19790110|
+Jason|Ball|LG|19790321|New Hampshire
+Jesse|Chatman|RB|19790922|Eastern Washington
+Chris|Demaree|DE|19800312|Kentucky
+Vernon|Fox|S|19791009|Fresno State
+Josh|Norman|TE|19800727|Oklahoma
+Tony|Okanlawon|CB|19790304|Maryland
+Craig|Osika|LG|19791204|Indiana
+Brad|Kassell|MLB|19800107|North Texas
+Matt|Martin|LT|19791012|Kansas State
+Ryan|Clark|S|19791012|Louisiana State
+Matt|Mitrione|DT|19780715|Purdue
+Charles|Stackhouse|FB|19800411|Mississippi
+Andy|King|LG|19781109|Illinois State
+Shawn|Byrdsong|CB|19791002|Mississippi State
+Will|Demps|S|19791107|San Diego State
+Dameon|Hunter|FB|19790218|Utah
+J.R.|Johnson|OLB|19790620|Syracuse
+Ma'ake|Kemoeatu|DT|19790110|Utah
 Tellis|Redmon|RB|19781219|
-Bart|Scott|OLB|19800818|
-Lawrence|Smith|LT|19790816|
-Andrew|Davison|CB|19791209|
+Bart|Scott|OLB|19800818|Southern Illinois
+Lawrence|Smith|LT|19790816|Tennessee State
+Andrew|Davison|CB|19791209|Kansas
 Chris|Smith|LT|19791009|
 Ed|Ieremia-Stansbury|FB|19790503|
-Eric|Parker|WR|19790414|
-Jimmy|McClain|MLB|19800723|
-Joe|Burns|RB|19790915|
-Teag|Whiting|LG|19790416|
-Kevin|Barry|LT|19790720|
+Eric|Parker|WR|19790414|Tennessee
+Jimmy|McClain|MLB|19800723|Troy
+Joe|Burns|RB|19790915|Georgia Tech
+Teag|Whiting|LG|19790416|Brigham Young
+Kevin|Barry|LT|19790720|Arizona
 Andy|Eby|C|19790426|
-Erwin|Swiney|CB|19781008|
-Marcus|Wilkins|OLB|19800102|
-Tony|Fisher|RB|19791012|
+Erwin|Swiney|CB|19781008|Nebraska
+Marcus|Wilkins|OLB|19800102|Texas
+Tony|Fisher|RB|19791012|Notre Dame
 Matt|Knutson|LT|19790614|
-Khary|Campbell|MLB|19790404|
+Khary|Campbell|MLB|19790404|Bowling Green State
 Billy|Cundiff|K|19800330|Drake
-Woodrow|Dantzler|RB|19791004|
-Keith|Davis|CB|19781230|
-Filip|Filipovic|P|19771105|
-Marcus|Floyd|CB|19781012|
-Randy|Hymes|WR|19790807|
-Jarmar|Julien|RB|19791211|
-Travis|Coleman|CB|19800104|
-D.D.|Lewis|OLB|19790108|
-Kemp|Rasmussen|DE|19790525|
-Trev|Faulk|MLB|19810806|
-Ahmad|Brooks|CB|19800313|
-John|Simon|RB|19781211|
-Grant|Irons|DE|19790707|
-Nathan|Black|WR|19780620|
-Lenny|Walls|CB|19790926|
-Damien|Anderson|RB|19790717|
-Tim|Duncan|K|19790612|
-Steven|Grace|C|19790213|
-Quentin|Harris|CB|19770126|
-Eric|Joyce|CB|19780121|
+Woodrow|Dantzler|RB|19791004|Clemson
+Keith|Davis|CB|19781230|Sam Houston State
+Filip|Filipovic|P|19771105|South Dakota
+Marcus|Floyd|CB|19781012|Indiana
+Randy|Hymes|WR|19790807|Grambling State
+Jarmar|Julien|RB|19791211|San Jose State
+Travis|Coleman|CB|19800104|Hampton
+D.D.|Lewis|OLB|19790108|Texas
+Kemp|Rasmussen|DE|19790525|Indiana
+Trev|Faulk|MLB|19810806|Louisiana State
+Ahmad|Brooks|CB|19800313|Texas
+John|Simon|RB|19781211|Louisiana Tech
+Grant|Irons|DE|19790707|Notre Dame
+Nathan|Black|WR|19780620|Northwestern State (Louisiana)
+Lenny|Walls|CB|19790926|Boston College
+Damien|Anderson|RB|19790717|Northwestern
+Tim|Duncan|K|19790612|Oklahoma
+Steven|Grace|C|19790213|Arizona
+Quentin|Harris|CB|19770126|Syracuse
+Eric|Joyce|CB|19780121|Tennessee State
 Preston|Parsons|QB|19790219|
-Jake|Soliday|WR|19781116|
-Tony|Wragge|LG|19790814|
+Jake|Soliday|WR|19781116|Northern Iowa
+Tony|Wragge|LG|19790814|New Mexico State
 Ryan|Watson|DT|19781125|
-Bryan|Thomas|DE|19790607|
-Eddie|Freeman|DT|19780104|
-Travis|Fisher|CB|19790912|
-Matt|Schobel|TE|19781104|
-Will|Witherspoon|OLB|19800819|
-Dennis|Johnson|DE|19791204|
-Omar|Easy|FB|19771029|
+Bryan|Thomas|DE|19790607|Alabama-Birmingham
+Eddie|Freeman|DT|19780104|Alabama-Birmingham
+Travis|Fisher|CB|19790912|Central Florida
+Matt|Schobel|TE|19781104|Texas Christian
+Will|Witherspoon|OLB|19800819|Georgia
+Dennis|Johnson|DE|19791204|Kentucky
+Omar|Easy|FB|19771029|Penn State
 Nate|Dwyer|DT|19780930|
-Martin|Bibla|LG|19791004|
-Chris|Luzar|TE|19790212|
-Scott|Peters|C|19781123|
-Justin|Bannan|DT|19790418|
-Herb|Haygood|WR|19771230|
-Jason|McAddley|WR|19790728|
-Kevin|McCadam|S|19790306|
-Marquand|Manuel|S|19790711|
-Kahlil|Hill|WR|19790318|
-Howard|Green|DE|19790112|
-Jeb|Putzier|TE|19790120|
-Tyreo|Harrison|OLB|19800515|
-Mike|Banks|TE|19791105|
-Monsanto|Pope|DT|19780127|
-Kevin|Shaffer|LT|19800302|
-Quincy|Monk|OLB|19790130|
-Brad|Franklin|CB|19791222|
-Atnaf|Harris|WR|19790227|
+Martin|Bibla|LG|19791004|Miami (Florida)
+Chris|Luzar|TE|19790212|Virginia
+Scott|Peters|C|19781123|Arizona State
+Justin|Bannan|DT|19790418|Colorado
+Herb|Haygood|WR|19771230|Michigan State
+Jason|McAddley|WR|19790728|Alabama
+Kevin|McCadam|S|19790306|Virginia Tech
+Marquand|Manuel|S|19790711|Florida
+Kahlil|Hill|WR|19790318|Iowa
+Howard|Green|DE|19790112|Louisiana State
+Jeb|Putzier|TE|19790120|Boise State
+Tyreo|Harrison|OLB|19800515|Notre Dame
+Mike|Banks|TE|19791105|Iowa State
+Monsanto|Pope|DT|19780127|Virginia
+Kevin|Shaffer|LT|19800302|Tulsa
+Quincy|Monk|OLB|19790130|North Carolina
+Brad|Franklin|CB|19791222|Louisiana-Lafayette
+Atnaf|Harris|WR|19790227|Northridge State
 James|Broyles|LG|19780518|
 Julius|Peppers|DE|19800118|North Carolina
-Joey|Harrington|QB|19781021|
-Mike|Williams|LT|19800111|
-Roy|Williams|S|19800814|
-John|Henderson|DT|19790109|
-Levi|Jones|LT|19790824|
+Joey|Harrington|QB|19781021|Oregon
+Mike|Williams|LT|19800111|Texas
+Roy|Williams|S|19800814|Oklahoma
+John|Henderson|DT|19790109|Tennessee
+Levi|Jones|LT|19790824|Arizona State
 Dwight|Freeney|DE|19800219|Syracuse
-Donte'|Stallworth|WR|19801110|
-Jeremy|Shockey|TE|19800818|
-Albert|Haynesworth|DT|19810617|
-William|Green|RB|19791217|
-Phillip|Buchanon|CB|19800919|
-Ashley|Lelie|WR|19800216|
-Javon|Walker|WR|19781014|
-Daniel|Graham|TE|19781116|
-Napoleon|Harris|MLB|19790225|
-Charles|Grant|DE|19780903|
-Lito|Sheppard|CB|19810408|
-Mike|Rumph|CB|19791108|
-Jerramy|Stevens|TE|19791113|
-Marc|Colombo|LT|19781008|
-Kendall|Simmons|LG|19790311|
-Robert|Thomas|OLB|19800717|
-Jabar|Gaffney|WR|19801201|
-DeShaun|Foster|RB|19800110|
-Kalimba|Edwards|DE|19791226|
-Josh|Reed|WR|19800501|
-Raonall|Smith|OLB|19781022|
-Toniu|Fonoti|LG|19811126|
-Mike|Pearson|LT|19800822|
-Lamont|Thompson|S|19780730|
-Larry|Tripplett|DT|19790118|
-LeCharles|Bentley|LG|19791107|
-Tank|Williams|S|19800630|
-Tim|Carter|WR|19790921|
-Andre|Davis|WR|19790612|
-Reche|Caldwell|WR|19790328|
-Levar|Fisher|OLB|19790702|
-Chester|Pitts|LT|19790626|
-Clinton|Portis|RB|19810901|
-Anthony|Weaver|DE|19800728|
-Langston|Walker|LT|19790903|
-Maurice|Morris|RB|19791201|
-Doug|Jolley|TE|19790102|
-Ladell|Betts|RB|19790827|
-Michael|Lewis|S|19800429|
-Sheldon|Brown|CB|19790319|
-Jon|McGraw|S|19790402|
-Anton|Palepoi|DE|19781119|
-Ryan|Denney|DE|19770615|
-Antwaan|Randle El|WR|19790817|
-Antonio|Bryant|WR|19810309|
-Deion|Branch|WR|19790718|
-Fred|Weary|LG|19770930|
-Andre'|Goodman|CB|19780811|
-Saleem|Rasheed|OLB|19810615|
-Willie|Offord|S|19781222|
-Ben|Leber|OLB|19781207|
-Roosevelt|Williams|CB|19780910|
-Joseph|Jefferson|CB|19800215|
-Derek|Ross|CB|19800105|
-Melvin|Fowler|C|19790331|
-Rocky|Calmus|OLB|19790801|
-Rashad|Bauman|CB|19790507|
-Will|Overstreet|OLB|19791007|
+Donte'|Stallworth|WR|19801110|Tennessee
+Jeremy|Shockey|TE|19800818|Miami (Florida)
+Albert|Haynesworth|DT|19810617|Tennessee
+William|Green|RB|19791217|Boston College
+Phillip|Buchanon|CB|19800919|Miami (Florida)
+Ashley|Lelie|WR|19800216|Hawaii
+Javon|Walker|WR|19781014|Florida State
+Daniel|Graham|TE|19781116|Colorado
+Napoleon|Harris|MLB|19790225|Northwestern
+Charles|Grant|DE|19780903|Georgia
+Lito|Sheppard|CB|19810408|Florida
+Mike|Rumph|CB|19791108|Miami (Florida)
+Jerramy|Stevens|TE|19791113|Washington
+Marc|Colombo|LT|19781008|Boston College
+Kendall|Simmons|LG|19790311|Auburn
+Robert|Thomas|OLB|19800717|UCLA
+Jabar|Gaffney|WR|19801201|Florida
+DeShaun|Foster|RB|19800110|UCLA
+Kalimba|Edwards|DE|19791226|South Carolina
+Josh|Reed|WR|19800501|Louisiana State
+Raonall|Smith|OLB|19781022|Washington State
+Toniu|Fonoti|LG|19811126|Nebraska
+Mike|Pearson|LT|19800822|Florida
+Lamont|Thompson|S|19780730|Washington State
+Larry|Tripplett|DT|19790118|Washington
+LeCharles|Bentley|LG|19791107|Ohio State
+Tank|Williams|S|19800630|Stanford
+Tim|Carter|WR|19790921|Auburn
+Andre|Davis|WR|19790612|Virginia Tech
+Reche|Caldwell|WR|19790328|Florida
+Levar|Fisher|OLB|19790702|North Carolina State
+Chester|Pitts|LT|19790626|San Diego State
+Clinton|Portis|RB|19810901|Miami (Florida)
+Anthony|Weaver|DE|19800728|Notre Dame
+Langston|Walker|LT|19790903|California
+Maurice|Morris|RB|19791201|Oregon
+Doug|Jolley|TE|19790102|Brigham Young
+Ladell|Betts|RB|19790827|Iowa
+Michael|Lewis|S|19800429|none
+Sheldon|Brown|CB|19790319|South Carolina
+Jon|McGraw|S|19790402|Kansas State
+Anton|Palepoi|DE|19781119|Nevada-Las Vegas
+Ryan|Denney|DE|19770615|Brigham Young
+Antwaan|Randle El|WR|19790817|Indiana
+Antonio|Bryant|WR|19810309|Pittsburgh
+Deion|Branch|WR|19790718|Louisville
+Fred|Weary|LG|19770930|Tennessee
+Andre'|Goodman|CB|19780811|South Carolina
+Saleem|Rasheed|OLB|19810615|Alabama
+Willie|Offord|S|19781222|South Carolina
+Ben|Leber|OLB|19781207|Kansas State
+Roosevelt|Williams|CB|19780910|Tuskegee
+Joseph|Jefferson|CB|19800215|Western Kentucky
+Derek|Ross|CB|19800105|Ohio State
+Melvin|Fowler|C|19790331|Maryland
+Rocky|Calmus|OLB|19790801|Oklahoma
+Rashad|Bauman|CB|19790507|Oregon
+Will|Overstreet|OLB|19791007|Tennessee
 Josh|McCown|QB|19790704|Sam Houston State
-James|Allen|OLB|19791111|
-Charles|Hill|DT|19801101|
-Lamar|Gordon|RB|19800107|
-Kris|Richard|CB|19791028|
+James|Allen|OLB|19791111|Oregon State
+Charles|Hill|DT|19801101|Maryland
+Lamar|Gordon|RB|19800107|North Dakota State
+Kris|Richard|CB|19791028|Southern California
 Marquise|Walker|WR|19781211|
-Chris|Baker|TE|19791118|
-Akin|Ayodele|OLB|19790917|
-Seth|McKinney|C|19790612|
-Brian|Westbrook|RB|19790902|
-Marques|Anderson|S|19790526|
-Terrence|Metcalf|LG|19780128|
-Chris|Hope|S|19800929|
+Chris|Baker|TE|19791118|Michigan State
+Akin|Ayodele|OLB|19790917|Purdue
+Seth|McKinney|C|19790612|Texas A&M
+Brian|Westbrook|RB|19790902|Villanova
+Marques|Anderson|S|19790526|UCLA
+Terrence|Metcalf|LG|19780128|Mississippi
+Chris|Hope|S|19800929|Florida State
 Eric|Crouch|WR|19781116|
-Dorsett|Davis|DT|19790124|
-Coy|Wire|S|19781107|
-Jonathan|Wells|RB|19790721|
-Dante|Wesley|CB|19790405|
-Kevin|Bentley|OLB|19791229|
-Jeff|Chandler|K|19790618|
-Justin|Peelle|TE|19790315|
-Alex|Brown|DE|19790604|
-Brian|Williams|CB|19790702|
-David|Thornton|OLB|19781101|
-David|Garrard|QB|19780214|
-Travis|Dorsch|K|19790904|
-Mike|Echols|CB|19781013|
-Ben|Taylor|OLB|19780831|
-Dave|Zastudil|P|19781026|
-Randy|McMichael|TE|19790628|
-Tony|Beckham|CB|19781001|
-Rohan|Davey|QB|19790414|
-Terreal|Bierria|S|19801010|
-Alan|Harper|DT|19790906|
-Darnell|Sanders|TE|19790316|
-Ron|Johnson|WR|19800523|
-Keyuo|Craver|CB|19800822|
-Jarvis|Green|DE|19790112|
-Larry|Foote|MLB|19800612|
-Sam|Brandon|S|19790705|
-Rocky|Boiman|OLB|19800124|
-Najeh|Davenport|FB|19790208|
-Jarrod|Baxter|FB|19790309|
-Randy|Fasani|QB|19780918|
-John|Owens|TE|19800110|
-Bobby|Gray|S|19780430|
-Andra|Davis|MLB|19781223|
-Scott|Fujita|OLB|19790428|
-Kyle|Johnson|RB|19781215|
-Rocky|Bernard|DT|19790419|
-Kenyon|Coleman|DE|19790410|
-Mel|Mitchell|S|19790210|
-Nick|Greisen|MLB|19790810|
-Ramon|Walker|S|19791108|
-Jonathan|Goodwin|LG|19781202|
-Terry|Jones|TE|19791203|
-Aaron|Kampman|DE|19791130|
-Jermaine|Phillips|S|19790327|
-Kurt|Kittner|QB|19800123|
-Andre|Lott|S|19790531|
-Omare|Lowe|CB|19780420|
+Dorsett|Davis|DT|19790124|Mississippi State
+Coy|Wire|S|19781107|Stanford
+Jonathan|Wells|RB|19790721|Ohio State
+Dante|Wesley|CB|19790405|Arkansas-Pine Bluff
+Kevin|Bentley|OLB|19791229|Northwestern
+Jeff|Chandler|K|19790618|Florida
+Justin|Peelle|TE|19790315|Oregon
+Alex|Brown|DE|19790604|Florida
+Brian|Williams|CB|19790702|North Carolina State
+David|Thornton|OLB|19781101|North Carolina
+David|Garrard|QB|19780214|East Carolina
+Travis|Dorsch|K|19790904|Purdue
+Mike|Echols|CB|19781013|Wisconsin
+Ben|Taylor|OLB|19780831|Virginia Tech
+Dave|Zastudil|P|19781026|Ohio University
+Randy|McMichael|TE|19790628|Georgia
+Tony|Beckham|CB|19781001|Wisconsin-Stout
+Rohan|Davey|QB|19790414|Louisiana State
+Terreal|Bierria|S|19801010|Georgia
+Alan|Harper|DT|19790906|Fresno State
+Darnell|Sanders|TE|19790316|Ohio State
+Ron|Johnson|WR|19800523|Minnesota
+Keyuo|Craver|CB|19800822|Nebraska
+Jarvis|Green|DE|19790112|Louisiana State
+Larry|Foote|MLB|19800612|Michigan
+Sam|Brandon|S|19790705|Nevada-Las Vegas
+Rocky|Boiman|OLB|19800124|Notre Dame
+Najeh|Davenport|FB|19790208|Miami (Florida)
+Jarrod|Baxter|FB|19790309|New Mexico
+Randy|Fasani|QB|19780918|Stanford
+John|Owens|TE|19800110|Notre Dame
+Bobby|Gray|S|19780430|Louisiana Tech
+Andra|Davis|MLB|19781223|Florida
+Scott|Fujita|OLB|19790428|California
+Kyle|Johnson|RB|19781215|Syracuse
+Rocky|Bernard|DT|19790419|Texas A&M
+Kenyon|Coleman|DE|19790410|UCLA
+Mel|Mitchell|S|19790210|Western Kentucky
+Nick|Greisen|MLB|19790810|Wisconsin
+Ramon|Walker|S|19791108|Pittsburgh
+Jonathan|Goodwin|LG|19781202|Michigan
+Terry|Jones|TE|19791203|Alabama
+Aaron|Kampman|DE|19791130|Iowa
+Jermaine|Phillips|S|19790327|Georgia
+Kurt|Kittner|QB|19800123|Illinois
+Andre|Lott|S|19790531|Tennessee
+Omare|Lowe|CB|19780420|Washington
 Freddie|Milons|WR|19800627|
 Brandon|Doman|QB|19761229|
-Craig|Nall|QB|19790421|
-Bryan|Knight|OLB|19790122|
-Verron|Haynes|FB|19790217|
-Courtland|Bullard|OLB|19780902|
-Pete|Hunter|CB|19800525|
-Ryan|Hannam|TE|19800224|
-Matt|Hill|LT|19781110|
-Josh|Shaw|DT|19790907|
-Demarcus|Faggins|CB|19790613|
-Keith|Heinrich|TE|19790319|
-Chris|Cash|CB|19800713|
-Kevin|Thomas|CB|19780728|
-Nick|Rogers|OLB|19790531|
-Tyson|Walter|LT|19780317|
+Craig|Nall|QB|19790421|Northwestern State (Louisiana)
+Bryan|Knight|OLB|19790122|Pittsburgh
+Verron|Haynes|FB|19790217|Georgia
+Courtland|Bullard|OLB|19780902|Ohio State
+Pete|Hunter|CB|19800525|Virginia Union
+Ryan|Hannam|TE|19800224|Northern Iowa
+Matt|Hill|LT|19781110|Boise State
+Josh|Shaw|DT|19790907|Michigan State
+Demarcus|Faggins|CB|19790613|Kansas State
+Keith|Heinrich|TE|19790319|Sam Houston State
+Chris|Cash|CB|19800713|Southern California
+Kevin|Thomas|CB|19780728|Nevada-Las Vegas
+Nick|Rogers|OLB|19790531|Georgia Tech
+Tyson|Walter|LT|19780317|Ohio State
 Clenton|Ballard|DT|19790417|
-David|Pugh|DT|19790724|
-J.T.|O'Sullivan|QB|19790825|
-Justin|Hartwig|LG|19781121|
-Wesly|Mallard|OLB|19781121|
-Keyon|Nash|CB|19790311|
+David|Pugh|DT|19790724|Virginia Tech
+J.T.|O'Sullivan|QB|19790825|UC Davis
+Justin|Hartwig|LG|19781121|Kansas
+Wesly|Mallard|OLB|19781121|Oregon
+Keyon|Nash|CB|19790311|Albany State
 Reggie|Coleman|LT|19781104|
-John|Stamper|DE|19780830|
-Craig|Jarrett|P|19790717|
-Lamont|Brightful|CB|19790129|
-John|Gilmore|TE|19790921|
-Adrian|Peterson|RB|19790701|
-Mike|Houghton|LT|19791201|
-Mark|Anelli|TE|19790605|
-Lee|Mays|WR|19780918|
-Jamin|Elliott|WR|19791005|
-Javin|Hunter|WR|19800509|
-Chester|Taylor|RB|19790922|
-Chad|Williams|S|19790122|
-Lavar|Glover|CB|19781217|
+John|Stamper|DE|19780830|South Carolina
+Craig|Jarrett|P|19790717|Michigan State
+Lamont|Brightful|CB|19790129|Eastern Washington
+John|Gilmore|TE|19790921|Penn State
+Adrian|Peterson|RB|19790701|Georgia Southern
+Mike|Houghton|LT|19791201|San Diego State
+Mark|Anelli|TE|19790605|Wisconsin
+Lee|Mays|WR|19780918|Texas-El Paso
+Jamin|Elliott|WR|19791005|Delaware
+Javin|Hunter|WR|19800509|Notre Dame
+Chester|Taylor|RB|19790922|Toledo
+Chad|Williams|S|19790122|Southern Mississippi
+Lavar|Glover|CB|19781217|Cincinnati
 Pete|Campion|LG|19791203|
-Mike|Pucillo|LG|19790714|
+Mike|Pucillo|LG|19790714|Auburn
 Seth|Burford|QB|19790311|
-Chad|Beasley|LG|19781113|
-Josh|Mallard|DE|19800321|
+Chad|Beasley|LG|19781113|Virginia Tech
+Josh|Mallard|DE|19800321|Georgia
 Derrius|Monroe|DE|19780721|
-Darrell|Hill|WR|19790619|
-Daryl|Jones|WR|19790202|
-Joaquin|Gonzalez|LT|19790907|
-Jeff|Grau|C|19791216|
+Darrell|Hill|WR|19790619|Northern Illinois
+Daryl|Jones|WR|19790202|Miami (Florida)
+Joaquin|Gonzalez|LT|19790907|Miami (Florida)
+Jeff|Grau|C|19791216|UCLA
 Jeff|Kelly|QB|19790907|
-Tim|Wansley|CB|19781107|
-Greg|Scott|DE|19791002|
-Ronald|Curry|QB|19790528|
-Raheem|Brock|DE|19780610|
-Eric|Heitmann|LG|19800224|
-Carlos|Hall|DE|19790116|
-Leonard|Henry|RB|19780105|
-Brett|Keisel|DE|19780919|
-Chris|Massey|FB|19790821|
-Steve|Smith|CB|19790628|
-Hayden|Epstein|K|19801116|
-Kyle|Kosier|LT|19781127|
-Matt|Murphy|TE|19800223|
-David|Givens|WR|19800816|
-Rock|Cartwright|FB|19791203|
-Dominique|Stevenson|MLB|19771228|
-Darian|Barnes|FB|19800229|
-T.J.|Duckett|RB|19810217|
-Ed|Reed|S|19780911|
-Patrick|Ramsey|QB|19790214|
-Quentin|Jammer|CB|19790619|
-Ryan|Sims|DT|19800504|
-Bryant|McKinnie|LT|19790923|
-Wendell|Bryant|DT|19800912|
-Andre|Gurode|C|19790306|
-Travis|Stephens|RB|19780626|
-Milford|Brown|LG|19800815|
-Brendon|Ayanbadejo|OLB|19760906|
-Dwayne|Morgan|LT|19740503|
+Tim|Wansley|CB|19781107|Georgia
+Greg|Scott|DE|19791002|Hampton
+Ronald|Curry|QB|19790528|North Carolina
+Raheem|Brock|DE|19780610|Temple
+Eric|Heitmann|LG|19800224|Stanford
+Carlos|Hall|DE|19790116|Arkansas
+Leonard|Henry|RB|19780105|East Carolina
+Brett|Keisel|DE|19780919|Brigham Young
+Chris|Massey|FB|19790821|Marshall
+Steve|Smith|CB|19790628|Oregon
+Hayden|Epstein|K|19801116|Michigan
+Kyle|Kosier|LT|19781127|Arizona State
+Matt|Murphy|TE|19800223|Maryland
+David|Givens|WR|19800816|Notre Dame
+Rock|Cartwright|FB|19791203|Kansas State
+Dominique|Stevenson|MLB|19771228|Tennessee
+Darian|Barnes|FB|19800229|Hampton
+T.J.|Duckett|RB|19810217|Michigan State
+Ed|Reed|S|19780911|Miami (Florida)
+Patrick|Ramsey|QB|19790214|Tulane
+Quentin|Jammer|CB|19790619|Texas
+Ryan|Sims|DT|19800504|North Carolina
+Bryant|McKinnie|LT|19790923|Miami (Florida)
+Wendell|Bryant|DT|19800912|Wisconsin
+Andre|Gurode|C|19790306|Colorado
+Travis|Stephens|RB|19780626|Tennessee
+Milford|Brown|LG|19800815|Florida State
+Brendon|Ayanbadejo|OLB|19760906|UCLA
+Dwayne|Morgan|LT|19740503|Clemson
 James|Cotton|DE|19761107|
-Arland|Bruce|WR|19771123|
+Arland|Bruce|WR|19771123|Minnesota
 Pita|Elisara|LT|19761116|
-Mike|Furrey|WR|19770312|
-Blaine|Saipaia|C|19780825|
-Cleveland|Pinkney|DT|19770914|
-Kenny|Clark|WR|19780514|
+Mike|Furrey|WR|19770312|Northern Iowa
+Blaine|Saipaia|C|19780825|Colorado State
+Cleveland|Pinkney|DT|19770914|South Carolina
+Kenny|Clark|WR|19780514|Central Florida
 Luis|Almanzar|DT|19761215|
-Antonio|Chatman|WR|19790212|
-David|Allen|RB|19780205|
-Jasen|Isom|FB|19770107|
-Josh|Stamer|OLB|19771011|
-Clinton|Hart|S|19770720|
-Quinn|Gray|QB|19790521|
-Nate|Jackson|WR|19790604|
-Ron|Israel|CB|19780105|
-Max|Yates|MLB|19791030|
+Antonio|Chatman|WR|19790212|Cincinnati
+David|Allen|RB|19780205|Kansas State
+Jasen|Isom|FB|19770107|Western Illinois
+Josh|Stamer|OLB|19771011|South Dakota
+Clinton|Hart|S|19770720|Central Florida CC
+Quinn|Gray|QB|19790521|Florida A&M
+Nate|Jackson|WR|19790604|Menlo
+Ron|Israel|CB|19780105|Notre Dame
+Max|Yates|MLB|19791030|Marshall
 Michael|Landry|DE|19781222|
-P.J.|Alexander|LG|19781223|
-Brandon|Hicks|DT|19771117|
-John|Stone|WR|19790707|
-Ken|Simonton|RB|19790607|
+P.J.|Alexander|LG|19781223|Syracuse
+Brandon|Hicks|DT|19771117|Bowling Green State
+John|Stone|WR|19790707|Wake Forest
+Ken|Simonton|RB|19790607|Oregon State
 Curry|Dawson|LT|19790804|
-Edell|Shepherd|WR|19800518|
-Kori|Dickerson|TE|19781206|
+Edell|Shepherd|WR|19800518|San Jose State
+Kori|Dickerson|TE|19781206|Southern California
 Ataveus|Cash|WR|19790502|
 Johnathan|Reese|RB|19800415|
 Terence|Wagner|C|19790526|
-Daryon|Brutley|CB|19790531|
-Qasim|Mitchell|LG|19791203|
+Daryon|Brutley|CB|19790531|Northern Iowa
+Qasim|Mitchell|LG|19791203|North Carolina A&T State
 Garrick|Jones|LT|19781202|
-Brandon|Moore|LG|19800603|
-Charlie|Adams|WR|19791023|
-Jashon|Sykes|OLB|19790925|
-Rashod|Kent|TE|19800607|
-Clarence|Coleman|WR|19800604|
-Aaron|Elling|K|19780531|
-Josh|Scobey|RB|19791211|
-Kendall|Newson|WR|19800305|
-Chris|Young|S|19800123|
-Ken|Amato|C|19770518|
-Jeff|Hatch|LT|19790928|
-Cliff|Russell|WR|19790208|
-Jake|Schifino|WR|19791115|
-Robert|Royal|TE|19790515|
-Sam|Simmons|WR|19791125|
-Larry|Ned|RB|19780823|
-Brian|Allen|RB|19800420|
-Victor|Rogers|LT|19781110|
-Jamar|Martin|FB|19800412|
+Brandon|Moore|LG|19800603|Illinois
+Charlie|Adams|WR|19791023|Hofstra
+Jashon|Sykes|OLB|19790925|Colorado
+Rashod|Kent|TE|19800607|Rutgers
+Clarence|Coleman|WR|19800604|Ferris State
+Aaron|Elling|K|19780531|Wyoming
+Josh|Scobey|RB|19791211|Kansas State
+Kendall|Newson|WR|19800305|Middle Tennessee State
+Chris|Young|S|19800123|Georgia Tech
+Ken|Amato|C|19770518|Montana State
+Jeff|Hatch|LT|19790928|Pennsylvania
+Cliff|Russell|WR|19790208|Utah
+Jake|Schifino|WR|19791115|Akron
+Robert|Royal|TE|19790515|Louisiana State
+Sam|Simmons|WR|19791125|Northwestern
+Larry|Ned|RB|19780823|San Diego State
+Brian|Allen|RB|19800420|Stanford
+Victor|Rogers|LT|19781110|Colorado
+Jamar|Martin|FB|19800412|Ohio State
 Alphonso|Roundtree|S|19770707|
-Chad|Mustard|TE|19771008|
-Derick|Armstrong|WR|19790402|
-Ray|Jackson|RB|19780801|
-Chris|Horn|WR|19770713|
-Antonio|Brown|WR|19780303|
-Bryan|Pittman|C|19770120|
+Chad|Mustard|TE|19771008|North Dakota
+Derick|Armstrong|WR|19790402|Arkansas-Monticello
+Ray|Jackson|RB|19780801|Cincinnati
+Chris|Horn|WR|19770713|Rocky Mountain
+Antonio|Brown|WR|19780303|West Virginia
+Bryan|Pittman|C|19770120|Washington
 Carson|Palmer|QB|19791227|USC
-Joffrey|Reynolds|RB|19791126|
-Dante|Brown|RB|19800728|
-Terrence|Edwards|WR|19790420|
-Terrence|Robinson|MLB|19800312|
+Joffrey|Reynolds|RB|19791126|Houston
+Dante|Brown|RB|19800728|Memphis
+Terrence|Edwards|WR|19790420|Georgia
+Terrence|Robinson|MLB|19800312|Oklahoma State
 Jon|Dorenbos|C|19800721|Texas-El Paso
-Chris|Brown|CB|19780509|
-Cortez|Hankton|WR|19810120|
-Matt|Leonard|DT|19791107|
-Seth|Marler|K|19810327|
-Brett|Romberg|LG|19791010|
+Chris|Brown|CB|19780509|Alabama-Birmingham
+Cortez|Hankton|WR|19810120|Texas Southern
+Matt|Leonard|DT|19791107|Stanford
+Seth|Marler|K|19810327|Tulane
+Brett|Romberg|LG|19791010|Miami (Florida)
 Joe|Smith|RB|19790826|
 Raymond|House|DE|19801007|
 John|Lewis|WR|19800530|
-Travaris|Robinson|S|19810901|
+Travaris|Robinson|S|19810901|Auburn
 Mike|Saffer|LT|19790425|
-Gary|Brackett|MLB|19800523|
+Gary|Brackett|MLB|19800523|Rutgers
 Calvin|Carlyle|CB|19790912|
-Anthony|Floyd|S|19810201|
-Tony|Brown|DE|19800929|
-Vinny|Ciurciu|MLB|19800502|
-Alonzo|Ephraim|C|19811108|
-Derrick|Frost|P|19801125|
-Roderick|Hood|CB|19811003|
-Jamaal|Jackson|LT|19800508|
-Ron|Johnson|DE|19791023|
-Greg|Lewis|WR|19800212|
-Reno|Mahe|RB|19800603|
-Quintin|Mikell|S|19800916|
-Sam|Rayburn|DT|19801020|
-Jeff|Roehl|LT|19800518|
-Casey|Fitzsimmons|TE|19801010|
-Avon|Cobourne|RB|19790306|
-Jemeel|Powell|CB|19800829|
-Phil|Bogle|LT|19790927|
-Kevin|Breedlove|LG|19800625|
-Jacques|Cesaire|DT|19800830|
-Stephen|Cooper|MLB|19790619|
-Kris|Dielman|LG|19810203|
+Anthony|Floyd|S|19810201|Louisville
+Tony|Brown|DE|19800929|Memphis
+Vinny|Ciurciu|MLB|19800502|Boston College
+Alonzo|Ephraim|C|19811108|Alabama
+Derrick|Frost|P|19801125|Northern Iowa
+Roderick|Hood|CB|19811003|Auburn
+Jamaal|Jackson|LT|19800508|Delaware State
+Ron|Johnson|DE|19791023|Shippensburg
+Greg|Lewis|WR|19800212|Illinois
+Reno|Mahe|RB|19800603|Brigham Young
+Quintin|Mikell|S|19800916|Boise State
+Sam|Rayburn|DT|19801020|Tulsa
+Jeff|Roehl|LT|19800518|Northwestern
+Casey|Fitzsimmons|TE|19801010|Carroll (Montana)
+Avon|Cobourne|RB|19790306|West Virginia
+Jemeel|Powell|CB|19800829|California
+Phil|Bogle|LT|19790927|New Haven
+Kevin|Breedlove|LG|19800625|Georgia
+Jacques|Cesaire|DT|19800830|Southern Connecticut State
+Stephen|Cooper|MLB|19790619|Maine
+Kris|Dielman|LG|19810203|Indiana
 Antonio|Gates|TE|19800618|Kent State
-Omari|Hand|DE|19800703|
-Lorenzo|Diamond|TE|19781215|
-Lawrence|Hamilton|WR|19800831|
-Jordan|Kramer|MLB|19791207|
-Rhett|Nelson|CB|19800216|
-Nick|Maddox|RB|19801211|
-Grant|Mattos|WR|19810312|
-Kassim|Osgood|WR|19800520|
-Akbar|Gbaja-Biamila|DE|19790506|
-Sultan|McCullough|RB|19800220|
-Ade|Jimoh|CB|19800418|
-Clifton|Smith|MLB|19800721|
-Kevin|Ware|TE|19800930|
-LaShaun|Ward|WR|19800922|
-Tank|Reese|DT|19801010|
+Omari|Hand|DE|19800703|Tennessee
+Lorenzo|Diamond|TE|19781215|Auburn
+Lawrence|Hamilton|WR|19800831|Stephen F. Austin State
+Jordan|Kramer|MLB|19791207|Idaho
+Rhett|Nelson|CB|19800216|Colorado State
+Nick|Maddox|RB|19801211|Florida State
+Grant|Mattos|WR|19810312|Southern California
+Kassim|Osgood|WR|19800520|San Diego State
+Akbar|Gbaja-Biamila|DE|19790506|San Diego State
+Sultan|McCullough|RB|19800220|Southern California
+Ade|Jimoh|CB|19800418|Utah State
+Clifton|Smith|MLB|19800721|Syracuse
+Kevin|Ware|TE|19800930|Washington
+LaShaun|Ward|WR|19800922|California
+Tank|Reese|DT|19801010|Kansas State
 Rober'|Freeman|CB|19810828|
 Nate|Hybl|QB|19800501|
-Enoch|DeMar|LG|19800907|
+Enoch|DeMar|LG|19800907|Indiana
 C.J.|Jones|WR|19800920|
-Mason|Unck|MLB|19800330|
-Jeremy|Loyd|MLB|19800730|
-Sherrod|Coates|OLB|19781222|
-Leigh|Bodden|CB|19810924|
-Shantee|Orr|MLB|19810528|
-Terrell|Roberts|CB|19810407|
-Sean|Berton|TE|19791031|
-James|Lynch|FB|19820617|
-Tracy|White|OLB|19810414|
-Jerheme|Urban|WR|19801126|
-Brooks|Barnard|P|19791104|
-Julius|Curry|CB|19790517|
-Ray|Wells|OLB|19800820|
-Keith|O'Neil|MLB|19800826|
+Mason|Unck|MLB|19800330|Arizona State
+Jeremy|Loyd|MLB|19800730|Iowa State
+Sherrod|Coates|OLB|19781222|Western Kentucky
+Leigh|Bodden|CB|19810924|Duquesne
+Shantee|Orr|MLB|19810528|Michigan
+Terrell|Roberts|CB|19810407|Oregon State
+Sean|Berton|TE|19791031|North Carolina State
+James|Lynch|FB|19820617|Maryland
+Tracy|White|OLB|19810414|Howard
+Jerheme|Urban|WR|19801126|Trinity (Texas)
+Brooks|Barnard|P|19791104|Maryland
+Julius|Curry|CB|19790517|Michigan
+Ray|Wells|OLB|19800820|Arizona
+Keith|O'Neil|MLB|19800826|Northern Arizona
 Tony|Romo|QB|19800421|Eastern Illinois
-Torrin|Tucker|LT|19791225|
+Torrin|Tucker|LT|19791225|Southern Mississippi
 Colin|Cole|DT|19800624|Iowa
-Rushen|Jones|CB|19800404|
-Chas|Gessner|WR|19810817|
-Shawn|Mayer|CB|19790304|
-Kenderick|Allen|DT|19780914|
-Zach|Hilton|TE|19800702|
+Rushen|Jones|CB|19800404|Vanderbilt
+Chas|Gessner|WR|19810817|Brown
+Shawn|Mayer|CB|19790304|Penn State
+Kenderick|Allen|DT|19780914|Louisiana State
+Zach|Hilton|TE|19800702|North Carolina
 Marquel|Blackwell|QB|19790729|
-Mark|Brown|MLB|19800519|
-Russell|Stuvaints|CB|19800828|
-Jason|Goss|CB|19791004|
-Kerry|Carter|RB|19801219|
-Arlen|Harris|RB|19800422|
-Will|Heller|TE|19810228|
+Mark|Brown|MLB|19800519|Auburn
+Russell|Stuvaints|CB|19800828|Youngstown State
+Jason|Goss|CB|19791004|Texas Christian
+Kerry|Carter|RB|19801219|Stanford
+Arlen|Harris|RB|19800422|Hofstra
+Will|Heller|TE|19810228|Georgia Tech
 Jason|Gesser|QB|19790531|
-Ronyell|Whitaker|CB|19790319|
-Anthony|Davis|LT|19800327|
+Ronyell|Whitaker|CB|19790319|Virginia Tech
+Anthony|Davis|LT|19800327|Virginia Tech
 Jamal|Powell|C|19810410|
-Tom|Lopienski|FB|19790612|
-Aaron|Moorehead|WR|19801105|
-Jim|Newton|LT|19781013|
-Otis|Grigsby|DE|19801119|
+Tom|Lopienski|FB|19790612|Notre Dame
+Aaron|Moorehead|WR|19801105|Illinois
+Jim|Newton|LT|19781013|Utah State
+Otis|Grigsby|DE|19801119|Kentucky
 Josh|Rue|RB|19790819|
-Billy|Yates|LG|19800415|
-Cameron|Worrell|S|19791214|
-Gabriel|Reid|TE|19770528|
+Billy|Yates|LG|19800415|Texas A&M
+Cameron|Worrell|S|19791214|Fresno State
+Gabriel|Reid|TE|19770528|Brigham Young
 Jason|Davis|DE|19800912|
 Kirk|Farmer|QB|19790827|
-Anthony|Dunn|DE|19800701|
-Cecil|Sapp|RB|19781223|
-Dwone|Hicks|RB|19810425|
-Julian|Battle|CB|19810711|
-Robert|Johnson|TE|19800620|
-Terrance|Martin|DT|19790706|
+Anthony|Dunn|DE|19800701|Northern Colorado
+Cecil|Sapp|RB|19781223|Colorado State
+Dwone|Hicks|RB|19810425|Middle Tennessee State
+Julian|Battle|CB|19810711|Tennessee
+Robert|Johnson|TE|19800620|Auburn
+Terrance|Martin|DT|19790706|North Carolina State
 Brandon|Williams|CB|19801117|
-Walter|Young|WR|19791207|
-Dwaine|Carpenter|S|19761104|
-Ivan|Taylor|CB|19800505|
-Melvin|Williams|DE|19790202|
-Ricky|Manning|CB|19801118|
-Tony|Gilbert|MLB|19791016|
-Scott|Kooistra|LT|19801014|
-Norman|LeJeune|CB|19800510|
-Curry|Burns|CB|19810212|
-Langston|Moore|DT|19810717|
-Reggie|Wells|LG|19801103|
-Corey|Jenkins|OLB|19760825|
-Joe|Odom|OLB|19791214|
-Sam|Aiken|WR|19801214|
-Kenny|King|DE|19810423|
-Lauvale|Sape|DT|19800829|
-Carson|Dach|C|19800920|
-Adrian|Madise|WR|19800323|
-David|Diehl|LT|19800915|
-Willie|Ponder|WR|19800214|
+Walter|Young|WR|19791207|Illinois
+Dwaine|Carpenter|S|19761104|North Carolina A&T State
+Ivan|Taylor|CB|19800505|Louisiana-Lafayette
+Melvin|Williams|DE|19790202|Kansas State
+Ricky|Manning|CB|19801118|UCLA
+Tony|Gilbert|MLB|19791016|Georgia
+Scott|Kooistra|LT|19801014|North Carolina State
+Norman|LeJeune|CB|19800510|Louisiana State
+Curry|Burns|CB|19810212|Louisville
+Langston|Moore|DT|19810717|South Carolina
+Reggie|Wells|LG|19801103|Clarion
+Corey|Jenkins|OLB|19760825|South Carolina
+Joe|Odom|OLB|19791214|Purdue
+Sam|Aiken|WR|19801214|North Carolina
+Kenny|King|DE|19810423|Alabama
+Lauvale|Sape|DT|19800829|Utah
+Carson|Dach|C|19800920|Eastern Michigan
+Adrian|Madise|WR|19800323|Texas Christian
+David|Diehl|LT|19800915|Illinois
+Willie|Ponder|WR|19800214|Southeast Missouri State
 Brennan|Curtin|LT|19800630|
-David|Tyree|WR|19800103|
-Donald|Lee|TE|19800831|
-LaTarence|Dunbar|WR|19800815|
-Kevin|Walter|WR|19810804|
-Demetrin|Veal|DT|19810811|
-Ben|Sobieski|LG|19790503|
-Andrew|Pinnock|FB|19800312|
-Brock|Forsey|RB|19800211|
-Josh|Brown|K|19790429|
-Gerald|Hayes|MLB|19801010|
-Frank|Walker|CB|19810806|
-Todd|Williams|LT|19780904|
-Taco|Wallace|WR|19810414|
-Chris|Johnson|CB|19790925|
-Bryan|Anderson|LG|19800330|
-Bryan|Scott|S|19810413|
-Todd|Johnson|S|19781218|
-Terrence|Holt|S|19800305|
-Derek|Pagel|S|19791024|
-Dan|Klecko|MLB|19810112|
-Asante|Samuel|CB|19810106|
-Khalid|Abdullah|OLB|19790306|
-James|Davis|MLB|19790426|
-Jordan|Black|LT|19800128|
-Jimmy|Wilkerson|DE|19810104|
-Mike|Nattiel|OLB|19801108|
-Rashad|Moore|DT|19790316|
-Scott|Tercero|LT|19811028|
-Wayne|Lucier|C|19791205|
-Brad|Pyatt|WR|19800416|
-Kawika|Mitchell|MLB|19791010|
-Courtney|Van Buren|LT|19800222|
-Brett|Williams|LT|19800502|
-David|Kircus|WR|19800219|
-Jeremy|Bridges|LT|19800419|
-Dave|Yovanovits|LG|19810306|
-Larry|Johnson|RB|19791119|
-Osi|Umenyiora|DE|19811116|
-Seth|Wand|LT|19790806|
-Domanick|Williams|RB|19801001|
-George|Wrighster|TE|19810401|
-Shaun|McDonald|WR|19810630|
-Justin|Gage|WR|19810124|
-Hunter|Hillenmeyer|MLB|19801028|
-Dewayne|Robertson|DT|19811016|
-Ty|Warren|DE|19810206|
-Nick|Barnett|MLB|19810527|
-Sammy|Davis|CB|19800408|
-Eugene|Wilson|S|19800817|
-Bethel|Johnson|WR|19790211|
-Drayton|Florence|CB|19801219|
-Chris|Kelsay|DE|19791031|
-Victor|Hobson|OLB|19800203|
-Dewayne|White|DE|19791019|
+David|Tyree|WR|19800103|Syracuse
+Donald|Lee|TE|19800831|Mississippi State
+LaTarence|Dunbar|WR|19800815|Texas Christian
+Kevin|Walter|WR|19810804|Eastern Michigan
+Demetrin|Veal|DT|19810811|Tennessee
+Ben|Sobieski|LG|19790503|Iowa
+Andrew|Pinnock|FB|19800312|South Carolina
+Brock|Forsey|RB|19800211|Boise State
+Josh|Brown|K|19790429|Nebraska
+Gerald|Hayes|MLB|19801010|Pittsburgh
+Frank|Walker|CB|19810806|Tuskegee
+Todd|Williams|LT|19780904|Florida State
+Taco|Wallace|WR|19810414|Kansas State
+Chris|Johnson|CB|19790925|Louisville
+Bryan|Anderson|LG|19800330|Pittsburgh
+Bryan|Scott|S|19810413|Penn State
+Todd|Johnson|S|19781218|Florida
+Terrence|Holt|S|19800305|North Carolina State
+Derek|Pagel|S|19791024|Iowa
+Dan|Klecko|MLB|19810112|Temple
+Asante|Samuel|CB|19810106|Central Florida
+Khalid|Abdullah|OLB|19790306|Mars Hill
+James|Davis|MLB|19790426|West Virginia
+Jordan|Black|LT|19800128|Notre Dame
+Jimmy|Wilkerson|DE|19810104|Oklahoma
+Mike|Nattiel|OLB|19801108|Florida
+Rashad|Moore|DT|19790316|Tennessee
+Scott|Tercero|LT|19811028|California
+Wayne|Lucier|C|19791205|Colorado
+Brad|Pyatt|WR|19800416|Northern Colorado
+Kawika|Mitchell|MLB|19791010|South Florida
+Courtney|Van Buren|LT|19800222|Arkansas-Pine Bluff
+Brett|Williams|LT|19800502|Florida State
+David|Kircus|WR|19800219|Grand Valley State
+Jeremy|Bridges|LT|19800419|Southern Mississippi
+Dave|Yovanovits|LG|19810306|Temple
+Larry|Johnson|RB|19791119|Penn State
+Osi|Umenyiora|DE|19811116|Troy
+Seth|Wand|LT|19790806|Northwest Missouri State
+Domanick|Williams|RB|19801001|Louisiana State
+George|Wrighster|TE|19810401|Oregon
+Shaun|McDonald|WR|19810630|Arizona State
+Justin|Gage|WR|19810124|Missouri
+Hunter|Hillenmeyer|MLB|19801028|Vanderbilt
+Dewayne|Robertson|DT|19811016|Kentucky
+Ty|Warren|DE|19810206|Texas A&M
+Nick|Barnett|MLB|19810527|Oregon State
+Sammy|Davis|CB|19800408|Texas A&M
+Eugene|Wilson|S|19800817|Illinois
+Bethel|Johnson|WR|19790211|Texas A&M
+Drayton|Florence|CB|19801219|Tuskegee
+Chris|Kelsay|DE|19791031|Nebraska
+Victor|Hobson|OLB|19800203|Michigan
+Dewayne|White|DE|19791019|Louisville
 Cory|Redding|DT|19801115|Texas
-Nate|Burleson|WR|19810819|
-Wayne|Hunter|LT|19810702|
-Kevin|Curtis|WR|19780717|
-Kenny|Peterson|DT|19781121|
-B.J.|Askew|FB|19800819|
-Angelo|Crowell|OLB|19810816|
-Chris|Simms|QB|19800829|
-Artose|Pinner|RB|19780105|
-Dejuan|Groce|CB|19800217|
-Terrence|McGee|CB|19801014|
-Matt|Wilhelm|MLB|19810202|
-Justin|Griffith|FB|19800721|
+Nate|Burleson|WR|19810819|Nevada-Reno
+Wayne|Hunter|LT|19810702|Hawaii
+Kevin|Curtis|WR|19780717|Utah State
+Kenny|Peterson|DT|19781121|Ohio State
+B.J.|Askew|FB|19800819|Michigan
+Angelo|Crowell|OLB|19810816|Virginia
+Chris|Simms|QB|19800829|Texas
+Artose|Pinner|RB|19780105|Kentucky
+Dejuan|Groce|CB|19800217|Nebraska
+Terrence|McGee|CB|19801014|Northwestern State (Louisiana)
+Matt|Wilhelm|MLB|19810202|Ohio State
+Justin|Griffith|FB|19800721|Mississippi State
 Bryant|McNeal|DE|19790713|
 Lance|Nimmo|LT|19790913|
-Austin|King|C|19810411|
+Austin|King|C|19810411|Northwestern
 Dan|Curley|FB|19780925|
-Matt|Walters|DE|19790822|
-Mike|Scifres|P|19801008|
-Dan|Koppen|C|19790912|
-Chris|Davis|FB|19791108|
-Sean|Mahan|LG|19800528|
-Shane|Walton|S|19791009|
-Kevin|Garrett|CB|19800729|
-Zuriel|Smith|WR|19800115|
-Brooks|Bollinger|QB|19791115|
-Blue|Adams|CB|19791015|
-Keenan|Howry|WR|19810617|
-Mario|Haggan|MLB|19800303|
-Montique|Sharpe|DT|19800310|
-Spencer|Nead|FB|19771103|
-Tully|Banta-Cain|MLB|19800828|
-Ken|Dorsey|QB|19810422|
-Scott|Shanle|OLB|19791123|
-Richard|Angulo|TE|19800813|
-Andre|Johnson|WR|19810711|
+Matt|Walters|DE|19790822|Miami (Florida)
+Mike|Scifres|P|19801008|Western Illinois
+Dan|Koppen|C|19790912|Boston College
+Chris|Davis|FB|19791108|Syracuse
+Sean|Mahan|LG|19800528|Notre Dame
+Shane|Walton|S|19791009|Notre Dame
+Kevin|Garrett|CB|19800729|Southern Methodist
+Zuriel|Smith|WR|19800115|Hampton
+Brooks|Bollinger|QB|19791115|Wisconsin
+Blue|Adams|CB|19791015|Cincinnati
+Keenan|Howry|WR|19810617|Oregon
+Mario|Haggan|MLB|19800303|Mississippi State
+Montique|Sharpe|DT|19800310|Wake Forest
+Spencer|Nead|FB|19771103|Brigham Young
+Tully|Banta-Cain|MLB|19800828|California
+Ken|Dorsey|QB|19810422|Miami (Florida)
+Scott|Shanle|OLB|19791123|Nebraska
+Richard|Angulo|TE|19800813|Western New Mexico
+Andre|Johnson|WR|19810711|Miami (Florida)
 Terence|Newman|CB|19780904|Kansas State
-Marcus|Trufant|CB|19801225|
-Tyler|Brayton|DE|19791120|
-Boss|Bailey|OLB|19791014|
-Ken|Hamlin|S|19810120|
-Pisa|Tinoisamoa|OLB|19810715|
-Teyo|Johnson|TE|19811129|
-Antwan|Peek|OLB|19791029|
-Andrew|Williams|DE|19790418|
-Visanthe|Shiancoe|TE|19800618|
-Seneca|Wallace|QB|19800806|
-Roderick|Babers|CB|19801006|
-LaBrandon|Toefield|RB|19800924|
-Solomon|Bates|MLB|19820418|
+Marcus|Trufant|CB|19801225|Washington State
+Tyler|Brayton|DE|19791120|Colorado
+Boss|Bailey|OLB|19791014|Georgia
+Ken|Hamlin|S|19810120|Arkansas
+Pisa|Tinoisamoa|OLB|19810715|Hawaii
+Teyo|Johnson|TE|19811129|Stanford
+Antwan|Peek|OLB|19791029|Cincinnati
+Andrew|Williams|DE|19790418|Miami (Florida)
+Visanthe|Shiancoe|TE|19800618|Morgan State
+Seneca|Wallace|QB|19800806|Iowa State
+Roderick|Babers|CB|19801006|Texas
+LaBrandon|Toefield|RB|19800924|Louisiana State
+Solomon|Bates|MLB|19820418|Arizona State
 Robert|Mathis|DE|19810226|Alabama A&M
-Aaron|Walker|TE|19800314|
-Keyon|Whiteside|OLB|19800131|
-Tron|LaFavor|DT|19791127|
-David|Young|S|19790517|
-Arnaz|Battle|WR|19800222|
-Cato|June|OLB|19791118|
-Charles|Rogers|WR|19810523|
+Aaron|Walker|TE|19800314|Florida
+Keyon|Whiteside|OLB|19800131|Tennessee
+Tron|LaFavor|DT|19791127|Florida
+David|Young|S|19790517|Georgia Southern
+Arnaz|Battle|WR|19800222|Notre Dame
+Cato|June|OLB|19791118|Michigan
+Charles|Rogers|WR|19810523|Michigan State
 Kevin|Williams|DT|19800816|Oklahoma State
-George|Foster|LT|19800609|
-Kwame|Harris|LT|19820315|
-Andre|Woolfolk|CB|19800126|
-Nnamdi|Asomugha|CB|19810706|
-Jon|Stinchcomb|LT|19790827|
+George|Foster|LT|19800609|Georgia
+Kwame|Harris|LT|19820315|Stanford
+Andre|Woolfolk|CB|19800126|Oklahoma
+Nnamdi|Asomugha|CB|19810706|California
+Jon|Stinchcomb|LT|19790827|Georgia
 Rashean|Mathis|CB|19800827|Bethune-Cookman
-E.J.|Henderson|MLB|19800803|
-Terry|Pierce|OLB|19810621|
+E.J.|Henderson|MLB|19800803|Maryland
+Terry|Pierce|OLB|19810621|Kansas State
 Anquan|Boldin|WR|19801003|Florida State
-Anthony|Adams|DT|19800618|
-Alonzo|Jackson|OLB|19800915|
-Tyrone|Calico|WR|19801109|
-Terrence|Kiel|S|19801124|
-Vincent|Manuwai|LG|19800712|
-Sam|Williams|DE|19800728|
-Dave|Ragone|QB|19791003|
-Chris|Brown|RB|19810417|
-Justin|Fargas|RB|19800125|
-Montrae|Holland|LG|19800521|
-Quentin|Griffin|RB|19810112|
-Steve|Sciullo|LG|19800827|
-Brandon|Lloyd|WR|19810705|
-Rien|Long|DT|19810807|
-Shurron|Pierson|DE|19820531|
-Donnie|Nickey|S|19800425|
-Brian|St. Pierre|QB|19791128|
-Doug|Gabriel|WR|19800827|
-Brandon|Green|DE|19800905|
-B.J.|Tucker|CB|19801012|
-Eddie|Johnson|P|19810302|
+Anthony|Adams|DT|19800618|Penn State
+Alonzo|Jackson|OLB|19800915|Florida State
+Tyrone|Calico|WR|19801109|Middle Tennessee State
+Terrence|Kiel|S|19801124|Texas A&M
+Vincent|Manuwai|LG|19800712|Hawaii
+Sam|Williams|DE|19800728|Fresno State
+Dave|Ragone|QB|19791003|Louisville
+Chris|Brown|RB|19810417|Colorado
+Justin|Fargas|RB|19800125|Southern California
+Montrae|Holland|LG|19800521|Florida State
+Quentin|Griffin|RB|19810112|Oklahoma
+Steve|Sciullo|LG|19800827|Marshall
+Brandon|Lloyd|WR|19810705|Illinois
+Rien|Long|DT|19810807|Washington State
+Shurron|Pierson|DE|19820531|South Florida
+Donnie|Nickey|S|19800425|Ohio State
+Brian|St. Pierre|QB|19791128|Boston College
+Doug|Gabriel|WR|19800827|Central Florida
+Brandon|Green|DE|19800905|Rice
+B.J.|Tucker|CB|19801012|Wisconsin
+Eddie|Johnson|P|19810302|Idaho State
 Marques|Ogden|LT|19801115|
-Makoa|Freitas|LG|19791123|
-Malaefou|MacKenzie|FB|19790724|
-Talman|Gardner|WR|19800310|
-Gibran|Hamdan|QB|19810208|
-Siddeeq|Shabazz|S|19810205|
-Elton|Patterson|DE|19810603|
-Tony|Hollings|RB|19811201|
-Jordan|Gross|LT|19800720|
-Michael|Haynes|DE|19800913|
-Troy|Polamalu|S|19810419|
+Makoa|Freitas|LG|19791123|Arizona
+Malaefou|MacKenzie|FB|19790724|Southern California
+Talman|Gardner|WR|19800310|Florida State
+Gibran|Hamdan|QB|19810208|Indiana
+Siddeeq|Shabazz|S|19810205|New Mexico State
+Elton|Patterson|DE|19810603|Central Florida
+Tony|Hollings|RB|19811201|Georgia Tech
+Jordan|Gross|LT|19800720|Utah
+Michael|Haynes|DE|19800913|Penn State
+Troy|Polamalu|S|19810419|Southern California
 Calvin|Pace|DE|19801028|Wake Forest
-Rex|Grossman|QB|19800823|
-Eric|Steinbach|LG|19800404|
+Rex|Grossman|QB|19800823|Florida
+Eric|Steinbach|LG|19800404|Iowa
 Charles|Tillman|CB|19810223|Louisiana-Lafayette
-Taylor|Jacobs|WR|19810530|
-Bruce|Nelson|C|19790512|
-L.J.|Smith|TE|19800513|
+Taylor|Jacobs|WR|19810530|Florida
+Bruce|Nelson|C|19790512|Iowa
+L.J.|Smith|TE|19800513|Rutgers
 Jason|Witten|TE|19820506|Tennessee
-Lance|Briggs|OLB|19801112|
-Mike|Seidman|TE|19810211|
-Musa|Smith|RB|19820531|
-Wade|Smith|LT|19810426|
-Derrick|Dockery|LG|19800907|
-Cie|Grant|MLB|19791127|
-Taylor|Whitley|LG|19800221|
-Billy|McMullen|WR|19800308|
-Dennis|Weathersby|CB|19800616|
-Bradie|James|OLB|19810117|
-Onterrio|Smith|RB|19801208|
-Jarret|Johnson|DE|19810814|
-Ian|Scott|DT|19811108|
-Jeremi|Johnson|FB|19800904|
-Colin|Branch|S|19800302|
-Ovie|Mughelli|FB|19800610|
-Bobby|Wade|WR|19810225|
-Ryan|Pontbriand|C|19791001|
-Kindal|Moorehead|DT|19781014|
-Aubrayo|Franklin|DT|19800827|
+Lance|Briggs|OLB|19801112|Arizona
+Mike|Seidman|TE|19810211|UCLA
+Musa|Smith|RB|19820531|Georgia
+Wade|Smith|LT|19810426|Memphis
+Derrick|Dockery|LG|19800907|Texas
+Cie|Grant|MLB|19791127|Ohio State
+Taylor|Whitley|LG|19800221|Texas A&M
+Billy|McMullen|WR|19800308|Virginia
+Dennis|Weathersby|CB|19800616|Oregon State
+Bradie|James|OLB|19810117|Louisiana State
+Onterrio|Smith|RB|19801208|Oregon
+Jarret|Johnson|DE|19810814|Alabama
+Ian|Scott|DT|19811108|Florida
+Jeremi|Johnson|FB|19800904|Western Kentucky
+Colin|Branch|S|19800302|Stanford
+Ovie|Mughelli|FB|19800610|Wake Forest
+Bobby|Wade|WR|19810225|Arizona
+Ryan|Pontbriand|C|19791001|Rice
+Kindal|Moorehead|DT|19781014|Alabama
+Aubrayo|Franklin|DT|19800827|Tennessee
 J.R.|Tolver|WR|19800113|
-Gerome|Sapp|S|19810208|
-Jeff|Sanchez|CB|19810121|
-Jimmy|Kennedy|DT|19791115|
-Bryant|Johnson|WR|19810307|
-Jeff|Faine|C|19810406|
-Donald|Strickland|CB|19801124|
-Johnathan|Sullivan|DT|19810121|
+Gerome|Sapp|S|19810208|Notre Dame
+Jeff|Sanchez|CB|19810121|Tulane
+Jimmy|Kennedy|DT|19791115|Penn State
+Bryant|Johnson|WR|19810307|Penn State
+Jeff|Faine|C|19810406|Notre Dame
+Donald|Strickland|CB|19801124|Colorado
+Johnathan|Sullivan|DT|19810121|Georgia
 Terrell|Suggs|OLB|19821011|Arizona State
-Mike|Doss|S|19810324|
-Jerome|McDougle|DE|19781215|
-Kyle|Boller|QB|19810617|
-Dallas|Clark|TE|19790612|
-Chaun|Thompson|OLB|19800522|
-Chris|Crocker|S|19800309|
-Michael|Lehan|CB|19791125|
-Antonio|Garay|DT|19791130|
-Kelley|Washington|WR|19790821|
-William|Joseph|DT|19790903|
-Erik|Bickerstaff|RB|19800725|
-Byron|Leftwich|QB|19800114|
-Willis|McGahee|RB|19811021|
-Lee|Suggs|RB|19800811|
-Jermaine|Brooks|DT|19790411|
-Jay|Taylor|K|19761023|
-Lawrence|Tynes|K|19780503|
-Steve|Cheek|P|19770418|
-Devin|Lemons|MLB|19790320|
-Ben|Steele|TE|19780527|
-Josh|Parry|FB|19780405|
+Mike|Doss|S|19810324|Ohio State
+Jerome|McDougle|DE|19781215|Miami (Florida)
+Kyle|Boller|QB|19810617|California
+Dallas|Clark|TE|19790612|Iowa
+Chaun|Thompson|OLB|19800522|West Texas A&M
+Chris|Crocker|S|19800309|Marshall
+Michael|Lehan|CB|19791125|Minnesota
+Antonio|Garay|DT|19791130|Boston College
+Kelley|Washington|WR|19790821|Tennessee
+William|Joseph|DT|19790903|Miami (Florida)
+Erik|Bickerstaff|RB|19800725|Wisconsin
+Byron|Leftwich|QB|19800114|Marshall
+Willis|McGahee|RB|19811021|Miami (Florida)
+Lee|Suggs|RB|19800811|Virginia Tech
+Jermaine|Brooks|DT|19790411|Arkansas
+Jay|Taylor|K|19761023|West Virginia
+Lawrence|Tynes|K|19780503|Troy
+Steve|Cheek|P|19770418|Cal Poly (Humboldt)
+Devin|Lemons|MLB|19790320|Texas Tech
+Ben|Steele|TE|19780527|Colorado Mesa
+Josh|Parry|FB|19780405|San Jose State
 David|Rivers|QB|19770901|
 Jim|Jones|LG|19780127|
-Cleo|Lemon|QB|19790816|
-Matt|Stanley|FB|19790427|
-Nick|Murphy|P|19791022|
-Eric|McCoo|RB|19800906|
-Maurice|Hicks|RB|19780722|
-Omari|Jordan|DT|19780415|
-Dwayne|Blakley|TE|19790810|
-Jared|Peck|LT|19790506|
-Louis|Green|OLB|19790923|
-Ola|Kimrin|K|19720224|
-Rod|Trafford|TE|19781129|
-Gabe|Crecion|TE|19770709|
-Curtis|Randall|MLB|19790806|
-Mat|McBriar|P|19790708|
-Drew|Wahlroos|MLB|19800607|
-Scottie|Vines|WR|19790417|
-Chris|Kern|CB|19790516|
-Dahrran|Diedrick|RB|19790111|
-Reggie|Newhouse|WR|19810216|
+Cleo|Lemon|QB|19790816|Arkansas State
+Matt|Stanley|FB|19790427|UCLA
+Nick|Murphy|P|19791022|Arizona State
+Eric|McCoo|RB|19800906|Penn State
+Maurice|Hicks|RB|19780722|North Carolina A&T State
+Omari|Jordan|DT|19780415|Buffalo
+Dwayne|Blakley|TE|19790810|Missouri
+Jared|Peck|LT|19790506|North Dakota State
+Louis|Green|OLB|19790923|Alcorn State
+Ola|Kimrin|K|19720224|Texas-El Paso
+Rod|Trafford|TE|19781129|South Carolina
+Gabe|Crecion|TE|19770709|UCLA
+Curtis|Randall|MLB|19790806|Louisiana Tech
+Mat|McBriar|P|19790708|Hawaii
+Drew|Wahlroos|MLB|19800607|Colorado
+Scottie|Vines|WR|19790417|Wyoming
+Chris|Kern|CB|19790516|Mount Union
+Dahrran|Diedrick|RB|19790111|Nebraska
+Reggie|Newhouse|WR|19810216|Baylor
 Chris|Clemons|MLB|19811030|Georgia
-Israel|Idonije|DE|19801117|
-Oliver|Celestin|CB|19810225|
-Adam|Goldberg|LG|19800812|
-Jason|Willis|WR|19800726|
+Israel|Idonije|DE|19801117|Manitoba
+Oliver|Celestin|CB|19810225|Texas Southern
+Adam|Goldberg|LG|19800812|Wyoming
+Jason|Willis|WR|19800726|Oregon
 Pete|Lougheed|LT|19791105|
-Joselio|Hanson|CB|19810813|
-Marcus|Reese|OLB|19810615|
-Reshard|Lee|RB|19801012|
-Shaun|Smith|DT|19810819|
+Joselio|Hanson|CB|19810813|Texas Tech
+Marcus|Reese|OLB|19810615|UCLA
+Reshard|Lee|RB|19801012|Middle Tennessee State
+Shaun|Smith|DT|19810819|South Carolina
 Cullen|Jenkins|DE|19810120|Central Michigan
 Chad|Setterstrom|LG|19800613|
-Corey|Jackson|DE|19781106|
-Earnest|Graham|RB|19800115|
-Michael|Brown|MLB|19800116|
+Corey|Jackson|DE|19781106|Nevada-Reno
+Earnest|Graham|RB|19800115|Florida
+Michael|Brown|MLB|19800116|Louisville
 Nick|Burley|FB|19800331|
 Joe|Iorio|C|19810707|
 Jason|Stewart|DT|19801114|
-Ronald|Bellamy|WR|19811228|
-Morgan|Pears|LT|19800504|
-Ian|Smart|RB|19800228|
-Marico|Portis|LG|19791129|
-Ben|Nelson|WR|19790821|
-Willie|Pile|S|19800525|
-Gene|Mruczkowski|C|19800606|
-Johnathan|Ingram|C|19800920|
-Richard|Alston|WR|19801120|
-Jamaal|Green|DE|19800605|
+Ronald|Bellamy|WR|19811228|Michigan
+Morgan|Pears|LT|19800504|Colorado State
+Ian|Smart|RB|19800228|Long Island-Post
+Marico|Portis|LG|19791129|Alabama
+Ben|Nelson|WR|19790821|St. Cloud State
+Willie|Pile|S|19800525|Virginia Tech
+Gene|Mruczkowski|C|19800606|Purdue
+Johnathan|Ingram|C|19800920|San Diego State
+Richard|Alston|WR|19801120|East Carolina
+Jamaal|Green|DE|19800605|Miami (Florida)
 Keith|Wright|DT|19800608|
-James|Lee|DT|19800312|
-Waine|Bacon|CB|19790411|
-Ethan|Kelley|DT|19800212|
+James|Lee|DT|19800312|Oregon State
+Waine|Bacon|CB|19790411|Alabama
+Ethan|Kelley|DT|19800212|Baylor
 Ryan|Hoag|WR|19791123|
-Steve|Josue|MLB|19800405|
-Nick|Eason|DT|19800529|
-Hanik|Milligan|S|19791103|
-Torrie|Cox|CB|19801029|
-Yeremiah|Bell|S|19780303|
-Davern|Williams|DT|19830213|
-Al|Johnson|C|19790127|
-Tony|Pashos|LT|19800803|
-Eddie|Moore|OLB|19800705|
-Drew|Henson|QB|19800213|
-Jason|Short|OLB|19780715|
-Steve|Morley|LG|19810818|
-Jason|Horton|CB|19800216|
-Terrence|Melton|OLB|19770101|
-Travelle|Wharton|LT|19810519|
-Tim|Euhus|TE|19801002|
-Nathan|Vasher|CB|19811117|
-Mewelde|Moore|RB|19820724|
-Erik|Coleman|S|19820506|
-Matt|Kranchick|TE|19791213|
-Sean|Tufts|MLB|19820326|
+Steve|Josue|MLB|19800405|Carson-Newman
+Nick|Eason|DT|19800529|Clemson
+Hanik|Milligan|S|19791103|Houston
+Torrie|Cox|CB|19801029|Pittsburgh
+Yeremiah|Bell|S|19780303|Eastern Kentucky
+Davern|Williams|DT|19830213|Troy
+Al|Johnson|C|19790127|Wisconsin
+Tony|Pashos|LT|19800803|Illinois
+Eddie|Moore|OLB|19800705|Tennessee
+Drew|Henson|QB|19800213|Michigan
+Jason|Short|OLB|19780715|Eastern Michigan
+Steve|Morley|LG|19810818|St. Mary's (Nova Scotia)
+Jason|Horton|CB|19800216|North Carolina A&T State
+Terrence|Melton|OLB|19770101|Rice
+Travelle|Wharton|LT|19810519|South Carolina
+Tim|Euhus|TE|19801002|Oregon State
+Nathan|Vasher|CB|19811117|Texas
+Mewelde|Moore|RB|19820724|Tulane
+Erik|Coleman|S|19820506|Washington State
+Matt|Kranchick|TE|19791213|Penn State
+Sean|Tufts|MLB|19820326|Colorado
 Drew|Caylor|C|19790912|
-Dylan|McFarland|LT|19800711|
-Trevor|Johnson|DE|19810226|
-Vick|King|RB|19800204|
+Dylan|McFarland|LT|19800711|Montana
+Trevor|Johnson|DE|19810226|Nebraska
+Vick|King|RB|19800204|McNeese State
 Matt|Cherry|WR|19811214|
-Brian|Jones|TE|19810823|
-David|Richardson|CB|19810909|
-Larry|Stevens|MLB|19820122|
-Tyson|Clabo|LG|19811017|
+Brian|Jones|TE|19810823|Arkansas-Pine Bluff
+David|Richardson|CB|19810909|Cal Poly (San Luis Obispo)
+Larry|Stevens|MLB|19820122|Michigan
+Tyson|Clabo|LG|19811017|Wake Forest
 Mike|Adams|CB|19810324|Delaware
-Willie|Parker|RB|19801111|
-Justin|Sandy|CB|19820222|
-Garnell|Wilds|CB|19810608|
-Billy|Strother|MLB|19820108|
-Anthony|Herrera|LG|19800614|
-Ryan|Boschetti|DT|19811007|
-Rayshun|Reed|CB|19810410|
-Renauld|Williams|MLB|19810223|
-Jason|Wright|RB|19820712|
-Jon|Bradley|DT|19810113|
-Mike|Labinjo|MLB|19800708|
-Dwight|Anderson|CB|19810705|
+Willie|Parker|RB|19801111|North Carolina
+Justin|Sandy|CB|19820222|Northern Iowa
+Garnell|Wilds|CB|19810608|Virginia Tech
+Billy|Strother|MLB|19820108|New Mexico
+Anthony|Herrera|LG|19800614|Tennessee
+Ryan|Boschetti|DT|19811007|UCLA
+Rayshun|Reed|CB|19810410|Troy
+Renauld|Williams|MLB|19810223|Hofstra
+Jason|Wright|RB|19820712|Northwestern
+Jon|Bradley|DT|19810113|Arkansas State
+Mike|Labinjo|MLB|19800708|Michigan State
+Dwight|Anderson|CB|19810705|South Dakota
 Mike|Brake|TE|19800506|
-Brian|Howard|DT|19810909|
-Kelvin|Kight|WR|19820702|
-Dusty|McGrorty|RB|19810509|
-Josh|Savage|DE|19800928|
+Brian|Howard|DT|19810909|Idaho
+Kelvin|Kight|WR|19820702|Florida
+Dusty|McGrorty|RB|19810509|Southern Oregon
+Josh|Savage|DE|19800928|Utah
 Thump|Belton|RB|19810601|
-Rufus|Brown|CB|19800718|
+Rufus|Brown|CB|19800718|Florida State
 Gregory|Walker|LG|19811001|
-Eric|Alexander|MLB|19820208|
+Eric|Alexander|MLB|19820208|Louisiana State
 Quinn|Dorsey|MLB|19800401|
-Randall|Gay|CB|19820505|
-Ryan|Lilja|LG|19811015|
-Benny|Sapp|CB|19810120|
-Rich|Scanlon|MLB|19801223|
-Jordan|Carstens|DT|19810122|
-Damane|Duckett|DT|19810121|
-Joey|Harris|RB|19801218|
-Eddie|Jackson|CB|19801219|
+Randall|Gay|CB|19820505|Louisiana State
+Ryan|Lilja|LG|19811015|Kansas State
+Benny|Sapp|CB|19810120|Northern Iowa
+Rich|Scanlon|MLB|19801223|Syracuse
+Jordan|Carstens|DT|19810122|Iowa State
+Damane|Duckett|DT|19810121|East Carolina
+Joey|Harris|RB|19801218|Purdue
+Eddie|Jackson|CB|19801219|Arkansas
 Rod|Rutherford|QB|19801212|
-T.J.|Hollowell|MLB|19810408|
-Khaleed|Vaughn|DE|19810520|
-Larry|Croom|RB|19811029|
-Eric|Edwards|TE|19800804|
-Adrian|Mayes|CB|19801117|
-Steve|Cargile|CB|19820602|
-Terrance|Copper|WR|19820312|
+T.J.|Hollowell|MLB|19810408|Nebraska
+Khaleed|Vaughn|DE|19810520|Clemson
+Larry|Croom|RB|19811029|Nevada-Las Vegas
+Eric|Edwards|TE|19800804|Louisiana State
+Adrian|Mayes|CB|19801117|Louisiana State
+Steve|Cargile|CB|19820602|Columbia
+Terrance|Copper|WR|19820312|East Carolina
 Tom|Crowder|WR|19810121|
-Scott|Connot|CB|19810624|
-Junior|Glymph|DE|19800902|
-Jason|Hilliard|LT|19810629|
-Vonta|Leach|RB|19811106|
-Lousaka|Polite|RB|19810914|
-Kalen|Thornton|OLB|19820512|
-Jordan|Babineaux|CB|19820831|
+Scott|Connot|CB|19810624|South Dakota State
+Junior|Glymph|DE|19800902|Carson-Newman
+Jason|Hilliard|LT|19810629|Louisville
+Vonta|Leach|RB|19811106|East Carolina
+Lousaka|Polite|RB|19810914|Pittsburgh
+Kalen|Thornton|OLB|19820512|Texas
+Jordan|Babineaux|CB|19820831|Southern Arkansas
 Malcom|Floyd|WR|19810908|Wyoming
-Michael|Harden|CB|19811020|
-Robert|Pollard|DE|19810628|
+Michael|Harden|CB|19811020|Missouri
+Robert|Pollard|DE|19810628|Texas Christian
 Wes|Welker|WR|19810501|Texas Tech
-Ran|Carthon|RB|19810210|
-Carey|Davis|RB|19810327|
-Lance|Frazier|CB|19810523|
-Brett|Pierce|TE|19810107|
-B.J.|Sams|RB|19801029|
-Brandon|Barnes|MLB|19810612|
+Ran|Carthon|RB|19810210|Florida
+Carey|Davis|RB|19810327|Illinois
+Lance|Frazier|CB|19810523|West Virginia
+Brett|Pierce|TE|19810107|Stanford
+B.J.|Sams|RB|19801029|McNeese State
+Brandon|Barnes|MLB|19810612|Missouri
 Don|Muhlbach|C|19810817|Texas A&amp;M
-Doug|Easlick|FB|19801204|
-Quintin|Williams|CB|19820924|
-Roderick|Bryant|CB|19810217|
-Jeremy|Cain|MLB|19800324|
-Alain|Kashama|DE|19791208|
+Doug|Easlick|FB|19801204|Virginia Tech
+Quintin|Williams|CB|19820924|Wake Forest
+Roderick|Bryant|CB|19810217|Idaho
+Jeremy|Cain|MLB|19800324|Massachusetts
+Alain|Kashama|DE|19791208|Michigan
 D.D.|Acholonu|MLB|19801017|
-Rashad|Baker|S|19820222|
-Jabari|Greer|CB|19820211|
-Luke|Lawton|RB||
+Rashad|Baker|S|19820222|Tennessee
+Jabari|Greer|CB|19820211|Tennessee
+Luke|Lawton|RB||McNeese State
 Jason|Peters|TE|19820122|Arkansas
-Constantin|Ritzmann|DE|19791220|
-Shaud|Williams|RB|19801002|
-Tommy|Kelly|DT|19801227|
-Trevor|Hutton|LG|19800228|
-Josh|Thomas|DE|19810626|
-Richard|Smith|WR|19800716|
-Roc|Alexander|CB|19810923|
-P.J.|Fleck|WR|19801129|
+Constantin|Ritzmann|DE|19791220|Tennessee
+Shaud|Williams|RB|19801002|Alabama
+Tommy|Kelly|DT|19801227|Mississippi State
+Trevor|Hutton|LG|19800228|Utah State
+Josh|Thomas|DE|19810626|Syracuse
+Richard|Smith|WR|19800716|Arkansas
+Roc|Alexander|CB|19810923|Washington
+P.J.|Fleck|WR|19801129|Northern Illinois
 Cullen|Loeffler|C|19810127|Texas
-Richard|Owens|TE|19801104|
-Alan|Reuber|LG|19810126|
-Josh|Cooper|DE|19801205|
-Kyle|Larson|P|19800902|
-Jim|Maxwell|MLB|19810808|
-Curtis|Deloatch|CB|19811004|
-Robb|Butler|CB|19810914|
-Kendrick|Starling|WR|19791227|
-Jamall|Broussard|WR|19810819|
-Spencer|Johnson|DT|19811212|
-Andrae|Thurman|WR|19801025|
-Jerrell|Pippens|CB|19800730|
+Richard|Owens|TE|19801104|Louisville
+Alan|Reuber|LG|19810126|Texas A&M
+Josh|Cooper|DE|19801205|Mississippi
+Kyle|Larson|P|19800902|Nebraska
+Jim|Maxwell|MLB|19810808|Gardner-Webb
+Curtis|Deloatch|CB|19811004|North Carolina A&T State
+Robb|Butler|CB|19810914|Robert Morris
+Kendrick|Starling|WR|19791227|San Jose State
+Jamall|Broussard|WR|19810819|San Jose State
+Spencer|Johnson|DT|19811212|Auburn
+Andrae|Thurman|WR|19801025|Southern Oregon
+Jerrell|Pippens|CB|19800730|Nebraska
 Brandon|Evans|LG|19811227|
-Clarence|Curry|CB|19811207|
-Raheem|Orr|MLB|19801108|
-Jonathan|Smith|WR|19811128|
-Leon|Joe|OLB|19811026|
-Rashad|Washington|S|19800315|
-Jason|Shivers|S|19821104|
-Triandos|Luke|WR|19811224|
-Jamaar|Taylor|WR|19810225|
-Kevin|Sampson|LT|19810619|
+Clarence|Curry|CB|19811207|Villanova
+Raheem|Orr|MLB|19801108|Rutgers
+Jonathan|Smith|WR|19811128|Georgia Tech
+Leon|Joe|OLB|19811026|Maryland
+Rashad|Washington|S|19800315|Kansas State
+Jason|Shivers|S|19821104|Arizona State
+Triandos|Luke|WR|19811224|Alabama
+Jamaar|Taylor|WR|19810225|Texas A&M
+Kevin|Sampson|LT|19810619|Syracuse
 Donnie|Jones|P|19800705|LSU
-Jim|Molinaro|LT|19810427|
-Ben|Noll|LG|19811114|
-Dexter|Reid|S|19810318|
-Marquise|Hill|DE|19820807|
-Jammal|Lord|CB|19810110|
-Craig|Terrill|DT|19800627|
-Larry|Turner|LG|19820308|
-Shane|Olivea|LT|19811007|
+Jim|Molinaro|LT|19810427|Notre Dame
+Ben|Noll|LG|19811114|Pennsylvania
+Dexter|Reid|S|19810318|North Carolina
+Marquise|Hill|DE|19820807|Louisiana State
+Jammal|Lord|CB|19810110|Nebraska
+Craig|Terrill|DT|19800627|Purdue
+Larry|Turner|LG|19820308|Eastern Kentucky
+Shane|Olivea|LT|19811007|Ohio State
 Jason|Babin|OLB|19800524|Western Michigan
-Tank|Johnson|DT|19811207|
-Keyaron|Fox|OLB|19820124|
+Tank|Johnson|DT|19811207|Washington
+Keyaron|Fox|OLB|19820124|Georgia Tech
 Sean|Bubin|LT|19810126|
-D.J.|Hackett|WR|19810703|
-Keith|Lewis|S|19811020|
-Courtney|Anderson|TE|19801119|
-Michael|Gaines|TE|19800330|
-Demorrio|Williams|OLB|19800706|
-Etric|Pruitt|CB|19810816|
-Niko|Koutouvides|MLB|19810325|
-Brandon|Chillar|OLB|19821021|
+D.J.|Hackett|WR|19810703|Colorado
+Keith|Lewis|S|19811020|Oregon
+Courtney|Anderson|TE|19801119|San Jose State
+Michael|Gaines|TE|19800330|Central Florida
+Demorrio|Williams|OLB|19800706|Nebraska
+Etric|Pruitt|CB|19810816|Southern Mississippi
+Niko|Koutouvides|MLB|19810325|Purdue
+Brandon|Chillar|OLB|19821021|UCLA
 Vince|Wilfork|DT|19811104|Miami (Fla.)
-Ricardo|Colclough|CB|19830926|
-Kris|Wilson|TE|19810822|
-Mark|Wilson|LT|19801111|
-Greg|Brooks|CB|19801216|
-Junior|Siavii|DT|19781114|
-Shaun|Phillips|OLB|19810513|
-Sean|McHugh|TE|19820527|
-Michael|Clayton|WR|19821013|
-Keary|Colbert|WR|19820521|
-Anthony|Maddox|DT|19781122|
-Kirk|Chambers|LT|19790319|
-Darrell|McClover|OLB|19810825|
-Cody|Pickett|QB|19800630|
-Jared|Clauss|DT|19810407|
+Ricardo|Colclough|CB|19830926|Tusculum
+Kris|Wilson|TE|19810822|Pittsburgh
+Mark|Wilson|LT|19801111|California
+Greg|Brooks|CB|19801216|Southern Mississippi
+Junior|Siavii|DT|19781114|Oregon
+Shaun|Phillips|OLB|19810513|Purdue
+Sean|McHugh|TE|19820527|Penn State
+Michael|Clayton|WR|19821013|Louisiana State
+Keary|Colbert|WR|19820521|Southern California
+Anthony|Maddox|DT|19781122|Delta State
+Kirk|Chambers|LT|19790319|Stanford
+Darrell|McClover|OLB|19810825|Miami (Florida)
+Cody|Pickett|QB|19800630|Washington
+Jared|Clauss|DT|19810407|Iowa
 Lenny|Williams|CB|19811216|
-Dunta|Robinson|CB|19820411|
+Dunta|Robinson|CB|19820411|South Carolina
 Steven|Jackson|RB|19830722|Oregon State
-Nate|Kaeding|K|19820326|
-Chris|Cooley|FB|19820711|
-Devard|Darling|WR|19820416|
+Nate|Kaeding|K|19820326|Iowa
+Chris|Cooley|FB|19820711|Utah State
+Devard|Darling|WR|19820416|Washington State
 Jared|Allen|DE|19820403|Idaho State
-P.K.|Sam|WR|19830226|
-Von|Hutchins|CB|19810214|
+P.K.|Sam|WR|19830226|Florida State
+Von|Hutchins|CB|19810214|Mississippi
 Deandre|Eiland|CB|19820604|
-Jim|Sorgi|QB|19801203|
-Alfonso|Marshall|CB|19810117|
-Jeff|Dugan|TE|19810408|
-Christian|Morton|CB|19810428|
+Jim|Sorgi|QB|19801203|Wisconsin
+Alfonso|Marshall|CB|19810117|Miami (Florida)
+Jeff|Dugan|TE|19810408|Maryland
+Christian|Morton|CB|19810428|Illinois
 Dwan|Edwards|DE|19810516|Oregon State
-Darius|Watts|WR|19811219|
-Tony|Hargrove|DE|19830720|
-Samie|Parker|WR|19810325|
-Jake|Scott|LT|19810416|
-Jeff|Shoate|CB|19810323|
-Robert|Reynolds|MLB|19810520|
-Ryan|Krause|TE|19810616|
-Kelly|Butler|LT|19820724|
-Dexter|Wynn|CB|19810225|
-Charlie|Anderson|OLB|19811208|
+Darius|Watts|WR|19811219|Marshall
+Tony|Hargrove|DE|19830720|Georgia Tech
+Samie|Parker|WR|19810325|Oregon
+Jake|Scott|LT|19810416|Idaho
+Jeff|Shoate|CB|19810323|San Diego State
+Robert|Reynolds|MLB|19810520|Ohio State
+Ryan|Krause|TE|19810616|Nebraska-Omaha
+Kelly|Butler|LT|19820724|Purdue
+Dexter|Wynn|CB|19810225|Colorado State
+Charlie|Anderson|OLB|19811208|Mississippi
 Jeff|Smoker|QB|19810613|
-Patrick|Crayton|WR|19790407|
-Jacques|Reeves|CB|19821008|
-Matt|Mauck|QB|19790212|
-Derrick|Ward|RB|19800830|
-Eugene|Amano|C|19820301|
-Sean|Taylor|S|19830401|
-Jonathan|Vilma|MLB|19820416|
-Shawn|Andrews|LT|19821225|
-D.J.|Williams|OLB|19820720|
-Michael|Jenkins|WR|19820618|
-Kevin|Jones|RB|19820821|
-Teddy|Lehman|OLB|19811118|
-Michael|Boulware|S|19810917|
-Max|Starks|LT|19820110|
-Matt|Ware|CB|19821202|
+Patrick|Crayton|WR|19790407|Northwestern Oklahoma State
+Jacques|Reeves|CB|19821008|Purdue
+Matt|Mauck|QB|19790212|Louisiana State
+Derrick|Ward|RB|19800830|Ottawa (Kansas)
+Eugene|Amano|C|19820301|Southeast Missouri State
+Sean|Taylor|S|19830401|Miami (Florida)
+Jonathan|Vilma|MLB|19820416|Miami (Florida)
+Shawn|Andrews|LT|19821225|Arkansas
+D.J.|Williams|OLB|19820720|Miami (Florida)
+Michael|Jenkins|WR|19820618|Ohio State
+Kevin|Jones|RB|19820821|Virginia Tech
+Teddy|Lehman|OLB|19811118|Oklahoma
+Michael|Boulware|S|19810917|Florida State
+Max|Starks|LT|19820110|Florida
+Matt|Ware|CB|19821202|UCLA
 Matt|Schaub|QB|19810625|Virginia
-Alex|Stepanovich|C|19810925|
-Kendyll|Pope|MLB|19810509|
-Jason|David|CB|19820612|
-J.R.|Reed|S|19820211|
-Trey|Darilek|LT|19810423|
+Alex|Stepanovich|C|19810925|Ohio State
+Kendyll|Pope|MLB|19810509|Florida State
+Jason|David|CB|19820612|Washington State
+J.R.|Reed|S|19820211|South Florida
+Trey|Darilek|LT|19810423|Texas-El Paso
 Antonio|Smith|DE|19811021|Oklahoma State
-Chad|Lavalais|DT|19790415|
-Mike|Karney|FB|19810706|
-Thomas|Tapeh|FB|19800328|
+Chad|Lavalais|DT|19790415|Louisiana State
+Mike|Karney|FB|19810706|Arizona State
+Thomas|Tapeh|FB|19800328|Minnesota
 Bo|Lacy|LT|19801122|
 Josh|Harris|QB|19820909|
-Quincy|Wilson|RB|19810426|
+Quincy|Wilson|RB|19810426|West Virginia
 Eli|Manning|QB|19810103|Mississippi
-Nick|Hardwick|C|19810902|
+Nick|Hardwick|C|19810902|Purdue
 Randy|Starks|DT|19831214|Maryland
-Tim|Anderson|DT|19801122|
-Bernard|Berrian|WR|19801227|
-Rich|Gardner|CB|19810201|
-Reggie|Torbor|OLB|19810125|
+Tim|Anderson|DT|19801122|Ohio State
+Bernard|Berrian|WR|19801227|Fresno State
+Rich|Gardner|CB|19810201|Penn State
+Reggie|Torbor|OLB|19810125|Auburn
 Jerricho|Cotchery|WR|19820616|North Carolina State
-Richard|Seigler|MLB|19801019|
-Adrian|Jones|LT|19810610|
-Dave|Ball|DE|19810104|
-Gibril|Wilson|S|19811112|
-Alex|Lewis|OLB|19810611|
-Sean|Ryan|TE|19800327|
-Craig|Krenzel|QB|19810701|
-Maurice|Mann|WR|19820914|
-Roderick|Green|OLB|19820426|
-Michael|Turner|RB|19820213|
-Rod|Davis|MLB|19810402|
+Richard|Seigler|MLB|19801019|Oregon State
+Adrian|Jones|LT|19810610|Kansas
+Dave|Ball|DE|19810104|UCLA
+Gibril|Wilson|S|19811112|Tennessee
+Alex|Lewis|OLB|19810611|Wisconsin
+Sean|Ryan|TE|19800327|Boston College
+Craig|Krenzel|QB|19810701|Ohio State
+Maurice|Mann|WR|19820914|Nevada-Reno
+Roderick|Green|OLB|19820426|Central Missouri
+Michael|Turner|RB|19820213|Northern Illinois
+Rod|Davis|MLB|19810402|Southern Mississippi
 Marko|Cavka|LT|19810404|
 Andy|Lee|P|19820811|Pittsburgh
-Troy|Fleming|FB|19801001|
-Clarence|Moore|WR|19820924|
-John|Navarre|QB|19800909|
-Nathan|Jones|CB|19820615|
+Troy|Fleming|FB|19801001|Tennessee
+Clarence|Moore|WR|19820924|Northern Arizona
+John|Navarre|QB|19800909|Michigan
+Nathan|Jones|CB|19820615|Rutgers
 Casey|Bramlet|QB|19810402|
-Brian|Rimpf|LT|19810211|
-Scott|Wells|C|19810107|
-Robert|Gallery|LT|19800726|
-Tommie|Harris|DT|19830429|
-Chris|Snee|LG|19820118|
+Brian|Rimpf|LT|19810211|East Carolina
+Scott|Wells|C|19810107|Tennessee
+Robert|Gallery|LT|19800726|Iowa
+Tommie|Harris|DT|19830429|Oklahoma
+Chris|Snee|LG|19820118|Boston College
 Daryl|Smith|OLB|19820314|Georgia Tech
-Julius|Jones|RB|19810814|
-Jake|Grove|C|19800122|
-Madieu|Williams|CB|19811018|
-Shawntae|Spencer|CB|19820222|
-Courtney|Watson|MLB|19800918|
-Stuart|Schweigert|S|19810621|
-Ben|Hartsock|TE|19800705|
-Gilbert|Gardner|OLB|19820509|
-Joey|Thomas|CB|19800829|
-Keith|Smith|CB|19800320|
-Derrick|Strait|CB|19800827|
-Derrick|Hamilton|WR|19811130|
-Caleb|Miller|MLB|19800903|
-Sean|Locklear|LG|19810529|
-B.J.|Sander|P|19800729|
-Darrion|Scott|DE|19811025|
-Landon|Johnson|OLB|19810313|
-Carlos|Francis|WR|19810103|
-Bo|Schobel|DE|19810324|
+Julius|Jones|RB|19810814|Notre Dame
+Jake|Grove|C|19800122|Virginia Tech
+Madieu|Williams|CB|19811018|Maryland
+Shawntae|Spencer|CB|19820222|Pittsburgh
+Courtney|Watson|MLB|19800918|Notre Dame
+Stuart|Schweigert|S|19810621|Purdue
+Ben|Hartsock|TE|19800705|Ohio State
+Gilbert|Gardner|OLB|19820509|Purdue
+Joey|Thomas|CB|19800829|Montana State
+Keith|Smith|CB|19800320|McNeese State
+Derrick|Strait|CB|19800827|Oklahoma
+Derrick|Hamilton|WR|19811130|Clemson
+Caleb|Miller|MLB|19800903|Arkansas
+Sean|Locklear|LG|19810529|North Carolina State
+B.J.|Sander|P|19800729|Ohio State
+Darrion|Scott|DE|19811025|Ohio State
+Landon|Johnson|OLB|19810313|Purdue
+Carlos|Francis|WR|19810103|Texas Tech
+Bo|Schobel|DE|19810324|Texas Christian
 Luke|McCown|QB|19810712|Louisiana Tech
-Matthias|Askew|DT|19820701|
-Nat|Dorsey|LT|19830909|
-Robert|Geathers|DE|19830811|
-Bruce|Thornton|CB|19800131|
-Glenn|Earl|S|19810610|
-Stacy|Andrews|LT|19810602|
-Michael|Waddell|CB|19810109|
-Cedric|Cobbs|RB|19810109|
-Johnnie|Morant|WR|19811207|
+Matthias|Askew|DT|19820701|Michigan State
+Nat|Dorsey|LT|19830909|Georgia Tech
+Robert|Geathers|DE|19830811|Georgia
+Bruce|Thornton|CB|19800131|Georgia
+Glenn|Earl|S|19810610|Notre Dame
+Stacy|Andrews|LT|19810602|Mississippi
+Michael|Waddell|CB|19810109|North Carolina
+Cedric|Cobbs|RB|19810109|Arkansas
+Johnnie|Morant|WR|19811207|Syracuse
 Josh|Scobee|K|19820623|Louisiana Tech
-Jacob|Bell|LG|19810302|
-Rodney|Leisle|DT|19810205|
-Chris|Thompson|CB|19820519|
-Amon|Gordon|DT|19811013|
-Cody|Spencer|MLB|19810601|
-Mark|Jones|WR|19801103|
-Adimchinobi|Echemandu|RB|19801121|
-Derrick|Pope|MLB|19820504|
-Casey|Cramer|RB|19820105|
-Colby|Bockwoldt|OLB|19810414|
-Bobby|McCray|DE|19810808|
-Reggie|Williams|WR|19830517|
-Vernon|Carey|LT|19810731|
-Kenechi|Udeze|DE|19830305|
-Rashaun|Woods|WR|19801017|
-Tatum|Bell|RB|19810302|
-Travis|LaBoy|DE|19810820|
-Justin|Smiley|LG|19811111|
-Jacob|Rogers|LT|19810817|
-Greg|Jones|RB|19810509|
-Marquis|Cooper|OLB|19820311|
-Will|Poole|CB|19810724|
+Jacob|Bell|LG|19810302|Miami (Ohio)
+Rodney|Leisle|DT|19810205|UCLA
+Chris|Thompson|CB|19820519|Nicholls State
+Amon|Gordon|DT|19811013|Stanford
+Cody|Spencer|MLB|19810601|North Texas
+Mark|Jones|WR|19801103|Tennessee
+Adimchinobi|Echemandu|RB|19801121|California
+Derrick|Pope|MLB|19820504|Alabama
+Casey|Cramer|RB|19820105|Dartmouth
+Colby|Bockwoldt|OLB|19810414|Brigham Young
+Bobby|McCray|DE|19810808|Florida
+Reggie|Williams|WR|19830517|Washington
+Vernon|Carey|LT|19810731|Miami (Florida)
+Kenechi|Udeze|DE|19830305|Southern California
+Rashaun|Woods|WR|19801017|Oklahoma State
+Tatum|Bell|RB|19810302|Oklahoma State
+Travis|LaBoy|DE|19810820|Hawaii
+Justin|Smiley|LG|19811111|Alabama
+Jacob|Rogers|LT|19810817|Southern California
+Greg|Jones|RB|19810509|Florida State
+Marquis|Cooper|OLB|19820311|Washington
+Will|Poole|CB|19810724|Southern California
 Will|Allen|S|19820617|Ohio State
-Ernest|Wilford|WR|19790114|
-Jeb|Terry|LG|19810410|
-Tony|Bua|OLB|19800211|
-Nick|Leckey|C|19820312|
-Rex|Hadnot|LG|19820128|
-Corey|Williams|DT|19800817|
-Nate|Lawrie|TE|19811007|
-Roy|Williams|WR|19811220|
-Lee|Evans|WR|19810311|
-Will|Smith|DE|19810704|
-J.P.|Losman|QB|19810312|
-Ahmad|Carroll|CB|19830804|
-Chris|Gamble|CB|19830311|
-Igor|Olshansky|DE|19820503|
-Ben|Troupe|TE|19820901|
-Dontarrious|Thomas|OLB|19800902|
-Antwan|Odom|DE|19810924|
+Ernest|Wilford|WR|19790114|Virginia Tech
+Jeb|Terry|LG|19810410|North Carolina
+Tony|Bua|OLB|19800211|Arkansas
+Nick|Leckey|C|19820312|Kansas State
+Rex|Hadnot|LG|19820128|Houston
+Corey|Williams|DT|19800817|Arkansas State
+Nate|Lawrie|TE|19811007|Yale
+Roy|Williams|WR|19811220|Texas
+Lee|Evans|WR|19810311|Wisconsin
+Will|Smith|DE|19810704|Ohio State
+J.P.|Losman|QB|19810312|Tulane
+Ahmad|Carroll|CB|19830804|Arkansas
+Chris|Gamble|CB|19830311|Ohio State
+Igor|Olshansky|DE|19820503|Oregon
+Ben|Troupe|TE|19820901|Florida
+Dontarrious|Thomas|OLB|19800902|Auburn
+Antwan|Odom|DE|19810924|Alabama
 Larry|Fitzgerald|WR|19830831|Pittsburgh
-Kellen|Winslow|TE|19830721|
+Kellen|Winslow|TE|19830721|Miami (Florida)
 DeAngelo|Hall|CB|19831119|Virginia Tech
 Ben|Roethlisberger|QB|19820302|Miami, O.
-Marcus|Tubbs|DT|19810516|
-Chris|Perry|RB|19811227|
+Marcus|Tubbs|DT|19810516|Texas
+Chris|Perry|RB|19811227|Michigan
 Karlos|Dansby|OLB|19811103|Auburn
-Keiwan|Ratliff|CB|19810419|
-Devery|Henderson|WR|19820326|
-Darnell|Dockett|DT|19810527|
-Ryan|Fowler|MLB|19820520|
+Keiwan|Ratliff|CB|19810419|Florida
+Devery|Henderson|WR|19820326|Louisiana State
+Darnell|Dockett|DT|19810527|Florida State
+Ryan|Fowler|MLB|19820520|Duke
 Philip|Rivers|QB|19811208|North Carolina State
 Benjamin|Watson|TE|19801218|Georgia
-Bob|Sanders|S|19810224|
-Fred|Booker|CB|19780604|
-Todd|France|K|19800213|
-Shawn|Lynch|C|19790725|
-Corey|McIntyre|FB|19790125|
-Rob|Bironas|K|19780129|
-Bryan|Fletcher|TE|19790323|
-Dante|Ellington|LT|19800229|
-Nic|Clemons|DE|19800203|
-James|Adkisson|WR|19800111|
-Ben|Archibald|LT|19780826|
-Will|Hunter|CB|19790327|
+Bob|Sanders|S|19810224|Iowa
+Fred|Booker|CB|19780604|Louisiana State
+Todd|France|K|19800213|Toledo
+Shawn|Lynch|C|19790725|Duke
+Corey|McIntyre|FB|19790125|West Virginia
+Rob|Bironas|K|19780129|Georgia Southern
+Bryan|Fletcher|TE|19790323|UCLA
+Dante|Ellington|LT|19800229|Alabama
+Nic|Clemons|DE|19800203|Georgia
+James|Adkisson|WR|19800111|South Carolina
+Ben|Archibald|LT|19780826|Brigham Young
+Will|Hunter|CB|19790327|Syracuse
 Cedric|Bonner|WR|19781214|
-Andy|Groom|P|19790910|
+Andy|Groom|P|19790910|Ohio State
 Derek|Watson|RB|19810501|
-Todd|Devoe|WR|19800405|
-Carl|Ford|WR|19801008|
-Ben|Claxton|LG|19800730|
-Kliff|Kingsbury|QB|19790809|
-Trent|Smith|TE|19790915|
-Remy|Hamilton|K|19740830|
-Ryan|Flinn|P|19800214|
-Rich|Alexis|RB|19810306|
-Chad|Lucas|WR|19811107|
-Jarrett|Payton|RB|19801226|
-John|Leake|MLB|19810828|
-Brad|Lekkerkerker|LT|19780508|
-Norm|Katnik|C|19810702|
-Jamal|Jones|WR|19810424|
-Matt|Morgan|LT|19801203|
+Todd|Devoe|WR|19800405|Central Missouri
+Carl|Ford|WR|19801008|Toledo
+Ben|Claxton|LG|19800730|Mississippi
+Kliff|Kingsbury|QB|19790809|Texas Tech
+Trent|Smith|TE|19790915|Oklahoma
+Remy|Hamilton|K|19740830|Michigan
+Ryan|Flinn|P|19800214|Central Florida
+Rich|Alexis|RB|19810306|Washington
+Chad|Lucas|WR|19811107|Alabama State
+Jarrett|Payton|RB|19801226|Miami (Florida)
+John|Leake|MLB|19810828|Clemson
+Brad|Lekkerkerker|LT|19780508|UC Davis
+Norm|Katnik|C|19810702|Southern California
+Jamal|Jones|WR|19810424|North Carolina A&T State
+Matt|Morgan|LT|19801203|Pittsburgh
 Scott|Jackson|C|19790119|
-George|Wilson|WR|19810314|
+George|Wilson|WR|19810314|Arkansas
 Nick|McNeil|MLB|19810819|
-Romby|Bryant|WR|19791221|
-Zach|Norton|CB|19811119|
-Curome|Cox|S|19810228|
-J.P.|Foschi|FB|19820519|
-Ben|Utecht|TE|19810630|
-Ronnie|Cruz|FB|19810611|
-Dedrick|Roper|MLB|19810731|
-Jared|Lorenzen|QB|19810214|
-Glenn|Martinez|WR|19811130|
-Kory|Chapman|RB|19800713|
+Romby|Bryant|WR|19791221|Tulsa
+Zach|Norton|CB|19811119|Cincinnati
+Curome|Cox|S|19810228|Maryland
+J.P.|Foschi|FB|19820519|Georgia Tech
+Ben|Utecht|TE|19810630|Minnesota
+Ronnie|Cruz|FB|19810611|Northern State (South Dakota)
+Dedrick|Roper|MLB|19810731|Northwood
+Jared|Lorenzen|QB|19810214|Kentucky
+Glenn|Martinez|WR|19811130|Saginaw Valley State
+Kory|Chapman|RB|19800713|Jacksonville State
 Landon|Trusty|TE|19811009|
-Eric|Taylor|DE|19811214|
-Sloan|Thomas|WR|19811222|
-Ryon|Bingham|DE|19810606|
-Adrien|Clarke|LG|19810326|
-Bruce|Perry|RB|19810322|
-Jeremy|LeSueur|CB|19801005|
+Eric|Taylor|DE|19811214|Memphis
+Sloan|Thomas|WR|19811222|Texas
+Ryon|Bingham|DE|19810606|Nebraska
+Adrien|Clarke|LG|19810326|Ohio State
+Bruce|Perry|RB|19810322|Maryland
+Jeremy|LeSueur|CB|19801005|Michigan
 Andy|Hall|QB|19801126|
-Bradlee|Van Pelt|QB|19800703|
-Stephen|Peterman|LG|19820111|
-Sean|Jones|S|19820302|
+Bradlee|Van Pelt|QB|19800703|Colorado State
+Stephen|Peterman|LG|19820111|Louisiana State
+Sean|Jones|S|19820302|Georgia
 Donnell|Washington|DT|19810206|
-Guss|Scott|S|19820521|
-Isaac|Sopoaga|DT|19810904|
-Drew|Carter|WR|19810905|
-Ryan|Myers|OLB|19800227|
-Jason|Anderson|RB|19800429|
-Donovan|Morgan|WR|19810729|
-Rolando|Cantu|LG|19810225|
-Ben|Graham|P|19731102|
-D.J.|Johnson|CB|19800503|
-Jerome|Carter|S|19821025|
-Derrick|Wimbush|RB|19800826|
+Guss|Scott|S|19820521|Florida
+Isaac|Sopoaga|DT|19810904|Hawaii
+Drew|Carter|WR|19810905|Ohio State
+Ryan|Myers|OLB|19800227|Akron
+Jason|Anderson|RB|19800429|South Dakota
+Donovan|Morgan|WR|19810729|Louisiana-Lafayette
+Rolando|Cantu|LG|19810225|ITESM Monterrey
+Ben|Graham|P|19731102|Deakin
+D.J.|Johnson|CB|19800503|Iowa
+Jerome|Carter|S|19821025|Florida State
+Derrick|Wimbush|RB|19800826|Fort Valley State
 Benard|Thomas|DE|19810410|
-Jim|Davis|DE|19811004|
-Dan|Connolly|LG|19820902|
-Jamar|Enzor|MLB|19811228|
+Jim|Davis|DE|19811004|Virginia Tech
+Dan|Connolly|LG|19820902|Southeast Missouri State
+Jamar|Enzor|MLB|19811228|Cincinnati
 Darius|Williams|TE|19820316|
 Ukee|Dozier|CB|19820310|
-Andre|Frazier|OLB|19820629|
-Arnold|Harrison|MLB|19820920|
+Andre|Frazier|OLB|19820629|Cincinnati
+Arnold|Harrison|MLB|19820920|Georgia
 Shaun|Suisham|K|19811229|Bowling Green State
 Greg|Warren|C|19811018|North Carolina
-Adrian|Awasom|DE|19831025|
+Adrian|Awasom|DE|19831025|North Texas
 C.J.|Brooks|LG|19820821|
-Chris|Carr|CB|19830430|
-Cory|Procter|LG|19821018|
-Jeremy|Calahan|DT|19830707|
+Chris|Carr|CB|19830430|Boise State
+Cory|Procter|LG|19821018|Montana
+Jeremy|Calahan|DT|19830707|Rice
 Clifford|Dukes|DE|19810626|
 Vontrell|Jamison|DE|19820726|
-Matt|McChesney|DT|19811106|
-Jerron|Wishom|CB|19820301|
-Chris|McKenzie|CB|19820317|
-Dominique|Thompson|WR|19821228|
-Otis|Amey|WR|19811204|
-Ahmad|Treaudo|CB|19820415|
-Alfred|Malone|DT|19820221|
-James|Butler|S|19820907|
-Chris|Kluwe|P|19811224|
-Leonard|Weaver|FB|19820923|
-Jeremy|Thornburg|S|19820507|
-Patrick|Dendy|CB|19820310|
+Matt|McChesney|DT|19811106|Colorado
+Jerron|Wishom|CB|19820301|Louisiana Tech
+Chris|McKenzie|CB|19820317|Arizona State
+Dominique|Thompson|WR|19821228|William & Mary
+Otis|Amey|WR|19811204|Sacramento State
+Ahmad|Treaudo|CB|19820415|Southern University
+Alfred|Malone|DT|19820221|Troy
+James|Butler|S|19820907|Georgia Tech
+Chris|Kluwe|P|19811224|UCLA
+Leonard|Weaver|FB|19820923|Carson-Newman
+Jeremy|Thornburg|S|19820507|Northern Arizona
+Patrick|Dendy|CB|19820310|Rice
 Martin|Patterson|MLB|19830218|
-Wesley|Duke|TE|19810621|
-Sam|Gado|RB|19821113|
-Kris|Griffin|OLB|19810527|
-Marques|Harris|OLB|19810920|
-Cory|Lekkerkerker|LT|19810725|
-Derreck|Robinson|DE|19820303|
+Wesley|Duke|TE|19810621|Mercer
+Sam|Gado|RB|19821113|Liberty
+Kris|Griffin|OLB|19810527|Indiana (Pennsylvania)
+Marques|Harris|OLB|19810920|Southern Utah
+Cory|Lekkerkerker|LT|19810725|UC Davis
+Derreck|Robinson|DE|19820303|Iowa
 Nick|Novak|K|19810821|Maryland
-Patrick|Body|CB|19820117|
-Stephen|Spach|TE|19820718|
-Dovonte|Edwards|CB|19821017|
-Roy|Manning|OLB|19811204|
-Zac|Woodfin|MLB|19830319|
-Marcus|Randall|QB|19820314|
-O.J.|Small|WR|19820818|
+Patrick|Body|CB|19820117|Toledo
+Stephen|Spach|TE|19820718|Fresno State
+Dovonte|Edwards|CB|19821017|North Carolina State
+Roy|Manning|OLB|19811204|Michigan
+Zac|Woodfin|MLB|19830319|Alabama-Birmingham
+Marcus|Randall|QB|19820314|Louisiana State
+O.J.|Small|WR|19820818|Florida
 Marcus|White|DT|19811113|
-Alex|Holmes|TE|19810822|
+Alex|Holmes|TE|19810822|Southern California
 John|Denney|C|19781213|Brigham Young
-Simon|Fraser|DE|19830327|
-Joshua|Cribbs|WR|19830609|
+Simon|Fraser|DE|19830327|Ohio State
+Joshua|Cribbs|WR|19830609|Kent State
 Jon|Condo|C|19810826|Maryland
-Harvey|Dahl|LT|19810624|
-Mike|Goolsby|MLB|19820910|
-Leigh|Torrence|CB|19820104|
-Tyson|Thompson|RB|19810521|
-Thomas|Johnson|DT|19810624|
-Darrell|Reid|DT|19820620|
+Harvey|Dahl|LT|19810624|Nevada-Reno
+Mike|Goolsby|MLB|19820910|Notre Dame
+Leigh|Torrence|CB|19820104|Stanford
+Tyson|Thompson|RB|19810521|San Jose State
+Thomas|Johnson|DT|19810624|Middle Tennessee State
+Darrell|Reid|DT|19820620|Minnesota
 Levon|Thomas|WR|19830707|
-Matt|Ulrich|LG|19811230|
-Tory|Humphrey|TE|19830120|
-Aaron|Francisco|CB|19830705|
-Heath|Farwell|MLB|19811231|
-Adam|Bergen|TE|19830903|
-John|Bronson|TE|19820708|
-Tim|Bulman|DT|19821031|
-Jermaine|Hardy|CB|19820320|
-Carlyle|Holiday|WR|19811004|
-Lamont|Reid|CB|19820504|
-Ernest|Shazor|S|19830704|
-Antoine|Cash|OLB|19820305|
-Kevin|Dudley|RB|19820102|
-Michael|Koenen|P|19820713|
-Dennis|Haley|MLB|19820218|
+Matt|Ulrich|LG|19811230|Northwestern
+Tory|Humphrey|TE|19830120|Central Michigan
+Aaron|Francisco|CB|19830705|Brigham Young
+Heath|Farwell|MLB|19811231|San Diego State
+Adam|Bergen|TE|19830903|Lehigh
+John|Bronson|TE|19820708|Penn State
+Tim|Bulman|DT|19821031|Boston College
+Jermaine|Hardy|CB|19820320|Virginia
+Carlyle|Holiday|WR|19811004|Notre Dame
+Lamont|Reid|CB|19820504|North Carolina State
+Ernest|Shazor|S|19830704|Michigan
+Antoine|Cash|OLB|19820305|Southern Mississippi
+Kevin|Dudley|RB|19820102|Michigan
+Michael|Koenen|P|19820713|Western Washington
+Dennis|Haley|MLB|19820218|Virginia
 Isaac|Snell|LG|19811104|
-Paul|Irons|TE|19831223|
+Paul|Irons|TE|19831223|Florida State
 Robbie|Gould|K|19821206|Penn State
-Mike|Wright|DE|19820301|
-Brad|Cieslak|TE|19820701|
+Mike|Wright|DE|19820301|Cincinnati
+Brad|Cieslak|TE|19820701|Northern Illinois
 Efrem|Hill|WR|19830723|
 Marcus|Lawrence|MLB|19820621|
-Aki|Jones|DT|19821025|
-Matt|Grootegoed|MLB|19820506|
-Liam|Ezekiel|MLB|19821030|
-Therrian|Fontenot|CB|19820620|
+Aki|Jones|DT|19821025|Fordham
+Matt|Grootegoed|MLB|19820506|Southern California
+Liam|Ezekiel|MLB|19821030|Northeastern
+Therrian|Fontenot|CB|19820620|Fresno State
 Jon|Goldsberry|FB|19811204|
-Jim|Leonhard|S|19821027|
-Evan|Oglesby|CB|19811218|
+Jim|Leonhard|S|19821027|Wisconsin
+Evan|Oglesby|CB|19811218|North Alabama
 L.P.|Ladouceur|C|19810313|California
-Ikechuku|Ndukwe|LG|19820717|
-Rich|Parson|WR|19800516|
+Ikechuku|Ndukwe|LG|19820717|Northwestern
+Rich|Parson|WR|19800516|Maryland
 Lance|Moore|WR|19830831|Toledo
-Isaiah|Ekejiuba|MLB|19811005|
-Chris|White|C|19830228|
-Matt|Katula|C|19820822|
+Isaiah|Ekejiuba|MLB|19811005|Virginia
+Chris|White|C|19830228|Southern Mississippi
+Matt|Katula|C|19820822|Wisconsin
 Chris|Jones|WR|19820717|
-J'Vonne|Parker|DT|19820607|
-Santonio|Thomas|DT|19810702|
-Brandon|McGowan|S|19830926|
-Junius|Coston|LG|19831105|
-Chris|Kemoeatu|LG|19830104|
-Nate|Washington|WR|19830828|
-Markus|Curry|CB|19810407|
-Brandon|Rideau|WR|19821018|
-Cam|Newton|S|19820519|
-Zak|Keasey|OLB|19820319|
-Atari|Bigby|CB|19810919|
-Laroni|Gallishaw|CB|19810404|
-Rashied|Davis|CB|19790724|
+J'Vonne|Parker|DT|19820607|Rutgers
+Santonio|Thomas|DT|19810702|Miami (Florida)
+Brandon|McGowan|S|19830926|Maine
+Junius|Coston|LG|19831105|North Carolina A&T State
+Chris|Kemoeatu|LG|19830104|Utah
+Nate|Washington|WR|19830828|Tiffin
+Markus|Curry|CB|19810407|Michigan
+Brandon|Rideau|WR|19821018|Kansas
+Cam|Newton|S|19820519|Furman
+Zak|Keasey|OLB|19820319|Princeton
+Atari|Bigby|CB|19810919|Central Florida
+Laroni|Gallishaw|CB|19810404|Murray State
+Rashied|Davis|CB|19790724|San Jose State
 Tim|McGill|DT|19790624|
 Alex|Smith|QB|19840507|Utah
-Ronnie|Brown|RB|19811212|
-Braylon|Edwards|WR|19830221|
-Cedric|Benson|RB|19821228|
-Carnell|Williams|RB|19820421|
+Ronnie|Brown|RB|19811212|Auburn
+Braylon|Edwards|WR|19830221|Michigan
+Cedric|Benson|RB|19821228|Texas
+Carnell|Williams|RB|19820421|Auburn
 Adam|Jones|CB|19830930|West Virginia
-Troy|Williamson|WR|19830430|
+Troy|Williamson|WR|19830430|South Carolina
 Antrel|Rolle|CB|19821216|Miami (Fla.)
-Carlos|Rogers|CB|19810702|
+Carlos|Rogers|CB|19810702|Auburn
 DeMarcus|Ware|OLB|19820731|Troy
-Shawne|Merriman|OLB|19840525|
-Jammal|Brown|LT|19810330|
+Shawne|Merriman|OLB|19840525|Maryland
+Jammal|Brown|LT|19810330|Oklahoma
 Thomas|Davis|S|19830322|Georgia
 Derrick|Johnson|OLB|19821122|Texas
-Travis|Johnson|DT|19820426|
-David|Pollack|OLB|19820619|
-Mike|Williams|WR|19840104|
-Erasmus|James|DE|19821104|
-Alex|Barron|LT|19820928|
-Marcus|Spears|DE|19830308|
-Matt|Jones|WR|19830422|
-Mark|Clayton|WR|19820702|
-Fabian|Washington|CB|19830609|
+Travis|Johnson|DT|19820426|Florida State
+David|Pollack|OLB|19820619|Georgia
+Mike|Williams|WR|19840104|Southern California
+Erasmus|James|DE|19821104|Wisconsin
+Alex|Barron|LT|19820928|Florida State
+Marcus|Spears|DE|19830308|Louisiana State
+Matt|Jones|WR|19830422|Arkansas
+Mark|Clayton|WR|19820702|Oklahoma
+Fabian|Washington|CB|19830609|Nebraska
 Aaron|Rodgers|QB|19831202|California
-Jason|Campbell|QB|19811231|
-Chris|Spencer|C|19820328|
+Jason|Campbell|QB|19811231|Auburn
+Chris|Spencer|C|19820328|Mississippi
 Roddy|White|WR|19811102|Alabama-Birmingham
-Luis|Castillo|DE|19830804|
-Marlin|Jackson|CB|19830630|
+Luis|Castillo|DE|19830804|Northwestern
+Marlin|Jackson|CB|19830630|Michigan
 Heath|Miller|TE|19821022|Virginia
-Mike|Patterson|DT|19830901|
+Mike|Patterson|DT|19830901|Southern California
 Logan|Mankins|LG|19820310|Fresno State
-David|Baas|LG|19810928|
-Brodney|Pool|S|19840524|
-Reggie|Brown|WR|19810113|
-Barrett|Ruud|MLB|19830520|
-Shaun|Cody|DT|19830122|
-Stanford|Routt|CB|19830726|
-Mark|Bradley|WR|19820129|
-Josh|Bullocks|S|19830228|
-Michael|Roos|LT|19821005|
-Kevin|Burnett|OLB|19821224|
-Corey|Webster|CB|19820302|
-J.J.|Arrington|RB|19830123|
-Lofa|Tatupu|MLB|19821115|
-Matt|Roth|DE|19821014|
+David|Baas|LG|19810928|Michigan
+Brodney|Pool|S|19840524|Oklahoma
+Reggie|Brown|WR|19810113|Georgia
+Barrett|Ruud|MLB|19830520|Nebraska
+Shaun|Cody|DT|19830122|Southern California
+Stanford|Routt|CB|19830726|Houston
+Mark|Bradley|WR|19820129|Oklahoma
+Josh|Bullocks|S|19830228|Nebraska
+Michael|Roos|LT|19821005|Eastern Washington
+Kevin|Burnett|OLB|19821224|Tennessee
+Corey|Webster|CB|19820302|Louisiana State
+J.J.|Arrington|RB|19830123|California
+Lofa|Tatupu|MLB|19821115|Southern California
+Matt|Roth|DE|19821014|Iowa
 Mike|Nugent|K|19820302|Ohio State
-Odell|Thurman|MLB|19830709|
-Marcus|Johnson|LG|19811201|
-Ron|Bartell|CB|19820222|
-Nick|Collins|S|19830816|
+Odell|Thurman|MLB|19830709|Georgia
+Marcus|Johnson|LG|19811201|Mississippi
+Ron|Bartell|CB|19820222|Howard
+Nick|Collins|S|19830816|Bethune-Cookman
 Khalif|Barnes|LT|19820421|Washington
-Roscoe|Parrish|WR|19820716|
-Darrent|Williams|CB|19820927|
-Justin|Miller|CB|19840214|
-Terrence|Murphy|WR|19821215|
+Roscoe|Parrish|WR|19820716|Miami (Florida)
+Darrent|Williams|CB|19820927|Oklahoma State
+Justin|Miller|CB|19840214|Clemson
+Terrence|Murphy|WR|19821215|Texas A&M
 Jonathan|Babineaux|DT|19811012|Iowa
-Kelvin|Hayden|CB|19830723|
+Kelvin|Hayden|CB|19830723|Illinois
 Vincent|Jackson|WR|19830114|Northern Colorado
-Bryant|McFadden|CB|19811121|
-Matt|McCoy|OLB|19821014|
-Adam|Terry|LT|19820901|
+Bryant|McFadden|CB|19811121|Florida State
+Matt|McCoy|OLB|19821014|San Diego State
+Adam|Terry|LT|19820901|Syracuse
 Frank|Gore|RB|19830514|Miami
-Oshiomogho|Atogwe|S|19810623|
-Charlie|Frye|QB|19810828|
-Courtney|Roby|WR|19830110|
-Andrew|Walter|QB|19820511|
-Channing|Crowder|OLB|19831202|
+Oshiomogho|Atogwe|S|19810623|Stanford
+Charlie|Frye|QB|19810828|Akron
+Courtney|Roby|WR|19830110|Indiana
+Andrew|Walter|QB|19820511|Arizona State
+Channing|Crowder|OLB|19831202|Florida
 Alex|Smith|TE|19820522|Stanford
-Stanley|Wilson|CB|19821105|
-Vernand|Morency|RB|19800204|
+Stanley|Wilson|CB|19821105|Stanford
+Vernand|Morency|RB|19800204|Oklahoma State
 Justin|Tuck|DE|19830329|Notre Dame
-Eric|Green|CB|19820316|
-Karl|Paymah|CB|19821129|
-Ryan|Moats|RB|19821217|
-Kirk|Morrison|MLB|19820219|
+Eric|Green|CB|19820316|Virginia Tech
+Karl|Paymah|CB|19821129|Washington State
+Ryan|Moats|RB|19821217|Louisiana Tech
+Kirk|Morrison|MLB|19820219|San Diego State
 Evan|Mathis|LG|19811101|Alabama
-Alfred|Fincher|MLB|19830815|
-Chris|Henry|WR|19830517|
-Ellis|Hobbs|CB|19830516|
+Alfred|Fincher|MLB|19830815|Connecticut
+Chris|Henry|WR|19830517|West Virginia
+Ellis|Hobbs|CB|19830516|Iowa State
 David|Greene|QB|19820622|
-Scott|Starks|CB|19830627|
-Sione|Pouha|DT|19790203|
-Atiyyah|Ellison|DT|19810929|
+Scott|Starks|CB|19830627|Wisconsin
+Sione|Pouha|DT|19790203|Utah
+Atiyyah|Ellison|DT|19810929|Missouri
 Chris|Colmer|LT|19801121|
 Vincent|Burns|DT|19810621|
-Trai|Essex|LT|19821205|
-Adam|Snyder|LT|19820130|
-Darryl|Blackstock|OLB|19830530|
-Brandon|Jones|WR|19821006|
-Domonique|Foxworth|CB|19830327|
-LeRoy|Hill|OLB|19820914|
+Trai|Essex|LT|19821205|Northwestern
+Adam|Snyder|LT|19820130|Oregon
+Darryl|Blackstock|OLB|19830530|Virginia
+Brandon|Jones|WR|19821006|Oklahoma
+Domonique|Foxworth|CB|19830327|Maryland
+LeRoy|Hill|OLB|19820914|Clemson
 Dustin|Colquitt|P|19820506|Tennessee
-Nick|Kaczur|LT|19790728|
-Sean|Considine|S|19821217|
-Antonio|Perkins|CB|19820109|
-Travis|Daniels|CB|19820908|
-Ray|Willis|LT|19820813|
-Kyle|Orton|QB|19821114|
-Dan|Buenning|LG|19811026|
-Vincent|Fuller|S|19820803|
-Marion|Barber|RB|19830610|
-Brandon|Jacobs|RB|19820706|
-Elton|Brown|LG|19820522|
-Ciatrick|Fason|RB|19821029|
-David|Stewart|LT|19820828|
-Jerome|Mathis|WR|19830726|
-Marviel|Underwood|S|19820217|
-Craphonso|Thorpe|WR|19830627|
-Eric|Ghiaciuc|C|19810528|
+Nick|Kaczur|LT|19790728|Toledo
+Sean|Considine|S|19821217|Iowa
+Antonio|Perkins|CB|19820109|Oklahoma
+Travis|Daniels|CB|19820908|Louisiana State
+Ray|Willis|LT|19820813|Florida State
+Kyle|Orton|QB|19821114|Purdue
+Dan|Buenning|LG|19811026|Wisconsin
+Vincent|Fuller|S|19820803|Virginia Tech
+Marion|Barber|RB|19830610|Minnesota
+Brandon|Jacobs|RB|19820706|Southern Illinois
+Elton|Brown|LG|19820522|Virginia
+Ciatrick|Fason|RB|19821029|Florida
+David|Stewart|LT|19820828|Mississippi State
+Jerome|Mathis|WR|19830726|Hampton
+Marviel|Underwood|S|19820217|San Diego State
+Craphonso|Thorpe|WR|19830627|Florida State
+Eric|Ghiaciuc|C|19810528|Central Michigan
 Stefan|LeFors|QB|19810607|
-Duke|Preston|LG|19820612|
-Kerry|Rhodes|S|19820802|
-Jason|Brown|LG|19830505|
-Brady|Poppinga|OLB|19790921|
+Duke|Preston|LG|19820612|Illinois
+Kerry|Rhodes|S|19820802|Louisville
+Jason|Brown|LG|19830505|North Carolina
+Brady|Poppinga|OLB|19790921|Brigham Young
 Todd|Herremans|LG|19821013|Saginaw Valley
-Alvin|Pearman|RB|19820810|
-Chauncey|Davis|DE|19830127|
-Dylan|Gandy|C|19820308|
+Alvin|Pearman|RB|19820810|Virginia
+Chauncey|Davis|DE|19830127|Florida State
+Dylan|Gandy|C|19820308|Texas Tech
 Darren|Sproles|RB|19830620|Kansas State
 Chris|Canty|DE|19821110|Virginia
-James|Sanders|S|19831111|
-Claude|Terrell|LG|19820420|
-Matt|Giordano|S|19821016|
-Roydell|Williams|WR|19810314|
-Ronald|Fields|DT|19810913|
-Boomer|Grigsby|MLB|19811115|
-David|McMillan|OLB|19810920|
-Airese|Currie|WR|19821116|
-Donte|Nicholson|S|19811218|
-Damien|Nash|RB|19820414|
-Jerome|Collins|TE|19820818|
+James|Sanders|S|19831111|Fresno State
+Claude|Terrell|LG|19820420|New Mexico
+Matt|Giordano|S|19821016|California
+Roydell|Williams|WR|19810314|Tulane
+Ronald|Fields|DT|19810913|Mississippi State
+Boomer|Grigsby|MLB|19811115|Illinois State
+David|McMillan|OLB|19810920|Kansas
+Airese|Currie|WR|19821116|Clemson
+Donte|Nicholson|S|19811218|Oklahoma
+Damien|Nash|RB|19820414|Missouri
+Jerome|Collins|TE|19820818|Notre Dame
 Dan|Orlovsky|QB|19830818|Connecticut
 Trent|Cole|DE|19821005|Cincinnati
 Alphonso|Hodge|CB|19820530|
-Jonathan|Welsh|DE|19820609|
-Adam|Seward|MLB|19820615|
-Daniel|Loper|LT|19820115|
-Drew|Hodgdon|C|19811115|
+Jonathan|Welsh|DE|19820609|Wisconsin
+Adam|Seward|MLB|19820615|Nevada-Las Vegas
+Daniel|Loper|LT|19820115|Texas Tech
+Drew|Hodgdon|C|19811115|Arizona State
 Adrian|McPherson|QB|19830508|
-Robert|McCune|MLB|19790309|
-Eric|King|CB|19820510|
-Gerald|Sensabaugh|S|19830613|
-Justin|Green|FB|19820430|
-Michael|Boley|OLB|19820824|
-Anthony|Alabi|LT|19810216|
-Frank|Omiyale|LT|19821123|
-Rian|Wallace|MLB|19820524|
-Michael|Hawkins|CB|19830715|
-Lance|Mitchell|MLB|19811009|
-Geoff|Hangartner|LG|19820422|
-Ben|Emanuel|S|19820618|
-Scott|Young|LG|19810715|
-Rasheed|Marshall|WR|19810711|
-Anttaj|Hawthorne|DT|19811115|
-Nick|Speegle|OLB|19811129|
-Wes|Sims|LG|19810408|
-Anthony|Bryant|DT|19811106|
-Bo|Scaife|TE|19810106|
-Mike|Montgomery|DE|19830818|
-Chris|Harris|S|19820806|
-Cedric|Houston|RB|19820628|
-Bill|Swancutt|DE|19820904|
-Chad|Owens|WR|19820403|
-Eric|Moore|DE|19810228|
-Will|Svitek|LT|19820108|
-C.C.|Brown|S|19830127|
-Jovan|Haye|DE|19820621|
-Tab|Perry|WR|19820120|
+Robert|McCune|MLB|19790309|Louisville
+Eric|King|CB|19820510|Wake Forest
+Gerald|Sensabaugh|S|19830613|North Carolina
+Justin|Green|FB|19820430|Montana
+Michael|Boley|OLB|19820824|Southern Mississippi
+Anthony|Alabi|LT|19810216|Texas Christian
+Frank|Omiyale|LT|19821123|Tennessee Tech
+Rian|Wallace|MLB|19820524|Temple
+Michael|Hawkins|CB|19830715|Oklahoma
+Lance|Mitchell|MLB|19811009|Oklahoma
+Geoff|Hangartner|LG|19820422|Texas A&M
+Ben|Emanuel|S|19820618|UCLA
+Scott|Young|LG|19810715|Brigham Young
+Rasheed|Marshall|WR|19810711|West Virginia
+Anttaj|Hawthorne|DT|19811115|Wisconsin
+Nick|Speegle|OLB|19811129|New Mexico
+Wes|Sims|LG|19810408|Oklahoma
+Anthony|Bryant|DT|19811106|Alabama
+Bo|Scaife|TE|19810106|Texas
+Mike|Montgomery|DE|19830818|Texas A&M
+Chris|Harris|S|19820806|Louisiana-Monroe
+Cedric|Houston|RB|19820628|Tennessee
+Bill|Swancutt|DE|19820904|Oregon State
+Chad|Owens|WR|19820403|Hawaii
+Eric|Moore|DE|19810228|Florida State
+Will|Svitek|LT|19820108|Stanford
+C.C.|Brown|S|19830127|Louisiana-Lafayette
+Jovan|Haye|DE|19820621|Vanderbilt
+Tab|Perry|WR|19820120|UCLA
 C.J.|Mosley|DT|19830806|Missouri
-Dante'|Ridgeway|WR|19840418|
-Jason|Jefferson|DT|19811220|
-Justin|Geisinger|LG|19820524|
-Joel|Dreessen|TE|19820726|
-Patrick|Thomas|OLB|19830126|
-Khari|Long|DE|19820523|
-Chris|Myers|LG|19810915|
-DeAndra|Cobb|RB|19810518|
-Dave|Rayner|K|19821026|
-Derrick|Johnson|CB|19820209|
-Johnathan|Goddard|MLB|19810511|
+Dante'|Ridgeway|WR|19840418|Ball State
+Jason|Jefferson|DT|19811220|Wisconsin
+Justin|Geisinger|LG|19820524|Vanderbilt
+Joel|Dreessen|TE|19820726|Colorado State
+Patrick|Thomas|OLB|19830126|North Carolina State
+Khari|Long|DE|19820523|Baylor
+Chris|Myers|LG|19810915|Miami (Florida)
+DeAndra|Cobb|RB|19810518|Michigan State
+Dave|Rayner|K|19821026|Michigan State
+Derrick|Johnson|CB|19820209|Washington
+Johnathan|Goddard|MLB|19810511|Marshall
 Joe|Berger|LG|19820525|Michigan Tech
-Rob|Petitti|LT|19820521|
-Reggie|Hodges|P|19820126|
+Rob|Petitti|LT|19820521|Pittsburgh
+Reggie|Hodges|P|19820126|Ball State
 Calvin|Armstrong|LT|19820331|
-Ryan|Riddle|OLB|19810705|
+Ryan|Riddle|OLB|19810705|California
 Derek|Anderson|QB|19830615|Oregon State
-Daven|Holly|CB|19820808|
-Reynaldo|Hill|CB|19820828|
-Rick|Razzano|FB|19810128|
-Nehemiah|Broughton|FB|19821104|
-Marcus|Maxwell|WR|19830708|
+Daven|Holly|CB|19820808|Cincinnati
+Reynaldo|Hill|CB|19820828|Florida
+Rick|Razzano|FB|19810128|Mississippi
+Nehemiah|Broughton|FB|19821104|The Citadel
+Marcus|Maxwell|WR|19830708|Oregon
 Jay|Ratliff|DE|19810829|Auburn
-Paris|Warren|WR|19820906|
-LeRon|McCoy|WR|19820124|
-Kenneth|Pettway|MLB|19821113|
+Paris|Warren|WR|19820906|Utah
+LeRon|McCoy|WR|19820124|Indiana (Pennsylvania)
+Kenneth|Pettway|MLB|19821113|Grambling State
 Shaun|Nua|DE|19810522|
 Matt|Cassel|QB|19820517|USC
-Hamza|Abdullah|CB|19830820|
-Jimmy|Verdon|DE|19811104|
-Jonathan|Fanene|DE|19820319|
-Mike|Smith|MLB|19810902|
-Cornelius|Wortham|MLB|19820125|
-Lionel|Gates|RB|19820313|
-Chris|Roberson|CB|19830603|
-Jeremy|Parquet|LT|19820411|
-Paul|Ernster|P|19820126|
-Harry|Williams|WR|19820810|
-Darrell|Shropshire|DT|19830318|
-Scott|Mruczkowski|LG|19820405|
-Noah|Herron|RB|19820403|
-William|Whitticker|LG|19820802|
-Billy|Bajema|TE|19821031|
-Patrick|Estes|LT|19830214|
-Keyonta|Marshall|DT|19810813|
+Hamza|Abdullah|CB|19830820|Washington State
+Jimmy|Verdon|DE|19811104|Arizona State
+Jonathan|Fanene|DE|19820319|Utah
+Mike|Smith|MLB|19810902|Texas Tech
+Cornelius|Wortham|MLB|19820125|Alabama
+Lionel|Gates|RB|19820313|Louisville
+Chris|Roberson|CB|19830603|Eastern Michigan
+Jeremy|Parquet|LT|19820411|Southern Mississippi
+Paul|Ernster|P|19820126|Northern Arizona
+Harry|Williams|WR|19820810|Tuskegee
+Darrell|Shropshire|DT|19830318|South Carolina
+Scott|Mruczkowski|LG|19820405|Bowling Green State
+Noah|Herron|RB|19820403|Northwestern
+William|Whitticker|LG|19820802|Michigan State
+Billy|Bajema|TE|19821031|Oklahoma State
+Patrick|Estes|LT|19830214|Virginia
+Keyonta|Marshall|DT|19810813|Grand Valley State
 Ryan|Fitzpatrick|QB|19821124|Harvard
-Madison|Hedgecock|FB|19810827|
+Madison|Hedgecock|FB|19810827|North Carolina
 J.R.|Russell|WR|19811205|
-Doug|Nienhuis|LG|19820216|
+Doug|Nienhuis|LG|19820216|Oregon State
 Billy|Parker|CB|19810517|
-Chase|Blackburn|MLB|19830610|
-Manuel|Wright|DT|19840413|
-Brandon|Childress|WR|19820331|
-Gregg|Guenther|TE|19820129|
-Terry|Butler|RB|19820802|
-B.J.|Ward|S|19811104|
-Dimitri|Patterson|CB|19830618|
-Michael|Jennings|WR|19790907|
-Eric|Powell|DE|19791116|
-Earl|Cochran|DE|19810419|
-Bennie|Joppru|TE|19800105|
-John|Standeford|WR|19820415|
-Dave|Pearson|C|19810329|
-Ruvell|Martin|WR|19820810|
-Kendrick|Mosley|WR|19810721|
+Chase|Blackburn|MLB|19830610|Akron
+Manuel|Wright|DT|19840413|Southern California
+Brandon|Childress|WR|19820331|Ohio State
+Gregg|Guenther|TE|19820129|Southern California
+Terry|Butler|RB|19820802|Villanova
+B.J.|Ward|S|19811104|Florida State
+Dimitri|Patterson|CB|19830618|Tuskegee
+Michael|Jennings|WR|19790907|Florida State
+Eric|Powell|DE|19791116|Florida State
+Earl|Cochran|DE|19810419|Alabama State
+Bennie|Joppru|TE|19800105|Michigan
+John|Standeford|WR|19820415|Purdue
+Dave|Pearson|C|19810329|Michigan
+Ruvell|Martin|WR|19820810|Saginaw Valley State
+Kendrick|Mosley|WR|19810721|Western Michigan
 Darrell|Campbell|DT|19810706|
-Anthony|Oakley|C|19810816|
-Jamaine|Winborne|CB|19801226|
+Anthony|Oakley|C|19810816|Western Kentucky
+Jamaine|Winborne|CB|19801226|Virginia
 Claude|Harriott|DE|19810408|
-Brandon|Miree|RB|19810414|
-Jorge|Cordova|OLB|19810925|
-Andrew|Economos|C|19820624|
+Brandon|Miree|RB|19810414|Pittsburgh
+Jorge|Cordova|OLB|19810925|Nevada-Reno
+Andrew|Economos|C|19820624|Georgia Tech
 John|Kuhn|FB|19820909|Shippensburg
-Erik|Pears|LT|19820625|
-Marquis|Weeks|RB|19801002|
-Herana-Daze|Jones|S|19820415|
-Ben|Wilkerson|C|19821122|
+Erik|Pears|LT|19820625|Colorado State
+Marquis|Weeks|RB|19801002|Virginia
+Herana-Daze|Jones|S|19820415|Indiana
+Ben|Wilkerson|C|19821122|Louisiana State
 Shane|Boyd|QB|19820918|
-Robert|Douglas|RB|19820725|
-Kay-Jay|Harris|RB|19790327|
-Shirdonya|Mitchell|CB|19820516|
-Keith|Joseph|FB|19811209|
+Robert|Douglas|RB|19820725|Memphis
+Kay-Jay|Harris|RB|19790327|West Virginia
+Shirdonya|Mitchell|CB|19820516|Missouri
+Keith|Joseph|FB|19811209|Texas A&M
 Lang|Campbell|QB|19810925|
-Tyson|Smith|MLB|19811009|
-Mike|Kracalik|LT|19820908|
-Michael|Bragg|CB|19811213|
-Antwain|Spann|CB|19830222|
+Tyson|Smith|MLB|19811009|Iowa State
+Mike|Kracalik|LT|19820908|San Diego State
+Michael|Bragg|CB|19811213|Texas A&M-Kingsville
+Antwain|Spann|CB|19830222|Louisiana-Lafayette
 Nick|Steitz|LG|19820818|
-Clint|Stickdorn|LT|19820430|
-Jonas|Seawright|DT|19820412|
-Abram|Elam|S|19811015|
-Greg|Camarillo|WR|19820418|
-Jack|Hunt|S|19811130|
-Dan|Cody|OLB|19811201|
-Eric|Shelton|RB|19830623|
+Clint|Stickdorn|LT|19820430|Cincinnati
+Jonas|Seawright|DT|19820412|North Carolina
+Abram|Elam|S|19811015|Kent State
+Greg|Camarillo|WR|19820418|Stanford
+Jack|Hunt|S|19811130|Louisiana State
+Dan|Cody|OLB|19811201|Oklahoma
+Eric|Shelton|RB|19830623|Louisville
 Richie|Incognito|LG|19830705|Nebraska
-Kevin|Everett|TE|19820205|
-Jordan|Beck|MLB|19830418|
-Wesley|Britt|LT|19811121|
-Tyjuan|Hagler|OLB|19811203|
-Kevin|Vickerson|DT|19830108|
-Rod|Wilson|MLB|19811112|
-Rashad|Jeanty|OLB|19830417|
-Kevin|Huntley|DE|19820408|
+Kevin|Everett|TE|19820205|Miami (Florida)
+Jordan|Beck|MLB|19830418|Cal Poly (San Luis Obispo)
+Wesley|Britt|LT|19811121|Alabama
+Tyjuan|Hagler|OLB|19811203|Cincinnati
+Kevin|Vickerson|DT|19830108|Michigan State
+Rod|Wilson|MLB|19811112|South Carolina
+Rashad|Jeanty|OLB|19830417|Central Florida
+Kevin|Huntley|DE|19820408|Kansas State
 Casey|Printers|QB|19810516|
 Jon|Ryan|P|19811126|Regina (Canada)
 Mario|Williams|DE|19850131|North Carolina State
-Paul|Carrington|DE|19821111|
+Paul|Carrington|DE|19821111|Central Florida
 Daniel|Fells|TE|19830923|California-Davis
-T.J.|Jackson|DT|19831212|
-Nick|Turnbull|CB|19810728|
-Naufahu|Tahi|FB|19811030|
+T.J.|Jackson|DT|19831212|Auburn
+Nick|Turnbull|CB|19810728|Florida International
+Naufahu|Tahi|FB|19811030|Brigham Young
 Wendell|Mathis|RB|19830928|
-Tyler|Everett|S|19831104|
-Antwon|Burton|DT|19830711|
-Jason|Carter|WR|19820915|
-Brian|Clark|WR|19831226|
-Na'Shan|Goddard|LT|19830423|
-Marcus|Green|DT|19830927|
-Darcy|Johnson|TE|19830211|
+Tyler|Everett|S|19831104|Ohio State
+Antwon|Burton|DT|19830711|Temple
+Jason|Carter|WR|19820915|Texas A&M
+Brian|Clark|WR|19831226|North Carolina State
+Na'Shan|Goddard|LT|19830423|South Carolina
+Marcus|Green|DT|19830927|Ohio State
+Darcy|Johnson|TE|19830211|Central Florida
 Nick|Mihlhauser|C|19840706|
-De De|Dorsey|RB|19840801|
-John|Busing|S|19830901|
-Frank|Davis|LG|19810822|
-Shaun|Bodiford|WR|19820504|
+De De|Dorsey|RB|19840801|Lindenwood
+John|Busing|S|19830901|Miami (Ohio)
+Frank|Davis|LG|19810822|South Florida
+Shaun|Bodiford|WR|19820504|Portland State
 R.J.|Cobbs|CB|19820726|
-Charles|Gordon|CB|19840718|
-James|Sims|RB|19830214|
-Chris|Taylor|RB|19831107|
+Charles|Gordon|CB|19840718|Kansas
+James|Sims|RB|19830214|Washington
+Chris|Taylor|RB|19831107|Indiana
 John|Walker|CB|19830425|
 Steven|Jackson|FB|19840511|
-Chris|Barclay|RB|19831015|
-Brett|Basanez|QB|19830511|
-Rob|Smith|C|19840308|
-Taye|Biddle|WR|19830227|
-Sean|Conover|DE|19840731|
-Dion|Byrum|CB|19830218|
-Cooper|Wallace|TE|19820426|
-P.J.|Pope|RB|19840226|
-Chris|Francies|WR|19820726|
-Jason|Hunter|DE|19830828|
-Oliver|Hoyte|FB|19841005|
-Jayme|Mitchell|DE|19840315|
+Chris|Barclay|RB|19831015|Wake Forest
+Brett|Basanez|QB|19830511|Northwestern
+Rob|Smith|C|19840308|Tennessee
+Taye|Biddle|WR|19830227|Mississippi
+Sean|Conover|DE|19840731|Bucknell
+Dion|Byrum|CB|19830218|Ohio University
+Cooper|Wallace|TE|19820426|Auburn
+P.J.|Pope|RB|19840226|Bowling Green State
+Chris|Francies|WR|19820726|Texas-El Paso
+Jason|Hunter|DE|19830828|Appalachian State
+Oliver|Hoyte|FB|19841005|North Carolina State
+Jayme|Mitchell|DE|19840315|Mississippi
 Donald|Penn|LT|19830427|Utah State
-John|Madsen|TE|19830509|
-Lance|Laury|MLB|19820117|
-Zac|Alcorn|TE|19800824|
-Jarrett|Bush|CB|19840521|
+John|Madsen|TE|19830509|Utah
+Lance|Laury|MLB|19820117|South Carolina
+Zac|Alcorn|TE|19800824|Black Hills State
+Jarrett|Bush|CB|19840521|Utah State
 Miles|Austin|WR|19840630|Monmouth, N.J.
-Daniel|Federkeil|LT|19831109|
-John|DiGiorgio|MLB|19820629|
-Ricky|Brown|MLB|19831227|
-Will|Buchanon|WR|19830405|
-A.J.|Schable|DE|19840518|
-Sam|Hurd|WR|19850424|
+Daniel|Federkeil|LT|19831109|Calgary
+John|DiGiorgio|MLB|19820629|Saginaw Valley State
+Ricky|Brown|MLB|19831227|Boston College
+Will|Buchanon|WR|19830405|Southern California
+A.J.|Schable|DE|19840518|South Dakota
+Sam|Hurd|WR|19850424|Northern Illinois
 Stephen|Bowen|DE|19840328|Hofstra
-Darrell|Hunter|CB|19831129|
+Darrell|Hunter|CB|19831129|Miami (Ohio)
 Derek|Miller|TE|19830610|
-Boone|Stutz|C|19821104|
-Micheal|Spurlock|WR|19830131|
-Martin|Nance|WR|19830526|
-Steve|Gregory|CB|19830108|
-Brandon|McKinney|DT|19830824|
-Quincy|Butler|CB|19831125|
-Mike|Bell|RB|19830423|
-Hank|Baskett|WR|19820904|
-Pierre|Woods|OLB|19820106|
-Corey|Mays|MLB|19831127|
-Devale|Ellis|WR|19840402|
-Jereme|Perry|CB|19811215|
+Boone|Stutz|C|19821104|Texas A&M
+Micheal|Spurlock|WR|19830131|Mississippi
+Martin|Nance|WR|19830526|Miami (Ohio)
+Steve|Gregory|CB|19830108|Syracuse
+Brandon|McKinney|DT|19830824|Michigan State
+Quincy|Butler|CB|19831125|Texas Christian
+Mike|Bell|RB|19830423|Arizona
+Hank|Baskett|WR|19820904|New Mexico
+Pierre|Woods|OLB|19820106|Michigan
+Corey|Mays|MLB|19831127|Notre Dame
+Devale|Ellis|WR|19840402|Hofstra
+Jereme|Perry|CB|19811215|Eastern Michigan
 Quinton|Porter|QB|19821228|
-Cletis|Gordon|CB|19830423|
-John|Eubanks|CB|19830713|
-Mike|Espy|WR|19821129|
-Anthony|Madison|CB|19811008|
-Richard|Collier|LT|19811023|
-Jamaal|Fudge|S|19830517|
-Brian|Iwuh|MLB|19840308|
+Cletis|Gordon|CB|19830423|Jackson State
+John|Eubanks|CB|19830713|Southern Mississippi
+Mike|Espy|WR|19821129|Mississippi
+Anthony|Madison|CB|19811008|Alabama
+Richard|Collier|LT|19811023|Valdosta State
+Jamaal|Fudge|S|19830517|Clemson
+Brian|Iwuh|MLB|19840308|Colorado
 Tony|McDaniel|DT|19850120|Tennessee
-Montell|Owens|FB|19840504|
+Montell|Owens|FB|19840504|Maine
 Charles|Sharon|WR|19830404|
 Steve|Weatherford|P|19821217|Illinois
-William|Kershaw|MLB|19831215|
+William|Kershaw|MLB|19831215|Maryland
 Ed|Blanton|LT|19821023|
-Jamie|Thompson|S|19830525|
-Joe|Sykes|DE|19821122|
-Stacy|Tutt|RB|19820808|
+Jamie|Thompson|S|19830525|Oklahoma State
+Joe|Sykes|DE|19821122|Southern University
+Stacy|Tutt|RB|19820808|Richmond
 Chris|Hannon|WR|19840218|
 Tim|Sandidge|DT|19830612|
-Cory|Ross|RB|19820922|
-Nick|Cole|C|19840728|
-Torrance|Daniels|MLB|19811227|
+Cory|Ross|RB|19820922|Nebraska
+Nick|Cole|C|19840728|New Mexico State
+Torrance|Daniels|MLB|19811227|Harding
 Patrick|McCoy|LT|19801214|
-Ronnie|Prude|CB|19820604|
-Wallace|Wright|WR|19840201|
-Patrick|Cobbs|RB|19830131|
-Glenn|Holt|WR|19840731|
-Kevin|Dockery|CB|19840108|
-Marcus|Vick|WR|19840320|
-Brandon|Jamison|OLB|19810731|
+Ronnie|Prude|CB|19820604|Louisiana State
+Wallace|Wright|WR|19840201|North Carolina
+Patrick|Cobbs|RB|19830131|North Texas
+Glenn|Holt|WR|19840731|Kentucky
+Kevin|Dockery|CB|19840108|Mississippi State
+Marcus|Vick|WR|19840320|Virginia Tech
+Brandon|Jamison|OLB|19810731|West Georgia
 Gerard|Ross|CB|19821227|
-Steve|Williams|DT|19810921|
-Rudy|Niswanger|C|19821109|
-Derrick|Ross|RB|19831229|
+Steve|Williams|DT|19810921|Northwest Missouri State
+Rudy|Niswanger|C|19821109|Louisiana State
+Derrick|Ross|RB|19831229|Tarleton State
 Willie|Colon|LT|19830409|Hofstra
-Hiram|Eugene|S|19801124|
-Jamaal|Branch|RB|19810130|
+Hiram|Eugene|S|19801124|Louisiana Tech
+Jamaal|Branch|RB|19810130|Colgate
 Reggie|Bush|RB|19850302|USC
-Vince|Young|QB|19830518|
+Vince|Young|QB|19830518|Texas
 D'Brickashaw|Ferguson|LT|19831210|Virginia
-A.J.|Hawk|OLB|19840106|
+A.J.|Hawk|OLB|19840106|Ohio State
 Vernon|Davis|TE|19840131|Maryland
-Michael|Huff|S|19830306|
+Michael|Huff|S|19830306|Texas
 Donte|Whitner|S|19850724|Ohio State
-Ernie|Sims|OLB|19841223|
-Matt|Leinart|QB|19830511|
+Ernie|Sims|OLB|19841223|Florida State
+Matt|Leinart|QB|19830511|Southern California
 Jay|Cutler|QB|19830429|Vanderbilt
 Haloti|Ngata|DT|19840121|Oregon
-Kamerion|Wimbley|OLB|19831013|
-Brodrick|Bunkley|DT|19831123|
-Tye|Hill|CB|19820603|
-Jason|Allen|S|19830705|
-Bobby|Carpenter|MLB|19830801|
-Antonio|Cromartie|CB|19840415|
+Kamerion|Wimbley|OLB|19831013|Florida State
+Brodrick|Bunkley|DT|19831123|Florida State
+Tye|Hill|CB|19820603|Clemson
+Jason|Allen|S|19830705|Tennessee
+Bobby|Carpenter|MLB|19830801|Ohio State
+Antonio|Cromartie|CB|19840415|Florida State
 Tamba|Hali|DE|19831103|Penn State
-Laurence|Maroney|RB|19850205|
-Manny|Lawson|OLB|19840703|
-Davin|Joseph|LG|19831122|
+Laurence|Maroney|RB|19850205|Minnesota
+Manny|Lawson|OLB|19840703|North Carolina State
+Davin|Joseph|LG|19831122|Oklahoma
 Johnathan|Joseph|CB|19840416|South Carolina
-Santonio|Holmes|WR|19840303|
-John|McCargo|DT|19830819|
+Santonio|Holmes|WR|19840303|Ohio State
+John|McCargo|DT|19830819|North Carolina State
 DeAngelo|Williams|RB|19830425|Memphis
 Marcedes|Lewis|TE|19840519|UCLA
 Nick|Mangold|C|19840113|Ohio State
-Joseph|Addai|RB|19830503|
-Kelly|Jennings|CB|19821130|
-Mathias|Kiwanuka|OLB|19830308|
+Joseph|Addai|RB|19830503|Louisiana State
+Kelly|Jennings|CB|19821130|Miami (Florida)
+Mathias|Kiwanuka|OLB|19830308|Boston College
 DeMeco|Ryans|MLB|19840728|Alabama
 D'Qwell|Jackson|MLB|19830926|Maryland
-Rocky|McIntosh|MLB|19821115|
-Chad|Jackson|WR|19850306|
-Jimmy|Williams|S|19840308|
-Thomas|Howard|MLB|19830714|
-Winston|Justice|LT|19840914|
-Daniel|Bullocks|S|19830228|
-Deuce|Lutui|LG|19830505|
-Danieal|Manning|S|19820809|
+Rocky|McIntosh|MLB|19821115|Miami (Florida)
+Chad|Jackson|WR|19850306|Florida
+Jimmy|Williams|S|19840308|Virginia Tech
+Thomas|Howard|MLB|19830714|Texas-El Paso
+Winston|Justice|LT|19840914|Southern California
+Daniel|Bullocks|S|19830228|Nebraska
+Deuce|Lutui|LG|19830505|Southern California
+Danieal|Manning|S|19820809|Abilene Christian
 Roman|Harper|S|19821211|Alabama
-Sinorice|Moss|WR|19831228|
-LenDale|White|RB|19841220|
-Joe|Klopfenstein|TE|19831109|
-Daryn|Colledge|LT|19820211|
-Cedric|Griffin|CB|19821111|
+Sinorice|Moss|WR|19831228|Miami (Florida)
+LenDale|White|RB|19841220|Southern California
+Joe|Klopfenstein|TE|19831109|Colorado
+Daryn|Colledge|LT|19820211|Boise State
+Cedric|Griffin|CB|19821111|Texas
 Kellen|Clemens|QB|19830606|Oregon
-Marcus|McNeill|LT|19831116|
-Ryan|Cook|LT|19830508|
+Marcus|McNeill|LT|19831116|Auburn
+Ryan|Cook|LT|19830508|New Mexico
 Greg|Jennings|WR|19830921|Western Michigan
 Anthony|Fasano|TE|19840420|Notre Dame
-Bernard|Pollard|S|19841223|
+Bernard|Pollard|S|19841223|Purdue
 Andrew|Whitworth|LT|19811212|Louisiana State
 Chris|Chester|LG|19830112|Oklahoma
 Devin|Hester|WR|19821104|Miami (Fla.)
-Richard|Marshall|CB|19841212|
-Jeremy|Trueblood|LT|19830510|
-Maurice|Jones-Drew|RB|19850323|
-Tony|Scheffler|TE|19830215|
+Richard|Marshall|CB|19841212|Fresno State
+Jeremy|Trueblood|LT|19830510|Boston College
+Maurice|Jones-Drew|RB|19850323|UCLA
+Tony|Scheffler|TE|19830215|Western Michigan
 Tim|Jennings|CB|19831224|Georgia
 Darryl|Tapp|DE|19840913|Virginia Tech
 Tarvaris|Jackson|QB|19830421|Alabama State
-Charles|Spencer|LT|19820317|
+Charles|Spencer|LT|19820317|Pittsburgh
 Eric|Winston|LT|19831117|Miami (Fla.)
-Abdul|Hodge|MLB|19820909|
-Claude|Wroten|DT|19830916|
-Paul|McQuistan|LG|19830430|
-Ashton|Youboty|CB|19840707|
-Leonard|Pope|TE|19830910|
-Brian|Calhoun|RB|19840508|
-Jason|Spitz|LG|19821219|
-Anthony|Schlegel|MLB|19810301|
-Jon|Alston|OLB|19830604|
-Travis|Wilson|WR|19840211|
-Jerious|Norwood|RB|19830729|
-Clint|Ingram|OLB|19830321|
-Charlie|Whitehurst|QB|19820806|
-Derek|Hagan|WR|19840921|
-Anthony|Smith|S|19830920|
-Brandon|Williams|WR|19840224|
-Brodie|Croyle|QB|19830206|
-David|Thomas|TE|19830705|
-David|Pittman|CB|19831014|
+Abdul|Hodge|MLB|19820909|Iowa
+Claude|Wroten|DT|19830916|Louisiana State
+Paul|McQuistan|LG|19830430|Weber State
+Ashton|Youboty|CB|19840707|Ohio State
+Leonard|Pope|TE|19830910|Georgia
+Brian|Calhoun|RB|19840508|Wisconsin
+Jason|Spitz|LG|19821219|Louisville
+Anthony|Schlegel|MLB|19810301|Ohio State
+Jon|Alston|OLB|19830604|Stanford
+Travis|Wilson|WR|19840211|Oklahoma
+Jerious|Norwood|RB|19830729|Mississippi State
+Clint|Ingram|OLB|19830321|Oklahoma
+Charlie|Whitehurst|QB|19820806|Clemson
+Derek|Hagan|WR|19840921|Arizona State
+Anthony|Smith|S|19830920|Syracuse
+Brandon|Williams|WR|19840224|Wisconsin
+Brodie|Croyle|QB|19830206|Alabama
+David|Thomas|TE|19830705|Texas
+David|Pittman|CB|19831014|Northwestern State (Louisiana)
 James|Anderson|OLB|19830926|Virginia Tech
-Rashad|Butler|LT|19830210|
-Maurice|Stovall|WR|19850221|
+Rashad|Butler|LT|19830210|Miami (Florida)
+Maurice|Stovall|WR|19850221|Notre Dame
 Frostee|Rucker|DE|19830914|USC
 Jason|Hatcher|DE|19820713|Grambling State
-Dominique|Byrd|TE|19840207|
-Freddy|Keiaho|OLB|19821218|
-Willie|Reid|WR|19820919|
-Gerris|Wilkinson|OLB|19830405|
-Eric|Smith|S|19830317|
+Dominique|Byrd|TE|19840207|Southern California
+Freddy|Keiaho|OLB|19821218|San Diego State
+Willie|Reid|WR|19820919|Florida State
+Gerris|Wilkinson|OLB|19830405|Georgia Tech
+Eric|Smith|S|19830317|Michigan State
 Owen|Daniels|TE|19821109|Wisconsin
-Max|Jean-Gilles|LG|19831119|
-Michael|Robinson|RB|19830206|
-Calvin|Lowry|S|19830213|
-Brad|Smith|WR|19831212|
-Ko|Simpson|S|19831109|
-Garrett|Mills|TE|19831012|
-Gabe|Watson|DT|19830924|
+Max|Jean-Gilles|LG|19831119|Georgia
+Michael|Robinson|RB|19830206|Penn State
+Calvin|Lowry|S|19830213|Penn State
+Brad|Smith|WR|19831212|Missouri
+Ko|Simpson|S|19831109|South Carolina
+Garrett|Mills|TE|19831012|Tulsa
+Gabe|Watson|DT|19830924|Michigan
 Jahri|Evans|LG|19830822|Bloomsburg
 Jason|Avant|WR|19830420|Michigan
-Leon|Williams|MLB|19830730|
-Demetrius|Williams|WR|19830328|
-Isaac|Sowells|LG|19820504|
-Victor|Adeyanju|DE|19830211|
+Leon|Williams|MLB|19830730|Miami (Florida)
+Demetrius|Williams|WR|19830328|Oregon
+Isaac|Sowells|LG|19820504|Indiana
+Victor|Adeyanju|DE|19830211|Indiana
 Will|Blackmon|CB|19841027|Boston College
 Stephen|Tulloch|MLB|19850101|North Carolina State
-Leon|Washington|RB|19820829|
+Leon|Washington|RB|19820829|Florida State
 Stephen|Gostkowski|K|19840128|Memphis
 Brandon|Marshall|WR|19840323|Central Florida
-Jamar|Williams|MLB|19840614|
-Nate|Salley|CB|19840205|
+Jamar|Williams|MLB|19840614|Arizona State
+Nate|Salley|CB|19840205|Ohio State
 Alan|Zemaitis|CB|19820824|
 Domata|Peko|DT|19841127|Michigan State
 Barry|Cofield|DT|19840319|Northwestern
-Skyler|Green|WR|19840912|
+Skyler|Green|WR|19840912|Louisiana State
 Elvis|Dumervil|DE|19840119|Louisville
-Ray|Edwards|DE|19850101|
-Rob|Sims|LG|19831206|
-Guy|Whimper|LT|19830521|
+Ray|Edwards|DE|19850101|Purdue
+Rob|Sims|LG|19831206|Ohio State
+Guy|Whimper|LT|19830521|East Carolina
 P.J.|Daniels|RB|19821221|
-Orien|Harris|DE|19830603|
+Orien|Harris|DE|19830603|Miami (Florida)
 Kyle|Williams|DT|19830610|Louisiana State
 Rob|Ninkovich|DE|19840201|Purdue
-Ryan|O'Callaghan|LT|19830719|
-Terna|Nande|MLB|19830617|
-Pat|Watkins|S|19821218|
-Quinn|Ojinnaka|LT|19840423|
-Parys|Haralson|OLB|19840124|
-Jonathan|Scott|LT|19830110|
-Brandon|Johnson|OLB|19830405|
-Brad|Butler|LT|19830918|
-Jerome|Harrison|RB|19830226|
-Dawan|Landry|S|19821230|
-Ingle|Martin|QB|19820815|
-Greg|Blue|S|19820312|
-Tim|Dobbins|MLB|19821210|
-Anthony|Montgomery|DT|19840308|
-Marcus|Maxey|CB|19830202|
-Jeff|King|TE|19830219|
-Julian|Jenkins|DE|19831025|
-A.J.|Nicholson|MLB|19830625|
-Charlie|Peprah|S|19830224|
-Mark|Anderson|DE|19830526|
-Brent|Hawkins|DE|19830901|
-Chris|Kuper|LG|19821219|
-David|Kirtman|FB|19830212|
-Tony|Moll|LG|19830823|
-Quinn|Sypniewski|TE|19820414|
-Omar|Gaither|MLB|19840318|
-Jesse|Mahelona|DT|19830407|
-Wali|Lundy|RB|19830908|
+Ryan|O'Callaghan|LT|19830719|California
+Terna|Nande|MLB|19830617|Miami (Ohio)
+Pat|Watkins|S|19821218|Florida State
+Quinn|Ojinnaka|LT|19840423|Syracuse
+Parys|Haralson|OLB|19840124|Tennessee
+Jonathan|Scott|LT|19830110|Texas
+Brandon|Johnson|OLB|19830405|Louisville
+Brad|Butler|LT|19830918|Virginia
+Jerome|Harrison|RB|19830226|Washington State
+Dawan|Landry|S|19821230|Georgia Tech
+Ingle|Martin|QB|19820815|Furman
+Greg|Blue|S|19820312|Georgia
+Tim|Dobbins|MLB|19821210|Iowa State
+Anthony|Montgomery|DT|19840308|Minnesota
+Marcus|Maxey|CB|19830202|Miami (Florida)
+Jeff|King|TE|19830219|Virginia Tech
+Julian|Jenkins|DE|19831025|Stanford
+A.J.|Nicholson|MLB|19830625|Florida State
+Charlie|Peprah|S|19830224|Alabama
+Mark|Anderson|DE|19830526|Alabama
+Brent|Hawkins|DE|19830901|Illinois State
+Chris|Kuper|LG|19821219|North Dakota
+David|Kirtman|FB|19830212|Southern California
+Tony|Moll|LG|19830823|Nevada-Reno
+Quinn|Sypniewski|TE|19820414|Colorado
+Omar|Gaither|MLB|19840318|Tennessee
+Jesse|Mahelona|DT|19830407|Tennessee
+Wali|Lundy|RB|19830908|Virginia
 Jonathan|Orr|WR|19830320|
-Reed|Doughty|S|19821104|
+Reed|Doughty|S|19821104|Northern Colorado
 Delanie|Walker|TE|19840812|Central Missouri State
-Kevin|Boothe|LG|19830705|
-Jonathan|Lewis|DT|19840712|
-Keith|Ellison|OLB|19840206|
+Kevin|Boothe|LG|19830705|Cornell
+Jonathan|Lewis|DT|19840712|Virginia Tech
+Keith|Ellison|OLB|19840206|Oregon State
 Dee|McCann|CB|19830424|
-Lawrence|Vickers|FB|19830508|
-Babatunde|Oshinowo|DT|19830114|
-Montavious|Stanley|DT|19811010|
-Johnny|Jolly|DT|19830221|
-Adam|Jennings|WR|19821117|
-Tyrone|Culver|S|19830706|
-Tre'|Stallings|LG|19830108|
-Drew|Coleman|CB|19830422|
-Jeff|Webb|WR|19820131|
+Lawrence|Vickers|FB|19830508|Colorado
+Babatunde|Oshinowo|DT|19830114|Stanford
+Montavious|Stanley|DT|19811010|Louisville
+Johnny|Jolly|DT|19830221|Texas A&M
+Adam|Jennings|WR|19821117|Fresno State
+Tyrone|Culver|S|19830706|Fresno State
+Tre'|Stallings|LG|19830108|Mississippi
+Drew|Coleman|CB|19830422|Texas Christian
+Jeff|Webb|WR|19820131|San Diego State
 Jeremy|Mincey|MLB|19831214|Florida
-Marcus|Hudson|S|19821115|
-Reggie|McNeal|WR|19830920|
-Bruce|Gradkowski|QB|19830127|
-J.D.|Runnels|FB|19840619|
+Marcus|Hudson|S|19821115|North Carolina State
+Reggie|McNeal|WR|19830920|Texas A&M
+Bruce|Gradkowski|QB|19830127|Toledo
+J.D.|Runnels|FB|19840619|Oklahoma
 Kedric|Golston|DT|19830530|Georgia
-Melvin|Oliver|DE|19830725|
-Charlie|Johnson|LT|19840502|
+Melvin|Oliver|DE|19830725|Louisiana State
+Charlie|Johnson|LT|19840502|Oklahoma State
 Marvin|Philip|C|19820203|
 Sam|Koch|P|19820813|Nebraska
-LaJuan|Ramsey|DT|19840319|
+LaJuan|Ramsey|DT|19840319|Southern California
 Dan|Stevenson|LG|19821004|
-Le Kevin|Smith|DT|19820721|
+Le Kevin|Smith|DT|19820721|Nebraska
 Antoine|Bethea|S|19840727|Howard
-Derrick|Martin|CB|19850516|
-Ethan|Kilmer|S|19830131|
+Derrick|Martin|CB|19850516|Wyoming
+Ethan|Kilmer|S|19830131|Penn State
 Zach|Strief|LT|19830922|Northwestern
-Pat|McQuistan|LT|19830430|
-Fred|Evans|DT|19831106|
-James|Wyche|DE|19820419|
-Chris|Morris|C|19830222|
-Cortland|Finnegan|CB|19840202|
-Terrance|Pennington|LT|19830925|
+Pat|McQuistan|LT|19830430|Weber State
+Fred|Evans|DT|19831106|Texas State
+James|Wyche|DE|19820419|Syracuse
+Chris|Morris|C|19830222|Michigan State
+Cortland|Finnegan|CB|19840202|Samford
+Terrance|Pennington|LT|19830925|New Mexico
 Fred|Matua|LG|19840114|
-Todd|Watkins|WR|19830622|
-Ryan|LaCasse|DE|19830206|
-Titus|Adams|DE|19830128|
-Justin|Hamilton|S|19820917|
+Todd|Watkins|WR|19830622|Brigham Young
+Ryan|LaCasse|DE|19830206|Syracuse
+Titus|Adams|DE|19830128|Nebraska
+Justin|Hamilton|S|19820917|Virginia Tech
 D.J.|Shockley|QB|19830323|
-Chase|Page|DT|19830520|
-Jarrad|Page|S|19841019|
-Willie|Andrews|S|19831102|
+Chase|Page|DT|19830520|North Carolina
+Jarrad|Page|S|19841019|UCLA
+Willie|Andrews|S|19831102|Baylor
 Will|Montgomery|LG|19830213|Virginia Tech
-Dee|Webb|CB|19841208|
-Stanley|McClover|DE|19841216|
-T.J.|Rushing|CB|19830608|
-Ryan|Plackemeier|P|19840305|
-Charles|Bennett|DE|19830404|
-Mark|Setterstrom|LG|19840303|
-Tony|Palmer|LG|19830223|
-Tim|Massaquoi|TE|19820708|
-Anthony|Cannon|OLB|19841231|
-Aaron|Merz|C|19830827|
-Ben|Obomanu|WR|19831030|
-David|Anderson|WR|19830728|
+Dee|Webb|CB|19841208|Florida
+Stanley|McClover|DE|19841216|Auburn
+T.J.|Rushing|CB|19830608|Stanford
+Ryan|Plackemeier|P|19840305|Wake Forest
+Charles|Bennett|DE|19830404|Clemson
+Mark|Setterstrom|LG|19840303|Minnesota
+Tony|Palmer|LG|19830223|Missouri
+Tim|Massaquoi|TE|19820708|Michigan
+Anthony|Cannon|OLB|19841231|Tulane
+Aaron|Merz|C|19830827|California
+Ben|Obomanu|WR|19831030|Auburn
+David|Anderson|WR|19830728|Colorado State
 Marques|Colston|WR|19830605|Hofstra
-Khreem|Smith|DE|19790707|
-D'Anthony|Batiste|LG|19820329|
-Ahmard|Hall|FB|19791113|
+Khreem|Smith|DE|19790707|Oklahoma State
+D'Anthony|Batiste|LG|19820329|Louisiana-Lafayette
+Ahmard|Hall|FB|19791113|Texas
 Ahmad|Brooks|MLB|19840314|Virginia
-Jovon|Johnson|CB|19831102|
+Jovon|Johnson|CB|19831102|Iowa
 Anthony|Sherrell|RB|19830813|
-Stylez G|White|DE|19790725|
-Kenton|Keith|RB|19800714|
-Ronnie|Ghent|TE|19800105|
-Justin|Jenkins|WR|19801210|
-Brandon|Middleton|WR|19810102|
-Bobby|Sippio|WR|19801204|
-Mike|Barr|P|19781208|
-Matt|Sinclair|MLB|19820724|
-Ryan|Grant|RB|19821209|
-Aaron|Halterman|TE|19820331|
-Antoine|Harris|S|19820408|
-Brock|Berlin|QB|19810704|
+Stylez G|White|DE|19790725|Minnesota
+Kenton|Keith|RB|19800714|New Mexico State
+Ronnie|Ghent|TE|19800105|Louisville
+Justin|Jenkins|WR|19801210|Mississippi State
+Brandon|Middleton|WR|19810102|Houston
+Bobby|Sippio|WR|19801204|Western Kentucky
+Mike|Barr|P|19781208|Rutgers
+Matt|Sinclair|MLB|19820724|Illinois
+Ryan|Grant|RB|19821209|Notre Dame
+Aaron|Halterman|TE|19820331|Indiana
+Antoine|Harris|S|19820408|Louisville
+Brock|Berlin|QB|19810704|Miami (Florida)
 Orrin|Thompson|LT|19821111|
-Tony|Curtis|TE|19830211|
-Jamaica|Rector|WR|19810810|
-Kyle|Eckel|FB|19811230|
+Tony|Curtis|TE|19830211|Portland State
+Jamaica|Rector|WR|19810810|Northwest Missouri State
+Kyle|Eckel|FB|19811230|Navy
 Lorenzo|Alexander|DT|19830531|California
-Raymond|Ventrone|S|19821021|
-Gary|Gibson|DT|19820505|
-Kevin|Harrison|MLB|19811224|
-Rhys|Lloyd|K|19820605|
-Dustin|Fox|CB|19821008|
-Alex|Haynes|RB|19820213|
-Michael|Gasperson|WR|19820610|
-Chris|Reis|CB|19830919|
-Travis|Williams|MLB|19830120|
-Andre|Hall|RB|19820820|
-Greg|Estandia|TE|19821118|
+Raymond|Ventrone|S|19821021|Villanova
+Gary|Gibson|DT|19820505|Rutgers
+Kevin|Harrison|MLB|19811224|Eastern Michigan
+Rhys|Lloyd|K|19820605|Minnesota
+Dustin|Fox|CB|19821008|Ohio State
+Alex|Haynes|RB|19820213|Central Florida
+Michael|Gasperson|WR|19820610|San Diego
+Chris|Reis|CB|19830919|Georgia Tech
+Travis|Williams|MLB|19830120|Auburn
+Andre|Hall|RB|19820820|South Florida
+Greg|Estandia|TE|19821118|Nevada-Las Vegas
 Jamie|Petrowski|TE|19820712|
-Colin|Allred|MLB|19830415|
-Copeland|Bryan|DE|19830714|
-LaMarcus|Hicks|CB|19830415|
-Jon|Dekker|TE|19830515|
-Mike|Brisiel|LG|19830314|
-Jeff|Charleston|DE|19830119|
+Colin|Allred|MLB|19830415|Baylor
+Copeland|Bryan|DE|19830714|Arizona
+LaMarcus|Hicks|CB|19830415|Iowa State
+Jon|Dekker|TE|19830515|Princeton
+Mike|Brisiel|LG|19830314|Colorado State
+Jeff|Charleston|DE|19830119|Idaho State
 Matt|Prater|K|19840810|Central Florida
-Mark|LeVoir|LT|19820729|
+Mark|LeVoir|LT|19820729|Notre Dame
 Travis|Leffew|LG|19830127|
-Kevin|Hobbs|CB|19830430|
-Steve|Fifita|DT|19820516|
-Dennis|Roland|LT|19830310|
-Anthony|Mix|WR|19830120|
+Kevin|Hobbs|CB|19830430|Auburn
+Steve|Fifita|DT|19820516|Utah
+Dennis|Roland|LT|19830310|Georgia
+Anthony|Mix|WR|19830120|Auburn
 Darrell|Hackney|QB|19830807|
-Nate|Livings|LG|19820316|
-Eric|Bassey|CB|19830103|
-Ryan|Neill|DE|19821212|
+Nate|Livings|LG|19820316|Louisiana State
+Eric|Bassey|CB|19830103|Oklahoma
+Ryan|Neill|DE|19821212|Rutgers
 Tanard|Davis|CB|19830127|
 Tramon|Williams|CB|19830316|Louisiana Tech
-Lee|Vickers|DE|19810313|
-Troy|Bienemann|TE|19830219|
-Isaac|Smolko|TE|19830228|
-McKinley|Boykin|DT|19830324|
-Grant|Mason|CB|19830818|
-Blake|Costanzo|MLB|19840414|
+Lee|Vickers|DE|19810313|North Alabama
+Troy|Bienemann|TE|19830219|Washington State
+Isaac|Smolko|TE|19830228|Penn State
+McKinley|Boykin|DT|19830324|Mississippi
+Grant|Mason|CB|19830818|Michigan
+Blake|Costanzo|MLB|19840414|Lafayette
 Drew|Olson|QB|19830406|
-Joe|Kowalewski|TE|19821115|
+Joe|Kowalewski|TE|19821115|Syracuse
 Brent|Grimes|CB|19830719|Shippensburg
 Fred|Jackson|RB|19810220|Coe
 Chad|Greenway|OLB|19830112|Iowa
-Chris|Gocong|OLB|19831116|
-Dusty|Dvoracek|DT|19830303|
-Domenik|Hixon|WR|19841008|
-Marques|Hagans|WR|19821229|
-Jason|Pociask|TE|19830209|
-Michael|Toudouze|LT|19830427|
-Mike|Hass|WR|19830102|
-Jeromey|Clary|LT|19831105|
-Tim|McGarigle|MLB|19831025|
-Rodrique|Wright|DT|19840731|
-Devin|Aromashodu|WR|19840523|
-Dave|Tollefson|DE|19820710|
-Saverio|Rocca|P|19731120|
-Chris|Wilson|DE|19820710|
-Renardo|Foster|LT|19840715|
+Chris|Gocong|OLB|19831116|Cal Poly (San Luis Obispo)
+Dusty|Dvoracek|DT|19830303|Oklahoma
+Domenik|Hixon|WR|19841008|Akron
+Marques|Hagans|WR|19821229|Virginia
+Jason|Pociask|TE|19830209|Wisconsin
+Michael|Toudouze|LT|19830427|Texas Christian
+Mike|Hass|WR|19830102|Oregon State
+Jeromey|Clary|LT|19831105|Kansas State
+Tim|McGarigle|MLB|19831025|Northwestern
+Rodrique|Wright|DT|19840731|Texas
+Devin|Aromashodu|WR|19840523|Auburn
+Dave|Tollefson|DE|19820710|Northwest Missouri State
+Saverio|Rocca|P|19731120|none
+Chris|Wilson|DE|19820710|Northwood
+Renardo|Foster|LT|19840715|Louisville
 Eric|Weems|WR|19850704|Bethune-Cookman
 Kurt|Quarterman|LG|19851005|
-Tony|Taylor|MLB|19840721|
-Chris|McFoy|WR|19830814|
-Steven|Harris|DT|19840814|
-Roderick|Rogers|CB|19840907|
-Selvin|Young|RB|19831001|
-Biren|Ealy|WR|19840707|
-Danny|Ware|RB|19850218|
+Tony|Taylor|MLB|19840721|Georgia
+Chris|McFoy|WR|19830814|Southern California
+Steven|Harris|DT|19840814|Florida
+Roderick|Rogers|CB|19840907|Wisconsin
+Selvin|Young|RB|19831001|Texas
+Biren|Ealy|WR|19840707|Houston
+Danny|Ware|RB|19850218|Georgia
 Sam|Hollenbach|QB|19830909|
-Quinton|Culberson|MLB|19851021|
-Christian|Gaddis|C|19841005|
-Stephon|Heyer|LT|19840116|
-Logan|Payne|WR|19850121|
-C.J.|Wallace|S|19850417|
-Rudy|Sylvan|TE|19841223|
-Daniel|Coats|TE|19840416|
-Byron|Storer|RB|19840501|
-Courtney|Bryan|S|19841002|
-Edmond|Miles|OLB|19840706|
-Geoffrey|Pope|CB|19840621|
+Quinton|Culberson|MLB|19851021|Mississippi State
+Christian|Gaddis|C|19841005|Villanova
+Stephon|Heyer|LT|19840116|Maryland
+Logan|Payne|WR|19850121|Minnesota
+C.J.|Wallace|S|19850417|Washington
+Rudy|Sylvan|TE|19841223|Ohio University
+Daniel|Coats|TE|19840416|Brigham Young
+Byron|Storer|RB|19840501|California
+Courtney|Bryan|S|19841002|New Mexico State
+Edmond|Miles|OLB|19840706|Iowa
+Geoffrey|Pope|CB|19840621|Howard
 Julius|Wilson|LT|19831017|
-Tuff|Harris|CB|19830123|
-Deljuan|Robinson|DE|19840701|
+Tuff|Harris|CB|19830123|Montana
+Deljuan|Robinson|DE|19840701|Mississippi State
 Mickey|Pimentel|MLB|19850329|
-Quinton|Teal|S|19840308|
-Conrad|Bolston|DT|19850109|
-David|Herron|MLB|19840617|
+Quinton|Teal|S|19840308|Coastal Carolina
+Conrad|Bolston|DT|19850109|Maryland
+David|Herron|MLB|19840617|MIchigan State
 Chase|Johnson|LT|19831216|
-Michael|Matthews|TE|19831009|
+Michael|Matthews|TE|19831009|Georgia Tech
 Larry|Birdine|DE|19831006|
-Daniel|Muir|DT|19830912|
-Melvin|Bullitt|S|19841113|
-Clifton|Dawson|RB|19831008|
-Ramon|Guzman|OLB|19820929|
-Victor|Worsley|MLB|19840424|
-Willie|Gaston|CB|19821215|
-Edgar|Jones|DE|19841201|
+Daniel|Muir|DT|19830912|Kent State
+Melvin|Bullitt|S|19841113|Texas A&M
+Clifton|Dawson|RB|19831008|Harvard
+Ramon|Guzman|OLB|19820929|Buffalo
+Victor|Worsley|MLB|19840424|North Carolina
+Willie|Gaston|CB|19821215|Houston
+Edgar|Jones|DE|19841201|Southeast Missouri State
 David|Ball|WR|19840606|
-Louis|Leonard|DT|19840716|
-Nick|Roach|MLB|19850616|
-Jyles|Tucker|MLB|19830918|
-Matt|Willis|WR|19840413|
-Charles|Ali|FB|19840823|
-Brandon|Archer|MLB|19831030|
-Ed|Johnson|DT|19831218|
+Louis|Leonard|DT|19840716|Fresno State
+Nick|Roach|MLB|19850616|Northwestern
+Jyles|Tucker|MLB|19830918|Wake Forest
+Matt|Willis|WR|19840413|UCLA
+Charles|Ali|FB|19840823|Arkansas-Pine Bluff
+Brandon|Archer|MLB|19831030|Kansas State
+Ed|Johnson|DT|19831218|Penn State
 Fontel|Mines|TE|19850226|
 Jason|Capizzi|LT|19830619|
-Derrick|Jones|DE|19841114|
-Darnell|Stapleton|C|19850921|
-Darius|Vinnett|CB|19840930|
+Derrick|Jones|DE|19841114|Grand Valley State
+Darnell|Stapleton|C|19850921|Rutgers
+Darius|Vinnett|CB|19840930|Arkansas
 Craig|Dahl|S|19850617|North Dakota State
 Scott|Mayle|WR|19831014|
-Corey|Mace|DE|19851222|
-Tyler|Palko|QB|19830809|
+Corey|Mace|DE|19851222|Wyoming
+Tyler|Palko|QB|19830809|Pittsburgh
 Pierre|Thomas|RB|19841218|Illinois
-Tyron|Brackenridge|CB|19840630|
-Matt|Gutierrez|QB|19840609|
-Jake|Nordin|TE|19840708|
-Gary|Russell|RB|19860906|
-Darius|Walker|RB|19851021|
-Gilbert|Harris|RB|19840618|
-JaMarcus|Russell|QB|19850809|
+Tyron|Brackenridge|CB|19840630|Washington State
+Matt|Gutierrez|QB|19840609|Idaho State
+Jake|Nordin|TE|19840708|Northern Illinois
+Gary|Russell|RB|19860906|Minnesota
+Darius|Walker|RB|19851021|Notre Dame
+Gilbert|Harris|RB|19840618|Arizona
+JaMarcus|Russell|QB|19850809|Louisiana State
 Calvin|Johnson|WR|19850929|Georgia Tech
 Joe|Thomas|LT|19841204|Wisconsin
-Gaines|Adams|DE|19830608|
-Levi|Brown|LT|19840316|
-LaRon|Landry|S|19841014|
+Gaines|Adams|DE|19830608|Clemson
+Levi|Brown|LT|19840316|Penn State
+LaRon|Landry|S|19841014|Louisiana State
 Adrian|Peterson|RB|19850321|Oklahoma
-Jamaal|Anderson|DE|19860206|
+Jamaal|Anderson|DE|19860206|Arkansas
 Ted|Ginn|WR|19850412|Ohio State
-Amobi|Okoye|DT|19870610|
-Patrick|Willis|MLB|19850125|
+Amobi|Okoye|DT|19870610|Louisville
+Patrick|Willis|MLB|19850125|Mississippi
 Marshawn|Lynch|RB|19860422|California
-Adam|Carriker|DT|19840506|
+Adam|Carriker|DT|19840506|Nebraska
 Darrelle|Revis|CB|19850714|Pittsburgh
 Lawrence|Timmons|OLB|19860514|Florida State
-Justin|Harrell|DT|19840214|
-Jarvis|Moss|DE|19840803|
+Justin|Harrell|DT|19840214|Tennessee
+Jarvis|Moss|DE|19840803|Florida
 Leon|Hall|CB|19841209|Michigan
 Michael|Griffin|CB|19850104|Texas
-Aaron|Ross|CB|19820915|
+Aaron|Ross|CB|19820915|Texas
 Reggie|Nelson|S|19830921|Florida
-Brady|Quinn|QB|19841027|
+Brady|Quinn|QB|19841027|Notre Dame
 Dwayne|Bowe|WR|19840921|LSU
 Brandon|Meriweather|S|19840114|Miami (Fla.)
 Jon|Beason|OLB|19850114|Miami
-Anthony|Spencer|OLB|19840123|
-Robert|Meachem|WR|19840928|
+Anthony|Spencer|OLB|19840123|Purdue
+Robert|Meachem|WR|19840928|Tennessee
 Joe|Staley|LT|19840830|Central Michigan
 Ben|Grubbs|LG|19840310|Auburn
-Craig|Davis|WR|19851002|
+Craig|Davis|WR|19851002|Louisiana State
 Greg|Olsen|TE|19850311|Miami
-Anthony|Gonzalez|WR|19840918|
+Anthony|Gonzalez|WR|19840918|Ohio State
 Alan|Branch|DT|19841229|Michigan
 Paul|Posluszny|MLB|19841010|Penn State
-Arron|Sears|LG|19841025|
-Kevin|Kolb|QB|19840824|
+Arron|Sears|LG|19841025|Tennessee
+Kevin|Kolb|QB|19840824|Houston
 Eric|Weddle|S|19850104|Utah
-Zach|Miller|TE|19851211|
-Justin|Blalock|LG|19831220|
-John|Beck|QB|19810821|
-Chris|Houston|CB|19841018|
-Tony|Ugoh|LT|19831117|
-Sidney|Rice|WR|19860901|
-Dwayne|Jarrett|WR|19860911|
+Zach|Miller|TE|19851211|Arizona State
+Justin|Blalock|LG|19831220|Texas
+John|Beck|QB|19810821|Brigham Young
+Chris|Houston|CB|19841018|Arkansas
+Tony|Ugoh|LT|19831117|Arkansas
+Sidney|Rice|WR|19860901|South Carolina
+Dwayne|Jarrett|WR|19860911|Southern California
 LaMarr|Woodley|OLB|19841103|Michigan
 David|Harris|MLB|19840121|Michigan
 Justin|Durant|OLB|19850921|Hampton
-Chris|Henry|RB|19850606|
-Steve|Smith|WR|19850506|
-Brian|Leonard|RB|19840203|
-Eric|Wright|CB|19850724|
-Turk|McBride|DE|19850530|
+Chris|Henry|RB|19850606|Arizona
+Steve|Smith|WR|19850506|Southern California
+Brian|Leonard|RB|19840203|Rutgers
+Eric|Wright|CB|19850724|Nevada-Las Vegas
+Turk|McBride|DE|19850530|Tennessee
 Josh|Wilson|CB|19850311|Maryland
-Tim|Crowder|DE|19850630|
-Victor|Abiamiri|DE|19860114|
-Ikaika|Alama-Francis|DE|19841204|
+Tim|Crowder|DE|19850630|Texas
+Victor|Abiamiri|DE|19860114|Notre Dame
+Ikaika|Alama-Francis|DE|19841204|Hawaii
 Ryan|Kalil|LG|19850329|USC
-Samson|Satele|LG|19841129|
-Gerald|Alexander|S|19840628|
-Brandon|Jackson|RB|19851002|
-Sabby|Piscitelli|S|19830824|
-Quentin|Moses|DE|19831118|
-Usama|Young|CB|19850508|
-James|Marten|LT|19840418|
-Quincy|Black|OLB|19840228|
-Buster|Davis|MLB|19831020|
-Ryan|Harris|LT|19850311|
-Lorenzo|Booker|RB|19840614|
-Marcus|McCauley|CB|19830903|
+Samson|Satele|LG|19841129|Hawaii
+Gerald|Alexander|S|19840628|Boise State
+Brandon|Jackson|RB|19851002|Nebraska
+Sabby|Piscitelli|S|19830824|Oregon State
+Quentin|Moses|DE|19831118|Georgia
+Usama|Young|CB|19850508|Kent State
+James|Marten|LT|19840418|Boston College
+Quincy|Black|OLB|19840228|New Mexico
+Buster|Davis|MLB|19831020|Florida State
+Ryan|Harris|LT|19850311|Notre Dame
+Lorenzo|Booker|RB|19840614|Florida State
+Marcus|McCauley|CB|19830903|Fresno State
 Jacoby|Jones|WR|19840711|Lane
-Yamon|Figurs|WR|19820110|
-Laurent|Robinson|WR|19850520|
-Jason|Hill|WR|19850220|
+Yamon|Figurs|WR|19820110|Kansas State
+Laurent|Robinson|WR|19850520|Illinois State
+Jason|Hill|WR|19850220|Washington State
 Matt|Spaeth|TE|19831124|Minnesota
-James|Jones|WR|19840331|
-Paul|Williams|WR|19831202|
-Jay|Alford|DT|19830528|
-Tank|Tyler|DT|19850214|
+James|Jones|WR|19840331|San Jose State
+Paul|Williams|WR|19831202|Fresno State
+Jay|Alford|DT|19830528|Penn State
+Tank|Tyler|DT|19850214|North Carolina State
 Charles|Johnson|DE|19860710|Georgia
-Jonathan|Wade|CB|19840327|
+Jonathan|Wade|CB|19840327|Tennessee
 Brandon|Mebane|DT|19850115|California
 Marshal|Yanda|LT|19840915|Iowa
-Stewart|Bradley|OLB|19831102|
-Andy|Alleman|LG|19831120|
-Aaron|Rouse|S|19840108|
-Tony|Hunt|RB|19851124|
-Mario|Henderson|LT|19841029|
-Trent|Edwards|QB|19831030|
-Garrett|Wolfe|RB|19840817|
-Dante|Hughes|CB|19850821|
-Anthony|Waters|MLB|19840725|
-Ray|McDonald|DE|19840902|
-Quinn|Pitcock|DT|19830914|
-Johnnie Lee|Higgins|WR|19830908|
-Adam|Podlesh|P|19830811|
+Stewart|Bradley|OLB|19831102|Nebraska
+Andy|Alleman|LG|19831120|Akron
+Aaron|Rouse|S|19840108|Virginia Tech
+Tony|Hunt|RB|19851124|Penn State
+Mario|Henderson|LT|19841029|Florida State
+Trent|Edwards|QB|19831030|Stanford
+Garrett|Wolfe|RB|19840817|Northern Illinois
+Dante|Hughes|CB|19850821|California
+Anthony|Waters|MLB|19840725|Clemson
+Ray|McDonald|DE|19840902|Florida
+Quinn|Pitcock|DT|19830914|Ohio State
+Johnnie Lee|Higgins|WR|19830908|Texas-El Paso
+Adam|Podlesh|P|19830811|Maryland
 Brian|Robison|DE|19830427|Texas
-Isaiah|Stanback|WR|19840816|
-Tanard|Jackson|S|19850721|
-Antonio|Pittman|RB|19851219|
+Isaiah|Stanback|WR|19840816|Washington
+Tanard|Jackson|S|19850721|Syracuse
+Antonio|Pittman|RB|19851219|Ohio State
 Paul|Soliai|DT|19831230|Utah
-Stephen|Nicholas|OLB|19830501|
-John|Bowie|CB|19840511|
-Dwayne|Wright|RB|19830602|
-Daniel|Sepulveda|P|19840112|
-Marvin|White|S|19831205|
-Leroy|Harris|LG|19840606|
+Stephen|Nicholas|OLB|19830501|South Florida
+John|Bowie|CB|19840511|Cincinnati
+Dwayne|Wright|RB|19830602|Fresno State
+Daniel|Sepulveda|P|19840112|Baylor
+Marvin|White|S|19831205|Texas Christian
+Leroy|Harris|LG|19840606|North Carolina State
 Zak|DeOssie|OLB|19840524|Brown
 Manuel|Ramirez|LG|19830219|Texas Tech
-Ryne|Robinson|WR|19841104|
+Ryne|Robinson|WR|19841104|Miami (Ohio)
 Allen|Barbre|LG|19840622|Missouri Southern State
-Baraka|Atkins|DE|19840928|
-Marcus|Thomas|DT|19850923|
+Baraka|Atkins|DE|19840928|Miami (Florida)
+Marcus|Thomas|DT|19850923|Florida
 Doug|Free|LT|19840116|Northern Illinois
-Fred|Bennett|CB|19831231|
-Mansfield|Wrotto|LG|19841012|
+Fred|Bennett|CB|19831231|South Carolina
+Mansfield|Wrotto|LG|19841012|Georgia Tech
 Jermon|Bushrod|LT|19840819|Towson
 Dashon|Goldson|CB|19840918|Washington
-Kareem|Brown|DE|19840130|
-Chris|Davis|WR|19840123|
+Kareem|Brown|DE|19840130|Miami (Florida)
+Chris|Davis|WR|19840123|Florida State
 Scott|Chandler|TE|19850723|Iowa
-Josh|Beekman|LG|19830630|
-Brannon|Condren|S|19830819|
-Ryan|McBean|DE|19840423|
-Martrez|Milner|TE|19840808|
-Antwan|Barnes|OLB|19841019|
-Clint|Session|OLB|19840922|
-Le'Ron|McClain|FB|19841227|
-Jay|Richardson|DE|19840127|
-Dustin|Fry|C|19831003|
-Brandon|McDonald|CB|19850826|
-Greg|Peterson|DT|19840121|
-Steve|Breaston|WR|19830820|
-David|Jones|CB|19850919|
-Aundrae|Allison|WR|19840625|
+Josh|Beekman|LG|19830630|Boston College
+Brannon|Condren|S|19830819|Troy
+Ryan|McBean|DE|19840423|Oklahoma State
+Martrez|Milner|TE|19840808|Georgia
+Antwan|Barnes|OLB|19841019|Florida International
+Clint|Session|OLB|19840922|Pittsburgh
+Le'Ron|McClain|FB|19841227|Alabama
+Jay|Richardson|DE|19840127|Ohio State
+Dustin|Fry|C|19831003|Clemson
+Brandon|McDonald|CB|19850826|Memphis
+Greg|Peterson|DT|19840121|North Carolina Central
+Steve|Breaston|WR|19830820|Michigan
+David|Jones|CB|19850919|Wingate
+Aundrae|Allison|WR|19840625|East Carolina
 Tarell|Brown|CB|19850106|Texas
-Kolby|Smith|RB|19841215|
-Uche|Nwaneri|LG|19840320|
-Josh|Gattis|CB|19840115|
+Kolby|Smith|RB|19841215|Louisville
+Uche|Nwaneri|LG|19840320|Purdue
+Josh|Gattis|CB|19840115|Wake Forest
 Jeff|Rowe|QB|19840321|
-Kevin|Boss|TE|19840111|
-Clifton|Ryan|DT|19840218|
-Dante|Rosario|TE|19841025|
-David|Clowney|WR|19850707|
-Johnny|Baldwin|OLB|19840401|
-Justin|Medlock|K|19831023|
-Will|Herring|OLB|19830828|
+Kevin|Boss|TE|19840111|Western Oregon
+Clifton|Ryan|DT|19840218|Michigan State
+Dante|Rosario|TE|19841025|Oregon
+David|Clowney|WR|19850707|Virginia Tech
+Johnny|Baldwin|OLB|19840401|Alabama A&M
+Justin|Medlock|K|19831023|UCLA
+Will|Herring|OLB|19830828|Auburn
 Brent|Celek|TE|19850125|Cincinnati
-Brandon|Frye|LT|19830123|
+Brandon|Frye|LT|19830123|Virginia Tech
 Tim|Shaw|MLB|19840327|Penn State
-Eric|Frampton|S|19840206|
-Derek|Landri|DT|19830921|
-Kevin|Payne|S|19831205|
+Eric|Frampton|S|19840206|Washington State
+Derek|Landri|DT|19830921|Notre Dame
+Kevin|Payne|S|19831205|Louisiana-Monroe
 Corey|Graham|CB|19850725|New Hampshire
-Roy|Hall|WR|19831208|
+Roy|Hall|WR|19831208|Ohio State
 William|Gay|CB|19850101|Louisville
-Clint|Oldenburg|LT|19830909|
-Legedu|Naanee|TE|19830916|
-Michael|Coe|CB|19831217|
-Troy|Smith|QB|19840720|
-Oren|O'Neal|FB|19830908|
-Jacob|Bender|LG|19850425|
+Clint|Oldenburg|LT|19830909|Colorado State
+Legedu|Naanee|TE|19830916|Boise State
+Michael|Coe|CB|19831217|Alabama State
+Troy|Smith|QB|19840720|Ohio State
+Oren|O'Neal|FB|19830908|Arkansas State
+Jacob|Bender|LG|19850425|Nicholls State
 Nick|Folk|K|19841105|Arizona
-H.B.|Blades|MLB|19840930|
-Justin|Rogers|OLB|19830831|
-Reagan|Maui'a|FB|19840706|
-Adam|Hayward|OLB|19840623|
-Kasey|Studdard|LG|19840701|
-John|Wendling|S|19830604|
-Trey|Lewis|DT|19850523|
-Matt|Toeaina|DT|19841009|
-Adam|Koets|LT|19840107|
-Korey|Hall|FB|19830805|
+H.B.|Blades|MLB|19840930|Pittsburgh
+Justin|Rogers|OLB|19830831|Southern Methodist
+Reagan|Maui'a|FB|19840706|Hawaii
+Adam|Hayward|OLB|19840623|Portland State
+Kasey|Studdard|LG|19840701|Texas
+John|Wendling|S|19830604|Wyoming
+Trey|Lewis|DT|19850523|Washburn
+Matt|Toeaina|DT|19841009|Oregon
+Adam|Koets|LT|19840107|Oregon State
+Korey|Hall|FB|19830805|Boise State
 Desmond|Bishop|MLB|19840724|California
 Mason|Crosby|K|19840903|Colorado
-David|Irons|CB|19821009|
-Deon|Anderson|FB|19830127|
-Herb|Taylor|LG|19840922|
-Courtney|Taylor|WR|19840407|
+David|Irons|CB|19821009|Auburn
+Deon|Anderson|FB|19830127|Connecticut
+Herb|Taylor|LG|19840922|Texas Christian
+Courtney|Taylor|WR|19840407|Auburn
 Melila|Purcell|DE|19840205|
-Rashad|Barksdale|CB|19840511|
-Daren|Stone|S|19850821|
-Prescott|Burgess|OLB|19840306|
-Corey|Hilliard|LT|19850426|
-Courtney|Brown|S|19840210|
-Ben|Patrick|TE|19840823|
-Tyler|Thigpen|QB|19840414|
-Zach|Diles|MLB|19850611|
-Kelvin|Smith|MLB|19840320|
-Marvin|Mitchell|MLB|19841021|
+Rashad|Barksdale|CB|19840511|Albany
+Daren|Stone|S|19850821|Maine
+Prescott|Burgess|OLB|19840306|Michigan
+Corey|Hilliard|LT|19850426|Oklahoma State
+Courtney|Brown|S|19840210|Cal Poly (San Luis Obispo)
+Ben|Patrick|TE|19840823|Delaware
+Tyler|Thigpen|QB|19840414|Coastal Carolina
+Zach|Diles|MLB|19850611|Kansas State
+Kelvin|Smith|MLB|19840320|Syracuse
+Marvin|Mitchell|MLB|19841021|Tennessee
 Trumaine|McBride|CB|19850924|Mississippi
-Derek|Schouman|TE|19850311|
-Mike|Otto|LT|19830724|
-Michael|Johnson|S|19840509|
+Derek|Schouman|TE|19850311|Boise State
+Mike|Otto|LT|19830724|Purdue
+Michael|Johnson|S|19840509|Arizona
 Brandon|Fields|P|19840521|Michigan State
-C.J.|Wilson|CB|19850402|
-DeShawn|Wynn|RB|19831009|
-John|Broussard|WR|19831218|
-Dan|Santucci|C|19830906|
+C.J.|Wilson|CB|19850402|Baylor
+DeShawn|Wynn|RB|19831009|Florida
+John|Broussard|WR|19831218|San Jose State
+Dan|Santucci|C|19830906|Notre Dame
 Michael|Allan|TE|19830908|
-Chansi|Stuckey|WR|19831004|
-Alan|Ball|CB|19850329|
+Chansi|Stuckey|WR|19831004|Clemson
+Alan|Ball|CB|19850329|Illinois
 Abraham|Wright|OLB|19841015|
-Brandon|Siler|MLB|19851205|
-Keyunta|Dawson|DE|19850913|
-Jason|Snelling|RB|19831229|
-Kenneth|Darby|RB|19821226|
-Derek|Stanley|WR|19850827|
+Brandon|Siler|MLB|19851205|Florida
+Keyunta|Dawson|DE|19850913|Texas Tech
+Jason|Snelling|RB|19831229|Virginia
+Kenneth|Darby|RB|19821226|Alabama
+Derek|Stanley|WR|19850827|Wisconsin-Whitewater
 Ahmad|Bradshaw|RB|19860319|Marshall
-Chad|Nkang|S|19850701|
-Chinedum|Ndukwe|S|19850304|
-Ramzee|Robinson|CB|19840220|
-Pago|Togafau|MLB|19840110|
-Michael|Adams|CB|19850617|
-Tim|Castille|FB|19840529|
+Chad|Nkang|S|19850701|Elon
+Chinedum|Ndukwe|S|19850304|Notre Dame
+Ramzee|Robinson|CB|19840220|Alabama
+Pago|Togafau|MLB|19840110|Idaho State
+Michael|Adams|CB|19850617|Louisiana-Lafayette
+Tim|Castille|FB|19840529|Alabama
 David|Holloway|MLB|19831204|
 Lyle|Sendlein|C|19840316|Texas
 Mike|Devito|DT|19840610|Maine
 Jason|Trusnik|MLB|19840606|Ohio Northern
-Jackie|Battle|RB|19831001|
+Jackie|Battle|RB|19831001|Houston
 Matt|Moore|QB|19840809|Oregon State
-Nick|Graham|CB|19840119|
-Akeem|Jordan|MLB|19850817|
-Marques|Murrell|DE|19850320|
-Marcus|Paschal|CB|19840831|
+Nick|Graham|CB|19840119|Tulsa
+Akeem|Jordan|MLB|19850817|James Madison
+Marques|Murrell|DE|19850320|Appalachian State
+Marcus|Paschal|CB|19840831|Iowa
 Jonathan|Palmer|LT|19831203|
-Sam|Paulescu|P|19840418|
+Sam|Paulescu|P|19840418|Oregon State
 Alex|Buzbee|DE|19851127|
-Nate|Harris|MLB|19830308|
+Nate|Harris|MLB|19830308|Louisville
 Cullen|Finnerty|QB|19820818|
-Robert|Turner|LG|19840820|
-Jeremy|Kapinos|P|19840823|
-Jared|Gaither|LT|19860318|
-Paul|Oliver|CB|19840330|
-Mark|Washington|MLB|19850820|
-Chris|Davis|WR|19831201|
-Glenn|Pakulak|P|19800409|
-Jason|Rader|TE|19810412|
+Robert|Turner|LG|19840820|New Mexico
+Jeremy|Kapinos|P|19840823|Penn State
+Jared|Gaither|LT|19860318|Maryland
+Paul|Oliver|CB|19840330|Georgia
+Mark|Washington|MLB|19850820|Texas State-San Marcos
+Chris|Davis|WR|19831201|Wake Forest
+Glenn|Pakulak|P|19800409|Kentucky
+Jason|Rader|TE|19810412|Marshall
 Stefan|Rodgers|LT|19811103|
 Thomas|Gafford|C|19830129|Houston
-Buck|Ortega|TE|19811122|
-Spencer|Havner|MLB|19830202|
+Buck|Ortega|TE|19811122|Miami (Florida)
+Spencer|Havner|MLB|19830202|UCLA
 Pat|Ross|C|19830316|
-Tavares|Washington|LT|19830420|
-Kevis|Coley|MLB|19820623|
-Eric|Henderson|DE|19830108|
-Remi|Ayodele|DT|19830422|
-Scott|Paxson|DT|19830203|
-Jason|Davis|FB|19831102|
+Tavares|Washington|LT|19830420|Florida
+Kevis|Coley|MLB|19820623|Southern Mississippi
+Eric|Henderson|DE|19830108|Georgia Tech
+Remi|Ayodele|DT|19830422|Oklahoma
+Scott|Paxson|DT|19830203|Penn State
+Jason|Davis|FB|19831102|Illinois
 Tearrius|George|MLB|19821203|
-Darnell|Bing|MLB|19840910|
-Quinton|Ganther|FB|19840715|
-Gijon|Robinson|TE|19841012|
-Marcus|Mason|RB|19840623|
-Mkristo|Bruce|DE|19841016|
-Billy|Latsko|RB|19840216|
-Kyle|Cook|C|19830725|
-Brandon|London|WR|19841016|
-Dominique|Zeigler|WR|19841011|
+Darnell|Bing|MLB|19840910|Southern California
+Quinton|Ganther|FB|19840715|Utah
+Gijon|Robinson|TE|19841012|MIssouri Western State
+Marcus|Mason|RB|19840623|Youngstown State
+Mkristo|Bruce|DE|19841016|Washington State
+Billy|Latsko|RB|19840216|Florida
+Kyle|Cook|C|19830725|Michigan State
+Brandon|London|WR|19841016|Massachusetts
+Dominique|Zeigler|WR|19841011|Baylor
 Pat|Murray|LG|19841031|
-Antwan|Applewhite|MLB|19851231|
-Tra|Battle|CB|19850105|
-Keith|Grennan|DE|19840520|
-Joe|Porter|CB|19851127|
-Jared|Retkofsky|C|19830316|
+Antwan|Applewhite|MLB|19851231|San Diego State
+Tra|Battle|CB|19850105|Georgia
+Keith|Grennan|DE|19840520|Eastern Washington
+Joe|Porter|CB|19851127|Rutgers
+Jared|Retkofsky|C|19830316|Texas Christian
 Drew|Stanton|QB|19840507|Michigan State
-Mike|Sims-Walker|WR|19841121|
-Michael|Bush|RB|19840616|
-Brandon|Harrison|S|19840429|
-Antonio|Johnson|DT|19841208|
+Mike|Sims-Walker|WR|19841121|Central Florida
+Michael|Bush|RB|19840616|Louisville
+Brandon|Harrison|S|19840429|Stanford
+Antonio|Johnson|DT|19841208|Mississippi State
 Cameron|Stephenson|LG|19830618|
-Thomas|Clayton|RB|19840426|
-Mike|Richardson|CB|19840218|
-Jacob|Ford|DE|19830720|
-Jordan|Palmer|QB|19840530|
-Jordan|Kent|WR|19840724|
-Steve|Vallos|C|19831228|
-Syndric|Steptoe|WR|19841206|
+Thomas|Clayton|RB|19840426|Kansas State
+Mike|Richardson|CB|19840218|Notre Dame
+Jacob|Ford|DE|19830720|Central Arkansas
+Jordan|Palmer|QB|19840530|Texas-El Paso
+Jordan|Kent|WR|19840724|Oregon
+Steve|Vallos|C|19831228|Wake Forest
+Syndric|Steptoe|WR|19841206|Arizona
 Clark|Harris|TE|19840710|Rutgers
-Marcus|Hamilton|CB|19840217|
+Marcus|Hamilton|CB|19840217|Virginia
 Andrew|Carnahan|LT|19830908|
-Jonathan|Holland|WR|19850618|
+Jonathan|Holland|WR|19850618|Louisiana Tech
 Brett|Goode|C|19841102|Arkansas
 Elliot|Vallejo|LT|19840517|
 Brett|Ratliff|QB|19850808|
-Alonzo|Coleman|RB|19840127|
+Alonzo|Coleman|RB|19840127|Hampton
 Rodney|Hannah|TE|19840809|
-Jeremy|Clark|DT|19830906|
-Richard|Bartel|QB|19830203|
+Jeremy|Clark|DT|19830906|Alabama
+Richard|Bartel|QB|19830203|Tarleton State
 James|Ihedigbo|CB|19831203|Massachusetts
-Jon|Corto|OLB|19840903|
-Kyle|Williams|LT|19840319|
-Chris|Patrick|LT|19840822|
+Jon|Corto|OLB|19840903|Sacred Heart
+Kyle|Williams|LT|19840319|Southern California
+Chris|Patrick|LT|19840822|Nebraska
 Nevin|McCaskill|LT|19831229|
 Jake|Long|LT|19850509|Michigan
-Gary|Guyton|MLB|19851114|
-Garrett|Hartley|K|19860516|
+Gary|Guyton|MLB|19851114|Georgia Tech
+Garrett|Hartley|K|19860516|Oklahoma
 Brett|Kern|P|19860217|Toledo
 Tyler|Polumbus|LT|19850410|Colorado
 Wesley|Woodyard|OLB|19860721|Kentucky
-Patrick|Bailey|MLB|19851119|
+Patrick|Bailey|MLB|19851119|Duke
 Jo-Lonn|Dunbar|MLB|19850313|Boston College
-Louis|Rankin|RB|19850504|
-Darrell|Strong|TE|19860521|
-BenJarvus|Green-Ellis|RB|19850702|
-Vince|Redd|MLB|19850901|
-Jonathan|Stupar|TE|19840724|
+Louis|Rankin|RB|19850504|Washington
+Darrell|Strong|TE|19860521|Pittsburgh
+BenJarvus|Green-Ellis|RB|19850702|Mississippi
+Vince|Redd|MLB|19850901|Liberty
+Jonathan|Stupar|TE|19840724|Virginia
 Darrick|Brown|CB|19840218|
-Marcus|Buggs|MLB|19850921|
-Jamar|Adams|CB|19851129|
-Elbert|Mack|CB|19860714|
-Devin|Clark|LG|19860522|
-Curtis|Gatewood|MLB|19850518|
+Marcus|Buggs|MLB|19850921|Vanderbilt
+Jamar|Adams|CB|19851129|Michigan
+Elbert|Mack|CB|19860714|Troy
+Devin|Clark|LG|19860522|New Mexico
+Curtis|Gatewood|MLB|19850518|Vanderbilt
 Matterral|Richardson|CB|19850630|
-Simeon|Castille|CB|19851012|
-James|Johnson|RB|19840906|
+Simeon|Castille|CB|19851012|Alabama
+James|Johnson|RB|19840906|Kansas State
 Bruce|Hall|RB|19850318|
-Ali|Highsmith|OLB|19850120|
+Ali|Highsmith|OLB|19850120|Louisiana State
 Husain|Abdullah|S|19850727|Washington State
 Leger|Douzable|DT|19860531|Central Florida
 Steven|Hauschka|K|19850629|North Carolina State
 Erin|Henderson|OLB|19860701|Maryland
 Drew|Radovich|LT|19850620|
-Darius|Reynaud|WR|19841229|
-Caleb|Hanie|QB|19850911|
-Eric|Foster|DT|19850405|
-Curtis|Johnson|DE|19850216|
-Jordan|Senn|OLB|19840611|
-Jamie|Silva|CB|19841214|
-Chad|Simpson|RB|19850822|
-David|Hawthorne|MLB|19850514|
-Davone|Bess|WR|19850913|
-Titus|Brown|MLB|19860327|
+Darius|Reynaud|WR|19841229|West Virginia
+Caleb|Hanie|QB|19850911|Colorado State
+Eric|Foster|DT|19850405|Rutgers
+Curtis|Johnson|DE|19850216|Clark Atlanta
+Jordan|Senn|OLB|19840611|Portland State
+Jamie|Silva|CB|19841214|Boston College
+Chad|Simpson|RB|19850822|Morgan State
+David|Hawthorne|MLB|19850514|Texas Christian
+Davone|Bess|WR|19850913|Hawaii
+Titus|Brown|MLB|19860327|Mississippi State
 Dan|Carpenter|K|19851125|Montana
-Joey|Haynos|TE|19840828|
+Joey|Haynos|TE|19840828|Maryland
 Danny|Lansanah|MLB|19850828|Connecticut
-Kregg|Lumpkin|RB|19840515|
-Mike|Cox|FB|19850711|
-Derek|Lokey|DT|19851125|
-Steve|Octavien|MLB|19841125|
-Josh|Bell|CB|19850108|
+Kregg|Lumpkin|RB|19840515|Georgia
+Mike|Cox|FB|19850711|Georgia Tech
+Derek|Lokey|DT|19851125|Texas
+Steve|Octavien|MLB|19841125|Nebraska
+Josh|Bell|CB|19850108|Baylor
 Mike|Tolbert|FB|19851123|Coastal Carolina
-Gerard|Lawson|CB|19850112|
-James|Lee|LT|19850817|
-Maurice|Leggett|CB|19861002|
-Lamar|Divens|DT|19851112|
-Anthony|Toribio|DT|19850301|
-Nate|Hughes|WR|19850118|
-Tyson|Devree|TE|19841112|
+Gerard|Lawson|CB|19850112|Oregon State
+James|Lee|LT|19850817|South Carolina State
+Maurice|Leggett|CB|19861002|Valdosta State
+Lamar|Divens|DT|19851112|Tennessee State
+Anthony|Toribio|DT|19850301|Carson-Newman
+Nate|Hughes|WR|19850118|Alcorn State
+Tyson|Devree|TE|19841112|Colorado
 Wallace|Gilberry|DE|19841205|Alabama
-Clifton|Smith|RB|19850704|
-Lynell|Hamilton|RB|19850805|
-David|Roach|CB|19850809|
-Greyson|Gunheim|DE|19860404|
+Clifton|Smith|RB|19850704|Fresno State
+Lynell|Hamilton|RB|19850805|San Diego State
+David|Roach|CB|19850809|Texas Christian
+Greyson|Gunheim|DE|19860404|Washington
 Connor|Barth|K|19860411|North Carolina
 Chris|Long|DE|19850328|Virginia
 Matt|Ryan|QB|19850517|Boston College
 Darren|McFadden|RB|19870827|Arkansas
 Glenn|Dorsey|DT|19850801|LSU
-Vernon|Gholston|OLB|19860605|
-Sedrick|Ellis|DT|19850709|
-Derrick|Harvey|DE|19861109|
-Keith|Rivers|OLB|19860505|
+Vernon|Gholston|OLB|19860605|Ohio State
+Sedrick|Ellis|DT|19850709|Southern California
+Derrick|Harvey|DE|19861109|Florida
+Keith|Rivers|OLB|19860505|Southern California
 Jerod|Mayo|MLB|19860223|Tennessee
 Leodis|McKelvin|CB|19850901|Troy
 Ryan|Clady|LT|19860906|Boise State
 Jonathan|Stewart|RB|19870321|Oregon
-Chris|Williams|LT|19850826|
+Chris|Williams|LT|19850826|Vanderbilt
 Branden|Albert|LT|19841104|Virginia
 Dominique|Rodgers-Cromartie|CB|19860407|Tennessee State
 Gosder|Cherilus|LT|19840628|Boston College
 Joe|Flacco|QB|19850116|Delaware
-Jeff|Otah|LT|19860617|
+Jeff|Otah|LT|19860617|Pittsburgh
 Aqib|Talib|CB|19860213|Kansas
-Sam|Baker|LT|19850530|
-Felix|Jones|RB|19870508|
-Rashard|Mendenhall|RB|19870619|
+Sam|Baker|LT|19850530|Southern California
+Felix|Jones|RB|19870508|Arkansas
+Rashard|Mendenhall|RB|19870619|Illinois
 Chris|Johnson|RB|19850923|East Carolina
 Mike|Jenkins|CB|19850322|South Florida
 Duane|Brown|LT|19850830|Virginia Tech
-Antoine|Cason|CB|19860709|
-Lawrence|Jackson|DE|19850830|
-Kentwan|Balmer|DE|19861015|
-Dustin|Keller|TE|19840925|
+Antoine|Cason|CB|19860709|Arizona
+Lawrence|Jackson|DE|19850830|Southern California
+Kentwan|Balmer|DE|19861015|North Carolina
+Dustin|Keller|TE|19840925|Purdue
 Kenny|Phillips|S|19861124|Miami
-Phillip|Merling|DE|19850419|
-Donnie|Avery|WR|19840612|
-Devin|Thomas|WR|19861115|
+Phillip|Merling|DE|19850419|Clemson
+Donnie|Avery|WR|19840612|Houston
+Devin|Thomas|WR|19861115|Michigan State
 Brandon|Flowers|CB|19860218|Virginia Tech
 Jordy|Nelson|WR|19850531|Kansas State
 Curtis|Lofton|MLB|19860609|Oklahoma
-John|Carlson|TE|19840512|
-Chilo|Rachal|LG|19860315|
+John|Carlson|TE|19840512|Notre Dame
+Chilo|Rachal|LG|19860315|Southern California
 Tracy|Porter|CB|19860811|Indiana
-James|Hardy|WR|19851224|
+James|Hardy|WR|19851224|Indiana
 Eddie|Royal|WR|19860521|Virginia Tech
-Tyrell|Johnson|S|19850519|
+Tyrell|Johnson|S|19850519|Arkansas State
 Matt|Forte|RB|19851210|Tulane
-Jordon|Dizon|MLB|19860116|
-Jerome|Simpson|WR|19860204|
-Trevor|Laws|DT|19850614|
-Fred|Davis|TE|19860115|
+Jordon|Dizon|MLB|19860116|Colorado
+Jerome|Simpson|WR|19860204|Coastal Carolina
+Trevor|Laws|DT|19850614|Notre Dame
+Fred|Davis|TE|19860115|Southern California
 DeSean|Jackson|WR|19861201|California
 Calais|Campbell|DT|19860901|Miami
-Malcolm|Kelly|WR|19861230|
-Quentin|Groves|DE|19840705|
-Limas|Sweed|WR|19841225|
+Malcolm|Kelly|WR|19861230|Oklahoma
+Quentin|Groves|DE|19840705|Auburn
+Limas|Sweed|WR|19841225|Texas
 Jason|Jones|DT|19860523|Eastern Michigan
-Ray|Rice|RB|19870122|
-Brian|Brohm|QB|19850923|
+Ray|Rice|RB|19870122|Rutgers
+Brian|Brohm|QB|19850923|Louisville
 Chad|Henne|QB|19850702|Michigan
-Dexter|Jackson|WR|19860805|
-Mike|Pollak|LG|19850216|
-Patrick|Lee|CB|19840220|
+Dexter|Jackson|WR|19860805|Appalachian State
+Mike|Pollak|LG|19850216|Arizona State
+Patrick|Lee|CB|19840220|Auburn
 Martellus|Bennett|TE|19870310|Texas A&M
-Terrence|Wheatley|CB|19850505|
-Terrell|Thomas|CB|19850108|
-Kevin|Smith|RB|19861217|
+Terrence|Wheatley|CB|19850505|Colorado
+Terrell|Thomas|CB|19850108|Southern California
+Kevin|Smith|RB|19861217|Central Florida
 John|Greco|LT|19850324|Toledo
 Kendall|Langford|DE|19860127|Hampton
 Charles|Godfrey|S|19851115|Iowa
-Chevis|Jackson|CB|19851211|
-Jacob|Hester|RB|19850508|
-Earl|Bennett|WR|19870323|
-Tavares|Gooden|MLB|19841007|
-Chris|Ellis|DE|19850211|
+Chevis|Jackson|CB|19851211|Louisiana State
+Jacob|Hester|RB|19850508|Louisiana State
+Earl|Bennett|WR|19870323|Vanderbilt
+Tavares|Gooden|MLB|19841007|Miami (Florida)
+Chris|Ellis|DE|19850211|Virginia Tech
 Jamaal|Charles|RB|19861227|Texas
-Dan|Connor|MLB|19851102|
-Reggie|Smith|CB|19860903|
-Brad|Cottam|TE|19841128|
+Dan|Connor|MLB|19851102|Penn State
+Reggie|Smith|CB|19860903|Oklahoma
+Brad|Cottam|TE|19841128|Tennessee
 Pat|Sims|DT|19851129|Auburn
-Shawn|Crable|OLB|19841226|
-Antwaun|Molden|CB|19850123|
-Bryan|Smith|DE|19831129|
-Early|Doucet|WR|19851028|
-DaJuan|Morgan|S|19851021|
+Shawn|Crable|OLB|19841226|Michigan
+Antwaun|Molden|CB|19850123|Eastern Kentucky
+Bryan|Smith|DE|19831129|McNeese State
+Early|Doucet|WR|19851028|Louisiana State
+DaJuan|Morgan|S|19851021|North Carolina State
 Jeremy|Zuttah|LG|19860601|Rutgers
 Harry|Douglas|WR|19840916|Louisville
-Craig|Stevens|TE|19840901|
-Tom|Zbikowski|S|19850522|
+Craig|Stevens|TE|19840901|California
+Tom|Zbikowski|S|19850522|Notre Dame
 Andre|Fluellen|DT|19850307|Florida State
-Bruce|Davis|OLB|19850902|
-Steve|Slaton|RB|19860104|
-Marcus|Harrison|DT|19840710|
-Jermichael|Finley|TE|19870326|
+Bruce|Davis|OLB|19850902|UCLA
+Steve|Slaton|RB|19860104|West Virginia
+Marcus|Harrison|DT|19840710|Arkansas
+Jermichael|Finley|TE|19870326|Texas
 Cliff|Avril|DE|19860408|Purdue
 Philip|Wheeler|OLB|19841212|Georgia Tech
-Kevin|O'Connell|QB|19850525|
-Mario|Manningham|WR|19860525|
-Chad|Rinehart|LG|19850504|
-Andre|Caldwell|WR|19850415|
-Thomas|DeCoud|S|19850319|
-Oniel|Cousins|LT|19840629|
+Kevin|O'Connell|QB|19850525|San Diego State
+Mario|Manningham|WR|19860525|Michigan
+Chad|Rinehart|LG|19850504|Northern Iowa
+Andre|Caldwell|WR|19850415|Florida
+Thomas|DeCoud|S|19850319|California
+Oniel|Cousins|LT|19840629|Texas-El Paso
 Tyvon|Branch|S|19861211|Connecticut
-Jeremy|Thompson|DE|19851009|
+Jeremy|Thompson|DE|19851009|Wake Forest
 William|Hayes|DE|19850502|Winston-Salem State
-Beau|Bell|MLB|19860526|
-William|Franklin|WR|19851013|
-Marcus|Smith|WR|19850111|
+Beau|Bell|MLB|19860526|Nevada-Las Vegas
+William|Franklin|WR|19851013|Missouri
+Marcus|Smith|WR|19850111|New Mexico
 Cody|Wallace|C|19841126|Texas A&M
 Kory|Lichtensteiger|LG|19850322|Bowling Green
 Mike|McGlynn|LG|19850308|Pittsburgh
-Shawn|Murphy|LG|19821217|
-Martin|Rucker|TE|19850504|
-Anthony|Collins|LT|19851102|
+Shawn|Murphy|LG|19821217|Utah State
+Martin|Rucker|TE|19850504|Missouri
+Anthony|Collins|LT|19851102|Kansas
 Dwight|Lowery|CB|19860123|San Jose State
-Reggie|Corner|CB|19831117|
-Kenny|Iwebema|DE|19850206|
+Reggie|Corner|CB|19831117|Akron
+Kenny|Iwebema|DE|19850206|Iowa
 Quintin|Demps|S|19850629|Texas-El Paso
-Xavier|Adibi|OLB|19841018|
-Jack|Williams|CB|19850327|
-Craig|Steltz|S|19860507|
-Red|Bryant|DT|19840418|
-Tashard|Choice|RB|19841120|
-Bryan|Kehl|OLB|19840616|
-Justin|Tryon|CB|19840529|
-Lavelle|Hawkins|WR|19860712|
+Xavier|Adibi|OLB|19841018|Virginia Tech
+Jack|Williams|CB|19850327|Kent State
+Craig|Steltz|S|19860507|Louisiana State
+Red|Bryant|DT|19840418|Texas A&M
+Tashard|Choice|RB|19841120|Georgia Tech
+Bryan|Kehl|OLB|19840616|Brigham Young
+Justin|Tryon|CB|19840529|Arizona State
+Lavelle|Hawkins|WR|19860712|California
 Jacob|Tamme|TE|19850315|Kentucky
-Keenan|Burton|WR|19841029|
-Jonathan|Wilhite|CB|19840223|
+Keenan|Burton|WR|19841029|Kentucky
+Jonathan|Wilhite|CB|19840223|Auburn
 Tony|Hills|LT|19841104|Texas
-Derek|Fine|TE|19830824|
-David|Hale|LG|19830303|
-Stanford|Keglar|OLB|19850704|
+Derek|Fine|TE|19830824|Kansas
+David|Hale|LG|19830303|Weber State
+Stanford|Keglar|OLB|19850704|Purdue
 Josh|Sitton|LG|19860616|Central Florida
 Kenneth|Moore|WR|19850219|
 John David|Booty|QB|19850103|
-Ryan|Torain|RB|19860810|
+Ryan|Torain|RB|19860810|Arizona State
 Brandon|Carr|CB|19860519|Grand Valley State
 Gary|Barnidge|TE|19850922|Louisville
 Zackary|Bowman|CB|19841118|Nebraska
 Orlando|Scandrick|CB|19870210|Boise State
-Jason|Shirley|DT|19850930|
+Jason|Shirley|DT|19850930|Fresno State
 Jerome|Felton|FB|19860703|Furman
 Tim|Hightower|RB|19860523|Richmond
 Breno|Giacomini|LT|19850927|Louisville
-Frank|Okam|DT|19851016|
+Frank|Okam|DT|19851016|Texas
 Letroy|Guion|DT|19870621|Florida State
 Matt|Slater|WR|19850909|UCLA
-Kroy|Biermann|DE|19850912|
-Thomas|Williams|MLB|19841225|
-Dennis|Dixon|QB|19850111|
-Roy|Schuening|LG|19840408|
+Kroy|Biermann|DE|19850912|Montana
+Thomas|Williams|MLB|19841225|Southern California
+Dennis|Dixon|QB|19850111|Oregon
+Roy|Schuening|LG|19840408|Oregon State
 Kellen|Davis|TE|19851011|Michigan State
 Josh|Johnson|QB|19860515|San Diego
-Marcus|Howard|DE|19851012|
+Marcus|Howard|DE|19851012|Georgia
 Erik|Ainge|QB|19860612|
-Owen|Schmitt|FB|19850213|
-Carl|Nicks|LG|19850514|
-Jonathan|Goff|MLB|19851212|
+Owen|Schmitt|FB|19850213|West Virginia
+Carl|Nicks|LG|19850514|Nebraska
+Jonathan|Goff|MLB|19851212|Vanderbilt
 Erik|Walden|OLB|19850821|Middle Tennessee State
-Trevor|Scott|DE|19840830|
-Barry|Richardson|LT|19860515|
-Dominique|Barber|S|19860802|
-Josh|Morgan|WR|19850620|
-Geno|Hayes|OLB|19870810|
-Jalen|Parmele|RB|19851230|
-Corey|Lynch|S|19850507|
-Taylor|Mehlhaff|K|19850825|
-Xavier|Omon|RB|19850215|
-Kareem|Moore|S|19840813|
-Nick|Hayden|DT|19860204|
-Kevin|Robinson|WR|19841219|
-Spencer|Larsen|FB|19840304|
-Chris|Harrington|MLB|19850119|
+Trevor|Scott|DE|19840830|Buffalo
+Barry|Richardson|LT|19860515|Clemson
+Dominique|Barber|S|19860802|Minnesota
+Josh|Morgan|WR|19850620|Virginia Tech
+Geno|Hayes|OLB|19870810|Florida State
+Jalen|Parmele|RB|19851230|Toledo
+Corey|Lynch|S|19850507|Appalachian State
+Taylor|Mehlhaff|K|19850825|Wisconsin
+Xavier|Omon|RB|19850215|Northwest Missouri State
+Kareem|Moore|S|19840813|Nicholls State
+Nick|Hayden|DT|19860204|Wisconsin
+Kevin|Robinson|WR|19841219|Utah State
+Spencer|Larsen|FB|19840304|Arizona
+Chris|Harrington|MLB|19850119|Texas A&M
 Colt|Brennan|QB|19830816|
 John|Sullivan|C|19850808|Notre Dame
 Ahtyba|Rubin|DT|19860725|Iowa State
-Paul|Hubbard|WR|19850612|
-Donald|Thomas|LG|19850925|
-Tom|Santi|TE|19851122|
+Paul|Hubbard|WR|19850612|Wisconsin
+Donald|Thomas|LG|19850925|Connecticut
+Tom|Santi|TE|19851122|Virginia
 Joe|Mays|MLB|19850706|North Dakota State
-Steve|Justice|C|19840526|
-Mike|Hart|RB|19860409|
+Steve|Justice|C|19840526|Wake Forest
+Mike|Hart|RB|19860409|Michigan
 Andy|Studebaker|DE|19850916|Wheaton
 Pierre|Garcon|WR|19860808|Mount Union
-Haruki|Nakamura|S|19860418|
-Ervin|Baldwin|DE|19860825|
+Haruki|Nakamura|S|19860418|Cincinnati
+Ervin|Baldwin|DE|19860825|Michigan State
 Matt|Flynn|QB|19850620|LSU
-Brian|Johnston|DE|19860502|
-Nate|Garner|LT|19850118|
-Chauncey|Washington|RB|19850429|
-Larry|Grant|MLB|19850216|
-Landon|Cohen|DT|19860803|
-Demetrius|Bell|LT|19840503|
-Josh|Barrett|CB|19841122|
-Hilee|Taylor|DE|19860718|
+Brian|Johnston|DE|19860502|Gardner-Webb
+Nate|Garner|LT|19850118|Arkansas
+Chauncey|Washington|RB|19850429|Southern California
+Larry|Grant|MLB|19850216|Ohio State
+Landon|Cohen|DT|19860803|Ohio University
+Demetrius|Bell|LT|19840503|Northwestern State (Louisiana)
+Josh|Barrett|CB|19841122|Arizona State
+Hilee|Taylor|DE|19860718|North Carolina
 Steve|Johnson|WR|19860722|Kentucky
-Brandon|Keith|LT|19841121|
-Chaz|Schilens|WR|19851107|
-Peyton|Hillis|FB|19860121|
-Chris|Chamberlain|OLB|19850930|
+Brandon|Keith|LT|19841121|Northern Iowa
+Chaz|Schilens|WR|19851107|San Diego State
+Peyton|Hillis|FB|19860121|Arkansas
+Chris|Chamberlain|OLB|19850930|Tulsa
 Cary|Williams|CB|19841223|Washburn
-Alex|Hall|OLB|19850817|
+Alex|Hall|OLB|19850817|St. Augustine's
 Justin|Forsett|RB|19851014|California
 Corey|Clark|LT|19840621|
-Brandon|Coutu|K|19840929|
-Jamey|Richard|LG|19841009|
-Cory|Boyd|RB|19850806|
+Brandon|Coutu|K|19840929|Georgia
+Jamey|Richard|LG|19841009|Buffalo
+Cory|Boyd|RB|19850806|South Carolina
 Mike|Merritt|TE|19840903|
 Allen|Patrick|RB|19840215|
-Rob|Jackson|DE|19851103|
-Joey|LaRocque|MLB|19860315|
-Lionel|Dotson|DE|19850211|
-Kirk|Barton|LT|19841104|
-Chris|Horton|S|19841229|
-Mackenzy|Bernadeau|LG|19860103|
-Kennard|Cox|CB|19850817|
-David|Vobora|OLB|19860408|
+Rob|Jackson|DE|19851103|Kansas State
+Joey|LaRocque|MLB|19860315|Oregon State
+Lionel|Dotson|DE|19850211|Arizona
+Kirk|Barton|LT|19841104|Ohio State
+Chris|Horton|S|19841229|UCLA
+Mackenzy|Bernadeau|LG|19860103|Bentley
+Kennard|Cox|CB|19850817|Pittsburgh
+David|Vobora|OLB|19860408|Idaho
 Marcel|Reece|WR|19850623|Washington
-Andrew|Crummey|LG|19841022|
-Olaniyi|Sobomehin|RB|19841011|
-Jameel|McClain|OLB|19850725|
-Darnell|Jenkins|WR|19821231|
-Jesse|Nading|DE|19850703|
+Andrew|Crummey|LG|19841022|Maryland
+Olaniyi|Sobomehin|RB|19841011|Portland State
+Jameel|McClain|OLB|19850725|Syracuse
+Darnell|Jenkins|WR|19821231|Miami (Florida)
+Jesse|Nading|DE|19850703|Colorado State
 Glenn|Sharpe|CB|19840227|
-Brandon|Miller|DE|19860121|
-Lance|Ball|RB|19850619|
-Drew|Miller|C|19850706|
+Brandon|Miller|DE|19860121|Georgia
+Lance|Ball|RB|19850619|Maryland
+Drew|Miller|C|19850706|Florida
 Paul|Smith|QB|19840702|
-Brian|Witherspoon|S|19850605|
-Eric|Brock|CB|19850404|
-Weston|Dacus|MLB|19850919|
+Brian|Witherspoon|S|19850605|Stillman
+Eric|Brock|CB|19850404|Auburn
+Weston|Dacus|MLB|19850919|Arkansas
 Derek|Wake|OLB|19820130|Penn State
-Shane|Andrus|K|19801002|
+Shane|Andrus|K|19801002|Murray State
 Troy|Bergeron|WR|19831203|
-Kelly|Talavou|DT|19841004|
-Marquice|Cole|CB|19831101|
-Eldra|Buckley|RB|19850623|
-Derrick|Roberson|CB|19850312|
-Eric|Fowler|WR|19841017|
-Joe|Cohen|DT|19840606|
-C.J.|Ah You|DE|19820707|
-Ricky|Schmitt|P|19850817|
-Byron|Westbrook|CB|19841226|
-Richmond|McGee|P|19830425|
+Kelly|Talavou|DT|19841004|Utah
+Marquice|Cole|CB|19831101|Northwestern
+Eldra|Buckley|RB|19850623|Tennessee-Chattanooga
+Derrick|Roberson|CB|19850312|Rutgers
+Eric|Fowler|WR|19841017|Grand Valley State
+Joe|Cohen|DT|19840606|Florida
+C.J.|Ah You|DE|19820707|Oklahoma
+Ricky|Schmitt|P|19850817|Shepherd
+Byron|Westbrook|CB|19841226|Salisbury
+Richmond|McGee|P|19830425|Texas
 Doug|Legursky|C|19860609|Marshall
-Roy|Lewis|CB|19850519|
-Ogemdi|Nwagbuo|DT|19851224|
+Roy|Lewis|CB|19850519|Washington
+Ogemdi|Nwagbuo|DT|19851224|Michigan State
 Ryan|Wendell|C|19860304|Fresno State
-Kyle|DeVan|C|19850210|
-William|Robinson|LT|19841220|
-Fernando|Velasco|C|19850222|
-Jason|Banks|DE|19850508|
-Keilen|Dykes|DT|19840906|
-Lance|Long|WR|19850504|
-Nate|Jones|WR|19851230|
+Kyle|DeVan|C|19850210|Oregon State
+William|Robinson|LT|19841220|San Diego State
+Fernando|Velasco|C|19850222|Georgia
+Jason|Banks|DE|19850508|Grambling State
+Keilen|Dykes|DT|19840906|West Virginia
+Lance|Long|WR|19850504|Mississippi State
+Nate|Jones|WR|19851230|Rutgers
 Jeremy|Leman|MLB|19850301|
-Albert|Young|RB|19850225|
-Samuel|Giguere|WR|19850711|
+Albert|Young|RB|19850225|Iowa
+Samuel|Giguere|WR|19850711|Sherbrooke
 Matthew|Mulligan|TE|19850118|Maine
-Kenwin|Cummings|MLB|19860723|
-Ropati|Pitoitua|DT|19850406|
+Kenwin|Cummings|MLB|19860723|Wingate
+Ropati|Pitoitua|DT|19850406|Washington State
 Danny|Woodhead|WR|19850125|Chadron State
-Jake|Allen|WR|19850118|
+Jake|Allen|WR|19850118|Mississippi College
 Rod|Harper|WR|19850326|
 J.J.|Jansen|C|19860120|Notre Dame
 Danny|Amendola|WR|19851102|Texas Tech
-Eric|Bakhtiari|MLB|19841202|
-Brandyn|Dombrowski|LG|19850403|
+Eric|Bakhtiari|MLB|19841202|San Diego
+Brandyn|Dombrowski|LG|19850403|San Diego State
 Kyle|Arrington|CB|19860812|Hofstra
-Brian|Schaefering|DT|19830820|
-Evan|Moore|TE|19850103|
-Matt|Lawrence|RB|19850505|
-Justin|King|CB|19870511|
-Dre|Moore|DT|19850609|
-Jack|Ikegwuonu|CB|19860107|
-Robert|James|MLB|19831226|
-DeMario|Pressley|DT|19851103|
-Alvin|Bowen|MLB|19831224|
+Brian|Schaefering|DT|19830820|Lindenwood
+Evan|Moore|TE|19850103|Stanford
+Matt|Lawrence|RB|19850505|Massachusetts
+Justin|King|CB|19870511|Penn State
+Dre|Moore|DT|19850609|Maryland
+Jack|Ikegwuonu|CB|19860107|Wisconsin
+Robert|James|MLB|19831226|Arizona State
+DeMario|Pressley|DT|19851103|North Carolina State
+Alvin|Bowen|MLB|19831224|Iowa State
 Trae|Williams|CB|19850130|
 Thomas|Brown|RB|19860515|
-Mike|Gibson|LG|19851118|
-Jaymar|Johnson|WR|19840710|
+Mike|Gibson|LG|19851118|California
+Jaymar|Johnson|WR|19840710|Jackson State
 Ryan|Mundy|CB|19850211|West Virginia
-Lex|Hilliard|RB|19840730|
-Justin|Harper|WR|19850224|
-Brett|Swain|WR|19850621|
+Lex|Hilliard|RB|19840730|Montana
+Justin|Harper|WR|19850224|Virginia Tech
+Brett|Swain|WR|19850621|San Diego State
 King|Dunlap|LT|19850914|Auburn
-Keith|Zinger|TE|19841009|
-Adrian|Arrington|WR|19851107|
-Geoff|Schwartz|LT|19860711|
+Keith|Zinger|TE|19841009|Louisiana State
+Adrian|Arrington|WR|19851107|Michigan
+Geoff|Schwartz|LT|19860711|Oregon
 Mario|Urrutia|WR|19860118|
 Eric|Young|LT|19831122|
-Dantrell|Savage|RB|19850215|
-Kenny|Onatolu|OLB|19821008|
-Stefan|Logan|WR|19810602|
+Dantrell|Savage|RB|19850215|Oklahoma State
+Kenny|Onatolu|OLB|19821008|Nebraska-Omaha
+Stefan|Logan|WR|19810602|South Dakota
 Terrence|Nunn|WR|19860725|
 Matthew|Stafford|QB|19880207|Georgia
-Scott|McKillop|MLB|19860304|
+Scott|McKillop|MLB|19860304|Pittsburgh
 Matt|Slauson|LG|19860218|Nebraska
-Curtis|Taylor|S|19850713|
+Curtis|Taylor|S|19850713|Louisiana State
 Ricky|Jean Francois|DE|19861123|LSU
 John Parker|Wilson|QB|19851017|
 Chris|Baker|DT|19871008|Hampton
-Tony|Carter|CB|19860524|
+Tony|Carter|CB|19860524|Florida State
 Britton|Colquitt|P|19850320|Tennessee
-Domonique|Johnson|CB|19851107|
-Jerome|Boyd|CB|19860526|
+Domonique|Johnson|CB|19851107|Jackson State
+Jerome|Boyd|CB|19860526|Oregon
 Desmond|Bryant|DT|19851215|Harvard
-Jonathan|Compas|C|19860109|
-Nick|Miller|WR|19870329|
-Edwin|Williams|LG|19861210|
+Jonathan|Compas|C|19860109|UC Davis
+Nick|Miller|WR|19870329|Southern Utah
+Edwin|Williams|LG|19861210|Maryland
 Derek|Walker|DE|19860916|
-Lendy|Holmes|CB|19851026|
-Antonio|Dixon|DT|19850717|
+Lendy|Holmes|CB|19851026|Oklahoma
+Antonio|Dixon|DT|19850717|Miami (Florida)
 Chase|Daniel|QB|19861007|Missouri
-Woodny|Turenne|CB|19870125|
+Woodny|Turenne|CB|19870125|Louisville
 Ramon|Foster|LT|19860107|Tennessee
-Tyler|Grisham|WR|19870611|
+Tyler|Grisham|WR|19870611|Clemson
 Mike|Reilly|QB|19850101|
-Reshard|Langford|CB|19860206|
-Marcus|Mailei|RB|19861030|
+Reshard|Langford|CB|19860206|Vanderbilt
+Marcus|Mailei|RB|19861030|Weber State
 Dallas|Reynolds|C|19840423|Brigham Young
-Kahlil|Bell|RB|19861210|
-Jon|Cooper|C|19861001|
-De'von|Hall|CB|19870908|
-Roger|Allen|LG|19860210|
-K.C.|Asiodu|MLB|19861124|
-Dominic|Douglas|MLB|19870113|
-Cord|Parks|CB|19861112|
-Phil|Trautwein|LT|19860415|
-Russell|Allen|OLB|19860505|
-Brock|Bolen|RB|19850324|
-Jeremy|Navarre|DE|19870316|
+Kahlil|Bell|RB|19861210|UCLA
+Jon|Cooper|C|19861001|Oklahoma
+De'von|Hall|CB|19870908|Utah State
+Roger|Allen|LG|19860210|Missouri Western State
+K.C.|Asiodu|MLB|19861124|Central Oklahoma
+Dominic|Douglas|MLB|19870113|Mississippi State
+Cord|Parks|CB|19861112|Northeastern
+Phil|Trautwein|LT|19860415|Florida
+Russell|Allen|OLB|19860505|San Diego State
+Brock|Bolen|RB|19850324|Louisville
+Jeremy|Navarre|DE|19870316|Maryland
 Cecil|Newton|C|19860320|
-Julius|Williams|DE|19860719|
+Julius|Williams|DE|19860719|Connecticut
 Michael|Bennett|DT|19851113|Texas A&M
-Andre|Ramsey|LT|19870724|
+Andre|Ramsey|LT|19870724|Ball State
 Brian|Hoyer|QB|19851013|Michigan State
 Jamar|Love|CB|19861108|
-Nick|Hennessey|LT|19860702|
-Ashlee|Palmer|OLB|19860407|
+Nick|Hennessey|LT|19860702|Colgate
+Ashlee|Palmer|OLB|19860407|Mississippi
 Keith|Fitzhugh|CB|19861111|
 Ryan|McKee|LT|19861104|
-Zach|Potter|TE|19860504|
-Jamaal|Westerman|MLB|19850221|
-Colin|Cloherty|TE|19870916|
+Zach|Potter|TE|19860504|Nebraska
+Jamaal|Westerman|MLB|19850221|Rutgers
+Colin|Cloherty|TE|19870916|Brown
 Ramon|Humber|OLB|19870810|North Dakota State
-Jacob|Lacey|CB|19870528|
+Jacob|Lacey|CB|19870528|Oklahoma State
 Dan|Gerberry|C|19851110|
-John|Gill|DT|19861028|
-Ryan|Baker|DE|19841125|
-Sha'reff|Rashad|CB|19861006|
+John|Gill|DT|19861028|Northwestern
+Ryan|Baker|DE|19841125|Purdue
+Sha'reff|Rashad|CB|19861006|Central Florida
 Hunter|Cantwell|QB|19851230|
-Mortty|Ivy|MLB|19860426|
-Brit|Miller|RB|19860915|
-Garry|Williams|LT|19860820|
-Quan|Cosby|WR|19821223|
-Rico|Murray|CB|19870821|
-Tom|Nelson|S|19861204|
-Chris|Pressley|FB|19860808|
+Mortty|Ivy|MLB|19860426|West Virginia
+Brit|Miller|RB|19860915|Illinois
+Garry|Williams|LT|19860820|Kentucky
+Quan|Cosby|WR|19821223|Texas
+Rico|Murray|CB|19870821|Kent State
+Tom|Nelson|S|19861204|Illinois State
+Chris|Pressley|FB|19860808|Wisconsin
 Dan|Skuta|MLB|19860421|Grand Valley State
-Reggie|Walker|MLB|19861215|
-Marcus|Benard|MLB|19850726|
-James|Holt|MLB|19861124|
-Charly|Martin|WR|19840320|
-Kory|Sperry|TE|19850410|
-C.J.|Spillman|S|19860506|
-Diyral|Briggs|DE|19851031|
-Kory|Sheets|RB|19850331|
-Rudy|Carpenter|QB|19860415|
-Kevin|Ogletree|WR|19870805|
+Reggie|Walker|MLB|19861215|Kansas State
+Marcus|Benard|MLB|19850726|Jackson State
+James|Holt|MLB|19861124|Kansas
+Charly|Martin|WR|19840320|West Texas A&M
+Kory|Sperry|TE|19850410|Colorado State
+C.J.|Spillman|S|19860506|Marshall
+Diyral|Briggs|DE|19851031|Bowling Green State
+Kory|Sheets|RB|19850331|Purdue
+Rudy|Carpenter|QB|19860415|Arizona State
+Kevin|Ogletree|WR|19870805|Virginia
 Evan|Dietrich-Smith|LG|19860719|Idaho State
 Andrew|Hartline|LG|19850901|
-Cyril|Obiozor|MLB|19860926|
-Tyrell|Sutton|RB|19861219|
+Cyril|Obiozor|MLB|19860926|Texas A&M
+Tyrell|Sutton|RB|19861219|Northwestern
 Patrick|Williams|WR|19860113|
-Arian|Foster|RB|19860824|
-Tim|Jamison|DE|19860226|
-Ryan|Purvis|TE|19860508|
-Darius|Hill|TE|19850826|
+Arian|Foster|RB|19860824|Tennessee
+Tim|Jamison|DE|19860226|Michigan
+Ryan|Purvis|TE|19860508|Boston College
+Darius|Hill|TE|19850826|Ball State
 Demar|Dotson|LT|19851011|Southern Mississippi
-Trevor|Ford|CB|19860219|
-Kareem|Huggins|RB|19860524|
+Trevor|Ford|CB|19860219|Troy
+Kareem|Huggins|RB|19860524|Hofstra
 Maurice|Evans|DE|19880814|
-Bruce|Johnson|CB|19870218|
-David|Nixon|MLB|19850316|
-Bret|Lockett|S|19861007|
+Bruce|Johnson|CB|19870218|Miami (Florida)
+David|Nixon|MLB|19850316|Brigham Young
+Bret|Lockett|S|19861007|UCLA
 Jonathan|Casillas|OLB|19870603|Wisconsin
-Danny|Gorrer|CB|19860601|
+Danny|Gorrer|CB|19860601|Texas A&M
 P.J.|Hill|RB|19870103|
 Garrison|Sanborn|C|19850731|Florida State
 Dannell|Ellerbe|MLB|19851129|Georgia
 Graham|Gano|K|19870409|Florida State
-K.J.|Gerard|CB|19860422|
-Jovan|Belcher|MLB|19870724|
-Dion|Gales|DT|19850817|
-Ricky|Price|CB|19870916|
-Pierre|Walters|OLB|19860325|
+K.J.|Gerard|CB|19860422|Northern Arizona
+Jovan|Belcher|MLB|19870724|Maine
+Dion|Gales|DT|19850817|Troy
+Ricky|Price|CB|19870916|Oklahoma State
+Pierre|Walters|OLB|19860325|Eastern Illinois
 Darryl|Harris|LG|19850114|
 Mark|Sanchez|QB|19861111|USC
-Shonn|Greene|RB|19850821|
-Jarron|Gilbert|DT|19860930|
+Shonn|Greene|RB|19850821|Iowa
+Jarron|Gilbert|DT|19860930|San Jose State
 Mike|Wallace|WR|19860801|Mississippi
-Ramses|Barden|WR|19860101|
-Keenan|Lewis|CB|19860517|
-Juaquin|Iglesias|WR|19870822|
-Kyle|Moore|DE|19861025|
-D.J.|Moore|CB|19870322|
-Anthony|Hill|TE|19850102|
-Rich|Ohrnberger|LG|19860214|
+Ramses|Barden|WR|19860101|Cal Poly (San Luis Obispo)
+Keenan|Lewis|CB|19860517|Oregon State
+Juaquin|Iglesias|WR|19870822|Oklahoma
+Kyle|Moore|DE|19861025|Southern California
+D.J.|Moore|CB|19870322|Vanderbilt
+Anthony|Hill|TE|19850102|North Carolina State
+Rich|Ohrnberger|LG|19860214|Penn State
 Gregory|Toler|CB|19850102|St. Paul's (VA)
-William|Middleton|CB|19860728|
-Johnny|Knox|WR|19861103|
+William|Middleton|CB|19860728|Furman
+Johnny|Knox|WR|19861103|Abilene Christian
 Rhett|Bomar|QB|19850702|
-Victor|Harris|S|19860216|
-Cody|Glenn|OLB|19861006|
+Victor|Harris|S|19860216|Virginia Tech
+Cody|Glenn|OLB|19861006|Nebraska
 Herman|Johnson|LT|19850129|
-Joe|Burnett|CB|19861128|
-Frank|Summers|RB|19850906|
+Joe|Burnett|CB|19861128|Central Florida
+Frank|Summers|RB|19850906|Nevada-Las Vegas
 Mike|Teel|QB|19860106|
-Morgan|Trent|CB|19851214|
+Morgan|Trent|CB|19851214|Michigan
 Andrew|Gardner|LT|19860404|Georgia Tech
 Jarius|Wynn|DE|19860829|Georgia
-Bear|Pascoe|TE|19860223|
+Bear|Pascoe|TE|19860223|Fresno State
 Cedric|Peerman|RB|19861010|Virginia
-Robert|Henson|MLB|19860127|
-Brandon|Underwood|CB|19860624|
+Robert|Henson|MLB|19860127|Texas Christian
+Brandon|Underwood|CB|19860624|Cincinnati
 Brice|McCain|CB|19861210|Utah
-Al|Afalava|S|19870120|
+Al|Afalava|S|19870120|Oregon State
 Brandon|Gibson|WR|19870813|Washington State
-Will|Davis|OLB|19860602|
+Will|Davis|OLB|19860602|Illinois
 Ra'Shon|Harris|DT|19860826|
-Bernard|Scott|RB|19840210|
+Bernard|Scott|RB|19840210|Abilene Christian
 Vance|Walker|DT|19870426|Georgia Tech
 Paul|Fanaika|LG|19860409|Arizona State
 Captain|Munnerlyn|CB|19880410|South Carolina
-E.J.|Biggers|CB|19870613|
+E.J.|Biggers|CB|19870613|Western Michigan
 Brad|Jones|OLB|19860401|Colorado
-Eddie|Williams|RB|19870822|
-Moise|Fokou|OLB|19850828|
+Eddie|Williams|RB|19870822|Idaho
+Moise|Fokou|OLB|19850828|Maryland
 Jamarca|Sanford|S|19850827|Mississippi
-Sammie|Stroughter|WR|19860103|
-LaRod|Stephens-Howling|RB|19870426|
+Sammie|Stroughter|WR|19860103|Oregon State
+LaRod|Stephens-Howling|RB|19870426|Pittsburgh
 David|Johnson|TE|19870826|Arkansas State
-Marko|Mitchell|WR|19850311|
-Courtney|Greene|CB|19861123|
+Marko|Mitchell|WR|19850311|Nevada-Reno
+Courtney|Greene|CB|19861123|Rutgers
 Lance|Louis|LT|19850424|San Diego State
-Nick|Reed|DE|19870901|
-Cameron|Morrah|TE|19870318|
+Nick|Reed|DE|19870901|Oregon
+Cameron|Morrah|TE|19870318|California
 Trevor|Canfield|LG|19860110|
 Ryan|Succop|K|19860919|South Carolina
 Mark|Parson|CB|19860509|
-Jason|Smith|LT|19860430|
+Jason|Smith|LT|19860430|Baylor
 Tyson|Jackson|DE|19860606|LSU
-Aaron|Curry|OLB|19860406|
+Aaron|Curry|OLB|19860406|Wake Forest
 Andre|Smith|LT|19870125|Alabama
 Darrius|Heyward-Bey|WR|19870226|Maryland
 Eugene|Monroe|LT|19870418|Virginia
 B.J.|Raji|DE|19860711|Boston College
 Michael|Crabtree|WR|19870914|Texas Tech
-Aaron|Maybin|DE|19880406|
-Knowshon|Moreno|RB|19870716|
+Aaron|Maybin|DE|19880406|Penn State
+Knowshon|Moreno|RB|19870716|Georgia
 Brian|Orakpo|OLB|19860731|Texas
 Malcolm|Jenkins|CB|19871220|Ohio State
 Brian|Cushing|OLB|19870124|USC
@@ -16070,517 +16070,517 @@ Larry|English|OLB|19860122|Northern Illinois
 Josh|Freeman|QB|19880113|Kansas State
 Robert|Ayers|OLB|19850906|Tennessee
 Jeremy|Maclin|WR|19880511|Missouri
-Brandon|Pettigrew|TE|19850223|
+Brandon|Pettigrew|TE|19850223|Oklahoma State
 Alex|Mack|C|19851119|California
 Percy|Harvin|WR|19880528|Florida
 Michael|Oher|LT|19860528|Mississippi
-Peria|Jerry|DT|19840823|
+Peria|Jerry|DT|19840823|Mississippi
 Vontae|Davis|CB|19880527|Illinois
 Clay|Matthews|OLB|19860514|Southern California
-Donald|Brown|RB|19870411|
+Donald|Brown|RB|19870411|Connecticut
 Eric|Wood|LG|19860318|Louisville
 Hakeem|Nicks|WR|19880114|North Carolina
 Kenny|Britt|WR|19880919|Rutgers
-Chris|Wells|RB|19880807|
+Chris|Wells|RB|19880807|Ohio State
 Evander|Hood|DE|19870216|Missouri
 Louis|Delmas|S|19870412|Western Michigan
 Patrick|Chung|S|19870819|Oregon
-James|Laurinaitis|MLB|19861203|
-Brian|Robiskie|WR|19871203|
-Alphonso|Smith|CB|19851020|
+James|Laurinaitis|MLB|19861203|Ohio State
+Brian|Robiskie|WR|19871203|Ohio State
+Alphonso|Smith|CB|19851020|Wake Forest
 Rey|Maualuga|OLB|19870120|USC
-Eben|Britton|LT|19871014|
-Ron|Brace|DT|19861218|
+Eben|Britton|LT|19871014|Arizona
+Ron|Brace|DT|19861218|Boston College
 Darius|Butler|CB|19860318|Connecticut
 Jairus|Byrd|S|19861007|Oregon
-Everette|Brown|DE|19870807|
-Pat|White|QB|19860225|
-Clint|Sintim|OLB|19860221|
+Everette|Brown|DE|19870807|Florida State
+Pat|White|QB|19860225|West Virginia
+Clint|Sintim|OLB|19860221|Virginia
 Connor|Barwin|DE|19861015|Cincinnati
 Michael|Mitchell|S|19870610|Ohio U.
-Darcel|McBath|S|19851028|
+Darcel|McBath|S|19851028|Texas Tech
 Max|Unger|LG|19860414|Oregon
-Mohamed|Massaquoi|WR|19861124|
+Mohamed|Massaquoi|WR|19861124|Georgia
 Andy|Levitre|LG|19860515|Oregon State
-David|Veikune|MLB|19851212|
+David|Veikune|MLB|19851212|Hawaii
 LeSean|McCoy|RB|19880712|Pittsburgh
 Phil|Loadholt|LT|19860121|Oklahoma
 William|Moore|S|19850518|Missouri
-Fili|Moala|DT|19850623|
+Fili|Moala|DT|19850623|Southern California
 Paul|Kruger|OLB|19860215|Utah
 Sebastian|Vollmer|LT|19840710|Houston
 Sherrod|Martin|CB|19841012|Troy
 Will|Beatty|LT|19850302|Connecticut
 Sean|Smith|CB|19870714|Utah
 Sen'Derrick|Marks|DT|19870223|Auburn
-Richard|Quinn|TE|19860906|
+Richard|Quinn|TE|19860906|North Carolina
 Bradley|Fletcher|CB|19860625|Iowa
-Alex|Magee|DE|19870428|
-Jason|Williams|MLB|19860423|
+Alex|Magee|DE|19870428|Purdue
+Jason|Williams|MLB|19860423|Western Illinois
 Michael|Johnson|DE|19870207|Georgia Tech
-Matt|Shaughnessy|DE|19860923|
-Terrance|Knighton|DT|19860704|
-Derek|Cox|CB|19860922|
-Glen|Coffee|RB|19870501|
+Matt|Shaughnessy|DE|19860923|Wisconsin
+Terrance|Knighton|DT|19860704|Temple
+Derek|Cox|CB|19860922|William & Mary
+Glen|Coffee|RB|19870501|Alabama
 DeAndre|Levy|MLB|19870326|Wisconsin
-Antoine|Caldwell|LG|19860419|
+Antoine|Caldwell|LG|19860419|Alabama
 Louis|Vasquez|LG|19870411|Texas Tech
 Kraig|Urbik|LG|19850923|Wisconsin
-Kevin|Barnes|CB|19860915|
+Kevin|Barnes|CB|19860915|Maryland
 Roy|Miller|DT|19870709|Texas
-Derrick|Williams|WR|19860706|
+Derrick|Williams|WR|19860706|Penn State
 Brandon|Tate|WR|19871005|North Carolina
-Asher|Allen|CB|19880122|
-Patrick|Turner|WR|19870519|
+Asher|Allen|CB|19880122|Georgia
+Patrick|Turner|WR|19870519|Southern California
 Lardarius|Webb|CB|19851012|Nicholls State
 Jared|Cook|TE|19870407|South Carolina
 Christopher|Owens|CB|19861201|San Jose State
-Deon|Butler|WR|19860104|
+Deon|Butler|WR|19860104|Penn State
 Jerraud|Powers|CB|19870719|Auburn
-Ryan|Mouton|CB|19860923|
+Ryan|Mouton|CB|19860923|Hawaii
 Rashad|Johnson|S|19860102|Alabama
-Chase|Coffman|TE|19861110|
-Travis|Beckum|TE|19870124|
-Stephen|McGee|QB|19850927|
-Donald|Washington|CB|19860728|
-Darell|Scott|DT|19860315|
-Kaluka|Maiava|MLB|19861227|
-Jonathan|Luigs|C|19860811|
-Mike|Thomas|WR|19870604|
+Chase|Coffman|TE|19861110|Missouri
+Travis|Beckum|TE|19870124|Wisconsin
+Stephen|McGee|QB|19850927|Texas A&M
+Donald|Washington|CB|19860728|Ohio State
+Darell|Scott|DT|19860315|Clemson
+Kaluka|Maiava|MLB|19861227|Southern California
+Jonathan|Luigs|C|19860811|Arkansas
+Mike|Thomas|WR|19870604|Arizona
 Brian|Hartline|WR|19861122|Ohio State
 T.J.|Lang|LG|19870920|Eastern Michigan
-Victor|Butler|OLB|19870729|
-Mike|Goodson|RB|19870523|
+Victor|Butler|OLB|19870729|Oregon State
+Mike|Goodson|RB|19870523|Texas A&M
 Glover|Quin|CB|19860115|New Mexico
-Vaughn|Martin|DE|19860418|
-David|Bruton|S|19870723|
+Vaughn|Martin|DE|19860418|Western Ontario
+David|Bruton|S|19870723|Notre Dame
 Sammie Lee|Hill|DT|19861108|Stillman
-Shawn|Nelson|TE|19851005|
+Shawn|Nelson|TE|19851005|Southern Mississippi
 Louis|Murphy|WR|19870511|Florida
 Lawrence|Sidbury|DE|19860206|Richmond
-Slade|Norris|MLB|19851025|
-Austin|Collie|WR|19851111|
-Tony|Fiammetta|RB|19860822|
-Gerald|McRath|OLB|19860616|
-Seth|Olsen|LG|19851217|
+Slade|Norris|MLB|19851025|Oregon State
+Austin|Collie|WR|19851111|Brigham Young
+Tony|Fiammetta|RB|19860822|Syracuse
+Gerald|McRath|OLB|19860616|Southern Mississippi
+Seth|Olsen|LG|19851217|Iowa
 Tyronne|Green|LG|19860406|Auburn
-Gartrell|Johnson|RB|19860621|
-Troy|Kropog|LT|19860731|
-Kenny|McKinley|WR|19870131|
+Gartrell|Johnson|RB|19860621|Colorado State
+Troy|Kropog|LT|19860731|Tulane
+Kenny|McKinley|WR|19870131|South Carolina
 Kevin|Huber|P|19850716|Cincinnati
-DeAngelo|Smith|S|19860717|
-Jarett|Dillard|WR|19851221|
-Quinn|Johnson|FB|19860930|
-Nic|Harris|OLB|19861006|
-Jasper|Brinkley|MLB|19850712|
+DeAngelo|Smith|S|19860717|Cincinnati
+Jarett|Dillard|WR|19851221|Rice
+Quinn|Johnson|FB|19860930|Louisiana State
+Nic|Harris|OLB|19861006|Oklahoma
+Jasper|Brinkley|MLB|19850712|South Carolina
 James|Casey|TE|19840922|Rice
-Garrett|Reynolds|LT|19870701|
+Garrett|Reynolds|LT|19870701|North Carolina
 Jamon|Meredith|LT|19860511|South Carolina
 Duke|Robinson|LG|19861010|
 Thomas|Morstead|P|19860308|Southern Methodist
-Chris|Clemons|S|19850915|
-Michael|Hamlin|S|19851121|
+Chris|Clemons|S|19850915|Clemson
+Michael|Hamlin|S|19851121|Clemson
 Nate|Davis|QB|19870525|
-David|Buehler|K|19870205|
-Javon|Ringer|RB|19870202|
-Tom|Brandstater|QB|19841021|
-Quinten|Lawrence|WR|19840921|
-Spencer|Adkins|OLB|19870516|
+David|Buehler|K|19870205|Southern California
+Javon|Ringer|RB|19870202|Michigan State
+Tom|Brandstater|QB|19841021|Fresno State
+Quinten|Lawrence|WR|19840921|McNeese State
+Spencer|Adkins|OLB|19870516|Miami (Florida)
 Zach|Miller|TE|19841004|Nebraska-Omaha
-Cary|Harris|CB|19870322|
-Kevin|Ellison|S|19870108|
-Coye|Francies|CB|19861115|
-Aaron|Brown|RB|19851010|
-James|Davis|RB|19860101|
-Keith|Null|QB|19850924|
-Jake|Ingram|C|19851023|
-Curtis|Painter|QB|19850624|
+Cary|Harris|CB|19870322|Southern California
+Kevin|Ellison|S|19870108|Southern California
+Coye|Francies|CB|19861115|San Jose State
+Aaron|Brown|RB|19851010|Texas Christian
+James|Davis|RB|19860101|Clemson
+Keith|Null|QB|19850924|West Texas A&M
+Jake|Ingram|C|19851023|Hawaii
+Curtis|Painter|QB|19850624|Purdue
 Brandon|Myers|TE|19850904|Iowa
 Jason|McCourty|CB|19870813|Rutgers
-Dominique|Edison|WR|19860716|
-Myron|Pryor|DE|19860613|
+Dominique|Edison|WR|19860716|Stephen F. Austin State
+Myron|Pryor|DE|19860613|Kentucky
 John|Phillips|TE|19870611|Virginia
-Chris|Ogbonnaya|RB|19860520|
-Javarris|Williams|RB|19860408|
-J.D.|Folsom|MLB|19840819|
+Chris|Ogbonnaya|RB|19860520|Texas
+Javarris|Williams|RB|19860408|Tennessee State
+J.D.|Folsom|MLB|19840819|Weber State
 Fui|Vakapuna|RB|19840309|
-Ellis|Lankster|CB|19870603|
+Ellis|Lankster|CB|19870603|West Virginia
 Pat|McAfee|P|19870502|West Virginia
-Lydon|Murtha|LT|19851113|
+Lydon|Murtha|LT|19851113|Nebraska
 Julian|Edelman|WR|19860522|Kent State
-Zack|Follett|MLB|19870703|
-Jake|O'Connell|TE|19851106|
+Zack|Follett|MLB|19870703|California
+Jake|O'Connell|TE|19851106|Miami (Ohio)
 Rashad|Jennings|RB|19850326|Liberty
-Tiquan|Underwood|WR|19870217|
-Jeremy|Jarmon|DE|19871120|
-Chris|Jennings|RB|19851212|
-Ryan|Manalac|MLB|19851020|
-Donovan|Raiola|C|19821213|
-Stanley|Daniels|LG|19841130|
-Jesse|Holley|WR|19840108|
-Onrea|Jones|WR|19831222|
-Tim|Duckworth|LG|19820914|
+Tiquan|Underwood|WR|19870217|Rutgers
+Jeremy|Jarmon|DE|19871120|Kentucky
+Chris|Jennings|RB|19851212|Arizona
+Ryan|Manalac|MLB|19851020|Cincinnati
+Donovan|Raiola|C|19821213|Wisconsin
+Stanley|Daniels|LG|19841130|Washington
+Jesse|Holley|WR|19840108|North Carolina
+Onrea|Jones|WR|19831222|Hampton
+Tim|Duckworth|LG|19820914|Auburn
 Chris|Clark|LT|19851001|Southern Mississippi
-Jehuu|Caulcrick|RB|19830806|
-Bryan|Mattison|LG|19840515|
-Taj|Smith|WR|19830930|
-Marcus|Dixon|DT|19840916|
-Caleb|Campbell|MLB|19860619|
+Jehuu|Caulcrick|RB|19830806|Michigan State
+Bryan|Mattison|LG|19840515|Iowa
+Taj|Smith|WR|19830930|Syracuse
+Marcus|Dixon|DT|19840916|Hampton
+Caleb|Campbell|MLB|19860619|Army
 Joe|Reitz|LT|19850824|Western Michigan
-Anthony|Armstrong|WR|19830329|
+Anthony|Armstrong|WR|19830329|West Texas A&M
 Tanner|Purdum|C|19840815|Baker
-Lee|Robinson|MLB|19870423|
-Mike|Rivera|MLB|19860110|
+Lee|Robinson|MLB|19870423|Alcorn State
+Mike|Rivera|MLB|19860110|Kansas
 Steve|McLendon|DT|19860103|Troy
-Isaac|Redman|RB|19841110|
+Isaac|Redman|RB|19841110|Bowie State
 Colt|Anderson|CB|19851025|Montana
-Rob|Francois|MLB|19850514|
-Ray|Feinga|LG|19860508|
-Jerome|Johnson|FB|19850119|
-Pete|Ittersagen|CB|19850928|
-Devin|Moore|RB|19851106|
-Emanuel|Cook|CB|19880120|
-Britt|Davis|WR|19860423|
-Tim|Masthay|P|19870316|
-John|Matthews|WR|19860719|
-Patrick|Brown|LT|19861225|
-C.J.|Davis|LG|19870202|
+Rob|Francois|MLB|19850514|Boston College
+Ray|Feinga|LG|19860508|Brigham Young
+Jerome|Johnson|FB|19850119|Nevada-Reno
+Pete|Ittersagen|CB|19850928|Wheaton
+Devin|Moore|RB|19851106|Wyoming
+Emanuel|Cook|CB|19880120|South Carolina
+Britt|Davis|WR|19860423|Northern Illinois
+Tim|Masthay|P|19870316|Kentucky
+John|Matthews|WR|19860719|San Diego
+Patrick|Brown|LT|19861225|Central Florida
+C.J.|Davis|LG|19870202|Pittsburgh
 Nick|Sundberg|C|19870729|California
-Nate|Ness|CB|19860905|
+Nate|Ness|CB|19860905|Arizona
 Jordan|Norwood|WR|19860928|Penn State
-Darry|Beckwith|MLB|19870515|
-Curtis|Brinkley|RB|19850920|
+Darry|Beckwith|MLB|19870515|Louisiana State
+Curtis|Brinkley|RB|19850920|Syracuse
 Alex|Boone|LT|19870504|Ohio State
 Reggie|Jones|CB|19860315|
 Jermey|Parnell|LT|19860720|Mississippi
 Darrel|Young|FB|19870408|Villanova
 Antone|Smith|RB|19850917|Florida State
-Jackie|Bates|CB|19861012|
-Tom|Crabtree|TE|19851104|
-Henry|Melton|DT|19861011|
-Jason|Phillips|MLB|19860214|
-Brandon|Hughes|CB|19860523|
+Jackie|Bates|CB|19861012|Hampton
+Tom|Crabtree|TE|19851104|Miami (Ohio)
+Henry|Melton|DT|19861011|Texas
+Jason|Phillips|MLB|19860214|Texas Christian
+Brandon|Hughes|CB|19860523|Oregon State
 Davon|Drew|TE|19851209|
-Troy|Nolan|S|19860907|
-Nick|Schommer|S|19860103|
+Troy|Nolan|S|19860907|Arizona State
+Nick|Schommer|S|19860103|North Dakota State
 Clinton|McDonald|DT|19870106|Memphis
-Corvey|Irvin|DT|19850503|
-Tyrone|McKenzie|MLB|19851211|
-Chip|Vaughn|CB|19851026|
-Stanley|Arnoux|OLB|19860909|
-Brandon|Williams|OLB|19880621|
-Andre|Brown|RB|19861215|
-Colin|Brown|LT|19850829|
+Corvey|Irvin|DT|19850503|Georgia
+Tyrone|McKenzie|MLB|19851211|South Florida
+Chip|Vaughn|CB|19851026|Wake Forest
+Stanley|Arnoux|OLB|19860909|Wake Forest
+Brandon|Williams|OLB|19880621|Texas Tech
+Andre|Brown|RB|19861215|North Carolina State
+Colin|Brown|LT|19850829|Missouri
 Don|Carey|CB|19870214|Norfolk State
-Manuel|Johnson|WR|19861014|
-Jaimie|Thomas|LG|19860824|
-Dan|Gronkowski|TE|19850121|
+Manuel|Johnson|WR|19861014|Oklahoma
+Jaimie|Thomas|LG|19860824|Maryland
+Dan|Gronkowski|TE|19850121|Maryland
 Joshua|Mauga|MLB|19870620|Nevada
-Julius|Pruitt|WR|19851230|
-Paul|Pratt|CB|19850501|
-Chad|Hall|WR|19860523|
-Chris|Bryan|P|19820306|
-Todd|Carter|K|19860607|
-Clint|Stitser|K|19850519|
+Julius|Pruitt|WR|19851230|Ouachita Baptist
+Paul|Pratt|CB|19850501|Nevada-Reno
+Chad|Hall|WR|19860523|Air Force
+Chris|Bryan|P|19820306|none
+Todd|Carter|K|19860607|Grand Valley State
+Clint|Stitser|K|19850519|Fresno State
 Rafael|Bush|CB|19870512|South Carolina State
 Justin|Drescher|C|19880101|Colorado
-Dimitri|Nance|RB|19880218|
-Michael|Palmer|TE|19880118|
-Antonio|Coleman|OLB|19860901|
-Dominique|Harris|CB|19870414|
-Anderson|Russell|CB|19870530|
-Keiland|Williams|RB|19860814|
+Dimitri|Nance|RB|19880218|Arizona State
+Michael|Palmer|TE|19880118|Clemson
+Antonio|Coleman|OLB|19860901|Auburn
+Dominique|Harris|CB|19870414|Temple
+Anderson|Russell|CB|19870530|Ohio State
+Keiland|Williams|RB|19860814|Louisiana State
 Logan|Paulsen|TE|19870226|UCLA
 Dorian|Brooks|LG|19870416|
 Joique|Bell|RB|19860804|Wayne State (Mich.)
-Naaman|Roosevelt|WR|19871224|
+Naaman|Roosevelt|WR|19871224|Buffalo
 Jonathan|Weeks|C|19860217|Baylor
 Sergio|Brown|CB|19880522|Notre Dame
 Kyle|Love|DT|19861118|Mississippi State
 Dane|Fletcher|OLB|19860914|Montana State
-Jeromy|Miles|CB|19870720|
+Jeromy|Miles|CB|19870720|Massachusetts
 Vincent|Rey|MLB|19870906|Duke
 Mike|Windt|C|19860529|Cincinnati
-Jermelle|Cudjo|DT|19860928|
+Jermelle|Cudjo|DT|19860928|Central Oklahoma
 Darian|Stewart|S|19880804|South Carolina
-Keith|Toston|RB|19870506|
-Jake|Ballard|TE|19871221|
-Duke|Calhoun|WR|19870901|
-Nate|Collins|DT|19871214|
+Keith|Toston|RB|19870506|Oklahoma State
+Jake|Ballard|TE|19871221|Ohio State
+Duke|Calhoun|WR|19870901|Memphis
+Nate|Collins|DT|19871214|Virginia
 Victor|Cruz|WR|19861111|Massachusetts
-Kevin|Alexander|MLB|19870701|
-Kyle|McCarthy|CB|19860930|
+Kevin|Alexander|MLB|19870701|Clemson
+Kyle|McCarthy|CB|19860930|Notre Dame
 Nathan|Overbay|TE|19870104|
 Cassius|Vaughn|CB|19871103|Mississippi
 Austin|Howard|LT|19870322|Northern Iowa
-David|Pender|CB|19871204|
-Lemuel|Jeanpierre|C|19870519|
-Brian|Jackson|CB|19870504|
+David|Pender|CB|19871204|Purdue
+Lemuel|Jeanpierre|C|19870519|South Carolina
+Brian|Jackson|CB|19870504|Oklahoma
 Jeff|Cumberland|TE|19870502|Illinois
-David|Nelson|WR|19861107|
+David|Nelson|WR|19861107|Florida
 LeGarrette|Blount|RB|19861205|Oregon
-Joe|Joseph|DT|19851020|
-Kevin|Matthews|C|19870204|
-Aaron|Berry|CB|19880625|
-Max|Hall|QB|19851001|
-Stephen|Williams|WR|19860629|
-A.J.|Jefferson|CB|19880404|
-Max|Komar|WR|19870430|
-Marshay|Green|CB|19860114|
-Jonathon|Amaya|CB|19881125|
-Marlon|Moore|WR|19870903|
-Roberto|Wallace|WR|19860510|
-Travis|Ivey|DT|19861222|
-Cornelius|Brown|CB|19880226|
-Barry|Turner|DE|19870107|
-Mike|Balogun|MLB|19830928|
+Joe|Joseph|DT|19851020|Miami (Florida)
+Kevin|Matthews|C|19870204|Texas A&M
+Aaron|Berry|CB|19880625|Pittsburgh
+Max|Hall|QB|19851001|Brigham Young
+Stephen|Williams|WR|19860629|Toledo
+A.J.|Jefferson|CB|19880404|Fresno State
+Max|Komar|WR|19870430|Idaho
+Marshay|Green|CB|19860114|Mississippi
+Jonathon|Amaya|CB|19881125|Nevada-Reno
+Marlon|Moore|WR|19870903|Fresno State
+Roberto|Wallace|WR|19860510|San Diego State
+Travis|Ivey|DT|19861222|Maryland
+Cornelius|Brown|CB|19880226|Texas-El Paso
+Barry|Turner|DE|19870107|Nebraska
+Mike|Balogun|MLB|19830928|Oklahoma
 Tramaine|Brock|CB|19880820|Belhaven
-Keaton|Kristick|MLB|19880425|
+Keaton|Kristick|MLB|19880425|Oregon State
 Chris|Maragos|CB|19870106|Wisconsin
 R.J.|Archer|QB|19870805|
-Rashawn|Jackson|RB|19870115|
-Andre|Neblett|DT|19880607|
-Aaron|Pettrey|K|19860617|
-Will|Barker|LT|19870703|
+Rashawn|Jackson|RB|19870115|Virginia
+Andre|Neblett|DT|19880607|Temple
+Aaron|Pettrey|K|19860617|Ohio State
+Will|Barker|LT|19870703|Virginia
 Barry|Church|S|19880211|Toledo
-Phil|Costa|C|19870711|
-Chris|Gronkowski|FB|19861226|
-Bryan|McCann|CB|19870929|
+Phil|Costa|C|19870711|Maryland
+Chris|Gronkowski|FB|19861226|Arizona
+Bryan|McCann|CB|19870929|Southern Methodist
 Danny|McCray|S|19880310|Louisiana State
-Lonyae|Miller|RB|19880429|
-Verran|Tucker|WR|19880626|
-Kellen|Heard|DT|19851017|
-Alex|Joseph|MLB|19880706|
-Nick|McDonald|LG|19870627|
+Lonyae|Miller|RB|19880429|Fresno State
+Verran|Tucker|WR|19880626|California
+Kellen|Heard|DT|19851017|Memphis
+Alex|Joseph|MLB|19880706|Temple
+Nick|McDonald|LG|19870627|Grand Valley State
 Sam|Shields|CB|19871208|Miami (Fla.)
 Frank|Zombo|OLB|19870305|Central Michigan
-Derek|Hardman|LT|19860913|
-Jeron|Mastrud|TE|19871217|
+Derek|Hardman|LT|19860913|Eastern Kentucky
+Jeron|Mastrud|TE|19871217|Kansas State
 Preston|Parker|WR|19870213|North Alabama
-Javarris|James|RB|19870918|
-Brandon|King|S|19870128|
-Jeff|Linkenbach|LT|19870609|
-Brandon|James|WR|19871221|
-Mike|Newton|CB|19871111|
-Blair|White|WR|19870220|
-Marcus|Brown|CB|19870127|
-Joe|Pawelek|MLB|19861208|
+Javarris|James|RB|19870918|Miami (Florida)
+Brandon|King|S|19870128|Purdue
+Jeff|Linkenbach|LT|19870609|Cincinnati
+Brandon|James|WR|19871221|Florida
+Mike|Newton|CB|19871111|Buffalo
+Blair|White|WR|19870220|Michigan State
+Marcus|Brown|CB|19870127|Arkansas State
+Joe|Pawelek|MLB|19861208|Baylor
 Josh|Pinkard|CB|19860402|
-Jeff|Byers|C|19850907|
+Jeff|Byers|C|19850907|Southern California
 George|Johnson|DE|19871211|Rutgers
-Daniel|Baldridge|LT|19851021|
-Mike|Caussin|TE|19870226|
-Jacob|Cutrera|OLB|19880518|
-Josh|Gordy|CB|19870209|
-Kevin|Haslam|LG|19861108|
-Robert|Malone|P|19880204|
-Aaron|Morgan|DE|19881230|
+Daniel|Baldridge|LT|19851021|Marshall
+Mike|Caussin|TE|19870226|James Madison
+Jacob|Cutrera|OLB|19880518|Louisiana State
+Josh|Gordy|CB|19870209|Central Michigan
+Kevin|Haslam|LG|19861108|Rutgers
+Robert|Malone|P|19880204|Fresno State
+Aaron|Morgan|DE|19881230|Louisiana-Monroe
 Ko|Quaye|DT|19870511|
-Donald|Jones|WR|19871217|
-Dominique|Curry|WR|19870816|
-Brandon|Carter|LG|19860910|
+Donald|Jones|WR|19871217|Youngstown State
+Dominique|Curry|WR|19870816|California (Pennsylvania)
+Brandon|Carter|LG|19860910|Texas Tech
 Chris|Ivory|RB|19880322|Tiffin University
-Cord|Howard|LG|19870702|
+Cord|Howard|LG|19870702|Georgia Tech
 Marcus|Sherels|CB|19870930|Minnesota
 Junior|Galette|DE|19880327|Stillman
 Clint|Gresham|C|19860824|Texas Christian
 Morgan|Cox|C|19860426|Tennessee
-Prince|Miller|CB|19880114|
-Isaiah|Greenhouse|MLB|19870715|
-Malcolm|Sheppard|DT|19880213|
-Torri|Williams|CB|19860829|
+Prince|Miller|CB|19880114|Georgia
+Isaiah|Greenhouse|MLB|19870715|Northwestern State (Louisiana)
+Malcolm|Sheppard|DT|19880213|Arkansas
+Torri|Williams|CB|19860829|Purdue
 Seyi|Ajirotutu|WR|19870612|Fresno State
-Richard|Goodman|WR|19870423|
-Kion|Wilson|MLB|19861024|
-Brandon|Lang|OLB|19860618|
-Graham|Harrell|QB|19850522|
+Richard|Goodman|WR|19870423|Florida State
+Kion|Wilson|MLB|19861024|South Florida
+Brandon|Lang|OLB|19860618|Troy
+Graham|Harrell|QB|19850522|Texas Tech
 Corey|Wootton|DE|19870622|Northwestern
-Joshua|Moore|CB|19880820|
+Joshua|Moore|CB|19880820|Kansas State
 Dan|LeFevour|QB|19870319|Central Michigan
 Ted|Larsen|C|19870613|North Carolina State
-Kyle|Williams|WR|19880719|
+Kyle|Williams|WR|19880719|Arizona State
 J'Marcus|Webb|LT|19880808|West Texas A&amp;M
 Phillip|Adams|CB|19880720|South Carolina State
-Syd'Quan|Thompson|CB|19870207|
+Syd'Quan|Thompson|CB|19870207|California
 Shay|Hodge|WR|19871018|
 Brandon|Banks|WR|19871221|Kansas State
-Martin|Tevaseu|DT|19871007|
-Brian|Sanford|DE|19870912|
-Cory|Greenwood|MLB|19850605|
+Martin|Tevaseu|DT|19871007|Nevada-Las Vegas
+Brian|Sanford|DE|19870912|Temple
+Cory|Greenwood|MLB|19850605|Concordia (Quebec)
 Devin|McCourty|CB|19870813|Rutgers
 Rodger|Saffold|LT|19880606|Indiana
-Chris|Cook|CB|19870215|
-Brian|Price|DT|19890410|
+Chris|Cook|CB|19870215|Virginia
+Brian|Price|DT|19890410|UCLA
 Dexter|McCluster|WR|19880825|Mississippi
 Nate|Allen|S|19871130|South Florida
 T.J.|Ward|S|19861212|Oregon
 Arrelious|Benn|WR|19880908|Illinois
-Torell|Troup|DT|19880623|
+Torell|Troup|DT|19880623|Central Florida
 Rob|Gronkowski|TE|19890514|Arizona
 Lamarr|Houston|DE|19870624|Texas
 Zane|Beadles|LT|19861119|Utah
 Jimmy|Clausen|QB|19870921|Notre Dame
 Javier|Arenas|CB|19871028|Alabama
-Jermaine|Cunningham|DE|19880424|
+Jermaine|Cunningham|DE|19880424|Florida
 Carlos|Dunlap|DE|19890228|Florida
 Sean|Lee|MLB|19860722|Penn State
 Mike|Neal|DE|19870626|Purdue
-Terrence|Cody|DT|19880628|
+Terrence|Cody|DT|19880628|Alabama
 Vladimir|Ducasse|LG|19871015|Massachusetts
 Brandon|Spikes|MLB|19870903|Florida
 Charles|Brown|LT|19870410|USC
-Jerome|Murphy|CB|19870113|
-Amari|Spievey|CB|19880415|
-Myron|Lewis|CB|19871124|
-Jon|Asamoah|LG|19880721|
+Jerome|Murphy|CB|19870113|South Florida
+Amari|Spievey|CB|19880415|Iowa
+Myron|Lewis|CB|19871124|Vanderbilt
+Jon|Asamoah|LG|19880721|Illinois
 Jared|Veldheer|C|19870614|Hillsdale
 Ed|Dickson|TE|19870725|Oregon
 Morgan|Burnett|S|19890113|Georgia Tech
-Alex|Carrington|DE|19870619|
+Alex|Carrington|DE|19870619|Arkansas State
 John|Jerry|LG|19860614|Mississippi
-Major|Wright|S|19880701|
+Major|Wright|S|19880701|Florida
 Brandon|LaFell|WR|19861104|LSU
 J.D.|Walton|C|19870324|Baylor
 Earl|Mitchell|DT|19870925|Arizona
 Emmanuel|Sanders|WR|19870317|Southern Methodist
 Corey|Peters|DT|19880608|Kentucky
-Jordan|Shipley|WR|19851223|
+Jordan|Shipley|WR|19851223|Texas
 Colt|McCoy|QB|19860905|Texas
-Daniel|Te'o-Nesheim|DE|19870612|
+Daniel|Te'o-Nesheim|DE|19870612|Washington
 Eric|Decker|WR|19870315|Minnesota
 Andre|Roberts|WR|19880109|Citadel
-Armanti|Edwards|WR|19880308|
-Taylor|Price|WR|19871008|
+Armanti|Edwards|WR|19880308|Appalachian State
+Taylor|Price|WR|19871008|Ohio University
 Shawn|Lauvao|LG|19871026|Arizona State
-Tony|Moeaki|TE|19870608|
+Tony|Moeaki|TE|19870608|Iowa
 Jimmy|Graham|TE|19861124|Miami
-Brandon|Ghee|CB|19870606|
-Rennie|Curran|OLB|19881110|
-Mike|Johnson|LG|19870402|
-Mardy|Gilyard|WR|19861202|
+Brandon|Ghee|CB|19870606|Wake Forest
+Rennie|Curran|OLB|19881110|Georgia
+Mike|Johnson|LG|19870402|Alabama
+Mardy|Gilyard|WR|19861202|Cincinnati
 Everson|Griffen|DE|19871222|Southern California
-Mike|Williams|WR|19870518|
-Darryl|Sharpton|OLB|19880101|
+Mike|Williams|WR|19870518|Syracuse
+Darryl|Sharpton|OLB|19880101|Miami (Florida)
 Perry|Riley|MLB|19880503|LSU
 Alterraun|Verner|CB|19881213|UCLA
-Trevard|Lindley|CB|19860202|
-Bruce|Campbell|LG|19880525|
-Jacoby|Ford|WR|19870727|
+Trevard|Lindley|CB|19860202|Kentucky
+Bruce|Campbell|LG|19880525|Maryland
+Jacoby|Ford|WR|19870727|Clemson
 Darrell|Stuckey|S|19870616|Kansas
 Walter|Thurmond|CB|19870812|Oregon
-Joe|McKnight|RB|19880416|
-Aaron|Hernandez|TE|19891106|
+Joe|McKnight|RB|19880416|Southern California
+Aaron|Hernandez|TE|19891106|Florida
 Dennis|Pitta|TE|19850629|Brigham Young
-Phillip|Dillard|MLB|19861210|
-Thaddeus|Gibson|OLB|19871021|
+Phillip|Dillard|MLB|19861210|Nebraska
+Thaddeus|Gibson|OLB|19871021|Ohio State
 Joe|Hawley|C|19881022|Nevada-Las Vegas
-Garrett|Graham|TE|19860804|
+Garrett|Graham|TE|19860804|Wisconsin
 Geno|Atkins|DT|19880328|Georgia
-Keenan|Clayton|OLB|19870619|
+Keenan|Clayton|OLB|19870619|Oklahoma
 Mike|Kafka|QB|19870725|Northwestern
 Al|Woods|DT|19870325|Louisiana State
-Eric|Norwood|OLB|19880524|
+Eric|Norwood|OLB|19880524|South Carolina
 Clay|Harbor|TE|19870702|Missouri State
-Akwasi|Owusu-Ansah|S|19880410|
+Akwasi|Owusu-Ansah|S|19880410|Indiana (Pennsylvania)
 Jason|Fox|LT|19880502|Miami
-Jacques|McClendon|LG|19871210|
-O'Brien|Schofield|MLB|19870403|
-Roddrick|Muckelroy|MLB|19861027|
+Jacques|McClendon|LG|19871210|Tennessee
+O'Brien|Schofield|MLB|19870403|Wisconsin
+Roddrick|Muckelroy|MLB|19861027|Texas
 Michael|Hoomanawanui|TE|19880704|Illinois
 Kam|Chancellor|S|19880403|Virginia Tech
-Dominique|Franks|CB|19871008|
+Dominique|Franks|CB|19871008|Oklahoma
 Kendrick|Lewis|S|19880616|Mississippi
 Perrish|Cox|CB|19870110|Oklahoma State
-Walter|McFadden|CB|19870121|
-John|Conner|RB|19870608|
-Ed|Wang|LT|19870312|
-Cameron|Sheffield|OLB|19880212|
-Larry|Hart|DE|19870716|
+Walter|McFadden|CB|19870121|Auburn
+John|Conner|RB|19870608|Kentucky
+Ed|Wang|LT|19870312|Virginia Tech
+Cameron|Sheffield|OLB|19880212|Troy
+Larry|Hart|DE|19870716|Central Arkansas
 Sherrick|McManis|CB|19871219|Northwestern
 Nolan|Carroll|CB|19870118|Maryland
 Cam|Thomas|DT|19861212|North Carolina
-Mitch|Petrus|LG|19870511|
-Robert|Johnson|S|19870213|
-Hall|Davis|DE|19870302|
-Zoltan|Mesko|P|19860306|
+Mitch|Petrus|LG|19870511|Arkansas
+Robert|Johnson|S|19870213|Utah
+Hall|Davis|DE|19870302|Louisiana-Lafayette
+Zoltan|Mesko|P|19860306|Michigan
 Chris|Scott|LT|19870804|Tennessee
-Austen|Lane|DE|19871109|
-Andrew|Quarless|TE|19881006|
-John|Skelton|QB|19880317|
-David|Reed|WR|19870322|
+Austen|Lane|DE|19871109|Murray State
+Andrew|Quarless|TE|19881006|Penn State
+John|Skelton|QB|19880317|Fordham
+David|Reed|WR|19870322|Utah
 Arthur|Jones|DT|19860603|Syracuse
-Matt|Tennant|C|19870319|
+Matt|Tennant|C|19870319|Boston College
 Riley|Cooper|WR|19870909|Florida
 Larry|Asante|CB|19880307|Nebraska
-Chris|DeGeare|LG|19870217|
-Brody|Eldridge|FB|19870331|
+Chris|DeGeare|LG|19870217|Wake Forest
+Brody|Eldridge|FB|19870331|Oklahoma
 Reshad|Jones|S|19880225|Georgia
 Crezdon|Butler|CB|19870526|Clemson
-Stevenson|Sylvester|MLB|19880718|
-Nate|Triplett|MLB|19870315|
+Stevenson|Sylvester|MLB|19880718|Utah
+Nate|Triplett|MLB|19870315|Minnesota
 Marshall|Newhouse|LT|19880929|Texas Christian
-Fendi|Onobun|TE|19861117|
-Shann|Schillinger|S|19860522|
+Fendi|Onobun|TE|19861117|Houston
+Shann|Schillinger|S|19860522|Montana
 Anthony|Dixon|RB|19870924|Mississippi State
 Greg|Hardy|DE|19880728|Mississippi
-Rusty|Smith|QB|19870128|
-Carlton|Mitchell|WR|19880406|
+Rusty|Smith|QB|19870128|Florida Atlantic
+Carlton|Mitchell|WR|19880406|South Florida
 Arthur|Moats|MLB|19880314|James Madison
 Sam|Young|LT|19870624|Notre Dame
-Deji|Karim|RB|19861118|
-Nate|Byham|TE|19880627|
-Eric|Olsen|LG|19880616|
+Deji|Karim|RB|19861118|Southern Illinois
+Nate|Byham|TE|19880627|Pittsburgh
+Eric|Olsen|LG|19880616|Notre Dame
 Anthony|McCoy|TE|19871228|USC
 Clifton|Geathers|DE|19871211|South Carolina
-Shelley|Smith|LG|19870521|
-Jonathan|Dwyer|RB|19890726|
+Shelley|Smith|LG|19870521|Colorado State
+Jonathan|Dwyer|RB|19890726|Georgia Tech
 Eugene|Sims|DE|19860318|West Texas A&M
-Travis|Goethel|OLB|19870727|
-Dezmon|Briscoe|WR|19890831|
+Travis|Goethel|OLB|19870727|Arizona State
+Dezmon|Briscoe|WR|19890831|Kansas
 James|Starks|RB|19860225|Buffalo
 Antonio|Brown|WR|19880710|Central Michigan
-David|Gettis|WR|19870827|
+David|Gettis|WR|19870827|Baylor
 Joe|Webb|QB|19861114|Alabama-Birmingham
-Jorrick|Calvin|CB|19870717|
-Jordan|Pugh|S|19880129|
+Jorrick|Calvin|CB|19870717|Troy
+Jordan|Pugh|S|19880129|Texas A&M
 Scotty|McGee|WR|19861204|
-Tony|Pike|QB|19860310|
-Thomas|Welch|LT|19870619|
-Levi|Brown|QB|19870311|
-Cody|Grimm|S|19870226|
-Marquis|Johnson|CB|19880518|
+Tony|Pike|QB|19860310|Cincinnati
+Thomas|Welch|LT|19870619|Vanderbilt
+Levi|Brown|QB|19870311|Troy
+Cody|Grimm|S|19870226|Virginia Tech
+Marquis|Johnson|CB|19880518|Alabama
 Willie|Young|DE|19850919|North Carolina State
 Mickey|Shuler|TE|19861009|Penn State
-Jeremy|Ware|CB|19860918|
+Jeremy|Ware|CB|19860918|Michigan State
 Dekoda|Watson|OLB|19880303|Florida State
-Terrence|Austin|WR|19880825|
-Jamar|Chaney|MLB|19861011|
-Matt|Dodge|P|19870530|
+Terrence|Austin|WR|19880825|UCLA
+Jamar|Chaney|MLB|19861011|Mississippi State
+Matt|Dodge|P|19870530|East Carolina
 Marc|Mariani|WR|19870502|Montana
-R.J.|Stanford|CB|19880506|
+R.J.|Stanford|CB|19880506|Utah
 George|Selvie|DE|19870306|South Florida
 Dorin|Dickerson|WR|19880331|Pittsburgh
 Reggie|Stephens|C|19870828|
-Erik|Cook|C|19870705|
+Erik|Cook|C|19870705|New Mexico
 C.J.|Wilson|DE|19870330|East Carolina
 Jim|Dray|TE|19861231|Stanford
 Sean|Lissemore|DE|19870911|William & Mary
-Dedrick|Epps|TE|19880619|
-Dexter|Davis|DE|19861110|
+Dedrick|Epps|TE|19880619|Miami (Florida)
+Dexter|Davis|DE|19861110|Arizona State
 Ricardo|Mathews|DE|19870730|Cincinnati
-Kavell|Conner|OLB|19870223|
+Kavell|Conner|OLB|19870223|Clemson
 Doug|Worthington|DE|19870810|Ohio State
-Jeff|Owens|DT|19861014|
+Jeff|Owens|DT|19861014|Georgia
 Kurt|Coleman|S|19880401|Ohio State
-Brandon|Deaderick|DE|19870819|
+Brandon|Deaderick|DE|19870819|Alabama
 Robert|McClain|CB|19880722|Connecticut
 Zac|Robinson|QB|19860929|
-Stevie|Brown|CB|19870717|
-Austin|Spitler|MLB|19861026|
-Erik|Lorig|FB|19861117|
-Josh|Hull|MLB|19870521|
+Stevie|Brown|CB|19870717|Michigan
+Austin|Spitler|MLB|19861026|Ohio State
+Erik|Lorig|FB|19861117|Stanford
+Josh|Hull|MLB|19870521|Penn State
 Matt|Kopa|LT|19870225|
-Josh|Price-Brent|DT|19880130|
+Josh|Price-Brent|DT|19880130|Illinois
 Teddy|Williams|WR|19880703|Texas-San Antonio
 Sam|Bradford|QB|19871108|Oklahoma
 Ndamukong|Suh|DT|19870106|Nebraska
@@ -16591,7 +16591,7 @@ Russell|Okung|LT|19881007|Oklahoma State
 Joe|Haden|CB|19890414|Florida
 C.J.|Spiller|RB|19870805|Clemson
 Tyson|Alualu|DT|19870512|California
-Anthony|Davis|LT|19891011|
+Anthony|Davis|LT|19891011|Rutgers
 Ryan|Mathews|RB|19871010|Fresno State
 Brandon|Graham|DE|19880403|Michigan
 Earl|Thomas|S|19890507|Texas
@@ -16608,7 +16608,7 @@ Tim|Tebow|QB|19870814|Florida
 Dan|Williams|DT|19870601|Tennessee
 Jared|Odrick|DE|19871231|Penn State
 Kyle|Wilson|CB|19870908|Boise State
-Jahvid|Best|RB|19890130|
+Jahvid|Best|RB|19890130|California
 Jerry|Hughes|DE|19880813|Texas Christian
 Patrick|Robinson|CB|19870907|Florida State
 Koa|Misi|OLB|19870117|Utah
@@ -16616,77 +16616,77 @@ Linval|Joseph|DT|19881010|East Carolina
 Daryl|Washington|MLB|19861009|Texas Christian
 Taylor|Mays|S|19880207|Southern California
 Toby|Gerhart|RB|19870328|Stanford
-Jason|Worilds|OLB|19880303|
+Jason|Worilds|OLB|19880303|Virginia Tech
 Golden|Tate|WR|19880802|Notre Dame
-Pat|Angerer|MLB|19870131|
-Damian|Williams|WR|19880526|
+Pat|Angerer|MLB|19870131|Iowa
+Damian|Williams|WR|19880526|Southern California
 Navorro|Bowman|MLB|19880528|Penn State
-Randy|Phillips|S|19860914|
-Derrick|Townsel|WR|19880712|
+Randy|Phillips|S|19860914|Miami (Florida)
+Derrick|Townsel|WR|19880712|Murray State
 Dez|Bryant|WR|19881104|Oklahoma State
 Rolando|McClain|MLB|19890714|Alabama
 Will|Tukuafu|DE|19840103|Oregon
-Danario|Alexander|WR|19880807|
+Danario|Alexander|WR|19880807|Missouri
 Andrew|Sendejo|CB|19870909|Rice
-Isaiah|Trufant|CB|19821209|
+Isaiah|Trufant|CB|19821209|Eastern Washington
 John|Babinecz|MLB||
 Dick|Conn|CB||
-Brandon|Browner|CB|19840802|
-Garrett|McIntyre|OLB|19841126|
+Brandon|Browner|CB|19840802|Oregon State
+Garrett|McIntyre|OLB|19841126|Fresno State
 Tom|Johnson|DT|19840830|Southern Mississippi
-John|Chick|DE|19821120|
+John|Chick|DE|19821120|Utah State
 Brian|De La Puente|LG|19850513|California
 Joe Jon|Finley|TE|19850130|
-Jed|Collins|FB|19860303|
-Kevin|Malast|MLB|19860606|
-Josh|Vaughan|RB|19861203|
-T.J.|Conley|P|19850829|
-Rob|Myers|TE|19860409|
-Kevin|Brock|TE|19860409|
+Jed|Collins|FB|19860303|Washington State
+Kevin|Malast|MLB|19860606|Rutgers
+Josh|Vaughan|RB|19861203|Richmond
+T.J.|Conley|P|19850829|Idaho
+Rob|Myers|TE|19860409|Utah State
+Kevin|Brock|TE|19860409|Rutgers
 Phillip|Hunt|DE|19860110|Houston
-Ronald|Talley|DE|19860221|
-Jeremiah|Johnson|RB|19870215|
-Emmanuel|Stephens|DE|19870217|
-Terrence|Johnson|CB|19860705|
-Da'Mon|Cromartie-Smith|CB|19870219|
+Ronald|Talley|DE|19860221|Delaware
+Jeremiah|Johnson|RB|19870215|Oregon
+Emmanuel|Stephens|DE|19870217|Mississippi
+Terrence|Johnson|CB|19860705|California (Pennsylvania)
+Da'Mon|Cromartie-Smith|CB|19870219|Texas-El Paso
 Thaddeus|Lewis|QB|19871119|Duke
-Jim|Cordle|C|19870822|
-Justin|Cole|MLB|19871122|
-Jeremy|Horne|WR|19861025|
-Patrick|Trahan|MLB|19861107|
-Alfonso|Smith|RB|19870123|
+Jim|Cordle|C|19870822|Ohio State
+Justin|Cole|MLB|19871122|San Jose State
+Jeremy|Horne|WR|19861025|Massachusetts
+Patrick|Trahan|MLB|19861107|Mississippi
+Alfonso|Smith|RB|19870123|Kentucky
 Levi|Horn|LT|19861002|
-Thomas|Austin|LG|19861114|
-Manase|Tonga|RB|19840228|
-Quinn|Porter|RB|19860202|
-Chastin|West|WR|19870501|
-Auston|English|MLB|19870310|
-David|Caldwell|S|19870519|
-Kyle|Bosworth|OLB|19861121|
-John|Estes|C|19870325|
-Chris|Hawkins|CB|19860412|
+Thomas|Austin|LG|19861114|Clemson
+Manase|Tonga|RB|19840228|Brigham Young
+Quinn|Porter|RB|19860202|Stillman
+Chastin|West|WR|19870501|Fresno State
+Auston|English|MLB|19870310|Oklahoma
+David|Caldwell|S|19870519|William & Mary
+Kyle|Bosworth|OLB|19861121|UCLA
+John|Estes|C|19870325|Hawaii
+Chris|Hawkins|CB|19860412|Louisiana State
 Albert|McClellan|OLB|19860604|Marshall
-Steve|Maneri|LT|19880320|
+Steve|Maneri|LT|19880320|Temple
 Mitch|Unrein|DT|19870325|Wyoming
 Richie|Brockel|TE|19860724|Boise State
-Bryan|Walters|WR|19871104|
+Bryan|Walters|WR|19871104|Cornell
 Ryan|D'Imperio|RB|19870815|
-Montario|Hardesty|RB|19870201|
+Montario|Hardesty|RB|19870201|Tennessee
 Donald|Butler|MLB|19881017|Washington
 Marcus|Easley|WR|19871102|Connecticut
-A.J.|Edds|MLB|19870918|
-Ricky|Sapp|DE|19861114|
+A.J.|Edds|MLB|19870918|Iowa
+Ricky|Sapp|DE|19861114|Clemson
 Otis|Hudson|LG|19860719|
-Kerry|Meier|WR|19861112|
-Danny|Batten|OLB|19871208|
-Jammie|Kirlew|MLB|19870512|
-Jameson|Konz|WR|19860702|
-Sergio|Kindle|OLB|19870920|
-Ben|Tate|RB|19880821|
-Kevin|Thomas|CB|19860920|
+Kerry|Meier|WR|19861112|Kansas
+Danny|Batten|OLB|19871208|South Dakota State
+Jammie|Kirlew|MLB|19870512|Indiana
+Jameson|Konz|WR|19860702|Kent State
+Sergio|Kindle|OLB|19870920|Texas
+Ben|Tate|RB|19880821|Auburn
+Kevin|Thomas|CB|19860920|Southern California
 Tyler|Clutts|FB|19841109|Fresno State
 Andrew|Hawkins|WR|19860310|Toledo
-Emmanuel|Arceneaux|WR|19870917|
+Emmanuel|Arceneaux|WR|19870917|Alcorn State
 Rod|Windsor|WR|19850424|
 Cam|Newton|QB|19890511|Auburn
 Von|Miller|OLB|19890326|Texas A&amp;M
@@ -16695,7 +16695,7 @@ A.J.|Green|WR|19880731|Georgia
 Patrick|Peterson|CB|19900711|Louisiana State
 Julio|Jones|WR|19890208|Alabama
 Aldon|Smith|OLB|19890925|Missouri
-Jake|Locker|QB|19880615|
+Jake|Locker|QB|19880615|Washington
 Tyron|Smith|LT|19901212|Southern California
 Blaine|Gabbert|QB|19891015|Missouri
 J.J.|Watt|DE|19890322|Wisconsin
@@ -16710,16 +16710,16 @@ Prince|Amukamara|CB|19890606|Nebraska
 Adrian|Clayborn|DE|19880706|Iowa
 Phillip|Taylor|DT|19880407|Baylor
 Anthony|Castonzo|LT|19880809|Boston College
-Danny|Watkins|LG|19841106|
+Danny|Watkins|LG|19841106|Baylor
 Cameron|Jordan|DE|19890710|California
 James|Carpenter|LT|19890322|Alabama
-Jon|Baldwin|WR|19890810|
+Jon|Baldwin|WR|19890810|Pittsburgh
 Jimmy|Smith|CB|19880726|Colorado
 Mark|Ingram|RB|19891221|Alabama
-Gabe|Carimi|LT|19880613|
+Gabe|Carimi|LT|19880613|Wisconsin
 Muhammad|Wilkerson|DE|19891022|Temple
 Cameron|Heyward|DE|19890506|Ohio State
-Derek|Sherrod|LT|19890423|
+Derek|Sherrod|LT|19890423|Mississippi State
 Ras-I|Dowling|CB|19880509|Virginia
 Aaron|Williams|CB|19900423|Texas
 Andy|Dalton|QB|19871029|Texas Christian
@@ -16729,7 +16729,7 @@ Akeem|Ayers|OLB|19890710|UCLA
 Bruce|Carter|MLB|19880219|North Carolina
 Brooks|Reed|OLB|19870228|Arizona
 Kyle|Rudolph|TE|19891109|Notre Dame
-Titus|Young|WR|19890821|
+Titus|Young|WR|19890821|Boise State
 Rahim|Moore|S|19900211|UCLA
 Orlando|Franklin|LT|19871216|Miami (Fla.)
 Lance|Kendricks|TE|19880130|Wisconsin
@@ -16743,45 +16743,45 @@ Rodney|Hudson|C|19890712|Florida State
 Shane|Vereen|RB|19890302|California
 Torrey|Smith|WR|19890126|Maryland
 Greg|Little|WR|19890530|North Carolina
-Brandon|Harris|CB|19900124|
-Jonas|Mouton|MLB|19880317|
-Daniel|Thomas|RB|19871029|
+Brandon|Harris|CB|19900124|Miami (Florida)
+Jonas|Mouton|MLB|19880317|Michigan
+Daniel|Thomas|RB|19871029|Kansas State
 Marcus|Gilbert|LT|19880215|Florida
 Randall|Cobb|WR|19900822|Kentucky
 Terrell|McClain|DT|19880720|South Florida
-Dontay|Moch|OLB|19880719|
-Nate|Irving|MLB|19880712|
+Dontay|Moch|OLB|19880719|Nevada-Reno
+Nate|Irving|MLB|19880712|North Carolina State
 Kelvin|Sheppard|MLB|19880102|LSU
 Rob|Housler|TE|19880317|Florida Atlantic
 Justin|Houston|OLB|19890121|Georgia
 DeMarco|Murray|RB|19880212|Oklahoma
-Martez|Wilson|OLB|19880921|
+Martez|Wilson|OLB|19880921|Illinois
 Stevan|Ridley|RB|19890127|LSU
 Ryan|Mallett|QB|19880605|Arkansas
-John|Moffitt|LG|19861028|
-Will|Rackley|LG|19891011|
+John|Moffitt|LG|19861028|Wisconsin
+Will|Rackley|LG|19891011|Lehigh
 Jurrell|Casey|DT|19891205|Southern California
-Austin|Pettis|WR|19880208|
-Leonard|Hankerson|WR|19890130|
+Austin|Pettis|WR|19880208|Boise State
+Leonard|Hankerson|WR|19890130|Miami (Florida)
 Chris|Culliver|CB|19880817|South Carolina
-DeMarcus|Van Dyke|CB|19890117|
+DeMarcus|Van Dyke|CB|19890117|Miami (Florida)
 Vincent|Brown|WR|19890125|San Diego State
-Jerrel|Jernigan|WR|19890614|
+Jerrel|Jernigan|WR|19890614|Troy
 Mason|Foster|MLB|19890301|Washington
 Jah|Reid|LT|19880721|Central Florida
 Allen|Bailey|DE|19890325|Miami
-Drake|Nevis|DT|19890508|
-Johnny|Patrick|CB|19880817|
+Drake|Nevis|DT|19890508|Louisiana State
+Johnny|Patrick|CB|19880817|Louisville
 Shareece|Wright|CB|19870408|USC
 Curtis|Marsh|CB|19880301|Utah State
 Akeem|Dent|MLB|19870927|Georgia
 Joe|Barksdale|LT|19890104|Louisiana State
 Chris|Conte|S|19890223|California
-Kenrick|Ellis|DT|19871210|
-Curtis|Brown|CB|19880924|
-Alex|Green|RB|19880623|
-Sione|Fua|DT|19880615|
-Brandon|Hogan|CB|19880401|
+Kenrick|Ellis|DT|19871210|Hampton
+Curtis|Brown|CB|19880924|Texas
+Alex|Green|RB|19880623|Hawaii
+Sione|Fua|DT|19880615|Stanford
+Brandon|Hogan|CB|19880401|West Virginia
 K.J.|Wright|MLB|19890723|Mississippi State
 Da'Norris|Searcy|S|19881116|North Carolina
 Clint|Boling|LG|19890509|Georgia
@@ -16789,57 +16789,57 @@ Jordan|Cameron|TE|19880807|USC
 Sam|Acho|OLB|19880906|Texas
 Luke|Stocker|TE|19880717|Tennessee
 Roy|Helu|RB|19881207|Nebraska
-Christian|Ballard|DT|19890103|
-Kris|Durham|WR|19880317|
-Quinton|Carter|S|19880720|
-Colin|McCarthy|MLB|19880530|
+Christian|Ballard|DT|19890103|Iowa
+Kris|Durham|WR|19880317|Georgia
+Quinton|Carter|S|19880720|Oklahoma
+Colin|McCarthy|MLB|19880530|Miami (Florida)
 David|Arkin|LG|19871007|Missouri State
-Edmond|Gates|WR|19860613|
-Greg|Salas|WR|19880825|
+Edmond|Gates|WR|19860613|Abilene Christian
+Greg|Salas|WR|19880825|Hawaii
 Chimdi|Chekwa|CB|19880107|Ohio State
 Cecil|Shorts|WR|19871222|Mount Union
 Kendall|Hunter|RB|19880916|Oklahoma State
 Casey|Matthews|MLB|19890116|Oregon
-James|Brewer|LT|19871223|
-Jalil|Brown|CB|19871014|
-Delone|Carter|RB|19870622|
-Alex|Henery|K|19870818|
+James|Brewer|LT|19871223|Indiana
+Jalil|Brown|CB|19871014|Colorado
+Delone|Carter|RB|19870622|Syracuse
+Alex|Henery|K|19870818|Nebraska
 Chris|Prosinski|S|19870428|Wyoming
 Chris|Hairston|LT|19890426|Clemson
-Tandon|Doss|WR|19890922|
-Owen|Marecic|FB|19881004|
+Tandon|Doss|WR|19890922|Indiana
+Owen|Marecic|FB|19881004|Stanford
 Taiwan|Jones|RB|19880726|Eastern Washington
 Bilal|Powell|RB|19881027|Louisville
-Rashad|Carmichael|CB|19880909|
-Cortez|Allen|CB|19881029|
+Rashad|Carmichael|CB|19880909|Virginia Tech
+Cortez|Allen|CB|19881029|The Citadel
 Julius|Thomas|TE|19880627|Portland State
-Jamie|Harper|RB|19890911|
+Jamie|Harper|RB|19890911|Clemson
 Davon|House|CB|19890710|New Mexico State
-Kealoha|Pilares|WR|19880220|
-Johnny|White|RB|19880203|
-Robert|Sands|S|19891103|
+Kealoha|Pilares|WR|19880220|Hawaii
+Johnny|White|RB|19880203|North Carolina
+Robert|Sands|S|19891103|West Virginia
 Ricky|Stanzi|QB|19870903|
 Anthony|Sherman|FB|19881211|Connecticut
 Buster|Skrine|CB|19890426|Chattanooga
 Marcus|Cannon|LT|19880506|Texas Christian
-Brandon|Burton|CB|19890731|
-D.J.|Williams|TE|19880910|
+Brandon|Burton|CB|19890731|Utah
+D.J.|Williams|TE|19880910|Arkansas
 Karl|Klug|DT|19880331|Iowa
 Josh|Thomas|CB|19890503|Buffalo
 Shiloh|Keo|CB|19871217|Idaho
 Jacquizz|Rodgers|RB|19900206|Oregon State
-DeJon|Gomes|S|19891117|
-Rod|Issac|S|19890220|
+DeJon|Gomes|S|19891117|Nebraska
+Rod|Issac|S|19890220|Middle Tennessee State
 Denarius|Moore|WR|19881209|Tennessee
 Dion|Lewis|RB|19900927|Pittsburgh
-Jason|Pinkston|LG|19870905|
-Ahmad|Black|CB|19891212|
+Jason|Pinkston|LG|19870905|Pittsburgh
+Ahmad|Black|CB|19891212|Florida
 T.J.|Yates|QB|19870528|North Carolina
 Jeremy|Kerley|WR|19881108|Texas Christian
 Richard|Sherman|CB|19880330|Stanford
 Niles|Paul|WR|19890809|Nebraska
-Doug|Hogue|OLB|19890201|
-Jermale|Hines|S|19871111|
+Doug|Hogue|OLB|19890201|Syracuse
+Jermale|Hines|S|19871111|Ohio State
 Lee|Smith|TE|19871121|Marshall
 Nathan|Enderle|QB|19880112|
 Julian|Vandervelde|LG|19871007|Iowa
@@ -16847,120 +16847,120 @@ Chris|Carter|OLB|19890406|Fresno State
 Daniel|Kilgore|LG|19871218|Appalachian State
 Chykie|Brown|CB|19861226|Texas
 Pernell|McPhee|DE|19881217|Mississippi State
-Ryan|Whalen|WR|19890726|
+Ryan|Whalen|WR|19890726|Stanford
 DeMarcus|Love|LT|19880307|
-Chris|White|MLB|19890115|
-Mistral|Raymond|S|19870907|
+Chris|White|MLB|19890115|Mississippi State
+Mistral|Raymond|S|19870907|South Florida
 Brandon|Fusco|C|19880726|Slippery Rock
 Byron|Maxwell|CB|19880223|Clemson
 Charles|Clay|FB|19890213|Tulsa
-Byron|Stingily|LT|19880909|
+Byron|Stingily|LT|19880909|Louisville
 Dwayne|Harris|WR|19870916|East Carolina
-Evan|Royster|RB|19871126|
+Evan|Royster|RB|19871126|Penn State
 Aldrick|Robinson|WR|19880924|Southern Methodist
-Caleb|Schlauderaff|LG|19871107|
+Caleb|Schlauderaff|LG|19871107|Utah
 Tyrod|Taylor|QB|19890803|Virginia Tech
 Richard|Gordon|TE|19870607|Miami (Fla.)
 Ronald|Johnson|WR|19880803|
 Jordan|Todman|RB|19900224|Connecticut
-David|Carter|DT|19871210|
-Greg|Jones|MLB|19881005|
-D.J.|Smith|MLB|19890224|
-Chris|Rucker|CB|19881012|
+David|Carter|DT|19871210|UCLA
+Greg|Jones|MLB|19881005|Michigan State
+D.J.|Smith|MLB|19890224|Appalachian State
+Chris|Rucker|CB|19881012|Michigan State
 Mike|Mohamed|OLB|19880311|California
 Colin|Jones|S|19871027|Texas Christian
 Jason|Kelce|C|19871105|Cincinnati
 Matt|Bosher|P|19871018|Miami (Fla.)
-Brian|Rolle|OLB|19881120|
-Tyler|Sash|S|19880527|
-Jerrell|Powe|DT|19870315|
-Stephen|Schilling|LT|19880721|
-Jacquian|Williams|OLB|19880720|
+Brian|Rolle|OLB|19881120|Ohio State
+Tyler|Sash|S|19880527|Iowa
+Jerrell|Powe|DT|19870315|Mississippi
+Stephen|Schilling|LT|19880721|Michigan
+Jacquian|Williams|OLB|19880720|South Florida
 Virgil|Green|TE|19880803|Nevada
-Lazarius|Levingston|DE|19871116|
+Lazarius|Levingston|DE|19871116|Louisiana State
 Justin|Rogers|CB|19880116|Richmond
 Bruce|Miller|FB|19870806|Central Florida
-Zach|Clayton|DT|19880101|
-Brandyn|Thompson|CB|19891030|
+Zach|Clayton|DT|19880101|Auburn
+Brandyn|Thompson|CB|19891030|Boise State
 Derek|Newton|LT|19871116|Arkansas State
-D'Aundre|Reed|DE|19880101|
-Maurice|Hurt|LG|19871108|
-Ryan|Taylor|TE|19871116|
-Malcolm|Williams|CB|19871122|
-Shaun|Chapas|RB|19880502|
-Da'Rel|Scott|RB|19880526|
-Anthony|Gaitor|CB|19881009|
-Markus|White|OLB|19871125|
-Anthony|Allen|RB|19880806|
-Jabara|Williams|OLB|19890706|
-Jonathan|Nelson|CB|19880506|
-Cliff|Matthews|DE|19890805|
-Frank|Kearse|DT|19881028|
+D'Aundre|Reed|DE|19880101|Arizona
+Maurice|Hurt|LG|19871108|Florida
+Ryan|Taylor|TE|19871116|North Carolina
+Malcolm|Williams|CB|19871122|Texas Christian
+Shaun|Chapas|RB|19880502|Georgia
+Da'Rel|Scott|RB|19880526|Maryland
+Anthony|Gaitor|CB|19881009|Florida International
+Markus|White|OLB|19871125|Florida State
+Anthony|Allen|RB|19880806|Georgia Tech
+Jabara|Williams|OLB|19890706|Stephen F. Austin State
+Jonathan|Nelson|CB|19880506|Oklahoma
+Cliff|Matthews|DE|19890805|South Carolina
+Frank|Kearse|DT|19881028|Alabama A&M
 Andrew|Gachkar|MLB|19881104|Missouri
-Jimmy|Wilson|CB|19860730|
-Stephen|Burton|WR|19891211|
-Greg|Lloyd|MLB|19890210|
+Jimmy|Wilson|CB|19860730|Montana
+Stephen|Burton|WR|19891211|West Texas A&M
+Greg|Lloyd|MLB|19890210|Connecticut
 Mike|Person|LT|19880617|Montana State
-David|Ausberry|TE|19870925|
+David|Ausberry|TE|19870925|Southern California
 Malcolm|Smith|OLB|19890705|Southern California
 Nate|Bussey|MLB|19890220|
-Lee|Ziemba|LT|19890329|
+Lee|Ziemba|LT|19890329|Auburn
 Michael|Jasper|DT|19861008|
-Eric|Hagg|S|19890915|
-DeMarco|Sampson|WR|19851219|
-Tommie|Campbell|CB|19870919|
-Bill|Nagy|LG|19871026|
-Chris|Neild|DT|19871201|
-Ricky|Henry|LG|19870727|
-Willie|Smith|LT|19861113|
+Eric|Hagg|S|19890915|Nebraska
+DeMarco|Sampson|WR|19851219|San Diego State
+Tommie|Campbell|CB|19870919|California (Pennsylvania)
+Bill|Nagy|LG|19871026|Wisconsin
+Chris|Neild|DT|19871201|West Virginia
+Ricky|Henry|LG|19870727|Nebraska
+Willie|Smith|LT|19861113|East Carolina
 Shaun|Draughn|RB|19871207|North Carolina
-John|Clay|RB|19880104|
+John|Clay|RB|19880104|Wisconsin
 D'Andre|Goodwin|WR|19871226|
 Chris|Harris|CB|19890618|Kansas
 Austin|Sylvester|RB|19880415|
-Ian|Williams|DT|19890831|
-Joe|Hastings|WR|19870505|
-Alex|Silvestro|DE|19881115|
-Jeff|Tarpinian|MLB|19871016|
-Will|Yeatman|TE|19880410|
-Larry|Dean|OLB|19880807|
+Ian|Williams|DT|19890831|Notre Dame
+Joe|Hastings|WR|19870505|Washburn
+Alex|Silvestro|DE|19881115|Rutgers
+Jeff|Tarpinian|MLB|19871016|Iowa
+Will|Yeatman|TE|19880410|Maryland
+Larry|Dean|OLB|19880807|Valdosta State
 Andre|Holmes|WR|19880616|Hillsdale
-Weslye|Saunders|TE|19890116|
+Weslye|Saunders|TE|19890116|South Carolina
 Justin|Boren|LG|19880428|
 Josh|Bynes|MLB|19890824|Auburn
-Chavis|Williams|MLB|19890710|
-LaQuan|Williams|WR|19880627|
-Josh|Baker|TE|19861225|
+Chavis|Williams|MLB|19890710|Alabama
+LaQuan|Williams|WR|19880627|Maryland
+Josh|Baker|TE|19861225|Northwest Missouri State
 Nick|Bellore|MLB|19890512|Central Michigan
-Christian|Yount|C|19880708|
+Christian|Yount|C|19880708|UCLA
 Brandon|Bair|DE|19841124|Oregon
 David|Mims|LT|19880518|
-Kiante|Tripp|DT|19871007|
-Darrin|Walls|CB|19880620|
-Kyle|Adams|FB|19880119|
+Kiante|Tripp|DT|19871007|Georgia
+Darrin|Walls|CB|19880620|Notre Dame
+Kyle|Adams|FB|19880119|Purdue
 Mario|Addison|DE|19870906|Troy
-Dom|DeCicco|MLB|19880911|
-Jordan|Miller|DT|19880201|
-Dane|Sanzenbacher|WR|19881013|
-Andre|Smith|TE|19880926|
-Winston|Venable|S|19870331|
-Anthony|Walters|CB|19880919|
+Dom|DeCicco|MLB|19880911|Pittsburgh
+Jordan|Miller|DT|19880201|Southern University
+Dane|Sanzenbacher|WR|19881013|Ohio State
+Andre|Smith|TE|19880926|Virginia Tech
+Winston|Venable|S|19870331|Boise State
+Anthony|Walters|CB|19880919|Delaware
 Spencer|Paysinger|OLB|19880628|Oregon
-Chris|Smith|CB|19870623|
+Chris|Smith|CB|19870623|Northern Illinois
 D.J.|Jones|LT|19880508|
-Bryant|Browning|LG|19880626|
+Bryant|Browning|LG|19880626|Ohio State
 Ben|Guidugli|TE|19871022|
-Kevin|Hughes|LG|19880806|
+Kevin|Hughes|LG|19880806|Southeastern Louisiana
 Jake|McQuaide|C|19871207|Ohio State
-Armon|Binns|WR|19890908|
-Cameron|Bradfield|LT|19870914|
+Armon|Binns|WR|19890908|Cincinnati
+Cameron|Bradfield|LT|19870914|Grand Valley State
 DuJuan|Harris|RB|19880903|Troy
-T.J.|Heath|CB|19870911|
-Michael|Lockley|MLB|19880420|
-Scott|Lutrus|MLB|19880423|
-Kevin|Rutland|CB|19880402|
+T.J.|Heath|CB|19870911|Jacksonville State
+Michael|Lockley|MLB|19880420|Florida Atlantic
+Scott|Lutrus|MLB|19880423|Connecticut
+Kevin|Rutland|CB|19880402|Missouri
 Cedric|Thornton|DT|19880621|Southern Arkansas
-Chas|Henry|P|19890106|
+Chas|Henry|P|19890106|Florida
 Doug|Baldwin|WR|19880921|Stanford
 Jeron|Johnson|S|19880612|Boise State
 Ricardo|Lockette|WR|19860521|Fort Valley State
@@ -16968,257 +16968,257 @@ Michael|Morgan|MLB|19880116|USC
 Ron|Parker|CB|19870817|Newberry
 Josh|Portis|QB|19870714|
 Pat|Devlin|QB|19880412|Delaware
-Quinton|Spears|OLB|19880511|
-Tim|Atchison|CB|19870927|
+Quinton|Spears|OLB|19880511|Prairie View A&M
+Tim|Atchison|CB|19870927|Baylor
 Demarcus|Dobbs|DE|19871130|Georgia
-Ryan|Mahaffey|TE|19871128|
-Mana|Silva|CB|19880817|
-Henry|Hynoski|FB|19881230|
+Ryan|Mahaffey|TE|19871128|Northern Iowa
+Mana|Silva|CB|19880817|Hawaii
+Henry|Hynoski|FB|19881230|Pittsburgh
 Justin|Trattou|DE|19880828|Florida
 Danny|Aiken|C|19880828|Virginia
 Kamar|Aiken|WR|19890530|Central Florida
 Josh|Nesbitt|CB|19880415|
-Zack|Pianalto|TE|19890527|
-Mike|Higgins|TE|19871207|
-Mister|Alexander|MLB|19880602|
+Zack|Pianalto|TE|19890527|North Carolina
+Mike|Higgins|TE|19871207|Nebraska-Omaha
+Mister|Alexander|MLB|19880602|Florida State
 Bryan|Braman|OLB|19870504|West Texas A&M
-Brett|Hartmann|P|19870817|
-Jeff|Maehl|WR|19890316|
-Colin|Cochart|TE|19870707|
-Stephen|Franklin|MLB|19880926|
+Brett|Hartmann|P|19870817|Central Michigan
+Jeff|Maehl|WR|19890316|Oregon
+Colin|Cochart|TE|19870707|South Dakota
+Stephen|Franklin|MLB|19880926|Southern Illinois
 Isa|Abdul-Quddus|S|19890803|Fordham
-Armando|Allen|RB|19890430|
-Devin|Holland|S|19881018|
-Colin|Baxter|C|19870731|
-Mossis|Madu|RB|19871104|
-Bront|Bird|MLB|19890317|
-Darryl|Gamble|OLB|19871117|
+Armando|Allen|RB|19890430|Notre Dame
+Devin|Holland|S|19881018|McNeese State
+Colin|Baxter|C|19870731|Arizona
+Mossis|Madu|RB|19871104|Oklahoma
+Bront|Bird|MLB|19890317|Texas Tech
+Darryl|Gamble|OLB|19871117|Georgia
 Ray|Dominguez|LT|19880712|
 Scott|Tolzien|QB|19870904|Wisconsin
-M.D.|Jennings|S|19880725|
-Jamari|Lattimore|OLB|19881006|
-Brandon|Saine|RB|19881214|
-Vic|So'oto|OLB|19870819|
-Phillip|Tanner|RB|19880808|
-Alex|Albright|OLB|19880129|
+M.D.|Jennings|S|19880725|Arkansas State
+Jamari|Lattimore|OLB|19881006|Middle Tennessee State
+Brandon|Saine|RB|19881214|Ohio State
+Vic|So'oto|OLB|19870819|Brigham Young
+Phillip|Tanner|RB|19880808|Middle Tennessee State
+Alex|Albright|OLB|19880129|Boston College
 Mike|Holmes|CB|19890601|
 Mark|Herzlich|OLB|19870901|Boston College
-Jarriel|King|LT|19870227|
-Ryan|Donahue|P|19880317|
-Ricardo|Silva|CB|19880509|
+Jarriel|King|LT|19870227|South Carolina
+Ryan|Donahue|P|19880317|Iowa
+Ricardo|Silva|CB|19880509|Hampton
 Joe|Lefeged|S|19880602|
-Mike|McNeill|TE|19880307|
-Adrian|Moten|OLB|19880422|
-Chad|Spann|RB|19880804|
+Mike|McNeill|TE|19880307|Nebraska
+Adrian|Moten|OLB|19880422|Maryland
+Chad|Spann|RB|19880804|Northern Illinois
 Dan|Bailey|K|19880126|Oklahoma State
 Chris|Jones|P|19890721|Carson-Newman
-Kevin|Kowalski|C|19890102|
-James|Dockery|CB|19881109|
-Brian|Smith|MLB|19890108|
+Kevin|Kowalski|C|19890102|Toledo
+James|Dockery|CB|19881109|Oregon State
+Brian|Smith|MLB|19890108|Notre Dame
 Ben|Jacobs|MLB|19880417|Fresno State
 D.J.|Young|LT|19880126|
 Byron|Bell|LG|19890117|New Mexico
-Thomas|Keiser|MLB|19890328|
+Thomas|Keiser|MLB|19890328|Stanford
 Adi|Kunalic|K|19890401|
-Darvin|Adams|WR|19900105|
-Mason|Brodine|DE|19880218|
+Darvin|Adams|WR|19900105|Auburn
+Mason|Brodine|DE|19880218|Nebraska-Kearney
 Sterling|Moore|CB|19900203|Southern Methodist
-Kevin|Cone|WR|19880320|
-Richard|Medlin|RB|19870304|
-Eddie|Jones|MLB|19880111|
+Kevin|Cone|WR|19880320|Georgia Tech
+Richard|Medlin|RB|19870304|Fayetteville State
+Eddie|Jones|MLB|19880111|Texas
 Caleb|King|RB|19880110|
 Mike|McAdoo|OLB|19900709|
-Tracy|Wilson|CB|19890227|
+Tracy|Wilson|CB|19890227|Northern Illinois
 Terrelle|Pryor|QB|19890620|Ohio State
 Dick|Conn|CB||
-Justin|Hickman|OLB|19850720|
+Justin|Hickman|OLB|19850720|UCLA
 Jerrell|Freeman|MLB|19860501|Mary Hardin-Baylor
 Marcus|Thigpen|RB|19860515|Indiana
-Pannel|Egboh|DE|19860323|
+Pannel|Egboh|DE|19860323|Stanford
 A.Q.|Shipley|C|19860522|Penn State
 Ryan|Durand|LG|19851117|
 Matt|Overton|C|19850706|Western Washington
-Jamie|McCoy|FB|19870721|
+Jamie|McCoy|FB|19870721|Texas A&M
 Dennis|Landolt|LT|19861015|
-John|Malecki|LG|19880526|
-Rob|Callaway|DT|19880214|
-Jimmy|Saddler-McQueen|DT|19870804|
-Alex|Parsons|C|19870914|
-Jay|Ross|DT|19871003|
+John|Malecki|LG|19880526|Pittsburgh
+Rob|Callaway|DT|19880214|Saginaw Valley State
+Jimmy|Saddler-McQueen|DT|19870804|Texas A&M-Kingsville
+Alex|Parsons|C|19870914|Southern California
+Jay|Ross|DT|19871003|East Carolina
 Anthony|Levine|CB|19870327|Tennessee State
-Trindon|Holliday|WR|19860427|
+Trindon|Holliday|WR|19860427|Louisiana State
 D'Anthony|Smith|DT|19880609|Louisiana Tech
-Adrian|Tracy|DE|19870406|
-Ramon|Harewood|LT|19870203|
-Selvish|Capers|LG|19851113|
+Adrian|Tracy|DE|19870406|William & Mary
+Ramon|Harewood|LT|19870203|Morehouse
+Selvish|Capers|LG|19851113|West Virginia
 Tim|Toone|WR|19850214|
 Harvey|Unga|RB|19870118|
-Carl|Ihenacho|OLB|19880528|
-Ryan|Williams|RB|19900409|
+Carl|Ihenacho|OLB|19880528|San Jose State
+Ryan|Williams|RB|19900409|Virginia Tech
 Jarvis|Jenkins|DE|19880424|Clemson
-Marvin|Austin|DT|19890110|
-Mikel|Leshoure|RB|19900330|
+Marvin|Austin|DT|19890110|North Carolina
+Mikel|Leshoure|RB|19900330|Illinois
 Allen|Bradford|MLB|19880831|Southern California
 J.T.|Thomas|OLB|19880815|West Virginia
-Keith|Williams|LG|19880408|
-Zack|Williams|LG|19881227|
-Greg|McElroy|QB|19880510|
-Baron|Batch|RB|19871221|
+Keith|Williams|LG|19880408|Nebraska
+Zack|Williams|LG|19881227|Washington State
+Greg|McElroy|QB|19880510|Alabama
+Baron|Batch|RB|19871221|Texas Tech
 Lawrence|Guy|DE|19900317|Arizona State
-Stanley|Havili|FB|19871114|
-Cheta|Ozougwu|DE|19881118|
+Stanley|Havili|FB|19871114|Southern California
+Cheta|Ozougwu|DE|19881118|Rice
 Cory|Brandon|LT|19871005|
 Matt|Asiata|RB|19870724|Utah
-Mario|Harvey|MLB|19870810|
+Mario|Harvey|MLB|19870810|Marshall
 Chris|Hogan|WR|19871024|Monmouth, N.J.
-Konrad|Reuland|TE|19870404|
+Konrad|Reuland|TE|19870404|Stanford
 Jeremy|Ross|WR|19880316|California
 Sealver|Siliga|DT|19900426|Utah
 Allen|Reisner|TE|19880929|Iowa
 Tim|Barnes|C|19880514|Missouri
-Bryan|Hall|DT|19880912|
-Josh|Victorian|CB|19880710|
-D.J.|Davis|WR|19890104|
-Robert|Hughes|RB|19890621|
+Bryan|Hall|DT|19880912|Arkansas State
+Josh|Victorian|CB|19880710|Louisiana Tech
+D.J.|Davis|WR|19890104|Oregon
+Robert|Hughes|RB|19890621|Notre Dame
 McLeod|Bethel-Thompson|QB|19880703|
-Michael|Preston|WR|19890601|
+Michael|Preston|WR|19890601|Heidelberg
 Kyle|Nelson|C|19861003|New Mexico State
-John|Griffin|RB|19881217|
-Julian|Posey|CB|19880717|
-Tommy|Gallarda|TE|19880508|
+John|Griffin|RB|19881217|Massachusetts
+Julian|Posey|CB|19880717|Ohio University
+Tommy|Gallarda|TE|19880508|Boise State
 Kyle|Miller|TE|19880418|Mount Union
-Richard|Murphy|RB|19860918|
-Jamar|Newsome|WR|19871105|
+Richard|Murphy|RB|19860918|Louisiana State
+Jamar|Newsome|WR|19871105|Central Florida
 Jonathan|Freeny|OLB|19890615|Rutgers
-Cory|Nelms|CB|19880227|
-David|Sims|S|19861020|
+Cory|Nelms|CB|19880227|Miami (Florida)
+David|Sims|S|19861020|Iowa State
 Joe|Morgan|WR|19880323|Walsh
-Lestar|Jean|WR|19880205|
+Lestar|Jean|WR|19880205|Florida Atlantic
 Patrick|DiMarco|RB|19890430|South Carolina
-Damik|Scafe|DE|19880426|
-Brandian|Ross|CB|19890928|
-Kerry|Taylor|WR|19890220|
-Darren|Evans|RB|19881109|
-David|Gilreath|WR|19881211|
+Damik|Scafe|DE|19880426|Boston College
+Brandian|Ross|CB|19890928|Youngstown State
+Kerry|Taylor|WR|19890220|Arizona State
+Darren|Evans|RB|19881109|Virginia Tech
+David|Gilreath|WR|19881211|Wisconsin
 Orie|Lemon|MLB|19870909|Oklahoma State
-LeQuan|Lewis|CB|19890217|
+LeQuan|Lewis|CB|19890217|Arizona State
 Jarrod|Shaw|LG|19880107|
-Armond|Smith|RB|19860507|
-William|Powell|RB|19880309|
+Armond|Smith|RB|19860507|Union (Kentucky)
+William|Powell|RB|19880309|Kansas State
 Kai|Forbath|K|19870902|UCLA
 Craig|Robertson|OLB|19880211|North Texas
-Marshall|McFadden|MLB|19860804|
+Marshall|McFadden|MLB|19860804|South Carolina State
 Michael|Wilhoite|MLB|19861207|Washburn
 Will|Johnson|FB|19881114|West Virginia
-Hayden|Smith|TE|19850410|
+Hayden|Smith|TE|19850410|Metropolitan State
 Josh|Harris|C|19890427|Auburn
 Bryce|Harris|LT|19890116|Fresno State
-Dominique|Davis|QB|19890717|
+Dominique|Davis|QB|19890717|East Carolina
 Phillipkeith|Manley|LG|19900507|
-Quinton|Pointer|CB|19880416|
+Quinton|Pointer|CB|19880416|Nevada-Las Vegas
 Matt|Daniels|S|19890927|Duke
 Johnny|Hekker|P|19900208|Oregon State
-Matthew|Masifilo|DE|19891001|
-Collin|Mooney|RB|19860403|
+Matthew|Masifilo|DE|19891001|Stanford
+Collin|Mooney|RB|19860403|Army
 Matt|Conrath|DT|19890811|Virginia
-Delano|Howell|S|19891117|
-Shawn|Powell|P|19881129|
+Delano|Howell|S|19891117|Stanford
+Shawn|Powell|P|19881129|Florida State
 Rodney|McLeod|S|19900623|Virginia
 Garrett|Celek|TE|19880529|Michigan State
 Chris|Owusu|WR|19900106|Stanford
-Nathan|Palmer|WR|19890414|
+Nathan|Palmer|WR|19890414|Northern Illinois
 Vontaze|Burfict|MLB|19900924|Arizona State
 Tashaun|Gipson|S|19900807|Wyoming
-Josh|Cooper|WR|19890108|
+Josh|Cooper|WR|19890108|Oklahoma State
 L.J.|Fort|MLB|19900103|Northern Iowa
 Jerry|Franklin|MLB|19880110|Arkansas
 Steven|Johnson|MLB|19880328|Kansas
 Aaron|Brewer|C|19900705|San Diego State
-Drew|Butler|P|19890510|
+Drew|Butler|P|19890510|Georgia
 Robert|Golden|S|19900913|Arizona
 Austin|Davis|QB|19890602|Southern Mississippi
 Cory|Harkey|TE|19900617|UCLA
-Brandon|Barden|TE|19890315|
-Adrian|Robinson|OLB|19891121|
+Brandon|Barden|TE|19890315|Vanderbilt
+Adrian|Robinson|OLB|19891121|Temple
 Jewel|Hampton|RB|19891223|
 David|Hunter|DT|19890919|
-Stephen|Hill|WR|19910425|
-Richard|Crawford|CB|19900801|
-Jordan|Bernstine|S|19890531|
+Stephen|Hill|WR|19910425|Georgia Tech
+Richard|Crawford|CB|19900801|Southern Methodist
+Jordan|Bernstine|S|19890531|Iowa
 Cole|Beasley|WR|19890426|Southern Methodist
 Lance|Dunbar|RB|19900125|North Texas
-Harland|Gunn|LG|19890830|
+Harland|Gunn|LG|19890830|Miami (Florida)
 Saalim|Hakim|WR|19900201|Palomar Coll. CA (J.C.)
-Adrian|Hamilton|MLB|19871129|
+Adrian|Hamilton|MLB|19871129|Prairie View A&M
 Ronald|Leary|LG|19890429|Memphis
 Hayworth|Hicks|LG|19881003|
-Donnie|Fletcher|CB|19900523|
+Donnie|Fletcher|CB|19900523|Boston College
 Damon|Harrison|DT|19881129|William Penn
 Antwon|Blake|S|19900809|Texas-El Paso
-Jarrett|Boykin|WR|19891104|
-Michael|Brewster|C|19890727|
-Kevin|Elliott|WR|19881221|
+Jarrett|Boykin|WR|19891104|Virginia Tech
+Michael|Brewster|C|19890727|Ohio State
+Kevin|Elliott|WR|19881221|Florida A&M
 Julian|Stanford|OLB|19900902|Wagner
 Johnson|Bademosi|CB|19900723|Stanford
-Trevor|Robinson|C|19900516|
+Trevor|Robinson|C|19900516|Notre Dame
 Austin|Pasztor|LG|19901126|Virginia
-Darrion|Weems|LT|19880904|
+Darrion|Weems|LT|19880904|Oregon
 Leonard|Johnson|CB|19900330|Iowa State
 Bradley|Sowell|LT|19890606|Mississippi
 Cameron|Collins|MLB|19890929|
-Josh|Samuda|LG|19881223|
+Josh|Samuda|LG|19881223|Massachusetts
 Derrick|Shelby|DE|19890304|Utah
-Kaelin|Burnett|MLB|19890906|
-Lucas|Nix|LG|19890928|
+Kaelin|Burnett|MLB|19890906|Nevada-Reno
+Lucas|Nix|LG|19890928|Pittsburgh
 Rod|Streater|WR|19880209|Temple
-Dezman|Moses|OLB|19890104|
+Dezman|Moses|OLB|19890104|Tulane
 Beau|Brinkley|C|19900125|Missouri
 Alshon|Jeffery|WR|19900214|South Carolina
-Alameda|Ta'amu|DT|19900823|
+Alameda|Ta'amu|DT|19900823|Washington
 Adam|Gettis|LG|19881209|Iowa
-Chris|Rainey|RB|19880302|
+Chris|Rainey|RB|19880302|Florida
 Alfred|Morris|RB|19881212|Florida Atlantic
-Winston|Guy|S|19900423|
+Winston|Guy|S|19900423|Kentucky
 Josh|Bush|S|19890305|Wake Forest
 Tom|Compton|LT|19890510|South Dakota
-Michael|Smith|RB|19880809|
+Michael|Smith|RB|19880809|Utah State
 J.R.|Sweezy|LG|19890408|North Carolina State
-Sammy|Brown|OLB|19900417|
-Mike|Brown|WR|19890209|
+Sammy|Brown|OLB|19900417|Houston
+Mike|Brown|WR|19890209|Liberty
 Jermaine|Kearse|WR|19900206|Washington
 Tony|Jerod-Eddie|DE|19900329|Texas A&M
-David|Snow|C|19891109|
-A.J.|Davis|CB|19890706|
-Danny|Noble|TE|19890330|
+David|Snow|C|19891109|Texas
+A.J.|Davis|CB|19890706|Jacksonville State
+Danny|Noble|TE|19890330|Toledo
 Don|Barclay|LG|19890418|West Virginia
 DeShawn|Shead|CB|19890628|Portland State
 Bruce|Irvin|DE|19871101|West Virginia
-DaJohn|Harris|DT|19890124|
+DaJohn|Harris|DT|19890124|Southern California
 Sean|Richardson|S|19900121|Vanderbilt
 Mike|Adams|LT|19900310|Ohio State
 David|Molk|C|19881215|Michigan
-Toney|Clemons|WR|19881011|
+Toney|Clemons|WR|19881011|Colorado
 Travaris|Cadet|RB|19890201|Appalachian State
-Jerico|Nelson|CB|19890919|
+Jerico|Nelson|CB|19890919|Arkansas
 Tyrunn|Walker|DT|19900318|Tulsa
-Ryan|Broyles|WR|19880409|
-Ronnell|Lewis|DE|19900917|
-Jerron|McMillian|S|19890402|
+Ryan|Broyles|WR|19880409|Oklahoma
+Ronnell|Lewis|DE|19900917|Oklahoma
+Jerron|McMillian|S|19890402|Maine
 Tahir|Whitehead|OLB|19900402|Temple
 George|Iloka|S|19900331|Boise State
-Jonte|Green|CB|19890719|
+Jonte|Green|CB|19890719|New Mexico State
 Travis|Lewis|MLB|19880115|Oklahoma
-David|Paulson|TE|19890222|
-Terrence|Frederick|CB|19900210|
+David|Paulson|TE|19890222|Oregon
+Terrence|Frederick|CB|19900210|Texas A&M
 Kellen|Moore|QB|19880705|Boise State
 Brandon|Bolden|RB|19900126|Mississippi
-Marcus|Forston|DT|19890928|
-Justin|Francis|DT|19890208|
+Marcus|Forston|DT|19890928|Miami (Florida)
+Justin|Francis|DT|19890208|Rutgers
 Markus|Zusevics|LT|19890425|
 Luke|Kuechly|OLB|19910420|Boston College
 Melvin|Ingram|OLB|19890426|South Carolina
 Shea|McClellin|DE|19890801|Boise State
-David|Wilson|RB|19910615|
+David|Wilson|RB|19910615|Virginia Tech
 Courtney|Upshaw|DE|19891213|Alabama
 Mitchell|Schwartz|LT|19890608|California
 Amini|Silatolu|LG|19880916|Midwestern State
@@ -17238,57 +17238,57 @@ Jayron|Hosley|CB|19900918|Virginia Tech
 Gino|Gradkowski|LG|19881105|Delaware
 Travis|Benjamin|WR|19891229|Miami
 Frank|Alexander|DE|19891217|Oklahoma
-Joe|Adams|WR|19891122|
+Joe|Adams|WR|19891122|Arkansas
 Nigel|Bradham|OLB|19890904|Florida State
 Robert|Turbin|RB|19891202|Utah State
-Devon|Wylie|WR|19880902|
+Devon|Wylie|WR|19880902|Fresno State
 Ladarius|Green|TE|19900529|Louisiana-Lafayette
-Evan|Rodriguez|FB|19880921|
+Evan|Rodriguez|FB|19880921|Temple
 Jaye|Howard|DT|19881220|Florida
 Joe|Looney|LG|19900831|Wake Forest
-James-Michael|Johnson|OLB|19890820|
+James-Michael|Johnson|OLB|19890820|Nevada-Reno
 Ron|Brooks|CB|19881016|LSU
-Adrien|Robinson|TE|19880923|
-Christian|Thompson|S|19900614|
+Adrien|Robinson|TE|19880923|Cincinnati
+Christian|Thompson|S|19900614|South Carolina State
 Mike|Daniels|DE|19890505|Iowa
 Josh|Norman|CB|19871215|Coastal Carolina
 Tank|Carder|OLB|19890118|Texas Christian
-Ryan|Miller|LT|19890706|
+Ryan|Miller|LT|19890706|Colorado
 Terrell|Manning|MLB|19900416|North Carolina State
 Marvin|Jones|WR|19900312|California
 Asa|Jackson|CB|19891202|Cal Poly-S.L.O.
 Jeremy|Lane|CB|19900714|Northwestern State-Louisiana
-Mark|Asper|LG|19851108|
-Trenton|Robinson|CB|19900216|
-Cyrus|Gray|RB|19891118|
+Mark|Asper|LG|19851108|Oregon
+Trenton|Robinson|CB|19900216|Michigan State
+Cyrus|Gray|RB|19891118|Texas A&M
 Billy|Winn|DT|19890415|Boise State
 Brad|Nortman|P|19890912|Wisconsin
-D.J.|Campbell|S|19890724|
-Jerome|Long|DT|19900409|
+D.J.|Campbell|S|19890724|California
+Jerome|Long|DT|19900409|San Diego State
 Greg|Scruggs|DE|19900817|Louisville
-DeAngelo|Tyson|DE|19890412|
+DeAngelo|Tyson|DE|19890412|Georgia
 Cam|Johnson|MLB|19900524|Virginia
-Junior|Hemingway|WR|19881227|
-Markus|Kuhn|DT|19860505|
+Junior|Hemingway|WR|19881227|Michigan
+Markus|Kuhn|DT|19860505|North Carolina State
 Trevin|Wade|CB|19890801|Arizona
-Brad|Smelley|RB|19890420|
+Brad|Smelley|RB|19890420|Alabama
 Kelvin|Beachum|LG|19890608|Southern Methodist
-Edwin|Baker|RB|19910601|
-John|Potter|K|19900124|
+Edwin|Baker|RB|19910601|Michigan State
+John|Potter|K|19900124|Western Michigan
 Josh|Bellamy|WR|19890518|Louisville
-Tysyn|Hartman|S|19890809|
+Tysyn|Hartman|S|19890809|Kansas State
 Neiko|Thorpe|CB|19900211|Auburn
-James|Brown|LT|19881130|
+James|Brown|LT|19881130|Troy
 Jeremy|Jones|S|19890718|
-Laron|Byrd|WR|19890818|
-Zack|Nash|MLB|19890923|
-Rishaw|Johnson|LG|19890223|
-Scott|Wedige|C|19881120|
-Nate|Eachus|RB|19900615|
-David|Douglas|WR|19890627|
-Adewale|Ojomo|DE|19881111|
-Omar|Brown|CB|19880606|
-Ishmaa'ily|Kitchen|DT|19880824|
+Laron|Byrd|WR|19890818|Miami (Florida)
+Zack|Nash|MLB|19890923|Sacramento State
+Rishaw|Johnson|LG|19890223|California (Pennsylvania)
+Scott|Wedige|C|19881120|Northern Illinois
+Nate|Eachus|RB|19900615|Colgate
+David|Douglas|WR|19890627|Arizona
+Adewale|Ojomo|DE|19881111|Miami (Florida)
+Omar|Brown|CB|19880606|Marshall
+Ishmaa'ily|Kitchen|DT|19880824|Kent State
 Bobby|Rainey|RB|19871016|Western Kentucky
 Deonte|Thompson|WR|19890214|Florida
 Sean|McGrath|TE|19871203|Henderson State
@@ -17297,7 +17297,7 @@ Will|Hill|S|19900307|Florida
 Nick|Perry|OLB|19900412|USC
 Mychal|Kendricks|OLB|19900928|California
 Tavon|Wilson|S|19900319|Illinois
-Peter|Konz|LG|19891220|
+Peter|Konz|LG|19891220|Wisconsin
 Vinny|Curry|DE|19880630|Marshall
 Ben|Jones|C|19890702|Georgia
 Orson|Charles|TE|19910127|Georgia
@@ -17307,33 +17307,33 @@ Jared|Crick|DE|19890821|Nebraska
 Najee|Goode|OLB|19890604|West Virginia
 Dennis|Kelly|LT|19900116|Purdue
 Keith|Tandy|S|19890212|West Virginia
-Charles|Mitchell|S|19890913|
-Marvin|McNutt|WR|19890704|
-Terrance|Ganaway|RB|19881007|
+Charles|Mitchell|S|19890913|Mississippi State
+Marvin|McNutt|WR|19890704|Iowa
+Terrance|Ganaway|RB|19881007|Baylor
 Bryce|Brown|RB|19910514|Kansas State
-Travian|Robertson|DT|19881209|
+Travian|Robertson|DT|19881209|South Carolina
 Damaris|Johnson|WR|19891122|Tulsa
 Chris|Polk|RB|19891216|Washington
-Emil|Igwenagu|TE|19890327|
-Jeremy|Stewart|RB|19890217|
-Sean|Cattouse|CB|19881004|
-Greg|Gatson|CB|19890324|
+Emil|Igwenagu|TE|19890327|Massachusetts
+Jeremy|Stewart|RB|19890217|Stanford
+Sean|Cattouse|CB|19881004|California
+Greg|Gatson|CB|19890324|Arkansas
 Nick|Guess|C|19881007|
 Mike|Harris|LT|19881205|UCLA
 Mike|Willie|WR|19900617|
 Emmanuel|Lamur|MLB|19890608|Kansas State
-Ben|Bass|DT|19891012|
+Ben|Bass|DT|19891012|Texas A&M
 Jamize|Olawale|RB|19890417|North Texas
 Ryan|Quigley|P|19900126|Boston College
-Joe|Anderson|WR|19881121|
-Hebron|Fangupo|DT|19850719|
+Joe|Anderson|WR|19881121|Texas Southern
+Hebron|Fangupo|DT|19850719|Brigham Young
 Jonathan|Grimes|RB|19891221|William & Mary
-Jerrell|Jackson|WR|19900206|
+Jerrell|Jackson|WR|19900206|Missouri
 Nate|Menkin|LT|19881004|
 Eddie|Pleasant|CB|19881217|Oregon
-Cody|White|LG|19880701|
+Cody|White|LG|19880701|Illinois State
 Jeff|Allen|LG|19900108|Illinois
-Brandon|Taylor|S|19900129|
+Brandon|Taylor|S|19900129|Louisiana State
 Lamar|Holmes|LT|19890708|Southern Mississippi
 Bobby|Massie|LT|19890801|Mississippi
 Coty|Sensabaugh|CB|19881115|Clemson
@@ -17342,14 +17342,14 @@ Ryan|Lindley|QB|19890622|San Diego State
 Rich|Ranglin|LG|19840927|
 Stephon|Gilmore|CB|19900919|South Carolina
 Donald|Stephenson|LT|19880930|Oklahoma
-Mike|Martin|DT|19900901|
+Mike|Martin|DT|19900901|Michigan
 Keenan|Robinson|MLB|19890707|Texas
 Senio|Kelemete|LG|19900510|Washington
 Vick|Ballard|RB|19900716|Mississippi State
-LaVon|Brazill|WR|19890315|
-Nate|Potter|LT|19880516|
+LaVon|Brazill|WR|19890315|Ohio University
+Nate|Potter|LT|19880516|Boise State
 Antonio|Allen|CB|19880923|South Carolina
-Quinton|Coples|DE|19900622|
+Quinton|Coples|DE|19900622|North Carolina
 Dre|Kirkpatrick|CB|19891026|Alabama
 Cordy|Glenn|LT|19890918|Georgia
 Lavonte|David|OLB|19900123|Nebraska
@@ -17358,25 +17358,25 @@ Zach|Brown|OLB|19891023|North Carolina
 Nick|Foles|QB|19890120|Arizona
 Malik|Jackson|DE|19900111|Tennessee
 Nate|Ebner|S|19881214|Ohio State
-Kheeston|Randall|DT|19900507|
+Kheeston|Randall|DT|19900507|Texas
 Jarius|Wright|WR|19891125|Arkansas
-Josh|Chapman|DT|19890610|
+Josh|Chapman|DT|19890610|Alabama
 Robert|Blanton|S|19890907|Notre Dame
 Blair|Walsh|K|19900108|Georgia
 Danny|Trevathan|OLB|19900324|Kentucky
 Audie|Cole|MLB|19890601|North Carolina State
 Rishard|Matthews|WR|19891012|Nevada
-Jerry|Brown|MLB|19871020|
+Jerry|Brown|MLB|19871020|Illinois
 Chandler|Jones|DE|19900227|Syracuse
 Derek|Wolfe|DE|19900224|Cincinnati
 Rhett|Ellison|TE|19881003|USC
-Dan|Herron|RB|19890321|
+Dan|Herron|RB|19890321|Ohio State
 Scott|Solomon|DE|19881105|Rice
-Taylor|Thompson|TE|19891019|
+Taylor|Thompson|TE|19891019|Southern Methodist
 Kevin|Zeitler|LG|19900308|Wisconsin
-Jonathan|Martin|LT|19890819|
+Jonathan|Martin|LT|19890819|Stanford
 Josh|Kaddu|MLB|19900312|Oregon
-Alfonzo|Dennard|CB|19890909|
+Alfonzo|Dennard|CB|19890909|Nebraska
 Justin|Tucker|K|19891121|Texas
 Andre|Branch|DE|19890714|Clemson
 Kirk|Cousins|QB|19880819|Michigan State
@@ -17384,36 +17384,36 @@ Harrison|Smith|S|19890202|Notre Dame
 Demario|Davis|MLB|19890111|Arkansas State
 T.Y.|Hilton|WR|19891114|Florida International
 Philip|Blake|C|19851127|
-Mike|Harris|CB|19890105|
+Mike|Harris|CB|19890105|Florida State
 Daryl|Richardson|RB|19900412|Abilene Christian
 Doug|Martin|RB|19890113|Boise State
-Chris|Givens|WR|19891206|
+Chris|Givens|WR|19891206|Wake Forest
 Lamar|Miller|RB|19910425|Miami
-Rokevious|Watkins|LG|19890224|
-Jonathan|Massaquoi|DE|19880511|
+Rokevious|Watkins|LG|19890224|South Carolina
+Jonathan|Massaquoi|DE|19880511|Troy
 Jorvorskie|Lane|FB|19870204|Texas A&M
 Brandon|Marshall|OLB|19890910|Nevada
 Greg|Zuerlein|K|19871227|Missouri Western
-Jeris|Pendleton|DT|19831107|
-Isaiah|Pead|RB|19891214|
+Jeris|Pendleton|DT|19831107|Ashland
+Isaiah|Pead|RB|19891214|Cincinnati
 Jack|Crawford|DE|19880907|Penn State
-Christo|Bilukidi|DT|19891213|
+Christo|Bilukidi|DT|19891213|Georgia State
 Michael|Brockers|DT|19901221|Louisiana State
-Miles|Burris|OLB|19880627|
+Miles|Burris|OLB|19880627|San Diego State
 Mohamed|Sanu|WR|19890822|Rutgers
 James|Hanna|TE|19890714|Oklahoma
 Michael|Floyd|WR|19891127|Notre Dame
-Jamell|Fleming|CB|19890505|
+Jamell|Fleming|CB|19890505|Oklahoma
 Brian|Quick|WR|19890605|Appalachian State
 Tyrone|Crawford|DT|19891122|Boise State
-Jordan|White|WR|19880604|
+Jordan|White|WR|19880604|Western Michigan
 Whitney|Mercilus|OLB|19900721|Illinois
-Ryan|Rau|MLB|19900730|
-Jake|Bequette|DE|19890221|
+Ryan|Rau|MLB|19900730|Portland State
+Jake|Bequette|DE|19890221|Arkansas
 Kyle|Wilber|OLB|19890426|Wake Forest
 Matt|Johnson|S|19890722|
 Fletcher|Cox|DT|19901213|Mississippi State
-A.J.|Jenkins|WR|19890908|
+A.J.|Jenkins|WR|19890908|Illinois
 Akiem|Hicks|DT|19891116|Regina, Can.
 Corey|White|CB|19900509|Samford
 T.J.|Graham|WR|19890727|North Carolina State
@@ -17425,7 +17425,7 @@ Dont'a|Hightower|OLB|19900312|Alabama
 Mark|Barron|S|19891027|Alabama
 Riley|Reiff|LT|19881201|Iowa
 DeVier|Posey|WR|19900315|Ohio State
-Trent|Richardson|RB|19900710|
+Trent|Richardson|RB|19900710|Alabama
 Morris|Claiborne|CB|19900207|Louisiana State
 Brandon|Weeden|QB|19831014|Oklahoma State
 David|DeCastro|LG|19900111|Stanford
@@ -17442,95 +17442,95 @@ Trumaine|Johnson|CB|19900101|Montana
 Josh|Robinson|CB|19910108|Central Florida
 Bryan|Anger|P|19881006|California
 Olivier|Vernon|DE|19901007|Miami
-Michael|Egnew|TE|19891101|
+Michael|Egnew|TE|19891101|Missouri
 Chris|Lewis-Harris|CB|19890211|Tennessee-Chattanooga
 Coby|Fleener|TE|19880920|Stanford
 Tony|Bergstrom|LG|19860806|Utah
 Ryan|Tannehill|QB|19880727|Texas A&amp;M
-Juron|Criner|WR|19891212|
+Juron|Criner|WR|19891212|Arizona
 Justin|Blackmon|WR|19900109|Oklahoma State
 Kendall|Wright|WR|19891112|Baylor
 Dick|Conn|CB||
-Will|Ta'ufo'ou|FB|19860619|
-Chris|Williams|WR|19870916|
+Will|Ta'ufo'ou|FB|19860619|California
+Chris|Williams|WR|19870916|New Mexico State
 James|Develin|RB|19880723|Brown
 Kenny|Wiggins|LT|19880808|Fresno State
 Spencer|Lanning|P|19880521|South Carolina
 Taylor|Boggs|C|19870220|Humboldt State
-Victor|Aiyewa|MLB|19890204|
+Victor|Aiyewa|MLB|19890204|Washington
 Corbin|Bryant|DT|19880104|Northwestern
-Ricky|Lumpkin|DT|19880907|
-Brandon|Smith|CB|19870223|
+Ricky|Lumpkin|DT|19880907|Kentucky
+Brandon|Smith|CB|19870223|Arizona State
 Chase|Reynolds|RB|19871022|Montana
 Larry|Donnell|TE|19881101|Grambling State
 Michael|Thomas|CB|19900317|Stanford
 Duke|Ihenacho|S|19890616|San Jose State
-Chase|Minnifield|CB|19890331|
+Chase|Minnifield|CB|19890331|Virginia
 Brian|Tyms|WR|19890221|Florida A&M
 Case|Keenum|QB|19880217|Houston
 Phillip|Supernaw|TE|19900130|Ouachita Baptist
 Dominique|Jones|TE|19870815|Shepherd
-Micah|Pellerin|CB|19881123|
+Micah|Pellerin|CB|19881123|Hampton
 Griff|Whalen|WR|19900301|Stanford
-Marcus|Dowtin|OLB|19890122|
+Marcus|Dowtin|OLB|19890122|North Alabama
 Joe|Banyard|RB|19881112|Texas-El Paso
 Ryan|Davis|DE|19890224|Bethune-Cookman
-Drew|Nowak|LG|19900307|
-J.K.|Schaffer|MLB|19900610|
-Matt|Veldman|TE|19880812|
-Chase|Baker|DT|19880521|
+Drew|Nowak|LG|19900307|Western Michigan
+J.K.|Schaffer|MLB|19900610|Cincinnati
+Matt|Veldman|TE|19880812|North Dakota State
+Chase|Baker|DT|19880521|Boise State
 Derrick|Coleman|FB|19901018|UCLA
-Eric|Page|WR|19910923|
+Eric|Page|WR|19910923|Toledo
 Kelcie|McCray|S|19880921|Arkansas State
-Derek|Moye|WR|19880812|
+Derek|Moye|WR|19880812|Penn State
 Derek|Carrier|TE|19900725|Beloit
 Marquette|King|P|19881026|Fort Valley State
 Joe|Long|LT|19890727|
 Matt|Simms|QB|19880927|Tennessee
 Mike|Remmers|LT|19890411|Oregon State
 Brian|Folkerts|C|19900130|Washburn
-Jose|Gumbs|S|19880420|
-Jake|Byrne|TE|19900124|
-Sean|Baker|CB|19881106|
-Chris|Greenwood|CB|19890710|
-Shaun|Prater|CB|19891027|
-Rodney|Austin|LG|19881204|
-Patrick|Edwards|WR|19881025|
+Jose|Gumbs|S|19880420|Monmouth (New Jersey)
+Jake|Byrne|TE|19900124|Wisconsin
+Sean|Baker|CB|19881106|Ball State
+Chris|Greenwood|CB|19890710|Albion
+Shaun|Prater|CB|19891027|Iowa
+Rodney|Austin|LG|19881204|Elon
+Patrick|Edwards|WR|19881025|Houston
 Brandon|Mosley|LG|19881221|Auburn
 Johnnie|Troutman|LG|19871111|Penn State
-Isaiah|Frey|CB|19900406|
+Isaiah|Frey|CB|19900406|Nevada-Reno
 Matt|McCants|LT|19890818|Alabama-Birmingham
 Brittan|Golden|WR|19880720|West Texas A&M
-James|Nixon|CB|19880202|
-Stephen|Goodin|LG|19880825|
-Julian|Talley|WR|19890609|
+James|Nixon|CB|19880202|California (Pennsylvania)
+Stephen|Goodin|LG|19880825|Nebraska-Kearney
+Julian|Talley|WR|19890609|Massachusetts
 Antoine|McClain|LG|19891206|
-Bradie|Ewing|FB|19891226|
+Bradie|Ewing|FB|19891226|Wisconsin
 Randy|Bullock|K|19891216|Texas A&amp;M
-Brandon|Washington|LG|19880813|
+Brandon|Washington|LG|19880813|Miami (Florida)
 Chase|Ford|TE|19900719|Miami
-Jeremy|Ebert|WR|19890406|
+Jeremy|Ebert|WR|19890406|Northwestern
 Brandon|Bostick|TE|19890503|Newberry
-Isaiah|Green|CB|19890810|
+Isaiah|Green|CB|19890810|Fresno State
 Alex|Tanney|QB|19871111|Monmouth, Ill.
 Nathan|Stupar|MLB|19880314|Penn State
-Kyle|Knox|OLB|19890310|
+Kyle|Knox|OLB|19890310|Fresno State
 Nick|Toon|WR|19881104|Wisconsin
-Jeff|Demps|RB|19900108|
+Jeff|Demps|RB|19900108|Florida
 Fozzy|Whittaker|RB|19890202|Texas
-Jason|Vega|DE|19870530|
+Jason|Vega|DE|19870530|Northeastern
 Josh|McNary|MLB|19880410|Army
 Chris|Banjo|S|19900226|Southern Methodist
-Shelton|Johnson|CB|19900716|
-Lamar|Mady|LG|19901213|
+Shelton|Johnson|CB|19900716|Wisconsin
+Lamar|Mady|LG|19901213|Youngstown State
 Cody|Davis|CB|19890606|Texas Tech
-Robert|Steeples|CB|19891127|
-Joplo|Bartu|OLB|19891003|
-Darius|Johnson|WR|19910222|
-Terren|Jones|LT|19911119|
+Robert|Steeples|CB|19891127|Memphis
+Joplo|Bartu|OLB|19891003|Texas State
+Darius|Johnson|WR|19910222|Southern Methodist
+Terren|Jones|LT|19911119|Alabama State
 Adam|Replogle|DT|19901010|
 Ryan|Schraeder|LT|19880504|Valdosta State
-Ronnie|Wingo|RB|19910218|
+Ronnie|Wingo|RB|19910218|Arkansas
 Paul|Worrilow|MLB|19900501|Delaware
 Brandon|Williams|TE|19871012|Oregon
 Daren|Bates|OLB|19901127|Auburn
@@ -17543,10 +17543,10 @@ Martin|Wallace|LT|19900422|Temple
 Nick|Williams|WR|19901123|Connecticut
 Josh|Aubrey|S|19910409|Stephen F. Austin St.
 C.J.|Anderson|RB|19910210|California
-Lamaar|Thomas|WR|19900423|
+Lamaar|Thomas|WR|19900423|New Mexico
 Ryan|Griffin|QB|19891117|Tulane
-Xavier|Nixon|LT|19900917|
-Skye|Dawson|WR|19901202|
+Xavier|Nixon|LT|19900917|Florida
+Skye|Dawson|WR|19901202|Texas Christian
 Will|Compton|MLB|19890919|Nebraska
 Jumal|Rolle|CB|19900528|Catawba
 MarQueis|Gray|TE|19891107|Minnesota
@@ -17559,43 +17559,43 @@ Kyle|Juszczyk|FB|19910423|Harvard
 Ricky|Wagner|LT|19891021|Wisconsin
 Ryan|Jensen|C|19910527|Colorado State-Pueblo
 Aaron|Mellette|WR|19891228|
-Deveron|Carr|CB|19900810|
+Deveron|Carr|CB|19900810|Arizona State
 Rashaan|Melvin|CB|19891002|Northern Illinois
 Timothy|Wright|TE|19900407|Rutgers
-Brian|Arnfelt|DE|19891011|
+Brian|Arnfelt|DE|19891011|Northwestern
 Darius|Eubanks|MLB|19910712|Georgia Southern
 Zach|Line|FB|19900426|Southern Methodist
 Rodney|Smith|WR|19900311|Florida State
-Paul|Hazel|OLB|19900504|
+Paul|Hazel|OLB|19900504|Western Michigan
 Abry|Jones|DT|19910908|Georgia
 Lonnie|Pryor|RB|19900222|
 LaRoy|Reynolds|MLB|19901103|Virginia
 Carson|Tinker|C|19891115|Alabama
 Chris|Barker|LG|19900803|Nevada
-Sam|Brenner|C|19900427|
+Sam|Brenner|C|19900427|Utah
 A.J.|Francis|DT|19900507|Maryland
-Keelan|Johnson|CB|19890926|
-Jordan|Kovacs|CB|19900612|
+Keelan|Johnson|CB|19890926|Arizona State
+Jordan|Kovacs|CB|19900612|Michigan
 Ryan|Allen|P|19900228|Louisiana Tech
-Kanorris|Davis|CB|19900121|
+Kanorris|Davis|CB|19900121|Troy
 Josh|Kline|LT|19891229|Kent State
-Zach|Sudfeld|TE|19890418|
+Zach|Sudfeld|TE|19890418|Nevada-Reno
 Kenbrell|Thompkins|WR|19880729|Cincinnati
 Joe|Vellano|DT|19881030|Maryland
 Brynden|Trawick|S|19891023|Troy
-Joe|Unga|LT|19870105|
-Jeff|Tuel|QB|19910212|
-Khaseem|Greene|OLB|19890204|
-Ka'Lial|Glaud|MLB|19901109|
+Joe|Unga|LT|19870105|Midwestern State
+Jeff|Tuel|QB|19910212|Washington State
+Khaseem|Greene|OLB|19890204|Rutgers
+Ka'Lial|Glaud|MLB|19901109|Rutgers
 Terence|Garvin|MLB|19910101|West Virginia
 Nickell|Robey|CB|19920117|Southern California
-Da'Rick|Rogers|WR|19910618|
+Da'Rick|Rogers|WR|19910618|Tennessee Tech
 Jordan|Mills|LT|19901224|Louisiana Tech
 Marquess|Wilson|WR|19920914|Washington State
 Cornelius|Washington|DE|19890910|Georgia
 Chris|Gragg|TE|19900630|Arkansas
 Ray-Ray|Armstrong|OLB|19910305|Miami
-Gerald|Rivers|DE|19900622|
+Gerald|Rivers|DE|19900622|Mississippi
 Ezekiel|Ansah|DE|19890529|Brigham Young
 Kenny|Vaccaro|S|19910215|Texas
 Zach|Ertz|TE|19901110|Stanford
@@ -17612,17 +17612,17 @@ Hugh|Thornton|LG|19910628|Illinois
 Jordan|Hill|DT|19910208|Penn State
 Duke|Williams|S|19901015|Nevada
 David|Bakhtiari|LT|19910930|Colorado
-Khaled|Holmes|C|19900119|
+Khaled|Holmes|C|19900119|Southern California
 J.C.|Tretter|LT|19910212|Cornell
-Chris|Harper|WR|19890910|
-Johnathan|Franklin|RB|19891023|
+Chris|Harper|WR|19890910|Kansas State
+Johnathan|Franklin|RB|19891023|UCLA
 Devin|Taylor|DE|19891115|South Carolina
 Earl|Wolff|S|19891215|North Carolina State
 Montori|Hughes|DT|19900825|Tennessee-Martin
 Oday|Aboushi|LT|19910605|Virginia
 Jonathan|Meeks|S|19891108|Clemson
 Kenny|Stills|WR|19920422|Oklahoma
-Cooper|Taylor|S|19900414|
+Cooper|Taylor|S|19900414|Richmond
 Quinton|Dial|DT|19900721|Alabama
 Luke|Willson|TE|19900115|Rice
 Micah|Hyde|CB|19901231|Iowa
@@ -17634,9 +17634,9 @@ Vinston|Painter|LT|19891011|Virginia Tech
 David|Quessenberry|LG|19900824|San Jose State
 Dustin|Hopkins|K|19901001|Florida State
 William|Campbell|LG|19910706|
-Nick|Moody|MLB|19900129|
+Nick|Moody|MLB|19900129|Florida State
 Rufus|Johnson|MLB|19900828|Tarleton State
-DeVonte|Holloman|OLB|19910212|
+DeVonte|Holloman|OLB|19910212|South Carolina
 Nate|Palmer|OLB|19890923|Illinois State
 Chris|Jones|DT|19900712|Bowling Green State
 Theo|Riddick|RB|19910504|Notre Dame
@@ -17645,64 +17645,64 @@ Mike|Catapano|DE|19900817|Princeton
 Tommy|Bohanon|FB|19900910|Wake Forest
 Charles|Johnson|WR|19890227|Grand Valley State
 Jordan|Poyer|CB|19910425|Oregon State
-Ryan|Seymour|LG|19900207|
-Ty|Powell|MLB|19880427|
+Ryan|Seymour|LG|19900207|Vanderbilt
+Ty|Powell|MLB|19880427|Harding
 Sam|Barrington|MLB|19901005|South Florida
 Reid|Fragel|LT|19910222|Ohio State
 Marcus|Cooper|CB|19900201|Rutgers
-Michael|Cox|RB|19881114|
+Michael|Cox|RB|19881114|Massachusetts
 Andy|Mulumba|OLB|19900131|Eastern Michigan
 Stefan|Charles|DT|19880609|Regina (Canada)
-Michael|Ford|RB|19900527|
+Michael|Ford|RB|19900527|Louisiana State
 Josh|Lenz|WR|19900922|
-Zach|Minter|DT|19901106|
-Jake|Knott|MLB|19901024|
+Zach|Minter|DT|19901106|Montana State
+Jake|Knott|MLB|19901024|Iowa State
 Russell|Shepard|WR|19900917|LSU
 Damion|Square|DE|19890206|Alabama
 Matt|Tobin|LT|19900605|Iowa
-Matthew|Tucker|RB|19910524|
+Matthew|Tucker|RB|19910524|Texas Christian
 Tyler|Bray|QB|19911227|Tennessee
 Josh|Martin|OLB|19911107|Columbia
 Bradley|McDougald|S|19901115|Kansas
-Troy|Davis|MLB|19910106|
+Troy|Davis|MLB|19910106|Central Florida
 Chris|Pantale|TE|19900322|Boston College
 Jack|Doyle|TE|19900505|Western Kentucky
-Jakar|Hamilton|CB|19891002|
+Jakar|Hamilton|CB|19891002|South Carolina State
 Jeff|Heath|S|19910514|Saginaw Valley State
-Cameron|Lawrence|MLB|19910120|
-Brandon|Magee|MLB|19901022|
+Cameron|Lawrence|MLB|19910120|Mississippi State
+Brandon|Magee|MLB|19901022|Arizona State
 Alvin|Bailey|LT|19910826|Arkansas
 John|Lotulelei|MLB|19911204|Nevada-Las Vegas
-Glenn|Foster|DE|19900531|
+Glenn|Foster|DE|19900531|Illinois
 Josh|Hill|TE|19900521|Idaho State
 Tim|Lelito|LG|19890721|Grand Valley State
 Eric|Martin|OLB|19910721|Nebraska
 Keavon|Milton|TE|19900623|Louisiana-Monroe
 Kevin|Reddick|MLB|19891228|North Carolina
-Rod|Sweeting|CB|19900928|
+Rod|Sweeting|CB|19900928|Georgia Tech
 A.J.|Bouye|CB|19910816|Central Florida
-Ja'Gared|Davis|MLB|19900911|
-Ray|Graham|RB|19900918|
-Willie|Jefferson|OLB|19910131|
-Dennis|Johnson|RB|19900224|
+Ja'Gared|Davis|MLB|19900911|Southern Methodist
+Ray|Graham|RB|19900918|Pittsburgh
+Willie|Jefferson|OLB|19910131|Stephen F. Austin State
+Dennis|Johnson|RB|19900224|Arkansas
 Alex|Kupper|LG|19900214|
-Jawanza|Starling|CB|19910621|
-Justin|Tuggle|MLB|19900104|
+Jawanza|Starling|CB|19910621|Southern California
+Justin|Tuggle|MLB|19900104|Kansas State
 Cierre|Wood|RB|19910221|Notre Dame
 Wes|Horton|DE|19891217|Southern California
-Robert|Lester|CB|19880430|
-Melvin|White|CB|19900626|
+Robert|Lester|CB|19880430|Alabama
+Melvin|White|CB|19900626|Louisiana-Lafayette
 Charles|James|CB|19900514|Charleston Southern
-Patrick|Lewis|C|19910130|
+Patrick|Lewis|C|19910130|Texas A&M
 Jake|Stoneburner|TE|19890825|Ohio State
 Lane|Taylor|LG|19891122|Oklahoma State
 Myles|White|WR|19900330|Louisiana Tech
-Christian|Tupou|DT|19890507|
+Christian|Tupou|DT|19890507|Southern California
 Manti|Te'o|MLB|19910126|Notre Dame
 Keenan|Allen|WR|19920427|California
 Knile|Davis|RB|19911005|Arkansas
 Stepfan|Taylor|RB|19910609|Stanford
-Brandon|Jenkins|OLB|19900209|
+Brandon|Jenkins|OLB|19900209|Florida State
 Tourek|Williams|OLB|19910509|Florida International
 Andre|Ellington|RB|19890203|Clemson
 Rex|Burkhead|RB|19900702|Nebraska
@@ -17712,12 +17712,12 @@ Tony|Jefferson|S|19920127|Oklahoma
 Jaron|Brown|WR|19900108|Clemson
 Jahleel|Addae|S|19900124|Central Michigan
 Marcus|Cromartie|CB|19901203|Wisconsin
-Kwame|Geathers|DT|19901004|
-Michael|Hill|RB|19890514|
+Kwame|Geathers|DT|19901004|Georgia
+Michael|Hill|RB|19890514|Missouri Western State
 Khiry|Robinson|RB|19891228|West Texas A&M
-Chance|Casey|CB|19910311|
-Greg|Jenkins|WR|19890823|
-Ryan|Robinson|DE|19901209|
+Chance|Casey|CB|19910311|Baylor
+Greg|Jenkins|WR|19890823|Alabama State
+Ryan|Robinson|DE|19901209|Oklahoma State
 Benson|Mayowa|DE|19910803|Idaho
 Kevin|Minter|MLB|19901203|Louisiana State
 Duron|Harmon|S|19910124|Rutgers
@@ -17738,8 +17738,8 @@ Akeem|Spence|DT|19911129|Illinois
 B.W.|Webb|CB|19900503|William &amp; Mary
 Chris|Thompson|RB|19901020|Florida State
 Jeff|Locke|P|19890927|UCLA
-Jeff|Baca|LG|19900110|
-Travis|Bond|LG|19901210|
+Jeff|Baca|LG|19900110|UCLA
+Travis|Bond|LG|19901210|North Carolina
 Logan|Ryan|CB|19910209|Rutgers
 Shamarko|Thomas|S|19910223|Syracuse
 Spencer|Ware|FB|19911123|Louisiana State
@@ -17750,9 +17750,9 @@ Jamie|Collins|OLB|19891020|Southern Mississippi
 Dion|Sims|TE|19910218|Michigan State
 Malliciah|Goodman|DE|19900104|Clemson
 Stansly|Maponga|DE|19910305|Texas Christian
-Steve|Beauharnais|MLB|19900502|
+Steve|Beauharnais|MLB|19900502|Rutgers
 Kemal|Ishmael|S|19910506|Central Florida
-Zeke|Motta|S|19900514|
+Zeke|Motta|S|19900514|Notre Dame
 Toben|Opurum|RB|19901118|Kansas
 Robert|Woods|WR|19920410|Southern California
 Christine|Michael|RB|19901109|Texas A&M
@@ -17763,7 +17763,7 @@ John|Simon|OLB|19901014|Ohio State
 Levine|Toilolo|TE|19910730|Stanford
 Kawann|Short|DT|19890202|Purdue
 Margus|Hunt|DE|19870714|Southern Methodist
-Quinton|Patton|WR|19900809|
+Quinton|Patton|WR|19900809|Louisiana Tech
 Demetrius|McCray|CB|19910511|Appalachian State
 Eric|Herman|LG|19891005|
 Star|Lotulelei|DT|19891220|Utah
@@ -17772,23 +17772,23 @@ Cornellius|Carradine|DE|19900218|Florida State
 Arthur|Brown|MLB|19900617|Kansas State
 Tyrann|Mathieu|S|19920513|Louisiana State
 Markus|Wheaton|WR|19910207|Oregon State
-Sanders|Commings|CB|19900308|
+Sanders|Commings|CB|19900308|Georgia
 A.J.|Klein|OLB|19910730|Iowa State
 Kenjon|Barner|RB|19890428|Oregon
-Justin|Veltung|WR|19910330|
+Justin|Veltung|WR|19910330|Idaho
 Johnthan|Banks|CB|19891003|Mississippi State
 Vance|McDonald|TE|19900613|Rice
 Shawn|Williams|S|19910513|Georgia
 Jordan|Reed|TE|19900703|Florida
 Sam|Montgomery|OLB|19900525|
 Josh|Boyce|WR|19910506|Texas Christian
-Michael|Buchanan|DE|19910124|
-Garrett|Gilkey|LG|19900709|
+Michael|Buchanan|DE|19910124|Illinois
+Garrett|Gilkey|LG|19900709|Chadron State
 Jamar|Taylor|CB|19900929|Boise State
 Eddie|Lacy|RB|19900602|Alabama
 Brian|Schwenke|C|19910322|California
 Lavar|Edwards|DE|19900429|LSU
-Khalid|Wooten|CB|19900219|
+Khalid|Wooten|CB|19900219|Nevada-Reno
 Michael|Bowie|LT|19910925|Northeastern State (Okla.)
 Daimion|Stafford|S|19910218|Nebraska
 Le'Veon|Bell|RB|19920218|Michigan State
@@ -17801,7 +17801,7 @@ Travis|Kelce|TE|19891005|Cincinnati
 Bennie|Logan|DT|19891228|LSU
 Nico|Johnson|MLB|19900619|Alabama
 Brandon|Williams|DT|19890221|Missouri Southern
-Nick|Kasa|TE|19901105|
+Nick|Kasa|TE|19901105|Colorado
 Mychal|Rivera|TE|19900908|Tennessee
 Stacy|McGee|DT|19900117|Oklahoma
 Brice|Butler|WR|19900129|San Diego State
@@ -17810,7 +17810,7 @@ Corey|Lemonier|OLB|19911119|Auburn
 Will|Davis|CB|19900508|Utah State
 Mike|Glennon|QB|19891212|North Carolina State
 Justin|Hunter|WR|19910520|Tennessee
-Montee|Ball|RB|19901205|
+Montee|Ball|RB|19901205|Wisconsin
 Kayvon|Webster|CB|19910201|South Florida
 Landry|Jones|QB|19890404|Oklahoma
 Tavon|Austin|WR|19900315|West Virginia
@@ -17820,10 +17820,10 @@ Robert|Alford|CB|19881101|Southeastern Louisiana
 Sio|Moore|OLB|19900502|Connecticut
 T.J.|McDonald|S|19910126|USC
 Dallas|Thomas|LG|19891030|Tennessee
-Stedman|Bailey|WR|19901111|
+Stedman|Bailey|WR|19901111|West Virginia
 Matt|Barkley|QB|19900908|Southern California
-Barrett|Jones|C|19900525|
-Brandon|McGee|CB|19901211|
+Barrett|Jones|C|19900525|Alabama
+Brandon|McGee|CB|19901211|Miami (Florida)
 Zac|Stacy|RB|19910409|Vanderbilt
 Johnathan|Cyprien|S|19900729|Florida International
 Dwayne|Gratz|CB|19900308|Connecticut
@@ -17837,17 +17837,17 @@ Travis|Frederick|C|19910318|Wisconsin
 Denard|Robinson|WR|19900922|Michigan
 Eric|Reid|S|19911210|Louisiana State
 Tyler|Eifert|TE|19900908|Notre Dame
-Ace|Sanders|WR|19911111|
+Ace|Sanders|WR|19911111|South Carolina
 Armonty|Bryant|DE|19900520|East Central (OK)
 Dion|Jordan|DE|19900305|Oregon
 Leon|McFadden|CB|19901026|San Diego State
 Josh|Evans|S|19910605|Florida
 Barkevious|Mingo|OLB|19901004|Louisiana State
 Matt|Elam|S|19910921|Florida
-Justin|Green|CB|19910226|
+Justin|Green|CB|19910226|Illinois
 Lane|Johnson|LT|19900508|Oklahoma
 Desmond|Trufant|CB|19900910|Washington
-Bjoern|Werner|OLB|19900830|
+Bjoern|Werner|OLB|19900830|Florida State
 DeAndre|Hopkins|WR|19920606|Clemson
 Geno|Smith|QB|19901010|West Virginia
 D.J.|Swearinger|S|19910901|South Carolina
@@ -17864,43 +17864,43 @@ Daniel|Adongo|MLB|19891012|No College
 Eric|Fisher|LT|19910105|Central Michigan
 Justin|Pugh|LT|19900815|Syracuse
 Ryan|Nassib|QB|19900310|Syracuse
-Dee|Milliner|CB|19910914|
+Dee|Milliner|CB|19910914|Alabama
 Chance|Warmack|LG|19910914|Alabama
 Dick|Conn|CB||
-Ross|Ventrone|S|19860927|
+Ross|Ventrone|S|19860927|Villanova
 Ben|Garland|LG|19880406|Air Force
-Gabe|Miller|OLB|19871205|
+Gabe|Miller|OLB|19871205|Oregon State
 Patrick|Scales|C|19880211|Utah State
 Dontrelle|Inman|WR|19890131|Virginia
-Brett|Brackett|TE|19871213|
+Brett|Brackett|TE|19871213|Penn State
 Chris|Matthews|WR|19891006|Kentucky
-Gerell|Robinson|TE|19891013|
-Garth|Gerhart|C|19881021|
+Gerell|Robinson|TE|19891013|Arizona State
+Garth|Gerhart|C|19881021|Arizona State
 Jeff|Adams|LT|19890906|Columbia
 Charley|Hughlett|C|19900516|Central Florida
-Jonas|Gray|RB|19900627|
+Jonas|Gray|RB|19900627|Notre Dame
 Jacquies|Smith|DE|19900318|Missouri
 Dominique|Hamilton|DT|19890118|
 Korey|Toomer|OLB|19881209|Idaho
 Darius|Fleming|OLB|19890719|Notre Dame
-Tommy|Streeter|WR|19891007|
-Chandler|Fenner|CB|19900706|
-Phil|Bates|WR||
+Tommy|Streeter|WR|19891007|Miami (Florida)
+Chandler|Fenner|CB|19900706|Holy Cross
+Phil|Bates|WR||Ohio University
 Cordarro|Law|OLB|19881015|Southern Mississippi
 Brenton|Bersin|WR|19900509|Wofford
 Emmanuel|Acho|MLB|19901110|Texas
-DeAndre|Presley|WR|19900110|
-Andrew|McDonald|LT|19880908|
+DeAndre|Presley|WR|19900110|Appalachian State
+Andrew|McDonald|LT|19880908|Indiana
 Cooper|Helfet|TE|19890602|Duke
 Chandler|Harnish|QB|19880728|
 Sean|Spence|MLB|19900607|Miami (Fla.)
-Keith|Browner|DE|19880407|
+Keith|Browner|DE|19880407|California
 Andrew|Tiller|LG|19890313|Syracuse
-Paul|Cornick|LT|19890315|
+Paul|Cornick|LT|19890315|North Dakota State
 Andrew|DePaola|C|19870728|Rutgers
 Austin|Johnson|FB|19890616|Tennessee
 Darren|Fells|TE|19860422|California-Irvine
-Brian|Leonhardt|TE|19900402|
+Brian|Leonhardt|TE|19900402|Bemidji State
 Lerentee|McCray|OLB|19900826|Florida
 Brandon|McManus|K|19910725|Temple
 Justin|Staples|MLB|19891210|Illinois
@@ -17911,54 +17911,54 @@ Steven|Terrell|S|19900921|Texas A&M
 Christopher|Hubbard|LG|19910423|Alabama-Birmingham
 Jordan|Devey|LT|19880111|Memphis
 Adam|Thielen|WR|19900822|Minn. State-Mankato
-Quanterus|Smith|DE|19891126|
+Quanterus|Smith|DE|19891126|Western Kentucky
 Corey|Fuller|WR|19900623|Virginia Tech
-Kevin|Dorsey|WR|19900223|
+Kevin|Dorsey|WR|19900223|Maryland
 Kerwynn|Williams|RB|19910609|Utah State
 B.J.|Daniels|QB|19891024|South Florida
 David|King|DT|19891227|Oklahoma
 Carter|Bykowski|LT|19900725|
 T.J.|Johnson|LG|19900717|South Carolina
-Justice|Cunningham|TE|19910114|
+Justice|Cunningham|TE|19910114|South Carolina
 Tress|Way|P|19900418|Oklahoma
-C.J.|Wilson|CB|19891118|
+C.J.|Wilson|CB|19891118|North Carolina State
 Brad|Wing|P|19910127|LSU
 Frankie|Hammond|WR|19900217|Florida
 Demetrius|Harris|TE|19910729|Wisconsin-Milwaukee
-Rico|Richardson|WR|19910701|
-Dalton|Freeman|C|19900618|
+Rico|Richardson|WR|19910701|Jackson State
+Dalton|Freeman|C|19900618|Clemson
 Rontez|Miles|CB|19881125|California (PA)
-Kenneth|Boatright|DE|19900306|
-Chase|Thomas|MLB|19890610|
+Kenneth|Boatright|DE|19900306|Southern Illinois
+Chase|Thomas|MLB|19890610|Stanford
 George|Winn|RB|19901110|Cincinnati
-Casey|Walker|DT|19891206|
+Casey|Walker|DT|19891206|Oklahoma
 Demontre|Hurst|CB|19910324|Oklahoma
 Sean|Porter|OLB|19910112|Texas A&M
-Steve|Williams|CB|19910307|
+Steve|Williams|CB|19910307|California
 Cobi|Hamilton|WR|19901113|Arkansas
 Kenny|Demens|MLB|19900204|Michigan
 Nick|Becton|LT|19900211|Virginia Tech
-Chibuikem|Okoro|CB|19891018|
+Chibuikem|Okoro|CB|19891018|Wake Forest
 Darren|Keyton|LG|19900615|
 Jordan|Gay|K|19900329|Centre
-Trevardo|Williams|MLB|19901231|
-Phillip|Thomas|S|19890301|
-Jeremy|Harris|CB|19910426|
-Justin|Brown|WR|19910310|
+Trevardo|Williams|MLB|19901231|Connecticut
+Phillip|Thomas|S|19890301|Fresno State
+Jeremy|Harris|CB|19910426|New Mexico State
+Justin|Brown|WR|19910310|Oklahoma
 Tharold|Simon|CB|19910306|LSU
 Nicholas|Williams|DE|19900221|Samford
 Latavius|Murray|RB|19900118|Central Florida
 Colton|Schmidt|P|19901027|California-Davis
-Sean|Renfree|QB|19900428|
+Sean|Renfree|QB|19900428|Duke
 Jonathan|Cooper|LG|19900119|North Carolina
 Michael|Ola|LG|19880419|Hampton
 Patrick|Murray|K|19910622|Fordham
-Henoc|Muamba|MLB|19890223|
+Henoc|Muamba|MLB|19890223|St. Francis Xavier
 Marcus|Ball|S|19870721|Memphis
-Akeem|Davis|S|19891225|
+Akeem|Davis|S|19891225|Memphis
 Jonotthan|Harrison|C|19910825|Florida
 Dewey|McDonald|CB|19900610|California (PA)
-Ray|Agnew|FB|19910226|
+Ray|Agnew|FB|19910226|Southern Illinois
 Isaiah|Crowell|RB|19930108|Alabama State
 Connor|Shaw|QB|19910919|South Carolina
 Daniel|Sorensen|S|19900305|Brigham Young
@@ -17967,67 +17967,67 @@ Albert|Wilson|WR|19920712|Georgia State
 James|Hurst|LT|19911217|North Carolina
 Tramain|Jacobs|CB|19920520|Texas A&M
 Jamie|Meder|DT|19910412|Ashland
-Zach|Orr|MLB|19920609|
+Zach|Orr|MLB|19920609|North Texas
 Sammy|Seamster|CB|19910205|Middle Tennessee State
 Juwan|Thompson|RB|19920513|Duke
-Blake|Annen|TE|19910528|
+Blake|Annen|TE|19910528|Cincinnati
 Trey|Burton|TE|19911029|Florida
 Donald|Hawkins|LT|19920422|Texas
-Jerome|Couplin|S|19910831|
+Jerome|Couplin|S|19910831|William & Mary
 Cornelius|Lucas|LT|19910718|Kansas State
-Mohammed|Seisay|CB|19900522|
-Jerome|Smith|RB|19910406|
+Mohammed|Seisay|CB|19900522|Nebraska
+Jerome|Smith|RB|19910406|Syracuse
 James|Stone|LG|19920426|Tennessee
 Jay|Elliott|OLB|19911111|Toledo
 Mike|Pennel|DT|19910509|Colorado State-Pueblo
-Justin|Perillo|TE|19910105|
-Dillon|Farrell|LG|19900907|
+Justin|Perillo|TE|19910105|Maine
+Dillon|Farrell|LG|19900907|New Mexico
 L.J.|McCray|S|19910618|Catawba
 Brock|Coyle|MLB|19901012|Montana
 Jackson|Jeffcoat|MLB|19901226|Texas
 Kerry|Wynn|DE|19910212|Richmond
-James|Davidson|MLB|19901101|
+James|Davidson|MLB|19901101|Texas-El Paso
 Ryan|Hewitt|TE|19910124|Stanford
 Antonio|Andrews|RB|19920817|Western Kentucky
 Brandon|Coleman|WR|19920622|Rutgers
 Brian|Dixon|CB|19900426|Northwest Missouri State
-Spencer|Hadley|MLB|19891030|
-Nic|Jacobs|TE|19911013|
+Spencer|Hadley|MLB|19891030|Brigham Young
+Nic|Jacobs|TE|19911013|McNeese State
 Seantavius|Jones|WR|19920809|Valdosta State
-George|Uko|DE|19920211|
+George|Uko|DE|19920211|Southern California
 Lawrence|Virgil|DT|19910120|Valdosta State
-Pierre|Warren|S|19920816|
+Pierre|Warren|S|19920816|Jacksonville State
 Allen|Hurns|WR|19911112|Miami
-Marcel|Jensen|TE|19900212|
+Marcel|Jensen|TE|19900212|Fresno State
 Craig|Loston|S|19891221|LSU
 Stephen|Morris|QB|19920827|Miami (Fla.)
 Tyler|Shatley|LG|19910505|Clemson
 Josh|Wells|LT|19910214|James Madison
 Asante|Cleveland|TE|19920321|Miami (Fla.)
 Josh|Allen|C|19911230|Louisiana-Monroe
-Solomon|Patton|WR|19901017|
+Solomon|Patton|WR|19901017|Florida
 Cody|Parkey|K|19920219|Auburn
-Loucheiz|Purifoy|CB|19921216|
+Loucheiz|Purifoy|CB|19921216|Florida
 Zurlon|Tipton|RB|19890427|Central Michigan
 Orleans|Darkwa|RB|19920228|Tulane
 Anthony|Johnson|DT|19930124|LSU
-Gator|Hoskins|TE|19911219|
+Gator|Hoskins|TE|19911219|Marshall
 Damien|Williams|RB|19920403|Oklahoma
 Josh|Mauro|DE|19910217|Stanford
 Anthony|Steen|LG|19900509|Alabama
-Glenn|Carson|MLB|19901205|
+Glenn|Carson|MLB|19901205|Penn State
 Bruce|Gaston|DT|19911129|Purdue
 Chandler|Catanzaro|K|19910226|Clemson
 Corey|Washington|WR|19911229|Newberry
 Garry|Gilliam|LT|19901126|Penn State
 Kenny|Ladler|S|19920623|Vanderbilt
-Dan|Fox|MLB|19910317|
-Chris|Davis|CB|19901104|
+Dan|Fox|MLB|19910317|Notre Dame
+Chris|Davis|CB|19901104|Auburn
 Tenny|Palepoi|DT|19901219|Utah
 Jeremiah|Sirles|LT|19910808|Nebraska
 Keith|Smith|MLB|19920408|San Jose State
 Dustin|Vaughan|QB|19910127|West Texas A&M
-Alex|Bayer|TE|19901108|
+Alex|Bayer|TE|19901108|Bowling Green State
 Marcus|Roberson|CB|19921004|Florida
 Trey|Watts|RB|19910213|Tulsa
 Ethan|Westbrooks|DE|19901115|West Texas A&amp;M
@@ -18039,10 +18039,10 @@ Ryan|Carrethers|DT|19910226|Arkansas State
 Jonathan|Newsome|OLB|19910122|Ball State
 John|Urschel|LG|19910624|Penn State
 Zach|Fulton|LG|19910923|Tennessee
-Marion|Grice|RB|19910410|
+Marion|Grice|RB|19910410|Arizona State
 Trevor|Reilly|OLB|19880117|Utah
 Jeff|Janis|WR|19910624|Saginaw Valley State
-Silas|Redd|RB|19920301|
+Silas|Redd|RB|19920301|Southern California
 Phillip|Gaines|CB|19910404|Rice
 Ross|Cockrell|CB|19910806|Duke
 Dakota|Dozier|LT|19910430|Furman
@@ -18067,7 +18067,7 @@ Louis|Nix|DT|19910731|
 Kareem|Martin|DE|19920219|North Carolina
 John|Brown|WR|19900403|Pittsburg State
 Bashaud|Breeland|CB|19920130|Clemson
-Jalen|Saunders|WR|19920930|
+Jalen|Saunders|WR|19920930|Oklahoma
 DaQuan|Jones|DE|19911227|Penn State
 Andre|Williams|RB|19920828|Boston College
 Ka'Deem|Carey|RB|19921030|Arizona
@@ -18076,7 +18076,7 @@ Marqueston|Huff|CB|19920406|Wyoming
 De'Anthony|Thomas|RB|19930105|Oregon
 Dontae|Johnson|CB|19911201|North Carolina State
 James|White|RB|19920203|Wisconsin
-Brock|Vereen|S|19920817|
+Brock|Vereen|S|19920817|Minnesota
 Tom|Savage|QB|19900426|Pittsburgh
 Larry|Webster|DE|19900214|Bloomsburg
 Lorenzo|Taliaferro|RB|19911223|Coastal Carolina
@@ -18087,20 +18087,20 @@ Nat|Berhe|S|19910706|San Diego State
 Caraun|Reid|DT|19911123|Princeton
 Vinnie|Sunseri|S|19930927|Alabama
 Ronald|Powell|OLB|19910514|Florida
-Jeoffrey|Pagan|DE|19930610|
+Jeoffrey|Pagan|DE|19930610|Alabama
 Alfred|Blue|RB|19910427|LSU
 David|Fales|QB|19901004|San Jose State
 Pat|O'Donnell|P|19910222|Miami
 Demetri|Goodson|CB|19890611|Baylor
 Zach|Moore|DE|19900905|Concordia-St. Paul
-Andrew|Jackson|MLB|19920316|
+Andrew|Jackson|MLB|19920316|Western Kentucky
 Jay|Prosch|FB|19920821|Auburn
 Andre|Hal|CB|19920530|Vanderbilt
 Beau|Allen|DT|19911114|Wisconsin
 Jabari|Price|CB|19920831|North Carolina
-Nate|Freese|K|19900818|
+Nate|Freese|K|19900818|Boston College
 Charles|Leno|LT|19911009|Boise State
-Ahmad|Dixon|S|19910905|
+Ahmad|Dixon|S|19910905|Baylor
 Terrance|Mitchell|CB|19920517|Oregon
 Shaquil|Barrett|OLB|19921117|Colorado State
 Deandre|Coleman|DT|19910127|California
@@ -18109,15 +18109,15 @@ Henry|Josey|RB|19910925|
 Austin|Wentworth|LG|19900510|Fresno State
 Greg|Ducre|CB|19920122|Washington
 Corey|Brown|WR|19911216|Ohio State
-Carrington|Byndom|CB|19920707|
+Carrington|Byndom|CB|19920707|Texas
 Adarius|Glanton|MLB|19900921|Florida Atlantic
 Andrew|Norwell|LG|19911025|Ohio State
 Brandon|Dunn|DT|19920905|Louisville
 Ryan|Groy|LG|19900930|Wisconsin
 Christian|Jones|OLB|19910218|Florida State
-DeDe|Lattimore|MLB|19910130|
-Jason|Ankrah|OLB|19910226|
-Max|Bullough|MLB|19920211|
+DeDe|Lattimore|MLB|19910130|South Florida
+Jason|Ankrah|OLB|19910226|Nebraska
+Max|Bullough|MLB|19920211|Michigan State
 Anthony|Denham|TE|19910721|Utah
 Marcus|Williams|CB|19910324|North Dakota State
 George|Atkinson|RB|19921129|Notre Dame
@@ -18125,26 +18125,26 @@ Scott|Simonson|TE|19920413|Assumption
 Timmy|Jernigan|DT|19920924|Florida State
 Preston|Brown|OLB|19921027|Louisville
 Jaylen|Watkins|CB|19911127|Florida
-Bryan|Stork|C|19901115|
+Bryan|Stork|C|19901115|Florida State
 Cassius|Marsh|DE|19920707|UCLA
 Nevin|Lawson|CB|19910423|Utah State
-Prince|Shembo|MLB|19911224|
+Prince|Shembo|MLB|19911224|Notre Dame
 Taylor|Hart|DE|19910222|Oregon
 Kadeem|Edwards|LG|19910124|Tennessee State
 Ricardo|Allen|CB|19911218|Purdue
 Kevin|Pamphile|LT|19901127|Purdue
-Robert|Herron|WR|19920602|
+Robert|Herron|WR|19920602|Wyoming
 Luke|Bowanko|C|19910612|Virginia
-Jemea|Thomas|CB|19900407|
+Jemea|Thomas|CB|19900407|Georgia Tech
 Daniel|McCullers|DT|19920811|Tennessee
-Tyler|Starr|DE|19910125|
-David|Foucault|LT|19890107|
+Tyler|Starr|DE|19910125|South Dakota
+David|Foucault|LT|19890107|Montreal
 Cairo|Santos|K|19911112|Tulane
 Chris|McCain|OLB|19911121|California
 Senorise|Perry|RB|19910919|Louisville
 Malcolm|Butler|CB|19900302|West Alabama
-Luther|Robinson|DE|19910224|
-Bojay|Filimoeatu|MLB|19891206|
+Luther|Robinson|DE|19910224|Miami (Florida)
+Bojay|Filimoeatu|MLB|19891206|Utah State
 Taylor|Gabriel|WR|19910217|Abilene Christian
 Robert|Nelson|CB|19900216|Arizona State
 Odell|Beckham|WR|19921105|Louisiana State
@@ -18152,7 +18152,7 @@ Brandin|Cooks|WR|19930925|Oregon State
 Teddy|Bridgewater|QB|19921110|Louisville
 Weston|Richburg|C|19910709|Colorado State
 Stanley|Jean-Baptiste|CB|19900412|Nebraska
-Khairi|Fortt|MLB|19920324|
+Khairi|Fortt|MLB|19920324|California
 Devon|Kennard|OLB|19910624|Southern California
 Shamar|Stephen|DT|19910225|Connecticut
 Storm|Johnson|RB|19920710|Central Florida
@@ -18171,12 +18171,12 @@ Bene'|Benwikere|CB|19910903|San Jose State
 Avery|Williamson|MLB|19920309|Kentucky
 Chris|Smith|DE|19920211|Arkansas
 Ed|Stinson|DT|19900215|Alabama
-Zach|Mettenberger|QB|19910716|
+Zach|Mettenberger|QB|19910716|Louisiana State
 Antone|Exum|S|19910227|Virginia Tech
 Walter|Powell|WR|19911123|Murray State
 T.J.|Carrie|CB|19900728|Ohio
 Shelby|Harris|DE|19910811|Illinois State
-Jonathan|Dowling|S|19911208|
+Jonathan|Dowling|S|19911208|Western Kentucky
 Cameron|Brate|TE|19910703|Harvard
 Tyler|Patmon|CB|19910126|Oklahoma State
 Branden|Oliver|RB|19910507|Buffalo
@@ -18198,7 +18198,7 @@ Jordan|Matthews|WR|19920716|Vanderbilt
 Trent|Murphy|OLB|19901222|Stanford
 Jeremy|Hill|RB|19921020|LSU
 C.J.|Fiedorowicz|TE|19911022|Iowa
-Chris|Borland|MLB|19901226|
+Chris|Borland|MLB|19901226|Wisconsin
 Will|Clarke|DE|19910504|West Virginia
 Russell|Bodine|C|19920630|North Carolina
 Walt|Aikens|S|19910619|Liberty
@@ -18231,7 +18231,7 @@ Justin|Ellis|DT|19901227|Louisiana Tech
 Keith|McGill|CB|19890309|Utah
 Anthony|Hitchens|MLB|19920610|Iowa
 Corey|Nelson|OLB|19920422|Oklahoma
-Al|Louis-Jean|CB|19931013|
+Al|Louis-Jean|CB|19931013|Boston College
 Michael|Schofield|LT|19901115|Michigan
 Lamin|Barrow|MLB|19901129|LSU
 Kelvin|Benjamin|WR|19910205|Florida State
@@ -18258,8 +18258,8 @@ Eric|Ebron|TE|19930410|North Carolina
 Aaron|Donald|DT|19910523|Pittsburgh
 Lamarcus|Joyner|S|19901127|Florida State
 Charles|Sims|RB|19900919|West Virginia
-Tre|Mason|RB|19930806|
-Dri|Archer|RB|19910809|
+Tre|Mason|RB|19930806|Auburn
+Dri|Archer|RB|19910809|Kent State
 Maurice|Alexander|S|19910216|Utah State
 E.J.|Gaines|CB|19920223|Missouri
 Zack|Martin|LG|19901120|Notre Dame
@@ -18279,15 +18279,15 @@ Todd|Davis|MLB|19920517|Sacramento State
 Allen|Robinson|WR|19930824|Penn State
 Marqise|Lee|WR|19911125|Southern California
 Billy|Turner|LG|19911017|North Dakota State
-Justin|Gilbert|CB|19911107|
+Justin|Gilbert|CB|19911107|Oklahoma State
 Taylor|Lewan|LT|19910722|Michigan
 Josh|Harris|RB|19910122|Wake Forest
-Glenn|Winston|RB|19890429|
+Glenn|Winston|RB|19890429|Northwood
 Jerome|Cunningham|TE|19910525|Southern Connecticut State
 T.J.|Fatinikun|DE|19910728|Toledo
 Cameron|Fuller|CB|19910124|
 Dick|Conn|CB||
-Mario|Butler|CB|19881020|
+Mario|Butler|CB|19881020|Georgia Tech
 Peyton|Thompson|CB|19900926|San Jose State
 Kourtnei|Brown|DE|19890417|Clemson
 Jeremiah|Warren|C|19870920|South Florida
@@ -18297,7 +18297,7 @@ Emmett|Cleary|LT|19900427|Boston College
 Braxston|Cave|C|19890729|Notre Dame
 Kapron|Lewis-Moore|DT|19900124|Notre Dame
 Brandon|Copeland|OLB|19910702|Pennsylvania
-Kendall|Gaskins|RB|19901104|
+Kendall|Gaskins|RB|19901104|Richmond
 Michael|Williams|TE|19900908|Alabama
 Rashad|Ross|WR|19900202|Arizona State
 Earl|Okine|DE|19900104|Florida
@@ -18308,19 +18308,19 @@ Jonathan|Krause|WR|19920118|Vanderbilt
 Willie|Snead|WR|19921017|Ball State
 Bennie|Fowler|WR|19910610|Michigan State
 Lou|Young|CB|19911009|Georgia Tech
-Kenny|Anunike|DE|19900522|
+Kenny|Anunike|DE|19900522|Duke
 Shamiel|Gary|CB|19900531|Oklahoma State
 Jeremy|Butler|WR|19910422|Tennessee-Martin
 Deji|Olatoye|CB|19910720|North Carolina A&T
 Josh|Andrews|LG|19910621|Oregon State
 Tay|Glover-Wright|CB|19920628|Utah State
-Kimario|McFadden|S|19910413|
+Kimario|McFadden|S|19910413|South Carolina State
 Roosevelt|Nix|FB|19920330|Kent State
 Joe|Thomas|MLB|19910506|South Carolina State
 Shayne|Skov|MLB|19900709|Stanford
-Dion|Bailey|S|19920302|
-Kelcy|Quarles|DT|19920123|
-Nikita|Whitlock|FB|19910516|
+Dion|Bailey|S|19920302|Southern California
+Kelcy|Quarles|DT|19920123|South Carolina
+Nikita|Whitlock|FB|19910516|Wake Forest
 Gabe|Ikard|C|19900926|Oklahoma
 Je'Ron|Hamm|TE|19920615|Louisiana-Monroe
 D.J.|Tialavea|TE|19910727|Utah State
@@ -18344,7 +18344,7 @@ Zach|Hocker|K|19910823|Arkansas
 Lonnie|Ballentine|S|19930423|Memphis
 Travis|Coons|K|19920206|Washington
 Chris|Boswell|K|19910316|Rice
-James|Morris|MLB|19911120|
+James|Morris|MLB|19911120|Iowa
 Tyler|Ott|C|19920228|Harvard
 Carlos|Fields|MLB|19901003|Winston-Salem State
 Seth|Roberts|WR|19910222|West Alabama
@@ -18355,14 +18355,14 @@ T.J.|Jones|WR|19920719|Notre Dame
 Rashaun|Allen|TE|19900225|Southern University
 Brandon|Thomas|LG|19910218|Clemson
 Ed|Reynolds|S|19911018|Stanford
-Kevin|Smith|WR|19911221|
+Kevin|Smith|WR|19911221|Washington
 Matt|Paradis|C|19891012|Boise State
 Christian|Bryant|S|19920321|Ohio State
 Demetrius|Rhaney|C|19920622|Tennessee State
 Adrian|Phillips|S|19920328|Texas
 Dexter|McDougle|CB|19910408|Maryland
 Delvin|Breaux|CB|19891025|LSU
-Uani|'Unga|MLB|19871228|
+Uani|'Unga|MLB|19871228|Brigham Young
 Brian|Peters|MLB|19881031|Northwestern (Ia)
 Jason|Myers|K|19910512|Marist
 Jarryd|Hayne|RB|19880215|No College
@@ -18402,7 +18402,7 @@ Jeremy|Langford|RB|19911206|Michigan State
 Justin|Hardy|WR|19911218|East Carolina
 Clayton|Geathers|S|19920601|Central Florida
 T.J.|Clemmings|LT|19911118|Pittsburgh
-Tre'|Jackson|LG|19921214|
+Tre'|Jackson|LG|19921214|Florida State
 Gabe|Wright|DT|19920403|Auburn
 Jamil|Douglas|LG|19920228|Arizona State
 Za'Darius|Smith|OLB|19920908|Kentucky
@@ -18425,7 +18425,7 @@ David|Mayo|MLB|19930818|Texas State
 Tye|Smith|CB|19930503|Towson
 Nick|Boyle|TE|19930217|Delaware
 Cameron|Artis-Payne|RB|19900623|Auburn
-Keith|Mumphery|WR|19920605|
+Keith|Mumphery|WR|19920605|Michigan State
 Robert|Myers|LG|19911226|Tennessee State
 Tayo|Fabuluje|LT|19910717|Texas Christian
 B.J.|Dubose|DE|19920119|
@@ -18435,9 +18435,9 @@ Quandre|Diggs|CB|19930122|Texas
 Darren|Waller|WR|19920913|Georgia Tech
 Josh|Robinson|RB|19920824|Mississippi State
 Aaron|Ripkowski|FB|19921220|Oklahoma
-Amarlo|Herrera|MLB|19910920|
+Amarlo|Herrera|MLB|19910920|Georgia
 Obum|Gwacham|DE|19910320|Oregon State
-Kennard|Backman|TE|19930226|
+Kennard|Backman|TE|19930226|Alabama-Birmingham
 Kristjan|Sokoli|LG|19910924|Buffalo
 Christian|Covington|DT|19931016|Rice
 Bobby|Hart|LT|19940821|Florida State
@@ -18457,7 +18457,7 @@ Robenson|Therezie|S|19910805|Auburn
 Terron|Ward|RB|19920215|Oregon State
 Raheem|Mostert|RB|19920409|Purdue
 Denzel|Rice|CB|19930331|Coastal Carolina
-Cariel|Brooks|CB|19910424|
+Cariel|Brooks|CB|19910424|Adams State
 Alani|Fua|MLB|19920101|Brigham Young
 Gabe|Martin|MLB|19920605|Bowling Green State
 Xavier|Williams|DT|19920118|Northern Iowa
@@ -18498,15 +18498,15 @@ Josh|Keyes|MLB|19930123|Boston College
 David|Andrews|C|19920710|Georgia
 Chris|Harper|WR|19931207|California
 Brandon|King|MLB|19930608|Auburn
-Eric|Patterson|CB|19930205|
-Taiwan|Jones|MLB|19931201|
+Eric|Patterson|CB|19930205|Ball State
+Taiwan|Jones|MLB|19931201|Michigan State
 Dean|Marlowe|S|19920725|James Madison
-Brandon|Wegher|RB|19901209|
+Brandon|Wegher|RB|19901209|Morningside
 Robertson|Daniel|CB|19911001|Brigham Young
 Gabe|Holmes|TE|19910329|Purdue
 Tevin|McDonald|S|19920717|Eastern Washington
-Leon|Orr|DT|19920211|
-Keenan|Lambert|S|19920228|
+Leon|Orr|DT|19920211|Florida
+Keenan|Lambert|S|19920228|Norfolk State
 Ronald|Martin|S|19930226|LSU
 Thomas|Rawls|RB|19930803|Central Michigan
 Rod|Smith|RB|19920110|Ohio State
@@ -18542,7 +18542,7 @@ D.J.|Alexander|MLB|19910930|Oregon State
 James|O'Shaughnessy|TE|19920114|Illinois State
 Kyshoen|Jarrett|S|19930504|Virginia Tech
 Geremy|Davis|WR|19920110|Connecticut
-Evan|Spencer|WR|19930526|
+Evan|Spencer|WR|19930526|Ohio State
 Charles|Gaines|CB|19921003|Louisville
 Anthony|Chickillo|OLB|19921210|Miami
 Rakeem|Nunez-Roches|DE|19930703|Southern Mississippi
@@ -18554,7 +18554,7 @@ Darius|Jennings|WR|19920628|Virginia
 Richard|Ash|DT|19920804|Western Michigan
 Harold|Jones-Quartey|S|19930806|Findlay
 David|Irving|DE|19930818|Iowa State
-Ben|Edwards|WR|19920410|
+Ben|Edwards|WR|19920410|Richmond
 Will|Tye|TE|19911104|Stony Brook
 Quinton|Dunbar|CB|19920722|Florida
 Donteea|Dye|WR|19930820|Heidelberg
@@ -18567,7 +18567,7 @@ Tavaris|Barnes|DE|19911102|Clemson
 Yannik|Cudjoe-Virgil|MLB|19921128|Maryland
 Cody|Riggs|CB|19911228|Notre Dame
 Quinton|Spain|LG|19910807|West Virginia
-J.R.|Tavai|MLB|19930923|
+J.R.|Tavai|MLB|19930923|Southern California
 Andrew|Turzilli|WR|19911013|Rutgers
 Corey|Moore|S|19930128|Georgia
 Brandon|Scherff|LG|19911226|Iowa
@@ -18590,7 +18590,7 @@ Tyreek|Burwell|LT|19920311|Cincinnati
 Nick|Dzubnar|MLB|19910815|Cal Poly
 Josh|Lambo|K|19901119|Texas A&amp;M
 Brian|Parker|TE|19920530|Albany, N.Y.
-Dreamius|Smith|RB|19920908|
+Dreamius|Smith|RB|19920908|West Virginia
 Daniel|Brown|WR|19920526|James Madison
 Stephone|Anthony|MLB|19920728|Clemson
 Denzel|Perryman|MLB|19921205|Miami
@@ -18606,7 +18606,7 @@ Deiontrez|Mount|OLB|19930226|Louisville
 Kaelin|Clay|WR|19920102|Utah
 Darius|Philon|DE|19940122|Arkansas
 Nick|O'Leary|TE|19920831|Florida State
-Andy|Gallik|C|19910924|
+Andy|Gallik|C|19910924|Boston College
 Neal|Sterling|WR|19920114|Monmouth, N.J.
 Tre|McBride|WR|19921201|William & Mary
 Markus|Golden|MLB|19910313|Missouri
@@ -18615,7 +18615,7 @@ Jordan|Hicks|MLB|19920627|Texas
 Jalston|Fowler|FB|19900726|Alabama
 Rodney|Gunter|DT|19920119|Delaware State
 Max|Garcia|LG|19911109|Florida
-David|Cobb|RB|19930603|
+David|Cobb|RB|19930603|Minnesota
 C.J.|Uzomah|TE|19930114|Auburn
 Jesse|James|TE|19940604|Penn State
 Lorenzo|Doss|CB|19940422|Tulane
@@ -18630,7 +18630,7 @@ Garrett|Grayson|QB|19910529|Colorado State
 John|Miller|LG|19930812|Louisville
 Steven|Nelson|CB|19930122|Oregon State
 Jon|Feliciano|LG|19920210|Miami
-Karlos|Williams|RB|19930504|
+Karlos|Williams|RB|19930504|Florida State
 Max|Valles|DE|19940805|Virginia
 Michael|Bennett|DT|19930224|Ohio State
 Trevor|Siemian|QB|19911226|Northwestern
@@ -18649,7 +18649,7 @@ Houston|Bates|MLB|19901220|Louisiana Tech
 Tevin|Westbrook|TE|19930117|Florida
 David|Johnson|RB|19911216|Northern Iowa
 Vince|Mayle|WR|19910612|Washington State
-Tony|Steward|MLB|19920919|
+Tony|Steward|MLB|19920919|Clemson
 Daniel|Munyer|C|19920304|Colorado
 Ronald|Darby|CB|19940102|Florida State
 Jake|Fisher|LT|19930423|Oregon
@@ -18659,7 +18659,7 @@ Ty|Montgomery|WR|19930122|Stanford
 Ben|Heeney|MLB|19920513|Kansas
 Andrus|Peat|LT|19931104|Stanford
 Chaz|Green|LT|19920408|Florida
-Neiron|Ball|OLB|19920820|
+Neiron|Ball|OLB|19920820|Florida
 Phillip|Dorsett|WR|19930105|Miami
 T.J.|Yeldon|RB|19931002|Alabama
 Frank|Clark|DE|19930614|Michigan
@@ -18699,7 +18699,7 @@ Henry|Anderson|DT|19910803|Stanford
 D'Joun|Smith|CB|19920923|Florida Atlantic
 Isaiah|Battle|LT|19930210|Clemson
 Jude|Adjei-Barimah|CB|19920721|Bowling Green State
-Brad|Bars|DE|19920424|
+Brad|Bars|DE|19920424|Penn State
 Dick|Conn|CB||
 Dobson|Collins|WR|19870712|
 Jerrod|Johnson|QB||
@@ -18760,7 +18760,7 @@ Colton|Underwood|TE||
 Kain|Colter|WR||
 Donte|Foster|WR||
 John|Fullington|LG|19910530|Washington State
-Davon|Coleman|DT||
+Davon|Coleman|DT||Arizona State
 Casey|Kreiter|C|19900813|Iowa
 Ronald|Patrick|LG|19911101|South Carolina
 Ben|Gardner|MLB|19910429|
@@ -18772,7 +18772,7 @@ Chris|Martin|LT|19900104|
 Bryan|Witzmann|LT|19900616|South Dakota State
 Erle|Ladson|LT||
 Bennett|Jackson|CB|19910916|Notre Dame
-Ben|Gottschalk|LG|19920215|
+Ben|Gottschalk|LG|19920215|Southern Methodist
 Trey|Millard|FB|19910721|
 Arthur|Lynch|TE||
 Craig|Watts|LG|19910620|West Texas A&M
@@ -18827,7 +18827,7 @@ Zaire|Anderson|MLB|19920818|Nebraska
 Jordan|Taylor|WR|19920218|Rice
 Rob|Crisp|LT|19910103|
 Edwin|Jackson|MLB|19911219|Georgia Southern
-Paul|Lasike|FB|19900618|
+Paul|Lasike|FB|19900618|Brigham Young
 Jaxon|Shipley|WR||
 Gannon|Sinclair|TE|19930205|Missouri State
 Zack|Wagenmann|MLB||
@@ -18838,7 +18838,7 @@ Connor|Hamlett|TE|19920412|Oregon State
 Chris|Reed|LG|19920722|Minn. State-Mankato
 Justin|Currie|CB|19930919|Western Michigan
 Nick|Harwell|WR||
-Shane|McDermott|C|19920218|
+Shane|McDermott|C|19920218|Miami (Florida)
 Joel|Ross|CB||
 Tim|Scott|CB||North Carolina
 Ray|Vinopal|CB||
@@ -18869,7 +18869,7 @@ Julian|Howsare|FB|19920911|Clarion
 Damiere|Byrd|WR|19930127|South Carolina
 Matt|Wile|P|19920620|Michigan
 Takoby|Cofield|LT|19920122|
-Josh|Shirley|MLB|19920104|
+Josh|Shirley|MLB|19920104|Nevada-Las Vegas
 Quayshawn|Nealy|MLB||
 Levi|Norwood|WR||
 Olsen|Pierre|DT|19910827|Miami
@@ -18917,7 +18917,7 @@ Shakim|Phillips|WR||
 Senquez|Golson|CB|19930707|Mississippi
 Kenny|Bell|WR|19920225|Nebraska
 Andre|Debose|WR||
-Joey|Iosefa|FB||
+Joey|Iosefa|FB||Hawaii
 JaCorey|Shepherd|CB|19930329|Kansas
 Ben|Koyack|TE|19930409|Notre Dame
 Ifo|Ekpre-Olomu|CB|19930710|
@@ -18968,7 +18968,7 @@ Anthony|Sarao|MLB||
 Delvon|Simmons|DE||
 Tevaun|Smith|WR|19930130|Iowa
 Darius|White|CB||
-Curt|Maggitt|OLB|19930204|
+Curt|Maggitt|OLB|19930204|Tennessee
 Maurice|Harris|WR|19921111|California
 Michael|Cooper|TE||
 DeMarcus|Ayers|WR|19940707|Houston
@@ -19173,7 +19173,7 @@ Beniquez|Brown|OLB||
 Joe|Callahan|QB|19930604|Wesley
 Makinton|Dorleant|CB|19921006|Northern Iowa
 Josh|Hawkins|CB|19930123|East Carolina
-Don|Jackson|RB|19930907|
+Don|Jackson|RB|19930907|Nevada-Reno
 Andrew|Adams|S|19930828|Connecticut
 Josh|James|LT||Carroll (Mont.)
 Marshaun|Coprich|RB||
@@ -19329,7 +19329,7 @@ Dominique|Robertson|WR||
 Shahbaz|Ahmed|LG||
 Leonard|Wester|LT|19930103|Missouri Western
 Brandon|Williams|DE||
-Frankie|Williams|CB|19930328|
+Frankie|Williams|CB|19930328|Purdue
 Rolan|Milligan|CB|19940816|Toledo
 Bryson|Keeton|CB|19930224|Montana State
 Bruce|Johnson|C||
@@ -24897,10 +24897,10 @@ Shedrick|Jackson|WR|19991020|Auburn
 Azizi|Hearn|CB|19990605|UCLA; Arizona
 Dylan|Drummond|WR|20000117|Eastern Michigan
 Gunnar|Oakes|TE||
-Chukwuebuka|Godrick|LT|20001011|
-Basil|Okoye|DT|20011020|
+Chukwuebuka|Godrick|LT|20001011|none
+Basil|Okoye|DT|20011020|none
 Austin|Ajiake|MLB|20000630|UNLV
-Charlie|Smyth|K|20010626|
+Charlie|Smyth|K|20010626|none
 Kalen|King|CB|20030128|Penn State
 Corey|Bullock|C|20011209|Maryland; North Carolina Central
 Ryan|Cooper|CB|20010831|Oregon State
@@ -25511,114 +25511,114 @@ Joseph|Vaughn|MLB||
 Isaiah|Bond|WR|20040315|Texas; Alabama
 Jake|Chaney|MLB||
 Quinshon|Judkins|RB|20031029|Ohio State; Mississippi
-Diamond|Ferri|RB||
-Keylon|Kincade|RB||
-Spencer|Toone|MLB||
-Steve|Sanders|WR||
-Rufus|Alexander|MLB||
-Dallas|Baker|WR||
-Donovan|Woods|MLB||
-Michael|Bumpus|WR||
-Marcus|Thomas|RB||
-Durant|Brooks|P||
-Isaiah|Gardner|CB||
-Maurice|Purify|WR||
-Jahi|Word-Daniels|CB||
-Gary|Banks|WR||
-Mitch|King|DT||
-Matt|Kroul|DT||
-Vince|Anderson|CB||
-Micah|Johnson|MLB||
-E.J.|Wilson|DE||
-Jamar|Wall|CB||
-Maurice|Simpkins|MLB||
-Carlton|Powell|DT||
-Mike|Tepper|LG||
-Collin|Franklin|TE||
-Kris|Adams|WR||
-Michael|Campbell|WR||
-Tori|Gurley|WR||
-Isaako|Aaitui|DT||
-Tony|Dye|CB||
-Michael|Brooks|DT||
-Caesar|Rayford|DE||
-Tauren|Poole|RB||
-Lowell|Rose|CB||
-Jordan|Thompson|TE||
-Kiero|Small|FB||
-Darrin|Reaves|RB||
-Jacobbi|McDaniel|DT||
-Terrance|Plummer|MLB||
-Tyler|Murphy|WR||
-Alonzo|Harris|RB||
-Chandler|Worthy|WR||
-George|Farmer|RB||
-Adam|Bighill|MLB||
-Evan|Baylis|TE||
-Riley|McCarron|WR||
-Janarion|Grant|WR||
-Matthew|Thomas|MLB||
-Dalyn|Dawkins|RB||
-Ahmad|Gooden|MLB||
-Jon|Hilliman|RB||
-Sergio|Castillo|K||
-Terrell|Bonds|CB||
-Omari|Cobb|MLB||
-Taylor|Russolino|K||
-Ethan|Wolf|TE||
-Chris|Blewitt|K||
-Ledarius|Mack|MLB||
-Hamilcar|Rashed Jr.|DE||
-Dillon|Stoner|WR||
-Daniel|Archibong|DT||
-Alex|Kessman|K||
-Dorian|Etheridge|MLB||
-Ramiz|Ahmed|K||
-Dennis|Houston|WR||
-Stanley|Berryhill|WR||
-Caleb|Shudak|K||
-Maurice|Alexander|WR||
-Devon|Allen|WR||
-Zach|VanValkenburg|MLB||
-Tanner|McCalister|S||
-Derrek|Pitts|CB||
-Tyreik|McAllister|WR||
-Zion|Logue|DT||
-Solomon|Byrd|DE||
-Isaac|Ukwu|DE||
-D.J.|Williams|RB||
-Jermaine|Jackson|WR||
-Jaylen|Mahoney|S||
-Gabriel|Murphy|MLB||
-Cam|Lampkin|CB||
-Jude|McAtamney|K||
-Tanner|Ingle|S||
-Jalen|Moreno-Cropper|WR||
-Durell|Nchami|DE||
-Jackson|Sirmon|MLB||
-Loren|Strickland|S||
-Anthony|Goodlow|DE||
-Jamie|Sheriff|MLB||
-T.J.|Maguranyanga|DE||
-Brandon|Johnson|CB||
-Jamon|Johnson|MLB||
-Amar|Johnson|RB||
-Zion|Childress|CB||
-Jacardia|Wright|RB||
-Chandler|Martin|MLB||
-Branson|Taylor|LT||
-Trevian|Thomas|S||
-Jacoby|Jones|WR||
-Cam'Ron|Silmon-Craig|CB||
-Coleman|Owen|WR||
-Trey|Washington|S||
-Keonta|Jenkins|MLB||
-Ja'Markis|Weston|MLB||
-Josh|Williams|RB||
-Ulysses|Bentley IV|RB||
-Xavier|Restrepo|WR||
-Nick|Jackson|MLB||
-Drake|Dabney|TE||
+Diamond|Ferri|RB||Syracuse
+Keylon|Kincade|RB||Southern Methodist
+Spencer|Toone|MLB||Utah
+Steve|Sanders|WR||Bowling Green State
+Rufus|Alexander|MLB||Oklahoma
+Dallas|Baker|WR||Florida
+Donovan|Woods|MLB||Oklahoma State
+Michael|Bumpus|WR||Washington State
+Marcus|Thomas|RB||Texas-El Paso
+Durant|Brooks|P||Georgia Tech
+Isaiah|Gardner|CB||Maryland
+Maurice|Purify|WR||Nebraska
+Jahi|Word-Daniels|CB||Georgia Tech
+Gary|Banks|WR||Troy
+Mitch|King|DT||Iowa
+Matt|Kroul|DT||Iowa
+Vince|Anderson|CB||Webber International
+Micah|Johnson|MLB||Kentucky
+E.J.|Wilson|DE||North Carolina
+Jamar|Wall|CB||Texas Tech
+Maurice|Simpkins|MLB||Coastal Carolina
+Carlton|Powell|DT||Virginia Tech
+Mike|Tepper|LG||California
+Collin|Franklin|TE||Iowa State
+Kris|Adams|WR||Texas-El Paso
+Michael|Campbell|WR||Temple
+Tori|Gurley|WR||South Carolina
+Isaako|Aaitui|DT||Nevada-Las Vegas
+Tony|Dye|CB||UCLA
+Michael|Brooks|DT||East Carolina
+Caesar|Rayford|DE||Washington
+Tauren|Poole|RB||Tennessee
+Lowell|Rose|CB||Tulsa
+Jordan|Thompson|TE||Ohio University
+Kiero|Small|FB||Arkansas
+Darrin|Reaves|RB||Alabama-Birmingham
+Jacobbi|McDaniel|DT||Florida State
+Terrance|Plummer|MLB||Central Florida
+Tyler|Murphy|WR||Boston College
+Alonzo|Harris|RB||Louisiana-Lafayette
+Chandler|Worthy|WR||Troy
+George|Farmer|RB||Southern California
+Adam|Bighill|MLB||Central Washington
+Evan|Baylis|TE||Oregon
+Riley|McCarron|WR||Iowa
+Janarion|Grant|WR||Rutgers
+Matthew|Thomas|MLB||Florida State
+Dalyn|Dawkins|RB||Colorado State
+Ahmad|Gooden|MLB||Samford
+Jon|Hilliman|RB||Rutgers
+Sergio|Castillo|K||West Texas A&M
+Terrell|Bonds|CB||Tennessee State
+Omari|Cobb|MLB||Marshall
+Taylor|Russolino|K||Millsaps
+Ethan|Wolf|TE||Tennessee
+Chris|Blewitt|K||Pittsburgh
+Ledarius|Mack|MLB||Buffalo
+Hamilcar|Rashed Jr.|DE||Oregon State
+Dillon|Stoner|WR||Oklahoma State
+Daniel|Archibong|DT||Temple
+Alex|Kessman|K||Pittsburgh
+Dorian|Etheridge|MLB||Louisville
+Ramiz|Ahmed|K||Nevada-Reno
+Dennis|Houston|WR||Western Illinois
+Stanley|Berryhill|WR||Arizona
+Caleb|Shudak|K||Iowa
+Maurice|Alexander|WR||Florida International
+Devon|Allen|WR||Oregon
+Zach|VanValkenburg|MLB||Iowa
+Tanner|McCalister|S||Ohio State
+Derrek|Pitts|CB||North Carolina State
+Tyreik|McAllister|WR||Charleston
+Zion|Logue|DT||Georgia
+Solomon|Byrd|DE||Southern California
+Isaac|Ukwu|DE||Mississippi
+D.J.|Williams|RB||Arizona
+Jermaine|Jackson|WR||Idaho
+Jaylen|Mahoney|S||Vanderbilt
+Gabriel|Murphy|MLB||UCLA
+Cam|Lampkin|CB||Washington State
+Jude|McAtamney|K||Rutgers
+Tanner|Ingle|S||North Carolina State
+Jalen|Moreno-Cropper|WR||Fresno State
+Durell|Nchami|DE||Maryland
+Jackson|Sirmon|MLB||California
+Loren|Strickland|S||Ball State
+Anthony|Goodlow|DE||Oklahoma State
+Jamie|Sheriff|MLB||South Alabama
+T.J.|Maguranyanga|DE||none
+Brandon|Johnson|CB||Oregon
+Jamon|Johnson|MLB||Kentucky
+Amar|Johnson|RB||South Dakota State
+Zion|Childress|CB||Kentucky
+Jacardia|Wright|RB||Missouri State
+Chandler|Martin|MLB||Memphis
+Branson|Taylor|LT||Pittsburgh
+Trevian|Thomas|S||Arkansas State
+Jacoby|Jones|WR||Central Florida
+Cam'Ron|Silmon-Craig|CB||Colorado
+Coleman|Owen|WR||Ohio University
+Trey|Washington|S||Mississippi
+Keonta|Jenkins|MLB||Virginia Tech
+Ja'Markis|Weston|MLB||Florida
+Josh|Williams|RB||Louisiana State
+Ulysses|Bentley IV|RB||Mississippi
+Xavier|Restrepo|WR||Miami (Florida)
+Nick|Jackson|MLB||Iowa
+Drake|Dabney|TE||Texas Christian
 Harold|Lucas|LT||Michigan St.
 Butch|Allison|LT||Missouri
 Tom|Fisher|MLB||Tennessee
@@ -30118,7 +30118,6 @@ Justin|Beriault|CB||Ball St.
 Pete|McMahon|LT||Iowa
 Jon|Dunn|LT||Virginia Tech
 Adrian|Ward|CB||Texas-El Paso
-Rick|Razzano|RB||Mississippi
 James|Kilian|QB||Tulsa
 Kurt|Campbell|CB||Albany (NY)
 David|Bergeron|MLB||Stanford

@@ -1,3 +1,4 @@
+import { FollowButton, PlayerGameLog } from "./HistoryLive";
 import { useEffect, useState } from "react";
 import {
   ARCH_LABEL,
@@ -262,6 +263,7 @@ export function PlayerProfile() {
               {!real && <span>· {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`}</span>}
             </p>
           </div>
+          {real && <FollowButton playerId={p.id} className="shrink-0" />}
           <Btn onClick={closeProfile} className="shrink-0">
             Close
           </Btn>
@@ -318,6 +320,7 @@ export function PlayerProfile() {
             </div>}
           </section>
 
+          {real && <PlayerGameLog player={p} />}
           {honors.length > 0 && (
             <section className="rounded-lg border border-brass/40 bg-surface p-4">
               <p className="text-xs tracking-[0.25em] text-brass">Honors</p>

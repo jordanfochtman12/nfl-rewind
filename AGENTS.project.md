@@ -189,7 +189,7 @@ Raw dumps go in `data/`. Engine catalogs in `src/lib/game/data/`.
 
 ## History mode is its own game
 
-History mode (`save.realHistory`, `src/lib/game/historyMode.ts`, `historyData.ts`, the
+History mode (`save.realHistory`, `src/lib/game/historyMode.ts`, `historyData.ts`, `historyExtras.ts`, the
 `data/history/` tables) is a separate game from the dynasty and Watch history. Always treat
 the two apart:
 

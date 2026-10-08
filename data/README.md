@@ -47,7 +47,9 @@ it covers and only generates a schedule for years past the data (2027).
 | `data/history/rosters/roster_YYYY.csv` | nflverse rosters | 1966–2025 |
 | `data/history/stats/stats_player_reg_YYYY.csv` | nflverse regular-season player stats (offense, defense, kicking, returns) | 1999–2025 |
 | `data/history/fdp/YYYY.csv` | Pro-Football-Reference season tables (offense), via fantasydatapros/data | 1970–1998 |
-| `data/history/pfa/YYYY.csv` | Pro Football Archives team-season stat tables (rosters with games played, offense, interceptions, sacks from 1970, fumbles, kicking, punting, returns), extracted by `scripts/fetch-pfa.py` | 1966–1998 |
+| `data/history/pfa/YYYY.csv` | Pro Football Archives team-season stat tables (rosters with games played, offense, interceptions, sacks from 1970, fumbles, kicking, punting, returns; from 1999 tackles, passes defensed, QB hits, tackles for loss, forced fumbles and targets too), extracted by `scripts/fetch-pfa.py` | 1920–2025 |
+| `data/history/pfa_ids.csv` | Archive player id → History person, written by `ingest-history.py` | 1966–2025 |
+| `data/history/pfa_box_links.txt` | Every 1966–1998 box-score page the cached team pages link to | 1966–1998 |
 | `data/history/wiki/*.wikitext` | Wikipedia award and Hall of Fame pages | 1966–2026 |
 | `data/history/trades.csv` | nflverse trades (players and picks, by date) | 2002–2025 |
 
@@ -70,5 +72,24 @@ Refresh the archive tables (polite: one request at a time, raw pages cached in t
 git-ignored `data/history/pfa_html/`):
 
 ```
-python3 scripts/fetch-pfa.py
+python3 scripts/fetch-pfa.py 1920 2025
 ```
+
+From 1999 the archive's official season lines replace nflverse's play-by-play totals, which
+drift a little (Drew Brees's 2011: 5,535 against the official 5,476); nflverse fills only what
+the archive lacks. Seasons before 1966 are read only for the careers and records standing when
+the record starts.
+
+### Box scores, records and ledgers
+
+```
+python3 scripts/fetch-pfa-box.py 1966 2025   # every game's box score page, cached gzipped in data/history/pfa_box/ (git-ignored)
+python3 scripts/ingest-boxscores.py          # -> src/lib/game/data/history/box/YYYY.ts, one module per season, loaded when that season is on screen
+python3 scripts/ingest-record-moments.py     # -> recordMoments.ts: when each all-time record fell (needs the box scores)
+python3 scripts/ingest-before-1966.py        # -> before1966.ts: every franchise's record and every series, 1920-1965 (FiveThirtyEight game file)
+```
+
+A box score is the game as the archive has it: date, venue, attendance, weather, the score by
+quarter, every scoring play, the starting lineups, team stats and every player's line. History
+mode sums them into running season lines while a season is on, and the official season line
+replaces the sum when the regular season closes.

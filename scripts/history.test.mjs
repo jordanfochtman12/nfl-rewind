@@ -18,19 +18,32 @@ import {
   replayHistory,
   simUntil,
   setHistoryData,
+  callsReport,
+  franchiseLedger,
+  historyRecords,
+  seriesBetween,
   HISTORY_LAST,
 } from "../src/lib/game/index.ts";
 
 let save;
 const records = {};
 const midSeason = {};
+/** Every "Record:" headline, with the season and week it ran. */
+const recordNews = [];
 
 before(async () => {
   setHistoryData(await loadHistoryData());
   save = createHistoryGame();
+  // A few calls, made before the results, to check they're graded.
+  save.historyCalls = { "sb:1985": "chi", "sb:1986": "den", "mvp:1984": "", "1966-w1-mia-rai": "rai" };
   while (save.phase !== "complete") {
     const { year, phase } = save;
+    const top = save.news[0]?.id;
     advanceHistory(save);
+    for (const n of save.news) {
+      if (n.id === top) break;
+      if (n.headline.startsWith("Record:")) recordNews.push({ year, week: n.phase === "regular" ? n.week : 99, headline: n.headline });
+    }
     if (phase === "regular" && save.phase === "playoffs")
       records[year] = Object.fromEntries(Object.entries(save.teams).map(([id, t]) => [id, `${t.wins}-${t.losses}-${t.ties}`]));
     if (year === 1990 && phase === "regular" && save.week === 9) midSeason.step = save.historyStep;
@@ -86,6 +99,8 @@ test("real stat lines", () => {
   assert.equal(line("Tom", "Brady", 2007).passTd, 50);
   assert.equal(line("Peyton", "Manning", 2013).passYds, 5477);
   assert.equal(line("Calvin", "Johnson", 2012).recYds, 1964);
+  // The official line from 1999 on, not the play-by-play sum (5,535).
+  assert.equal(line("Drew", "Brees", 2011).passYds, 5476);
   assert.equal(line("Marvin", "Harrison", 2002).rec, 143);
   assert.equal(line("T.J.", "Watt", 2021).sacks, 22.5);
   assert.equal(line("LaDainian", "Tomlinson", 2006).rushTd, 28);
@@ -214,4 +229,73 @@ test("History mode stays out of the regular game", () => {
   const plain = run(false);
   assert.ok(plain.length > 1000);
   assert.equal(run(true), plain);
+});
+
+test("the all-time records fell when they really fell", () => {
+  const fell = (re) => recordNews.find((n) => re.test(n.headline));
+  // Walter Payton passed Jim Brown on October 7, 1984, the sixth week of the season.
+  const payton = fell(/Walter Payton passes Jim Brown for the most career rushing yards/);
+  assert.equal(payton?.year, 1984);
+  assert.equal(payton?.week, 6);
+  assert.equal(fell(/Eric Dickerson has the most rushing yards ever in a season/)?.year, 1984);
+  assert.equal(fell(/O\.J\. Simpson has the most rushing yards ever in a season/)?.year, 1973);
+  assert.equal(fell(/Dan Marino has the most touchdown passes ever in a season/)?.year, 1984);
+  assert.equal(fell(/Emmitt Smith passes Walter Payton/)?.year, 2002);
+  assert.equal(fell(/Jerry Rice passes/)?.year !== undefined, true);
+  // Where the book stands at the end of the record.
+  const book = Object.fromEntries(historyRecords(save).map((r) => [`${r.stat}:${r.scope}`, `${r.holder} ${r.value}`]));
+  assert.equal(book["rushYds:season"], "Eric Dickerson 2105");
+  assert.equal(book["passTd:season"], "Peyton Manning 55");
+  assert.equal(book["recTd:season"], "Randy Moss 23");
+  assert.equal(book["rushYds:career"], "Emmitt Smith 18355");
+  assert.equal(book["recYds:career"], "Jerry Rice 22895");
+  assert.equal(book["sacks:career"], "Bruce Smith 200");
+  assert.equal(book["ints:career"], "Paul Krause 81");
+  assert.equal(book["ints:season"].startsWith('Dick "Night Train" Lane 14'), true);
+});
+
+test("franchise ledgers and series run back to 1920", () => {
+  const titles = (id) => franchiseLedger(save, id).titles;
+  // League championships: the NFL's and AFL's through 1969, the Super Bowl after.
+  assert.equal(titles("gnb").length, 13);
+  assert.deepEqual(titles("gnb").slice(-4), [1966, 1967, 1996, 2010]);
+  assert.equal(titles("chi").length, 9);
+  assert.equal(titles("pit").length, 6);
+  assert.deepEqual(titles("kan").filter((y) => y < 1970), [1962, 1966, 1969]);
+  const s = seriesBetween(save, "gnb", "chi");
+  assert.ok(s.wins + s.losses + s.ties > 200, `${s.wins}-${s.losses}-${s.ties}`);
+  assert.ok(s.wins > s.losses, "the Packers lead the series");
+});
+
+test("calls are graded against what really happened", () => {
+  const g = save.historyGraded;
+  assert.deepEqual(g["sb:1985"], [1985, 1]);
+  assert.deepEqual(g["sb:1986"], [1986, 0]);
+  assert.deepEqual(g["1966-w1-mia-rai"], [1966, 1]);
+  assert.equal(callsReport(save).made, 3);
+});
+
+test("every real game has its box score, and the box score has the real final", async () => {
+  const { REAL_SCHEDULES } = await import("../src/lib/game/data/realSchedules.ts");
+  const { loadBoxSeason } = await import("../src/lib/game/index.ts");
+  let games = 0;
+  let missing = 0;
+  for (let y = 1966; y <= HISTORY_LAST; y++) {
+    const boxes = await loadBoxSeason(y);
+    assert.ok(boxes?.length, `no box scores for ${y}`);
+    const by = new Map(boxes.map((b) => [`${b.h}|${b.a}|${b.d}`, b]));
+    for (const row of REAL_SCHEDULES[y].split("|")) {
+      const [, home, away, hs, as, mmdd] = row.split(",");
+      if (Number(hs) < 0) continue;
+      games += 1;
+      const b = by.get(`${home}|${away}|${mmdd}`) ?? by.get(`${away}|${home}|${mmdd}`);
+      if (!b) {
+        missing += 1;
+        continue;
+      }
+      const [bh, ba] = b.h === home ? [b.f[1], b.f[0]] : [b.f[0], b.f[1]];
+      assert.deepEqual([bh, ba], [Number(hs), Number(as)], `${y} ${away} at ${home} ${mmdd}`);
+    }
+  }
+  assert.ok(missing / games < 0.01, `${missing} of ${games} games have no box score`);
 });

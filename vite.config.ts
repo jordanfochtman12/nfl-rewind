@@ -32,8 +32,10 @@ function offlineManifestPlugin(): Plugin {
     apply: "build",
     generateBundle(_opts, bundle) {
       if (this.environment?.name !== "client") return;
+      // History mode's box scores (one chunk per season, ~40MB in all) cache the first time
+      // a season is opened, not at install.
       const files = Object.keys(bundle)
-        .filter((f) => /\.(js|css|woff2)$/.test(f))
+        .filter((f) => /\.(js|css|woff2)$/.test(f) && !/(^|\/)(19|20)\d\d-[\w-]+\.js$/.test(f))
         .sort()
         .map((f) => `/${f}`);
       let h = 0;

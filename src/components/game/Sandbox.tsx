@@ -12,6 +12,7 @@ import {
   gamesInWeek,
   historyLabel,
   HISTORY_LAST,
+  isFollowed,
   realPostseason,
   type DynastySave,
   type GameResult,
@@ -158,11 +159,16 @@ export function WatchBar() {
 }
 
 export function GameRow({ save, g, tag }: { save: DynastySave; g: GameResult; tag?: string }) {
+  const openBox = useGameStore((s) => s.openBox);
   const home = g.homeId as TeamId;
   const away = g.awayId as TeamId;
-  const real = g.realHome !== undefined && g.realAway !== undefined && g.realHome >= 0;
-  return (
-    <li className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 ${tag ? "border-brass/60 bg-brass/10" : "border-line"}`}>
+  const history = !!save.realHistory;
+  const real = !history && g.realHome !== undefined && g.realAway !== undefined && g.realHome >= 0;
+  const followed = history && isFollowed(save, { teamId: home }) || (history && isFollowed(save, { teamId: away }));
+  const call = history ? save.historyGraded?.[g.id] : undefined;
+  const mark = tag ?? (call ? (call[1] ? "✓ YOUR CALL" : "✗ YOUR CALL") : undefined);
+  const body = (
+    <>
       <span className="flex min-w-0 items-center gap-2">
         <ClubHash id={away} year={save.year} className="h-6 w-1 shrink-0 rounded-full" />
         <Logo id={away} size={28} year={save.year} />
@@ -176,14 +182,27 @@ export function GameRow({ save, g, tag }: { save: DynastySave; g: GameResult; ta
         ) : (
           <span className="block font-display text-sm uppercase italic text-muted">at</span>
         )}
-        {tag && <span className="block text-[10px] tracking-[0.2em] text-brass">{tag}</span>}
+        {mark && <span className={`block text-[10px] tracking-[0.2em] ${call && !call[1] ? "text-subtle" : "text-brass"}`}>{mark}</span>}
         {g.played && real && <span className="tabular block text-[10px] text-subtle">real {g.realAway}–{g.realHome}</span>}
+        {history && g.played && <span className="block text-[10px] tracking-[0.15em] text-subtle">BOX SCORE</span>}
       </span>
       <span className="flex min-w-0 items-center justify-end gap-2">
         <span className="truncate text-right text-sm">{displayName(save.year, home)}</span>
         <Logo id={home} size={28} year={save.year} />
         <ClubHash id={home} year={save.year} className="h-6 w-1 shrink-0 rounded-full" />
       </span>
+    </>
+  );
+  const cls = `flex w-full items-center justify-between gap-3 rounded-lg border px-3 py-2 ${tag || followed ? "border-brass/60 bg-brass/10" : "border-line"}`;
+  return (
+    <li>
+      {history && g.played ? (
+        <button type="button" className={`${cls} min-h-12 text-left hover:border-brass`} onClick={() => openBox(g)} aria-label={`Box score: ${displayName(save.year, away)} ${g.awayScore}, ${displayName(save.year, home)} ${g.homeScore}`}>
+          {body}
+        </button>
+      ) : (
+        <div className={cls}>{body}</div>
+      )}
     </li>
   );
 }

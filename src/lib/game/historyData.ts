@@ -5,6 +5,7 @@
  * FiveThirtyEight game file and Wikipedia; nothing in it is estimated. No React.
  */
 import type { Pos, SeasonStats, TeamId } from "./types.ts";
+import { parseRecordMoments, type Ledger, type RecordTables } from "./historyExtras.ts";
 
 export interface HistoryPerson {
   first: string;
@@ -56,6 +57,10 @@ export interface HistoryData {
   trades(year: number): HistoryTrade[];
   /** Hall of Fame class of that year: person ids or names (coaches, contributors, pre-1966 players). */
   hof(year: number): (number | string)[];
+  /** Every franchise's record and every series before 1966 (History mode's ledgers start here). */
+  before1966: { franchise: Record<string, Ledger>; series: Record<string, [number, number, number, number, string, string, number]> };
+  /** When the all-time records fell. */
+  records: RecordTables;
   /** Seasons each person appears on a roster, for retirement. */
   lastSeason(person: number): number | undefined;
   firstSeason(person: number): number | undefined;
@@ -84,6 +89,10 @@ export function parseHistory(mods: {
   HOF_CLASSES: Record<number, string>;
   COACHES?: Record<number, string>;
   TRADES?: Record<number, string>;
+  FRANCHISE_BEFORE?: Record<string, Ledger>;
+  SERIES_BEFORE?: Record<string, [number, number, number, number, string, string, number]>;
+  RECORD_MOMENTS?: string;
+  RECORDS_1966?: Record<string, [string, number, number]>;
 }): HistoryData {
   const people = mods.PEOPLE.split("\n").map((l) => {
     const [first, last, pos, birth, college] = l.split("|");
@@ -199,7 +208,21 @@ export function parseHistory(mods: {
       }),
   );
   const hof = memo((y) => (mods.HOF_CLASSES[y] ?? "").split("/").filter(Boolean).map(ref));
-  return { people, rosters, stats, playoffs, drafts, awards, coaches, trades, hof, lastSeason: (p) => last.get(p), firstSeason: (p) => first.get(p) };
+  return {
+    people,
+    rosters,
+    stats,
+    playoffs,
+    drafts,
+    awards,
+    coaches,
+    trades,
+    hof,
+    before1966: { franchise: mods.FRANCHISE_BEFORE ?? {}, series: mods.SERIES_BEFORE ?? {} },
+    records: parseRecordMoments(mods.RECORD_MOMENTS ?? "", mods.RECORDS_1966 ?? {}),
+    lastSeason: (p) => last.get(p),
+    firstSeason: (p) => first.get(p),
+  };
 }
 
 let loaded: Promise<HistoryData> | undefined;
@@ -216,8 +239,25 @@ export function loadHistoryData(): Promise<HistoryData> {
     import("./data/history/hof.ts"),
     import("./data/history/coaches.ts"),
     import("./data/history/trades.ts"),
-  ]).then(([p, r, s, po, d, a, h, c, t]) =>
-    parseHistory({ PEOPLE: p.PEOPLE, ROSTERS: r.ROSTERS, STATS: s.STATS, STAT_FIELDS: s.STAT_FIELDS, PLAYOFFS: po.PLAYOFFS, DRAFTS: d.DRAFTS, AWARDS: a.AWARDS, HOF_CLASSES: h.HOF_CLASSES, COACHES: c.COACHES, TRADES: t.TRADES }),
+    import("./data/history/before1966.ts"),
+    import("./data/history/recordMoments.ts"),
+  ]).then(([p, r, s, po, d, a, h, c, t, b, rm]) =>
+    parseHistory({
+      PEOPLE: p.PEOPLE,
+      ROSTERS: r.ROSTERS,
+      STATS: s.STATS,
+      STAT_FIELDS: s.STAT_FIELDS,
+      PLAYOFFS: po.PLAYOFFS,
+      DRAFTS: d.DRAFTS,
+      AWARDS: a.AWARDS,
+      HOF_CLASSES: h.HOF_CLASSES,
+      COACHES: c.COACHES,
+      TRADES: t.TRADES,
+      FRANCHISE_BEFORE: b.FRANCHISE_BEFORE,
+      SERIES_BEFORE: b.SERIES_BEFORE,
+      RECORD_MOMENTS: rm.RECORD_MOMENTS,
+      RECORDS_1966: rm.RECORDS_1966,
+    }),
   );
   return loaded;
 }

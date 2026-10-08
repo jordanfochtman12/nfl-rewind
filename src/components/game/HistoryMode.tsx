@@ -9,6 +9,7 @@ import {
   activeTeamIds,
   coverageNote,
   displayName,
+  followedNews,
   gamesInWeek,
   roman,
   superBowlNumber,
@@ -22,6 +23,8 @@ import { Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import { GameRow } from "./Sandbox";
+import { PlayoffPicture } from "./WatchStories";
+import { CallsPanel, FollowingPanel, RecordBookPanel, RecordWatch } from "./HistoryLive";
 
 function lastSlate(save: DynastySave): { title: string; games: GameResult[] } {
   if (save.phase === "regular") {
@@ -163,7 +166,9 @@ export function HistoryDesk() {
     .map((id) => ({ id, t: save.teams[id]! }))
     .sort((a, b) => b.t.wins - a.t.wins || a.t.losses - b.t.losses || a.id.localeCompare(b.id))
     .slice(0, 8);
-  const wire = save.news.slice(0, 8);
+  const [mine, setMine] = useState(false);
+  const wire = (mine ? save.news.filter((n) => followedNews(save, n)) : save.news).slice(0, 8);
+  const midSeason = save.phase === "regular" && save.week > 3;
   const afterSeason = ["superBowl", "awards", "hof", "complete"].includes(save.phase);
   return (
     <div className="space-y-4">
@@ -186,9 +191,10 @@ export function HistoryDesk() {
           <HofCard save={save} />
         </div>
       )}
+      {save.phase !== "complete" && <CallsPanel />}
       {slate.games.length > 0 && (
         <section className="rounded-xl border border-line bg-surface p-4">
-          <p className="text-xs tracking-[0.25em] text-muted">{slate.title.toUpperCase()}</p>
+          <p className="text-xs tracking-[0.25em] text-muted">{slate.title.toUpperCase()} · TAP A GAME FOR ITS BOX SCORE</p>
           <ul className="mt-3 space-y-2">
             {slate.games.map((g) => (
               <GameRow key={g.id} save={save} g={g} />
@@ -196,6 +202,9 @@ export function HistoryDesk() {
           </ul>
         </section>
       )}
+      <FollowingPanel />
+      <RecordWatch />
+      {midSeason && <PlayoffPicture save={save} />}
       {(save.phase === "preseason" || (save.phase === "draft" && save.year > 1966)) && <DraftCard save={save} />}
       <div className="grid gap-4 md:grid-cols-2">
         {played && (
@@ -223,9 +232,15 @@ export function HistoryDesk() {
             </ol>
           </section>
         )}
-        {wire.length > 0 && (
+        {(wire.length > 0 || mine) && (
           <section className="rounded-xl border border-line bg-surface p-4">
-            <p className="text-xs tracking-[0.25em] text-muted">AROUND THE LEAGUE</p>
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="text-xs tracking-[0.25em] text-muted">AROUND THE LEAGUE</p>
+              <button type="button" aria-pressed={mine} className={`bx-chip min-h-9 px-3 text-[11px] ${mine ? "bx-chip-on" : ""}`} onClick={() => setMine((v) => !v)}>
+                ★ Following only
+              </button>
+            </div>
+            {mine && !wire.length && <p className="mt-2 text-sm text-muted">Nothing yet about who you follow.</p>}
             <ul className="mt-3 space-y-3">
               {wire.map((n) => (
                 <li key={n.id}>
@@ -237,6 +252,7 @@ export function HistoryDesk() {
           </section>
         )}
       </div>
+      <RecordBookPanel />
     </div>
   );
 }

@@ -61,12 +61,16 @@ def main() -> None:
     last = int(sys.argv[2]) if len(sys.argv) > 2 else 1998
     OUT.mkdir(parents=True, exist_ok=True)
     for y in range(first, last + 1):
-        for lg in ["nfl", "afl"] if y <= 1969 else ["nfl"]:
+        for lg in ["nfl", "afl"] if 1960 <= y <= 1969 else ["nfl"]:
             index = get(f"{y}{lg}.html")
-            if not index:
-                print(f"{y} {lg}: no index page", flush=True)
-                continue
-            teams = sorted({m for m in re.findall(rf'href="/?({y}{lg}([a-z]+)\.html)"', index) if m[1] not in SKIP and "draft" not in m[1]})
+            if index:
+                teams = sorted({m for m in re.findall(rf'href="/?({y}{lg}([a-z]+)\.html)"', index) if m[1] not in SKIP and "draft" not in m[1]})
+            else:
+                # No league page yet (the latest season): try last season's clubs.
+                teams = sorted({(f"{y}{lg}{f.stem[len(str(y - 1)) + len(lg):]}.html", f.stem[len(str(y - 1)) + len(lg):]) for f in OUT.glob(f"{y - 1}{lg}?*.html")})
+                if not teams:
+                    print(f"{y} {lg}: no index page", flush=True)
+                    continue
             got = sum(1 for name, _ in teams if get(name))
             print(f"{y} {lg}: {got}/{len(teams)} team pages", flush=True)
 

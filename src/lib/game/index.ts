@@ -251,7 +251,30 @@ export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
 export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";
 export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree.ts";
 export { careerValue, draftClassReport, gradableClasses, type ClassPick, type ClassReport } from "./draftGrades.ts";
-export { advanceHistory, coverageNote, createHistoryGame, historyCursor, historyLabel, replayHistory, setHistoryData, HISTORY_FIRST, HISTORY_LAST } from "./historyMode.ts";
+export { advanceHistory, applyLiveLines, coverageNote, createHistoryGame, historyCursor, historyLabel, historyRecords, replayHistory, setHistoryData, upcomingHistoryGames, HISTORY_FIRST, HISTORY_LAST, type HistoryCursor } from "./historyMode.ts";
+export {
+  boxFor,
+  boxPlayerId,
+  boxSeason,
+  callPoints,
+  callsReport,
+  followedNews,
+  follows,
+  franchiseLedger,
+  historyGrade,
+  isFollowed,
+  loadBoxSeason,
+  recordBookNow,
+  seriesBetween,
+  seriesOf,
+  toggleFollow,
+  RECORD_LABEL,
+  type BoxGame,
+  type BoxLine,
+  type FranchiseLedger,
+  type RecordHolder,
+  type SeriesRow,
+} from "./historyExtras.ts";
 export { loadHistoryData, parseHistory, type HistoryData } from "./historyData.ts";
 export { clubWindow, evaluateTrade, untouchable, whatWouldItTake } from "./tradeAi.ts";
 export { draftPickValue, executePickDeal, slotValue, tradeDownOffers, tradeUpPackage, type PickDeal } from "./draftTrades.ts";

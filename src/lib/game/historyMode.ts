@@ -19,6 +19,7 @@ import { recordAward } from "./honors.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { addNews, addTx } from "./news.ts";
 import { rulesTakingEffect } from "./rulebook.ts";
+import { boxFor, boxPlayerId, boxSeason, gradeCall, ledgerGame, recordBookNow, recordNews, seedLedgers, type RecordHolder } from "./historyExtras.ts";
 
 export const HISTORY_FIRST = 1966;
 export const HISTORY_LAST = 2025;
@@ -82,6 +83,7 @@ export function createHistoryGame(): DynastySave {
   s.phase = "draft";
   s.week = 0;
   s.weekLabel = `${HISTORY_FIRST} draft`;
+  seedLedgers(s, data().before1966.franchise, data().before1966.series);
   addNews(s, {
     kind: "headline",
     headline: "History mode: the league as it really was",
@@ -96,14 +98,29 @@ export function createHistoryGame(): DynastySave {
  * History mode's disk form. The whole league is rebuilt from the record, so a save is just how
  * far along it is (a full replay to 2025 holds ~28k players and would be ~50MB on disk).
  */
-export function historyCursor(save: DynastySave): { realHistory: true; historyStep: number } {
-  return { realHistory: true, historyStep: save.historyStep ?? 0 };
+export interface HistoryCursor {
+  realHistory: true;
+  historyStep: number;
+  follow?: DynastySave["historyFollow"];
+  calls?: DynastySave["historyCalls"];
 }
 
-/** Replay the record to a saved step (the data must be loaded first). */
-export function replayHistory(steps: number): DynastySave {
+export function historyCursor(save: DynastySave): HistoryCursor {
+  return {
+    realHistory: true,
+    historyStep: save.historyStep ?? 0,
+    ...(save.historyFollow ? { follow: save.historyFollow } : {}),
+    ...(save.historyCalls ? { calls: save.historyCalls } : {}),
+  };
+}
+
+/** Replay the record to a saved step (the data must be loaded first). The viewer's follows and calls ride along. */
+export function replayHistory(steps: number, extras: Pick<HistoryCursor, "follow" | "calls"> = {}): DynastySave {
   const s = createHistoryGame();
+  if (extras.follow) s.historyFollow = extras.follow;
+  if (extras.calls) s.historyCalls = extras.calls;
   for (let i = 0; i < steps && s.phase !== "complete"; i++) advanceHistory(s);
+  applyLiveLines(s);
   return s;
 }
 
@@ -485,7 +502,11 @@ function playWeek(save: DynastySave): void {
     g.played = true;
     creditStandings(save, g, false);
     creditCoaches(save, g);
+    ledgerGame(save, g);
+    gradeCall(save, g.id, [g.homeScore > g.awayScore ? g.homeId : g.awayScore > g.homeScore ? g.awayId : "tie"]);
   }
+  applyLiveLines(save);
+  recordNews(save, data().records, save.week, personPlayer(save));
   midseasonChanges(save);
   if (save.week >= maxWeek(save)) {
     applyTrades(save, save.week + 1, false);
@@ -498,6 +519,7 @@ function playWeek(save: DynastySave): void {
 /** The season's real stat lines go on the books once the regular season is over. */
 function closeRegularSeason(save: DynastySave): void {
   const y = save.year;
+  clearLiveLines(save);
   for (const { person, team, line } of data().stats(y)) {
     const p = playerFor(save, person, y, (team || "fa") as Player["teamId"]);
     const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
@@ -508,6 +530,7 @@ function closeRegularSeason(save: DynastySave): void {
   }
   save.phase = "playoffs";
   save.week = 1;
+  recordNews(save, data().records, 99, personPlayer(save));
   addNews(save, {
     kind: "headline",
     headline: `The ${y} regular season is in the books`,
@@ -529,6 +552,7 @@ function gameFor(save: DynastySave, g: ReturnType<HistoryData["playoffs"]>[numbe
     homeScore: g.homeScore,
     awayScore: g.awayScore,
     played: true,
+    date: g.mmdd,
   } as GameResult;
 }
 
@@ -544,6 +568,10 @@ function playRound(save: DynastySave): void {
   all.forEach((g, i) => {
     if (g.round !== round) return;
     const game = gameFor(save, g, i, week);
+    ledgerGame(save, game);
+    const winner = game.homeScore > game.awayScore ? game.homeId : game.awayId;
+    gradeCall(save, game.id, [winner]);
+    if (round === "Super Bowl") gradeCall(save, `sb:${save.year}`, [winner]);
     if (round === "Super Bowl") {
       const mvp = data().awards(save.year).sbmvp?.find((x): x is number => typeof x === "number");
       if (mvp !== undefined) game.mvpPlayerId = playerFor(save, mvp, save.year, "fa").id;
@@ -574,6 +602,7 @@ function giveAwards(save: DynastySave): void {
     for (const p of ids) recordAward(p, y, AWARD_KEY[k as keyof typeof AWARD_KEY]);
   }
   if (Object.keys(co).length) a.co = co;
+  if (a.mvp) gradeCall(save, `mvp:${y}`, [a.mvp, ...(co.mvp ?? [])]);
   const coy = real.coy?.find((x): x is string => typeof x === "string");
   if (coy) {
     a.coyName = coy;
@@ -633,4 +662,118 @@ function inductHallOfFame(save: DynastySave): void {
       teamIds: [],
       playerIds: [],
     });
+}
+
+/** The save's player for a real person, if he's in it. */
+const personPlayer = (save: DynastySave) => (person: number) => save.players[pid(person)];
+
+/** Running season lines out: the official ones are going on the books. */
+function clearLiveLines(save: DynastySave): void {
+  const y = save.year;
+  for (const p of Object.values(save.players)) if (p.stats[y]?.live) delete p.stats[y];
+}
+
+const LIVE_FIELD: Record<string, keyof SeasonStats> = {
+  pa: "passAtt",
+  pc: "passCmp",
+  py: "passYds",
+  pt: "passTd",
+  pi: "passInt",
+  sk: "sacksThrown",
+  ra: "rushAtt",
+  ry: "rushYds",
+  rt: "rushTd",
+  re: "rec",
+  ey: "recYds",
+  et: "recTd",
+  tg: "targets",
+  in: "ints",
+  sa: "sacks",
+  pn: "punts",
+  pny: "puntYds",
+  pry: "prYds",
+  kry: "krYds",
+  prt: "prTd",
+  krt: "krTd",
+  tk: "tackles",
+  tl: "tfl",
+  pd: "pd",
+  qh: "qbHits",
+  ff: "ff",
+  fr: "fr",
+  fm: "fgMade",
+  fa: "fgAtt",
+  xm: "xpMade",
+  xa: "xpAtt",
+};
+
+/**
+ * This season's running stat lines, summed from the real box scores of the games played so
+ * far (when the season's box scores are loaded). The official season line replaces them when
+ * the regular season closes. Only players already on a roster get a line, so this never
+ * changes who's in the league.
+ */
+export function applyLiveLines(save: DynastySave): void {
+  const y = save.year;
+  if (save.phase !== "regular" || !boxSeason(y)) return;
+  clearLiveLines(save);
+  const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
+  const lineFor = (id: string | undefined, team: TeamId): SeasonStats | undefined => {
+    const p = id ? save.players[id] : undefined;
+    if (!p || (p.stats[y] && !p.stats[y]!.live)) return undefined;
+    return (p.stats[y] ??= { ...emptyStats(y, team), live: true, unknown });
+  };
+  for (const g of save.schedule) {
+    if (g.year !== y || g.phase !== "regular" || !g.played) continue;
+    const box = boxFor(g);
+    if (!box) continue;
+    const sides: TeamId[] = [box.a, box.h];
+    const seen = new Set<string>();
+    for (const [side, who, ln] of box.p) {
+      const id = boxPlayerId(who);
+      const st = lineFor(id, sides[side]!);
+      if (!st) continue;
+      if (!seen.has(id!)) {
+        seen.add(id!);
+        st.gp += 1;
+      }
+      for (const [k, v] of Object.entries(ln)) {
+        const f = LIVE_FIELD[k];
+        if (f) (st[f] as number) += v;
+      }
+    }
+    box.l?.forEach((list, side) => {
+      for (const [, who] of list) {
+        const id = boxPlayerId(who);
+        if (!id || seen.has(id)) continue;
+        const st = lineFor(id, sides[side]!);
+        if (!st) continue;
+        seen.add(id);
+        st.gp += 1;
+      }
+    });
+  }
+}
+
+/** The all-time record book as of this point in the record. */
+export function historyRecords(save: DynastySave): RecordHolder[] {
+  return DATA ? recordBookNow(save, data().records, personPlayer(save)) : [];
+}
+
+/**
+ * The games the next step plays, for calling them first: this week's slate, or the next
+ * playoff round (its matchups are already set by then).
+ */
+export function upcomingHistoryGames(save: DynastySave): GameResult[] {
+  if (!DATA) return [];
+  if (save.phase === "regular") return gamesInWeek(save, save.week).filter((g) => !g.played && g.realHome !== undefined);
+  if (save.phase !== "playoffs") return [];
+  const round = nextRound(save);
+  if (!round) return [];
+  const week = new Set(save.playoffGames.map((g) => g.round)).size + 1;
+  return data()
+    .playoffs(save.year)
+    .map((g, i) => ({ g, i }))
+    .filter(({ g }) => g.round === round)
+    .map(({ g, i }) => ({ ...gameFor(save, g, i, week), homeScore: 0, awayScore: 0, played: false }));
 }

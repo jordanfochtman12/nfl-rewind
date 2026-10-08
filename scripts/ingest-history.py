@@ -110,7 +110,13 @@ KEEP = {"ACT", "RES", "INA", "PUP", "SUS", "NWT", "TRC", "TRD", "TRT", "TRL", "E
 # Released players count for the club they played for that season (Jeff George, Atlanta 1996).
 cut_pool: dict[int, list[tuple[int, str]]] = defaultdict(list)
 # Season tables that print a player under another name than the roster's.
-ALIAS = {"karimabduljabbar": "abdulkarimaljabbar", "rocketismail": "raghibismail"}
+ALIAS = {
+    "karimabduljabbar": "abdulkarimaljabbar", "rocketismail": "raghibismail",
+    # The archive's names for players the rosters list by their given names.
+    "camheyward": "cameronheyward", "camsample": "cameronsample", "nickwestbrookikhine": "nicholaswestbrookikhine",
+    "cjgardnerjohnson": "chaunceygardnerjohnson", "joshhinesallen": "joshallen", "robbiechosenanderson": "robbyanderson",
+    "cadillacwilliams": "carnellwilliams", "beaniewells": "chriswells", "ziggyansah": "ezekielansah",
+}
 rosters: dict[int, dict[str, list[int]]] = defaultdict(lambda: defaultdict(list))
 jerseys: dict[tuple[int, int, str], int] = {}
 seasons_of: dict[int, set[int]] = defaultdict(set)
@@ -314,18 +320,24 @@ PFA_TEAM = {
     "ten": "oti", "kc": "kan", "larm": "ram", "stlr": "ram", "mia": "mia", "min": "min", "no": "nor",
     "nyg": "nyg", "nyj": "nyj", "oak": "rai", "lard": "rai", "phi": "phi", "pit": "pit", "sd": "sdg",
     "sf": "sfo", "stl": "crd", "stlc": "crd", "pho": "crd", "ari": "crd", "was": "was", "sea": "sea",
-    "tb": "tam", "car": "car", "jac": "jax", "rav": "rav", "lari": "rai", "phx": "crd",
+    "tb": "tam", "car": "car", "jac": "jax", "rav": "rav", "lari": "rai", "phx": "crd", "lac": "sdg", "lv": "rai",
 }
 
 
 def pfa_team(code: str, year: int) -> str | None:
     # Baltimore is the Colts through 1983 and the Ravens from 1996; St. Louis the Cardinals
-    # through 1987 and the Rams from 1995.
+    # through 1987 and the Rams from 1995; Houston the Oilers through 1996 and the Texans from 2002.
     if code == "bal":
         return "clt" if year <= 1983 else "rav"
     if code == "stl":
         return "crd" if year <= 1987 else "ram"
+    if code == "hou":
+        return "oti" if year <= 1996 else "htx"
     return PFA_TEAM.get(code)
+
+
+# Archive player id -> History person, for every season the archive covers (other ingests read it).
+pfa_person: dict[str, int] = {}
 
 
 def pfa_pages(y: int) -> dict[str, dict[str, list[list[str]]]]:
@@ -343,16 +355,22 @@ OFFENSE = {"passAtt", "passCmp", "passYds", "passTd", "passInt", "rushAtt", "rus
 
 
 def load_pfa_stats() -> None:
-    """1966-1998 season lines from Pro Football Archives team pages: offense, interceptions,
-    sacks (unofficial before 1982), fumble recoveries, kicking, punting and returns, with games
-    played from the club's roster. These replace the PFR-table lines for those seasons (they
-    agree on offense and add completions for 1992-98); a PFR line the archive lacks is kept."""
+    """Season lines from Pro Football Archives team pages, the league's official numbers:
+    offense, interceptions, sacks (unofficial before 1982), fumble recoveries, kicking, punting
+    and returns, with games played from the club's roster, and from 1999 tackles, passes
+    defensed, QB hits, tackles for loss, forced fumbles and targets too.
+    - 1966-1998: these replace the PFR-table lines (they agree on offense and add completions
+      for 1992-98); where both have a passing, rushing or receiving number, PFR's wins.
+    - 1999 on: these replace the nflverse lines, whose play-by-play totals drift from the
+      official ones (Drew Brees's 2011: 5,535 yards against the official 5,476); nflverse
+      fills only what the archive doesn't have.
+    A line the archive lacks is kept as it was."""
     if not (DATA / "history" / "pfa").exists():
         print("pfa: no extracted tables (run scripts/fetch-pfa.py)")
         return
     unknown_codes: set[str] = set()
     report = []
-    for y in range(FIRST, 1999):
+    for y in range(FIRST, LAST + 1):
         lines: dict[str, dict] = {}  # archive player id -> summed line
         meta: dict[str, tuple[str, str, list[str]]] = {}  # id -> name, pos, clubs (by games)
         colleges: dict[str, str] = {}
@@ -391,6 +409,11 @@ def load_pfa_stats() -> None:
                 add(r["_id"], r["_name"], rushAtt=num(r.get("ATT")), rushYds=num(r.get("YDS")), rushTd=num(r.get("TD")))
             for r in rows("RECEIVING"):
                 add(r["_id"], r["_name"], rec=num(r.get("REC")), recYds=num(r.get("YDS")), recTd=num(r.get("TD")))
+                if y >= 1999 and r.get("TAR"):
+                    add(r["_id"], r["_name"], targets=num(r.get("TAR")))
+            if y >= 1999:
+                for r in rows("DEFENSE"):
+                    add(r["_id"], r["_name"], tackles=num(r.get("TKL")), pd=num(r.get("PD")), qbHits=num(r.get("QH")), tfl=num(r.get("TFL")), ff=num(r.get("FF")))
             for r in rows("INTERCEPTIONS"):
                 add(r["_id"], r["_name"], ints=num(r.get("INT")))
             for r in rows("SACKS"):
@@ -453,11 +476,16 @@ def load_pfa_stats() -> None:
             if not people[i]["c"] and colleges.get(pid):
                 people[i]["c"] = colleges[pid]
             line = dict(ln)
+            pfa_person[pid] = i
             if i in have:
-                # Where PFR's season table has a passing, rushing or receiving number, it wins
-                # (the archive has the odd typo); the archive adds everything else.
                 for k, v in have[i][1].items():
-                    if k in OFFENSE and v != -1:
+                    if y < 1999:
+                        # Where PFR's season table has a passing, rushing or receiving number, it
+                        # wins (the archive has the odd typo); the archive adds everything else.
+                        if k in OFFENSE and v != -1:
+                            line[k] = v
+                    elif k not in line and v != -1:
+                        # The official line wins; nflverse fills what the archive doesn't keep.
                         line[k] = v
             merged[i] = (clubs[0], line)
         for i in collisions:
@@ -473,6 +501,8 @@ def load_pfa_stats() -> None:
     if unknown_codes:
         print(f"pfa: unmapped club codes {sorted(unknown_codes)}")
     print("pfa seasons: " + " ".join(report))
+    with open(DATA / "history" / "pfa_ids.csv", "w", newline="", encoding="utf-8") as fh:
+        csv.writer(fh).writerows(sorted(pfa_person.items()))
 
 
 # ---------- playoffs ----------

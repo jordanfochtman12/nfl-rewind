@@ -11,6 +11,11 @@ import {
   loadHistoryData,
   replayHistory,
   setHistoryData,
+  applyLiveLines,
+  boxSeason,
+  loadBoxSeason,
+  toggleFollow as toggleFollowIn,
+  type HistoryCursor,
   openCalls,
   ownerGameJustPlayed,
   simUntil,
@@ -92,6 +97,19 @@ interface GameStore {
   switchSlot: (slot: number) => Promise<void>;
   /** Empty a slot for good. */
   clearSlot: (slot: number) => Promise<void>;
+  /** History mode: the game whose real box score is open. */
+  boxView: { year: number; homeId: TeamId; awayId: TeamId; date?: string; round?: string; week: number } | null;
+  openBox: (g: { year: number; homeId: string; awayId: string; date?: string; round?: string; week: number }) => void;
+  closeBox: () => void;
+  /** History mode: follow (or stop following) a club or a player. */
+  toggleFollow: (what: { teamId?: TeamId; playerId?: string }) => void;
+  /** History mode: call a game (or a season's champion / MVP) before the result is in; null clears it. */
+  makeCall: (id: string, pick: string | null) => void;
+  /**
+   * History mode: step until something happens to who the viewer follows (news about them, or
+   * a playoff game of theirs), the season ends, or 60 steps pass. Returns what stopped it.
+   */
+  historyUntilFollowed: () => string;
 }
 
 type Persisted = { save: DynastySave | null };
@@ -111,6 +129,7 @@ function stepTo(
   const gameId = ownerGameJustPlayed(prev, next);
   if (gameId) set({ save: next, rewind: { gameId, pre: prev, opts } });
   else set({ save: next, rewind: null });
+  if (next.realHistory) ensureHistoryBox();
 }
 
 /**
@@ -185,22 +204,39 @@ function persistStorage(): PersistStorage<Persisted> {
   };
 }
 
-/** The step count of a History mode disk save, or undefined for anything else. */
-function historyStub(raw: unknown): number | undefined {
+/** A History mode disk save (its place in the record, plus follows and calls), or undefined for anything else. */
+function historyStub(raw: unknown): HistoryCursor | undefined {
   if (!raw || typeof raw !== "object") return undefined;
-  const r = raw as { realHistory?: boolean; historyStep?: number; teams?: unknown };
-  return r.realHistory && !r.teams ? (r.historyStep ?? 0) : undefined;
+  const r = raw as Partial<HistoryCursor> & { teams?: unknown };
+  return r.realHistory && !r.teams ? { realHistory: true, historyStep: r.historyStep ?? 0, follow: r.follow, calls: r.calls } : undefined;
 }
 
 /** Load the record and replay it to a saved History mode step. */
-async function restoreHistory(steps: number): Promise<void> {
+async function restoreHistory(cursor: HistoryCursor): Promise<void> {
   useGameStore.setState({ historyLoading: true });
   try {
     setHistoryData(await loadHistoryData());
-    useGameStore.setState({ save: replayHistory(steps), rewind: null });
+    const save = replayHistory(cursor.historyStep, cursor);
+    // This season's running stat lines come from its box scores.
+    await loadBoxSeason(save.year);
+    applyLiveLines(save);
+    useGameStore.setState({ save, rewind: null });
   } finally {
     useGameStore.setState({ historyLoading: false });
   }
+}
+
+/** History mode: make sure the season on screen has its box scores, then fill its running lines. */
+function ensureHistoryBox(): void {
+  const s = useGameStore.getState().save;
+  if (!s?.realHistory || boxSeason(s.year)) return;
+  const year = s.year;
+  void loadBoxSeason(year).then((games) => {
+    const cur = useGameStore.getState().save;
+    if (!games || !cur?.realHistory || cur.year !== year) return;
+    applyLiveLines(cur);
+    useGameStore.setState({ save: { ...cur } });
+  });
 }
 
 export const useGameStore = create<GameStore>()(
@@ -344,6 +380,61 @@ export const useGameStore = create<GameStore>()(
         resetWritten();
         set({ slot, save: null, screen: "title", profileId: null, viewTeamId: null, rewind: null, liveGameId: null, tv: false });
         await useGameStore.persist.rehydrate();
+      },
+      boxView: null,
+      openBox: (g) => set({ boxView: { year: g.year, homeId: g.homeId as TeamId, awayId: g.awayId as TeamId, date: g.date, round: g.round, week: g.week } }),
+      closeBox: () => set({ boxView: null }),
+      toggleFollow: (what) => {
+        const { save } = get();
+        if (!save?.realHistory) return;
+        const next = { ...save };
+        toggleFollowIn(next, what);
+        set({ save: next });
+      },
+      makeCall: (id, pick) => {
+        const { save } = get();
+        if (!save?.realHistory || save.historyGraded?.[id]) return;
+        const calls = { ...(save.historyCalls ?? {}) };
+        if (pick) calls[id] = pick;
+        else delete calls[id];
+        set({ save: { ...save, historyCalls: calls } });
+      },
+      historyUntilFollowed: () => {
+        const { save } = get();
+        if (!save?.realHistory || save.phase === "complete") return "";
+        const f = save.historyFollow ?? { teams: [], players: [] };
+        if (!f.teams.length && !f.players.length) return "none";
+        const year = save.year;
+        let seen = save.news[0]?.id;
+        let playoffSeen = save.playoffGames.length + (save.superBowl ? 1 : 0);
+        let first = true;
+        let why = "";
+        // One clone for the whole run (simUntil), checking after every step.
+        const s = simUntil(
+          save,
+          (x) => {
+            if (first) return (first = false);
+            for (const n of x.news) {
+              if (n.id === seen) break;
+              if (n.teamIds.some((t) => f.teams.includes(t)) || n.playerIds.some((p) => f.players.includes(p))) {
+                why = n.headline;
+                break;
+              }
+            }
+            seen = x.news[0]?.id;
+            if (why) return true;
+            const games = [...x.playoffGames, ...(x.superBowl ? [x.superBowl] : [])];
+            const fresh = games.slice(playoffSeen).find((g) => f.teams.includes(g.homeId as TeamId) || f.teams.includes(g.awayId as TeamId));
+            playoffSeen = games.length;
+            if (fresh) return (why = `${fresh.round ?? "Playoffs"}: ${fresh.awayScore}-${fresh.homeScore}`), true;
+            if (x.year > year) return (why = "season"), true;
+            return false;
+          },
+          61,
+        );
+        set({ save: s, rewind: null });
+        ensureHistoryBox();
+        return why;
       },
       clearSlot: async (slot) => {
         await flushPending();

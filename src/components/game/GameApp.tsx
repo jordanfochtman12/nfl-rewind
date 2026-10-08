@@ -84,6 +84,7 @@ import { GameNight } from "./GameNight";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
+import { HistoryBoxModal } from "./HistoryLive";
 import { PlayerLink, PlayerProfile } from "./PlayerProfile";
 import { TeamRosterModal } from "./TeamRoster";
 import { LeagueDirectory } from "./LeagueDirectory";
@@ -1890,6 +1891,7 @@ function PlayShell() {
         <WatchTV />
         <PlayerProfile />
         <TeamRosterModal />
+        {save.realHistory && <HistoryBoxModal />}
       </ClubDesk>
     ) : (
     <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
@@ -1955,6 +1957,7 @@ function PlayShell() {
         {tab === "league" && <LeagueDirectory />}
         <PlayerProfile />
         <TeamRosterModal />
+        {save.realHistory && <HistoryBoxModal />}
         <CrunchCall />
       </main>
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}

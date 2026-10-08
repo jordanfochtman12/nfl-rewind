@@ -1,0 +1,1546 @@
+nflbkn,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflbkn,ROSTER,alfs00200,Warren Alfson,33,LOG-LDG,6-0,191,26,Nebraska,11,11
+nflbkn,ROSTER,bail00400,Bill Bailey,22,OE-DE,6-2,213,25,Duke,7,0
+nflbkn,ROSTER,butc00600,Wendell Butcher,66,BB-S,6-1,197,27,Gustavus Adolphus,10,1
+nflbkn,ROSTER,cond00200,Merl Condit,35,HB-RDH,5-11,187,24,Carnegie Mellon,11,11
+nflbkn,ROSTER,fric00200,Ray Frick,5,C-LB,6-1,205,22,Pennsylvania,3,0
+nflbkn,ROSTER,fron00200,Andy Fronczek,21,OT-DT,6-0,201,25,Richmond,11,0
+nflbkn,ROSTER,hodg00800,Herman Hodges,13,ROE-RDE,6-1,198,27,Samford,11,3
+nflbkn,ROSTER,jone22210,Thurmon Jones,1,FB,5-10,198,23,Abilene Christian,1,0
+nflbkn,ROSTER,juri00200,Mike Jurich,17,OT-DT,6-1,234,22,Denver,4,0
+nflbkn,ROSTER,kina00400,Bruiser Kinard,25,LOT-LDT,6-1,216,27,Mississippi,11,11
+nflbkn,ROSTER,kina00600,George Kinard,27,OG-DG,6-1,202,25,Mississippi,10,0
+nflbkn,ROSTER,kish00200,Ben Kish,20,BB-S,6-0,207,24,Pittsburgh,7,0
+nflbkn,ROSTER,koon00400,Joe Koons,24,C-LB,6-1,190,26,Dubuque; Long Island,6,0
+nflbkn,ROSTER,krac00200,George Kracum,10,FB-LB,6-1,210,23,Pittsburgh,11,0
+nflbkn,ROSTER,kris00600,Frank Kristufek,19,ROT-RDT,6-0,209,26,Pittsburgh,11,5
+nflbkn,ROSTER,leck00200,Bill Leckonby,4,TB-LDH,6-0,185,24,St. Lawrence,11,2
+nflbkn,ROSTER,mand01200,Pug Manders,9,FB-LB,6-0,200,28,Minnesota; Drake,11,11
+nflbkn,ROSTER,mcad00600,Dean McAdams,6,HB-RDH,6-1,193,24,Washington,11,0
+nflbkn,ROSTER,merr00800,Walt Merrill,29,ROT-RDT,6-2,219,24,Alabama,6,6
+nflbkn,ROSTER,park00500,Ace Parker,7,TB-LDH,5-11,178,29,Duke,11,9
+nflbkn,ROSTER,park02400,Dave Parker,32,OE-DE,6-3,200,23,Hardin-Simmons,6,0
+nflbkn,ROSTER,peac00200,Larry Peace,2,HB-DH,5-10,185,24,Pittsburgh,7,0
+nflbkn,ROSTER,petr01200,Steve Petro,31,OG-DG,5-10,197,27,Pittsburgh,6,0
+nflbkn,ROSTER,robe07800,Tom Robertson,14,C-LB,6-0,218,24,Kansas; Louisiana State; Tulsa,11,0
+nflbkn,ROSTER,ruci00200,Eddie Rucinski,26,ROE-RDE,6-2,198,25,Indiana,11,8
+nflbkn,ROSTER,schw01400,Perry Schwartz,99,LOE-LDE,6-2,199,26,Sacramento CC; California,11,11
+nflbkn,ROSTER,shet00200,Rhoten Shetley,30,BB-S,5-11,208,23,Furman,11,10
+nflbkn,ROSTER,sive00200,Jim Sivell,28,ROG-RDG,5-9,205,27,Auburn,11,11
+nflbkn,ROSTER,stas00200,Leo Stasica,11,HB-DH,5-11,185,25,Illinois; Colorado,6,0
+nflbkn,ROSTER,sven00200,Earl Svendsen,18,C-LB,6-1,190,26,Minnesota,11,11
+nflbkn,ROSTER,titu00400,Si Titus,15,OG-DG-C-LB,6-0,195,23,Holy Cross,7,0
+nflbkn,ROSTER,wemp00200,Don Wemple,23,ROE-RDE,6-0,195,24,Colgate,11,0
+nflbkn,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflbkn,SCORING,mand01200,Pug Manders,7,0,0,,0,0,,0,42
+nflbkn,SCORING,cond00200,Merl Condit,4,11,12,91.7,2,11,18.2,0,41
+nflbkn,SCORING,krac00200,George Kracum,3,0,0,,0,0,,0,18
+nflbkn,SCORING,schw01400,Perry Schwartz,2,0,0,,0,0,,0,12
+nflbkn,SCORING,kina00400,Bruiser Kinard,1,3,5,60.0,0,0,,0,9
+nflbkn,SCORING,mcad00600,Dean McAdams,0,3,3,100.0,2,3,66.7,0,9
+nflbkn,SCORING,leck00200,Bill Leckonby,1,0,0,,0,0,,0,6
+nflbkn,SCORING,ruci00200,Eddie Rucinski,1,0,0,,0,0,,0,6
+nflbkn,SCORING,shet00200,Rhoten Shetley,1,0,0,,0,0,,0,6
+nflbkn,SCORING,wemp00200,Don Wemple,1,0,0,,0,0,,0,6
+nflbkn,SCORING,kris00600,Frank Kristufek,0,0,0,,0,0,,1,2
+nflbkn,SCORING,peac00200,Larry Peace,0,1,1,100.0,0,0,,0,1
+nflbkn,SCORING,,Team Totals,21,18,21,85.7,4,14,28.6,1,158
+nflbkn,SCORING,,Opponents Totals,17,13,17,76.5,4,10,40.0,0,127
+nflbkn,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflbkn,FIELD GOALS,cond00200,Merl Condit,2,11,18.2,0,35,0/2,1/2,1/4,0/3,0/0
+nflbkn,FIELD GOALS,mcad00600,Dean McAdams,2,3,66.7,0,30,0/1,1/1,1/1,0/0,0/0
+nflbkn,FIELD GOALS,,Team Totals,4,14,28.6,0,35,0/3,2/3,2/5,0/3,0/0
+nflbkn,FIELD GOALS,,Opponents Totals,4,10,40.0,,,1/,2/,1/,0/,0/
+nflbkn,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflbkn,RUSHING,mand01200,Pug Manders,111,486,4.4,46,6
+nflbkn,RUSHING,cond00200,Merl Condit,91,357,3.9,41t,4
+nflbkn,RUSHING,park00500,Ace Parker,85,301,3.5,60,0
+nflbkn,RUSHING,leck00200,Bill Leckonby,54,202,3.7,17,0
+nflbkn,RUSHING,krac00200,George Kracum,52,169,3.3,17t,3
+nflbkn,RUSHING,mcad00600,Dean McAdams,38,99,2.6,39,0
+nflbkn,RUSHING,stas00200,Leo Stasica,3,17,5.7,5,0
+nflbkn,RUSHING,ruci00200,Eddie Rucinski,2,13,6.5,7,0
+nflbkn,RUSHING,schw01400,Perry Schwartz,1,7,7.0,7,0
+nflbkn,RUSHING,shet00200,Rhoten Shetley,1,7,7.0,7t,1
+nflbkn,RUSHING,jone22210,Thurmon Jones,1,3,3.0,3,0
+nflbkn,RUSHING,butc00600,Wendell Butcher,1,2,2.0,2,0
+nflbkn,RUSHING,peac00200,Larry Peace,4,2,0.5,2,0
+nflbkn,RUSHING,,Team Totals,444,1665,3.8,60,14
+nflbkn,RUSHING,,Opponents Totals,376,1210,3.2,,8
+nflbkn,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflbkn,PASSING,park00500,Ace Parker,102,51,50.0,43,642,6.3,12.6,47,2,2.0,8,7.8,,,,43.8
+nflbkn,PASSING,mcad00600,Dean McAdams,27,12,44.4,12,176,6.5,14.7,36,2,7.4,3,11.1,,,,51.4
+nflbkn,PASSING,leck00200,Bill Leckonby,64,25,39.1,34,299,4.7,12.0,32,1,1.6,5,7.8,,,,26.8
+nflbkn,PASSING,stas00200,Leo Stasica,2,1,50.0,1,14,7.0,14.0,14,0,0.0,0,0.0,,,,72.9
+nflbkn,PASSING,cond00200,Merl Condit,6,1,16.7,4,3,0.5,3.0,3,0,0.0,1,16.7,,,,0.0
+nflbkn,PASSING,shet00200,Rhoten Shetley,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflbkn,PASSING,,Team Totals,202,90,44.6,94,1134,5.6,12.6,47,5,2.5,18,8.9,,,,33.7
+nflbkn,PASSING,,Opponents Totals,189,86,45.5,83,1169,6.2,13.6,,6,3.2,20,10.6,,,,36.8
+nflbkn,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflbkn,RECEIVING,schw01400,Perry Schwartz,25,362,14.5,36,2
+nflbkn,RECEIVING,ruci00200,Eddie Rucinski,17,204,12.0,33,1
+nflbkn,RECEIVING,hodg00800,Herman Hodges,12,128,10.7,32,0
+nflbkn,RECEIVING,mcad00600,Dean McAdams,7,94,13.4,47,0
+nflbkn,RECEIVING,mand01200,Pug Manders,6,67,11.2,27,0
+nflbkn,RECEIVING,cond00200,Merl Condit,5,32,6.4,21,0
+nflbkn,RECEIVING,kish00200,Ben Kish,4,50,12.5,27,0
+nflbkn,RECEIVING,shet00200,Rhoten Shetley,4,41,10.3,22,0
+nflbkn,RECEIVING,park00500,Ace Parker,3,66,22.0,36,0
+nflbkn,RECEIVING,krac00200,George Kracum,2,17,8.5,13,0
+nflbkn,RECEIVING,wemp00200,Don Wemple,2,37,18.5,29t,1
+nflbkn,RECEIVING,bail00400,Bill Bailey,1,14,14.0,14,0
+nflbkn,RECEIVING,leck00200,Bill Leckonby,1,9,9.0,9t,1
+nflbkn,RECEIVING,park02400,Dave Parker,1,10,10.0,10,0
+nflbkn,RECEIVING,,Team Totals,90,1134,12.6,47,5
+nflbkn,RECEIVING,,Opponents Totals,86,1169,13.6,,6
+nflbkn,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflbkn,INTERCEPTIONS,mand01200,Pug Manders,4,73,18.3,65t,1
+nflbkn,INTERCEPTIONS,leck00200,Bill Leckonby,3,22,7.3,12,0
+nflbkn,INTERCEPTIONS,cond00200,Merl Condit,3,15,5.0,5,0
+nflbkn,INTERCEPTIONS,alfs00200,Warren Alfson,2,49,24.5,45,0
+nflbkn,INTERCEPTIONS,titu00400,Si Titus,2,5,2.5,2,0
+nflbkn,INTERCEPTIONS,krac00200,George Kracum,1,27,27.0,27,0
+nflbkn,INTERCEPTIONS,shet00200,Rhoten Shetley,1,22,22.0,22,0
+nflbkn,INTERCEPTIONS,kish00200,Ben Kish,1,9,9.0,9,0
+nflbkn,INTERCEPTIONS,park00500,Ace Parker,1,5,5.0,5,0
+nflbkn,INTERCEPTIONS,sven00200,Earl Svendsen,1,1,1.0,1,0
+nflbkn,INTERCEPTIONS,mcad00600,Dean McAdams,1,0,0.0,0,0
+nflbkn,INTERCEPTIONS,,Team Totals,20,228,11.4,65t,1
+nflbkn,INTERCEPTIONS,,Opponents Totals,18,253,14.1,,1
+nflbkn,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflbkn,PUNTING,mcad00600,Dean McAdams,16,761,47.6,70,0,,,,,
+nflbkn,PUNTING,park00500,Ace Parker,27,1079,40.0,49,0,,,,,
+nflbkn,PUNTING,leck00200,Bill Leckonby,15,588,39.2,48,0,,,,,
+nflbkn,PUNTING,cond00200,Merl Condit,1,38,38.0,38,0,,,,,
+nflbkn,PUNTING,kish00200,Ben Kish,1,35,35.0,35,0,,,,,
+nflbkn,PUNTING,,Team Totals,60,2501,41.7,70,0,,,463,,
+nflbkn,PUNTING,,Opponents Totals,72,,,,,,,343,,
+nflbkn,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflbkn,PUNT RETURNS,park00500,Ace Parker,16,,153,9.6,20,0
+nflbkn,PUNT RETURNS,leck00200,Bill Leckonby,15,,119,7.9,19,0
+nflbkn,PUNT RETURNS,cond00200,Merl Condit,5,,44,8.8,14,0
+nflbkn,PUNT RETURNS,stas00200,Leo Stasica,2,,14,7.0,9,0
+nflbkn,PUNT RETURNS,mcad00600,Dean McAdams,2,,11,5.5,9,0
+nflbkn,PUNT RETURNS,sven00200,Earl Svendsen,1,,2,2.0,2,0
+nflbkn,PUNT RETURNS,,Team Totals,41,,343,8.4,20,0
+nflbkn,PUNT RETURNS,,Opponents Totals,35,,463,13.2,,1
+nflbkn,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflbkn,KICKOFF RETURNS,cond00200,Merl Condit,8,,178,22.3,,0
+nflbkn,KICKOFF RETURNS,mand01200,Pug Manders,7,,128,18.3,,0
+nflbkn,KICKOFF RETURNS,shet00200,Rhoten Shetley,4,,80,20.0,,0
+nflbkn,KICKOFF RETURNS,park00500,Ace Parker,3,,71,23.7,,0
+nflbkn,KICKOFF RETURNS,leck00200,Bill Leckonby,2,,76,38.0,,0
+nflbkn,KICKOFF RETURNS,stas00200,Leo Stasica,1,,43,43.0,43,0
+nflbkn,KICKOFF RETURNS,krac00200,George Kracum,1,,20,20.0,20,0
+nflbkn,KICKOFF RETURNS,kina00400,Frank Kinard,1,,14,14.0,14,0
+nflbkn,KICKOFF RETURNS,schw01400,Perry Schwartz,1,,6,6.0,6,0
+nflbkn,KICKOFF RETURNS,,Team Totals,28,,616,22.0,,0
+nflbkn,KICKOFF RETURNS,,Opponents Totals,27,,606,22.4,,0
+nflbkn,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflbkn,FUMBLES,kina00400,Frank Kinard,,,,,,,1
+nflbkn,FUMBLES,,Team Totals,27,10,17,8,25,,1
+nflbkn,FUMBLES,,Opponents Totals,17,8,9,10,19,,1
+nflchib,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflchib,ROSTER,arto00200,Lee Artoe,35,ROT-RDT,6-2,234,24,Santa Clara; California,11,11
+nflchib,ROSTER,bais00200,Al Baisi,26,OG-DG,6-0,215,24,West Virginia,10,0
+nflchib,ROSTER,bray00600,Ray Bray,82,ROG-RDG,6-0,237,24,Western Michigan,11,7
+nflchib,ROSTER,buss01000,Young Bussey,37,QB-S,5-10,175,24,Louisiana State,10,0
+nflchib,ROSTER,clar11430,Harry Clarke,4,LOH-LDH,6-0,186,25,West Virginia,10,3
+nflchib,ROSTER,fami00200,Gary Famiglietti,2,FB-LB-ROH-RDH,5-11,225,28,Boston University,7,2
+nflchib,ROSTER,fede00400,John Federovitch,34,OT-DT,6-5,263,24,Davis & Elkins,11,0
+nflchib,ROSTER,fort00200,Aldo Forte,23,ROG-RDG,6-0,213,23,Montana,11,4
+nflchib,ROSTER,fort01000,Danny Fortmann,21,LOG-LDG,6-0,210,25,Colgate,11,11
+nflchib,ROSTER,gall01400,Hugh Gallarneau,8,ROH-RDH,6-0,190,24,Stanford,11,8
+nflchib,ROSTER,hugh00600,Billy Hughes,24,C-LB,6-1,226,26,Texas,6,0
+nflchib,ROSTER,kava00200,Ken Kavanaugh,51,LOE-LDE,6-3,207,25,Louisiana State,11,0
+nflchib,ROSTER,kolm00200,Ed Kolman,29,LOT-LDT,6-2,232,26,Temple,11,9
+nflchib,ROSTER,laha00200,Hal Lahar,12,ROG-RDG-OT-DT,6-0,225,22,Oklahoma,7,0
+nflchib,ROSTER,luck00800,Sid Luckman,42,QB-S,5-11,197,25,Columbia,11,11
+nflchib,ROSTER,mani00200,Joe Maniaci,11,FB-LB,6-1,212,27,Fordham,7,0
+nflchib,ROSTER,matu00600,Al Matuza,15,C-LB,6-2,200,23,Georgetown (DC),10,1
+nflchib,ROSTER,mcaf00400,George McAfee,5,ROH-RDH-LOH-LDH,6-0,178,23,Duke,11,2
+nflchib,ROSTER,mcle00600,Ray McLean,57,ROH-RDH-LOH-LDH,5-10,168,26,St. Anselm,10,0
+nflchib,ROSTER,miha00400,Joe Mihal,27,OT-DT,6-2,234,25,Purdue,6,0
+nflchib,ROSTER,muss00600,George Musso,16,OG-DG,6-1,262,31,Millikin,11,0
+nflchib,ROSTER,nolt00200,Ray Nolting,25,LOH-LD-ROH-RDH,5-11,185,28,Cincinnati,9,5
+nflchib,ROSTER,nowa00600,Bob Nowaskey,20,LOE-LDE-ROE-RDE,6-0,205,23,George Washington,11,5
+nflchib,ROSTER,osma00200,Bill Osmanski,9,FB-LB,5-11,197,26,Holy Cross,10,7
+nflchib,ROSTER,plas00200,Dick Plasman,14,LOE-LDE,6-3,218,27,Vanderbilt,10,5
+nflchib,ROSTER,pool00400,Hamp Pool,76,ROE-RDE,6-3,221,26,California; Stanford,8,0
+nflchib,ROSTER,sieg00400,Johnny Siegal,6,ROE-RDE,6-1,205,23,Columbia,11,7
+nflchib,ROSTER,snyd00600,Bob Snyder,19,QB-S-ROH-RDH-LOH-LDH,6-0,205,28,Ohio University,11,0
+nflchib,ROSTER,stan01000,Norm Standlee,22,FB-LB,6-1,238,22,Stanford,9,3
+nflchib,ROSTER,styd00200,Joe Stydahar,13,LOT-LDT,6-4,233,29,West Virginia,7,2
+nflchib,ROSTER,swis00200,Bob Swisher,48,LOH-LDH,5-11,163,27,Northwestern,11,3
+nflchib,ROSTER,turn01100,Bulldog Turner,66,C-LB,6-1,237,22,Hardin-Simmons,11,10
+nflchib,ROSTER,wils06200,George Wilson,30,ROE-RDE-LOE-LDE,6-1,199,27,Northwestern,10,5
+nflchib,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflchib,SCORING,mcaf00400,George McAfee,12,0,0,,0,0,,0,72
+nflchib,SCORING,gall01400,Hugh Gallarneau,11,0,0,,0,0,,0,66
+nflchib,SCORING,kava00200,Ken Kavanaugh,6,1,1,100.0,0,0,,0,37
+nflchib,SCORING,stan01000,Norm Standlee,5,0,0,,0,0,,0,30
+nflchib,SCORING,mani00200,Joe Maniaci,3,8,8,100.0,1,1,100.0,0,29
+nflchib,SCORING,snyd00600,Bob Snyder,0,20,24,83.3,2,2,100.0,0,26
+nflchib,SCORING,osma00200,Bill Osmanski,4,0,0,,0,0,,0,24
+nflchib,SCORING,mcle00600,Ray McLean,3,0,0,,0,0,,0,18
+nflchib,SCORING,sieg00400,Johnny Siegal,3,0,0,,0,0,,0,18
+nflchib,SCORING,swis00200,Bob Swisher,3,0,0,,0,0,,0,18
+nflchib,SCORING,nowa00600,Bob Nowaskey,2,1,2,50.0,0,0,,0,13
+nflchib,SCORING,fami00200,Gary Famiglietti,1,0,0,,0,0,,0,6
+nflchib,SCORING,luck00800,Sid Luckman,1,0,0,,0,0,,0,6
+nflchib,SCORING,nolt00200,Ray Nolting,1,0,0,,0,0,,0,6
+nflchib,SCORING,pool00400,Hamp Pool,1,0,0,,0,0,,0,6
+nflchib,SCORING,arto00200,Lee Artoe,0,3,4,75.0,1,7,14.3,0,6
+nflchib,SCORING,plas00200,Dick Plasman,0,6,9,66.7,0,0,,0,6
+nflchib,SCORING,laha00200,Hal Lahar,0,1,2,50.0,1,1,100.0,0,4
+nflchib,SCORING,styd00200,Joe Stydahar,0,4,4,100.0,0,0,,0,4
+nflchib,SCORING,clar11430,Harry Clarke,0,1,1,100.0,0,0,,0,1
+nflchib,SCORING,,(Team),0,0,1,0.0,0,0,,0,0
+nflchib,SCORING,,Team Totals,56,45,56,80.4,5,11,45.5,0,396
+nflchib,SCORING,,Opponents Totals,20,18,20,90.0,3,7,42.9,0,147
+nflchib,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflchib,FIELD GOALS,snyd00600,Bob Snyder,2,2,100.0,0,34,0/0,1/1,1/1,0/0,0/0
+nflchib,FIELD GOALS,arto00200,Lee Artoe,1,7,14.3,0,25,0/2,1/1,0/2,0/1,0/1
+nflchib,FIELD GOALS,laha00200,Hal Lahar,1,1,100.0,0,20,0/0,1/1,0/0,0/0,0/0
+nflchib,FIELD GOALS,mani00200,Joe Maniaci,1,1,100.0,0,24,0/0,1/1,0/0,0/0,0/0
+nflchib,FIELD GOALS,,Team Totals,5,11,45.5,0,34,1/3,3/3,1/3,0/1,0/1
+nflchib,FIELD GOALS,,Opponents Totals,3,7,42.9,,,0/,0/,2/,1/,0/
+nflchib,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflchib,RUSHING,mcaf00400,George McAfee,65,474,7.3,70t,6
+nflchib,RUSHING,stan01000,Norm Standlee,81,414,5.1,46,5
+nflchib,RUSHING,osma00200,Bill Osmanski,70,371,5.3,23,4
+nflchib,RUSHING,gall01400,Hugh Gallarneau,49,304,6.2,40,8
+nflchib,RUSHING,nolt00200,Ray Nolting,40,169,4.2,28,1
+nflchib,RUSHING,swis00200,Bob Swisher,37,149,4.0,20,0
+nflchib,RUSHING,clar11430,Harry Clarke,28,122,4.4,15,0
+nflchib,RUSHING,fami00200,Gary Famiglietti,36,101,2.8,10,1
+nflchib,RUSHING,mani00200,Joe Maniaci,28,95,3.4,14,3
+nflchib,RUSHING,mcle00600,Ray McLean,13,78,6.0,21,1
+nflchib,RUSHING,luck00800,Sid Luckman,18,18,1.0,20,1
+nflchib,RUSHING,nowa00600,Bob Nowaskey,3,5,1.7,3,0
+nflchib,RUSHING,plas00200,Dick Plasman,1,1,1.0,1,0
+nflchib,RUSHING,snyd00600,Bob Snyder,7,-10,-1.4,13,0
+nflchib,RUSHING,buss01000,Young Bussey,13,-27,-2.1,16,0
+nflchib,RUSHING,,Team Totals,489,2264,4.6,70t,30
+nflchib,RUSHING,,Opponents Totals,373,1076,2.9,,7
+nflchib,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflchib,PASSING,luck00800,Sid Luckman,119,68,57.1,45,1181,9.9,17.4,65,9,7.6,6,5.0,,,,95.3
+nflchib,PASSING,snyd00600,Bob Snyder,28,13,46.4,13,353,12.6,27.2,59t,3,10.7,2,7.1,,,,98.8
+nflchib,PASSING,buss01000,Young Bussey,40,13,32.5,24,353,8.8,27.2,48,5,12.5,3,7.5,,,,74.3
+nflchib,PASSING,nolt00200,Ray Nolting,5,3,60.0,2,71,14.2,23.7,53t,1,20.0,0,0.0,,,,143.8
+nflchib,PASSING,mcaf00400,George McAfee,3,1,33.3,2,44,14.7,44.0,44t,1,33.3,0,0.0,,,,121.5
+nflchib,PASSING,osma00200,Bill Osmanski,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflchib,PASSING,,Team Totals,196,98,50.0,87,2002,10.2,20.4,65,19,9.7,11,5.6,,,,95.2
+nflchib,PASSING,,Opponents Totals,265,106,40.0,125,1463,5.5,13.8,,9,3.4,34,12.8,,,,30.2
+nflchib,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflchib,RECEIVING,plas00200,Dick Plasman,14,283,20.2,42,0
+nflchib,RECEIVING,nowa00600,Bob Nowaskey,12,199,16.6,40t,1
+nflchib,RECEIVING,gall01400,Hugh Gallarneau,11,204,18.5,46t,2
+nflchib,RECEIVING,kava00200,Ken Kavanaugh,11,314,28.5,48,6
+nflchib,RECEIVING,sieg00400,Johnny Siegal,9,220,24.4,65,3
+nflchib,RECEIVING,mcaf00400,George McAfee,7,144,20.6,39t,3
+nflchib,RECEIVING,swis00200,Bob Swisher,6,179,29.8,53t,2
+nflchib,RECEIVING,mcle00600,Ray McLean,5,84,16.8,40,1
+nflchib,RECEIVING,pool00400,Hamp Pool,5,101,20.2,56t,1
+nflchib,RECEIVING,nolt00200,Ray Nolting,4,68,17.0,25,0
+nflchib,RECEIVING,osma00200,Bill Osmanski,4,52,13.0,27,0
+nflchib,RECEIVING,wils06200,George Wilson,4,75,18.8,21,0
+nflchib,RECEIVING,clar11430,Harry Clarke,2,61,30.5,38,0
+nflchib,RECEIVING,mani00200,Joe Maniaci,2,21,10.5,19,0
+nflchib,RECEIVING,stan01000,Norm Standlee,2,-3,-1.5,3,0
+nflchib,RECEIVING,,Team Totals,98,2002,20.4,65,19
+nflchib,RECEIVING,,Opponents Totals,106,1463,13.8,,9
+nflchib,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflchib,INTERCEPTIONS,mcaf00400,George McAfee,6,78,13.0,56,1
+nflchib,INTERCEPTIONS,mcle00600,Ray McLean,3,79,26.3,45,0
+nflchib,INTERCEPTIONS,luck00800,Sid Luckman,3,52,17.3,37,0
+nflchib,INTERCEPTIONS,osma00200,Bill Osmanski,3,19,6.3,19,0
+nflchib,INTERCEPTIONS,fort01000,Danny Fortmann,3,7,2.3,5,0
+nflchib,INTERCEPTIONS,clar11430,Harry Clarke,2,62,31.0,35,0
+nflchib,INTERCEPTIONS,stan01000,Norm Standlee,2,31,15.5,27,0
+nflchib,INTERCEPTIONS,matu00600,Al Matuza,2,9,4.5,9,0
+nflchib,INTERCEPTIONS,buss01000,Young Bussey,2,5,2.5,5,0
+nflchib,INTERCEPTIONS,swis00200,Bob Swisher,1,60,60.0,60t,1
+nflchib,INTERCEPTIONS,styd00200,Joe Stydahar,1,55,55.0,55,0
+nflchib,INTERCEPTIONS,gall01400,Hugh Gallarneau,1,46,46.0,46t,1
+nflchib,INTERCEPTIONS,snyd00600,Bob Snyder,1,24,24.0,24,0
+nflchib,INTERCEPTIONS,turn01100,Bulldog Turner,1,12,12.0,12,0
+nflchib,INTERCEPTIONS,fede00400,John Federovitch,1,8,8.0,8,0
+nflchib,INTERCEPTIONS,kava00200,Ken Kavanaugh,1,6,6.0,6,0
+nflchib,INTERCEPTIONS,hugh00600,Billy Hughes,1,3,3.0,3,0
+nflchib,INTERCEPTIONS,,Team Totals,34,556,16.4,60t,3
+nflchib,INTERCEPTIONS,,Opponents Totals,11,214,19.5,,0
+nflchib,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflchib,PUNTING,luck00800,Sid Luckman,13,534,41.1,52,0,,,,,
+nflchib,PUNTING,mcaf00400,George McAfee,12,430,35.8,55,1,,,,,
+nflchib,PUNTING,stan01000,Norm Standlee,2,126,63.0,70,0,,,,,
+nflchib,PUNTING,snyd00600,Bob Snyder,2,76,38.0,38,0,,,,,
+nflchib,PUNTING,buss01000,Young Bussey,2,74,37.0,41,0,,,,,
+nflchib,PUNTING,gall01400,Hugh Gallarneau,1,0,0.0,0,1,0,0,0,0,0.0
+nflchib,PUNTING,,Team Totals,32,1240,38.8,70,2,,,340,,
+nflchib,PUNTING,,Opponents Totals,56,,,,,,,546,,
+nflchib,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflchib,PUNT RETURNS,swis00200,Bob Swisher,7,,101,14.4,32,0
+nflchib,PUNT RETURNS,mcaf00400,George McAfee,5,,158,31.6,74,1
+nflchib,PUNT RETURNS,clar11430,Harry Clarke,4,,56,14.0,18,0
+nflchib,PUNT RETURNS,nolt00200,Ray Nolting,4,,50,12.5,15,0
+nflchib,PUNT RETURNS,mcle00600,Ray McLean,3,,99,33.0,61t,1
+nflchib,PUNT RETURNS,gall01400,Hugh Gallarneau,2,,36,18.0,26,0
+nflchib,PUNT RETURNS,buss01000,Young Bussey,1,,40,40.0,40,0
+nflchib,PUNT RETURNS,hugh00600,Billy Hughes,1,,6,6.0,6,0
+nflchib,PUNT RETURNS,,Team Totals,27,,546,20.2,74,2
+nflchib,PUNT RETURNS,,Opponents Totals,20,,340,17.0,,1
+nflchib,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflchib,KICKOFF RETURNS,mcaf00400,George McAfee,7,,223,31.9,,1
+nflchib,KICKOFF RETURNS,clar11430,Harry Clarke,5,,158,31.6,,0
+nflchib,KICKOFF RETURNS,nolt00200,Ray Nolting,4,,73,18.3,,0
+nflchib,KICKOFF RETURNS,swis00200,Bob Swisher,2,,70,35.0,,0
+nflchib,KICKOFF RETURNS,gall01400,Hugh Gallarneau,2,,35,17.5,,0
+nflchib,KICKOFF RETURNS,stan01000,Norm Standlee,2,,32,16.0,,0
+nflchib,KICKOFF RETURNS,mcle00600,Ray McLean,2,,31,15.5,,0
+nflchib,KICKOFF RETURNS,luck00800,Sid Luckman,2,,29,14.5,,0
+nflchib,KICKOFF RETURNS,kava00200,Ken Kavanaugh,1,,15,15.0,15,0
+nflchib,KICKOFF RETURNS,osma00200,Bill Osmanski,1,,15,15.0,15,0
+nflchib,KICKOFF RETURNS,turn01100,Bulldog Turner,1,,4,4.0,4,0
+nflchib,KICKOFF RETURNS,,Team Totals,29,,685,23.6,,1
+nflchib,KICKOFF RETURNS,,Opponents Totals,48,,1187,24.7,,1
+nflchib,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflchib,FUMBLES,nowa00600,Bob Nowaskey,,,,,,,1
+nflchib,FUMBLES,,Team Totals,37,19,18,14,32,,1
+nflchib,FUMBLES,,Opponents Totals,26,14,12,19,31,,1
+nflchic,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflchic,ROSTER,apol00400,Ray Apolskis,75,C-LB,5-10,206,23,Marquette,11,7
+nflchic,ROSTER,arms01400,Charley Armstrong,,WB-RDH,5-10,180,22,Mississippi College,1,0
+nflchic,ROSTER,baba00200,Al Babartsky,46,ROT-RDT,6-0,223,26,Fordham,11,8
+nflchic,ROSTER,bake01200,Conway Baker,22,LOT-LDT,5-11,228,30,Centenary,11,4
+nflchic,ROSTER,bala00400,Frank Balazs,44,FB-LB,6-2,212,23,Iowa,9,3
+nflchic,ROSTER,bein00200,Ed Beinor,73,LOT-LDT,6-2,222,24,Notre Dame,7,3
+nflchic,ROSTER,busl00200,Ray Busler,97,ROT-RDT,6-1,222,26,Marquette,8,2
+nflchic,ROSTER,chis00200,Andy Chisick,30,C-LB,6-1,206,25,Villanova,11,4
+nflchic,ROSTER,clem01200,Johnny Clement,23,TB-LDH,6-0,189,22,Southern Methodist,9,4
+nflchic,ROSTER,copp00200,Al Coppage,54,ROE-RDE,6-1,195,25,Oklahoma,7,2
+nflchic,ROSTER,dadd00200,Bill Daddio,32,LOE-LDE-ROE-RDE,5-11,207,25,Pittsburgh,11,3
+nflchic,ROSTER,davi03600,Bill Davis,57,LOT-LDT-ROT-RDT,6-1,234,25,Texas Tech,10,5
+nflchic,ROSTER,dewe00400,Billy Dewell,7,LOE-LDE,6-4,208,24,Southern Methodist,11,8
+nflchic,ROSTER,evan01600,Dick Evans,28,OE-DE,6-3,205,26,Iowa,8,0
+nflchic,ROSTER,gold00200,Marshall Goldberg,89,TB-LDH-FB-LB,5-11,190,24,Pittsburgh,11,10
+nflchic,ROSTER,hall03500,Johnny Hall,77,WB-RDH-TB-LDH,6-0,195,25,Texas Christian,11,7
+nflchic,ROSTER,higg00800,Jim Higgins,25,LDG-LOG,6-1,200,21,Trinity (Texas),5,1
+nflchic,ROSTER,huff02200,Frank Huffman,49,ROG-RDG,6-1,207,26,Marshall,9,3
+nflchic,ROSTER,ivy000200,Pop Ivy,51,ROE-RDE,6-3,208,25,Oklahoma,10,9
+nflchic,ROSTER,john02500,Bert Johnson,21,BB-S-WB-RDH,6-0,212,29,Kentucky,11,3
+nflchic,ROSTER,kuha00200,Joe Kuharich,88,ROG-RDG-LOG-LDG,5-11,197,24,Notre Dame,10,9
+nflchic,ROSTER,kuzm00200,John Kuzman,24,OT-DT,6-1,232,26,Fordham,4,0
+nflchic,ROSTER,loka00200,Joe Lokanc,27,LOG-LDG,5-11,205,24,Northwestern,9,0
+nflchic,ROSTER,mall01400,Ray Mallouf,98,TB-LDH-FB-LB,5-11,180,23,Southern Methodist,8,5
+nflchic,ROSTER,mart06200,John Martin,29,WB-RDH,6-1,195,23,Oklahoma,9,3
+nflchic,ROSTER,mccu01400,Hugh McCullough,33,TB-LDH,6-0,185,25,Oklahoma,7,0
+nflchic,ROSTER,monf00200,Avery Monfort,68,WB-RDH,5-10,178,23,San Bernardino Valley JC; New Mexico,2,0
+nflchic,ROSTER,morr09800,Bob Morrow,48,FB-LB-TB-LDH,6-0,222,23,Illinois Wesleyan,9,0
+nflchic,ROSTER,murp00400,Bill Murphy,25,OG-DG,6-0,203,26,Washington-St. Louis,5,0
+nflchic,ROSTER,park01400,Buddy Parker,15,BB-S,6-0,193,28,Centenary,11,7
+nflchic,ROSTER,popo00800,Milt Popovich,66,LOG-LDG,5-11,196,27,Montana,7,1
+nflchic,ROSTER,shoo00400,Fred Shook,36,OG-DG-C-LB,6-0,218,22,Texas Christian,2,0
+nflchic,ROSTER,vanz00200,Fred Vanzo,73,BB-S,6-2,230,25,Northwestern,3,1
+nflchic,ROSTER,whit01600,Art White,35,LOG-LDG,5-8,217,26,Alabama,9,8
+nflchic,ROSTER,zont00200,Lou Zontini,10,BB-S-WB-RDH,5-8,189,24,Notre Dame,8,1
+nflchic,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflchic,SCORING,gold00200,Marshall Goldberg,4,0,1,0.0,0,0,,0,24
+nflchic,SCORING,hall03500,Johnny Hall,4,0,0,,0,0,,0,24
+nflchic,SCORING,dadd00200,Bill Daddio,0,8,8,100.0,4,8,50.0,0,20
+nflchic,SCORING,ivy000200,Pop Ivy,2,0,0,,0,0,,0,12
+nflchic,SCORING,mart06200,John Martin,2,0,0,,0,0,,0,12
+nflchic,SCORING,clem01200,Johnny Clement,1,0,0,,0,0,,0,6
+nflchic,SCORING,davi03600,Bill Davis,1,0,0,,0,0,,0,6
+nflchic,SCORING,dewe00400,Billy Dewell,1,0,0,,0,0,,0,6
+nflchic,SCORING,john02500,Bert Johnson,1,0,0,,0,0,,0,6
+nflchic,SCORING,morr09800,Bob Morrow,1,0,0,,0,0,,0,6
+nflchic,SCORING,zont00200,Lou Zontini,0,5,6,83.3,0,4,0.0,0,5
+nflchic,SCORING,park01400,Buddy Parker,0,0,2,0.0,0,0,,0,0
+nflchic,SCORING,,Team Totals,17,13,17,76.5,4,12,33.3,0,127
+nflchic,SCORING,,Opponents Totals,28,23,28,82.1,2,6,33.3,0,197
+nflchic,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflchic,FIELD GOALS,dadd00200,Bill Daddio,4,8,50.0,0,32,2/5,1/1,1/2,0/0,0/0
+nflchic,FIELD GOALS,zont00200,Lou Zontini,0,4,0.0,0,,0/3,0/0,0/0,0/1,0/0
+nflchic,FIELD GOALS,,Team Totals,4,12,33.3,0,32,2/8,1/1,1/2,0/1,0/0
+nflchic,FIELD GOALS,,Opponents Totals,2,6,33.3,,,0/,1/,1/,0/,0/
+nflchic,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflchic,RUSHING,gold00200,Marshall Goldberg,117,427,3.6,25,3
+nflchic,RUSHING,hall03500,Johnny Hall,53,165,3.1,24,2
+nflchic,RUSHING,morr09800,Bob Morrow,37,128,3.5,15,1
+nflchic,RUSHING,mall01400,Ray Mallouf,43,104,2.4,15,0
+nflchic,RUSHING,clem01200,Johnny Clement,61,94,1.5,25,1
+nflchic,RUSHING,bala00400,Frank Balazs,21,82,3.9,30,0
+nflchic,RUSHING,mart06200,John Martin,25,56,2.2,17,1
+nflchic,RUSHING,mccu01400,Hugh McCullough,15,22,1.5,14,0
+nflchic,RUSHING,monf00200,Avery Monfort,3,8,2.7,11,0
+nflchic,RUSHING,john02500,Bert Johnson,3,7,2.3,6,0
+nflchic,RUSHING,popo00800,Milt Popovich,5,4,0.8,4,0
+nflchic,RUSHING,dewe00400,Billy Dewell,1,-1,-1.0,-1,0
+nflchic,RUSHING,park01400,Buddy Parker,1,-1,-1.0,-1,0
+nflchic,RUSHING,zont00200,Lou Zontini,1,-9,-9.0,-9,0
+nflchic,RUSHING,,Team Totals,386,1086,2.8,30,8
+nflchic,RUSHING,,Opponents Totals,384,1334,3.5,,13
+nflchic,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflchic,PASSING,mall01400,Ray Mallouf,96,48,50.0,44,725,7.6,15.1,80t,2,2.1,4,4.2,,,,64.8
+nflchic,PASSING,clem01200,Johnny Clement,100,48,48.0,45,690,6.9,14.4,76t,3,3.0,7,7.0,,,,51.7
+nflchic,PASSING,mccu01400,Hugh McCullough,32,12,37.5,15,133,4.2,11.1,35,0,0.0,5,15.6,,,,11.1
+nflchic,PASSING,gold00200,Marshall Goldberg,19,7,36.8,10,110,5.8,15.7,44,1,5.3,2,10.5,,,,34.9
+nflchic,PASSING,hall03500,Johnny Hall,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflchic,PASSING,bala00400,Frank Balazs,4,0,0.0,2,0,0.0,,,0,0.0,2,50.0,,,,0.0
+nflchic,PASSING,,Team Totals,252,117,46.4,115,1658,6.6,14.2,80t,6,2.4,20,7.9,,,,43.1
+nflchic,PASSING,,Opponents Totals,196,90,45.9,90,1305,6.7,14.5,,12,6.1,16,8.2,,,,54.5
+nflchic,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflchic,RECEIVING,dewe00400,Billy Dewell,27,362,13.4,30,1
+nflchic,RECEIVING,ivy000200,Pop Ivy,20,183,9.2,16,0
+nflchic,RECEIVING,gold00200,Marshall Goldberg,16,313,19.6,76t,1
+nflchic,RECEIVING,hall03500,Johnny Hall,16,302,18.9,80t,2
+nflchic,RECEIVING,copp00200,Al Coppage,8,117,14.6,40,0
+nflchic,RECEIVING,park01400,Buddy Parker,7,122,17.4,44,0
+nflchic,RECEIVING,dadd00200,Bill Daddio,5,39,7.8,14,0
+nflchic,RECEIVING,john02500,Bert Johnson,4,90,22.5,29,1
+nflchic,RECEIVING,mart06200,John Martin,4,53,13.3,27t,1
+nflchic,RECEIVING,evan01600,Dick Evans,3,34,11.3,22,0
+nflchic,RECEIVING,bala00400,Frank Balazs,2,17,8.5,9,0
+nflchic,RECEIVING,loka00200,Joe Lokanc,1,2,2.0,2,0
+nflchic,RECEIVING,seym00100,Seymour,1,3,3.0,3,0
+nflchic,RECEIVING,zont00200,Lou Zontini,1,22,22.0,22,0
+nflchic,RECEIVING,,Team Totals,117,1658,14.2,80t,6
+nflchic,RECEIVING,,Opponents Totals,90,1305,14.5,,12
+nflchic,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflchic,INTERCEPTIONS,gold00200,Marshall Goldberg,7,54,7.7,16,0
+nflchic,INTERCEPTIONS,park01400,Buddy Parker,2,8,4.0,7,0
+nflchic,INTERCEPTIONS,john02500,Bert Johnson,1,30,30.0,30,0
+nflchic,INTERCEPTIONS,ivy000200,Pop Ivy,1,20,20.0,20t,1
+nflchic,INTERCEPTIONS,kuha00200,Joe Kuharich,1,20,20.0,20,0
+nflchic,INTERCEPTIONS,chis00200,Andy Chisick,1,7,7.0,7,0
+nflchic,INTERCEPTIONS,apol00400,Ray Apolskis,1,4,4.0,4,0
+nflchic,INTERCEPTIONS,mart06200,John Martin,1,2,2.0,2,0
+nflchic,INTERCEPTIONS,morr09800,Bob Morrow,1,0,0.0,0,0
+nflchic,INTERCEPTIONS,,Team Totals,16,145,9.1,30,1
+nflchic,INTERCEPTIONS,,Opponents Totals,20,340,17.0,,1
+nflchic,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflchic,PUNTING,mall01400,Ray Mallouf,28,1150,41.1,57,0,,,,,
+nflchic,PUNTING,mart06200,John Martin,24,959,40.0,60,0,,,,,
+nflchic,PUNTING,zont00200,Lou Zontini,12,446,37.2,55,0,,,,,
+nflchic,PUNTING,bala00400,Frank Balazs,7,259,37.0,55,0,,,,,
+nflchic,PUNTING,clem01200,Johnny Clement,4,125,31.3,38,0,,,,,
+nflchic,PUNTING,mccu01400,Hugh McCullough,3,122,40.7,43,0,,,,,
+nflchic,PUNTING,kuha00200,Joe Kuharich,1,45,45.0,45,0,,,,,
+nflchic,PUNTING,,Team Totals,79,3106,39.3,60,0,,,552,,
+nflchic,PUNTING,,Opponents Totals,62,,,,,,,311,,
+nflchic,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflchic,PUNT RETURNS,clem01200,Johnny Clement,13,,113,8.7,20,0
+nflchic,PUNT RETURNS,gold00200,Marshall Goldberg,12,,152,12.7,20,0
+nflchic,PUNT RETURNS,mall01400,Ray Mallouf,4,,11,2.8,11,0
+nflchic,PUNT RETURNS,mccu01400,Hugh McCullough,3,,35,11.7,15,0
+nflchic,PUNT RETURNS,,Team Totals,32,,311,9.7,20,0
+nflchic,PUNT RETURNS,,Opponents Totals,45,,552,12.3,,0
+nflchic,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflchic,KICKOFF RETURNS,gold00200,Marshall Goldberg,12,,290,24.2,41,0
+nflchic,KICKOFF RETURNS,hall03500,Johnny Hall,6,,140,23.3,,0
+nflchic,KICKOFF RETURNS,mart06200,John Martin,3,,86,28.7,,0
+nflchic,KICKOFF RETURNS,baba00200,Al Babartsky,3,,57,19.0,,
+nflchic,KICKOFF RETURNS,clem01200,Johnny Clement,2,,42,21.0,,0
+nflchic,KICKOFF RETURNS,mall01400,Ray Mallouf,2,,31,15.5,,0
+nflchic,KICKOFF RETURNS,mccu01400,Hugh McCullough,1,,23,23.0,23,0
+nflchic,KICKOFF RETURNS,bala00400,Frank Balazs,1,,21,21.0,21,0
+nflchic,KICKOFF RETURNS,john02500,Bert Johnson,1,,15,15.0,15,0
+nflchic,KICKOFF RETURNS,,Team Totals,31,,705,22.7,,0
+nflchic,KICKOFF RETURNS,,Opponents Totals,29,,596,20.6,,0
+nflchic,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflchic,FUMBLES,davi03600,Bill Davis,,,,,,,1
+nflchic,FUMBLES,ivy000200,Pop Ivy,,,,,,,1
+nflchic,FUMBLES,,Team Totals,19,12,7,15,22,,2
+nflchic,FUMBLES,,Opponents Totals,27,15,12,12,24,,2
+nflcle,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflcle,ROSTER,adam01550,Chet Adams,34,LOT-LDT,6-3,240,26,Ohio University,11,11
+nflcle,ROSTER,ande00400,Stan Andersen,,LOE-LDE,6-2,218,24,Stanford,5,3
+nflcle,ROSTER,arms01600,Graham Armstrong,18,LOT-LDT,6-3,230,23,John Carroll,8,0
+nflcle,ROSTER,clay00400,Boyd Clay,21,ROT-RDT,6-1,220,26,Tennessee,11,0
+nflcle,ROSTER,conk00400,Bill Conkright,37,C-LB,6-1,203,27,Oklahoma,11,7
+nflcle,ROSTER,davi06750,Corby Davis,3,QB-S-TB-LDH-FB-LB,5-11,212,27,Indiana,8,5
+nflcle,ROSTER,drak00800,Johnny Drake,14,FB-LB,6-1,213,25,Purdue,11,8
+nflcle,ROSTER,duns00600,Moose Dunstan,20,ROT-RDT,6-3,238,26,Marin JC; Santa Clara; Portland,11,11
+nflcle,ROSTER,gall02000,Tony Gallovich,1,WB-RDH,5-9,172,24,Wake Forest,4,0
+nflcle,ROSTER,good04600,Owen Goodnight,16,TB-LDH-FB-LB,6-0,200,24,Hardin-Simmons,10,1
+nflcle,ROSTER,greg01800,Jack Gregory,23,OG-DG,6-2,215,27,Alabama; Tennessee-Chattanooga,7,0
+nflcle,ROSTER,hall04000,Parker Hall,32,TB-LDH,6-0,198,25,Mississippi,10,8
+nflcle,ROSTER,hama00200,Johnny Haman,15,C-LB,6-1,210,23,Northwestern,10,3
+nflcle,ROSTER,hann01600,Chuck Hanneman,31,OE-DE,6-0,212,27,Eastern Michigan,1,0
+nflcle,ROSTER,hers00400,Kirk Hershey,22,OE-DE,6-2,215,23,Carroll (Wisconsin); Cornell,2,0
+nflcle,ROSTER,hick00800,Red Hickey,28,LOE-LDE,6-2,204,24,Arkansas,10,3
+nflcle,ROSTER,jani00200,Len Janiak,38,FB-LB-QB-S,6-1,203,26,Ohio University,10,4
+nflcle,ROSTER,lyma00200,Dell Lyman,1,OT-DT,6-3,223,23,UCLA,4,0
+nflcle,ROSTER,magn00200,Dante Magnani,24,WB-RDH,5-10,182,24,St. Mary's (California),9,8
+nflcle,ROSTER,mahe00600,Frank Maher,9,HB-DH,6-1,195,23,Toledo,2,0
+nflcle,ROSTER,math00850,Riley Matheson,11,ROG-RDG-LOG-LDG,6-2,207,27,Cameron JC; Texas-El Paso,11,6
+nflcle,ROSTER,mcdo05400,Paul McDonough,19,ROE-RDE,6-4,222,25,Utah,10,8
+nflcle,ROSTER,mcga00400,Barney McGarry,30,LOG-LDG,6-1,204,24,Utah,11,11
+nflcle,ROSTER,morr01800,George Morris,4,WB-RDH,5-11,189,22,Baldwin-Wallace,10,3
+nflcle,ROSTER,much00200,Rudy Mucha,27,BB-S-P,6-1,236,23,Washington,10,3
+nflcle,ROSTER,patt00200,Maury Patt,2,LOE-LDE,6-2,205,26,Carnegie Mellon,11,5
+nflcle,ROSTER,proc00200,Ray Prochaska,8,ROE-RDE,6-3,200,22,Nebraska,9,0
+nflcle,ROSTER,riet00200,Bill Rieth,6,OG-DG,5-11,203,25,Carnegie Mellon,8,1
+nflcle,ROSTER,rock01400,Hank Rockwell,17,ROG-RDG,6-4,231,24,Fullerton JC; Arizona State,9,3
+nflcle,ROSTER,seab00600,Charley Seabright,25,BB-S,6-2,204,23,West Virginia,7,2
+nflcle,ROSTER,shir00400,Fred Shirey,36,LOT-LDT,6-2,222,25,Nebraska,3,0
+nflcle,ROSTER,simi00400,Milt Simington,33,ROG-RDG-OT-DT,6-2,217,23,Arkansas,7,0
+nflcle,ROSTER,slov00400,Marty Slovak,5,TB-LDH,5-10,178,25,Toledo,7,2
+nflcle,ROSTER,smit16000,Gaylon Smith,10,FB-LB,5-11,202,25,Southwestern (Tennessee),5,0
+nflcle,ROSTER,thor04000,Wilfred Thorpe,26,ROG-RDG-LOG-LDG-OT-DT,6-3,205,24,Arkansas,5,2
+nflcle,ROSTER,wils06600,Gordon Wilson,21,ROT-RDT,6-0,228,26,Murray State JC; Texas-El Paso,1,0
+nflcle,ROSTER,wils08400,Johnny Wilson,12,ROE-RDE,6-3,202,26,Western Reserve,12,3
+nflcle,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflcle,SCORING,hick00800,Red Hickey,4,0,0,,0,0,,0,24
+nflcle,SCORING,drak00800,Johnny Drake,3,0,0,,0,0,,0,18
+nflcle,SCORING,adam01550,Chet Adams,0,13,15,86.7,1,2,50.0,0,16
+nflcle,SCORING,hall04000,Parker Hall,2,0,0,,0,0,,0,12
+nflcle,SCORING,magn00200,Dante Magnani,2,0,0,,0,0,,0,12
+nflcle,SCORING,mcdo05400,Paul McDonough,2,0,0,,0,0,,0,12
+nflcle,SCORING,duns00600,Moose Dunstan,1,0,0,,0,0,,0,6
+nflcle,SCORING,patt00200,Maury Patt,1,0,0,,0,0,,0,6
+nflcle,SCORING,wils08400,Johnny Wilson,1,0,0,,0,0,,0,6
+nflcle,SCORING,clay00400,Boyd Clay,0,1,1,100.0,1,2,50.0,0,4
+nflcle,SCORING,,Team Totals,16,14,16,87.5,2,4,50.0,0,116
+nflcle,SCORING,,Opponents Totals,34,29,34,85.3,6,15,40.0,0,244
+nflcle,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflcle,FIELD GOALS,adam01550,Chet Adams,1,2,50.0,0,40,0/1,0/0,0/0,1/1,0/0
+nflcle,FIELD GOALS,clay00400,Boyd Clay,1,2,50.0,0,21,0/0,1/2,0/0,0/0,0/0
+nflcle,FIELD GOALS,,Team Totals,2,4,50.0,0,40,0/1,1/2,0/0,1/1,0/0
+nflcle,FIELD GOALS,,Opponents Totals,6,15,40.0,,,2/,3/,1/,0/,0/
+nflcle,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflcle,RUSHING,drak00800,Johnny Drake,101,246,2.4,15,2
+nflcle,RUSHING,hall04000,Parker Hall,57,232,4.1,60,2
+nflcle,RUSHING,slov00400,Marty Slovak,46,132,2.9,14,0
+nflcle,RUSHING,magn00200,Dante Magnani,24,128,5.3,29,0
+nflcle,RUSHING,davi06750,Corby Davis,31,110,3.5,18,0
+nflcle,RUSHING,morr01800,George Morris,24,69,2.9,20,0
+nflcle,RUSHING,smit16000,Gaylon Smith,11,22,2.0,12,0
+nflcle,RUSHING,jani00200,Len Janiak,14,20,1.4,12,0
+nflcle,RUSHING,patt00200,Maury Patt,5,16,3.2,11,0
+nflcle,RUSHING,hick00800,Red Hickey,7,7,1.0,7,0
+nflcle,RUSHING,gall02000,Tony Gallovich,1,1,1.0,1,0
+nflcle,RUSHING,much00200,Rudy Mucha,1,0,0.0,0,0
+nflcle,RUSHING,good04600,Owen Goodnight,21,-54,-2.6,7,0
+nflcle,RUSHING,,Team Totals,343,929,2.7,60,4
+nflcle,RUSHING,,Opponents Totals,436,1553,3.6,,16
+nflcle,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflcle,PASSING,hall04000,Parker Hall,190,84,44.2,87,863,4.5,10.3,39,7,3.7,19,10.0,,,,30.5
+nflcle,PASSING,slov00400,Marty Slovak,54,27,50.0,18,307,5.7,11.4,48t,2,3.7,9,16.7,,,,40.2
+nflcle,PASSING,good04600,Owen Goodnight,36,12,33.3,19,182,5.1,15.2,61,1,2.8,5,13.9,,,,20.6
+nflcle,PASSING,seab00600,Charley Seabright,1,0,0.0,0,0,0.0,,,0,0.0,1,100.0,,,,0.0
+nflcle,PASSING,drak00800,Johnny Drake,2,0,0.0,2,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflcle,PASSING,smit16000,Gaylon Smith,2,0,0.0,1,0,0.0,,,0,0.0,1,50.0,,,,0.0
+nflcle,PASSING,,Team Totals,285,123,43.2,127,1352,4.7,11.0,61,10,3.5,35,12.3,,,,29.9
+nflcle,PASSING,,Opponents Totals,206,90,43.7,101,1425,6.9,15.8,,12,5.8,15,7.3,,,,56.4
+nflcle,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflcle,RECEIVING,hick00800,Red Hickey,21,294,14.0,39,4
+nflcle,RECEIVING,patt00200,Maury Patt,17,163,9.6,25,1
+nflcle,RECEIVING,drak00800,Johnny Drake,16,211,13.2,48t,1
+nflcle,RECEIVING,magn00200,Dante Magnani,14,189,13.5,61,1
+nflcle,RECEIVING,mcdo05400,Paul McDonough,14,198,14.1,26t,2
+nflcle,RECEIVING,davi06750,Corby Davis,13,64,4.9,12,0
+nflcle,RECEIVING,morr01800,George Morris,9,17,1.9,6,0
+nflcle,RECEIVING,seab00600,Charley Seabright,5,44,8.8,14,0
+nflcle,RECEIVING,wils08400,Johnny Wilson,5,115,23.0,57,1
+nflcle,RECEIVING,proc00200,Ray Prochaska,4,29,7.3,11,0
+nflcle,RECEIVING,ande00400,Stan Andersen,2,20,10.0,,0
+nflcle,RECEIVING,jani00200,Len Janiak,2,5,2.5,3,0
+nflcle,RECEIVING,much00200,Rudy Mucha,1,3,3.0,3,0
+nflcle,RECEIVING,,Team Totals,123,1352,11.0,61,10
+nflcle,RECEIVING,,Opponents Totals,90,1425,15.8,,12
+nflcle,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflcle,INTERCEPTIONS,drak00800,Johnny Drake,2,66,33.0,54,0
+nflcle,INTERCEPTIONS,good04600,Owen Goodnight,2,13,6.5,11,0
+nflcle,INTERCEPTIONS,magn00200,Dante Magnani,2,6,3.0,4,0
+nflcle,INTERCEPTIONS,hall04000,Parker Hall,2,0,0.0,0,0
+nflcle,INTERCEPTIONS,jani00200,Len Janiak,1,19,19.0,19,0
+nflcle,INTERCEPTIONS,smit16000,Gaylon Smith,1,16,16.0,16,0
+nflcle,INTERCEPTIONS,rock01400,Hank Rockwell,1,9,9.0,9,0
+nflcle,INTERCEPTIONS,hama00200,Johnny Haman,1,6,6.0,6,0
+nflcle,INTERCEPTIONS,thor04000,Wilfred Thorpe,1,5,5.0,5,0
+nflcle,INTERCEPTIONS,math00850,Riley Matheson,1,1,1.0,1,0
+nflcle,INTERCEPTIONS,conk00400,Bill Conkright,1,0,0.0,0,0
+nflcle,INTERCEPTIONS,,Team Totals,15,141,9.4,54,0
+nflcle,INTERCEPTIONS,,Opponents Totals,35,409,11.7,,3
+nflcle,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflcle,PUNTING,hall04000,Parker Hall,49,1967,40.1,67,0,,,,,
+nflcle,PUNTING,good04600,Owen Goodnight,16,637,39.8,74,0,,,,,
+nflcle,PUNTING,much00200,Rudy Mucha,11,488,44.4,52,0,,,,,
+nflcle,PUNTING,davi06750,Corby Davis,2,75,37.5,38,0,,,,,
+nflcle,PUNTING,smit16000,Gaylon Smith,1,23,23.0,23,0,,,,,
+nflcle,PUNTING,,Team Totals,79,3190,40.4,74,0,,,414,,
+nflcle,PUNTING,,Opponents Totals,68,,,,,,,343,,
+nflcle,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflcle,PUNT RETURNS,hall04000,Parker Hall,13,,125,9.6,25,0
+nflcle,PUNT RETURNS,magn00200,Dante Magnani,5,,54,10.8,25,0
+nflcle,PUNT RETURNS,morr01800,George Morris,5,,33,6.6,10,0
+nflcle,PUNT RETURNS,slov00400,Marty Slovak,4,,30,7.5,18,0
+nflcle,PUNT RETURNS,good04600,Owen Goodnight,2,,27,13.5,22,0
+nflcle,PUNT RETURNS,duns00600,Moose Dunstan,1,,35,35.0,35t,1
+nflcle,PUNT RETURNS,smit16000,Gaylon Smith,1,,33,33.0,33,0
+nflcle,PUNT RETURNS,davi06750,Corby Davis,1,,6,6.0,6,0
+nflcle,PUNT RETURNS,,Team Totals,32,,343,10.7,35t,1
+nflcle,PUNT RETURNS,,Opponents Totals,51,,414,8.1,,1
+nflcle,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflcle,KICKOFF RETURNS,magn00200,Dante Magnani,8,,241,30.1,93t,1
+nflcle,KICKOFF RETURNS,morr01800,George Morris,8,,118,14.8,,
+nflcle,KICKOFF RETURNS,hall04000,Parker Hall,7,,131,18.7,,0
+nflcle,KICKOFF RETURNS,slov00400,Marty Slovak,6,,126,21.0,,0
+nflcle,KICKOFF RETURNS,good04600,Owen Goodnight,5,,103,20.6,,0
+nflcle,KICKOFF RETURNS,drak00800,Johnny Drake,4,,64,16.0,,0
+nflcle,KICKOFF RETURNS,jani00200,Len Janiak,2,,27,13.5,,0
+nflcle,KICKOFF RETURNS,mcdo05400,Paul McDonough,1,,9,9.0,9,0
+nflcle,KICKOFF RETURNS,,Team Totals,41,,820,20.0,,1
+nflcle,KICKOFF RETURNS,,Opponents Totals,18,,484,26.9,,1
+nflcle,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflcle,FUMBLES,,Team Totals,25,18,17,11,28,,0
+nflcle,FUMBLES,,Opponents Totals,20,11,9,8,17,,0
+nfldet,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nfldet,ROSTER,ande00400,Stan Andersen,82,LOE-LDE,6-2,218,24,Stanford,6,3
+nfldet,ROSTER,bati00200,Stan Batinski,65,ROG-RDG,5-10,215,24,Temple,7,3
+nfldet,ROSTER,beli00200,Steve Belichick,30,FB-LB,5-8,190,22,Western Reserve,6,3
+nfldet,ROSTER,boot00400,Dick Booth,11,WB-RDH,6-1,190,23,Western Reserve,11,5
+nfldet,ROSTER,brit01200,Maury Britt,81,OE-DE,6-4,220,22,Arkansas,9,0
+nfldet,ROSTER,call02600,Bill Callihan,25,BB-S,6-2,217,25,Nebraska,11,6
+nfldet,ROSTER,card01200,Lloyd Cardwell,10,WB-RDH,6-2,195,28,Nebraska,4,2
+nfldet,ROSTER,crab00600,Clem Crabtree,72,ROT-RDT,6-2,225,23,Wake Forest,9,3
+nfldet,ROSTER,fisk00200,Bill Fisk,80,ROE-RDE-LOE-LDE,6-0,199,25,Southern California,11,8
+nfldet,ROSTER,furs00200,Tony Furst,73,ROT-RDT-LOT-LDT,6-1,215,23,Dayton,10,6
+nfldet,ROSTER,hann01600,Chuck Hanneman,68,LOE-LDE,6-0,212,27,Eastern Michigan,6,4
+nfldet,ROSTER,hopp00200,Harry Hopp,31,FB-LB,6-0,209,23,Nebraska,10,6
+nfldet,ROSTER,jeff00800,Billy Jefferson,46,TB-LDH,6-2,208,23,Mississippi State,11,2
+nfldet,ROSTER,jett00400,John Jett,82,OE-DE,6-7,225,23,Wake Forest,5,0
+nfldet,ROSTER,lio000200,Augie Lio,61,LOG-LDG,6-0,234,23,Georgetown (DC),11,7
+nfldet,ROSTER,loga00200,Andy Logan,76,OT-DT-C-LB,6-0,230,23,Western Reserve,7,1
+nfldet,ROSTER,math01000,Ned Mathews,12,WB-RDH,5-10,187,23,UCLA,9,1
+nfldet,ROSTER,matt04000,Jack Mattiford,62,ROG-RDG,5-11,210,25,Marshall,10,3
+nfldet,ROSTER,moor10400,Paul Moore,23,BB-S,5-9,207,23,Presbyterian,7,0
+nfldet,ROSTER,nels01200,Bob Nelson,51,C-LB,6-1,214,21,Baylor,9,2
+nfldet,ROSTER,nopp00200,John Noppenberg,14,HB-DH,6-0,196,24,Miami (Florida),3,0
+nfldet,ROSTER,obee00200,Dunc Obee,52,C-LB,5-11,215,23,Dayton,3,0
+nfldet,ROSTER,pars01200,Lloyd Parsons,32,FB-LB,5-11,200,23,Minnesota; Gustavus Adolphus,7,0
+nfldet,ROSTER,pave00200,Ted Pavelec,71,ROT-RDT-LOT-LDT,6-0,218,23,Detroit Mercy,10,2
+nfldet,ROSTER,piep00200,Milt Piepul,33,FB-LB,6-1,215,23,Notre Dame,11,2
+nfldet,ROSTER,pric00400,Cotton Price,42,TB-LDH-QB-S,6-1,182,23,Texas A&M,11,2
+nfldet,ROSTER,rado00800,Bill Radovich,66,ROG-RDG-LOG-LDG,5-9,238,26,Southern California,11,4
+nfldet,ROSTER,schi00200,Alex Schibanoff,79,OT-DT,6-1,218,22,Franklin & Marshall,1,0
+nfldet,ROSTER,szak00200,Paul Szakash,84,ROE-RDE,6-0,215,28,Montana,9,7
+nfldet,ROSTER,toma00800,Lou Tomasetti,15,WB-RDH,6-0,198,25,Bucknell,4,2
+nfldet,ROSTER,trip01400,John Tripson,70,LOT-LDT-ROT-RDT,6-3,220,22,Mississippi State,11,9
+nfldet,ROSTER,urem00200,Emil Uremovich,75,ROT-RDT,6-2,233,25,Indiana,10,1
+nfldet,ROSTER,vanz00200,Fred Vanzo,22,BB-S-WB-RDH,6-2,230,25,Northwestern,6,5
+nfldet,ROSTER,whit14800,Whizzer White,44,TB-LDH,6-1,187,24,Colorado,11,8
+nfldet,ROSTER,wiet00400,John Wiethe,68,ROG-RDG-LOG-LDG,6-0,198,29,Xavier (Ohio),7,5
+nfldet,ROSTER,wojc00200,Alex Wojciechowicz,50,C-LB,5-11,217,26,Fordham,9,9
+nfldet,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nfldet,SCORING,whit14800,Whizzer White,4,0,0,,0,0,,0,24
+nfldet,SCORING,beli00200,Steve Belichick,3,0,0,,0,0,,0,18
+nfldet,SCORING,lio000200,Augie Lio,1,12,13,92.3,0,5,0.0,0,18
+nfldet,SCORING,hann01600,Chuck Hanneman,1,4,4,100.0,1,4,25.0,0,13
+nfldet,SCORING,fisk00200,Bill Fisk,2,0,0,,0,0,,0,12
+nfldet,SCORING,jeff00800,Billy Jefferson,2,0,0,,0,0,,0,12
+nfldet,SCORING,boot00400,Dick Booth,1,0,0,,0,0,,0,6
+nfldet,SCORING,brit01200,Maury Britt,1,0,0,,0,0,,0,6
+nfldet,SCORING,hopp00200,Harry Hopp,1,0,0,,0,0,,0,6
+nfldet,SCORING,math01000,Ned Mathews,1,0,0,,0,0,,0,6
+nfldet,SCORING,,Team Totals,17,16,17,94.1,1,9,11.1,0,121
+nfldet,SCORING,,Opponents Totals,24,24,24,100.0,9,18,50.0,0,195
+nfldet,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nfldet,FIELD GOALS,hann01600,Chuck Hanneman,1,4,25.0,0,8,1/4,0/0,0/0,0/0,0/0
+nfldet,FIELD GOALS,lio000200,Augie Lio,0,5,0.0,0,,0/4,0/0,0/0,0/1,0/0
+nfldet,FIELD GOALS,,Team Totals,1,9,11.1,0,8,1/8,0/0,0/0,0/1,0/0
+nfldet,FIELD GOALS,,Opponents Totals,9,18,50.0,,,2/,4/,2/,1/,0/
+nfldet,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nfldet,RUSHING,whit14800,Whizzer White,89,240,2.7,20,2
+nfldet,RUSHING,hopp00200,Harry Hopp,69,202,2.9,29,1
+nfldet,RUSHING,jeff00800,Billy Jefferson,56,164,2.9,20,1
+nfldet,RUSHING,beli00200,Steve Belichick,28,118,4.2,11,2
+nfldet,RUSHING,boot00400,Dick Booth,29,80,2.8,17,1
+nfldet,RUSHING,piep00200,Milt Piepul,20,56,2.8,13,0
+nfldet,RUSHING,math01000,Ned Mathews,31,56,1.8,16,0
+nfldet,RUSHING,pric00400,Charley Price,16,36,2.3,13,0
+nfldet,RUSHING,card01200,Lloyd Cardwell,10,19,1.9,12,0
+nfldet,RUSHING,pars01200,Lloyd Parsons,5,9,1.8,4,0
+nfldet,RUSHING,toma00800,Lou Tomasetti,6,4,0.7,,0
+nfldet,RUSHING,lio000200,Augie Lio,1,-4,-4.0,-4,0
+nfldet,RUSHING,nopp00200,John Noppenberg,1,-5,-5.0,-5,0
+nfldet,RUSHING,,Team Totals,361,975,2.7,29,7
+nfldet,RUSHING,,Opponents Totals,475,1416,3.0,,14
+nfldet,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nfldet,PASSING,whit14800,Whizzer White,62,22,35.5,35,338,5.5,15.4,47,2,3.2,5,8.1,,,,31.5
+nfldet,PASSING,jeff00800,Billy Jefferson,72,18,25.0,45,181,2.5,10.1,32,0,0.0,9,12.5,,,,0.0
+nfldet,PASSING,pric00400,Charley Price,33,9,27.3,20,112,3.4,12.4,19,0,0.0,4,12.1,,,,1.6
+nfldet,PASSING,boot00400,Dick Booth,8,5,62.5,2,135,16.9,27.0,71,2,25.0,1,12.5,,,,106.3
+nfldet,PASSING,math01000,Ned Mathews,8,3,37.5,5,59,7.4,19.7,27,1,12.5,0,0.0,,,,103.6
+nfldet,PASSING,piep00200,Milt Piepul,1,1,100.0,0,23,23.0,23.0,23,0,0.0,0,0.0,,,,118.8
+nfldet,PASSING,hopp00200,Harry Hopp,3,0,0.0,2,0,0.0,,,0,0.0,1,33.3,,,,0.0
+nfldet,PASSING,,Team Totals,187,58,31.0,109,848,4.5,14.6,71,5,2.7,20,10.7,,,,16.2
+nfldet,PASSING,,Opponents Totals,247,112,45.3,117,1605,6.5,14.3,,9,3.6,18,7.3,,,,48.7
+nfldet,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nfldet,RECEIVING,fisk00200,Bill Fisk,9,140,15.6,32,2
+nfldet,RECEIVING,boot00400,Dick Booth,7,103,14.7,36,0
+nfldet,RECEIVING,math01000,Ned Mathews,6,56,9.3,18,0
+nfldet,RECEIVING,ande00400,Stan Andersen,5,59,11.8,,0
+nfldet,RECEIVING,whit14800,Whizzer White,5,158,31.6,71,1
+nfldet,RECEIVING,call02600,Bill Callihan,4,34,8.5,22,0
+nfldet,RECEIVING,hann01600,Chuck Hanneman,4,48,12.0,46,1
+nfldet,RECEIVING,jett00400,John Jett,4,50,12.5,18,0
+nfldet,RECEIVING,szak00200,Paul Szakash,3,77,25.7,47,0
+nfldet,RECEIVING,hopp00200,Harry Hopp,2,7,3.5,5,0
+nfldet,RECEIVING,jeff00800,Billy Jefferson,2,14,7.0,11,0
+nfldet,RECEIVING,vanz00200,Fred Vanzo,2,20,10.0,12,0
+nfldet,RECEIVING,beli00200,Steve Belichick,1,13,13.0,13,0
+nfldet,RECEIVING,brit01200,Maury Britt,1,45,45.0,45t,1
+nfldet,RECEIVING,matt04000,Jack Mattiford,1,21,21.0,21,0
+nfldet,RECEIVING,pars01200,Lloyd Parsons,1,3,3.0,3,0
+nfldet,RECEIVING,pric00400,Charley Price,1,6,6.0,6,0
+nfldet,RECEIVING,,Team Totals,58,848,14.6,71,5
+nfldet,RECEIVING,,Opponents Totals,112,1605,14.3,,9
+nfldet,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nfldet,INTERCEPTIONS,math01000,Ned Mathews,5,128,25.6,51,1
+nfldet,INTERCEPTIONS,lio000200,Augie Lio,3,12,4.0,8,0
+nfldet,INTERCEPTIONS,wiet00400,John Wiethe,2,8,4.0,8,0
+nfldet,INTERCEPTIONS,whit14800,Whizzer White,1,82,82.0,82t,1
+nfldet,INTERCEPTIONS,nels01200,Bob Nelson,1,41,41.0,41,0
+nfldet,INTERCEPTIONS,boot00400,Dick Booth,1,18,18.0,18,0
+nfldet,INTERCEPTIONS,toma00800,Lou Tomasetti,1,13,13.0,13,0
+nfldet,INTERCEPTIONS,jeff00800,Billy Jefferson,1,12,12.0,12,0
+nfldet,INTERCEPTIONS,beli00200,Steve Belichick,1,10,10.0,10,0
+nfldet,INTERCEPTIONS,hopp00200,Harry Hopp,1,3,3.0,3,0
+nfldet,INTERCEPTIONS,furs00200,Tony Furst,1,0,0.0,0,0
+nfldet,INTERCEPTIONS,,Team Totals,18,327,18.2,82t,2
+nfldet,INTERCEPTIONS,,Opponents Totals,20,215,10.8,,0
+nfldet,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nfldet,PUNTING,whit14800,Whizzer White,48,1997,41.6,63,0,,,,,
+nfldet,PUNTING,jeff00800,Billy Jefferson,20,750,37.5,72,0,,,,,
+nfldet,PUNTING,pric00400,Charley Price,5,191,38.2,60,0,,,,,
+nfldet,PUNTING,hopp00200,Harry Hopp,2,84,42.0,50,0,,,,,
+nfldet,PUNTING,piep00200,Milt Piepul,1,35,35.0,35,0,,,,,
+nfldet,PUNTING,lio000200,Augie Lio,1,28,28.0,28,0,,,,,
+nfldet,PUNTING,math01000,Ned Mathews,1,26,26.0,26,0,,,,,
+nfldet,PUNTING,boot00400,Dick Booth,1,25,25.0,25,0,,,,,
+nfldet,PUNTING,,Team Totals,79,3136,39.7,72,0,,,546,,
+nfldet,PUNTING,,Opponents Totals,67,,,,,,,502,,
+nfldet,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nfldet,PUNT RETURNS,whit14800,Whizzer White,19,,262,13.8,64,0
+nfldet,PUNT RETURNS,jeff00800,Billy Jefferson,7,,69,9.9,23,0
+nfldet,PUNT RETURNS,pric00400,Charley Price,3,,48,16.0,23,0
+nfldet,PUNT RETURNS,card01200,Lloyd Cardwell,3,,25,8.3,12,0
+nfldet,PUNT RETURNS,beli00200,Steve Belichick,1,,77,77.0,77t,1
+nfldet,PUNT RETURNS,toma00800,Lou Tomasetti,1,,18,18.0,18,0
+nfldet,PUNT RETURNS,math01000,Ned Mathews,1,,3,3.0,3,0
+nfldet,PUNT RETURNS,,Team Totals,35,,502,14.3,77t,1
+nfldet,PUNT RETURNS,,Opponents Totals,43,,546,12.7,,1
+nfldet,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nfldet,KICKOFF RETURNS,whit14800,Whizzer White,11,,285,25.9,41,0
+nfldet,KICKOFF RETURNS,math01000,Ned Mathews,9,,233,25.9,31,0
+nfldet,KICKOFF RETURNS,boot00400,Dick Booth,4,,122,30.5,,0
+nfldet,KICKOFF RETURNS,jeff00800,Billy Jefferson,3,,142,47.3,,1
+nfldet,KICKOFF RETURNS,pric00400,Charley Price,2,,51,25.5,,0
+nfldet,KICKOFF RETURNS,jett00400,John Jett,2,,24,12.0,,0
+nfldet,KICKOFF RETURNS,beli00200,Steve Belichick,1,,36,36.0,36,0
+nfldet,KICKOFF RETURNS,card01200,Lloyd Cardwell,1,,22,22.0,22,0
+nfldet,KICKOFF RETURNS,toma00800,Lou Tomasetti,1,,18,18.0,18,0
+nfldet,KICKOFF RETURNS,szak00200,Paul Szakash,1,,17,17.0,17,0
+nfldet,KICKOFF RETURNS,ande00400,Stan Andersen,1,,14,14.0,14,0
+nfldet,KICKOFF RETURNS,lio000200,Augie Lio,1,,7,7.0,7,0
+nfldet,KICKOFF RETURNS,,Team Totals,37,,980,26.5,,1
+nfldet,KICKOFF RETURNS,,Opponents Totals,27,,609,22.6,,0
+nfldet,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nfldet,FUMBLES,lio000200,Augie Lio,,,,,,,1
+nfldet,FUMBLES,,Team Totals,24,11,13,12,25,,1
+nfldet,FUMBLES,,Opponents Totals,20,12,8,11,19,,0
+nflgb,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflgb,ROSTER,adki00050,Bob Adkins,55,BB-S,6-0,214,24,Marshall,7,0
+nflgb,ROSTER,bala00400,Frank Balazs,35,FB-LB,6-2,212,23,Iowa,1,0
+nflgb,ROSTER,broc00400,Charlie Brock,29,C-LB,6-1,207,25,Nebraska,11,3
+nflgb,ROSTER,broc01000,Lou Brock,16,HB-RDH,6-0,195,24,Purdue,11,4
+nflgb,ROSTER,bucc00200,Mike Bucchianeri,33,OG-DG,5-10,212,24,Indiana,1,0
+nflgb,ROSTER,buhl00200,Larry Buhler,52,BB-S,6-2,208,24,Minnesota,11,7
+nflgb,ROSTER,cana00400,Tony Canadeo,3,TB-LDH,5-11,190,22,Gonzaga,9,4
+nflgb,ROSTER,crai00600,Larry Craig,54,BB-S-ROE-RDE,6-1,211,25,South Carolina,10,4
+nflgb,ROSTER,enge00200,Tiny Engebretsen,34,OG-DG,6-1,238,31,Northwestern,1,0
+nflgb,ROSTER,frut00200,Ed Frutig,51,ROE-EDE,6-1,190,21,Michigan,8,2
+nflgb,ROSTER,gold00600,Charles Goldenberg,43,ROG-RDG-LOG-LDG,5-10,220,31,Wisconsin,8,3
+nflgb,ROSTER,gree11200,Tom Greenfield,56,C-LB,6-3,215,24,Arizona,3,0
+nflgb,ROSTER,hink00600,Clarke Hinkle,30,FB-LB,5-11,202,32,Bucknell,11,8
+nflgb,ROSTER,huts00400,Don Hutson,14,LOE-LDE,6-1,183,28,Alabama,11,4
+nflgb,ROSTER,isbe00200,Cecil Isbell,17,TB-LDH,6-1,190,26,Purdue,11,4
+nflgb,ROSTER,jacu00200,Harry Jacunski,48,LOE-LDE,6-2,200,26,Fordham,10,7
+nflgb,ROSTER,jank00600,Eddie Jankowski,7,FB-LB,5-9,201,28,Wisconsin,11,0
+nflgb,ROSTER,john02600,Bill Johnson,50,ROE-RDE,6-1,196,25,Minnesota,4,0
+nflgb,ROSTER,john15650,Howard Johnson,64,ROG-RDG-OT-DT,5-9,197,25,Georgia,10,0
+nflgb,ROSTER,kuus00200,Bill Kuusisto,45,LOG-LDG-ROG-RDG,6-0,228,23,Wisconsin; Minnesota,10,3
+nflgb,ROSTER,laws00200,Joe Laws,24,HB-RDH,5-9,186,30,Iowa,10,4
+nflgb,ROSTER,lee000400,Bill Lee,40,ROT-RDT,6-2,231,30,Alabama,10,4
+nflgb,ROSTER,letl00200,Russ Letlow,46,OG-DG-OT-DT,6-0,214,28,San Francisco,4,0
+nflgb,ROSTER,lyma00200,Dell Lyman,15,LOT-LDT,6-3,223,23,UCLA,4,0
+nflgb,ROSTER,mcla01200,Lee McLaughlin,37,LOG-LDG-ROG-RDG,6-1,225,24,Virginia,10,9
+nflgb,ROSTER,mull02000,Carl Mulleneaux,19,ROE-RSE,6-3,209,27,Utah State,10,0
+nflgb,ROSTER,pann00200,Ernie Pannell,22,LOT-LDT,6-2,220,24,Texas A&M,10,3
+nflgb,ROSTER,pask00400,George Paskvan,68,FB-LB,6-0,190,23,Wisconsin,7,3
+nflgb,ROSTER,ray000400,Baby Ray,44,LOT-LDT,6-6,249,27,Vanderbilt,11,8
+nflgb,ROSTER,ridd00600,Ray Riddick,5,ROE-RDE,6-1,211,24,Fordham,11,9
+nflgb,ROSTER,rohr00600,Herm Rohrig,6,TB-LDH,5-8,190,23,Nebraska,9,0
+nflgb,ROSTER,schu02600,Charlie Schultz,60,ROT-RDT,6-2,231,26,Minnesota,11,7
+nflgb,ROSTER,sven00400,George Svendsen,66,C-LB,6-4,230,28,Oregon State; Minnesota,10,8
+nflgb,ROSTER,tins01000,Pete Tinsley,21,ROG-RDG-LOG-LDG-OT-DT,5-8,205,28,Georgia,9,7
+nflgb,ROSTER,uram00200,Andy Uram,42,TB-LDH-HB-RDH,5-10,188,26,Minnesota,11,3
+nflgb,ROSTER,urba00200,Alex Urban,23,LOE-LDE,6-3,207,24,South Carolina,6,0
+nflgb,ROSTER,vane00400,Hal Van Every,36,HB-RDH-TB-LDH,6-0,195,23,Minnesota,11,3
+nflgb,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflgb,SCORING,huts00400,Don Hutson,12,20,24,83.3,1,1,100.0,0,95
+nflgb,SCORING,hink00600,Clarke Hinkle,6,2,2,100.0,6,14,42.9,0,56
+nflgb,SCORING,cana00400,Tony Canadeo,3,0,0,,0,0,,0,18
+nflgb,SCORING,vane00400,Hal Van Every,3,0,0,,0,0,,0,18
+nflgb,SCORING,broc01000,Lou Brock,2,0,0,,0,0,,0,12
+nflgb,SCORING,mull02000,Carl Mulleneaux,2,0,0,,0,0,,0,12
+nflgb,SCORING,isbe00200,Cecil Isbell,1,0,0,,0,0,,0,6
+nflgb,SCORING,laws00200,Joe Laws,1,0,0,,0,0,,0,6
+nflgb,SCORING,pann00200,Ernie Pannell,1,0,0,,0,0,,0,6
+nflgb,SCORING,uram00200,Andy Uram,1,0,0,,0,0,,0,6
+nflgb,SCORING,urba00200,Alex Urban,1,0,0,,0,0,,0,6
+nflgb,SCORING,jank00600,Eddie Jankowski,0,1,2,50.0,1,1,100.0,0,4
+nflgb,SCORING,rohr00600,Herm Rohrig,0,1,1,100.0,1,1,100.0,0,4
+nflgb,SCORING,enge00200,Tiny Engebretsen,0,0,0,,1,3,33.3,0,3
+nflgb,SCORING,adki00050,Bob Adkins,0,3,3,100.0,0,0,,0,3
+nflgb,SCORING,bala00400,Frank Balazs,0,1,1,100.0,0,0,,0,1
+nflgb,SCORING,,(Team),0,0,0,,0,0,,1,2
+nflgb,SCORING,,Team Totals,33,28,33,84.8,10,20,50.0,1,258
+nflgb,SCORING,,Opponents Totals,16,12,16,75.0,4,12,33.3,0,120
+nflgb,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflgb,FIELD GOALS,hink00600,Clarke Hinkle,6,14,42.9,0,43,1/8,1/1,3/4,1/1,0/0
+nflgb,FIELD GOALS,enge00200,Tiny Engebretsen,1,3,33.3,0,36,0/2,0/0,1/1,0/0,0/0
+nflgb,FIELD GOALS,huts00400,Don Hutson,1,1,100.0,0,13,1/1,0/0,0/0,0/0,0/0
+nflgb,FIELD GOALS,jank00600,Eddie Jankowski,1,1,100.0,0,40,0/0,0/0,0/0,1/1,0/0
+nflgb,FIELD GOALS,rohr00600,Herm Rohrig,1,1,100.0,0,32,0/0,0/0,1/1,0/0,0/0
+nflgb,FIELD GOALS,,Team Totals,10,20,50.0,0,43,2/11,1/1,5/6,2/2,0/0
+nflgb,FIELD GOALS,,Opponents Totals,4,12,33.3,,,0/,3/,1/,0/,0/
+nflgb,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflgb,RUSHING,hink00600,Clarke Hinkle,129,393,3.0,20,5
+nflgb,RUSHING,isbe00200,Cecil Isbell,72,317,4.4,24,1
+nflgb,RUSHING,uram00200,Andy Uram,49,258,5.3,61,0
+nflgb,RUSHING,cana00400,Tony Canadeo,43,137,3.2,16,3
+nflgb,RUSHING,vane00400,Hal Van Every,25,127,5.1,31,2
+nflgb,RUSHING,pask00400,George Paskvan,38,116,3.1,12,0
+nflgb,RUSHING,jank00600,Eddie Jankowski,47,65,1.4,13,0
+nflgb,RUSHING,laws00200,Joe Laws,21,58,2.8,10,0
+nflgb,RUSHING,broc01000,Lou Brock,14,44,3.1,14,0
+nflgb,RUSHING,huts00400,Don Hutson,4,22,5.5,18t,2
+nflgb,RUSHING,frut00200,Ed Frutig,1,11,11.0,11,0
+nflgb,RUSHING,rohr00600,Herm Rohrig,21,2,0.1,18,0
+nflgb,RUSHING,crai00600,Larry Craig,1,1,1.0,1,0
+nflgb,RUSHING,bala00400,Frank Balazs,2,-1,-0.5,1,0
+nflgb,RUSHING,,Team Totals,467,1550,3.3,61,13
+nflgb,RUSHING,,Opponents Totals,356,1221,3.4,,7
+nflgb,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflgb,PASSING,isbe00200,Cecil Isbell,206,117,56.8,78,1479,7.2,12.6,56,15,7.3,11,5.3,,,,81.4
+nflgb,PASSING,vane00400,Hal Van Every,30,11,36.7,17,195,6.5,17.7,44,0,0.0,2,6.7,,,,31.9
+nflgb,PASSING,cana00400,Tony Canadeo,16,4,25.0,12,54,3.4,13.5,18,2,12.5,0,0.0,,,,80.7
+nflgb,PASSING,rohr00600,Herm Rohrig,1,1,100.0,0,3,3.0,3.0,3,0,0.0,0,0.0,,,,79.2
+nflgb,PASSING,,Team Totals,253,133,52.6,107,1731,6.8,13.0,56,17,6.7,13,5.1,,,,75.4
+nflgb,PASSING,,Opponents Totals,233,104,44.6,104,1343,5.8,12.9,80t,8,3.4,25,10.7,,,,35.2
+nflgb,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflgb,RECEIVING,huts00400,Don Hutson,58,738,12.7,45t,10
+nflgb,RECEIVING,broc01000,Lou Brock,22,307,14.0,36t,2
+nflgb,RECEIVING,rohr00600,Herm Rohrig,11,58,5.3,19,0
+nflgb,RECEIVING,mull02000,Carl Mulleneaux,9,216,24.0,56,2
+nflgb,RECEIVING,hink00600,Clarke Hinkle,8,78,9.8,28,1
+nflgb,RECEIVING,uram00200,Andy Uram,6,124,20.7,44,0
+nflgb,RECEIVING,jacu00200,Harry Jacunski,4,48,12.0,27,0
+nflgb,RECEIVING,laws00200,Joe Laws,4,48,12.0,18,1
+nflgb,RECEIVING,ridd00600,Ray Riddick,3,33,11.0,16,0
+nflgb,RECEIVING,crai00600,Larry Craig,2,13,6.5,12,0
+nflgb,RECEIVING,frut00200,Ed Frutig,2,40,20.0,34,0
+nflgb,RECEIVING,urba00200,Alex Urban,2,26,13.0,14,1
+nflgb,RECEIVING,isbe00200,Cecil Isbell,1,-1,-1.0,-1,0
+nflgb,RECEIVING,vane00400,Hal Van Every,1,3,3.0,3,0
+nflgb,RECEIVING,,Team Totals,133,1731,13.0,56,17
+nflgb,RECEIVING,,Opponents Totals,104,1343,12.9,,8
+nflgb,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflgb,INTERCEPTIONS,vane00400,Hal Van Every,3,104,34.7,91,1
+nflgb,INTERCEPTIONS,adki00050,Bob Adkins,2,79,39.5,54,0
+nflgb,INTERCEPTIONS,uram00200,Andy Uram,2,37,18.5,28,0
+nflgb,INTERCEPTIONS,laws00200,Joe Laws,2,36,18.0,36,0
+nflgb,INTERCEPTIONS,cana00400,Tony Canadeo,2,30,15.0,22,0
+nflgb,INTERCEPTIONS,pask00400,George Paskvan,2,6,3.0,4,0
+nflgb,INTERCEPTIONS,broc01000,Lou Brock,2,3,1.5,3,0
+nflgb,INTERCEPTIONS,sven00400,George Svendsen,1,42,42.0,42,0
+nflgb,INTERCEPTIONS,jank00600,Eddie Jankowski,1,33,33.0,33,0
+nflgb,INTERCEPTIONS,huts00400,Don Hutson,1,32,32.0,32,0
+nflgb,INTERCEPTIONS,tins01000,Pete Tinsley,1,24,24.0,24,0
+nflgb,INTERCEPTIONS,rohr00600,Herm Rohrig,1,17,17.0,17,0
+nflgb,INTERCEPTIONS,john15650,Howard Johnson,1,10,10.0,10,0
+nflgb,INTERCEPTIONS,hink00600,Clarke Hinkle,1,2,2.0,2,0
+nflgb,INTERCEPTIONS,gold00600,Charles Goldenberg,1,0,0.0,0,0
+nflgb,INTERCEPTIONS,isbe00200,Cecil Isbell,1,0,0.0,0,0
+nflgb,INTERCEPTIONS,pann00200,Ernie Pannell,1,0,0.0,0,0
+nflgb,INTERCEPTIONS,,Team Totals,25,455,18.2,91,1
+nflgb,INTERCEPTIONS,,Opponents Totals,13,170,13.1,,0
+nflgb,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflgb,PUNTING,hink00600,Clarke Hinkle,22,980,44.5,63,0,,,,,
+nflgb,PUNTING,vane00400,Hal Van Every,13,505,38.8,65,0,,,,,
+nflgb,PUNTING,cana00400,Tony Canadeo,10,405,40.5,62,0,,,,,
+nflgb,PUNTING,rohr00600,Herm Rohrig,5,214,42.8,52,0,,,,,
+nflgb,PUNTING,broc01000,Lou Brock,3,128,42.7,48,0,,,,,
+nflgb,PUNTING,,Team Totals,53,2232,42.1,65,0,,,432,,
+nflgb,PUNTING,,Opponents Totals,58,2367,40.0,,1,,,487,,
+nflgb,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflgb,PUNT RETURNS,broc01000,Lou Brock,15,,153,10.2,45,0
+nflgb,PUNT RETURNS,uram00200,Andy Uram,7,,121,17.3,90t,1
+nflgb,PUNT RETURNS,vane00400,Hal Van Every,4,,58,14.5,20,0
+nflgb,PUNT RETURNS,rohr00600,Herm Rohrig,4,,46,11.5,14,0
+nflgb,PUNT RETURNS,cana00400,Tony Canadeo,4,,26,6.5,10,0
+nflgb,PUNT RETURNS,isbe00200,Cecil Isbell,3,,19,6.3,7,0
+nflgb,PUNT RETURNS,hink00600,Clarke Hinkle,2,,61,30.5,36,0
+nflgb,PUNT RETURNS,laws00200,Joe Laws,2,,3,1.5,3,0
+nflgb,PUNT RETURNS,,Team Totals,41,,487,11.9,90t,1
+nflgb,PUNT RETURNS,,Opponents Totals,31,,432,13.9,77t,1
+nflgb,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflgb,KICKOFF RETURNS,cana00400,Tony Canadeo,4,,110,27.5,55,0
+nflgb,KICKOFF RETURNS,vane00400,Hal Van Every,4,,99,24.8,31,0
+nflgb,KICKOFF RETURNS,broc01000,Lou Brock,4,,94,23.5,36,0
+nflgb,KICKOFF RETURNS,laws00200,Joe Laws,3,,75,25.0,26,0
+nflgb,KICKOFF RETURNS,rohr00600,Herm Rohrig,3,,60,20.0,29,0
+nflgb,KICKOFF RETURNS,hink00600,Clarke Hinkle,3,,38,12.7,16,0
+nflgb,KICKOFF RETURNS,isbe00200,Cecil Isbell,2,,32,16.0,20,0
+nflgb,KICKOFF RETURNS,uram00200,Andy Uram,2,,27,13.5,14,0
+nflgb,KICKOFF RETURNS,ridd00600,Ray Riddick,1,,14,14.0,14,0
+nflgb,KICKOFF RETURNS,buhl00200,Larry Buhler,1,,10,10.0,10,0
+nflgb,KICKOFF RETURNS,huts00400,Don Hutson,1,,8,8.0,8,0
+nflgb,KICKOFF RETURNS,,Team Totals,28,,567,20.3,55,0
+nflgb,KICKOFF RETURNS,,Opponents Totals,39,,880,22.6,51,0
+nflgb,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflgb,FUMBLES,pann00200,Ernie Pannell,,,,,,,1
+nflgb,FUMBLES,,Team Totals,20,11,9,23,32,,1
+nflgb,FUMBLES,,Opponents Totals,41,23,18,11,29,,0
+nflnyg,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflnyg,ROSTER,blaz00400,Tony Blazine,69,ROT-RDT,6-0,232,29,Illinois Wesleyan,11,2
+nflnyg,ROSTER,cope00200,Frank Cope,36,LOT-LDT,6-2,225,26,Santa Clara,11,0
+nflnyg,ROSTER,cuff00200,Ward Cuff,14,WB-RDH,6-1,192,29,Marquette,11,10
+nflnyg,ROSTER,dano00200,Ed Danowski,22,TB-S,6-1,200,30,Fordham,6,0
+nflnyg,ROSTER,defi00200,Lou DeFilippo,55,C-LB,6-2,230,25,Fordham,11,0
+nflnyg,ROSTER,denn01000,Vince Dennery,52,OE-DE,6-0,200,25,Fordham,9,0
+nflnyg,ROSTER,eaki00200,Kay Eakin,12,TB-LDH,6-0,180,24,Arkansas,11,1
+nflnyg,ROSTER,edwa04000,Monk Edwards,60,LOG-LDG-ROT-RDT,6-3,213,21,Baylor,11,10
+nflnyg,ROSTER,eshm00200,Len Eshmont,2,TB-LDH,5-10,179,24,Fordham,9,5
+nflnyg,ROSTER,fala00200,Nello Falaschi,26,QB-S,6-0,195,28,Santa Clara,11,11
+nflnyg,ROSTER,fran02500,George Franck,13,TB-LDH,6-0,180,23,Minnesota,11,3
+nflnyg,ROSTER,glad00200,Chet Gladchuk,11,OT-DT,6-4,247,24,Boston College,7,0
+nflnyg,ROSTER,hein00400,Mel Hein,7,C-LB,6-2,225,32,Washington State,11,11
+nflnyg,ROSTER,horn01000,Dick Horne,49,LOE-LDE,6-2,214,23,Compton JC; Oregon,2,0
+nflnyg,ROSTER,howe01800,Jim Lee Howell,21,ROE-RDE,6-5,210,27,Arkansas,11,11
+nflnyg,ROSTER,leem00200,Tuffy Leemans,4,FB-LB,6-0,195,29,Oregon; George Washington,11,11
+nflnyg,ROSTER,lumm00200,Jack Lummus,29,ROE-RDE,6-3,200,26,Baylor,10,0
+nflnyg,ROSTER,lund00400,Ken Lunday,5,OG-DG-C-LB,6-3,215,29,Northeastern Oklahoma JC; Arkansas,11,0
+nflnyg,ROSTER,mare00400,Andy Marefos,70,FB-LB-WB-RDH,6-0,223,24,St. Mary's (California),10,0
+nflnyg,ROSTER,mccl00400,Clint McClain,17,WB-RDH,5-9,190,23,Weatherford JC; Southern Methodist,6,0
+nflnyg,ROSTER,mell00600,John Mellus,33,LOT-LDT,6-0,214,24,Villanova,11,11
+nflnyg,ROSTER,olde00400,Doug Oldershaw,39,ROG-RDG,6-0,195,26,UC Santa Barbara,10,6
+nflnyg,ROSTER,pede00200,Win Pedersen,66,LOT-LDT-ROT-RDT,6-3,225,26,Minnesota,10,5
+nflnyg,ROSTER,pool01000,Jim Poole,23,LOE-LDE,6-2,218,26,Mississippi,11,11
+nflnyg,ROSTER,prin00400,Dom Principe,25,QB-S,6-0,205,24,Fordham,8,0
+nflnyg,ROSTER,pugh00400,Marion Pugh,30,TB-S,6-1,187,22,Texas A&M,5,0
+nflnyg,ROSTER,reag00400,Frank Reagan,8,TB-LDH-QB-S,5-11,182,22,Pennsylvania,5,2
+nflnyg,ROSTER,shaf00800,Leland Shaffer,20,QB-S,6-2,203,29,Kansas State,9,0
+nflnyg,ROSTER,soar00200,Hank Soar,15,TB-LDH,6-1,209,27,Providence,11,0
+nflnyg,ROSTER,sohn00200,Ben Sohn,44,LOG-LDG,6-3,230,23,Southern California,11,3
+nflnyg,ROSTER,tutt00600,Orville Tuttle,42,LOG-LDG,5-9,210,29,Phillips; Oklahoma City,11,2
+nflnyg,ROSTER,vosb00200,Don Vosberg,49,OE-DE,6-2,190,22,Marquette,7,0
+nflnyg,ROSTER,wall05600,Willie Walls,24,ROE-RDE,6-4,214,29,Texas Christian,11,0
+nflnyg,ROSTER,yeag00200,Howie Yeager,6,WB-RDH,6-0,178,26,UC Santa Barbara,10,1
+nflnyg,ROSTER,youn00200,Len Younce,32,ROG-RDG,6-1,208,24,Oregon State,11,5
+nflnyg,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflnyg,SCORING,cuff00200,Ward Cuff,2,19,20,95.0,5,13,38.5,0,46
+nflnyg,SCORING,mare00400,Andy Marefos,2,6,6,100.0,4,5,80.0,0,30
+nflnyg,SCORING,fran02500,George Franck,4,0,0,,0,0,,0,24
+nflnyg,SCORING,leem00200,Tuffy Leemans,4,0,0,,0,0,,0,24
+nflnyg,SCORING,reag00400,Frank Reagan,4,0,0,,0,0,,0,24
+nflnyg,SCORING,yeag00200,Howie Yeager,4,0,0,,0,0,,0,24
+nflnyg,SCORING,pool01000,Jim Poole,3,0,0,,0,0,,0,18
+nflnyg,SCORING,mccl00400,Clint McClain,2,0,0,,0,0,,0,12
+nflnyg,SCORING,cope00200,Frank Cope,1,0,0,,0,0,,0,6
+nflnyg,SCORING,denn01000,Vince Dennery,1,0,0,,0,0,,0,6
+nflnyg,SCORING,eaki00200,Kay Eakin,1,0,0,,0,1,0.0,0,6
+nflnyg,SCORING,howe01800,Jim Lee Howell,1,0,0,,0,0,,0,6
+nflnyg,SCORING,olde00400,Doug Oldershaw,1,0,0,,0,0,,0,6
+nflnyg,SCORING,pede00200,Win Pedersen,0,0,0,,1,1,100.0,0,3
+nflnyg,SCORING,soar00200,Hank Soar,0,3,3,100.0,0,0,,0,3
+nflnyg,SCORING,pugh00400,Marion Pugh,0,0,1,0.0,0,0,,0,0
+nflnyg,SCORING,,Team Totals,30,28,30,93.3,10,20,50.0,0,238
+nflnyg,SCORING,,Opponents Totals,15,12,15,80.0,4,11,36.4,0,114
+nflnyg,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflnyg,FIELD GOALS,cuff00200,Ward Cuff,5,13,38.5,0,38,2/4,2/4,1/1,0/1,0/3
+nflnyg,FIELD GOALS,mare00400,Andy Marefos,4,5,80.0,0,38,1/2,2/2,1/1,0/0,0/0
+nflnyg,FIELD GOALS,pede00200,Win Pedersen,1,1,100.0,0,27,0/0,1/1,0/0,0/0,0/0
+nflnyg,FIELD GOALS,eaki00200,Kay Eakin,0,1,0.0,0,,0/1,0/0,0/0,0/0,0/0
+nflnyg,FIELD GOALS,,Team Totals,10,20,50.0,0,38,3/7,5/7,2/2,0/1,0/3
+nflnyg,FIELD GOALS,,Opponents Totals,4,11,36.4,,,2/,2/,0/,0/,0/
+nflnyg,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflnyg,RUSHING,leem00200,Tuffy Leemans,100,332,3.3,26,4
+nflnyg,RUSHING,eshm00200,Len Eshmont,50,164,3.3,25,0
+nflnyg,RUSHING,cuff00200,Ward Cuff,28,157,5.6,37,0
+nflnyg,RUSHING,mare00400,Andy Marefos,60,153,2.6,11,2
+nflnyg,RUSHING,reag00400,Frank Reagan,35,146,4.2,21t,4
+nflnyg,RUSHING,fran02500,George Franck,48,101,2.1,17,3
+nflnyg,RUSHING,soar00200,Hank Soar,29,90,3.1,19,0
+nflnyg,RUSHING,yeag00200,Howie Yeager,22,67,3.0,39t,1
+nflnyg,RUSHING,pugh00400,Marion Pugh,24,50,2.1,45,0
+nflnyg,RUSHING,mccl00400,Clint McClain,9,36,4.0,11t,2
+nflnyg,RUSHING,prin00400,Dom Principe,1,5,5.0,5,0
+nflnyg,RUSHING,eaki00200,Kay Eakin,27,-5,-0.2,17,0
+nflnyg,RUSHING,,Team Totals,433,1296,3.0,45,16
+nflnyg,RUSHING,,Opponents Totals,408,1166,2.9,,6
+nflnyg,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflnyg,PASSING,leem00200,Tuffy Leemans,66,31,47.0,30,475,7.2,15.3,44,4,6.1,5,7.6,,,,59.8
+nflnyg,PASSING,dano00200,Ed Danowski,24,12,50.0,10,179,7.5,14.9,65t,2,8.3,2,8.3,,,,67.9
+nflnyg,PASSING,pugh00400,Marion Pugh,24,12,50.0,12,161,6.7,13.4,53t,1,4.2,0,0.0,,,,85.6
+nflnyg,PASSING,eaki00200,Kay Eakin,19,5,26.3,10,71,3.7,14.2,41t,1,5.3,4,21.1,,,,20.6
+nflnyg,PASSING,soar00200,Hank Soar,5,3,60.0,2,75,15.0,25.0,38t,1,20.0,0,0.0,,,,143.8
+nflnyg,PASSING,eshm00200,Len Eshmont,3,2,66.7,1,32,10.7,16.0,16,1,33.3,0,0.0,,,,141.7
+nflnyg,PASSING,mare00400,Andy Marefos,8,2,25.0,5,79,9.9,39.5,65t,1,12.5,1,12.5,,,,68.2
+nflnyg,PASSING,reag00400,Frank Reagan,6,1,16.7,5,16,2.7,16.0,16,0,0.0,0,0.0,,,,39.6
+nflnyg,PASSING,fran02500,George Franck,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflnyg,PASSING,,Team Totals,156,68,43.6,76,1088,7.0,16.0,65t,11,7.1,12,7.7,,,,58.9
+nflnyg,PASSING,,Opponents Totals,218,103,47.2,86,1212,5.6,11.8,,7,3.2,29,13.3,,,,35.7
+nflnyg,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflnyg,RECEIVING,cuff00200,Ward Cuff,19,317,16.7,41t,2
+nflnyg,RECEIVING,yeag00200,Howie Yeager,11,220,20.0,65t,3
+nflnyg,RECEIVING,fran02500,George Franck,8,95,11.9,44t,1
+nflnyg,RECEIVING,pool01000,Jim Poole,6,74,12.3,16t,2
+nflnyg,RECEIVING,eaki00200,Kay Eakin,5,81,16.2,38t,1
+nflnyg,RECEIVING,howe01800,Jim Lee Howell,4,62,15.5,42,1
+nflnyg,RECEIVING,prin00400,Dom Principe,4,54,13.5,28,0
+nflnyg,RECEIVING,wall05600,Willie Walls,4,76,19.0,36,0
+nflnyg,RECEIVING,dano00200,Ed Danowski,1,12,12.0,12,0
+nflnyg,RECEIVING,denn01000,Vince Dennery,1,65,65.0,65t,1
+nflnyg,RECEIVING,eshm00200,Len Eshmont,1,4,4.0,4,0
+nflnyg,RECEIVING,fala00200,Nello Falaschi,1,3,3.0,3,0
+nflnyg,RECEIVING,lumm00200,Jack Lummus,1,5,5.0,5,0
+nflnyg,RECEIVING,mare00400,Andy Marefos,1,5,5.0,5,0
+nflnyg,RECEIVING,shaf00800,Leland Shaffer,1,5,5.0,5,0
+nflnyg,RECEIVING,,Team Totals,68,1088,16.0,65t,11
+nflnyg,RECEIVING,,Opponents Totals,103,1212,11.8,,7
+nflnyg,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflnyg,INTERCEPTIONS,cuff00200,Ward Cuff,4,152,38.0,43,0
+nflnyg,INTERCEPTIONS,fran02500,George Franck,4,94,23.5,45,0
+nflnyg,INTERCEPTIONS,leem00200,Tuffy Leemans,3,35,11.7,26,0
+nflnyg,INTERCEPTIONS,mare00400,Andy Marefos,2,48,24.0,40,0
+nflnyg,INTERCEPTIONS,eaki00200,Kay Eakin,2,33,16.5,33,0
+nflnyg,INTERCEPTIONS,soar00200,Hank Soar,2,31,15.5,31,0
+nflnyg,INTERCEPTIONS,youn00200,Len Younce,2,25,12.5,18,0
+nflnyg,INTERCEPTIONS,mccl00400,Clint McClain,1,34,34.0,34,0
+nflnyg,INTERCEPTIONS,reag00400,Frank Reagan,1,28,28.0,28,0
+nflnyg,INTERCEPTIONS,olde00400,Doug Oldershaw,1,26,26.0,26t,1
+nflnyg,INTERCEPTIONS,glad00200,Chet Gladchuk,1,16,16.0,16,0
+nflnyg,INTERCEPTIONS,pool01000,Jim Poole,1,16,16.0,16,0
+nflnyg,INTERCEPTIONS,fala00200,Nello Falaschi,1,10,10.0,10,0
+nflnyg,INTERCEPTIONS,hein00400,Mel Hein,1,9,9.0,9,0
+nflnyg,INTERCEPTIONS,lund00400,Ken Lunday,1,5,5.0,5,0
+nflnyg,INTERCEPTIONS,shaf00800,Leland Shaffer,1,4,4.0,4,0
+nflnyg,INTERCEPTIONS,pede00200,Win Pedersen,1,3,3.0,3,0
+nflnyg,INTERCEPTIONS,,Team Totals,29,569,19.6,45,1
+nflnyg,INTERCEPTIONS,,Opponents Totals,12,105,8.8,,1
+nflnyg,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflnyg,PUNTING,eaki00200,Kay Eakin,20,949,47.5,71,0,,,,,
+nflnyg,PUNTING,fran02500,George Franck,18,717,39.8,70,0,,,,,
+nflnyg,PUNTING,reag00400,Frank Reagan,13,488,37.5,54,1,,,,,
+nflnyg,PUNTING,eshm00200,Len Eshmont,11,433,39.4,66,0,,,,,
+nflnyg,PUNTING,dano00200,Ed Danowski,2,73,36.5,40,0,,,,,
+nflnyg,PUNTING,,Team Totals,64,2660,41.6,71,1,,,469,,
+nflnyg,PUNTING,,Opponents Totals,75,,,,,,,717,,
+nflnyg,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflnyg,PUNT RETURNS,leem00200,Tuffy Leemans,14,,170,12.1,18,0
+nflnyg,PUNT RETURNS,fran02500,George Franck,13,,194,14.9,31,0
+nflnyg,PUNT RETURNS,eshm00200,Len Eshmont,6,,131,21.8,34,0
+nflnyg,PUNT RETURNS,reag00400,Frank Reagan,6,,113,18.8,27,0
+nflnyg,PUNT RETURNS,soar00200,Hank Soar,4,,54,13.5,30,0
+nflnyg,PUNT RETURNS,yeag00200,Howie Yeager,2,,40,20.0,34,0
+nflnyg,PUNT RETURNS,cuff00200,Ward Cuff,1,,10,10.0,10,0
+nflnyg,PUNT RETURNS,pugh00400,Marion Pugh,1,,5,5.0,5,0
+nflnyg,PUNT RETURNS,,Team Totals,47,,717,15.3,34,0
+nflnyg,PUNT RETURNS,,Opponents Totals,33,,469,14.2,,1
+nflnyg,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflnyg,KICKOFF RETURNS,fran02500,George Franck,4,,120,30.0,,0
+nflnyg,KICKOFF RETURNS,yeag00200,Howie Yeager,3,,89,29.7,,0
+nflnyg,KICKOFF RETURNS,leem00200,Tuffy Leemans,3,,48,16.0,,0
+nflnyg,KICKOFF RETURNS,eshm00200,Len Eshmont,2,,54,27.0,,0
+nflnyg,KICKOFF RETURNS,reag00400,Frank Reagan,2,,50,25.0,,0
+nflnyg,KICKOFF RETURNS,cuff00200,Ward Cuff,2,,46,23.0,,0
+nflnyg,KICKOFF RETURNS,fala00200,Nello Falaschi,2,,32,16.0,,0
+nflnyg,KICKOFF RETURNS,wall05600,Willie Walls,2,,28,14.0,,0
+nflnyg,KICKOFF RETURNS,,Team Totals,20,,467,23.4,,0
+nflnyg,KICKOFF RETURNS,,Opponents Totals,45,,1007,22.4,,0
+nflnyg,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflnyg,FUMBLES,,Team Totals,25,14,11,13,24,,0
+nflnyg,FUMBLES,,Opponents Totals,34,13,21,14,35,,0
+nflphi,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflphi,ROSTER,bant00400,Jack Banta,33,LOH-LDH,5-11,191,24,Southern California,6,5
+nflphi,ROSTER,barn08600,Len Barnum,13,QB-S-ROH-RDH-FB-LB,6-0,200,29,West Virginia Wesleyan,10,8
+nflphi,ROSTER,bart00400,Sam Bartholomew,27,FB-LB,5-11,188,24,Tennessee,8,2
+nflphi,ROSTER,basc00200,Nick Basca,47,LOH-LDH,5-8,170,25,Villanova,11,0
+nflphi,ROSTER,baus00200,Frank Bausch,55,C-LB,6-2,220,33,Kansas,4,4
+nflphi,ROSTER,bjor00400,Bob Bjorklund,50,C-LB,6-2,225,23,Minnesota,7,0
+nflphi,ROSTER,cabr00400,Larry Cabrelli,84,ROE-RDE,5-10,194,24,Colgate,8,2
+nflphi,ROSTER,cast00800,Jim Castiglia,31,FB-LB,5-11,208,23,Georgetown (DC),11,6
+nflphi,ROSTER,cemo00200,Tony Cemore,61,LOG-LDG,6-0,210,24,Creighton,9,1
+nflphi,ROSTER,cont00200,Enio Conti,67,LOG-LDG,5-11,204,28,Bucknell,8,8
+nflphi,ROSTER,desa00200,Dan DeSantis,49,LOH-LDH,6-0,180,23,Niagara,11,4
+nflphi,ROSTER,difi00200,Dave DiFilippo,69,ROG-RDG,5-10,210,25,Villanova,5,2
+nflphi,ROSTER,eibn00200,John Eibner,76,LOT-LDT,6-2,228,27,Kentucky,11,9
+nflphi,ROSTER,feib00200,Bernie Feibish,52,C-LB,6-2,223,22,New York University,3,0
+nflphi,ROSTER,ferr00400,Jack Ferrante,87,OE-DE,6-1,197,25,none,3,0
+nflphi,ROSTER,fox001000,Terry Fox,36,FB-LB,6-1,208,23,Miami (Florida),11,2
+nflphi,ROSTER,fran03800,Joe Frank,70,OT-DT,6-1,217,26,Georgetown (DC),10,0
+nflphi,ROSTER,frit01600,Ralph Fritz,63,LOG-LDG,5-9,202,24,Michigan,10,1
+nflphi,ROSTER,gerb00200,Ed Gerber,62,LOG-LDG,6-0,223,21,Alabama,5,1
+nflphi,ROSTER,ghec00200,Lou Ghecas,11,HB-DH,5-9,175,23,Georgetown (DC),8,0
+nflphi,ROSTER,glod00200,Fred Gloden,37,FB-LB,5-10,187,23,Tulane,7,0
+nflphi,ROSTER,grah02150,Lyle Graham,51,C-LB,6-3,210,26,Richmond,11,7
+nflphi,ROSTER,hers00400,Kirk Hershey,80,OE-DE,6-2,215,23,Carroll (Wisconsin); Cornell,6,0
+nflphi,ROSTER,hink01000,Jack Hinkle,,B,6-0,195,24,Syracuse,1?,0
+nflphi,ROSTER,humb00200,Dick Humbert,81,ROE-RDE,6-1,179,23,Richmond,11,8
+nflphi,ROSTER,krie00600,Bob Krieger,82,LOE-LDE,6-1,190,23,Dartmouth,11,11
+nflphi,ROSTER,land02400,Mort Landsberg,30,ROH-RDH,5-11,180,22,Cornell,11,7
+nflphi,ROSTER,mcaf00800,Wes McAfee,40,LOH-LDH-ROH-RDH,5-11,175,22,Duke,8,1
+nflphi,ROSTER,piro00200,Hank Piro,89,ROE-RDE,6-0,186,24,Syracuse,10,1
+nflphi,ROSTER,raga00200,Phil Ragazzo,77,ROT-RDT,6-0,216,26,Western Reserve,10,10
+nflphi,ROSTER,sear01000,Vic Sears,79,LOT-LDT,6-3,223,23,Oregon State,11,2
+nflphi,ROSTER,shon00200,John Shonk,85,OE-DE,6-1,190,23,West Virginia,9,0
+nflphi,ROSTER,stur00200,Cecil Sturgeon,71,OT-DT,6-2,254,22,North Dakota State,7,0
+nflphi,ROSTER,suff00200,Bob Suffridge,60,ROG-RDG,6-0,205,25,Tennessee,10,9
+nflphi,ROSTER,thom27200,Tommy Thompson,10,QB-S,6-1,192,23,Tulsa,11,5
+nflphi,ROSTER,toma00800,Lou Tomasetti,15,ROH-RDH,6-0,198,25,Bucknell,6,3
+nflphi,ROSTER,watk00600,Foster Watkins,41,LOH-LDH,5-9,166,25,West Texas A&M,11,1
+nflphi,ROSTER,west01800,Hodges West,72,ROT-RDT,6-1,220,23,Tennessee,10,1
+nflphi,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflphi,SCORING,cast00800,Jim Castiglia,4,0,0,,0,0,,0,24
+nflphi,SCORING,humb00200,Dick Humbert,3,0,0,,0,0,,0,18
+nflphi,SCORING,basc00200,Nick Basca,1,9,9,100.0,1,2,50.0,0,18
+nflphi,SCORING,krie00600,Bob Krieger,2,0,0,,0,0,,0,12
+nflphi,SCORING,mcaf00800,Wes McAfee,1,2,2,100.0,0,0,,0,8
+nflphi,SCORING,barn08600,Len Barnum,0,2,2,100.0,2,6,33.3,0,8
+nflphi,SCORING,bant00400,Jack Banta,1,0,0,,0,0,,0,6
+nflphi,SCORING,cabr00400,Larry Cabrelli,1,0,0,,0,0,,0,6
+nflphi,SCORING,piro00200,Hank Piro,1,0,0,,0,0,,0,6
+nflphi,SCORING,thom27200,Tommy Thompson,1,0,0,,0,0,,0,6
+nflphi,SCORING,toma00800,Lou Tomasetti,1,0,0,,0,0,,0,6
+nflphi,SCORING,desa00200,Dan DeSantis,0,1,1,100.0,0,0,,0,1
+nflphi,SCORING,,(Team),0,0,2,0.0,0,0,,0,0
+nflphi,SCORING,,Team Totals,16,14,16,87.5,3,8,37.5,0,119
+nflphi,SCORING,,Opponents Totals,29,27,29,93.1,5,14,35.7,1,218
+nflphi,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflphi,FIELD GOALS,barn08600,Len Barnum,2,6,33.3,1,43,1/3,0/0,0/0,1/3,0/0
+nflphi,FIELD GOALS,basc00200,Nick Basca,1,2,50.0,0,15,1/2,0/0,0/0,0/0,0/0
+nflphi,FIELD GOALS,,Team Totals,3,8,37.5,1,43,2/5,0/0,0/0,1/3,0/0
+nflphi,FIELD GOALS,,Opponents Totals,5,14,35.7,,,1/,1/,3/,0/,0/
+nflphi,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflphi,RUSHING,cast00800,Jim Castiglia,60,183,3.1,47t,4
+nflphi,RUSHING,desa00200,Dan DeSantis,45,125,2.8,26,0
+nflphi,RUSHING,fox001000,Terry Fox,21,97,4.6,13,0
+nflphi,RUSHING,bant00400,Jack Banta,27,92,3.4,,1
+nflphi,RUSHING,bart00400,Sam Bartholomew,21,69,3.3,10,0
+nflphi,RUSHING,land02400,Mort Landsberg,23,69,3.0,33,0
+nflphi,RUSHING,barn08600,Len Barnum,35,64,1.8,20,0
+nflphi,RUSHING,glod00200,Fred Gloden,22,55,2.5,10,0
+nflphi,RUSHING,basc00200,Nick Basca,15,44,2.9,19,1
+nflphi,RUSHING,toma00800,Lou Tomasetti,10,37,3.7,,0
+nflphi,RUSHING,watk00600,Foster Watkins,15,11,0.7,8,0
+nflphi,RUSHING,mcaf00800,Wes McAfee,9,6,0.7,3,0
+nflphi,RUSHING,ghec00200,Lou Ghecas,2,0,0.0,3,0
+nflphi,RUSHING,cont00200,Enio Conti,1,-1,-1.0,-1,0
+nflphi,RUSHING,thom27200,Tommy Thompson,54,-2,0.0,14,0
+nflphi,RUSHING,,Team Totals,360,849,2.4,47t,6
+nflphi,RUSHING,,Opponents Totals,435,1518,3.5,,12
+nflphi,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflphi,PASSING,thom27200,Tommy Thompson,162,86,53.1,62,959,5.9,11.2,50t,8,4.9,14,8.6,,,,51.4
+nflphi,PASSING,barn08600,Len Barnum,55,19,34.5,26,260,4.7,13.7,33,0,0.0,10,18.2,,,,11.0
+nflphi,PASSING,watk00600,Foster Watkins,10,6,60.0,4,62,6.2,10.3,15,1,10.0,0,0.0,,,,111.3
+nflphi,PASSING,desa00200,Dan DeSantis,7,3,42.9,3,78,11.1,26.0,40,1,14.3,1,14.3,,,,84.2
+nflphi,PASSING,mcaf00800,Wes McAfee,4,1,25.0,3,4,1.0,4.0,4,0,0.0,0,0.0,,,,39.6
+nflphi,PASSING,basc00200,Nick Basca,4,0,0.0,3,0,0.0,,,0,0.0,1,25.0,,,,0.0
+nflphi,PASSING,cast00800,Jim Castiglia,7,0,0.0,6,0,0.0,,,0,0.0,1,14.3,,,,0.0
+nflphi,PASSING,,Team Totals,249,115,46.2,107,1367,5.5,11.9,50t,10,4.0,27,10.8,,,,37.2
+nflphi,PASSING,,Opponents Totals,238,100,42.0,117,1369,5.8,13.7,,14,5.9,21,8.8,,,,43.9
+nflphi,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflphi,RECEIVING,humb00200,Dick Humbert,29,332,11.4,33,3
+nflphi,RECEIVING,krie00600,Bob Krieger,19,240,12.6,33,2
+nflphi,RECEIVING,piro00200,Hank Piro,10,141,14.1,26,1
+nflphi,RECEIVING,fox001000,Terry Fox,6,71,11.8,21,0
+nflphi,RECEIVING,land02400,Mort Landsberg,5,51,10.2,19,0
+nflphi,RECEIVING,shon00200,John Shonk,5,52,10.4,14,0
+nflphi,RECEIVING,toma00800,Lou Tomasetti,5,54,10.8,40,1
+nflphi,RECEIVING,cabr00400,Larry Cabrelli,4,90,22.5,50t,1
+nflphi,RECEIVING,cast00800,Jim Castiglia,4,24,6.0,11,0
+nflphi,RECEIVING,desa00200,Dan DeSantis,4,53,13.3,19,0
+nflphi,RECEIVING,thom27200,Tommy Thompson,4,30,7.5,6,1
+nflphi,RECEIVING,watk00600,Foster Watkins,4,36,9.0,16,0
+nflphi,RECEIVING,bart00400,Sam Bartholomew,3,15,5.0,7,0
+nflphi,RECEIVING,mcaf00800,Wes McAfee,3,30,10.0,13,1
+nflphi,RECEIVING,bant00400,Jack Banta,2,42,21.0,37,0
+nflphi,RECEIVING,basc00200,Nick Basca,2,45,22.5,25,0
+nflphi,RECEIVING,ferr00400,Jack Ferrante,2,22,11.0,12,0
+nflphi,RECEIVING,glod00200,Fred Gloden,2,13,6.5,11,0
+nflphi,RECEIVING,barn08600,Len Barnum,1,11,11.0,11,0
+nflphi,RECEIVING,hers00400,Kirk Hershey,1,11,11.0,11,0
+nflphi,RECEIVING,,Team Totals,115,1367,11.9,50t,10
+nflphi,RECEIVING,,Opponents Totals,100,1369,13.7,,14
+nflphi,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflphi,INTERCEPTIONS,basc00200,Nick Basca,3,27,9.0,12,0
+nflphi,INTERCEPTIONS,thom27200,Tommy Thompson,3,24,8.0,14,0
+nflphi,INTERCEPTIONS,land02400,Mort Landsberg,2,45,22.5,37,0
+nflphi,INTERCEPTIONS,grah02150,Lyle Graham,2,39,19.5,18,0
+nflphi,INTERCEPTIONS,desa00200,Dan DeSantis,2,37,18.5,34,0
+nflphi,INTERCEPTIONS,barn08600,Len Barnum,2,20,10.0,20,0
+nflphi,INTERCEPTIONS,feib00200,Bernie Feibish,1,9,9.0,9,0
+nflphi,INTERCEPTIONS,cemo00200,Tony Cemore,1,6,6.0,6,0
+nflphi,INTERCEPTIONS,bart00400,Sam Bartholomew,1,5,5.0,5,0
+nflphi,INTERCEPTIONS,shon00200,John Shonk,1,1,1.0,1,0
+nflphi,INTERCEPTIONS,cast00800,Jim Castiglia,1,0,0.0,0,0
+nflphi,INTERCEPTIONS,humb00200,Dick Humbert,1,0,0.0,0,0
+nflphi,INTERCEPTIONS,piro00200,Hank Piro,1,0,0.0,0,0
+nflphi,INTERCEPTIONS,,Team Totals,21,213,10.1,37,0
+nflphi,INTERCEPTIONS,,Opponents Totals,27,492,18.2,,2
+nflphi,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflphi,PUNTING,barn08600,Len Barnum,41,1788,43.6,68,0,2,,,,
+nflphi,PUNTING,basc00200,Nick Basca,10,348,34.8,45,0,0,,,,
+nflphi,PUNTING,bant00400,Jack Banta,9,412,45.8,67,0,0,,,,
+nflphi,PUNTING,desa00200,Dan DeSantis,7,206,29.4,45,0,0,,,,
+nflphi,PUNTING,thom27200,Tommy Thompson,1,43,43.0,43,0,0,,,,
+nflphi,PUNTING,mcaf00800,Wes McAfee,1,32,32.0,32,0,0,,,,
+nflphi,PUNTING,,Team Totals,69,2829,41.0,68,0,2,,519,,
+nflphi,PUNTING,,Opponents Totals,66,2445,37.0,70,2,1,,210,,
+nflphi,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflphi,PUNT RETURNS,desa00200,Dan DeSantis,9,,80,8.9,18,0
+nflphi,PUNT RETURNS,thom27200,Tommy Thompson,5,,27,5.4,15,0
+nflphi,PUNT RETURNS,mcaf00800,Wes McAfee,3,,21,7.0,13,0
+nflphi,PUNT RETURNS,watk00600,Foster Watkins,3,,17,5.7,8,0
+nflphi,PUNT RETURNS,toma00800,Lou Tomasetti,2,,30,15.0,15,0
+nflphi,PUNT RETURNS,land02400,Mort Landsberg,2,,15,7.5,9,0
+nflphi,PUNT RETURNS,ghec00200,Lou Ghecas,1,,11,11.0,11,0
+nflphi,PUNT RETURNS,basc00200,Nick Basca,1,,8,8.0,8,0
+nflphi,PUNT RETURNS,bart00400,Sam Bartholomew,1,,1,1.0,1,0
+nflphi,PUNT RETURNS,,Team Totals,27,,210,7.8,18,0
+nflphi,PUNT RETURNS,,Opponents Totals,40,,519,13.0,25,0
+nflphi,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflphi,KICKOFF RETURNS,cast00800,Jim Castiglia,7,,199,28.4,72,0
+nflphi,KICKOFF RETURNS,desa00200,Dan DeSantis,6,,144,24.0,30,0
+nflphi,KICKOFF RETURNS,barn08600,Len Barnum,3,,58,19.3,24,0
+nflphi,KICKOFF RETURNS,mcaf00800,Wes McAfee,2,,64,32.0,39,0
+nflphi,KICKOFF RETURNS,bart00400,Sam Bartholomew,2,,56,28.0,45,0
+nflphi,KICKOFF RETURNS,land02400,Mort Landsberg,2,,49,24.5,38,0
+nflphi,KICKOFF RETURNS,piro00200,Hank Piro,1,,33,33.0,33,0
+nflphi,KICKOFF RETURNS,thom27200,Tommy Thompson,1,,23,23.0,23,0
+nflphi,KICKOFF RETURNS,basc00200,Nick Basca,1,,22,22.0,22,0
+nflphi,KICKOFF RETURNS,ghec00200,Lou Ghecas,1,,17,17.0,17,0
+nflphi,KICKOFF RETURNS,watk00600,Foster Watkins,1,,17,17.0,17,0
+nflphi,KICKOFF RETURNS,fox001000,Terry Fox,1,,16,16.0,16,0
+nflphi,KICKOFF RETURNS,shon00200,John Shonk,1,,16,16.0,16,0
+nflphi,KICKOFF RETURNS,humb00200,Dick Humbert,1,,15,15.0,15,0
+nflphi,KICKOFF RETURNS,hink01000,Jack Hinkle,1,,5,5.0,5,0
+nflphi,KICKOFF RETURNS,,Team Totals,31,,734,23.7,72,0
+nflphi,KICKOFF RETURNS,,Opponents Totals,22,,443,20.1,53,0
+nflphi,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflphi,FUMBLES,,Team Totals,24,15,9,10,19,,0
+nflphi,FUMBLES,,Opponents Totals,21,10,11,15,26,,0
+nflpit,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflpit,ROSTER,arno00600,Jay Arnold,34,HB-RDH-BB-S,6-1,210,29,Texas,10,4
+nflpit,ROSTER,bass01800,Dick Bassi,35,ROG-RDG,5-11,214,26,Santa Clara,11,11
+nflpit,ROSTER,brum00200,Boyd Brumbaugh,10,TB-LDH-FB-LB-BB-S,5-11,195,26,Duquesne,10,7
+nflpit,ROSTER,cher01800,Chuck Cherundolo,21,C-LB,6-1,215,25,Penn State,11,9
+nflpit,ROSTER,coom00600,Joe Coomer,24,LOT-LDT-ROT-RDT,6-5,281,24,Texas A&M: Austin,10,6
+nflpit,ROSTER,dods00200,Les Dodson,5,TB-LDH,6-1,180,25,Mississippi,2,0
+nflpit,ROSTER,doll00600,Dick Dolly,32,LOE-LDE,6-3,211,24,West Virginia,8,4
+nflpit,ROSTER,done00200,Al Donelli,3,TB-LDH,5-7,165,24,Duquesne,7,0
+nflpit,ROSTER,doyl00800,Ted Doyle,28,ROT-RDT,6-2,224,27,Nebraska,9,2
+nflpit,ROSTER,hack01250,Elmer Hackney,20,FB-LB,6-1,202,25,Kansas State,11,4
+nflpit,ROSTER,hick00800,Red Hickey,39,OE-DE,6-2,204,24,Arkansas,1,0
+nflpit,ROSTER,hoag00600,Joe Hoague,37,FB-LB-WB-RDH,6-2,203,23,Colgate,10,1
+nflpit,ROSTER,jone01200,Art Jones,12,WB-RDH-TB-LDH,6-2,186,22,Richmond,11,9
+nflpit,ROSTER,kahl00600,Royal Kahler,46,OT-DT,6-2,226,23,Nebraska,8,0
+nflpit,ROSTER,kich00200,Walt Kichefski,45,ROE-RDE-LOE-LDE,6-1,212,25,Miami (Florida),11,5
+nflpit,ROSTER,kolb00400,Elmer Kolberg,8/16,OE-DE-QB-S,6-4,201,25,Oregon State,5,0
+nflpit,ROSTER,loon00200,Don Looney,30,ROE-RDE,6-2,182,25,Texas Christian,9,0
+nflpit,ROSTER,mahe00600,Frank Maher,76,HB-DH,6-1,195,23,Toledo,2,0
+nflpit,ROSTER,mcdo05200,Coley McDonough,11,TB,6-1,189,26,North Carolina State; Dayton,6,1
+nflpit,ROSTER,nery00200,Carl Nery,40,OG-DG,6-0,217,24,Duquesne,10,0
+nflpit,ROSTER,nicc00200,Armand Niccolai,5,LOT-LDT-ROT-RDT,6-2,226,30,Duquesne,8,0
+nflpit,ROSTER,nopp00200,John Noppenberg,50,TB-LDH-WB-RDH,6-0,196,24,Miami (Florida),4,2
+nflpit,ROSTER,patr00600,John Patrick,17,BB-S-FB-LB,6-0,202,23,Penn State,11,8
+nflpit,ROSTER,pirr00200,Rocco Pirro,23,BB-S-C-LB,6-0,226,25,Catholic,11,1
+nflpit,ROSTER,plat00400,George Platukis,33,LOE-LDE,6-0,196,26,Duquesne,11,7
+nflpit,ROSTER,riff00400,Dick Riffle,39/22,TB-LDH-FB-LB,6-1,200,26,Albright,10,7
+nflpit,ROSTER,sand03200,Jack Sanders,55,LOG-LD-ROG-RDG,6-0,219,24,Southern Methodist,10,3
+nflpit,ROSTER,schi01000,Johnny Schiechl,44,C-LB,6-3,244,24,Santa Clara,5,2
+nflpit,ROSTER,schu03000,Elbie Schultz,48,LOG-LDG-LOT-LDT,6-4,252,24,Oregon State,10,9
+nflpit,ROSTER,some00200,George Somers,14,LOT-LDT,6-2,253,26,La Salle,10,5
+nflpit,ROSTER,star03600,Ben Starrett,15,TB-LDH,5-10,213,24,St. Mary's (California); Northeastern Louisiana JC,4,0
+nflpit,ROSTER,wend00800,Joe Wendlick,59,ROE-RDE,6-0,213,26,Oregon State,11,6
+nflpit,ROSTER,will08400,Don Williams,38,OG-DG,5-8,210,22,Texas,6,0
+nflpit,ROSTER,woud00200,John Woudenberg,36,ROT-RDT,6-3,226,23,Denver,11,8
+nflpit,ROSTER,zopp00200,Frank Zoppetti,76,TB-LDH,5-11,185,25,Duquesne,4,0
+nflpit,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflpit,SCORING,jone01200,Art Jones,5,0,0,,0,0,,0,30
+nflpit,SCORING,nicc00200,Armand Niccolai,0,8,9,88.9,2,4,50.0,0,14
+nflpit,SCORING,brum00200,Boyd Brumbaugh,2,0,0,,0,0,,0,12
+nflpit,SCORING,hoag00600,Joe Hoague,2,0,0,,0,0,,0,12
+nflpit,SCORING,riff00400,Dick Riffle,2,0,0,,0,0,,0,12
+nflpit,SCORING,hack01250,Elmer Hackney,1,0,0,,0,0,,0,6
+nflpit,SCORING,kich00200,Walt Kichefski,1,0,0,,0,0,,0,6
+nflpit,SCORING,loon00200,Don Looney,1,0,0,,0,0,,0,6
+nflpit,SCORING,sand03200,Jack Sanders,0,5,5,100.0,0,0,,0,5
+nflpit,SCORING,some00200,George Somers,0,0,0,,0,2,0.0,0,0
+nflpit,SCORING,,Team Totals,14,13,14,92.9,2,6,33.3,0,103
+nflpit,SCORING,,Opponents Totals,38,36,38,94.7,5,12,41.7,0,276
+nflpit,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflpit,FIELD GOALS,nicc00200,Armand Niccolai,2,4,50.0,0,22,1/1,1/3,0/0,0/0,0/0
+nflpit,FIELD GOALS,some00200,George Somers,0,2,0.0,0,,0/2,0/0,0/0,0/0,0/0
+nflpit,FIELD GOALS,,Team Totals,2,6,33.3,0,22,1/3,1/3,0/0,0/0,0/0
+nflpit,FIELD GOALS,,Opponents Totals,5,12,41.7,,,1/,1/,1/,2/,0/
+nflpit,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflpit,RUSHING,riff00400,Dick Riffle,109,388,3.6,54,1
+nflpit,RUSHING,hack01250,Elmer Hackney,63,253,4.0,31,1
+nflpit,RUSHING,jone01200,Art Jones,62,239,3.9,34t,4
+nflpit,RUSHING,brum00200,Boyd Brumbaugh,68,114,1.7,8,2
+nflpit,RUSHING,hoag00600,Joe Hoague,33,112,3.4,29,1
+nflpit,RUSHING,mcdo05200,Coley McDonough,20,64,3.2,28,0
+nflpit,RUSHING,nopp00200,John Noppenberg,10,21,2.1,,0
+nflpit,RUSHING,done00200,Al Donelli,15,20,1.3,7,0
+nflpit,RUSHING,star03600,Ben Starrett,7,9,1.3,15,0
+nflpit,RUSHING,arno00600,Jay Arnold,2,4,2.0,4,0
+nflpit,RUSHING,doll00600,Dick Dolly,1,2,2.0,2,0
+nflpit,RUSHING,pirr00200,Rocco Pirro,1,1,1.0,1,0
+nflpit,RUSHING,dods00200,Les Dodson,2,-4,-2.0,6,0
+nflpit,RUSHING,,Team Totals,393,1223,3.1,54,9
+nflpit,RUSHING,,Opponents Totals,426,1556,3.7,,23
+nflpit,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflpit,PASSING,brum00200,Boyd Brumbaugh,41,13,31.7,20,260,6.3,20.0,72t,2,4.9,8,19.5,,,,31.6
+nflpit,PASSING,mcdo05200,Coley McDonough,41,12,29.3,22,200,4.9,16.7,59,1,2.4,7,17.1,,,,16.0
+nflpit,PASSING,riff00400,Dick Riffle,39,8,20.5,22,88,2.3,11.0,22,1,2.6,9,23.1,,,,8.5
+nflpit,PASSING,jone01200,Art Jones,23,6,26.1,14,86,3.7,14.3,19,0,0.0,3,13.0,,,,3.1
+nflpit,PASSING,done00200,Al Donelli,8,2,25.0,3,13,1.6,6.5,10,1,12.5,3,37.5,,,,39.6
+nflpit,PASSING,dods00200,Les Dodson,8,1,12.5,4,7,0.9,7.0,7,0,0.0,3,37.5,,,,0.0
+nflpit,PASSING,hack01250,Elmer Hackney,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflpit,PASSING,hoag00600,Joe Hoague,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflpit,PASSING,zopp00200,Frank Zoppetti,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflpit,PASSING,star03600,Ben Starrett,2,0,0.0,1,0,0.0,,,0,0.0,1,50.0,,,,0.0
+nflpit,PASSING,nopp00200,John Noppenberg,3,0,0.0,3,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflpit,PASSING,,Team Totals,168,42,25.0,92,654,3.9,15.6,72t,5,3.0,34,20.2,,,,13.6
+nflpit,PASSING,,Opponents Totals,189,84,44.4,86,1168,6.2,13.9,,10,5.3,19,10.1,,,,42.9
+nflpit,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflpit,RECEIVING,loon00200,Don Looney,10,186,18.6,66t,1
+nflpit,RECEIVING,wend00800,Joe Wendlick,7,84,12.0,19,0
+nflpit,RECEIVING,kich00200,Walt Kichefski,5,111,22.2,72t,1
+nflpit,RECEIVING,jone01200,Art Jones,4,121,30.3,59,1
+nflpit,RECEIVING,done00200,Al Donelli,2,25,12.5,14,0
+nflpit,RECEIVING,hoag00600,Joe Hoague,2,21,10.5,14,1
+nflpit,RECEIVING,pirr00200,Rocco Pirro,2,31,15.5,19,0
+nflpit,RECEIVING,plat00400,George Platukis,2,15,7.5,11,0
+nflpit,RECEIVING,riff00400,Dick Riffle,2,24,12.0,14,1
+nflpit,RECEIVING,arno00600,Jay Arnold,1,5,5.0,5,0
+nflpit,RECEIVING,bass01800,Dick Bassi,1,6,6.0,6,0
+nflpit,RECEIVING,brum00200,Boyd Brumbaugh,1,1,1.0,1,0
+nflpit,RECEIVING,hack01250,Elmer Hackney,1,10,10.0,10,0
+nflpit,RECEIVING,kolb00400,Elmer Kolberg,1,2,2.0,2,0
+nflpit,RECEIVING,patr00600,John Patrick,1,12,12.0,12,0
+nflpit,RECEIVING,,Team Totals,42,654,15.6,72t,5
+nflpit,RECEIVING,,Opponents Totals,84,1168,13.9,,10
+nflpit,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflpit,INTERCEPTIONS,jone01200,Art Jones,7,35,5.0,12,0
+nflpit,INTERCEPTIONS,riff00400,Dick Riffle,6,93,15.5,29,0
+nflpit,INTERCEPTIONS,patr00600,John Patrick,1,25,25.0,25,0
+nflpit,INTERCEPTIONS,done00200,Al Donelli,1,18,18.0,18,0
+nflpit,INTERCEPTIONS,cher01800,Chuck Cherundolo,1,13,13.0,13,0
+nflpit,INTERCEPTIONS,pirr00200,Rocco Pirro,1,2,2.0,2,0
+nflpit,INTERCEPTIONS,arno00600,Jay Arnold,1,0,0.0,0,0
+nflpit,INTERCEPTIONS,schi01000,Johnny Schiechl,1,0,0.0,0,0
+nflpit,INTERCEPTIONS,,Team Totals,19,186,9.8,29,0
+nflpit,INTERCEPTIONS,,Opponents Totals,34,596,17.5,,2
+nflpit,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflpit,PUNTING,jone01200,Art Jones,47,1772,37.7,51,0,,,,,
+nflpit,PUNTING,hoag00600,Joe Hoague,17,631,37.1,55,0,,,,,
+nflpit,PUNTING,nopp00200,John Noppenberg,7,270,38.6,44,0,,,,,
+nflpit,PUNTING,mcdo05200,Coley McDonough,7,260,37.1,65,0,,,,,
+nflpit,PUNTING,riff00400,Dick Riffle,7,246,35.1,51,1,,,,,
+nflpit,PUNTING,done00200,Al Donelli,1,41,41.0,41,0,,,,,
+nflpit,PUNTING,dods00200,Les Dodson,1,34,34.0,34,0,,,,,
+nflpit,PUNTING,,Team Totals,87,3254,37.4,65,1,,,516,,
+nflpit,PUNTING,,Opponents Totals,65,,,,,,,372,,
+nflpit,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflpit,PUNT RETURNS,jone01200,Art Jones,14,,232,16.6,61,0
+nflpit,PUNT RETURNS,brum00200,Boyd Brumbaugh,7,,60,8.6,11,0
+nflpit,PUNT RETURNS,riff00400,Dick Riffle,3,,38,12.7,16,0
+nflpit,PUNT RETURNS,mcdo05200,Coley McDonough,2,,28,14.0,23,0
+nflpit,PUNT RETURNS,done00200,Al Donelli,1,,11,11.0,11,0
+nflpit,PUNT RETURNS,hack01250,Elmer Hackney,1,,3,3.0,3,0
+nflpit,PUNT RETURNS,,Team Totals,28,,372,13.3,61,0
+nflpit,PUNT RETURNS,,Opponents Totals,45,,516,11.5,,0
+nflpit,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflpit,KICKOFF RETURNS,brum00200,Boyd Brumbaugh,11,,271,24.6,53,0
+nflpit,KICKOFF RETURNS,riff00400,Dick Riffle,9,,237,26.3,56,0
+nflpit,KICKOFF RETURNS,jone01200,Art Jones,7,,122,17.4,,0
+nflpit,KICKOFF RETURNS,done00200,Al Donelli,4,,83,20.8,,0
+nflpit,KICKOFF RETURNS,mcdo05200,Coley McDonough,4,,77,19.3,,0
+nflpit,KICKOFF RETURNS,star03600,Ben Starrett,2,,42,21.0,,0
+nflpit,KICKOFF RETURNS,nopp00200,John Noppenberg,1,,24,24.0,24,0
+nflpit,KICKOFF RETURNS,kich00200,Walt Kichefski,1,,18,18.0,18,0
+nflpit,KICKOFF RETURNS,hoag00600,Joe Hoague,1,,17,17.0,17,0
+nflpit,KICKOFF RETURNS,loon00200,Don Looney,1,,16,16.0,16,0
+nflpit,KICKOFF RETURNS,patr00600,John Patrick,1,,12,12.0,12,0
+nflpit,KICKOFF RETURNS,sand03200,Jack Sanders,1,,8,8.0,8,0
+nflpit,KICKOFF RETURNS,kahl00600,Royal Kahler,1,,3,3.0,3,0
+nflpit,KICKOFF RETURNS,,Team Totals,44,,930,21.1,,0
+nflpit,KICKOFF RETURNS,,Opponents Totals,21,,536,25.5,,1
+nflpit,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflpit,FUMBLES,,Team Totals,32,15,17,8,25,,0
+nflpit,FUMBLES,,Opponents Totals,17,8,9,15,24,,
+nflwas,ROSTER,,Player,No,Pos,Ht,Wt,Age,College,GP,GS
+nflwas,ROSTER,agui00350,Joe Aguirre,19,LOE-LDE,6-3,225,23,St. Mary's (California),10,1
+nflwas,ROSTER,aldr00250,Ki Aldrich,38,C-LB,6-0,215,25,Texas Christian,11,1
+nflwas,ROSTER,bant00400,Jack Banta,46,HB-DH,5-11,191,24,Southern California,1,0
+nflwas,ROSTER,barb01600,Jim Barber,15,ROT-RDT,6-3,223,29,San Francisco,11,10
+nflwas,ROSTER,baug00200,Sammy Baugh,33,TB-LDH,6-2,182,27,Texas Christian,11,1
+nflwas,ROSTER,bein00200,Ed Beinor,45,OT-DT,6-2,222,24,Notre Dame,4,0
+nflwas,ROSTER,carr06100,Vic Carroll,26,LOG-LDG,6-3,231,29,Pasadena CC; Nevada-Reno,10,0
+nflwas,ROSTER,cife00600,Ed Cifers,43,ROE-RDE,6-1,227,25,Tennessee,11,9
+nflwas,ROSTER,clai00600,Frank Clair,31,ROE-RDE,6-1,204,24,Ohio State,8,1
+nflwas,ROSTER,davi08800,Fred Davis,17,LOT-LDT,6-3,244,22,Alabama,11,1
+nflwas,ROSTER,dow000400,Ken Dow,25,FB-LB,5-10,198,24,Oregon State,2,0
+nflwas,ROSTER,fark00200,Andy Farkas,44,FB-LB,5-10,192,25,Detroit Mercy,10,2
+nflwas,ROSTER,farm00200,Dick Farman,21,LOG-LDG,6-0,219,25,Washington State,11,1
+nflwas,ROSTER,filc00200,Frank Filchock,30,TB-LDH,5-10,193,25,Indiana,11,10
+nflwas,ROSTER,gent01400,Lee Gentry,46,FB-LB,6-0,198,23,Tulsa,5,0
+nflwas,ROSTER,hare00200,Cecil Hare,11,BB-S,5-11,195,22,Gonzaga,11,9
+nflwas,ROSTER,hare00600,Ray Hare,42,BB-S,6-1,205,23,Gonzaga,11,0
+nflwas,ROSTER,hoff00400,Bob Hoffman,45,BB-S,6-1,208,24,Southern California,3,2
+nflwas,ROSTER,just00600,Ed Justice,13,WB-RDH,6-1,200,29,Gonzaga,8,2
+nflwas,ROSTER,krue00200,Al Krueger,14,WB-RDH,6-0,190,22,Southern California,8,0
+nflwas,ROSTER,mast01200,Bob Masterson,28,LOE-LDE,6-1,213,26,Miami (Florida),11,9
+nflwas,ROSTER,mcch00200,Bob McChesney,32,ROE-RDE-LOE-LDE,6-2,195,29,UCLA,11,1
+nflwas,ROSTER,mill17200,Wayne Millner,40,LOE-LDE,6-0,190,30,Notre Dame,11,1
+nflwas,ROSTER,moor13400,Wilbur Moore,35,WB-RDH,5-11,187,25,Minnesota,6,5
+nflwas,ROSTER,seym00200,Bob Seymour,20,WB-RDH,6-2,205,25,Oklahoma,10,2
+nflwas,ROSTER,shug00200,Clyde Shugart,51,ROG-RDG,6-1,220,25,Iowa State,9,9
+nflwas,ROSTER,sliv00200,Steve Slivinski,16,ROG-RDG,5-10,213,24,Washington,11,1
+nflwas,ROSTER,smit16400,George Smith,47,C-LB,6-3,220,27,Glendale CC; California,9,6
+nflwas,ROSTER,stra02200,Clem Stralka,39,LOG-LDG,5-9,215,28,Georgetown (DC),10,10
+nflwas,ROSTER,stua00200,Jim Stuart,27,OG-DG-OT-DT,6-0,212,22,Oregon,6,1
+nflwas,ROSTER,titc00200,Bob Titchenal,18,C-LB,6-2,194,24,Glendale CC; San Jose State,10,4
+nflwas,ROSTER,todd00200,Dick Todd,41,FB-LB,5-10,172,27,Texas A&M,7,6
+nflwas,ROSTER,wilk01600,Willie Wilkin,36,LOT-LDT,6-4,261,25,St. Mary's (California),11,10
+nflwas,ROSTER,youn01800,Bill Young,37,ROT-RDT,6-1,247,27,Alabama,8,1
+nflwas,ROSTER,zimm01600,Roy Zimmerman,22,WB-RDH-FB-LB0TB-LDH,6-2,201,23,San Jose State,9,5
+nflwas,SCORING,,SCORING,TD,X1,X1A,PCT,FG,FGA,PCT,SAF,PTS
+nflwas,SCORING,agui00350,Joe Aguirre,2,8,9,88.9,2,5,40.0,0,26
+nflwas,SCORING,seym00200,Bob Seymour,4,0,0,,0,0,,0,24
+nflwas,SCORING,mast01200,Bob Masterson,1,8,8,100.0,3,6,50.0,0,23
+nflwas,SCORING,fark00200,Andy Farkas,3,0,0,,0,0,,0,18
+nflwas,SCORING,todd00200,Dick Todd,3,0,0,,0,0,,0,18
+nflwas,SCORING,filc00200,Frank Filchock,2,0,0,,0,0,,0,12
+nflwas,SCORING,mcch00200,Bob McChesney,2,0,0,,0,0,,0,12
+nflwas,SCORING,aldr00250,Ki Aldrich,0,4,5,80.0,1,3,33.3,0,7
+nflwas,SCORING,carr06100,Vic Carroll,1,0,0,,0,0,,0,6
+nflwas,SCORING,cife00600,Ed Cifers,1,0,0,,0,0,,0,6
+nflwas,SCORING,hare00600,Ray Hare,1,0,0,,0,0,,0,6
+nflwas,SCORING,just00600,Ed Justice,1,0,0,,0,0,,0,6
+nflwas,SCORING,krue00200,Al Krueger,1,0,0,,0,0,,0,6
+nflwas,SCORING,moor13400,Wilbur Moore,1,0,0,,0,0,,0,6
+nflwas,SCORING,,(Team),0,0,1,0.0,0,0,,0,0
+nflwas,SCORING,,Team Totals,23,20,23,87.0,6,14,42.9,0,176
+nflwas,SCORING,,Opponents Totals,23,19,23,82.6,5,13,38.5,1,174
+nflwas,FIELD GOALS,,FIELD GOALS,MADE,ATT,PCT,BL,LG,1-19,20-29,30-39,40-49,50+
+nflwas,FIELD GOALS,mast01200,Bob Masterson,3,6,50.0,0,28,1/3,2/2,0/0,0/1,0/0
+nflwas,FIELD GOALS,agui00350,Joe Aguirre,2,5,40.0,0,39,0/3,0/0,2/3,0/-1,0/0
+nflwas,FIELD GOALS,aldr00250,Ki Aldrich,1,3,33.3,0,17,1/2,0/0,0/0,0/1,0/0
+nflwas,FIELD GOALS,,Team Totals,6,14,42.9,0,39,2/8,2/2,2/2,0/2,0/0
+nflwas,FIELD GOALS,,Opponents Totals,5,13,38.5,,,3/,1/,1/,0/,0/
+nflwas,RUSHING,,RUSHING,ATT,YDS,AVG,LG,TD
+nflwas,RUSHING,filc00200,Frank Filchock,115,383,3.3,51,1
+nflwas,RUSHING,fark00200,Andy Farkas,85,224,2.6,10,2
+nflwas,RUSHING,todd00200,Dick Todd,55,138,2.5,11,1
+nflwas,RUSHING,seym00200,Bob Seymour,62,137,2.2,17,1
+nflwas,RUSHING,zimm01600,Roy Zimmerman,20,54,2.7,12,0
+nflwas,RUSHING,hare00600,Ray Hare,12,51,4.3,12,1
+nflwas,RUSHING,moor13400,Wilbur Moore,10,48,4.8,42t,1
+nflwas,RUSHING,hare00200,Cecil Hare,5,19,3.8,6,0
+nflwas,RUSHING,baug00200,Sammy Baugh,27,14,0.5,16,0
+nflwas,RUSHING,gent01400,Lee Gentry,5,13,2.6,7,0
+nflwas,RUSHING,mill17200,Wayne Millner,2,8,4.0,8,0
+nflwas,RUSHING,mast01200,Bob Masterson,1,3,3.0,3,0
+nflwas,RUSHING,hoff00400,Bob Hoffman,1,2,2.0,2,0
+nflwas,RUSHING,bant00400,Jack Banta,2,1,0.5,1,0
+nflwas,RUSHING,just00600,Ed Justice,4,-8,-2.0,2,0
+nflwas,RUSHING,,Team Totals,406,1087,2.7,42,7
+nflwas,RUSHING,,Opponents Totals,416,1110,2.7,,7
+nflwas,PASSING,,PASSING,ATT,COM,PCT,INC,YDS,Y/ATT,Y/COM,LG,TD,TD%,INT,INT%,TS,YL,NYP,RTG
+nflwas,PASSING,baug00200,Sammy Baugh,193,106,54.9,68,1236,6.4,11.7,55,10,5.2,19,9.8,,,,52.2
+nflwas,PASSING,filc00200,Frank Filchock,68,28,41.2,29,327,4.8,11.7,35,1,1.5,11,16.2,,,,21.8
+nflwas,PASSING,zimm01600,Roy Zimmerman,1,0,0.0,1,0,0.0,,,0,0.0,0,0.0,,,,39.6
+nflwas,PASSING,,Team Totals,262,134,51.1,98,1563,6.0,11.7,55,11,4.2,30,11.5,,,,44.0
+nflwas,PASSING,,Opponents Totals,229,103,45.0,103,1338,5.8,13.0,,15,6.6,23,10.0,,,,46.2
+nflwas,RECEIVING,,RECEIVING,REC,YDS,AVG,LG,TD
+nflwas,RECEIVING,mill17200,Wayne Millner,20,262,13.1,55,0
+nflwas,RECEIVING,mcch00200,Bob McChesney,19,213,11.2,26t,2
+nflwas,RECEIVING,fark00200,Andy Farkas,12,77,6.4,44,0
+nflwas,RECEIVING,hare00600,Ray Hare,12,87,7.3,18,0
+nflwas,RECEIVING,mast01200,Bob Masterson,11,135,12.3,25,1
+nflwas,RECEIVING,agui00350,Joe Aguirre,10,103,10.3,17,2
+nflwas,RECEIVING,cife00600,Ed Cifers,10,94,9.4,19,1
+nflwas,RECEIVING,just00600,Ed Justice,8,149,18.6,36,1
+nflwas,RECEIVING,todd00200,Dick Todd,8,125,15.6,25,1
+nflwas,RECEIVING,krue00200,Al Krueger,7,123,17.6,35,1
+nflwas,RECEIVING,seym00200,Bob Seymour,6,85,14.2,41,2
+nflwas,RECEIVING,zimm01600,Roy Zimmerman,5,36,7.2,11,0
+nflwas,RECEIVING,clai00600,Frank Clair,2,12,6.0,9,0
+nflwas,RECEIVING,moor13400,Wilbur Moore,2,6,3.0,5,0
+nflwas,RECEIVING,carr06100,Vic Carroll,1,31,31.0,31,0
+nflwas,RECEIVING,hare00200,Cecil Hare,1,25,25.0,25,0
+nflwas,RECEIVING,,Team Totals,134,1563,11.7,55,11
+nflwas,RECEIVING,,Opponents Totals,103,1338,13.0,,15
+nflwas,INTERCEPTIONS,,INTERCEPTIONS,INT,YDS,AVG,LG,TD
+nflwas,INTERCEPTIONS,baug00200,Sammy Baugh,4,83,20.8,35,0
+nflwas,INTERCEPTIONS,fark00200,Andy Farkas,4,27,6.8,26,0
+nflwas,INTERCEPTIONS,aldr00250,Ki Aldrich,2,46,23.0,40,0
+nflwas,INTERCEPTIONS,carr06100,Vic Carroll,2,38,19.0,30t,1
+nflwas,INTERCEPTIONS,seym00200,Bob Seymour,2,36,18.0,20,0
+nflwas,INTERCEPTIONS,just00600,Ed Justice,2,13,6.5,13,0
+nflwas,INTERCEPTIONS,titc00200,Bob Titchenal,2,3,1.5,3,0
+nflwas,INTERCEPTIONS,sliv00200,Steve Slivinski,1,20,20.0,20,0
+nflwas,INTERCEPTIONS,krue00200,Al Krueger,1,12,12.0,12,0
+nflwas,INTERCEPTIONS,gent01400,Lee Gentry,1,9,9.0,9,0
+nflwas,INTERCEPTIONS,hare00200,Cecil Hare,1,4,4.0,4,0
+nflwas,INTERCEPTIONS,mast01200,Bob Masterson,1,0,0.0,0,0
+nflwas,INTERCEPTIONS,,Team Totals,23,291,12.7,40,1
+nflwas,INTERCEPTIONS,,Opponents Totals,30,302,10.1,,0
+nflwas,PUNTING,,PUNTING,NO,YDS,AVG,LG,BL,TB,I20,RYDS,NYDS,NET
+nflwas,PUNTING,baug00200,Sammy Baugh,30,1462,48.7,75,0,,,,,
+nflwas,PUNTING,zimm01600,Roy Zimmerman,14,594,42.4,65,1,,,,,
+nflwas,PUNTING,todd00200,Dick Todd,10,435,43.5,61,0,,,,,
+nflwas,PUNTING,filc00200,Frank Filchock,1,35,35.0,35,0,,,,,
+nflwas,PUNTING,,Team Totals,55,2526,45.9,75,1,,,351,,
+nflwas,PUNTING,,Opponents Totals,65,,,,,,,675,,
+nflwas,PUNT RETURNS,,PUNT RETURNS,NO,FC,YDS,AVG,LG,TD
+nflwas,PUNT RETURNS,todd00200,Dick Todd,14,,238,17.0,73,1
+nflwas,PUNT RETURNS,fark00200,Andy Farkas,14,,152,10.9,59,1
+nflwas,PUNT RETURNS,seym00200,Bob Seymour,10,,128,12.8,25,0
+nflwas,PUNT RETURNS,filc00200,Frank Filchock,7,,157,22.4,68,1
+nflwas,PUNT RETURNS,,Team Totals,45,,675,15.0,73,3
+nflwas,PUNT RETURNS,,Opponents Totals,28,,351,12.5,,0
+nflwas,KICKOFF RETURNS,,KICKOFF RETURNS,NO,FC,YDS,AVG,LG,TD
+nflwas,KICKOFF RETURNS,fark00200,Andy Farkas,6,,105,17.5,,0
+nflwas,KICKOFF RETURNS,filc00200,Frank Filchock,5,,126,25.2,,
+nflwas,KICKOFF RETURNS,seym00200,Bob Seymour,3,,96,32.0,,0
+nflwas,KICKOFF RETURNS,todd00200,Dick Todd,3,,58,19.3,,0
+nflwas,KICKOFF RETURNS,hare00600,Ray Hare,3,,57,19.0,,0
+nflwas,KICKOFF RETURNS,just00600,Ed Justice,2,,49,24.5,,0
+nflwas,KICKOFF RETURNS,mast01200,Bob Masterson,2,,20,10.0,,0
+nflwas,KICKOFF RETURNS,cife00600,Ed Cifers,2,,0,0.0,,0
+nflwas,KICKOFF RETURNS,krue00200,Al Krueger,1,,23,23.0,23,0
+nflwas,KICKOFF RETURNS,moor13400,Wilbur Moore,1,,21,21.0,21,0
+nflwas,KICKOFF RETURNS,,Team Totals,28,,580,20.7,,0
+nflwas,KICKOFF RETURNS,,Opponents Totals,36,,698,19.4,,0
+nflwas,FUMBLES,,FUMBLES,NO,LOST,OWN,OPP,REC,YDS,TD
+nflwas,FUMBLES,,Team Totals,23,11,12,12,24,,0
+nflwas,FUMBLES,,Opponents Totals,33,12,21,11,32,,1

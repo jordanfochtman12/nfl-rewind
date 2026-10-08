@@ -21,6 +21,7 @@ import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { KitChips } from "./KitChips";
 import { PlayerLink } from "./PlayerProfile";
+import { FollowButton, FranchisePanel } from "./HistoryLive";
 
 type View = "overview" | "roster" | "schedule";
 
@@ -30,6 +31,7 @@ export function TeamRosterModal() {
   const viewTeamId = useGameStore((s) => s.viewTeamId);
   const closeTeam = useGameStore((s) => s.closeTeam);
   const openProfile = useGameStore((s) => s.openProfile);
+  const openBox = useGameStore((s) => s.openBox);
   const [view, setView] = useState<View>("overview");
   const [pos, setPos] = useState("");
 
@@ -128,6 +130,7 @@ export function TeamRosterModal() {
               {titles.length ? ` · ${titles.length} title${titles.length === 1 ? "" : "s"}` : ""}
             </p>
           </div>
+          <FollowButton teamId={id} className="max-sm:px-2" />
           <button
             type="button"
             onClick={closeTeam}
@@ -148,6 +151,7 @@ export function TeamRosterModal() {
         <div className="overflow-auto">
           {view === "overview" && (
             <div className="grid gap-4 p-4 md:grid-cols-2">
+              {save.realHistory && <FranchisePanel id={id} />}
               <section className="rounded-lg border border-line bg-surface p-3">
                 <p className="text-xs tracking-[0.25em] text-muted">Front office</p>
                 <dl className="mt-2 grid grid-cols-[6rem_1fr] gap-y-1 text-sm">
@@ -338,7 +342,11 @@ export function TeamRosterModal() {
                     <span className="w-6 text-xs text-subtle">{home ? "vs" : "at"}</span>
                     <Logo id={opp} size={22} year={year} />
                     <span className="flex-1 font-display text-xs font-bold uppercase italic text-white">{teamAbbr(opp)}</span>
-                    {g.played ? (
+                    {g.played && save.realHistory ? (
+                      <button type="button" className={`tabular min-h-9 underline decoration-line hover:text-brass ${res === "W" ? "text-good" : res === "L" ? "text-red" : "text-paper"}`} onClick={() => openBox(g)}>
+                        {res} {us}-{them} · box
+                      </button>
+                    ) : g.played ? (
                       <span className={`tabular ${res === "W" ? "text-good" : res === "L" ? "text-red" : "text-paper"}`}>
                         {res} {us}-{them}
                       </span>
