@@ -4,6 +4,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { OfflineSupport } from "@/components/offline";
 import appCss from "../styles.css?url";
 import broadcastCss from "../broadcast-next.css?url";
+import nfl2k5Css from "../nfl2k5.css?url";
 
 const APP_NAME = "NFL Rewind";
 
@@ -20,6 +21,7 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=rewind-next" },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: broadcastCss },
+      { rel: "stylesheet", href: nfl2k5Css },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
     ],
