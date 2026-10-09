@@ -31,6 +31,9 @@ import {
   kickoffRules,
   kickoffTbRate,
   otRules,
+  otCall,
+  fgSnapYards,
+  missedFgSpot,
   penaltyRates,
   playoffBrake,
   replayReview,
@@ -48,7 +51,7 @@ import {
 } from "./era.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { ARC_DATA_LAST } from "./careerArc.ts";
-import { activeTeamIds, conferenceOf, divisionKey, gamesInSeason, originalLeague } from "./teams.ts";
+import { activeTeamIds, conferenceOf, divisionKey, gamesInSeason, nicknameOf, originalLeague } from "./teams.ts";
 import { emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
@@ -56,6 +59,7 @@ import { maybeReveal } from "./scout.ts";
 import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueInfo, type Wx } from "./venues.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { checkGameRecords } from "./records.ts";
+import { focusMatchesReport, keyMatchups, practiceFor, type KeyMatchup, type PracticeFocus } from "./gameday.ts";
 import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, staffPlan } from "./gameplans.ts";
@@ -355,6 +359,7 @@ interface OpenPlay {
   spot: number;
   bumps: [string, Partial<BoxPlayer>][];
   notes: string[];
+  cue?: PlayLog["cue"];
 }
 
 /** One line of play-by-play from the stat events of a snap. */
@@ -625,11 +630,14 @@ type Call = "run" | "short" | "med" | "deep" | "screen" | "draw" | "pa" | "sneak
 
 /** Protect a trailing team's final possession before ordinary era/coach tendencies. */
 export function finalPossessionCall(
-  q: number, clock: number, down: number, spot: number, trail: number, kickRange: number,
+  q: number, clock: number, down: number, spot: number, trail: number, kickRange: number, snapYards = 17,
 ): Call | undefined {
-  if (q < 4 || clock > 30 || trail <= 0) return undefined;
-  // Take a tying/winning kick on fourth down or when only one snap remains.
-  if (trail <= 3 && 117 - spot <= kickRange && (down === 4 || clock <= 8)) return "fg";
+  if (q < 4 || clock > 30 || trail < 0) return undefined;
+  // Take a tying or winning kick on fourth down or when only one snap remains. Tied counts:
+  // nobody runs out the clock in field-goal range.
+  if (trail <= 3 && 100 - spot + snapYards <= kickRange && (down === 4 || clock <= 8)) return "fg";
+  // Tied and out of range, the staff plays it as it would (often for overtime).
+  if (trail === 0) return undefined;
   // A punt or a clock-consuming run cannot rescue this possession. Avoid blind
   // spikes too: the engine may already have a stopped clock after an incompletion.
   return spot < 65 ? "deep" : spot < 85 ? "med" : "short";
@@ -664,14 +672,15 @@ function callPlay(
   const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -7 && clock < 240)) && !desperate;
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
   const finalCall = finalPossessionCall(q, clock, down, spot, trail,
-    fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0));
+    fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0), fgSnapYards(year));
   if (finalCall) return finalCall;
   if (canKneelOut(q, clock, down, spot, trail, defensiveTimeouts)) return "kneel";
   // Pinned deep with the half nearly gone: take a knee rather than risk a giveaway.
   if (q === 2 && clock <= 35 && down < 4 && spot <= 25) return "kneel";
   if (down === 4) {
-    const fgDist = 100 - spot + 17;
-    const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0);
+    const fgDist = 100 - spot + fgSnapYards(year);
+    // In overtime a make ends it (or answers), so kickers get sent out from longer range.
+    const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0) + (q >= 5 ? 5 : 0);
     const goP =
       0.04 +
       fourthGoBias(year) +
@@ -684,6 +693,7 @@ function callPlay(
       (desperate && spot >= 42 && togo <= 8) ||
       spot >= 97 ||
       (last && trail > 0 && spot >= 50) ||
+      (q >= 5 && clock <= 240 && togo <= 3 && spot >= 40) ||
       (short && mid && rand(save) < clamp(goP, 0.02, 0.55)) ||
       (togo <= 2 && spot >= 62 && rand(save) < clamp(goP, 0.02, 0.4));
     if (go) {
@@ -862,7 +872,10 @@ function redZoneSqueeze(year: number): number {
   // The 60s and 70s finished more of their trips: scoring ran 1-3 points a game light.
   // Retuned once both teams ran the drill before the half (more second-quarter points) and
   // field goals and completions were set to each era's real rates.
-  if (year <= 1969) return -0.31;
+  // With the posts back on the goal line before 1974, stalled trips kick real field goals
+  // (2.3-2.7 tries a game) instead of being finished at an inflated touchdown rate.
+  if (year <= 1969) return -0.16;
+  if (year <= 1973) return -0.02;
   if (year <= 1977) return -0.11;
   if (year <= 1983) return 0.0;
   if (year <= 1989) return 0.1;
@@ -1169,9 +1182,35 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let homeTO = 3;
   let awayTO = 3;
   let ot = false;
-  let modifiedFirst = true;
-  let modifiedGotScore = false;
+  // Overtime bookkeeping: which possession of overtime this is, who has the ball on it, and
+  // the score when it was last checked, so every era's rule is judged in one place.
+  let otPossNo = 0;
+  let otOff: TeamId | null = null;
+  let otPts: [number, number] = [0, 0];
   const otRule = otRules(year, game.phase);
+  // Game week. The one-on-ones that decide games are looked up for every game so the league
+  // plays one way; the owner's practice focus only ever touches his own club (see gameday.ts).
+  const userIn = !save.cpuOnly && !save.sandbox && !save.realHistory && (homeId === save.userTeamId || awayId === save.userTeamId);
+  const focus = userIn ? practiceFor(save, game) : undefined;
+  const focusFit = focus ? (focusMatchesReport(save, homeId === save.userTeamId ? awayId : homeId, focus) ? 1.5 : 1) : 0;
+  const focusOf = (id: TeamId, f: PracticeFocus) => (id === save.userTeamId && focus === f ? focusFit : 0);
+  const matchups = keyMatchups(save, homeId, awayId);
+  const matchupOf = (kind: KeyMatchup["kind"], offense: TeamId) => matchups.find((m) => m.kind === kind && m.teamId === offense);
+  const bigStage = playoff || !!game.night || !!game.rivalry || !!game.slot;
+  // Momentum, from the home side: turnovers, stops and scores push it, every snap lets it fade.
+  let mo = 0;
+  const moFor = (id: TeamId) => (id === homeId ? mo : -mo);
+  const ruleSaid = new Set<string>();
+  const ruleOnce = (key: string, text: string) => {
+    if (!logOn || ruleSaid.has(key)) return;
+    ruleSaid.add(key);
+    note(text);
+    cue("rule");
+  };
+  let crowdQ = 0;
+  let longDriveSaid = 0;
+  let freshLegs = false;
+  const matchupSaid: Record<string, number> = {};
   const units: Record<string, TeamUnits> = { [homeId]: homeU, [awayId]: awayU };
   const boxOf = (id: TeamId) => (id === homeId ? homeBox : awayBox);
   // The owner's sideline orders (live broadcast): a new plan or a benched quarterback, from a
@@ -1186,6 +1225,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
   const planNowAuto = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
     const base = planFor(save, id);
+    // Overtime is no place to punt from midfield: coaches play to end it, and a side that has
+    // to answer a score plays like it's the two-minute drill.
+    if (qq >= 5) return { ...base, fourth: "aggressive", tempo: trail > 0 || ck <= 150 || game.phase === "regular" ? "hurry" : base.tempo };
     if (qq >= 4 && trail >= 8 && ck <= 300) return { ...base, attack: "pass", fourth: "aggressive", tempo: "hurry" };
     if (qq >= 4 && trail <= -8 && ck <= 240) return { ...base, attack: "run", fourth: "conservative", tempo: "chew" };
     if (playoff && base.fourth === "aggressive" && trail > -3) return { ...base, fourth: "normal" };
@@ -1208,7 +1250,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const kind = sum("sacksThrown") ? "sack" : sum("passAtt") ? "pass" : sum("rushAtt") ? "run" : sum("fgAtt") || sum("punts") ? "kick" : "other";
       const yards = kind === "pass" ? sum("passYds") : kind === "run" ? sum("rushYds") : kind === "sack" ? cur.sackYards ?? 0 : 0;
       log.push({ q: cur.q, clock: cur.clock, poss: cur.poss, down: cur.down, togo: Math.max(1, Math.round(cur.togo)), spot: Math.round(cur.spot), text: d.text, hs: homeScore, as: awayScore, tag: d.tag,
-        snap: { call: cur.call ?? "special", kind, yards: Math.round(Math.min(yards, 100 - cur.spot)), complete: kind === "pass" ? sum("passCmp") > 0 : undefined }, homeTimeouts: homeTO, awayTimeouts: awayTO });
+        snap: { call: cur.call ?? "special", kind, yards: Math.round(Math.min(yards, 100 - cur.spot)), complete: kind === "pass" ? sum("passCmp") > 0 : undefined }, homeTimeouts: homeTO, awayTimeouts: awayTO,
+        ...(cur.cue ? { cue: cur.cue } : {}), ...(Math.abs(mo) >= 0.05 ? { mo: Math.round(mo * 10) / 10 } : {}) });
     }
     cur = undefined;
   };
@@ -1216,6 +1259,19 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const note = (s: string) => {
     if (highlights.length < 12) highlights.push(s);
     cur?.notes.push(s);
+  };
+  const cue = (c: NonNullable<PlayLog["cue"]>) => {
+    if (cur && (!cur.cue || c === "inj")) cur.cue = c;
+  };
+  const swing = (toward: TeamId, amt: number, why?: string) => {
+    const before = moFor(toward);
+    mo = clamp(mo + (toward === homeId ? amt : -amt), -3, 3);
+    const after = moFor(toward);
+    // The booth calls a swing when the game turns, not every time a drive ends.
+    if (why && logOn && before < 0.6 && after >= 1.4) {
+      note(`${why} Momentum has swung to the ${nicknameOf(year, toward)}.`);
+      cue("momentum");
+    }
   };
   const qi = () => (q <= 4 ? q - 1 : 4);
   const addPts = (id: TeamId, n: number) => {
@@ -1267,6 +1323,20 @@ export function simGame(save: DynastySave, game: GameResult): void {
     return auto;
   };
   const live = (id: TeamId) => units[id]!;
+  homeU.defRun += focusOf(homeId, "runD") * 1.2;
+  awayU.defRun += focusOf(awayId, "runD") * 1.2;
+  /** A matched pair only counts while both men are still out there. */
+  const pairOn = (m: KeyMatchup | undefined): m is KeyMatchup => {
+    if (!m) return false;
+    const o = live(m.teamId);
+    const d = live(m.teamId === homeId ? awayId : homeId);
+    const ids = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db].map((x) => x?.id);
+    return ids(o).includes(m.offId) && ids(d).includes(m.defId);
+  };
+  const edgeVsTackle = (offense: TeamId) => {
+    const m = matchupOf("lt-edge", offense);
+    return pairOn(m) ? (m.defGrade - m.offGrade) / 1100 : 0;
+  };
   const toOf = (id: TeamId) => (id === homeId ? homeTO : awayTO);
   const spendTO = (id: TeamId) => {
     if (id === homeId) homeTO = Math.max(0, homeTO - 1);
@@ -1328,6 +1398,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let plays = 0;
 
   const closeDrive = (result: DriveResult) => {
+    const other = poss === homeId ? awayId : homeId;
+    if (result === "td") swing(poss, 0.8);
+    else if (result === "fg") swing(poss, 0.3);
+    else if (result === "int" || result === "fumble") swing(other, 1.5, "Takeaway.");
+    else if (result === "downs") swing(other, 1.1, "Stopped on fourth down.");
+    else if (result === "safety") swing(other, 0.9, "Safety.");
+    else if (result === "miss") swing(other, 0.4);
     drives.push({
       teamId: poss,
       q: driveQ,
@@ -1375,6 +1452,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
       next.offPass -= 0.8;
       next.offRun -= 0.6;
     }
+    if (game.rivalry) {
+      next.offPass += 1.1;
+      next.offRun += 1.1;
+    }
+    next.defRun += focusOf(id, "runD") * 1.2;
     units[id] = next;
   };
 
@@ -1389,10 +1471,19 @@ export function simGame(save: DynastySave, game: GameResult): void {
           ? `${playerName(p)} is down. He's being checked for a concussion.`
           : `${playerName(p)} is down with a ${hurt === "ribs" ? "rib" : hurt} injury.`,
     );
+    const onField = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db, u.k, u.p].filter((x): x is Player => !!x);
+    const was = new Set(onField(live(id)).map((x) => x.id));
     rebuild(id);
     const u = live(id);
+    cue("inj");
+    const sub = onField(u).find((x) => !was.has(x.id) && x.pos === p.pos) ?? onField(u).find((x) => !was.has(x.id));
     if (p.pos === "QB" && u.qb && u.qb.id !== p.id) {
-      note(`${playerName(u.qb)} is in at quarterback.`);
+      note(`${playerName(u.qb)} is in at quarterback (${u.qb.ovr}, down from ${p.ovr}).`);
+    } else if (sub) {
+      const drop = p.ovr - sub.ovr;
+      note(`Next man up: ${playerName(sub)} (${sub.ovr})${drop >= 8 ? `, a real drop from ${p.ovr}` : ""}.`);
+    } else {
+      note(`Nobody behind him at ${p.pos}. They'll shuffle the lineup.`);
     }
   };
 
@@ -1464,6 +1555,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       return;
     }
     if (rand(save) < tbChance + Math.max(0, hang - 62) / 90) {
+      if (year >= 2024) ruleOnce("tb", `Touchback. The new kickoff brings it out to the ${ko.tb}.`);
       poss = receiving;
       spot = ko.tb;
       down = 1;
@@ -1529,8 +1621,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (pick) go2 = pick === "two";
     }
     if (go2) {
+      if (year === 1994) ruleOnce("two", "New this season: the NFL's first two-point conversions.");
+      else if (afl) ruleOnce("two", "The AFL's two-point try, a rule the NFL won't adopt until 1994.");
       const ok = rand(save) < clamp(twoPointMakeP(year) + (u.offPass - 70) / 220 + u.kit.td, 0.28, 0.58);
       if (ok) addPts(id, 2);
+      if (logOn) note(ok ? "The two-point try is good." : "The two-point try fails.");
       return;
     }
     if (u.k) bumpBox(boxOf(id), u.k.id, { xpAtt: 1 });
@@ -1614,12 +1709,47 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
   while (plays < 260) {
     stampDrives();
+    mo *= 0.94;
+    if (ot && otRule.kind !== "none") {
+      // A score ends overtime once the scores differ, except a first-possession score the era
+      // lets the other side answer: a field goal under modified sudden death (2010), any
+      // score once both teams are guaranteed the ball (playoffs 2022, regular season 2025).
+      const homeGain = homeScore - otPts[0];
+      const awayGain = awayScore - otPts[1];
+      if (homeGain > 0 || awayGain > 0) {
+        const scorer = homeGain > 0 ? homeId : awayId;
+        const answerable =
+          otPossNo === 1 &&
+          scorer === otOff &&
+          (otRule.kind === "both" || (otRule.kind === "modified" && Math.max(homeGain, awayGain) === 3));
+        if (homeScore !== awayScore && !answerable) break;
+      }
+      if (poss !== otOff) {
+        // A possession just ended. Past the guaranteed ones, whoever leads has won.
+        if (otPossNo >= 2 && homeScore !== awayScore) break;
+        otPossNo += 1;
+        otOff = poss;
+      }
+      otPts = [homeScore, awayScore];
+    }
     if (logOn) {
       flushPlay();
       while (orderAt < orders.length && orders[orderAt]!.at <= log.length) applyOrder(orders[orderAt++]!);
       cur = { q, clock, poss, down, togo, spot, bumps: [], notes: [] };
     }
     plays += 1;
+    if (plays === 1 && logOn && bigStage) {
+      note(
+        playoff
+          ? "Playoff football. Win or go home."
+          : game.night
+            ? "Prime time. The whole country is watching this one."
+            : game.rivalry
+              ? "Rivalry week. These two don't like each other."
+              : "A national TV window. The lights are a little brighter.",
+      );
+      cue("crowd");
+    }
     if (q === 2 || q === 4) {
       if (!warned && clock <= 120 && clock > 0) {
         warned = true;
@@ -1629,6 +1759,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (clock <= 0) {
       if (q === 1 || q === 3) {
         q += 1;
+        if (q === 4 && logOn && !neutral && Math.abs(homeScore - awayScore) <= 8) {
+          note(`Fourth quarter, one-score game. ${venue.stadium} is on its feet.`);
+          cue("crowd");
+        }
         clock = 900;
         warned = q === 2 || q === 4 ? false : warned;
         continue;
@@ -1652,10 +1786,16 @@ export function simGame(save: DynastySave, game: GameResult): void {
         ot = true;
         q = 5;
         clock = otRule.seconds;
-        modifiedFirst = true;
-        modifiedGotScore = false;
         closeDrive("end");
-        kickoffTo(rand(save) < 0.5 ? homeId : awayId, false);
+        const otReceiver = rand(save) < 0.5 ? homeId : awayId;
+        otPossNo = 1;
+        otOff = otReceiver;
+        otPts = [homeScore, awayScore];
+        if (logOn) {
+          note(otCall(otRule.kind, year));
+          cue("rule");
+        }
+        kickoffTo(otReceiver, false);
         continue;
       }
       if (q >= 5) {
@@ -1663,7 +1803,6 @@ export function simGame(save: DynastySave, game: GameResult): void {
         if (game.phase === "regular" || game.phase === "preseason") break;
         q += 1;
         clock = 900;
-        modifiedFirst = false;
         continue;
       }
       break;
@@ -1693,8 +1832,16 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
     const offU = poss === homeId ? homeU : awayU;
     const disc = Math.max(0.55, 1 + (offU.kit.pen ?? 0));
-    const pre = pens.preSnap * disc + (poss === awayId && !neutral ? noise : 0);
+    // The building matters most when the game is tight, the stage is big and the home side has it rolling.
+    const tight = (q >= 4 && Math.abs(homeScore - awayScore) <= 8) || ot;
+    const crowdLift = (bigStage ? 1.15 : 1) * (tight ? 1.35 : 1) * (mo > 1.2 ? 1.15 : 1);
+    const pre = pens.preSnap * disc + (poss === awayId && !neutral ? noise * crowdLift : 0);
     if (rand(save) < pre) {
+      if (poss === awayId && !neutral && tight && noise > 0 && crowdQ !== q) {
+        crowdQ = q;
+        note("False start. The crowd forced that one.");
+        cue("crowd");
+      }
       const yds = halfDist(spot, 5, true);
       addPen(poss, yds);
       spot = Math.max(1, spot - yds);
@@ -1757,7 +1904,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       call !== "kneel" &&
       call !== "spike"
     ) {
-      const fgDist = 100 - spot + 17;
+      const fgDist = 100 - spot + fgSnapYards(year);
       const opts: CrunchSituation["options"] = [{ id: "go", label: `Go for it on 4th-and-${Math.max(1, Math.round(togo))}` }];
       if (fgDist <= 58) opts.push({ id: "fg", label: `Kick the ${Math.round(fgDist)}-yard field goal` });
       if (spot < 72) opts.push({ id: "punt", label: "Punt it away" });
@@ -1794,8 +1941,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
 
     if (call === "fg") {
-      const fgDist = 100 - spot + 17;
+      const fgDist = 100 - spot + fgSnapYards(year);
       if (off.k) bumpBox(boxOf(poss), off.k.id, { fgAtt: 1 });
+      if (year < 1974) ruleOnce("posts", "The goalposts sit on the goal line in this era, ten yards closer than they will.");
       if (q >= 4 && clock <= 28 && toOf(defId) > 0 && rand(save) < 0.55) {
         spendTO(defId);
       }
@@ -1815,7 +1963,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           extraPoint(defId);
           kickoffTo(poss, false);
         } else {
-          flipPoss(Math.max(20, 100 - (spot + 7)));
+          flipPoss(missedFgSpot(year, spot));
         }
         continue;
       }
@@ -1824,18 +1972,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
         addPts(poss, 3);
         note(`${off.k ? playerName(off.k) : "The kicker"} from ${Math.round(fgDist)}. It's good.`);
         closeDrive("fg");
-        if (ot && (otRule.kind === "sudden" || (otRule.kind === "modified" && !modifiedFirst && modifiedGotScore))) break;
-        if (ot && otRule.kind === "modified" && modifiedFirst) {
-          modifiedGotScore = true;
-          modifiedFirst = false;
-          kickoffTo(defId, false);
-          continue;
-        }
+        if (ot && otRule.kind === "sudden") break;
         const trailK = trailOf(poss);
         kickoffTo(defId, onsideCall(poss, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8));
       } else {
         closeDrive("miss");
-        flipPoss(Math.max(20, 100 - (spot + 7)));
+        flipPoss(missedFgSpot(year, spot));
+        if (year < 1974) ruleOnce("miss20", "No good. Under these rules a miss comes back out to the 20.");
       }
       continue;
     }
@@ -1940,9 +2083,15 @@ export function simGame(save: DynastySave, game: GameResult): void {
         ? ((poss === homeId ? homeRushYds : awayRushYds) > 110 ? 0.9 : 0) +
           ((poss === homeId ? awayRushYds : homeRushYds) > 110 && pass ? 0.6 : 0)
         : 0;
-    const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0);
+    const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0) + moFor(poss) * 0.8 + (ot ? 2.5 : 0);
+    // A defense kept on the field for a long drive wears down, and a no-huddle offense won't let it substitute.
+    const gassed = Math.max(0, drivePlays - 9) * (plan.tempo === "hurry" ? 0.009 : 0.006);
+    if (logOn && drivePlays === 11 && longDriveSaid < 2) {
+      longDriveSaid += 1;
+      note("Eleven plays into this drive. That defense has its hands on its hips.");
+    }
     const focusEdge = defensivePlan.defensiveFocus === "run" ? (pass ? -5 : 5) : defensivePlan.defensiveFocus === "pass" ? (pass ? 5 : -5) : 0;
-    const defP = (pass ? def.defPass : def.defRun) * dfat + (pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0) + focusEdge;
+    const defP = (pass ? def.defPass : def.defRun) * dfat * (1 - gassed) + (pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0) + focusEdge;
     const edge = offP - defP;
 
     if (pass) {
@@ -1952,7 +2101,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
           off.kit.sack +
           (call === "deep" ? 0.02 : 0) +
           (rand(save) < 0.5 ? 0.03 : -0.01) -
-          (pa ? 0.02 : 0) -
+          (pa ? 0.02 : 0) +
+          edgeVsTackle(poss) -
+          focusOf(poss, "passPro") * 0.006 -
+          Math.min(0.012, Math.max(0, drivePlays - 8) * 0.003) -
           // Quick release helps relative to an average passer. Uncentered, this term took ~8
           // points off every dropback and cancelled the era sack rate (sacks ran 35-50% low).
           ((off.qb?.ratings.rel ?? 70) - 70) / 900,
@@ -1976,11 +2128,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           if (spot >= 100) {
             if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushTd: 1 });
             scoreTd(poss, `${playerName(off.qb!)} keeps it and goes.`);
-            if (ot && otRule.kind !== "none") {
-              if (otRule.kind === "sudden" || !modifiedFirst) break;
-              modifiedGotScore = true;
-              modifiedFirst = false;
-            }
+            if (ot && otRule.kind === "sudden") break;
             continue;
           }
           if (yds >= togo) {
@@ -2006,6 +2154,12 @@ export function simGame(save: DynastySave, game: GameResult): void {
           bumpBox(boxOf(defId), rusher.id, { sacks: 0.5, tackles: 1, tfl: 1, qbHits: 1 });
           bumpBox(boxOf(defId), helper.id, { sacks: 0.5, qbHits: 1 });
         } else if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
+        const edgeM = matchupOf("lt-edge", poss);
+        if (logOn && rusher && edgeM && rusher.id === edgeM.defId) {
+          const lt = save.players[edgeM.offId];
+          note(`${playerName(rusher)} wins the edge${lt ? ` against ${playerName(lt)}` : ""}.`);
+          cue("matchup");
+        }
         const used = snapClock(save, plan, year, q, clock, trail, true, false, false, false);
         tickClock(poss, Math.max(used.used, 18));
         drivePlays += 1;
@@ -2120,11 +2274,15 @@ export function simGame(save: DynastySave, game: GameResult): void {
       // Tight windows near the goal line separate the passers: the great ones still find a man.
       if (spot >= 80) cmpP -= 0.04 + redZoneSqueeze(year) - ((off.qb?.ratings.throwAcc ?? 70) - 72) / 260;
       if (tightCatchRule(year) && (call === "deep" || call === "med")) cmpP -= 0.02;
-      if (rec && def.db[0]) {
-        const mismatch =
-          (rec.ratings.speed + rec.ratings.rrt) / 2 - (def.db[0].ratings.cov + def.db[0].ratings.speed) / 2;
-        cmpP += mismatch / 420;
+      // The top corner follows the No. 1 receiver; that one-on-one counts a little more.
+      const shadow = matchupOf("wr-cb", poss);
+      const shadowed = !!rec && pairOn(shadow) && rec.id === shadow.offId;
+      const cover = shadowed ? def.db.find((p) => p.id === shadow!.defId) ?? def.db[0] : def.db[0];
+      if (rec && cover) {
+        const mismatch = (rec.ratings.speed + rec.ratings.rrt) / 2 - (cover.ratings.cov + cover.ratings.speed) / 2;
+        cmpP += mismatch / (shadowed ? 340 : 420);
       }
+      if (spot >= 80) cmpP += focusOf(poss, "redZone") * 0.015;
       cmpP = clamp(cmpP, 0.3, year <= 1969 ? 0.64 : year < 2000 ? 0.78 : 0.82);
       let intP =
         era.intRate *
@@ -2141,6 +2299,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (year <= 1969) intP += 0.02;
       intP += qbCliff(save, poss, off.qb);
       intP *= intTaper(off.qb, year);
+      intP -= focusOf(poss, "ballSecurity") * 0.003;
       intP = clamp(intP, 0.018, 0.11);
       const roll = rand(save);
       if (rec) bumpBox(boxOf(poss), rec.id, { targets: 1 });
@@ -2173,6 +2332,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
         // Interception returns scored far more often before the 80s (open field, slower QBs).
         const pickSix = rand(save) < (year <= 1977 ? 0.14 : 0.09) * big * ((thief?.ratings.speed ?? 70) / 85);
         if (thief) note(`${playerName(thief)} jumps it.`);
+        if (logOn && thief && shadowed && thief.id === cover?.id && rec) {
+          note(`${playerName(thief)} wins that one against ${playerName(rec)}.`);
+          cue("matchup");
+        }
         if (pickSix && thief) {
           addPts(defId, 6);
           note(`${playerName(thief)} the other way. Pick-six.`);
@@ -2223,6 +2386,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
       yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
+      if (logOn && shadowed && rec && cover && yds >= 18) {
+        const n = (matchupSaid[rec.id] = (matchupSaid[rec.id] ?? 0) + 1);
+        note(n === 1 ? `${playerName(rec)} gets behind ${playerName(cover)}. That's the matchup they circled.` : `${playerName(rec)} beats ${playerName(cover)} again.`);
+        cue("matchup");
+      }
       const t = pickTackler(save, def, true);
       if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
       const sideline = call === "deep" || ((q === 2 || q >= 4) && clock <= 120 && (trail >= 1 || q === 2));
@@ -2243,15 +2411,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
             : `${off.qb ? playerName(off.qb) : "The quarterback"} hits ${playerName(rec)} — freeze-frame, six.`
           : "Touchdown pass.";
         scoreTd(poss, line);
-        if (ot && (otRule.kind === "sudden" || !modifiedFirst)) break;
-        if (ot && otRule.kind === "modified") {
-          modifiedGotScore = true;
-          modifiedFirst = false;
-        }
+        if (ot && otRule.kind === "sudden") break;
         continue;
       }
       // The catcher's own ball security, not the whole receiving corps' traits summed.
-      const fumP = Math.max(0.002, 0.009 + (rec ? kitBoost(rec, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.01 : 0));
+      const fumP = Math.max(0.002, 0.009 + (rec ? kitBoost(rec, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.01 : 0) - focusOf(poss, "ballSecurity") * 0.001);
       if (rand(save) < fumP) {
         if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
         const lost = rand(save) < 0.5;
@@ -2286,6 +2450,19 @@ export function simGame(save: DynastySave, game: GameResult): void {
       boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
     );
     let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80;
+    const lane = matchupOf("rb-lb", poss);
+    if (rusher && pairOn(lane) && rusher.id === lane.offId) mu += (lane.offGrade - lane.defGrade) / 90;
+    // A back's legs go after twenty carries; the drop is steeper for one without stamina.
+    const carries = rusher ? boxOf(poss).find((b) => b.playerId === rusher.id)?.rushAtt ?? 0 : 0;
+    if (rusher?.pos === "RB" && carries > 20) mu -= (carries - 20) * 0.035 * (80 / Math.max(50, rusher.ratings.stamina));
+    if (logOn && !freshLegs && rusher && rusher.id === off.rb2?.id && off.rb) {
+      const lead = boxOf(poss).find((b) => b.playerId === off.rb!.id)?.rushAtt ?? 0;
+      if (lead >= 16) {
+        freshLegs = true;
+        note(`Fresh legs: ${playerName(rusher)} spells ${playerName(off.rb)}, who has carried it ${lead} times.`);
+      }
+    }
+    if (spot >= 80) mu += focusOf(poss, "redZone") * 0.12;
     if (call === "draw") mu += 0.8;
     if (call === "sneak") mu = 0.7 + (off.ol[2]?.ratings.str ?? 70) / 80 + sneakBoost(year);
     if (togo <= 1 && call !== "sneak") mu += 0.4;
@@ -2319,11 +2496,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (spot >= 100) {
       if (rusher) bumpBox(boxOf(poss), rusher.id, { rushTd: 1 });
       scoreTd(poss, rusher ? `${playerName(rusher)} north-south. Touchdown.` : "Rushing touchdown.");
-      if (ot && (otRule.kind === "sudden" || !modifiedFirst)) break;
-      if (ot && otRule.kind === "modified") {
-        modifiedGotScore = true;
-        modifiedFirst = false;
-      }
+      if (ot && otRule.kind === "sudden") break;
       continue;
     }
     if (spot <= 0) {
@@ -2339,7 +2512,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const fumBase = year <= 1977 ? 0.028 : year <= 1989 ? 0.024 : year <= 2005 ? 0.019 : 0.016;
     const fumP = Math.max(
       0.003,
-      fumBase + (rusher ? kitBoost(rusher, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.012 : 0) - (rusher ? (rusher.ratings.btk - 70) / 3000 : 0),
+      fumBase + (rusher ? kitBoost(rusher, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.012 : 0) - (rusher ? (rusher.ratings.btk - 70) / 3000 : 0) -
+        focusOf(poss, "ballSecurity") * 0.002,
     );
     if (rand(save) < fumP) {
       if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
@@ -2444,7 +2618,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
   flushPlay();
   playTap = undefined;
   if (logOn) game.log = log;
-  game.drives = drives.slice(0, 32);
+  if (userIn) {
+    game.matchups = matchups;
+    if (focus) game.practice = focus;
+  }
+  game.drives = drives.slice(0, 40);
   game.homePen = homePen;
   game.awayPen = awayPen;
   game.homePenYds = homePenYds;

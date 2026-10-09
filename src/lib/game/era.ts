@@ -174,6 +174,9 @@ export function playoffTeamCount(year: number): { perConf: number; total: number
 }
 
 export function kickoffRules(year: number): { from: number; tb: number } {
+  // The dynamic kickoff (2024) brought touchbacks out to the 30, then the 35 in 2025.
+  if (year >= 2025) return { from: 35, tb: 35 };
+  if (year >= 2024) return { from: 35, tb: 30 };
   if (year >= 2016) return { from: 35, tb: 25 };
   if (year >= 2011) return { from: 35, tb: 20 };
   if (year >= 1994) return { from: 30, tb: 20 };
@@ -194,8 +197,9 @@ export function twoPointOk(year: number, teamId: TeamId): boolean {
  * '90s, ~81% in the 2000s, ~85% since.
  */
 export function fgEraMod(year: number): number {
-  if (year <= 1969) return 0.79;
-  if (year <= 1973) return 0.77;
+  // Kicks before 1974 were ten yards shorter from the same spot (posts on the goal line).
+  if (year <= 1969) return 0.78;
+  if (year <= 1973) return 0.75;
   if (year <= 1977) return 0.79;
   if (year <= 1985) return 0.88;
   if (year <= 1993) return 0.91;
@@ -209,7 +213,7 @@ export function clockStopFirstDown(_year: number): boolean {
   return false;
 }
 
-export type OtKind = "none" | "sudden" | "modified";
+export type OtKind = "none" | "sudden" | "modified" | "both";
 
 export function otRules(
   year: number,
@@ -219,13 +223,39 @@ export function otRules(
   if (!decisive && year < 1974) return { kind: "none", seconds: 0 };
   // Modified sudden death (a first-possession field goal doesn't end it) came to the playoffs
   // in 2010 and the regular season in 2012; regular-season overtime went to ten minutes in 2017.
+  // Both teams are guaranteed a possession: playoffs from 2022, the regular season from 2025.
   if (!decisive) {
+    if (year >= 2025) return { kind: "both", seconds: 600 };
     if (year >= 2017) return { kind: "modified", seconds: 600 };
     if (year >= 2012) return { kind: "modified", seconds: 900 };
     return { kind: "sudden", seconds: 900 };
   }
+  if (year >= 2022) return { kind: "both", seconds: 900 };
   if (year >= 2010) return { kind: "modified", seconds: 900 };
   return { kind: "sudden", seconds: 900 };
+}
+
+/** The referee's overtime explanation, as the booth relays it. */
+export function otCall(kind: OtKind, year: number): string {
+  if (kind === "both") return "Overtime. Both teams are guaranteed a possession under the new rule; after that, next score wins.";
+  if (kind === "modified")
+    return year >= 2012
+      ? "Overtime. A touchdown on the first possession wins it; a field goal gives the other side a chance to answer."
+      : "Overtime under the new playoff rule: a first-drive field goal no longer ends it.";
+  return "Sudden-death overtime. First score wins.";
+}
+
+/**
+ * Goalposts stood on the goal line until 1974, so a field goal was ten yards shorter from
+ * the same spot: the snap from the line of scrimmage plus seven.
+ */
+export function fgSnapYards(year: number): number {
+  return year < 1974 ? 7 : 17;
+}
+
+/** Before 1974 a missed field goal came out to the 20; after, to the spot of the kick. */
+export function missedFgSpot(year: number, spot: number): number {
+  return year < 1974 ? 20 : Math.max(20, 100 - (spot + 7));
 }
 
 /** Extra-point kick distance. NFL moved the XP back in 2015. */

@@ -20,7 +20,13 @@ test('final possession pursues the score needed instead of wasting the clock', (
   assert.equal(finalPossessionCall(4, 31, 4, 40, 4, 50), undefined);
   assert.equal(finalPossessionCall(2, 8, 1, 70, 3, 50), undefined);
   assert.equal(finalPossessionCall(4, 8, 1, 70, -3, 50), undefined);
-  assert.equal(finalPossessionCall(4, 8, 1, 70, 0, 50), undefined);
+  // Tied in range with one snap left: kick it and win. Tied out of range: the staff's call.
+  assert.equal(finalPossessionCall(4, 8, 1, 70, 0, 50), 'fg');
+  assert.equal(finalPossessionCall(5, 6, 2, 72, 0, 50), 'fg');
+  assert.equal(finalPossessionCall(4, 8, 1, 40, 0, 50), undefined);
+  // Before 1974 the posts were on the goal line: the same spot is ten yards shorter.
+  assert.equal(finalPossessionCall(4, 8, 1, 60, 3, 50, 7), 'fg');
+  assert.equal(finalPossessionCall(4, 8, 1, 60, 3, 50), 'deep');
 });
 
 const create = () => createNewGame({ userTeamId: 'gnb', startingYear: 1966, seed: 1966 });

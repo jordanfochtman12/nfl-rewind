@@ -81,6 +81,7 @@ import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
+import { GameWeekPrep } from "./Gameday";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
@@ -536,6 +537,7 @@ function ThisSunday() {
           {staffSystems(save, save.userTeamId).defense}. The call sheet on the Staff tab is live — this is what the booth will actually call.
         </p>
         <MatchupNotes game={game} />
+        {!save.sandbox && !save.realHistory && <GameWeekPrep game={game} />}
       </div>
     </section>
   );

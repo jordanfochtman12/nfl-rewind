@@ -8,7 +8,9 @@ import { clubInk, nicknameOf, ordersUpTo, teamAbbr, type GameResult, type Gamepl
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { useEraClass } from "./eraLook";
-import { markWatched, winProb } from "./liveWatch";
+import { markWatched } from "./liveWatch";
+import { wpSeries } from "@/lib/game/gameday";
+import { CueChip, KeyMatchups, MomentumMeter } from "./Gameday";
 
 const ORD = ["", "1st", "2nd", "3rd", "4th"];
 const clockText = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -129,7 +131,7 @@ export function LiveBroadcast({
     return () => setLiveGame(null);
   }, [liveNow, game.id, setLiveGame]);
 
-  const wp = useMemo(() => log.map((l, k) => winProb(l, us, home, final && k === log.length - 1)), [log, us, home, final]);
+  const wp = useMemo(() => wpSeries(log, us, home, final), [log, us, home, final]);
   const cur = log[i];
   if (!cur) return null;
   const next = log[i + 1];
@@ -228,6 +230,12 @@ export function LiveBroadcast({
       {halftime && <div className="border-b border-brass/30"><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
       {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 
+      {!compact && i < 4 && game.matchups?.length ? (
+        <div className="border-b border-white/10 px-3 py-3">
+          <KeyMatchups game={game} compact />
+        </div>
+      ) : null}
+
       {canCall && !ended && !compact && (
         <OwnersBoxCalls
           gameId={game.id}
@@ -246,6 +254,7 @@ export function LiveBroadcast({
                 <p className="font-display text-[11px] font-bold uppercase italic tracking-wide text-subtle">
                   {l.q > 4 ? "OT" : `Q${l.q}`} {clockText(l.clock)} · {teamAbbr(l.poss)} · {ORD[Math.min(4, l.down)]} & {l.togo}
                   {t && <span className={`ml-2 px-1.5 py-px not-italic ${t.cls}`}>{t.label}</span>}
+                  <CueChip cue={l.cue} />
                 </p>
                 <p className={k === 0 ? "text-[15px] text-white" : "text-sm text-paper"}>{l.text}</p>
                 {k === 0 &&
@@ -275,6 +284,7 @@ export function LiveBroadcast({
               ))}
               {pts.length > 1 && <polyline points={pts.join(" ")} fill="none" stroke="#ffc629" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />}
             </svg>
+            {log.some((l) => l.mo !== undefined) && <MomentumMeter log={log} i={i} home={home} away={away} />}
             {keyPlays.length > 0 && (
               <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-xs">
                 {keyPlays

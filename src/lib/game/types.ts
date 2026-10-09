@@ -549,6 +549,10 @@ export interface GameResult {
   /** What really happened in this game (history's final), when it's on the real schedule. */
   realHome?: number;
   realAway?: number;
+  /** The owner's game: the one-on-ones the broadcast followed (see gameday.ts). */
+  matchups?: { kind: "wr-cb" | "lt-edge" | "rb-lb"; teamId: TeamId; offId: string; defId: string; offGrade: number; defGrade: number }[];
+  /** The owner's practice focus that week, when he set one. */
+  practice?: "runD" | "passPro" | "ballSecurity" | "redZone";
 }
 
 /** One snap of the owner's game, for the live broadcast. */
@@ -569,6 +573,10 @@ export interface PlayLog {
   hs: number;
   as: number;
   tag?: "td" | "to" | "big" | "fg" | "call" | "safety";
+  /** A broadcast cue on top of the play: an injury, a momentum swing, the crowd, a rule, a matchup. */
+  cue?: "inj" | "momentum" | "crowd" | "rule" | "matchup";
+  /** Momentum after the play, from the home side, -3 to 3. */
+  mo?: number;
 }
 
 /** A call the owner sends down to the sideline during his live game, from play `at` on. */
@@ -1029,6 +1037,8 @@ export interface DynastySave {
   liveOrders?: LiveOrder[];
   /** Where the live broadcast picks back up after a crunch-time call. */
   liveResume?: { gameId: string; index: number };
+  /** Game week: the one thing the owner's staff drills for his next game. */
+  practice?: { gameId: string; focus: "runD" | "passPro" | "ballSecurity" | "redZone" };
   /** Owner preference: watch his games play out live. */
   liveOn?: boolean;
   /** Set once rosters carry era-accurate jersey numbers (older saves are reissued on load). */
