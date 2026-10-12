@@ -98,3 +98,10 @@ export function restoreSlotMeta(slot: number, meta: Omit<SlotMeta, "slot" | "t">
   index[slot] = { ...meta, slot, t: Date.now() };
   write(INDEX_KEY, index);
 }
+
+/** The first slot with nothing in it, other than the one in use. */
+export function emptySlot(): number | undefined {
+  const index = slotIndex();
+  for (let n = 1; n <= SLOT_COUNT; n++) if (n !== active && !index[n]) return n;
+  return undefined;
+}

@@ -105,6 +105,7 @@ import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { HistoryDesk, HistoryDraft } from "./HistoryMode";
 import { SaveSlots } from "./SaveSlots";
 import { saveHealth } from "@/lib/save-idb";
+import { emptySlot } from "@/lib/save-slots";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
@@ -157,7 +158,7 @@ function TitleScreen() {
         </Btn>
         <Btn
           onClick={() => {
-            if (save && !watchReady) {
+            if (save && !emptySlot() && !watchReady) {
               setWatchReady(true);
               return;
             }
@@ -169,7 +170,7 @@ function TitleScreen() {
         <Btn
           disabled={historyLoading}
           onClick={() => {
-            if (save && !historyReady) {
+            if (save && !emptySlot() && !historyReady) {
               setHistoryReady(true);
               return;
             }
@@ -185,12 +186,12 @@ function TitleScreen() {
       </div>
       {watchReady && save && (
         <p role="alert" className="text-sm text-brass">
-          Watching history starts a new league and replaces the save in this slot. Pick an empty slot below to keep it.
+          All five save slots are full: watching history replaces the save in this one. Clear a slot below to keep it.
         </p>
       )}
       {historyReady && save && (
         <p role="alert" className="text-sm text-brass">
-          History mode starts at the 1966 draft and replaces the save in this slot. Pick an empty slot below to keep it.
+          All five save slots are full: History mode replaces the save in this one. Clear a slot below to keep it.
         </p>
       )}
       {historyError && <p role="alert" className="text-sm text-brick">{historyError}</p>}
@@ -288,8 +289,8 @@ function TeamSelect() {
       <Group title="National Football League" ids={nfl} />
       <Group title="American Football League" ids={afl} />
       {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
-        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
-        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">Starting replaces the {displayName(save.year, save.userTeamId)} dynasty in this slot. Go back to the title and pick an empty save slot to keep it.</p>}
+        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !emptySlot() && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
+        {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">All five save slots are full, so starting replaces the {displayName(save.year, save.userTeamId)} dynasty in this one. Go back to the title and clear a slot to keep it.</p>}
       </section>}
       <p className="text-xs text-subtle">
         Club marks are original designs in each club&apos;s colors, not official NFL logos. Mascot icons by Lorc,
@@ -1980,10 +1981,21 @@ function PlayShell() {
 
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
-  // The studio voices start downloading once the page has settled, so the first show has them.
+  // The studio voices start downloading once the page has settled, so the first show has them,
+  // but only with room to spare: on a phone short of storage they wait until a voice is needed,
+  // so the model never crowds out the saved dynasties.
   useEffect(() => {
     const t = window.setTimeout(() => {
-      if (settingsNow().hdVoices) warmHdVoices();
+      if (!settingsNow().hdVoices) return;
+      void (async () => {
+        try {
+          const est = await navigator.storage?.estimate?.();
+          if (est?.quota && est.quota - (est.usage ?? 0) < 1e9) return;
+        } catch {
+          /* can't tell: go ahead */
+        }
+        warmHdVoices();
+      })();
     }, 4000);
     return () => window.clearTimeout(t);
   }, []);

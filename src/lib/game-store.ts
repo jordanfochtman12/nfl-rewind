@@ -26,7 +26,7 @@ import {
   type TeamId,
 } from "@/lib/game/index.ts";
 import { dynastyStorage } from "@/lib/save-idb.ts";
-import { activeSlot, recordSlot, setActiveSlot, slotIndex, slotKey } from "@/lib/save-slots.ts";
+import { activeSlot, emptySlot, recordSlot, setActiveSlot, slotIndex, slotKey } from "@/lib/save-slots.ts";
 import { importDynasty } from '@/lib/game/importSave';
 
 export type Screen = "title" | "select" | "play";
@@ -143,6 +143,8 @@ const SAVE_NAME = "nfl-rewind-dynasty";
 
 /** Write any save waiting on the debounce now (set by persistStorage). */
 let flushPending: () => Promise<void> = () => Promise.resolve();
+/** Write any save still waiting to be written (the title screen does, so its list is current). */
+export const flushSaves = (): Promise<void> => flushPending();
 /** Forget what was last written, so the next save in a freshly loaded slot is written. */
 let resetWritten: () => void = () => {};
 
@@ -196,12 +198,19 @@ function persistStorage(): PersistStorage<Persisted> {
       if (!save) return;
       if (save === lastWritten) return;
       lastWritten = save;
+      // A new slot's first write never waits behind the previous slot's.
+      if (pending && pending.slot !== activeSlot()) void flush();
       pending = { name, slot: activeSlot(), value };
-      if (timer) clearTimeout(timer);
       // A live draft changes the save every couple of seconds; packing a late-dynasty save
       // takes a few hundred milliseconds, so the picks are written in batches instead of
-      // each one stalling the room. Leaving the page still writes at once (see flush).
-      timer = setTimeout(() => void flush(), save?.phase === "draft" ? 6000 : 350);
+      // each one stalling the room. The batch is written at most six seconds after its first
+      // change (later picks don't push it back); leaving the page writes at once.
+      if (save.phase === "draft") {
+        if (!timer) timer = setTimeout(() => void flush(), 6000);
+        return;
+      }
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => void flush(), 350);
     },
     removeItem: async (name) => {
       pending = null;
@@ -249,7 +258,22 @@ function ensureHistoryBox(): void {
 
 export const useGameStore = create<GameStore>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      /**
+       * A new game never lands on top of another: when the slot in use already holds a save,
+       * the new one takes the first empty slot. (Only with all five full does it replace.)
+       */
+      const freshSlot = () => {
+        if (!get().save && !slotIndex()[activeSlot()]) return;
+        const n = emptySlot();
+        if (!n) return;
+        // Anything still waiting to be written goes to the slot it came from (it carries it).
+        void flushPending();
+        setActiveSlot(n);
+        resetWritten();
+        set({ slot: n });
+      };
+      return {
       save: null,
       screen: "title",
       tab: "office",
@@ -269,6 +293,7 @@ export const useGameStore = create<GameStore>()(
       openTeam: (viewTeamId) => set({ viewTeamId, profileId: null }),
       closeTeam: () => set({ viewTeamId: null }),
       newGame: (teamId) => {
+        freshSlot();
         const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
         set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
       },
@@ -277,6 +302,7 @@ export const useGameStore = create<GameStore>()(
         set({ historyLoading: true });
         try {
           setHistoryData(await loadHistoryData());
+          freshSlot();
           const save = createHistoryGame();
           set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null, tv: false });
         } finally {
@@ -285,6 +311,7 @@ export const useGameStore = create<GameStore>()(
       },
       newSandbox: () => {
         // The engine wants a club id for the owner's seat; in a sandbox nothing treats it as anyone's.
+        freshSlot();
         const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
         set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
       },
@@ -454,7 +481,8 @@ export const useGameStore = create<GameStore>()(
           set({ save: null, screen: "title", rewind: null });
         }
       },
-    }),
+      };
+    },
     {
       name: SAVE_NAME,
       storage: persistStorage(),

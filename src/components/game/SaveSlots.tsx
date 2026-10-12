@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import type { TeamId } from "@/lib/game";
-import { useGameStore } from "@/lib/game-store";
+import { flushSaves, useGameStore } from "@/lib/game-store";
 import { SLOT_COUNT, slotIndex, type SlotMeta } from "@/lib/save-slots";
 import { downloadText, duplicateSlot, fmtBytes, recoverSlots, slotBytes, slotExport, storageRoom } from "@/lib/save-tools";
 import { Logo } from "./chrome";
@@ -39,10 +39,16 @@ export function SaveSlots() {
   const restoreTo = useRef<number>(1);
   // The index lives in localStorage and changes as saves are written; re-read when the save does.
   useEffect(() => setIndex(slotIndex()), [save, slot]);
-  // Saves the list lost track of come back on it (once per visit to the title screen).
+  // Saves the list lost track of come back on it (once per visit to the title screen). Anything
+  // still waiting to be written goes first, so the list shows the game just left.
   useEffect(() => {
     let live = true;
-    void recoverSlots().then((n) => {
+    void flushSaves()
+      .then(() => {
+        if (live) setIndex(slotIndex());
+        return recoverSlots();
+      })
+      .then((n) => {
       if (!live || !n) return;
       setIndex(slotIndex());
       setNote(`Found ${n} saved ${n === 1 ? "dynasty" : "dynasties"} that had dropped off the list.`);
@@ -222,7 +228,7 @@ export function SaveSlots() {
           Saves use {fmtBytes(Object.values(bytes).reduce((a, b) => a + b, 0))} · browser storage {fmtBytes(room.used)} of {fmtBytes(room.quota)} used
         </p>
       )}
-      <p className="text-xs text-subtle">New games start in the highlighted slot. Pick an empty one to keep your other saves.</p>
+      <p className="text-xs text-subtle">Each new game takes its own empty slot, so your other saves stay put. Tap Load to switch dynasties.</p>
     </section>
   );
 }
