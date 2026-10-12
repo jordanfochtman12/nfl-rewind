@@ -1,7 +1,10 @@
+import { NightShow } from "./ShowKit";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   collegeLine,
   displayName,
+  playerName,
+  teamAbbr,
   draftPreview,
   formatHt,
   POS_GROUPS,
@@ -322,7 +325,13 @@ export function DraftPreviewShow() {
     });
   }
 
+  const mockTicker = d.mock.slice(0, 16).map((m) => {
+    const pid = m.actualId ?? m.mockId;
+    const p = pid ? save.players[pid] : undefined;
+    return `NO. ${m.overall} ${teamAbbr(m.teamId)}: ${p ? `${playerName(p).toUpperCase()}, ${p.pos}` : "ON THE CLOCK"}`;
+  });
   return (
+    <NightShow id={`draft-preview-${save.year}`} show="DRAFT PREVIEW SPECIAL" title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
     <article className="relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_30px_80px_-30px_#000]">
       <FilmStill still="draft" veil="bottom" className="h-[440px]" />
       <div className="relative">
@@ -366,6 +375,7 @@ export function DraftPreviewShow() {
         ))}
       </div>
     </article>
+    </NightShow>
   );
 }
 

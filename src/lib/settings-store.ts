@@ -16,6 +16,10 @@ export interface Settings {
   music: boolean;
   /** A preferred device voice for the lead voice ("" = best available). */
   voiceName: string;
+  /** Studio-grade neural voices (Kokoro, downloaded once, ~90 MB); device voices otherwise. */
+  hdVoices: boolean;
+  /** The viewer's pick of studio voice by chair (host, analyst, reporter, pbp, color, draft). */
+  hdCast: Partial<Record<"host" | "analyst" | "reporter" | "pbp" | "color" | "draft", string>>;
   /** Watch mode auto-play pace. */
   autoSpeed: AutoSpeed;
   /** Auto-play pauses for the draft, the Super Bowl, awards night and the Hall of Fame. */
@@ -37,6 +41,8 @@ export const DEFAULT_SETTINGS: Settings = {
   boothVoices: false,
   music: true,
   voiceName: "",
+  hdVoices: true,
+  hdCast: {},
   autoSpeed: "normal",
   stopForBigNights: true,
   tvStudio: true,

@@ -146,7 +146,9 @@ function passTaper(perGame: number | undefined, ref: number): number {
   if (!perGame) return 1;
   const r = perGame / ref;
   if (r <= 1) return 1;
-  return Math.max(0.68, 1 - (r - 1) * 1.6);
+  // Past 20% over the leader's pace (the real record ran 16% over) the coverage really rolls:
+  // a 6,000-yard season stays out of reach while a record season stays possible.
+  return Math.max(0.55, 1 - (r - 1) * 1.6 - Math.max(0, r - 1.2) * 2);
 }
 
 /** A typical league-leading interception total for the era (real decade leaders). */

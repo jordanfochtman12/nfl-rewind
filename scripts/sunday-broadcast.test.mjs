@@ -294,10 +294,10 @@ test("the league's year: rule changes at camp, career milestones, trade requests
   for (const r of pairs) assert.ok((r.heat ?? 0) >= 0);
   const hot = G.risingRivalries(s, 5);
   for (const r of hot) assert.ok(r.heat >= G.RIVALRY_HOT);
-  // Trade requests: a few a season at most, one per club.
+  // Trade requests: no fixed number, but never a flood, and one per club.
   for (let y = 1966; y < 1975; y++) {
     const asked = Object.values(s.players).filter((p) => p.tradeRequest === y);
-    assert.ok(asked.length <= 3, `${y}: ${asked.length} requests`);
+    assert.ok(asked.length <= G.requestCeiling(y), `${y}: ${asked.length} requests`);
   }
   // Milestones name a round number that was actually crossed.
   for (const n of s.news.filter((n) => / passes [\d,]+ career /.test(n.headline))) {

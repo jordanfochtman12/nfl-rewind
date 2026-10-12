@@ -1,12 +1,13 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
 import { useGameStore } from "@/lib/game-store";
+import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
 
 /** Starts the channel from a tap, which also unlocks speech on phones. */
 export function startTv(year: number): void {
   try {
     if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(footballSpeech(`Welcome to Rewind TV. The ${year} season, all of it, starts now.`, year)));
+      cancelSpeech();
+      speakLine(new SpeechSynthesisUtterance(footballSpeech(`Welcome to Rewind TV. The ${year} season, all of it, starts now.`, year)), { key: "tv-host", gender: "m", chair: "host" });
     }
   } catch {
     /* no speech on this device */

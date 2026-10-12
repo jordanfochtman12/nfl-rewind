@@ -97,10 +97,18 @@ export function chemistryEdge(save: DynastySave, teamId: TeamId): number {
   return Math.max(-1.2, Math.min(1.2, (c - 60) / 25));
 }
 
+/**
+ * How many stars can ask out in a season before it stops being news: one for every five clubs
+ * (about five in 1966, seven today). Not a quota, a ceiling against a flood.
+ */
+export function requestCeiling(year: number): number {
+  return Math.ceil(activeTeamIds(year).length / 5);
+}
+
 /** The weekly drift, the clubs' chemistry, and a public trade request from a miserable star. */
 export function updateMorale(save: DynastySave): void {
   if (save.realHistory) return;
-  // The league's rule for public requests (careerMoments.tradeDemands): three a season, one a club.
+  // Public requests: no fixed number, just never a flood (see requestCeiling), one a club.
   const asked = Object.values(save.players).filter((p) => p.tradeRequest === save.year);
   let requests = asked.length;
   const clubsAsked = new Set(asked.map((p) => p.teamId));
@@ -115,7 +123,7 @@ export function updateMorale(save: DynastySave): void {
       if (p.morale < 40 && p.ovr >= 80) p.moraleLow = (p.moraleLow ?? 0) + 1;
       else p.moraleLow = undefined;
       // A public request is rare: a handful a season league-wide.
-      if ((p.moraleLow ?? 0) >= 3 && p.tradeRequest !== save.year && p.age <= 33 && requests < 3 && !clubsAsked.has(id)) {
+      if ((p.moraleLow ?? 0) >= 3 && p.tradeRequest !== save.year && p.age <= 33 && requests < requestCeiling(save.year) && !clubsAsked.has(id)) {
         requests += 1;
         clubsAsked.add(id);
         p.tradeRequest = save.year;

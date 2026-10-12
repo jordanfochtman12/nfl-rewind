@@ -3,6 +3,7 @@
  * season, a star on a losing club asking out, a veteran in the last year of his deal playing for
  * the next one. Nothing here draws randomness; everything reads the stats already on the books.
  */
+import { requestCeiling } from "./morale.ts";
 import type { BoxPlayer, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
 import { addNews } from "./news.ts";
 import { leagueMarks, STAT_WORDS, WATCH_STATS } from "./boothMemory.ts";
@@ -134,9 +135,9 @@ export function weeklyMoments(save: DynastySave, games: GameResult[]): void {
  */
 export function tradeDemands(save: DynastySave): void {
   const year = save.year;
-  // A public request is rare: a handful a season at most, one per club.
+  // A public request is rare: never a flood (requestCeiling), one per club.
   const asked = livingPlayers(save).filter((p) => p.tradeRequest === year);
-  if (asked.length >= 3) return;
+  if (asked.length >= requestCeiling(year)) return;
   const clubsAsked = new Set(asked.map((p) => clubOf(p)));
   const candidates = livingPlayers(save)
     .filter((p) => {

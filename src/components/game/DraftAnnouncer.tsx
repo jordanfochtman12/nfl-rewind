@@ -22,6 +22,7 @@ import { draftCrowdAudio } from "./draftCrowdAudio";
 import { stadiumAudio } from "./stadiumAudio";
 
 import { DraftAudioContext } from "./draftAudio";
+import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
 
 
 /** Stays mounted through the last pick so the closing announcement can finish. */
@@ -66,7 +67,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     serial.current++;
     clearTimeout(watchdog.current);
     audio.current?.stop();
-    if (ownsSpeech.current && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (ownsSpeech.current && "speechSynthesis" in window) cancelSpeech();
     ownsSpeech.current = false;
     setBusy(false);
   }, []);
@@ -173,7 +174,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         ownsSpeech.current = true;
         watchdog.current = setTimeout(fail, Math.max(30000, words.split(/\s+/).length * 900));
         try {
-          window.speechSynthesis.speak(utterance);
+          const g = who === "COMM" ? commissionerFor(save.year).gender : who === "DESK" ? analyst.gender : official.gender;
+          speakLine(utterance, { key: who === "COMM" ? `comm-${commissionerFor(save.year).gender}` : who === "DESK" ? `desk-${analyst.gender}` : who, gender: g, chair: who === "DESK" ? "analyst" : "draft" });
         } catch {
           fail();
         }

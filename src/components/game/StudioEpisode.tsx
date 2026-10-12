@@ -1,13 +1,17 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
 import { settingsNow } from "@/lib/settings-store";
-import { useEffect, useRef, useState } from "react";
-import type { PrimetimeShow } from "@/lib/game";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { showGraphic, showTicker, type PrimetimeShow } from "@/lib/game";
+import { useGameStore } from "@/lib/game-store";
+import { LowerThird, ShowGraphicView, ShowOpen, ShowTicker } from "./ShowKit";
 import { Logo } from "./chrome";
 import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { crewFor, crewGender } from "@/lib/game/previewVoice";
+import { cancelSpeech, prefetchLine, prefetchLines, speakLine, useTalking } from "@/lib/voice/studioVoice";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
+const CHAIR = { HOST: "host", ANALYST: "analyst", REPORTER: "reporter" } as const;
 
 /**
  * A directed, chapter-by-chapter broadcast. The frozen script is also the accessible transcript.
@@ -36,7 +40,16 @@ export function StudioEpisode({
     [voice, setVoice] = useState(() => settingsNow().voiceName);
   const [error, setError] = useState("");
   const audio = useRef<ReturnType<typeof stadiumAudio> | null>(null);
+  const save = useGameStore((s) => s.save);
+  // The show this episode belongs to (this week's or an archived one): its boards and honorees.
+  const show = useMemo(
+    () => (save ? [save.primetime, ...(save.primetimeArchive ?? [])].find((x) => x?.episode?.id === episode.id) : undefined),
+    [save, episode.id],
+  );
+  const [opening, setOpening] = useState(false);
   const chapter = episode.chapters[index]!;
+  const graphic = useMemo(() => (save ? showGraphic(save, year, episode, chapter, show) : undefined), [save, year, episode, chapter, show]);
+  const ticker = useMemo(() => (save ? showTicker(save, year, show?.week) : []), [save, year, show?.week]);
   const current = chapter.lines[line]!;
   const finale = episode.edition === "superBowl";
   const preview = episode.edition === "seasonPreview";
@@ -62,10 +75,34 @@ export function StudioEpisode({
       setError("Music is unavailable. The show transcript remains available.");
     }
   };
+  // While the open rolls, the first reads are being made, so the desk comes up talking.
+  useEffect(() => {
+    if (!opening || !narration) return;
+    const crew = crewFor(year);
+    const first = episode.chapters.slice(index, index + 2).flatMap((c) => c.lines).slice(0, 5);
+    prefetchLines(
+      first.map((l) => {
+        const person = episode.cast?.[l.speaker] ?? crew[l.speaker];
+        const c = episode.cast?.[l.speaker];
+        return {
+          text: footballSpeech(l.text, year),
+          who: { key: person.name, gender: c?.gender ?? (c ? crewGender(c.name) : undefined) ?? crew[l.speaker].gender, chair: CHAIR[l.speaker] },
+          rate: l.speaker === "ANALYST" ? 0.97 : l.speaker === "REPORTER" ? 1.03 : 1,
+        };
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opening]);
+  const air = useTalking();
+  // The open rolls, then the desk comes up and the show starts.
+  const endOpen = useCallback(() => {
+    setOpening(false);
+    setPlaying(true);
+  }, []);
   useEffect(() => {
     if (!autoPlay) return;
     start();
-    setPlaying(true);
+    setOpening(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -85,7 +122,7 @@ export function StudioEpisode({
       document.removeEventListener("visibilitychange", hide);
       audio.current?.close();
       audio.current = null;
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      if ("speechSynthesis" in window) cancelSpeech();
     };
   }, []);
   useEffect(() => {
@@ -124,10 +161,17 @@ export function StudioEpisode({
           setPlaying(false);
         }
       };
-      window.speechSynthesis.speak(speech);
+      const person = episode.cast?.[current.speaker] ?? crew[current.speaker];
+      speakLine(speech, { key: person.name, gender: who(current.speaker).gender, chair: CHAIR[current.speaker] });
+      // Read ahead: the next line is being made while this one is on the air.
+      const after = chapter.lines[line + 1] ?? episode.chapters[index + 1]?.lines[0];
+      if (after) {
+        const nextPerson = episode.cast?.[after.speaker] ?? crew[after.speaker];
+        prefetchLine(footballSpeech(after.text, year), { key: nextPerson.name, gender: who(after.speaker).gender, chair: CHAIR[after.speaker] }, after.speaker === "ANALYST" ? 0.97 : after.speaker === "REPORTER" ? 1.03 : 1);
+      }
       return () => {
         active = false;
-        window.speechSynthesis.cancel();
+        cancelSpeech();
       };
     }
     const timer = window.setTimeout(
@@ -138,7 +182,7 @@ export function StudioEpisode({
       active = false;
       window.clearTimeout(timer);
     };
-  }, [playing, index, line, narration, voice, voices, year, episode.cast, current.speaker, current.text]);
+  }, [playing, index, line, narration, voice, voices, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);
@@ -159,6 +203,10 @@ export function StudioEpisode({
               if (end) {
                 setIndex(0);
                 setLine(0);
+              }
+              if (end || (index === 0 && line === 0)) {
+                setOpening(true);
+                return;
               }
             }
             setPlaying(!playing);
@@ -217,6 +265,16 @@ export function StudioEpisode({
       )}
       <div className="pt-show-grid">
         <div className="pt-stage">
+          {opening && (
+            <ShowOpen
+              show={finale ? "SUPER BOWL POSTGAME" : preview ? "SEASON PREVIEW SPECIAL" : episode.edition === "awards" ? "AWARDS NIGHT" : episode.edition === "playoffs" || episode.edition === "championship" ? "PLAYOFF PRIMETIME" : "PRIMETIME"}
+              title={episode.headline}
+              sub={episode.subtitle}
+              teamIds={episode.chapters[0]?.teamIds ?? []}
+              year={year}
+              onDone={endOpen}
+            />
+          )}
           {finale && (
             <div className="pt-celebration" aria-hidden="true">
               {Array.from({ length: 20 }, (_, i) => (
@@ -256,18 +314,26 @@ export function StudioEpisode({
           )}
           <div className="pt-stage-top">
             <span className="pt-onair">{playing ? "ON AIR" : preview ? "SEASON PREVIEW" : "STUDIO REPLAY"}</span>
+            {playing && narration && air.talking && !air.onAir && <span className="pt-mic" role="status">● On the mic…</span>}
             <span>
               {String(index + 1).padStart(2, "0")} /{" "}
               {String(episode.chapters.length).padStart(2, "0")} SEGMENTS
             </span>
           </div>
-          <div className="pt-stage-emblems" aria-hidden>
-            {chapter.teamIds.slice(0, 2).map((id) => (
-              <Logo key={id} id={id} size={90} />
-            ))}
-          </div>
+          {!graphic && (
+            <div className="pt-stage-emblems" aria-hidden>
+              {chapter.teamIds.slice(0, 2).map((id) => (
+                <Logo key={id} id={id} size={90} />
+              ))}
+            </div>
+          )}
           <p className="pt-kicker">{chapter.kicker}</p>
           <h3>{chapter.title}</h3>
+          {graphic && <ShowGraphicView key={chapter.id} g={graphic} year={year} />}
+          {(() => {
+            const who = episode.cast?.[current.speaker] ?? crewFor(year)[current.speaker];
+            return <LowerThird key={`${index}-${line}`} name={who.name} role={who.role} accent={current.speaker === "HOST" ? "#d51c38" : current.speaker === "ANALYST" ? "#2f6fd6" : "#c9a24f"} />;
+          })()}
           <div className="pt-script" aria-live={playing ? "off" : "polite"}>
             {chapter.lines.map((l, i) => (
               <div key={i} className={i === line ? "pt-script-line is-speaking" : "pt-script-line"}>
@@ -278,6 +344,7 @@ export function StudioEpisode({
               </div>
             ))}
           </div>
+          <ShowTicker items={ticker} />
           <div className="pt-stage-bottom">
             <button
               className="bx-chip min-h-11 px-3"

@@ -95,6 +95,8 @@ import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
 import { FreeAgencyNight } from "./FreeAgencyNight";
 import { FreeAgencyRecap } from "./FreeAgencyRecap";
+import { warmHdVoices } from "@/lib/voice/studioVoice";
+import { settingsNow } from "@/lib/settings-store";
 import { SuperBowlHistory } from "./SuperBowlHistory";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
@@ -1973,6 +1975,13 @@ function PlayShell() {
 
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
+  // The studio voices start downloading once the page has settled, so the first show has them.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      if (settingsNow().hdVoices) warmHdVoices();
+    }, 4000);
+    return () => window.clearTimeout(t);
+  }, []);
   if (screen === "title") return <TitleScreen />;
   if (screen === "select") return <TeamSelect />;
   return <PlayShell />;

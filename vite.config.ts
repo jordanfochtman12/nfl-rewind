@@ -35,7 +35,8 @@ function offlineManifestPlugin(): Plugin {
       // History mode's box scores (one chunk per season, ~40MB in all) cache the first time
       // a season is opened, not at install.
       const files = Object.keys(bundle)
-        .filter((f) => /\.(js|css|woff2)$/.test(f) && !/(^|\/)(19|20)\d\d-[\w-]+\.js$/.test(f))
+        // The studio voice worker (Kokoro) loads on first use, not at install.
+        .filter((f) => /\.(js|css|woff2)$/.test(f) && !/(^|\/)(19|20)\d\d-[\w-]+\.js$/.test(f) && !/kokoroWorker/.test(f))
         .sort()
         .map((f) => `/${f}`);
       let h = 0;

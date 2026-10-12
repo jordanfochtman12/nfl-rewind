@@ -5,8 +5,9 @@ import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import type { BoothLine } from "@/lib/game/commentary";
+import { cancelSpeech, isSpeaking, prefetchLines, speakLine, useTalking } from "@/lib/voice/studioVoice";
 
-export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0) {
+export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0, upcoming: { lines: BoothLine[]; cue: string }[] = []) {
   const [enabled, setEnabled] = useState(false);
   const [music, setMusic] = useState(false);
   const [volume, setVolume] = useState(0.3);
@@ -19,23 +20,40 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   const booth = boothFor(year);
   // Two people in the booth, two voices: the play-by-play man and his color analyst, each cast
   // to match (a chosen voice goes to the play-by-play call).
-  const speaking = (call: BoothLine[]) => {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+  const utter = (line: BoothLine, playCue: string) => {
     const cast = castVoices(voices, [
       { key: "PBP", gender: booth.pbp.gender, rate: 1.02 },
       { key: "COLOR", gender: booth.color.gender, pitch: 0.94, rate: 0.97 },
     ], voiceName);
+    const speech = new SpeechSynthesisUtterance(footballSpeech(line.text, year));
+    const c = cast.get(line.speaker);
+    if (c?.voice) speech.voice = c.voice;
+    speech.pitch = c?.pitch ?? 1;
+    // The play-by-play man picks up the pace on a touchdown.
+    speech.rate = (c?.rate ?? 1) * (line.speaker === "PBP" && playCue === "td" ? 1.08 : 1);
+    speech.volume = line.speaker === "PBP" ? 0.9 : 0.85;
+    const person = line.speaker === "PBP" ? booth.pbp : booth.color;
+    return { speech, who: { key: person.name, gender: person.gender, chair: line.speaker === "PBP" ? ("pbp" as const) : ("color" as const) } };
+  };
+  const speaking = (call: BoothLine[]) => {
+    if (!("speechSynthesis" in window)) return;
+    cancelSpeech();
     for (const line of call) {
-      const speech = new SpeechSynthesisUtterance(footballSpeech(line.text, year));
-      const c = cast.get(line.speaker);
-      if (c?.voice) speech.voice = c.voice;
-      speech.pitch = c?.pitch ?? 1;
-      speech.rate = (c?.rate ?? 1) * (line.speaker === "PBP" && cue === "td" ? 1.06 : 1);
-      speech.volume = line.speaker === "PBP" ? 0.9 : 0.85;
-      window.speechSynthesis.speak(speech);
+      const { speech, who } = utter(line, cue);
+      speakLine(speech, who);
     }
   };
+  // The next snaps' calls are made while this one is on the air, so the booth never lags the field.
+  const ahead = upcoming.map((u) => `${u.cue}:${u.lines.map((l) => l.text).join("|")}`).join("#");
+  useEffect(() => {
+    if (!announcer || !active) return;
+    prefetchLines(upcoming.flatMap((u) => u.lines.map((l) => {
+      const { speech, who } = utter(l, u.cue);
+      return { text: speech.text, who, rate: speech.rate };
+    })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ahead, announcer, active, voices]);
+  const talking = useTalking((t) => t.talking);
   const ensureAudio = async () => {
     try {
       engine.current ??= stadiumAudio();
@@ -62,7 +80,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
         void engine.current?.context.suspend();
       } else void engine.current?.context.resume();
       if ((!active || document.hidden) && "speechSynthesis" in window)
-        window.speechSynthesis.cancel();
+        cancelSpeech();
     };
     sync();
     document.addEventListener("visibilitychange", sync);
@@ -74,7 +92,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     if (!sequential || !active || document.hidden) return;
     if (enabled && ["td", "to", "fg", "safety"].includes(cue)) engine.current?.cue(cue === "td");
     // Finish ordinary calls. Only a major event interrupts the current sentence.
-    if (announcer && (["td", "to", "safety"].includes(cue) || !window.speechSynthesis.speaking))
+    if (announcer && (["td", "to", "safety"].includes(cue) || !isSpeaking()))
       speaking(lines);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, active, cue, enabled, announcer]);
@@ -85,11 +103,13 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     () => () => {
       void engine.current?.close();
       engine.current = null;
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      if ("speechSynthesis" in window) cancelSpeech();
     },
     [],
   );
   return {
+    /** The booth is still calling the last snap: a telecast waits for it. */
+    holding: announcer && active && talking,
     chime: () => engine.current?.cue(),
     controls: (
       <div className="space-y-2">
@@ -126,7 +146,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
                 return;
               }
               setAnnouncer(!announcer);
-              if (announcer) window.speechSynthesis.cancel();
+              if (announcer) cancelSpeech();
               else
                 speaking([
                   { speaker: "PBP", text: `Hello again, everybody. I'm ${booth.pbp.name}, alongside ${booth.color.name}, and it is a great day for football.` },
@@ -162,7 +182,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
               value={voiceName}
               onChange={(e) => {
                 setVoiceName(e.target.value);
-                window.speechSynthesis.cancel();
+                cancelSpeech();
               }}
             >
               <option value="">Best available English voice</option>

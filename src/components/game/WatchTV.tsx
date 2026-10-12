@@ -40,6 +40,7 @@ import { DraftNight } from "./DraftNight";
 import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
+import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -184,8 +185,8 @@ function useHost(year: number, on: boolean) {
       if (c?.voice) u.voice = c.voice;
       u.rate = c?.rate ?? 1;
       u.pitch = c?.pitch ?? 1;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
+      cancelSpeech();
+      speakLine(u, { key: host.name, gender: host.gender, chair: "host" });
     },
     [voices, year, on],
   );
@@ -293,7 +294,7 @@ export function WatchTV() {
   }, [save, stage.k, advance]);
 
   const exit = () => {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if ("speechSynthesis" in window) cancelSpeech();
     setTv(false);
   };
 

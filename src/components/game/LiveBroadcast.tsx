@@ -74,22 +74,27 @@ export function LiveBroadcast({
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState(compact ? 1 : 0);
   const doneRef = useRef(false);
+  const held = useRef(false);
   const [halftime, setHalftime] = useState(false);
   const halfSeen = useRef(startAt > 0);
   const booth = boothFor(game.year);
-  const call = useMemo(
-    () =>
-      log[i]
-        ? boothCall(log[i]!, i, {
-            nick: (id) => nicknameOf(game.year, id as TeamId),
-            homeId: home,
-            awayId: away,
-            pbpFirst: firstName(booth.pbp.name),
-            colorFirst: firstName(booth.color.name),
-            colorBackground: booth.color.background,
-            prev: log[i - 1],
-          })
-        : [],
+  const callAt = (k: number) =>
+    log[k]
+      ? boothCall(log[k]!, k, {
+          nick: (id) => nicknameOf(game.year, id as TeamId),
+          homeId: home,
+          awayId: away,
+          pbpFirst: firstName(booth.pbp.name),
+          colorFirst: firstName(booth.color.name),
+          colorBackground: booth.color.background,
+          prev: log[k - 1],
+        })
+      : [];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const call = useMemo(() => callAt(i), [i, log, game.year]);
+  // The next three snaps' calls, so the booth's voices are made before the ball is snapped.
+  const upcoming = useMemo(
+    () => [1, 2, 3].filter((d) => log[i + d]).map((d) => ({ lines: callAt(i + d), cue: log[i + d]?.tag ?? "" })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [i, log, game.year],
   );
@@ -104,7 +109,7 @@ export function LiveBroadcast({
           (atNow.cue === "crowd" ? 0.2 : 0),
       )
     : 0;
-  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity);
+  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity, upcoming);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 
@@ -113,9 +118,18 @@ export function LiveBroadcast({
     if (!compact && !halfSeen.current && log[i]?.q <= 2 && (log[i + 1]?.q ?? 0) >= 3) {
       halfSeen.current = true; setHalftime(true); return;
     }
-    const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), playMs);
+    // Like a telecast, the next snap waits for the booth to finish the call (not at 4x, which is
+    // for skimming), then comes a beat after the last word.
+    const hold = sound.holding && !compact && speed < SPEEDS.length - 1;
+    if (hold) {
+      held.current = true;
+      return;
+    }
+    const wait = held.current ? Math.min(playMs, 650) : playMs;
+    held.current = false;
+    const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), wait);
     return () => clearTimeout(t);
-  }, [i, playing, playMs, atEnd, log, halftime, compact]);
+  }, [i, playing, playMs, atEnd, log, halftime, compact, sound.holding, speed]);
 
   useEffect(() => {
     if (!halftime || !autoHalftime) return;

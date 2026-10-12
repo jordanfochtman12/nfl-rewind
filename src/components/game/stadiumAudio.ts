@@ -1,3 +1,4 @@
+import { isSpeaking } from "@/lib/voice/studioVoice";
 import { NETWORK_BPM, scoreStep } from "./studioScore";
 import { DRAFT_BPM, draftScoreStep } from "./draftScore";
 /** Original "Sunday Lights / Network Mix": layered brass, strings, bass and breakbeat percussion. */
@@ -128,7 +129,10 @@ export function stadiumAudio(theme: "network" | "draft" = "network") {
   const stepSeconds = 60 / (theme === "draft" ? DRAFT_BPM : NETWORK_BPM) / 2;
   const timer = window.setInterval(() => {
     if (context.state !== "running") return;
-    const duck = "speechSynthesis" in window && window.speechSynthesis.speaking ? 0.28 : 1;
+    const talking = isSpeaking();
+    const duck = talking ? 0.28 : 1;
+    // The crowd settles under the announcers too, and swells back between calls.
+    if (crowdOn) crowd.gain.setTargetAtTime(talking ? base * 0.62 : base, context.currentTime, 0.25);
     music.gain.setTargetAtTime(musicOn ? volume * 0.24 * duck : 0, context.currentTime, 0.12);
     if (!musicOn) {
       next = context.currentTime;

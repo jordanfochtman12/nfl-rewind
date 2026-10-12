@@ -14,7 +14,13 @@ import {
   type Player,
   type TeamId,
   playbookOf,
+  awardBallots,
+  playerGraphic,
+  playerName,
+  type AwardBallots,
 } from "@/lib/game";
+import { useMemo, useState } from "react";
+import { NightShow, ShowGraphicView } from "./ShowKit";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -63,6 +69,15 @@ export function AwardsNight() {
   const allPro = (a.allPro ?? []).map((id) => save.players[id]).filter(Boolean) as Player[];
   const yours = rows.filter(([, id]) => ours(save, id));
   return (
+    <NightShow
+      id={`awards-${save.year}`}
+      show="THE WRITERS' DINNER"
+      title={`${save.year} Awards Night`}
+      sub="Six envelopes. One room."
+      year={save.year}
+      ticker={save.news.filter((n) => n.year === save.year).slice(0, 10).map((n) => n.headline.toUpperCase())}
+      tickerLabel="THE SEASON"
+    >
     <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
       <FilmStill still="office" veil="full" />
       <div className="relative space-y-6 px-5 py-8 sm:px-8">
@@ -73,37 +88,7 @@ export function AwardsNight() {
             ? `The room stands up for your club ${yours.length === 1 ? "once" : `${yours.length} times`}.`
             : "Nobody from your club takes a trophy home. The writers had other names."}
         </p>
-        <ul className="space-y-3">
-          {shown.map(([label, id]) => {
-            const p = id ? save.players[id] : undefined;
-            const mine = ours(save, id);
-            return (
-              <li
-                key={label}
-                className={`flex flex-wrap items-center justify-between gap-3 rounded-lg border px-4 py-3 ${
-                  mine ? "border-brass/50 bg-brass/10" : "border-line bg-black/50"
-                }`}
-              >
-                <span className="text-xs tracking-[0.25em] text-muted">{label}</span>
-                <span className="font-display text-xl">
-                  <Name id={id} />
-                  {p && p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? (
-                    <span className="ml-2 text-sm text-muted">{displayName(save.year, p.teamId)}</span>
-                  ) : null}
-                </span>
-              </li>
-            );
-          })}
-          {coach && (
-            <li className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-black/50 px-4 py-3">
-              <span className="text-xs tracking-[0.25em] text-muted">Coach of the Year</span>
-              <span className="font-display text-xl">
-                {coach.name}
-                {coach.teamId ? <span className="ml-2 text-sm text-muted">{displayName(save.year, coach.teamId)}</span> : null}
-              </span>
-            </li>
-          )}
-        </ul>
+        <AwardsCeremony shown={shown} coach={coach ? { name: coach.name, teamId: coach.teamId ?? undefined } : undefined} />
         {allPro.length > 0 && (
           <section>
             <p className="text-xs tracking-[0.3em] text-muted">ALL-PRO</p>
@@ -125,7 +110,100 @@ export function AwardsNight() {
         <Continue label="On to the Pro Bowl" />
       </div>
     </article>
+    </NightShow>
   );
+}
+
+const BALLOT_KEY: Record<string, keyof AwardBallots> = {
+  "Most Valuable Player": "mvp",
+  "Offensive Player of the Year": "offPoy",
+  "Defensive Player of the Year": "defPoy",
+  "Rookie of the Year": "oroy",
+  "Offensive Rookie": "oroy",
+  "Defensive Rookie": "droy",
+  "Comeback Player": "cpoty",
+};
+
+/** The envelopes: finalists on the board, then the winner and his season on the screen. */
+function AwardsCeremony({ shown, coach }: { shown: [string, string | undefined][]; coach?: { name: string; teamId?: TeamId } }) {
+  const save = useGameStore((s) => s.save)!;
+  const [open, setOpen] = useState(0);
+  const ballots = useMemo(() => (save.sandbox || save.realHistory ? undefined : awardBallots(save, { top: 3 })), [save]);
+  const all = open >= shown.length;
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs tracking-[0.3em] text-muted">
+          {all ? "EVERY ENVELOPE OPENED" : `ENVELOPE ${open + 1} OF ${shown.length}`}
+        </p>
+        {!all && (
+          <button type="button" className="bx-chip min-h-9 px-3 text-xs" onClick={() => setOpen(shown.length)}>
+            Open them all
+          </button>
+        )}
+      </div>
+      <ol className="space-y-3">
+        {shown.map(([label, id], i) => {
+          const p = id ? save.players[id] : undefined;
+          const key = BALLOT_KEY[label];
+          const finalists = (key && ballots ? (ballots[key] as Player[]) : []).filter((x) => x.id !== id).slice(0, 2);
+          const pool = p ? [p, ...finalists].sort((x, y) => (hashName(x.id + label) % 7) - (hashName(y.id + label) % 7)) : finalists;
+          const revealed = i < open;
+          const live = i === open;
+          const card = p && revealed ? playerGraphic(save, save.year, p.id, label.toUpperCase()) : undefined;
+          return (
+            <li key={label} className={`rounded-lg border px-4 py-3 ${ours(save, id) && revealed ? "border-brass/60 bg-brass/10" : live ? "border-brass/40 bg-black/60" : "border-line bg-black/45"}`}>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs tracking-[0.25em] text-muted">{label}</span>
+                {revealed ? (
+                  <span className="font-display text-xl">
+                    <Name id={id} />
+                    {p && p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? <span className="ml-2 text-sm text-muted">{displayName(save.year, p.teamId)}</span> : null}
+                  </span>
+                ) : live ? (
+                  <button type="button" className="bx-primary min-h-10 px-4" onClick={() => setOpen(i + 1)}>
+                    Open the envelope
+                  </button>
+                ) : (
+                  <span className="text-sm text-muted">Sealed</span>
+                )}
+              </div>
+              {!revealed && live && pool.length > 1 && (
+                <p className="mt-2 text-sm text-muted">
+                  The finalists: {pool.map((x) => `${playerName(x)} (${x.pos})`).join(", ")}
+                </p>
+              )}
+              {card && (
+                <div className="mt-3">
+                  <ShowGraphicView g={card} year={save.year} />
+                </div>
+              )}
+            </li>
+          );
+        })}
+        {coach && (
+          <li className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-black/50 px-4 py-3">
+            <span className="text-xs tracking-[0.25em] text-muted">Coach of the Year</span>
+            {all ? (
+              <span className="font-display text-xl">
+                {coach.name}
+                {coach.teamId ? <span className="ml-2 text-sm text-muted">{displayName(save.year, coach.teamId)}</span> : null}
+              </span>
+            ) : (
+              <span className="text-sm text-muted">After the players</span>
+            )}
+          </li>
+        )}
+      </ol>
+    </div>
+  );
+}
+
+/** A stable shuffle for the finalists, so the winner isn't always read first. */
+function hashName(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
 }
 
 export function ProBowlNight() {
@@ -152,7 +230,17 @@ export function ProBowlNight() {
       </ol>
     </section>
   );
+  const mvpCard = mvp ? playerGraphic(save, save.year, mvp.id, "PRO BOWL MVP", `${homeLabel} ${g.homeScore}, ${awayLabel} ${g.awayScore}`) : undefined;
   return (
+    <NightShow
+      id={`probowl-${save.year}`}
+      show="THE PRO BOWL"
+      title={`${awayLabel} ${g.awayScore}, ${homeLabel} ${g.homeScore}`}
+      sub={g.stadium ?? "All-star game"}
+      year={save.year}
+      ticker={[...home, ...away].slice(0, 24).map((p) => `${playerName(p).toUpperCase()} · ${p.pos}`)}
+      tickerLabel="THE ROSTERS"
+    >
     <article className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
       <FilmStill still="superbowl" veil="full" />
       <div className="relative space-y-6 px-5 py-8 sm:px-8">
@@ -174,9 +262,11 @@ export function ProBowlNight() {
             MVP · <PlayerLink player={mvp} className="inline min-h-0 font-display text-2xl text-brass" />
           </p>
         )}
+        {mvpCard && <ShowGraphicView g={mvpCard} year={save.year} />}
         <Continue label="Retirement ceremony" />
       </div>
     </article>
+    </NightShow>
   );
 }
 
@@ -300,6 +390,15 @@ export function HofNight() {
     return `The ${displayName(save.year, club.teamId)} retire his #${p.jersey}.`;
   };
   return (
+    <NightShow
+      id={`hof-${save.year}`}
+      show="CANTON · ENSHRINEMENT"
+      title={`The Class of ${save.year + 1}`}
+      sub={klass.length + coaches.length ? `${klass.length + coaches.length} through the door` : "The vote is in"}
+      year={save.year}
+      ticker={[...klass.map((p) => `${playerName(p).toUpperCase()} · ${p.pos}`), ...coaches.map((c) => `${c.name.toUpperCase()} · COACH`)]}
+      tickerLabel="THE CLASS"
+    >
     <article className="relative overflow-hidden rounded-xl border border-brass/50 bg-studio">
       <FilmStill still="superbowl" veil="full" />
       <div className="relative space-y-6 px-5 py-8 sm:px-8">
@@ -364,6 +463,7 @@ export function HofNight() {
         <Continue label={save.year >= END_YEAR ? "Close the books" : "Coaching carousel"} />
       </div>
     </article>
+    </NightShow>
   );
 }
 
