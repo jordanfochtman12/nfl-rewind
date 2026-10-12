@@ -8,6 +8,7 @@
 import type { Player, Pos } from "./types.ts";
 import { CAREER_ARCS, VET_ARCS, type CareerArcRow, type VetArcRow } from "./data/careerArcs.ts";
 import { UNDRAFTED_ARCS } from "./data/undrafted.ts";
+import { AUDIT_ARCS, AUDIT_VET_ARCS } from "./data/auditPlayers.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { clamp } from "./rng.ts";
 
@@ -67,7 +68,7 @@ function lookupArcRow(year: number, first: string, last: string): Player["arc"] 
   const found = lookupTable(year, first, last);
   if (found) return found;
   for (const k of keysOf(first, last)) {
-    const sup = SUPPLEMENTAL[k] ?? UNDRAFTED_ARCS[k];
+    const sup = SUPPLEMENTAL[k] ?? UNDRAFTED_ARCS[k] ?? AUDIT_ARCS[k];
     if (sup && Math.abs(sup.dy - year) <= 1) {
       const r = sup.row;
       return { dy: year, to: r[0], st: r[1], g: r[2], pb: r[3], ap: r[4], age: r[5] };
@@ -123,7 +124,7 @@ function fits(raw: string, pos: Pos): boolean {
 export function lookupVetArc(first: string, last: string, pos: Pos): Player["arc"] | undefined {
   let rows: VetArcRow[] = [];
   for (const k of keysOf(first, last)) {
-    const hit = VET_ARCS[k];
+    const hit = VET_ARCS[k] ?? AUDIT_VET_ARCS[k];
     if (hit?.length) {
       rows = hit;
       break;

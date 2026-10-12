@@ -5,6 +5,7 @@ import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import {LiveBroadcast } from "./LiveBroadcast";
 import { wasWatched } from "./liveWatch";
+import { SuperBowlHistory } from "./SuperBowlHistory";
 import { useRef, useState } from "react";
 
 export function SuperBowlNight() {
@@ -171,6 +172,12 @@ export function SuperBowlNight() {
           {g.played ? "Continue to awards" : "Play Super Bowl"}
         </Btn>
       </div>
+      {save.history.superBowls.length > 0 && (
+        <div className="relative border-t border-brass/25 px-6 py-8">
+          <p className="mb-3 font-display text-xs tracking-[0.5em] text-brass">THE ROLL OF CHAMPIONS</p>
+          <SuperBowlHistory compact />
+        </div>
+      )}
     </article>
   );
 }

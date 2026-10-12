@@ -79,24 +79,29 @@ function indoorAt(id: TeamId, year: number): boolean {
 }
 
 function turfAt(id: TeamId, year: number): boolean {
+  // Domes with natural grass on a roll-out tray: Reliant/NRG (to 2014), State Farm, Allegiant.
+  if ((id === "htx" && year <= 2014) || (id === "crd" && year >= 2006) || (id === "rai" && year >= 2020)) return false;
   if (indoorAt(id, year)) return true;
   if (year < 1970) return false;
   if (id === "phi" && year >= 1971 && year <= 2000) return true;
-  if (id === "pit" && year >= 1970 && year <= 2002) return true;
+  if (id === "pit" && year >= 1970 && year <= 2000) return true;
   if (id === "cin" && year >= 1970 && year <= 1999) return true;
-  if (id === "kan" && year >= 1970 && year <= 1993) return true;
+  if (id === "kan" && year >= 1972 && year <= 1993) return true; // Arrowhead opened on turf in 1972
   if (id === "buf" && year >= 1973 && year <= 2010) return true;
   if (id === "sea" && year >= 2000) return true;
   if (id === "det" && year >= 1975) return true;
-  if (id === "nwe" && year >= 2006 && year <= 2019) return true;
-  if (id === "nyj" && year >= 2003) return true;
-  if (id === "nyg" && year >= 2003) return true;
-  if (id === "dal" && year >= 2009) return true;
+  if (id === "nwe" && ((year >= 1971 && year <= 1990) || (year >= 2006 && year <= 2019))) return true; // Schaefer/Sullivan turf
+  if (id === "nyj" && ((year >= 1984 && year <= 1999) || year >= 2003)) return true; // Giants Stadium
+  if (id === "nyg" && ((year >= 1976 && year <= 1999) || year >= 2003)) return true;
+  if (id === "dal" && year >= 1971) return true; // Texas Stadium's Texas Turf, then AT&T
+  if (id === "chi" && year >= 1971 && year <= 1987) return true; // Soldier Field's AstroTurf
+  if (id === "crd" && year >= 1970 && year <= 1987) return true; // Busch Memorial
+  if (id === "sfo" && year >= 1971 && year <= 1978) return true; // Candlestick's first turf
+  if (id === "was" && year >= 1971 && year <= 1973) return true; // RFK's AstroTurf years
   if (id === "atl" && year >= 1992) return true;
   if (id === "min" && year >= 1982) return true;
   if (id === "clt" && year >= 1984) return true;
-  if (id === "htx") return true;
-  if (id === "rai" && year >= 2020) return true;
+  if (id === "htx" && year >= 2015) return true; // NRG played on grass trays until 2015
   if (id === "ram" && year >= 1995 && year <= 2015) return true;
   return false;
 }

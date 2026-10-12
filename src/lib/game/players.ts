@@ -3,7 +3,7 @@ import { ROSTER_TARGET } from "./types.ts";
 import { deriveOvr, hasFullKit } from "./ratings.ts";
 import { eraCollege, eraName, jerseyFor, jerseyLegal } from "./names.ts";
 import { jitter, randInt } from "./rng.ts";
-import { VETERANS_1966, type VetSeed } from "./data/veterans1966.ts";
+import { veterans1966, type VetSeed } from "./data/veterans1966.ts";
 import { assignKit } from "./abilities.ts";
 import { lookupProfile, nameKey, nameSalt, nameVariance, ratingsFromProfile, type Arch } from "./profiles.ts";
 import { STAR_PROFILES } from "./data/starProfiles.ts";
@@ -452,7 +452,7 @@ export function seedVeterans(save: DynastySave): void {
   // The 1966 roster source includes rookies (e.g. Pete Lammons). They belong
   // on the opening draft board, not on a roster and the board simultaneously.
   const rookies = new Set(draftSeedsFor(1966).map((s) => historicalNameKey(s.f, s.l, 1966)));
-  for (const v of VETERANS_1966 as VetSeed[]) {
+  for (const v of veterans1966() as VetSeed[]) {
     const key = historicalNameKey(v.f, v.l, 1966);
     if (rookies.has(key)) continue;
     if (seen.has(key)) continue;
@@ -620,7 +620,7 @@ export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): numbe
  */
 export function restoreVeteranNumbers(save: DynastySave): number {
   const real = new Map<string, number>();
-  for (const v of VETERANS_1966 as VetSeed[]) if (v.n) real.set(`${v.f}|${v.l}|${v.p}`, v.n);
+  for (const v of veterans1966()) if (v.n) real.set(`${v.f}|${v.l}|${v.p}`, v.n);
   const realOf = (p: Player) => (p.historical && p.draftYear == null ? real.get(`${p.firstName}|${p.lastName}|${p.pos}`) : undefined);
   let fixed = 0;
   for (const id of Object.keys(save.teams) as TeamId[]) {

@@ -11,7 +11,10 @@ import { DRAFT_2010S } from "./draftClasses2010s.ts";
 import { DRAFT_INGEST } from "./draftClassesIngest.ts";
 import { UNDRAFTED } from "./undrafted.ts";
 import { STAR_PROFILES } from "./starProfiles.ts";
-import { cleanNameParts, historicalNameKey } from "../identity.ts";
+import { cleanNameParts, historicalNameKey, normalizedName } from "../identity.ts";
+import { AUDIT_DRAFTED, AUDIT_FIX, AUDIT_UNDRAFTED } from "./auditPlayers.ts";
+import { inferArch, nameVariance, ratingsFromProfile } from "../profiles.ts";
+import { primaryKeys } from "../ratings.ts";
 import { historicalYear } from "../historicalYears.ts";
 
 export interface DraftSeed {
@@ -1043,7 +1046,8 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
   ],
 };
 
-export function draftSeedsFor(year: number): DraftSeed[] {
+/** The catalogs as written, before the player audit (scripts/player-audit.mjs) corrects them. */
+export function draftSeedsBase(year: number): DraftSeed[] {
   const rows: DraftSeed[] = [
     ...(DRAFT_CLASSES[year] ?? []),
     ...(DRAFT_EXTRA[year] ?? []),
@@ -1106,3 +1110,64 @@ export function draftSeedsFor(year: number): DraftSeed[] {
   return out;
 }
 
+
+const auditKits = new Map<string, Pick<DraftSeed, "arch" | "rt">>();
+/**
+ * A locked kit for a player the audit added or moved to his real position: the game's own
+ * rating model at his position and overall, his archetype from his name, so he plays like
+ * every other catalog player at that grade.
+ */
+function auditKit(s: DraftSeed): Pick<DraftSeed, "arch" | "rt"> {
+  const key = `${s.f}|${s.l}|${s.p}|${s.o}`;
+  const hit = auditKits.get(key);
+  if (hit) return hit;
+  const arch = inferArch(s.p, s.f, s.l);
+  const r = ratingsFromProfile(s.p, s.o, arch, undefined, nameVariance(s.f, s.l, 3));
+  const rt: Partial<Ratings> = {};
+  for (const k of [...primaryKeys(s.p), "speed", "awareness", "inj", "stamina"] as const) rt[k] = r[k];
+  const kit = { arch, rt };
+  auditKits.set(key, kit);
+  return kit;
+}
+
+/**
+ * A draft class as the game uses it: the catalogs, corrected against the real record by the
+ * player audit (position, college, round, height, weight), plus the real players the
+ * catalogs never had (draft picks who played, and undrafted players who stuck).
+ */
+export function draftSeedsFor(year: number): DraftSeed[] {
+  const out = draftSeedsBase(year);
+  for (const s of out) {
+    const f = AUDIT_FIX[`${year}|${normalizedName(s.f, s.l)}`];
+    if (!f) continue;
+    if (f.p && f.p !== s.p) {
+      s.p = f.p;
+      Object.assign(s, auditKit(s));
+    }
+    if (f.c) s.c = f.c;
+    if (f.r !== undefined) s.r = f.r;
+    if (f.ht) s.ht = f.ht;
+    if (f.wt) s.wt = f.wt;
+  }
+  const have = new Set(out.map((s) => historicalNameKey(s.f, s.l, year)));
+  let added = false;
+  for (const raw of [...(AUDIT_DRAFTED[year] ?? []), ...(AUDIT_UNDRAFTED[year] ?? [])]) {
+    const name = cleanNameParts(raw.f, raw.l);
+    const base: DraftSeed = { ...raw, f: name.firstName, l: name.lastName, src: "career" };
+    const s: DraftSeed = { ...base, ...auditKit(base) };
+    const key = historicalNameKey(s.f, s.l, year);
+    if (have.has(key)) continue;
+    have.add(key);
+    out.push(s);
+    added = true;
+  }
+  if (added)
+    out.sort((a, b) => {
+      const ra = a.r && a.r > 0 ? a.r : 99;
+      const rb = b.r && b.r > 0 ? b.r : 99;
+      if (ra !== rb) return ra - rb;
+      if (b.o !== a.o) return b.o - a.o;
+      return a.l.localeCompare(b.l);
+    });
+  return out;
+}

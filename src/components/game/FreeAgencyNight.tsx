@@ -1,6 +1,5 @@
 import {
   deskHoles,
-  displayName,
   formatMoney,
   freeAgents,
   playerName,
@@ -15,6 +14,7 @@ import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
 import { KitChips } from "./KitChips";
 import { BidControls, BiddingWars } from "./MarketLife";
+import { FreeAgencyRecap } from "./FreeAgencyRecap";
 
 export function FreeAgencyNight() {
   const save = useGameStore((s) => s.save)!;
@@ -29,10 +29,6 @@ export function FreeAgencyNight() {
     .slice()
     .sort((a, b) => visibleOvr(b) - visibleOvr(a))
     .slice(0, 14);
-  const signed = save.transactions
-    .filter((t) => t.kind === "sign" && t.year === save.year)
-    .slice(-8)
-    .reverse();
   return (
     <div className="space-y-4">
       <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
@@ -71,24 +67,7 @@ export function FreeAgencyNight() {
 
       <BiddingWars />
 
-      {signed.length > 0 && (
-        <section className="rounded-xl border border-line bg-surface p-4">
-          <p className="text-xs tracking-[0.25em] text-muted">AROUND THE LEAGUE</p>
-          <ul className="mt-2 space-y-1 text-sm">
-            {signed.map((t) => {
-              const p = save.players[t.playerId];
-              return (
-                <li key={t.id}>
-                  {p ? <PlayerLink player={p} className="inline min-h-0" /> : t.playerId}{" "}
-                  <span className="text-muted">
-                    → {t.to !== "fa" ? displayName(save.year, t.to as typeof save.userTeamId) : t.to}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+      <FreeAgencyRecap year={save.year} compact />
 
       <section className="rounded-xl border border-line bg-surface p-4">
         <p className="text-xs tracking-[0.25em] text-muted">ON THE STREET</p>

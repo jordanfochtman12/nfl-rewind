@@ -68,7 +68,7 @@ import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
 import { DraftReportCard } from "./DraftReportCard";
 import { HallOfFame } from "./HallOfFame";
-import { HISTORY_LAST, leagueHistoryHtml, roman, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
+import { HISTORY_LAST, leagueHistoryHtml, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
@@ -94,6 +94,8 @@ import { ExpansionNight } from "./ExpansionNight";
 import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
 import { FreeAgencyNight } from "./FreeAgencyNight";
+import { FreeAgencyRecap } from "./FreeAgencyRecap";
+import { SuperBowlHistory } from "./SuperBowlHistory";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
@@ -468,6 +470,7 @@ function Office() {
           <PhaseAction />
         </div>
       </section>
+      {save.phase === "preseason" && save.faRecaps?.[save.year] && <FreeAgencyRecap year={save.year} compact />}
       {finale && <GradeCard grade={grade} />}
       <FranchiseHQ />
       <details className="hq-panel p-4"><summary className="cursor-pointer font-semibold">Detailed roster needs</summary><div className="mt-3"><DeskReport /></div></details>
@@ -1636,24 +1639,8 @@ function History() {
           })}
         </ul>
       </section>
-      <section>
-        <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Super Bowls</h3>
-        {save.history.superBowls.length === 0 && (
-          <p className="text-muted">The almanac is empty. Super Bowl I has not been played.</p>
-        )}
-        <ul className="space-y-2">
-          {save.history.superBowls.map((b) => (
-            <li key={b.year} className="rounded-lg border border-line bg-surface p-3">
-              <p className="font-display text-lg">
-                Super Bowl {roman(b.number)} — {displayName(b.year, b.homeScore >= b.awayScore ? b.homeId : b.awayId)}
-              </p>
-              <p className="text-sm text-muted">
-                {b.homeScore}–{b.awayScore} · {b.site} · {b.mvpName ?? "MVP n/a"}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <SuperBowlHistory compact />
+      {Object.keys(save.faRecaps ?? {}).length > 0 && <FreeAgencyRecap />}
       <TeamOfHonor />
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Pro Football Hall of Fame</h3>
@@ -1829,6 +1816,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
   { id: "history", label: "History" },
+  { id: "superbowl", label: "Super Bowls" },
   { id: "team", label: "Team History" },
   { id: "hof", label: "Hall of Fame" },
 ];
@@ -1841,6 +1829,7 @@ const WATCH_TABS: { id: Tab; label: string }[] = [
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
   { id: "history", label: "History" },
+  { id: "superbowl", label: "Super Bowls" },
   { id: "team", label: "Team History" },
   { id: "hof", label: "Hall of Fame" },
 ];
@@ -1962,6 +1951,7 @@ function PlayShell() {
         {tab === "draft" && !showDraft && !real && <DraftNight />}
         {tab === "draft" && (!showDraft || real) && <DraftReportCard />}
         {tab === "history" && <History />}
+        {tab === "superbowl" && <SuperBowlHistory />}
         {tab === "team" && (
           <TeamHistory records={(id) => <RecordBookSection title={`${displayName(save.year, id)} franchise records`} teamId={id} />} />
         )}

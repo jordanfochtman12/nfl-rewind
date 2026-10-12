@@ -2,6 +2,7 @@ import { CAREER_ARCS, VET_ARCS } from "./data/careerArcs.ts";
 import { HISTORICAL_ALIASES } from "./data/playerAliases.ts";
 import { UNDRAFTED_ARCS } from "./data/undrafted.ts";
 import { normalizedName } from "./identity.ts";
+import { AUDIT_ARCS, AUDIT_VET_ARCS } from "./data/auditPlayers.ts";
 
 const years = new Map<string, Set<number>>();
 function add(name: string, year: number): void {
@@ -18,6 +19,9 @@ for (const [name, rows] of Object.entries(VET_ARCS)) {
 }
 // Undrafted players keep their own year even when a drafted namesake exists (two Michael Bennetts).
 for (const [name, { dy }] of Object.entries(UNDRAFTED_ARCS)) add(name.replace(/\|/g, " "), dy);
+// Players the audit added from the real record, under their real first year.
+for (const [name, { dy }] of Object.entries(AUDIT_ARCS)) add(name.replace(/\|/g, " "), dy);
+for (const [name, rows] of Object.entries(AUDIT_VET_ARCS)) for (const row of rows) add(name.replace(/\|/g, " "), row[0]);
 for (const [year, ...names] of HISTORICAL_ALIASES) {
   for (const name of names) add(name, year);
 }

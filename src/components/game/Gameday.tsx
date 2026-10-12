@@ -302,6 +302,8 @@ export function GameFlow({ game }: { game: GameResult }) {
                       awayColor={clubInk(away, game.year).primary}
                       playing
                       index={s.index}
+                      year={game.year}
+                      game={game}
                     />
                     {lines.map((c) => (
                       <p key={c.text} className={c.speaker === "PBP" ? "text-[15px] text-white" : "text-sm italic text-paper"}>

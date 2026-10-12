@@ -100,7 +100,10 @@ export function chemistryEdge(save: DynastySave, teamId: TeamId): number {
 /** The weekly drift, the clubs' chemistry, and a public trade request from a miserable star. */
 export function updateMorale(save: DynastySave): void {
   if (save.realHistory) return;
-  let requests = Object.values(save.players).filter((p) => p.tradeRequest === save.year).length;
+  // The league's rule for public requests (careerMoments.tradeDemands): three a season, one a club.
+  const asked = Object.values(save.players).filter((p) => p.tradeRequest === save.year);
+  let requests = asked.length;
+  const clubsAsked = new Set(asked.map((p) => p.teamId));
   for (const id of activeTeamIds(save.year)) {
     const roster = rosterOf(save, id);
     const starterIds = new Set<string>();
@@ -112,8 +115,9 @@ export function updateMorale(save: DynastySave): void {
       if (p.morale < 40 && p.ovr >= 80) p.moraleLow = (p.moraleLow ?? 0) + 1;
       else p.moraleLow = undefined;
       // A public request is rare: a handful a season league-wide.
-      if ((p.moraleLow ?? 0) >= 3 && p.tradeRequest !== save.year && p.age <= 33 && requests < 4) {
+      if ((p.moraleLow ?? 0) >= 3 && p.tradeRequest !== save.year && p.age <= 33 && requests < 3 && !clubsAsked.has(id)) {
         requests += 1;
+        clubsAsked.add(id);
         p.tradeRequest = save.year;
         p.moraleLow = undefined;
         const why = moraleTarget(save, p, starterIds).reasons.filter((r) => r.delta < 0).sort((a, b) => a.delta - b.delta)[0];

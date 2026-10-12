@@ -449,7 +449,7 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
  * players a year piling up on the same number.
  */
 
-function paceDamp(p: Player, key: "rec" | "sacks", year: number, eraRef: number): number {
+function paceDamp(p: Player, key: "rec" | "sacks" | "ints", year: number, eraRef: number): number {
   const s = p.stats[year];
   if (!s || s.gp < 3) return 1;
   const pace = (s[key] / s.gp) * gamesInSeason(year);
@@ -603,7 +603,10 @@ function pickThief(save: DynastySave, def: TeamUnits): Player | undefined {
   if (!pool.length) return undefined;
   // Ball skills compound: on a linear weight every corner and safety split a club's picks
   // evenly and three of them tied for the league lead most years.
-  return pool[dist(save, pool.map((p) => Math.pow((p.ratings.cov + p.ratings.catch * 0.35 + p.ratings.awareness * 0.2) / 100, 2.5) * kitShare(p, "intShare")))];
+  // A ballhawk far ahead of a typical leader's pace sees fewer throws his way: real leaders
+  // land at 9-11 and the record (14) takes a rare season, never a run of 18s.
+  const ref = (gamesInSeason(save.year) * 11) / 14;
+  return pool[dist(save, pool.map((p) => Math.pow((p.ratings.cov + p.ratings.catch * 0.35 + p.ratings.awareness * 0.2) / 100, 2.5) * kitShare(p, "intShare") * paceDamp(p, "ints", save.year, ref)))];
 }
 
 function fgRange(k: Player | undefined, year: number, altitude: number): number {

@@ -42,6 +42,7 @@ export type Tab =
   | "stats"
   | "draft"
   | "history"
+  | "superbowl"
   | "team"
   | "hof"
   | "league";

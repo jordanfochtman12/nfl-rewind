@@ -1,4 +1,6 @@
 import type { Pos, TeamId } from "../types.ts";
+import { AUDIT_VET_FIX, AUDIT_VETS } from "./auditPlayers.ts";
+import { normalizedName } from "../identity.ts";
 
 export interface VetSeed {
   f: string;
@@ -705,3 +707,18 @@ export const VETERANS_1966: VetSeed[] = [
   { f: "Frank", l: "Jackson", p: "WR", t: "mia", a: 27, o: 74, n: 26 },
   { f: "Bo", l: "Roberson", p: "WR", t: "mia", a: 31, o: 72, n: 40, c: "Cornell" },
 ];
+
+/**
+ * The 1966 veterans as the game seeds them: the hand list corrected against the real 1966
+ * rosters by the player audit (club, position, number, age, college; anyone not in the league
+ * that year dropped), plus the real 1966 players the list missed.
+ */
+export function veterans1966(): VetSeed[] {
+  const out: VetSeed[] = [];
+  for (const v of VETERANS_1966) {
+    const f = AUDIT_VET_FIX[normalizedName(v.f, v.l)];
+    if (f === null) continue;
+    out.push(f ? { ...v, ...f } : v);
+  }
+  return [...out, ...AUDIT_VETS];
+}

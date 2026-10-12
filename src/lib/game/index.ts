@@ -128,6 +128,7 @@ export { playerHofScore, coachHofScore } from "./hof.ts";
 
 export { formatHt } from "./development.ts";
 export { venueOf, pickWeather, bowlVenue, crowdNoise } from "./venues.ts";
+export { fieldLook, type FieldLook, type EndZoneLook, type Surface } from "./fieldLook.ts";
 export { seasonLeaders, careerTotals, playoffTotals } from "./leaders.ts";
 export { honorLines, AWARD_LABEL } from "./honors.ts";
 export {
@@ -279,3 +280,5 @@ export { loadHistoryData, parseHistory, type HistoryData } from "./historyData.t
 export { clubWindow, evaluateTrade, untouchable, whatWouldItTake } from "./tradeAi.ts";
 export { draftPickValue, executePickDeal, slotValue, tradeDownOffers, tradeUpPackage, type PickDeal } from "./draftTrades.ts";
 export { BUDGETS, COMBINE_FROM, ownerGrade, proDayVisit, runCombine, scoutState, setScoutBudget, visitsLeft } from "./scouting.ts";
+export { faRecap, faHeadlines, type FaRecap, type FaSigning, type FaTeamLine } from "./faRecap.ts";
+export { superBowlBook, bowlGame, type SuperBowlBook, type BowlGame, type BowlClub, type Dynasty } from "./superBowlBook.ts";

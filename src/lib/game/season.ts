@@ -1,4 +1,5 @@
 import type { AdvanceOpts, DynastySave } from "./types.ts";
+import { fileFaRecap } from "./faRecap.ts";
 import { END_YEAR } from "./types.ts";
 import { activeTeamIds, roman, superBowlNumber } from "./teams.ts";
 import { cloneSave, resetSeasonRecord } from "./save.ts";
@@ -443,6 +444,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       if (auto || opts.closeFa) {
         resolveAllBids(s);
         runFreeAgency(s);
+        if (!s.cpuOnly || s.sandbox) fileFaRecap(s);
         s.faOpened = false;
         s.phase = "preseason";
         resolveCamp(s);

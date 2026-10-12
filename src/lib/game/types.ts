@@ -938,6 +938,8 @@ export interface Almanac {
 }
 
 export interface DynastySave {
+  /** Free-agency recaps, filed when each winter's market closes (last dozen kept). */
+  faRecaps?: Record<number, import("./faRecap.ts").FaRecap>;
   /** Original records retained when repairing historical duplicate identities. */
   identityRepairs?: { keptId: string; originals: Player[] }[];
   /** The owner's contract talks this offseason. */
