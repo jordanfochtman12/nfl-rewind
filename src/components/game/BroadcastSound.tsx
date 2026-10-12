@@ -40,7 +40,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     cancelSpeech();
     for (const line of call) {
       const { speech, who } = utter(line, cue);
-      speakLine(speech, who);
+      speakLine(speech, who, { live: true });
     }
   };
   // The next snaps' calls are made while this one is on the air, so the booth never lags the field.

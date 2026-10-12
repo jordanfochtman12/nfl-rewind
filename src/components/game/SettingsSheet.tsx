@@ -91,7 +91,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
   const hdHint = !st.hdVoices
     ? "Off: the device's own voices read the shows."
     : hd.status === "ready"
-      ? `Neural broadcast voices, on the air${hd.rtf && hd.rtf > 1 ? ". This device makes speech a little slower than it's spoken, so the shows read ahead and the booth waits for the call" : ""}.`
+      ? `Neural broadcast voices, on the air${hd.rtf && hd.rtf > 1 ? ". This device makes speech slower than it's spoken, so the shows read ahead, and a live call that isn't ready yet goes to the device voice so the game never waits" : ""}.`
       : hd.status === "loading"
         ? `Downloading the studio voices, ${Math.round(hd.progress * 100)}% (about 90 MB, once).`
         : hd.status === "failed"

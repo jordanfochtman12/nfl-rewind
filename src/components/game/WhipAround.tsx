@@ -157,7 +157,7 @@ export function WhipAround({
       u.pitch = c?.pitch ?? 1;
       cancelSpeech();
       // The whip-around cuts game to game; a call that would land late is dropped.
-      speakLine(u, { key: pbp.name, gender: pbp.gender, chair: "pbp" }, { maxLagMs: 3500 });
+      speakLine(u, { key: pbp.name, gender: pbp.gender, chair: "pbp" }, { maxLagMs: 3500, live: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now]);

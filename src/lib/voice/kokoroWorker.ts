@@ -9,6 +9,9 @@ import { KokoroTTS } from "kokoro-js";
 const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 let tts: Promise<KokoroTTS> | undefined;
 let phone = false;
+let phoneGpu = false;
+let device: "webgpu" | "wasm" = "wasm";
+let triedGpu = false;
 const files = new Map<string, { loaded: number; total: number }>();
 
 /**
@@ -17,8 +20,9 @@ const files = new Map<string, { loaded: number; total: number }>();
  * shares the browser's storage with the saved dynasties.
  */
 async function gpu(): Promise<boolean> {
-  // A phone's GPU shares its memory with the tab: the 92 MB CPU model is the one that fits.
-  if (phone) return false;
+  // A phone's GPU shares its memory with the tab: only when the page says this phone has held
+  // (or may try) the GPU model; otherwise the 92 MB CPU model.
+  if (phone && !phoneGpu) return false;
   try {
     const est = await navigator.storage?.estimate?.();
     if (est?.quota && est.quota - (est.usage ?? 0) < 1.5e9) return false;
@@ -29,10 +33,11 @@ async function gpu(): Promise<boolean> {
   }
 }
 
-function open(device: "webgpu" | "wasm"): Promise<KokoroTTS> {
+function open(d: "webgpu" | "wasm"): Promise<KokoroTTS> {
+  device = d;
   return KokoroTTS.from_pretrained(MODEL, {
-    dtype: device === "webgpu" ? "fp32" : "q8",
-    device,
+    dtype: d === "webgpu" ? "fp32" : "q8",
+    device: d,
     progress_callback: (p: { status?: string; file?: string; loaded?: number; total?: number }) => {
       if (p.status !== "progress" || !p.file || !p.total) return;
       files.set(p.file, { loaded: p.loaded ?? 0, total: p.total });
@@ -49,13 +54,16 @@ function open(device: "webgpu" | "wasm"): Promise<KokoroTTS> {
 
 function load(): Promise<KokoroTTS> {
   tts ??= gpu()
-    .then((g) => (g ? open("webgpu").catch(() => open("wasm")) : open("wasm")))
+    .then((g) => {
+      triedGpu = g;
+      return g ? open("webgpu").catch(() => open("wasm")) : open("wasm");
+    })
     .then(async (t) => {
       // A short read to learn how fast this device makes speech (1 = real time).
       const t0 = performance.now();
       const a = await t.generate("The studio is ready. Let's go to the field.", { voice: "am_michael" as never });
       const secs = a.audio.length / a.sampling_rate;
-      self.postMessage({ type: "ready", rtf: (performance.now() - t0) / 1000 / Math.max(0.5, secs) });
+      self.postMessage({ type: "ready", device, triedGpu, rtf: (performance.now() - t0) / 1000 / Math.max(0.5, secs) });
       return t;
     })
     .catch((err: unknown) => {
@@ -94,10 +102,11 @@ async function pump(): Promise<void> {
   }
 }
 
-self.onmessage = (e: MessageEvent<{ type: "load"; phone?: boolean } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
+self.onmessage = (e: MessageEvent<{ type: "load"; phone?: boolean; phoneGpu?: boolean } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
   const m = e.data;
   if (m.type === "load") {
     phone = !!m.phone;
+    phoneGpu = !!m.phoneGpu;
     void load().catch(() => {});
     return;
   }

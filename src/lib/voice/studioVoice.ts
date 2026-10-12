@@ -118,15 +118,17 @@ function spawn(first: boolean): void {
   const l: Lane = { w, ready: false, inFlight: 0 };
   lanes.push(l);
   w.onmessage = (e: MessageEvent) => {
-    const m = e.data as { type: string; id?: number; pcm?: Float32Array; rate?: number; loaded?: number; total?: number; message?: string; rtf?: number };
+    const m = e.data as { type: string; id?: number; pcm?: Float32Array; rate?: number; loaded?: number; total?: number; message?: string; rtf?: number; device?: string; triedGpu?: boolean };
     if (m.type === "progress" && m.total && first) useHdVoice.setState({ status: "loading", progress: Math.min(1, (m.loaded ?? 0) / m.total) });
     else if (m.type === "ready") {
       l.ready = true;
+      if (first) notePhoneGpu(m.triedGpu ? m.device : undefined);
       if (m.rtf) rtf = first ? m.rtf : Math.min(rtf, m.rtf);
       useHdVoice.setState({ status: "ready", progress: 1, rtf, workers: lanes.filter((x) => x.ready).length });
       // A second lane on a CPU-bound device with cores to spare: twice the lines made at once.
       if (first && !isPhone() && rtf > 0.6 && lanes.length === 1 && (navigator.hardwareConcurrency ?? 2) >= 6) spawn(false);
     } else if (m.type === "failed") {
+      if (first) notePhoneGpu("failed");
       lanes.splice(lanes.indexOf(l), 1);
       if (first && !lanes.some((x) => x.ready)) useHdVoice.setState({ status: "failed", error: m.message });
       for (const [id, p] of pending)
@@ -145,7 +147,51 @@ function spawn(first: boolean): void {
   w.onerror = (e) => {
     if (first && !l.ready) useHdVoice.setState({ status: "failed", error: e.message });
   };
-  w.postMessage({ type: "load", phone: isPhone() });
+  w.postMessage({ type: "load", phone: isPhone(), phoneGpu: first && phoneGpuAllowed() });
+}
+
+/**
+ * A phone's GPU makes the voices many times faster than its CPU, but the GPU model is big
+ * (about 325 MB) and a phone that can't hold it closes the tab. So a phone tries it a couple
+ * of times: each attempt is counted before it starts and the count cleared when it works, and
+ * tabs that died mid-attempt (or were closed during the download) leave the count behind, so
+ * after two the phone goes straight to the CPU model.
+ */
+const GPU_KEY = "rewind-voice-gpu";
+function phoneGpuAllowed(): boolean {
+  if (!isPhone() || !("gpu" in navigator)) return false;
+  try {
+    const was = localStorage.getItem(GPU_KEY);
+    if (was === "ok") return true;
+    const tries = Number(/^try(\d)$/.exec(was ?? "")?.[1] ?? 0);
+    if (was === "bad" || tries >= 2) {
+      localStorage.setItem(GPU_KEY, "bad");
+      return false;
+    }
+    localStorage.setItem(GPU_KEY, `try${tries + 1}`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+/** How the attempt went: the device the model runs on, or undefined when the GPU was never tried. */
+function notePhoneGpu(device: string | undefined): void {
+  if (!isPhone()) return;
+  try {
+    const was = localStorage.getItem(GPU_KEY);
+    if (!device) {
+      // No GPU attempt this time (no adapter, or short of storage): this visit doesn't count.
+      if (was?.startsWith("try")) {
+        const n = Number(was.slice(3)) - 1;
+        if (n > 0) localStorage.setItem(GPU_KEY, `try${n}`);
+        else localStorage.removeItem(GPU_KEY);
+      }
+      return;
+    }
+    if (was === "ok" || was?.startsWith("try")) localStorage.setItem(GPU_KEY, device === "webgpu" ? "ok" : "bad");
+  } catch {
+    /* no storage */
+  }
 }
 
 /** A phone or tablet: one voice worker and the small CPU model, so the tab stays inside its memory. */
@@ -182,7 +228,12 @@ export function hdReady(): Promise<boolean> {
 /* ---------------- making lines ---------------- */
 
 /** Lines already made or on their way, so a show can read ahead while a line plays. */
-const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane }>();
+const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane; done: boolean }>();
+
+/** Is this line already made (read ahead), so it can go on the air with no wait? */
+function isMade(text: string, voice: string, speed: number): boolean {
+  return !!made.get(`${voice}|${speed.toFixed(2)}|${text}`)?.done;
+}
 
 function synth(text: string, voice: string, speed: number, now: boolean): Promise<Clip> {
   const k = `${voice}|${speed.toFixed(2)}|${text}`;
@@ -201,13 +252,15 @@ function synth(text: string, voice: string, speed: number, now: boolean): Promis
     pending.set(id, { resolve, lane: l });
     l.w.postMessage({ type: "say", id, text, voice, speed, now });
   }).then((r) => {
+    const e = made.get(k);
+    if (e) e.done = true;
     if (r.pcm && r.rate) {
       const secs = r.pcm.length / r.rate;
       if (secs > 0.6) rtf = rtf * 0.8 + ((performance.now() - started) / 1000 / secs) * 0.2;
     }
     return r;
   });
-  made.set(k, { clip, id, lane: l });
+  made.set(k, { clip, id, lane: l, done: false });
   if (made.size > 120) made.delete(made.keys().next().value!);
   refreshTalking();
   return clip;
@@ -322,8 +375,9 @@ function deviceSpeak(u: SpeechSynthesisUtterance): void {
 /**
  * Read a line in the studio voice. `maxLagMs`: a live call that would air later than this after
  * it was asked for is dropped instead (the moment has passed); shows wait for every line.
+ * `live`: a call from the field, which never holds the game for a voice still being made.
  */
-export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { maxLagMs?: number } = {}): void {
+export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { maxLagMs?: number; live?: boolean } = {}): void {
   if (hdWanted()) warmHdVoices();
   if (!hdWanted() || useHdVoice.getState().status !== "ready" || !lane()) {
     deviceSpeak(u);
@@ -333,6 +387,13 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
   const asked = performance.now();
   const voice = hdVoiceFor(who);
   const parts = sentences(u.text);
+  // A live call on a device that makes speech slower than it's spoken: the studio voice reads
+  // it when the read-ahead already made it, otherwise the device voice calls it right now, so
+  // the game is never held for the booth.
+  if (opts.live && rtf > 1.1 && !isMade(parts[0]!, voice, clampRate(u.rate))) {
+    deviceSpeak(u);
+    return;
+  }
   // Making starts now for every sentence (the first ahead of any read-ahead work); playback
   // waits its turn, so queued lines read in order like the device engine's own queue.
   const clips = parts.map((t, k) => synth(t, voice, clampRate(u.rate), k === 0));
