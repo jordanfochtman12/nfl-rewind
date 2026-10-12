@@ -90,3 +90,11 @@ export function copySlotMeta(from: number, to: number): void {
   index[to] = { ...m, slot: to, t: Date.now() };
   write(INDEX_KEY, index);
 }
+
+/** Put a slot back on the list from what its stored save says (a slot list that was lost). */
+export function restoreSlotMeta(slot: number, meta: Omit<SlotMeta, "slot" | "t">): void {
+  const index = slotIndex();
+  if (index[slot]) return;
+  index[slot] = { ...meta, slot, t: Date.now() };
+  write(INDEX_KEY, index);
+}

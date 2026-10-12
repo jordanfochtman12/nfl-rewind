@@ -257,7 +257,10 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player
   // An undrafted sleeper the scouts all missed (named, so he stays in the league unsigned).
   if (friend) {
     p.hometown = friend.hometown;
-    p.potential = Math.min(94, p.ovr + 12);
+    moveToward(p, friend.start);
+    p.potential = friend.ceiling;
+    p.peakOvr = p.ovr;
+    p.gem = true;
   }
   p.collegeNo = friend?.n ?? realRookieNumber(save.year, s.f, s.l) ?? collegeNumber(p.pos, p.id);
   p.jersey = p.collegeNo;

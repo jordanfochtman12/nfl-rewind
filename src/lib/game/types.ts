@@ -229,6 +229,8 @@ export interface Player {
   collegeNo?: number;
   college?: string;
   hometown?: string;
+  /** A sleeper who grows fast toward his ceiling (the owner's own class). */
+  gem?: boolean;
   heightIn?: number;
   weight?: number;
   forty?: number;

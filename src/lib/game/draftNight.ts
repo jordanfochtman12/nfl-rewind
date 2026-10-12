@@ -85,8 +85,11 @@ const GROUP_ONE: Record<PosGroup, string> = {
 
 /** This year's selections in pick order. */
 export function picksMade(save: DynastySave): Player[] {
-  return Object.values(save.players)
-    .filter((p) => p.draftYear === save.year && p.draftTeam && p.draftPick != null && save.draftBoard.some((pr) => pr.playerId === p.id && pr.taken))
+  // Walk the board, not the whole player file (tens of thousands of names late in a dynasty).
+  return save.draftBoard
+    .filter((pr) => pr.taken)
+    .map((pr) => save.players[pr.playerId])
+    .filter((p): p is Player => !!p && p.draftYear === save.year && !!p.draftTeam && p.draftPick != null)
     .sort((a, b) => a.draftPick! - b.draftPick!);
 }
 

@@ -10,9 +10,15 @@ const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 let tts: Promise<KokoroTTS> | undefined;
 const files = new Map<string, { loaded: number; total: number }>();
 
-/** The GPU when the browser offers one (much faster; the full-precision model the GPU wants). */
+/**
+ * The GPU when the browser offers one (much faster; the full-precision model the GPU wants),
+ * and only with room to spare: that model is about 325 MB against 92 MB for the CPU's, and it
+ * shares the browser's storage with the saved dynasties.
+ */
 async function gpu(): Promise<boolean> {
   try {
+    const est = await navigator.storage?.estimate?.();
+    if (est?.quota && est.quota - (est.usage ?? 0) < 1.5e9) return false;
     const g = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
     return !!g && !!(await g.requestAdapter());
   } catch {

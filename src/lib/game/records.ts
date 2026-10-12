@@ -140,7 +140,8 @@ export function careerRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): 
     const frozen = settledLeaders(save, topN, settled, settled.filter((p) => p.teamId === "hof").length);
     byCat = (cat) => [...(frozen.get(cat.id) ?? []), ...living.map(({ p, c }) => ({ p, c, value: cat.of(c.totals) }))];
   }
-  const all = teamId ? players.map((p) => ({ p })) : [];
+  // A franchise book only needs the men who ever played for the franchise.
+  const all = teamId ? players.filter((p) => Object.values(p.stats).some((x) => x.teamId === teamId) || (p.career ?? []).some((x) => x.teamId === teamId)).map((p) => ({ p })) : [];
   return CATS.map((cat) => {
     const ranked = (byCat ? byCat(cat) : all.map(({ p }): Ranked => ({ p, value: teamCareerValue(p, teamId!, cat) })))
       .filter((r) => r.value > 0)
@@ -270,21 +271,35 @@ export function availableDecades(save: DynastySave): number[] {
 /** Best XI-ish squad for a decade, scored on aggregate production + peak talent across every year played in it. */
 export function allDecadeTeam(save: DynastySave, decadeStart: number): DecadeTeamSlot[] {
   const years = Array.from({ length: 10 }, (_, i) => decadeStart + i);
+  // One walk over the player file, grouped by position: who could have played in the decade.
+  const byPos = new Map<Pos, Player[]>();
+  const lo = decadeStart;
+  const hi = decadeStart + 9;
+  for (const p of Object.values(save.players)) {
+    const ol = OL_POS.has(p.pos);
+    if (ol) {
+      const start = p.draftYear ?? save.startingYear;
+      const end = p.retiredYear != null ? p.retiredYear - 1 : save.year;
+      if (end < lo || start > hi) continue;
+    } else if (!years.some((y) => p.stats[y])) continue;
+    const list = byPos.get(p.pos);
+    if (list) list.push(p);
+    else byPos.set(p.pos, [p]);
+  }
   return DECADE_SLOTS.map(([pos, n]) => {
-    const pool = Object.values(save.players)
-      .filter((p) => p.pos === pos)
+    const pool = (byPos.get(pos) ?? [])
       .map((p) => {
         if (OL_POS.has(pos)) {
           const start = p.draftYear ?? save.startingYear;
           const end = p.retiredYear != null ? p.retiredYear - 1 : save.year;
           const activeYears = years.filter((y) => y >= start && y <= end);
           if (!activeYears.length) return null;
-          const teamId = lastTeamOf(save, p);
           return {
             p,
             score: (p.peakOvr ?? p.ovr) * 0.5 + activeYears.length * 2,
             years: activeYears.length,
-            team: displayName(Math.min(decadeStart + 9, save.year), teamId),
+            // Named only for the few who make the team (the lookup walks the retirement log).
+            team: () => displayName(Math.min(decadeStart + 9, save.year), lastTeamOf(save, p)),
           };
         }
         const playedYears = years.filter((y) => p.stats[y]);
@@ -295,7 +310,7 @@ export function allDecadeTeam(save: DynastySave, decadeStart: number): DecadeTea
           p,
           score: decadeScore(p, years),
           years: playedYears.length,
-          team: teamId && teamId !== "two" ? displayName(Math.min(lastY, save.year), teamId) : "—",
+          team: () => (teamId && teamId !== "two" ? displayName(Math.min(lastY, save.year), teamId) : "—"),
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null)
@@ -303,7 +318,7 @@ export function allDecadeTeam(save: DynastySave, decadeStart: number): DecadeTea
       .slice(0, n);
     return {
       pos,
-      players: pool.map((x) => ({ playerId: x.p.id, name: playerName(x.p), team: x.team, years: x.years })),
+      players: pool.map((x) => ({ playerId: x.p.id, name: playerName(x.p), team: x.team(), years: x.years })),
     };
   });
 }

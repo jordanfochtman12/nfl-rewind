@@ -52,10 +52,21 @@ test("the Berlin, PA class: on the board, unscouted, undrafted, and better than 
     for (const p of mine) {
       assert.ok(p.hometown && /PA$/.test(p.hometown));
       assert.ok(p.scoutOvr < 62, `${p.lastName} scouted ${p.scoutOvr}`);
-      assert.ok(p.ovr >= 72 && p.potential >= p.ovr + 8, `${p.lastName} ${p.ovr}/${p.potential}`);
+      const want = { Tommy: [73, 93], Jordan: [72, 94], Austin: [70, 90], Tyler: [76, 95] }[p.firstName];
+      assert.deepEqual([p.ovr, p.potential], want, `${p.firstName} starts and tops out where he should`);
+      assert.ok(p.gem);
       assert.ok(s.draftBoard.some((pr) => pr.playerId === p.id));
     }
     while (makeDraftPick(s));
     for (const p of mine) assert.equal(s.players[p.id].draftPick, undefined, `${p.lastName} goes undrafted`);
   }
+});
+
+test("a hidden gem grows fast once he's on a roster", () => {
+  let s = simUntil(createNewGame({ userTeamId: "pit", startingYear: 2019, seed: 5 }), (x) => x.phase === "draft");
+  const jordan = Object.values(s.players).find((p) => p.firstName === "Jordan" && p.lastName === "Fochtman");
+  assert.equal(jordan.arch, "dual", "a dual threat: runs as well as he throws");
+  s = simUntil(s, (x) => x.year === 2023 && x.phase === "regular");
+  const now = s.players[jordan.id];
+  if (now && now.teamId !== "fa") assert.ok(now.ovr >= 78, `Jordan ${now.ovr} by 2023`);
 });

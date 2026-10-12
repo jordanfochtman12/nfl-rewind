@@ -4,7 +4,8 @@
  * has left. Reads the same packed IndexedDB entries the store writes.
  */
 import { dynastyStorage } from "@/lib/save-idb.ts";
-import { copySlotMeta, slotKey } from "@/lib/save-slots.ts";
+import { copySlotMeta, restoreSlotMeta, slotIndex, slotKey, SLOT_COUNT } from "@/lib/save-slots.ts";
+import { displayName, type TeamId } from "@/lib/game/index.ts";
 
 const SAVE_NAME = "nfl-rewind-dynasty";
 const PACKED = (name: string) => `${name}:packed`;
@@ -73,4 +74,38 @@ export function downloadText(name: string, text: string): void {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Saves the slot list has lost track of (its index lives in localStorage, the saves in
+ * IndexedDB, and a browser can clear one without the other): put every stored save back on
+ * the list. Returns how many came back.
+ */
+export async function recoverSlots(): Promise<number> {
+  const index = slotIndex();
+  let found = 0;
+  for (let n = 1; n <= SLOT_COUNT; n++) {
+    if (index[n]) continue;
+    const r = await rawOf(n);
+    if (!r) continue;
+    try {
+      const save = (JSON.parse(r.raw) as { state?: { save?: Record<string, unknown> | null } }).state?.save;
+      if (!save) continue;
+      const history = !!save.realHistory;
+      const watch = !!save.sandbox;
+      const team = save.userTeamId as TeamId | undefined;
+      const year = typeof save.year === "number" ? save.year : 1966;
+      restoreSlotMeta(n, {
+        kind: history ? "history" : watch ? "watch" : "dynasty",
+        title: history ? "History mode" : watch ? "Watch history" : team ? displayName(year, team) : "Dynasty",
+        teamId: !history && !watch ? team : undefined,
+        year,
+        weekLabel: typeof save.weekLabel === "string" ? save.weekLabel : "",
+      });
+      found += 1;
+    } catch {
+      /* unreadable: leave it off the list rather than guess */
+    }
+  }
+  return found;
 }

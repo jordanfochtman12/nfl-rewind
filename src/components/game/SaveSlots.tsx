@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { SLOT_COUNT, slotIndex, type SlotMeta } from "@/lib/save-slots";
-import { downloadText, duplicateSlot, fmtBytes, slotBytes, slotExport, storageRoom } from "@/lib/save-tools";
+import { downloadText, duplicateSlot, fmtBytes, recoverSlots, slotBytes, slotExport, storageRoom } from "@/lib/save-tools";
 import { Logo } from "./chrome";
 
 const KIND_LABEL: Record<SlotMeta["kind"], string> = { dynasty: "Dynasty", watch: "Watch history", history: "History mode" };
@@ -17,7 +17,12 @@ function when(t: number): string {
 }
 
 export function SaveSlots() {
-  const slot = useGameStore((s) => s.slot);
+  const storeSlot = useGameStore((s) => s.slot);
+  // The active slot lives in this browser's storage; the server can't know it, so the first
+  // paint uses slot 1 (as the server did) and the real one comes in after mount.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const slot = mounted ? storeSlot : 1;
   const save = useGameStore((s) => s.save);
   const switchSlot = useGameStore((s) => s.switchSlot);
   const clearSlot = useGameStore((s) => s.clearSlot);
@@ -34,6 +39,18 @@ export function SaveSlots() {
   const restoreTo = useRef<number>(1);
   // The index lives in localStorage and changes as saves are written; re-read when the save does.
   useEffect(() => setIndex(slotIndex()), [save, slot]);
+  // Saves the list lost track of come back on it (once per visit to the title screen).
+  useEffect(() => {
+    let live = true;
+    void recoverSlots().then((n) => {
+      if (!live || !n) return;
+      setIndex(slotIndex());
+      setNote(`Found ${n} saved ${n === 1 ? "dynasty" : "dynasties"} that had dropped off the list.`);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   useEffect(() => {
     let live = true;
     void (async () => {

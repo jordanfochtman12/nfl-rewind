@@ -116,7 +116,9 @@ export function agePlayer(save: DynastySave, p: Player): void {
   if (!starter && p.age < peak && gp < 3 && rand(save) < 0.55) delta = Math.min(delta, 0);
   if (rand(save) < 0.14) delta += randInt(save, -1, 1);
   if ((p.morale ?? 70) < 42 && rand(save) < 0.2) delta = Math.min(delta, 0);
-  if (p.ovr + delta > pot && delta > 0 && rand(save) < 0.7) delta = Math.max(0, pot - p.ovr);
+  // A hidden gem climbs fast once he's in a building: two to four a year until he hits it.
+  if (p.gem && p.ovr < pot && p.age <= peak + 1 && p.teamId !== "fa") delta = Math.max(delta, starter ? randInt(save, 3, 4) : randInt(save, 2, 3));
+  if (p.ovr + delta > pot && delta > 0 && (p.gem || rand(save) < 0.7)) delta = Math.max(0, pot - p.ovr);
 
   if (delta !== 0) applyAgeDelta(p, delta);
   }

@@ -16,8 +16,9 @@ function rows(
   pick: (s: SeasonStats, p: Player) => number,
   label: string,
   n = 8,
+  pool: Player[] = Object.values(save.players),
 ): LeaderRow[] {
-  return Object.values(save.players)
+  return pool
     .map((p) => {
       const s = p.stats[save.year];
       return { p, v: s ? pick(s, p) : 0 };
@@ -35,18 +36,22 @@ function rows(
     }));
 }
 
+/** This season's leaders. Late in a dynasty there are tens of thousands of players on file,
+ * so only the ones with a line this year are walked. */
 export function seasonLeaders(save: DynastySave) {
+  const pool = Object.values(save.players).filter((p) => p.stats[save.year]);
+  const r = (pick: (s: SeasonStats, p: Player) => number, label: string) => rows(save, pick, label, 8, pool);
   return {
-    passYds: rows(save, (s) => s.passYds, "Pass yds"),
-    passTd: rows(save, (s) => s.passTd, "Pass TD"),
-    rushYds: rows(save, (s) => s.rushYds, "Rush yds"),
-    rec: rows(save, (s) => s.rec, "Receptions"),
-    recYds: rows(save, (s) => s.recYds, "Rec yds"),
-    sacks: rows(save, (s) => s.sacks, "Sacks"),
-    ints: rows(save, (s) => s.ints, "INT"),
-    tfl: rows(save, (s) => s.tfl ?? 0, "TFL"),
-    pd: rows(save, (s) => s.pd ?? 0, "PD"),
-    scoring: rows(save, (s) => s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade, "Pts"),
+    passYds: r((s) => s.passYds, "Pass yds"),
+    passTd: r((s) => s.passTd, "Pass TD"),
+    rushYds: r((s) => s.rushYds, "Rush yds"),
+    rec: r((s) => s.rec, "Receptions"),
+    recYds: r((s) => s.recYds, "Rec yds"),
+    sacks: r((s) => s.sacks, "Sacks"),
+    ints: r((s) => s.ints, "INT"),
+    tfl: r((s) => s.tfl ?? 0, "TFL"),
+    pd: r((s) => s.pd ?? 0, "PD"),
+    scoring: r((s) => s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade, "Pts"),
   };
 }
 

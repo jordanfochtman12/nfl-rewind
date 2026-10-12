@@ -107,10 +107,19 @@ export function coachHofBlurb(c: Coach): string {
   return `${c.name}, head coach. ${rec}${titles}. ${c.abilities?.slice(0, 2).join(" · ") ?? "The whistle was the argument."}`;
 }
 
+/** Retirement log by player, rebuilt only when the log grows (it is append-only). */
+const retiredIndex = new WeakMap<object, { n: number; by: Map<string, TeamId> }>();
 export function lastTeamOf(save: DynastySave, p: Player): TeamId {
-  const retired = save.history.retirements.find((r) => r.playerId === p.id);
-  if (retired?.teamId) return retired.teamId;
-  return save.userTeamId;
+  const log = save.history.retirements;
+  let idx = retiredIndex.get(log);
+  if (!idx || idx.n !== log.length) {
+    const by = new Map<string, TeamId>();
+    // First entry wins, as find() did.
+    for (const r of log) if (r.playerId && r.teamId && !by.has(r.playerId)) by.set(r.playerId, r.teamId);
+    idx = { n: log.length, by };
+    retiredIndex.set(log, idx);
+  }
+  return idx.by.get(p.id) ?? save.userTeamId;
 }
 
 export function lastCoachTeam(save: DynastySave, c: Coach): TeamId {

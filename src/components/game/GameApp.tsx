@@ -104,6 +104,7 @@ import { SundayNight } from "./SundayNight";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { HistoryDesk, HistoryDraft } from "./HistoryMode";
 import { SaveSlots } from "./SaveSlots";
+import { saveHealth } from "@/lib/save-idb";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
@@ -1450,12 +1451,15 @@ type RecordScope = (typeof RECORD_SCOPES)[number];
 function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }) {
   const save = useGameStore((s) => s.save)!;
   const [scope, setScope] = useState<RecordScope>("career");
-  const cats =
-    scope === "career"
-      ? careerRecordBook(save, teamId ? 1 : 3, teamId)
-      : scope === "season"
-        ? seasonRecordBook(save, teamId ? 1 : 3, teamId)
-        : gameRecordBook(save, teamId);
+  const cats = useMemo(
+    () =>
+      scope === "career"
+        ? careerRecordBook(save, teamId ? 1 : 3, teamId)
+        : scope === "season"
+          ? seasonRecordBook(save, teamId ? 1 : 3, teamId)
+          : gameRecordBook(save, teamId),
+    [save, scope, teamId],
+  );
   return (
     <section>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
@@ -1563,7 +1567,7 @@ function ShareHistory() {
 
 function History() {
   const save = useGameStore((s) => s.save)!;
-  const leaders = seasonLeaders(save);
+  const leaders = useMemo(() => seasonLeaders(save), [save]);
   const boards = [
     ["Passing", leaders.passYds],
     ["Rushing", leaders.rushYds],
@@ -1735,7 +1739,7 @@ function AllDecadeTeams() {
   const save = useGameStore((s) => s.save)!;
   const decades = availableDecades(save);
   const [decade, setDecade] = useState(decades[decades.length - 1] ?? save.startingYear);
-  const slots = allDecadeTeam(save, decade);
+  const slots = useMemo(() => allDecadeTeam(save, decade), [save, decade]);
   return (
     <section>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
@@ -1899,6 +1903,7 @@ function PlayShell() {
     ) : (
     <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
       <a href="#franchise-content" className="skip-link">Skip to franchise content</a>
+      <SaveHealthBanner />
       <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
@@ -1985,4 +1990,22 @@ export function GameApp() {
   if (screen === "title") return <TitleScreen />;
   if (screen === "select") return <TeamSelect />;
   return <PlayShell />;
+}
+
+/** Says so when the browser has no room left to write the dynasty, so it is never lost quietly. */
+function SaveHealthBanner() {
+  const [failed, setFailed] = useState(saveHealth.failed);
+  useEffect(() => {
+    const on = () => setFailed(saveHealth.failed);
+    saveHealth.listeners.add(on);
+    return () => {
+      saveHealth.listeners.delete(on);
+    };
+  }, []);
+  if (!failed) return null;
+  return (
+    <p role="alert" className="mx-auto mt-2 max-w-6xl rounded-md border border-brick/60 bg-brick/15 px-4 py-2 text-sm text-paper">
+      This browser is out of room, so the latest progress isn&apos;t saved. Use Export on the title screen to keep a copy, or clear an old slot.
+    </p>
+  );
 }

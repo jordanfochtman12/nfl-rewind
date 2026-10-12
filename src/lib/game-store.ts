@@ -190,11 +190,18 @@ function persistStorage(): PersistStorage<Persisted> {
     },
     setItem: (name, value) => {
       const save = value.state.save;
+      // An empty store is never written over a slot: switching slots empties the store while
+      // the next save loads (a big one can take seconds), and clearing a slot deletes it
+      // outright (clearSlot). Writing the blank would erase the dynasty.
+      if (!save) return;
       if (save === lastWritten) return;
       lastWritten = save;
       pending = { name, slot: activeSlot(), value };
       if (timer) clearTimeout(timer);
-      timer = setTimeout(() => void flush(), 350);
+      // A live draft changes the save every couple of seconds; packing a late-dynasty save
+      // takes a few hundred milliseconds, so the picks are written in batches instead of
+      // each one stalling the room. Leaving the page still writes at once (see flush).
+      timer = setTimeout(() => void flush(), save?.phase === "draft" ? 6000 : 350);
     },
     removeItem: async (name) => {
       pending = null;
