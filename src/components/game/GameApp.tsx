@@ -1982,15 +1982,15 @@ function PlayShell() {
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
   // The studio voices start downloading once the page has settled, so the first show has them,
-  // but only with room to spare: on a phone short of storage they wait until a voice is needed,
-  // so the model never crowds out the saved dynasties.
+  // phones included (the 92 MB CPU model). Only a device nearly out of storage waits until a
+  // voice is needed, so the model never crowds out the saved dynasties.
   useEffect(() => {
     const t = window.setTimeout(() => {
       if (!settingsNow().hdVoices) return;
       void (async () => {
         try {
           const est = await navigator.storage?.estimate?.();
-          if (est?.quota && est.quota - (est.usage ?? 0) < 1e9) return;
+          if (est?.quota && est.quota - (est.usage ?? 0) < 4e8) return;
         } catch {
           /* can't tell: go ahead */
         }

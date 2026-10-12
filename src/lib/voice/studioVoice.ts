@@ -125,7 +125,7 @@ function spawn(first: boolean): void {
       if (m.rtf) rtf = first ? m.rtf : Math.min(rtf, m.rtf);
       useHdVoice.setState({ status: "ready", progress: 1, rtf, workers: lanes.filter((x) => x.ready).length });
       // A second lane on a CPU-bound device with cores to spare: twice the lines made at once.
-      if (first && rtf > 0.6 && lanes.length === 1 && (navigator.hardwareConcurrency ?? 2) >= 6) spawn(false);
+      if (first && !isPhone() && rtf > 0.6 && lanes.length === 1 && (navigator.hardwareConcurrency ?? 2) >= 6) spawn(false);
     } else if (m.type === "failed") {
       lanes.splice(lanes.indexOf(l), 1);
       if (first && !lanes.some((x) => x.ready)) useHdVoice.setState({ status: "failed", error: m.message });
@@ -145,7 +145,14 @@ function spawn(first: boolean): void {
   w.onerror = (e) => {
     if (first && !l.ready) useHdVoice.setState({ status: "failed", error: e.message });
   };
-  w.postMessage({ type: "load" });
+  w.postMessage({ type: "load", phone: isPhone() });
+}
+
+/** A phone or tablet: one voice worker and the small CPU model, so the tab stays inside its memory. */
+export function isPhone(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /iPhone|iPad|iPod|Android|Mobile/i.test(ua) || (/Macintosh/.test(ua) && (navigator.maxTouchPoints ?? 0) > 1);
 }
 
 /** Start loading the studio voices (idempotent). Called at startup, on the first read, or from Settings. */
@@ -233,6 +240,59 @@ export function prefetchLine(text: string, who: Speaker, rate = 1): void {
 /* ---------------- on the air ---------------- */
 
 let ctx: AudioContext | undefined;
+
+/**
+ * Phones only let a page make sound after a tap, and only from a context opened or resumed
+ * during one. Every tap opens (or wakes) the studio's audio and the device voice, plays an
+ * instant of silence to claim them, and asks iOS to play through the silent switch like a video
+ * would. Without this the studio voices on an iPhone are made but never heard.
+ */
+export function unlockAudio(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const s = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
+    if (s && s.type !== "playback") s.type = "playback";
+  } catch {
+    /* not offered here */
+  }
+  try {
+    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (AC) {
+      ctx ??= new AC();
+      if (ctx.state !== "running") {
+        void ctx.resume().catch(() => undefined);
+        const src = ctx.createBufferSource();
+        src.buffer = ctx.createBuffer(1, 1, 22050);
+        src.connect(ctx.destination);
+        src.start(0);
+      }
+    }
+  } catch {
+    /* no Web Audio */
+  }
+  if (!spokeOnce && "speechSynthesis" in window && !window.speechSynthesis.speaking) {
+    spokeOnce = true;
+    try {
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0;
+      window.speechSynthesis.speak(u);
+    } catch {
+      /* no device voice */
+    }
+  }
+}
+let spokeOnce = false;
+
+if (typeof window !== "undefined") {
+  for (const ev of ["pointerdown", "touchend", "keydown"]) window.addEventListener(ev, unlockAudio, { capture: true, passive: true });
+}
+
+/** Wakes the audio for a line; false when the phone still holds it locked (no tap yet). */
+async function awake(c: AudioContext): Promise<boolean> {
+  if (c.state === "running") return true;
+  await Promise.race([c.resume().catch(() => undefined), new Promise((r) => setTimeout(r, 1200))]);
+  return (c.state as string) === "running";
+}
 let playing: AudioBufferSourceNode | undefined;
 /** Bumped by cancel: any line still being made is dropped when it arrives. */
 let generation = 0;
@@ -298,7 +358,16 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
           return;
         }
         ctx ??= new AudioContext();
-        if (ctx.state === "suspended") await ctx.resume();
+        if (!(await awake(ctx))) {
+          // The phone hasn't let the page play yet: the device voice reads it (or it passes).
+          const rest = new SpeechSynthesisUtterance(parts.slice(i).join(" "));
+          rest.rate = u.rate;
+          rest.volume = u.volume;
+          rest.onend = () => fire(u, "end");
+          rest.onerror = () => fire(u, "end");
+          deviceSpeak(rest);
+          return;
+        }
         const buf = ctx.createBuffer(1, r.pcm.length, r.rate);
         buf.copyToChannel(r.pcm as Float32Array<ArrayBuffer>, 0);
         const src = ctx.createBufferSource();

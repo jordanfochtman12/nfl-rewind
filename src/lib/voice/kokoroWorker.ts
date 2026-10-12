@@ -8,6 +8,7 @@ import { KokoroTTS } from "kokoro-js";
 
 const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 let tts: Promise<KokoroTTS> | undefined;
+let phone = false;
 const files = new Map<string, { loaded: number; total: number }>();
 
 /**
@@ -16,6 +17,8 @@ const files = new Map<string, { loaded: number; total: number }>();
  * shares the browser's storage with the saved dynasties.
  */
 async function gpu(): Promise<boolean> {
+  // A phone's GPU shares its memory with the tab: the 92 MB CPU model is the one that fits.
+  if (phone) return false;
   try {
     const est = await navigator.storage?.estimate?.();
     if (est?.quota && est.quota - (est.usage ?? 0) < 1.5e9) return false;
@@ -91,9 +94,10 @@ async function pump(): Promise<void> {
   }
 }
 
-self.onmessage = (e: MessageEvent<{ type: "load" } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
+self.onmessage = (e: MessageEvent<{ type: "load"; phone?: boolean } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
   const m = e.data;
   if (m.type === "load") {
+    phone = !!m.phone;
     void load().catch(() => {});
     return;
   }
