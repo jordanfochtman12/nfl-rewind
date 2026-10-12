@@ -81,7 +81,8 @@ import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
 import { DraftNight } from "./DraftNight";
 import { SuperBowlNight } from "./SuperBowlNight";
 import { GameNight } from "./GameNight";
-import { GameWeekPrep } from "./Gameday";
+import { GameWeekPrep, TonightsStorylines } from "./Gameday";
+import { LockerRoom, MoodCell } from "./LockerRoom";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
@@ -537,6 +538,11 @@ function ThisSunday() {
           {staffSystems(save, save.userTeamId).defense}. The call sheet on the Staff tab is live — this is what the booth will actually call.
         </p>
         <MatchupNotes game={game} />
+        {!save.sandbox && !save.realHistory && (
+          <div className="mt-4">
+            <TonightsStorylines game={game} />
+          </div>
+        )}
         {!save.sandbox && !save.realHistory && <GameWeekPrep game={game} />}
       </div>
     </section>
@@ -643,13 +649,14 @@ function Roster() {
   return (
     <div className="space-y-3">
       {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
+      {!save.realHistory && <LockerRoom />}
       <div className="overflow-x-auto rounded-xl border border-line">
-      <table className="w-full min-w-[960px] text-left text-sm">
+      <table className="w-full min-w-[1040px] text-left text-sm">
         <thead className="text-xs tracking-wider text-muted">
           <tr>
             <th className="sticky left-0 z-10 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
             <th className="sticky left-12 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Status", ""].map((h) => (
+            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Mood", "Status", ""].map((h) => (
               <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                 {h}
               </th>
@@ -678,6 +685,9 @@ function Roster() {
                 <KitChips player={p} compact />
               </td>
               <td className="tabular px-3 py-2 text-muted">{formatMoney(p.salary ?? 0, save.year)}</td>
+              <td className="px-3 py-2 text-xs">
+                <MoodCell p={p} />
+              </td>
               <td className="px-3 py-2 text-xs">
                 {p.onIR ? (
                   <span className="text-brick">

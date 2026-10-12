@@ -31,6 +31,8 @@ import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { KitChips } from "./KitChips";
 import { ProfileExtras } from "./ProfileExtras";
+import { MoodCell } from "./LockerRoom";
+import { CareerCompare, CareerRanks } from "./CareerCompare";
 
 function archLabel(p: Player): string {
   const a = p.arch as keyof typeof ARCH_LABEL | undefined;
@@ -270,6 +272,7 @@ export function PlayerProfile() {
         </header>
 
         <div className="space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
+          <CareerRanks p={p} />
           <section className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border border-line bg-surface p-4">
               <p className="text-xs tracking-[0.25em] text-muted">Vital</p>
@@ -297,7 +300,7 @@ export function PlayerProfile() {
                     <dt className="text-muted">Potential</dt>
                     <dd className="tabular">{p.revealed ? p.potential : "—"}</dd>
                     <dt className="text-muted">Morale</dt>
-                    <dd className="tabular">{p.morale ?? "—"}</dd>
+                    <dd>{p.morale === undefined ? "—" : <MoodCell p={p} />}</dd>
                   </>
                 )}
                 <dt className="text-muted">Status</dt>
@@ -393,6 +396,7 @@ export function PlayerProfile() {
           )}
 
           <ProfileExtras p={p} />
+          <CareerCompare p={p} />
         </div>
       </article>
     </div>

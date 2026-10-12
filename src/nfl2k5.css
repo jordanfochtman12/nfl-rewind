@@ -800,3 +800,9 @@ table tbody tr:hover {
     opacity: 0.7;
   }
 }
+
+/* The header light streak and the page wipe travel past the right edge; clip them so the
+   page never picks up a sideways scroll. `clip` (not hidden) keeps the sticky header working. */
+.broadcast-shell {
+  overflow-x: clip;
+}

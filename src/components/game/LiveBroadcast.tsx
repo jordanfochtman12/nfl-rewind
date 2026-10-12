@@ -10,7 +10,7 @@ import { Btn, Logo } from "./chrome";
 import { useEraClass } from "./eraLook";
 import { markWatched } from "./liveWatch";
 import { wpSeries } from "@/lib/game/gameday";
-import { CueChip, KeyMatchups, MomentumMeter } from "./Gameday";
+import { CueChip, HalftimeDesk, KeyMatchups, MomentumMeter } from "./Gameday";
 
 const ORD = ["", "1st", "2nd", "3rd", "4th"];
 const clockText = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -93,7 +93,18 @@ export function LiveBroadcast({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [i, log, game.year],
   );
-  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year);
+  // How loud the building is: tight and late, a big stage, a team on a run, the crowd cue itself.
+  const atNow = log[i];
+  const intensity = atNow
+    ? Math.min(
+        1,
+        (atNow.q > 4 ? 0.85 : atNow.q === 4 && Math.abs(atNow.hs - atNow.as) <= 8 ? 0.55 + (900 - atNow.clock) / 3000 : atNow.q >= 3 && Math.abs(atNow.hs - atNow.as) <= 8 ? 0.3 : 0.12) +
+          (game.rivalry || game.night || game.phase !== "regular" ? 0.12 : 0) +
+          (Math.abs(atNow.mo ?? 0) >= 1.5 ? 0.12 : 0) +
+          (atNow.cue === "crowd" ? 0.2 : 0),
+      )
+    : 0;
+  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 
@@ -150,6 +161,22 @@ export function LiveBroadcast({
   const pts = wp.slice(0, i + 1).map((v, k) => `${((k / Math.max(1, log.length - 1)) * W).toFixed(1)},${((1 - v) * H).toFixed(1)}`);
   const usWp = wp[i]!;
 
+  // Running team totals for the stats strip, from the plays so far.
+  const totals = (id: TeamId) => {
+    let yds = 0, to = 0, third = 0, thirdAtt = 0;
+    for (let k = 0; k <= i; k++) {
+      const l = log[k]!;
+      if (l.poss !== id) continue;
+      if (l.snap && (l.snap.kind === "pass" || l.snap.kind === "run" || l.snap.kind === "sack")) yds += l.snap.yards;
+      if (l.tag === "to") to += 1;
+      if (l.down === 3 && l.snap && l.snap.kind !== "kick") {
+        thirdAtt += 1;
+        if (l.snap.yards >= l.togo || l.tag === "td") third += 1;
+      }
+    }
+    return { yds: Math.round(yds), to, third, thirdAtt };
+  };
+  const timeoutsOf = (id: TeamId) => (id === home ? cur.homeTimeouts : cur.awayTimeouts);
   const slab = (id: TeamId, score: number, ink: ReturnType<typeof clubInk>, side: "l" | "r") => (
     <div
       className={`bug-slab flex min-w-0 items-center gap-2 px-3 py-2 ${side === "r" ? "flex-row-reverse text-right" : ""}`}
@@ -160,9 +187,18 @@ export function LiveBroadcast({
       }}
     >
       <Logo id={id} size={compact ? 28 : 36} />
-      <span className="font-display text-sm font-extrabold italic uppercase">{teamAbbr(id)}</span>
+      <span className="flex flex-col leading-none">
+        <span className="font-display text-sm font-extrabold italic uppercase">{teamAbbr(id)}</span>
+        {timeoutsOf(id) !== undefined && (
+          <span className={`mt-1 flex gap-0.5 ${side === "r" ? "justify-end" : ""}`} aria-label={`${timeoutsOf(id)} timeouts left`}>
+            {[0, 1, 2].map((t) => (
+              <i key={t} className={`block h-1 w-3 rounded-sm ${t < (timeoutsOf(id) ?? 0) ? "bg-brass" : "bg-black/40"}`} />
+            ))}
+          </span>
+        )}
+      </span>
       {!ended && sit.poss === id && <span className="h-2 w-2 rounded-full bg-brass shadow-[0_0_8px_#ffc629]" aria-label="possession" />}
-      <span className={`bug-num ${compact ? "text-3xl" : "text-4xl"} ${side === "r" ? "mr-auto" : "ml-auto"}`}>{score}</span>
+      <span key={score} className={`bug-num score-pop ${compact ? "text-3xl" : "text-4xl sm:text-5xl"} ${side === "r" ? "mr-auto" : "ml-auto"}`}>{score}</span>
     </div>
   );
 
@@ -214,20 +250,38 @@ export function LiveBroadcast({
       {/* score bug */}
       <div className="grid grid-cols-[1fr_auto_1fr]">
         {slab(away, cur.as, awayInk, "l")}
-        <div className="flex flex-col items-center justify-center bg-black px-3">
-          <p className="bug-num text-xl text-brass">{ended ? "FINAL" : halftime ? "HALFTIME" : `${sit.q > 4 ? "OT" : `Q${sit.q}`} ${clockText(sit.clock)}`}</p>
+        <div className="flex flex-col items-center justify-center gap-0.5 bg-black px-2 py-1 sm:px-3">
+          <p className="bug-num text-lg text-brass sm:text-xl">{ended ? "FINAL" : halftime ? "HALFTIME" : `${sit.q > 4 ? "OT" : `Q${sit.q}`} ${clockText(sit.clock)}`}</p>
           {!ended && !halftime && (
-            <p className="whitespace-nowrap font-display text-[11px] font-bold uppercase italic tracking-wide text-muted">
-              {ORD[Math.min(4, sit.down)] ?? "4th"} & {sit.togo} · {spotText(sit, opp)}
-            </p>
+            <>
+              <p className="whitespace-nowrap rounded-sm bg-brass px-1.5 font-display text-[12px] font-extrabold uppercase italic leading-5 tracking-wide text-[#140f00]">
+                {ORD[Math.min(4, sit.down)] ?? "4th"} & {sit.spot + sit.togo >= 100 ? "Goal" : sit.togo}
+              </p>
+              <p className="whitespace-nowrap font-display text-[10px] font-bold uppercase italic tracking-wide text-muted">Ball on {spotText(sit, opp)}</p>
+            </>
           )}
         </div>
         {slab(home, cur.hs, homeInk, "r")}
       </div>
 
+      {!compact && (
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-1.5 font-display text-[11px] font-bold uppercase italic tracking-wide sm:text-xs" aria-label="Team stats">
+          {[away, home].map((id, k) => {
+            const t = totals(id);
+            return (
+              <span key={id} className={`flex flex-wrap gap-x-3 ${k === 1 ? "order-3 justify-end text-right" : ""}`}>
+                <span className="text-white">{t.yds} yds</span>
+                <span className={t.to ? "text-brick" : "text-muted"}>{t.to} TO</span>
+                <span className="text-muted">3rd {t.third}/{t.thirdAtt}</span>
+              </span>
+            );
+          })}
+          <span className="order-2 text-[10px] text-subtle">Play {i + 1}/{log.length}</span>
+        </div>
+      )}
+
       <BroadcastField play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} />
-      {!compact && <div className="flex flex-wrap items-center gap-3 border-y border-white/10 px-4 py-2 text-xs text-muted"><span>{teamAbbr(away)} timeouts: {cur.awayTimeouts ?? "—"}</span><span>{teamAbbr(home)} timeouts: {cur.homeTimeouts ?? "—"}</span><span className="ml-auto">Play {i + 1} / {log.length}</span></div>}
-      {halftime && <div className="border-b border-brass/30"><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
+      {halftime && <div className="border-b border-brass/30"><HalftimeDesk game={game} log={log.slice(0, i + 1)} /><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
       {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 
       {!compact && i < 4 && game.matchups?.length ? (

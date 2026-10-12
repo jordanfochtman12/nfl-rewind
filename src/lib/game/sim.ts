@@ -59,7 +59,9 @@ import { maybeReveal } from "./scout.ts";
 import { attendanceFor, bowlVenue, crowdNoise, pickWeather, venueOf, type VenueInfo, type Wx } from "./venues.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
 import { checkGameRecords } from "./records.ts";
+import { chemistryEdge } from "./morale.ts";
 import { focusMatchesReport, keyMatchups, practiceFor, type KeyMatchup, type PracticeFocus } from "./gameday.ts";
+import { gameWatches, leagueMarks, liveMarkCall, pregameMemory, WATCH_STATS, type MemoryNote, type Watch } from "./boothMemory.ts";
 import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, staffPlan } from "./gameplans.ts";
@@ -284,7 +286,9 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
     inj: skill.reduce((n, p) => n + kitBoost(p, "inj"), 0),
     pen: coachKitBoost(coach, "pen") + coachKitBoost(oc, "pen") + coachKitBoost(dc, "pen"),
   };
-  return { qb, qb2, rb, rb2, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass, offRun, defPass, defRun, kit };
+  // A tight locker room plays a little better; a fractured one a little worse.
+  const chem = chemistryEdge(save, teamId);
+  return { qb, qb2, rb, rb2, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass: offPass + chem, offRun: offRun + chem, defPass: defPass + chem, defRun: defRun + chem, kit };
 }
 
 function dist(save: DynastySave, weights: number[]): number {
@@ -632,6 +636,8 @@ type Call = "run" | "short" | "med" | "deep" | "screen" | "draw" | "pa" | "sneak
 export function finalPossessionCall(
   q: number, clock: number, down: number, spot: number, trail: number, kickRange: number, snapYards = 17,
 ): Call | undefined {
+  // End of the half: with one snap left in range, take the points.
+  if (q === 2) return clock <= 8 && 100 - spot + snapYards <= kickRange ? "fg" : undefined;
   if (q < 4 || clock > 30 || trail < 0) return undefined;
   // Take a tying or winning kick on fourth down or when only one snap remains. Tied counts:
   // nobody runs out the clock in field-goal range.
@@ -665,6 +671,8 @@ function callPlay(
   lastRun: boolean,
   scramble: number,
   altitude: number,
+  /** Personnel lean toward the pass (+) or the run (-): who's healthy, and where the matchup is. */
+  lean = 0,
 ): Call {
   const late = q >= 4 && clock <= 180;
   const last = q >= 4 && clock <= 40;
@@ -680,7 +688,7 @@ function callPlay(
   if (down === 4) {
     const fgDist = 100 - spot + fgSnapYards(year);
     // In overtime a make ends it (or answers), so kickers get sent out from longer range.
-    const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0) + (q >= 5 ? 5 : 0);
+    const range = fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0) + (q >= 5 ? 3 : 0);
     const goP =
       0.04 +
       fourthGoBias(year) +
@@ -690,10 +698,13 @@ function callPlay(
     const go =
       (plan.fourth === "aggressive" && togo <= 3 && spot >= 55) ||
       (plan.fourth === "normal" && togo <= 1 && spot >= 60) ||
-      (desperate && spot >= 42 && togo <= 8) ||
+      // Down a field goal, kick to tie; down more than that, a field goal doesn't help.
+      (desperate && (trail >= 4 || fgDist > range + 4) && spot >= 42 && togo <= 8) ||
+      // Wind and snow make the kick a coin flip, so short yardage in range goes for it.
+      ((wx === "wind" || wx === "snow") && togo <= 2 && spot >= 55 && spot < 80 && rand(save) < 0.35) ||
       spot >= 97 ||
       (last && trail > 0 && spot >= 50) ||
-      (q >= 5 && clock <= 240 && togo <= 3 && spot >= 40) ||
+      (q >= 5 && clock <= 420 && togo <= 3 && spot >= 40 && fgDist > range + 4) ||
       (short && mid && rand(save) < clamp(goP, 0.02, 0.55)) ||
       (togo <= 2 && spot >= 62 && rand(save) < clamp(goP, 0.02, 0.4));
     if (go) {
@@ -726,6 +737,7 @@ function callPlay(
   if (wx === "wind") passW -= 0.04;
   if (desperate) passW += 0.18;
   if (twoMin && (trail >= 1 || q === 2)) passW += 0.16;
+  passW += lean;
   passW = clamp(passW, 0.2, 0.8);
   if (rand(save) > passW) {
     if (down === 3 && togo >= 6 && rand(save) < 0.22) return "draw";
@@ -761,7 +773,8 @@ function snapClock(
   // otherwise means a no-huddle pace, not a drill for sixty minutes.
   // Before the half every offense works the drill to steal points; late in the game only
   // the trailing side does.
-  const urgent = (q >= 4 && trail >= 4 && clock <= 240) || (twoMin && (trail > 0 || q === 2));
+  // Late in a short regular-season overtime nobody wants a tie: both sides run the drill.
+  const urgent = (q >= 4 && trail >= 4 && clock <= 240) || (twoMin && (trail > 0 || q === 2)) || (q >= 5 && clock <= 300 && plan.tempo === "hurry");
   const hurry = urgent || plan.tempo === "hurry";
   const chew = plan.tempo === "chew" && trail <= 0 && !(q >= 4 && clock <= 180 && trail >= 1);
   const stopFd = clockStopFirstDown(year) && firstDown;
@@ -881,6 +894,9 @@ function redZoneSqueeze(year: number): number {
   if (year <= 1989) return 0.1;
   if (year <= 1999) return 0.15;
   if (year <= 2009) return 0.095;
+  // 2010 had the 2010s passing game but still kicked off from the 30 (long fields came in
+  // 2011): with the decade's value it ran ~26 points a game against the real 22.0.
+  if (year === 2010) return 0.14;
   if (year <= 2019) return -0.04;
   // The spread era finished drives: scoring ran ~2 points a game light at 0.02.
   return -0.12;
@@ -1230,6 +1246,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (qq >= 5) return { ...base, fourth: "aggressive", tempo: trail > 0 || ck <= 150 || game.phase === "regular" ? "hurry" : base.tempo };
     if (qq >= 4 && trail >= 8 && ck <= 300) return { ...base, attack: "pass", fourth: "aggressive", tempo: "hurry" };
     if (qq >= 4 && trail <= -8 && ck <= 240) return { ...base, attack: "run", fourth: "conservative", tempo: "chew" };
+    // The four-minute offense: protecting any lead late, run it and bleed the clock.
+    if (qq >= 4 && trail < 0 && ck <= 300) return { ...base, attack: trail <= -4 ? "run" : base.attack, tempo: "chew" };
     if (playoff && base.fourth === "aggressive" && trail > -3) return { ...base, fourth: "normal" };
     if (year <= 1979 && base.tempo === "hurry") return { ...base, tempo: "standard" };
     return base;
@@ -1242,8 +1260,53 @@ export function simGame(save: DynastySave, game: GameResult): void {
     !!save.sandbox || (!save.cpuOnly && (homeId === save.userTeamId || awayId === save.userTeamId || game.phase === "superBowl"));
   const log: PlayLog[] = [];
   let cur: OpenPlay | undefined;
+  // The booth's memory: what it knows going in, and who it's watching for a milestone, a
+  // record, or a big day against his old team.
+  const watches: Watch[] = logOn ? gameWatches(save, game) : [];
+  const watchOf = new Map(watches.map((w) => [w.playerId, w]));
+  const marks = logOn ? leagueMarks(save) : undefined;
+  const memory: MemoryNote[] = logOn ? pregameMemory(save, game, watches) : [];
+  const momentSaid = new Set<string>();
+  const callMoments = (play: OpenPlay) => {
+    const touched = new Map<string, Partial<BoxPlayer>[]>();
+    for (const [id, b] of play.bumps) if (watchOf.has(id)) touched.set(id, [...(touched.get(id) ?? []), b]);
+    for (const [id, bs] of touched) {
+      const w = watchOf.get(id)!;
+      const row = boxOf(w.teamId).find((b) => b.playerId === id);
+      for (const k of WATCH_STATS) {
+        const delta = bs.reduce((n, b) => n + (((b as Record<string, number | undefined>)[k]) ?? 0), 0);
+        if (!delta) continue;
+        const after = (row as unknown as Record<string, number> | undefined)?.[k] ?? delta;
+        const call = marks && liveMarkCall(save, w, k, after - delta, after, marks);
+        if (call && !momentSaid.has(call.text)) {
+          momentSaid.add(call.text);
+          play.notes.push(call.text);
+          play.cue = "record";
+        }
+      }
+      const big = bs.some((b) => (b.passTd ?? 0) + (b.rushTd ?? 0) + (b.recTd ?? 0) + (b.ints ?? 0) + (b.sacks ?? 0) > 0);
+      const p = save.players[id];
+      if (big && w.formerClub && p && !momentSaid.has(`old:${id}`)) {
+        momentSaid.add(`old:${id}`);
+        play.notes.push(
+          w.formerClub.traded
+            ? `${playerName(p)} does it against the team that traded him. He'll enjoy that one.`
+            : `${playerName(p)}, against his old team. He knows where they line up.`,
+        );
+        if (!play.cue) play.cue = "story";
+      }
+    }
+  };
+  const injuryUpdates: { at: number; text: string }[] = [];
+  const tellMemory = () => {
+    const m = memory.shift();
+    if (!m || !cur) return;
+    cur.notes.push(m.text);
+    if (!cur.cue) cur.cue = "story";
+  };
   const flushPlay = () => {
     if (!cur) return;
+    if (watchOf.size) callMoments(cur);
     const d = describePlay(save, cur);
     if (d) {
       const sum = (key: keyof BoxPlayer) => cur!.bumps.reduce((n, [, b]) => n + (typeof b[key] === "number" ? b[key] as number : 0), 0);
@@ -1393,12 +1456,18 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let driveYds = 0;
   let driveStart = spot;
   let driveQ = 1;
+  let driveClock = 900;
   let driveRz = false;
   let lastRun = false;
   let plays = 0;
 
   const closeDrive = (result: DriveResult) => {
     const other = poss === homeId ? awayId : homeId;
+    if (logOn && (result === "td" || result === "fg") && drivePlays >= 4) {
+      const secs = Math.max(0, (q - driveQ) * 900 + driveClock - clock);
+      note(`That drive: ${drivePlays} plays, ${Math.max(0, Math.round(driveYds))} yards, ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}.`);
+      if (cur && !cur.cue) cur.cue = "drive";
+    }
     if (result === "td") swing(poss, 0.8);
     else if (result === "fg") swing(poss, 0.3);
     else if (result === "int" || result === "fumble") swing(other, 1.5, "Takeaway.");
@@ -1426,6 +1495,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     togo = 10;
     driveStart = spot;
     driveQ = q;
+    driveClock = clock;
     drivePlays = 0;
     driveYds = 0;
     driveRz = false;
@@ -1485,6 +1555,15 @@ export function simGame(save: DynastySave, game: GameResult): void {
     } else {
       note(`Nobody behind him at ${p.pos}. They'll shuffle the lineup.`);
     }
+    if (logOn && hurt !== "shaken up") {
+      injuryUpdates.push({
+        at: plays + 6,
+        text:
+          p.injuredWeeks >= 3
+            ? `Injury update: ${playerName(p)} (${hurt}) has been ruled out for the rest of the game.`
+            : `Injury update: ${playerName(p)} is questionable to return with a ${hurt === "ribs" ? "rib" : hurt} injury.`,
+      });
+    }
   };
 
   const tickClock = (id: TeamId, used: number) => {
@@ -1506,6 +1585,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       togo = 10;
       driveStart = spot;
       driveQ = q;
+      driveClock = clock;
       drivePlays = 0;
       driveYds = 0;
       driveRz = false;
@@ -1521,6 +1601,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         togo = 10;
         driveStart = spot;
         driveQ = q;
+        driveClock = clock;
         drivePlays = 0;
         driveYds = 0;
         driveRz = false;
@@ -1533,6 +1614,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       togo = 10;
       driveStart = spot;
       driveQ = q;
+      driveClock = clock;
       drivePlays = 0;
       driveYds = 0;
       driveRz = false;
@@ -1547,6 +1629,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       togo = 10;
       driveStart = spot;
       driveQ = q;
+      driveClock = clock;
       drivePlays = 0;
       driveYds = 0;
       driveRz = false;
@@ -1562,6 +1645,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       togo = 10;
       driveStart = spot;
       driveQ = q;
+      driveClock = clock;
       drivePlays = 0;
       driveYds = 0;
       driveRz = false;
@@ -1575,6 +1659,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       togo = 10;
       driveStart = spot;
       driveQ = q;
+      driveClock = clock;
       drivePlays = 0;
       driveYds = 0;
       driveRz = false;
@@ -1603,6 +1688,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     togo = 10;
     driveStart = spot;
     driveQ = q;
+    driveClock = clock;
     drivePlays = 0;
     driveYds = 0;
     driveRz = false;
@@ -1658,14 +1744,42 @@ export function simGame(save: DynastySave, game: GameResult): void {
     kickoffTo(defId, onsideCall(id, q >= 4 && clock <= 150 && trailK >= 1 && trailK <= 8));
   };
 
-  const tryTimeout = (id: TeamId, running: boolean) => {
+  /** A timeout stops the clock where the play ended: the huddle runoff is given back. */
+  const stopClock = (used: number) => {
+    const refund = Math.max(0, used - 6);
+    clock += refund;
+    addPoss(poss, -refund);
+  };
+  const tryTimeout = (id: TeamId, running: boolean, used = 0) => {
     if (!running) return;
     if (toOf(id) <= 0) return;
     const trail = trailOf(id);
     const twoMin = (q === 2 || q >= 4) && clock <= 120;
-    if (twoMin && (trail >= 1 || q === 2) && clock > 8) {
+    if (twoMin && (trail >= 1 || q === 2 || q >= 5) && clock > 8) {
       spendTO(id);
+      stopClock(used);
     }
+  };
+  /** Trailing late, the defense spends its timeouts to get the ball back with time to use it. */
+  const tryDefTimeout = (id: TeamId, running: boolean, used: number) => {
+    if (!running || toOf(id) <= 0) return;
+    const trail = trailOf(id);
+    if (q >= 4 && clock <= 150 && clock > 8 && trail >= 1 && trail <= 16) {
+      spendTO(id);
+      stopClock(used);
+      if (logOn) note(`Timeout, ${nicknameOf(year, id)}. They need the ball back.`);
+    }
+  };
+  // Who started: when the quarterback or the lead back goes down, the play-calling changes with him.
+  const startedQb: Record<string, string | undefined> = { [homeId]: homeU.qb?.id, [awayId]: awayU.qb?.id };
+  const startedRb: Record<string, string | undefined> = { [homeId]: homeU.rb?.id, [awayId]: awayU.rb?.id };
+  const personnelLean = (offense: TeamId, defense: TeamId) => {
+    const o = live(offense);
+    const d = live(defense);
+    let lean = clamp((o.offPass - d.defPass - (o.offRun - d.defRun)) / 150, -0.05, 0.05);
+    if (o.qb && startedQb[offense] && o.qb.id !== startedQb[offense]) lean -= 0.05;
+    if (startedRb[offense] && o.rb?.id !== startedRb[offense]) lean += 0.03;
+    return lean;
   };
 
   homeU.offPass += homeField;
@@ -1750,6 +1864,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
       );
       cue("crowd");
     }
+    if (logOn && (plays === 2 || plays === 6 || plays === 12 || plays === 20)) tellMemory();
+    while (logOn && injuryUpdates.length && injuryUpdates[0]!.at <= plays) {
+      note(injuryUpdates.shift()!.text);
+      cue("inj");
+    }
     if (q === 2 || q === 4) {
       if (!warned && clock <= 120 && clock > 0) {
         warned = true;
@@ -1783,10 +1902,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (q === 4 && !ot) {
         if (homeScore !== awayScore) break;
         if (otRule.kind === "none") break;
+        closeDrive("end");
         ot = true;
         q = 5;
         clock = otRule.seconds;
-        closeDrive("end");
         const otReceiver = rand(save) < 0.5 ? homeId : awayId;
         otPossNo = 1;
         otOff = otReceiver;
@@ -1884,6 +2003,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       lastRun,
       off.kit.scramble,
       venue.altitude,
+      personnelLean(poss, defId),
     );
     if (call === "fg" && togo <= 2 && spot >= 58 && rand(save) < 0.014) {
       note("Fake field goal.");
@@ -2083,7 +2203,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         ? ((poss === homeId ? homeRushYds : awayRushYds) > 110 ? 0.9 : 0) +
           ((poss === homeId ? awayRushYds : homeRushYds) > 110 && pass ? 0.6 : 0)
         : 0;
-    const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0) + moFor(poss) * 0.8 + (ot ? 2.5 : 0);
+    const offP = (pass ? off.offPass : off.offRun) * fat + clutch + sch + openScript + wear - (prevent ? 1.5 : 0) + moFor(poss) * 0.8 + (ot ? 4 : 0);
     // A defense kept on the field for a long drive wears down, and a no-huddle offense won't let it substitute.
     const gassed = Math.max(0, drivePlays - 9) * (plan.tempo === "hurry" ? 0.009 : 0.006);
     if (logOn && drivePlays === 11 && longDriveSaid < 2) {
@@ -2433,7 +2553,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (yds >= togo) {
         addFd(poss);
         newSet();
-        tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120)));
+        tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120) || (q >= 5 && clock <= 120)), used.used);
+        tryDefTimeout(defId, !used.stopped, used.used);
       } else {
         down += 1;
         togo -= yds;
@@ -2544,7 +2665,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (yds >= togo) {
       addFd(poss);
       newSet();
-      tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120)));
+      tryTimeout(poss, !used.stopped && (trail >= 1 || (q === 2 && clock <= 120) || (q >= 5 && clock <= 120)), used.used);
+      tryDefTimeout(defId, !used.stopped, used.used);
     } else {
       down += 1;
       togo -= yds;

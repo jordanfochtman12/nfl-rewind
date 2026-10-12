@@ -32,6 +32,7 @@ import {
   setScoutBudget,
   visitsLeft,
 } from "@/lib/game";
+import { counterOffer, gradeRange, positionalNeeds, schemeFit } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -166,6 +167,8 @@ export function DraftNight() {
   const needs = onClock
     ? [...new Set(rosterOf(save, onClock).sort((a, b) => a.ovr - b.ovr).slice(0, 5).map((p) => p.pos))].join(" · ")
     : "";
+  // The owner's own needs are measured against the league's starters, not just his weakest men.
+  const myNeeds = useMemo(() => (isUser && onClock ? positionalNeeds(save, onClock, 4).map((n) => n.pos).join(" · ") : ""), [save, isUser, onClock]);
 
   useEffect(() => {
     if (!cpuUp || paused || announcer.busy || announcer.hidden) return;
@@ -224,7 +227,7 @@ export function DraftNight() {
                     {isUser ? "YOUR WAR ROOM" : "ON THE CLOCK"}
                   </p>
                   <p className="font-display text-2xl">{displayName(save.year, onClock)}</p>
-                  <p className="text-xs text-muted">Needs {needs || "best available"}</p>
+                  <p className="text-xs text-muted">Needs {(isUser ? myNeeds : needs) || "best available"}</p>
                 </div>
                 <Clock seconds={hold} />
               </div>
@@ -370,6 +373,7 @@ export function DraftNight() {
                     {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
+                  {!save.sandbox && <FitLine p={p} />}
                   <div className="mt-1.5">
                     <KitChips player={p} compact />
                   </div>
@@ -423,6 +427,7 @@ export function DraftNight() {
               {!scout.revealed && !save.sandbox && ownerGrade(save, scout) !== visibleOvr(scout) && (
                 <p className="text-xs text-muted">League consensus: {visibleOvr(scout)}</p>
               )}
+              {!save.sandbox && <ScoutRange p={scout} />}
               <p className="mt-2 text-sm text-muted">{measLine(scout)}</p>
               <CombineLine p={scout} />
               <div className="mt-3">
@@ -492,7 +497,17 @@ function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void 
   const desk = useGameStore((s) => s.desk);
   const note = useGameStore((s) => s.lastDeskNote);
   const [target, setTarget] = useState<string>("");
-  const calls = useMemo(() => (onClock ? tradeDownOffers(save) : []), [save, onClock]);
+  const offered = useMemo(() => (onClock ? tradeDownOffers(save) : []), [save, onClock]);
+  // One counter per call: ask for more and they either sweeten it or hold firm.
+  const [asked, setAsked] = useState<string[]>([]);
+  const [countered, setCountered] = useState<Record<string, PickDeal>>({});
+  const [reply, setReply] = useState("");
+  useEffect(() => {
+    setAsked([]);
+    setCountered({});
+    setReply("");
+  }, [save.draftPickIndex]);
+  const calls = offered.map((c) => countered[c.partner] ?? c);
   const upcoming = useMemo(() => {
     const q = draftQueue(save);
     return q.slice(save.draftPickIndex + (onClock ? 1 : 0), save.draftPickIndex + 13).map((p, i) => ({ p, slot: save.draftPickIndex + (onClock ? 2 : 1) + i }));
@@ -521,7 +536,20 @@ function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void 
                   <span className="tabular text-xs text-muted">
                     chart {Math.round(c.getValue)} for {Math.round(c.giveValue)}
                   </span>
-                  <Btn kind="primary" className="min-h-10 px-3 text-xs" onClick={() => run(c)}>
+                  {!asked.includes(c.partner) && (
+                    <Btn
+                      className="min-h-10 px-3 text-xs"
+                      onClick={() => {
+                        const r = counterOffer(save, countered[c.partner] ?? c);
+                        setAsked((a) => [...a, c.partner]);
+                        setReply(r.reply);
+                        if (r.deal) setCountered((m) => ({ ...m, [c.partner]: r.deal! }));
+                      }}
+                    >
+                      Ask for more
+                    </Btn>
+                  )}
+                  <Btn kind="primary" className="min-h-10 px-3 text-xs" onClick={() => run(countered[c.partner] ?? c)}>
                     Take it
                   </Btn>
                 </li>
@@ -530,6 +558,7 @@ function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void 
           ) : (
             <p className="text-sm text-muted">Nobody behind you is calling. They think their man will be there.</p>
           )}
+          {reply && <p className="text-xs text-brass">{reply}</p>}
         </div>
       )}
       <div className="space-y-2">
@@ -627,6 +656,42 @@ function ScoutDesk() {
         {visitsLeft(save)} pro-day visit{visitsLeft(save) === 1 ? "" : "s"} left
         {save.year < COMBINE_FROM ? " · no combine yet (it starts in 1982)" : ""}
       </span>
+    </div>
+  );
+}
+
+/** Scheme fit for the owner's club, on one line. */
+function FitLine({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const fit = schemeFit(save, save.userTeamId, p);
+  const tone = fit.label === "Ideal fit" ? "text-good" : fit.label === "Good fit" ? "text-paper" : fit.label === "Poor fit" ? "text-brick" : "text-muted";
+  return (
+    <p className="mt-0.5 text-xs">
+      <span className={`font-semibold ${tone}`}>{fit.label}</span> <span className="text-subtle">· {fit.why}</span>
+    </p>
+  );
+}
+
+/** The scouts' grade as a range, with how sure they are. */
+function ScoutRange({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const r = gradeRange(save, p);
+  const fit = schemeFit(save, save.userTeamId, p);
+  return (
+    <div className="mt-2 space-y-1 text-xs">
+      {r.lo !== r.hi && (
+        <p>
+          <span className="text-muted">Scouts&apos; range </span>
+          <span className="tabular text-white">
+            {r.lo}–{r.hi}
+          </span>{" "}
+          <span className={r.confidence === "High" ? "text-good" : r.confidence === "Low" ? "text-brick" : "text-paper"}>· {r.confidence} confidence</span>
+        </p>
+      )}
+      <p>
+        <span className="text-muted">Scheme fit </span>
+        <span className="text-white">{fit.label}</span> <span className="text-subtle">· {fit.why}</span>
+      </p>
     </div>
   );
 }

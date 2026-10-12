@@ -344,7 +344,9 @@ export function checkSeasonMilestones(save: DynastySave): void {
     const base = PRE_1966_MARKS[cat.id];
     const sim = save.bestSeasonMarks[cat.id] ?? 0;
     const prior = Math.max(sim, base?.value ?? 0);
-    if (thisYearBest > prior && holder) {
+    // Announced already the week it fell (weeklyMoments)?
+    const told = holder && save.news.some((n) => n.year === save.year && n.playerIds?.includes(holder!.id) && /single-season record/.test(n.headline));
+    if (thisYearBest > prior && holder && !told) {
       const old = base && base.value >= sim ? ` (${base.holder}, ${base.year})` : "";
       addNews(save, {
         kind: "award",

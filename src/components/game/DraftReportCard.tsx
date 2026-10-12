@@ -1,6 +1,7 @@
 /** Draft classes revisited: the re-draft, the steals and busts, and every club's grade. */
 import { useMemo, useState } from "react";
 import { displayName, draftClassReport, gradableClasses, teamAbbr, type ClassPick } from "@/lib/game";
+import { crowdVerdicts } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 
@@ -78,6 +79,18 @@ export function DraftReportCard() {
                 <p className="text-sm text-muted">Every early pick has held up.</p>
               )}
             </article>
+            {crowdVerdicts(save, r.picks).length > 0 && (
+              <article>
+                <h4 className="mb-1 text-xs tracking-[0.2em] text-brass">WAS THE CROWD RIGHT?</h4>
+                <ul className="space-y-1 text-sm">
+                  {crowdVerdicts(save, r.picks).map((v) => (
+                    <li key={v.playerId}>
+                      <span className={v.buzz === "booed" ? "text-brick" : "text-good"}>{v.buzz === "booed" ? "Booed" : "Cheered"}</span> · <span className="text-white">{v.name}</span>: <span className="text-paper">{v.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            )}
           </div>
           <article>
             <h4 className="mb-1 text-xs tracking-[0.2em] text-brass">CLUB GRADES</h4>

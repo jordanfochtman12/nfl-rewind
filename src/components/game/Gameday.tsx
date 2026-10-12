@@ -20,6 +20,9 @@ import {
   wpSeries,
   type PracticeFocus,
 } from "@/lib/game/gameday";
+import { pregameMemory } from "@/lib/game/boothMemory";
+import { teamStyle } from "@/lib/game/teamStyle";
+import { halftimeReport, postgameInterviews } from "@/lib/game/presentation";
 import { useGameStore } from "@/lib/game-store";
 import { BroadcastField } from "./BroadcastField";
 import { Logo } from "./chrome";
@@ -33,6 +36,9 @@ const CUE: Record<NonNullable<PlayLog["cue"]>, { label: string; cls: string }> =
   crowd: { label: "CROWD", cls: "bg-white text-black" },
   rule: { label: "RULE", cls: "bg-[#a78bfa] text-black" },
   matchup: { label: "MATCHUP", cls: "bg-brass text-[#140f00]" },
+  story: { label: "STORYLINE", cls: "bg-[#f0abfc] text-black" },
+  record: { label: "RECORD WATCH", cls: "bg-gradient-to-r from-brass to-[#fff3b0] text-[#140f00]" },
+  drive: { label: "DRIVE", cls: "bg-[#94a3b8] text-black" },
 };
 
 /** A broadcast cue chip for a play (injury, momentum, crowd, rule, matchup). */
@@ -340,6 +346,98 @@ export function GameFlow({ game }: { game: GameResult }) {
           Practice focus this week: <span className="text-white">{PRACTICE[game.practice].label}</span>.
         </p>
       )}
+    </section>
+  );
+}
+
+/** What the booth will be talking about tonight: series, streaks, old teams, milestones, records. */
+export function TonightsStorylines({ game }: { game: GameResult }) {
+  const save = useGameStore((s) => s.save)!;
+  // Identities have their own cards above; the booth list is everything else it remembers.
+  const notes = useMemo(() => pregameMemory(save, game).filter((n) => n.kind !== "style"), [save, game]);
+  const home = game.homeId as TeamId;
+  const away = game.awayId as TeamId;
+  const styles = useMemo(() => [away, home].map((id) => ({ id, s: teamStyle(save, id) })), [save, away, home]);
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="text-xs tracking-[0.25em] text-brass">TEAM IDENTITIES</p>
+        <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+          {styles.map(({ id, s }) => (
+            <li key={id} className="rounded-md border border-line bg-surface-2 px-3 py-2 text-sm">
+              <p className="flex items-center gap-2 font-medium text-white">
+                <Logo id={id} size={20} /> {s.offense} · {s.defense}
+              </p>
+              <p className="mt-1 text-xs text-muted">{s.line}</p>
+              {s.missing.map((m) => (
+                <p key={m} className="mt-1 text-xs text-brick">
+                  {m}
+                </p>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {notes.length > 0 && (
+        <div>
+          <p className="text-xs tracking-[0.25em] text-brass">TONIGHT IN THE BOOTH</p>
+          <ul className="mt-2 space-y-1 text-sm text-paper">
+            {notes.slice(0, 6).map((n) => (
+              <li key={n.text} className="border-l-2 border-brass/50 pl-3">
+                <span className="mr-1 text-[10px] tracking-widest text-muted">{n.kind.toUpperCase()}</span> {n.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** The halftime report: the half's scoring, who's carrying each side, and what comes next. */
+export function HalftimeDesk({ game, log }: { game: GameResult; log: PlayLog[] }) {
+  const r = useMemo(() => halftimeReport(game, log), [game, log]);
+  if (!r) return null;
+  return (
+    <div className="space-y-2 px-4 pt-4 text-sm sm:px-5">
+      <p className="text-xs tracking-[0.25em] text-brass">HALFTIME · {r.score.toUpperCase()}</p>
+      {r.scoring.length > 0 ? (
+        <ol className="space-y-1 text-paper">
+          {r.scoring.map((x) => (
+            <li key={x} className="border-l-2 border-white/15 pl-3">
+              {x}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="text-muted">Scoreless at the half. The defenses have owned it.</p>
+      )}
+      {r.leaders.length > 0 && <p className="text-paper">Leaders: {r.leaders.join(" · ")}</p>}
+      {r.turning && <p className="text-brick">{r.turning}</p>}
+      <p className="text-muted">{r.secondHalf}</p>
+    </div>
+  );
+}
+
+/** The postgame podium: both coaches and the player of the game, quoting the real result. */
+export function PostgameInterviews({ game }: { game: GameResult }) {
+  const save = useGameStore((s) => s.save)!;
+  const list = useMemo(() => postgameInterviews(save, game), [save, game]);
+  if (!list.length) return null;
+  return (
+    <section aria-label="Postgame interviews">
+      <h4 className="mb-2 text-xs tracking-[0.2em] text-muted">At the podium</h4>
+      <ul className="grid gap-2 sm:grid-cols-3">
+        {list.map((x) => (
+          <li key={x.who + x.role} className="rounded-md border border-line bg-surface-2 p-3 text-sm">
+            <p className="flex items-center gap-2 font-display text-xs font-bold uppercase italic tracking-wide text-brass">
+              <Logo id={x.teamId} size={18} /> {x.who}
+            </p>
+            <p className="text-[11px] text-muted">{x.role}</p>
+            <p className="mt-2 text-paper">&ldquo;{x.quote}&rdquo;</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

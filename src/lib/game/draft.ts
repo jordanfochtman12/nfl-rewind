@@ -454,6 +454,10 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
   let prospect = playerId ? save.draftBoard.find((p) => p.playerId === playerId && !p.taken) : undefined;
   if (!prospect) prospect = bestAvailable(save, teamId, round);
   if (!prospect) return false;
+  // How the room took it, by the consensus board at that moment (never by how he turns out).
+  const consensusRank = save.draftBoard.filter((x) => !x.taken).indexOf(prospect);
+  const buzz: Player["draftBuzz"] =
+    round > 3 ? undefined : consensusRank >= 12 + save.draftPickIndex * 0.15 ? "booed" : consensusRank <= 1 ? "cheered" : "mixed";
   prospect.taken = true;
   prospect.takenBy = teamId;
   slot.used = true;
@@ -463,6 +467,7 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftRound = round;
     p.draftPick = save.draftPickIndex + 1;
     p.draftTeam = teamId;
+    if (buzz) p.draftBuzz = buzz;
     p.jersey = jerseyFor(save, p.pos, usedJerseys(save, teamId));
     // Rookies are paid by slot (see rookieContract), not by grade.
     const deal = rookieContract(save.year, save.draftPickIndex + 1, round);

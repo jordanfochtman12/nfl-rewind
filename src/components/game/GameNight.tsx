@@ -1,5 +1,5 @@
 import { FilmReport } from "./FilmReport";
-import { GameFlow } from "./Gameday";
+import { GameFlow, PostgameInterviews } from "./Gameday";
 import { useMemo, useState } from "react";
 import {
   clubInk,
@@ -494,6 +494,8 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
           </ul>
         </section>
       )}
+
+      {game.played && <PostgameInterviews game={game} />}
 
       {game.log && game.log.length > 0 && <GameFlow game={game} />}
 

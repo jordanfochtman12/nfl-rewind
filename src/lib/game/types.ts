@@ -216,6 +216,7 @@ export interface Player {
   scoutOvr: number;
   /** Developmental ceiling. */
   potential: number;
+  /** Mood, 0-100: drifts weekly toward the player's situation (see morale.ts). */
   morale: number;
   /** True kit is hidden until snaps / years. */
   revealed: boolean;
@@ -229,6 +230,8 @@ export interface Player {
   weight?: number;
   forty?: number;
   /** Combine (or pro-day) numbers; satOut when he skipped the drills. */
+  /** How the draft room reacted when he was picked: by the board then, not by what he became. */
+  draftBuzz?: "cheered" | "booed" | "mixed";
   combine?: { forty?: number; bench?: number; vertical?: number; cone?: number; satOut?: boolean; proDay?: boolean };
   historical: boolean;
   generated: boolean;
@@ -270,6 +273,8 @@ export interface Player {
   holdout?: boolean;
   /** The season he asked his club for a trade. */
   tradeRequest?: number;
+  /** Weeks in a row a star has been miserable. */
+  moraleLow?: number;
   /** Postseason lines (playoffs + Super Bowl), kept apart from the regular-season record. */
   playoffStats?: Record<number, SeasonStats>;
   /** Pro Bowls, All-Pros, awards and rings, by year. */
@@ -406,6 +411,8 @@ export interface TeamState {
   confWins: number;
   confLosses: number;
   streak: string;
+  /** Locker-room chemistry, 0-100, updated weekly (see morale.ts). */
+  chemistry?: number;
   /** Regular-season record across the dynasty. Not reset in training camp. */
   careerWins: number;
   careerLosses: number;
@@ -574,7 +581,7 @@ export interface PlayLog {
   as: number;
   tag?: "td" | "to" | "big" | "fg" | "call" | "safety";
   /** A broadcast cue on top of the play: an injury, a momentum swing, the crowd, a rule, a matchup. */
-  cue?: "inj" | "momentum" | "crowd" | "rule" | "matchup";
+  cue?: "inj" | "momentum" | "crowd" | "rule" | "matchup" | "story" | "record" | "drive";
   /** Momentum after the play, from the home side, -3 to 3. */
   mo?: number;
 }
@@ -939,6 +946,8 @@ export interface DynastySave {
   tagYear?: number;
   /** The desk's preseason calls, frozen at kickoff. */
   previewPicks?: PreviewPicks;
+  /** Season-long storylines the studio follows week to week (see arcs.ts). */
+  arcs?: StoryArc[];
   /** The owner's offseason progression, shown at camp. */
   progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */
@@ -1254,6 +1263,23 @@ export interface SeasonPreview {
 }
 
 /** Frozen at kickoff so the awards show can grade the desk's preseason calls. */
+export interface StoryArc {
+  id: string;
+  year: number;
+  kind: "rookie" | "collapse" | "surprise" | "race" | "mvp";
+  title: string;
+  opened: number;
+  playerId?: string;
+  teamId?: TeamId;
+  teamIds?: TeamId[];
+  /** The preseason projection a collapse or a surprise is measured against. */
+  projW?: number;
+  beats: { week: number; text: string; short: string; metric: number }[];
+  closed?: boolean;
+  /** The last week the studio aired it, so a story isn't on every single show. */
+  aired?: number;
+}
+
 export interface PreviewPicks {
   year: number;
   superBowl: { winner: TeamId; loser: TeamId };

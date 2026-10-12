@@ -18,7 +18,9 @@ test('final possession pursues the score needed instead of wasting the clock', (
   assert.equal(finalPossessionCall(4, 8, 1, 70, 3, 44), 'med');
   assert.equal(finalPossessionCall(4, 20, 1, 70, 3, 50), 'med');
   assert.equal(finalPossessionCall(4, 31, 4, 40, 4, 50), undefined);
-  assert.equal(finalPossessionCall(2, 8, 1, 70, 3, 50), undefined);
+  // End of the half: one snap left in range, take the points; out of range, the staff's call.
+  assert.equal(finalPossessionCall(2, 8, 1, 70, 3, 50), 'fg');
+  assert.equal(finalPossessionCall(2, 8, 1, 40, 3, 50), undefined);
   assert.equal(finalPossessionCall(4, 8, 1, 70, -3, 50), undefined);
   // Tied in range with one snap left: kick it and win. Tied out of range: the staff's call.
   assert.equal(finalPossessionCall(4, 8, 1, 70, 0, 50), 'fg');

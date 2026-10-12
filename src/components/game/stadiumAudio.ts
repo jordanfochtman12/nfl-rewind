@@ -159,12 +159,19 @@ export function stadiumAudio(theme: "network" | "draft" = "network") {
       next += stepSeconds;
     }
   }, 70);
+  // The crowd's resting level: a murmur early, a roar in a one-score fourth quarter.
+  let base = 0.018;
   return {
     context,
     setCrowd(on: boolean) {
       crowdOn = on;
       crowd.gain.cancelScheduledValues(context.currentTime);
-      crowd.gain.setTargetAtTime(on ? 0.018 : 0, context.currentTime, 0.2);
+      crowd.gain.setTargetAtTime(on ? base : 0, context.currentTime, 0.2);
+    },
+    /** 0 (a quiet first quarter) to 1 (overtime, the building shaking). Builds and settles slowly. */
+    setIntensity(level: number) {
+      base = 0.012 + 0.05 * Math.max(0, Math.min(1, level));
+      if (crowdOn) crowd.gain.setTargetAtTime(base, context.currentTime, 1.6);
     },
     setMusic(on: boolean, level: number) {
       musicOn = on;
@@ -175,7 +182,7 @@ export function stadiumAudio(theme: "network" | "draft" = "network") {
       if (context.state !== "running" || !crowdOn) return;
       const t = context.currentTime;
       crowd.gain.setTargetAtTime(big ? 0.1 : 0.06, t, 0.1);
-      crowd.gain.setTargetAtTime(0.018, t + 1, 0.4);
+      crowd.gain.setTargetAtTime(base, t + 1, 0.4);
       const o = context.createOscillator(),
         g = context.createGain();
       o.frequency.value = big ? 660 : 460;

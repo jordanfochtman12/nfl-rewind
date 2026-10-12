@@ -21,6 +21,8 @@ import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNew
 import { resolveCamp } from "./camp.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
+import { updateMorale } from "./morale.ts";
+import { updateArcs } from "./arcs.ts";
 import { closeDeadline, deadlineWeek, openDeadline } from "./deadline.ts";
 import {
   cpuInSeasonMoves,
@@ -260,6 +262,7 @@ function simThisWeek(save: DynastySave): void {
   pickFeaturedGame(save, games);
   for (const g of games) simGame(save, g);
   weeklyMoments(save, games);
+  updateMorale(save);
   cpuInSeasonMoves(save);
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
   tradeDemands(save);
@@ -269,6 +272,7 @@ function simThisWeek(save: DynastySave): void {
   weekPrimetime(save);
   // The finale's ballot and stat boards must use the same era-bounded season totals as awards night.
   if (save.schedule.filter(g => g.year === save.year && g.phase === "regular").every(g => g.played)) clampSeasonStats(save);
+  updateArcs(save);
   buildPrimetime(save);
   save.waiverOrder = activeTeamIds(save.year)
     .slice()

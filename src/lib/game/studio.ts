@@ -10,6 +10,7 @@ import { activeTeamIds, conferenceOf, displayName, divisionKey, nicknameOf, roma
 import { depthAt, playerName } from "./players.ts";
 import { superBowlSite } from "./data/bowlSites.ts";
 import { crewFor } from "./previewVoice.ts";
+import { arcsThisWeek, divisionPickMisses } from "./arcs.ts";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 type Chapter = Episode["chapters"][number];
@@ -127,7 +128,7 @@ function hash(s: string): number {
 }
 
 /** A spoken stat line from a box score: "24 carries for 106 yards and two touchdowns". */
-function spokenLine(b: BoxPlayer, pos: string): string | undefined {
+export function spokenLine(b: BoxPlayer, pos: string): string | undefined {
   const n = (x?: number) => x ?? 0;
   const and = (bits: string[]) => (bits.length > 1 ? `${bits.slice(0, -1).join(", ")} and ${bits[bits.length - 1]}` : bits[0]!);
   if (n(b.passAtt) >= 10) {
@@ -147,7 +148,7 @@ function spokenLine(b: BoxPlayer, pos: string): string | undefined {
   return undefined;
 }
 
-function weight(b: BoxPlayer): number {
+export function weight(b: BoxPlayer): number {
   const n = (x?: number) => x ?? 0;
   return (
     n(b.passYds) * 0.04 + n(b.passTd) * 4 - n(b.passInt) * 2.5 + n(b.rushYds) * 0.1 + n(b.rushTd) * 6 + n(b.recYds) * 0.1 + n(b.recTd) * 6 + (n(b.sacks) * 4 + n(b.ints) * 5 + n(b.ff) * 3) * 1.2
@@ -494,6 +495,89 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
         !right && !tie ? reporter(say("acc-rr", [`For the record, I had the ${nick(win(result))}.`, `I'll just say I had my doubts.`])) : undefined,
       ]);
     }
+
+    /* ---------- the storylines we've been following ---------- */
+    const moving = arcsThisWeek(save, save.week).slice(0, 2);
+    for (const a of moving) {
+      a.aired = save.week;
+      const first = a.beats[0]!;
+      const now = a.beats.at(-1)!;
+      const subject =
+        a.kind === "race"
+          ? `the ${a.title.replace(/^The race for the /, "")} race`
+          : a.kind === "mvp"
+            ? "the MVP race"
+            : a.playerId && save.players[a.playerId]
+              ? playerName(save.players[a.playerId]!)
+              : a.teamId
+                ? `the ${nick(a.teamId)}`
+                : a.title;
+      const since = a.opened === now.week ? "" : ` since Week ${a.opened}`;
+      const opener =
+        a.closed
+          ? host(say(`arc-c-${a.id}`, [`Time to close the book on a story we've followed${since}: "${a.title}"`, `One storyline wraps up tonight. ${R}?`]))
+          : host(
+              say(`arc-o-${a.id}`, [
+                `A story we've been following${since}. ${R}, where are we with ${subject}?`,
+                `We keep coming back to ${subject}, and for good reason. ${R}?`,
+                `${a.beats.length > 3 ? `Chapter ${a.beats.length}` : "The next chapter"} of "${a.title}". ${R}?`,
+              ]),
+            );
+      const callback = a.beats.length >= 3 && first.week !== now.week ? ` When we first brought it up in Week ${first.week}, ${first.short}.` : "";
+      const take =
+        a.kind === "collapse"
+          ? say(`arc-a-${a.id}`, [
+              `In August I had them down for ${a.projW?.toFixed(1)} wins. I was wrong about this team, ${H}, and it isn't close.`,
+              `I bought them in the preseason. ${a.projW?.toFixed(1)} wins, I said. That's on me.`,
+              `I keep waiting for them to turn it around. I'm starting to think it isn't coming.`,
+            ])
+          : a.kind === "surprise"
+            ? say(`arc-a-${a.id}`, [
+                `I had them at ${a.projW?.toFixed(1)} wins. I'll say it on the air: I missed on them.`,
+                `We wrote them off in August. They've made us look silly, and good for them.`,
+                `Nobody at this desk saw it. They're for real, ${H}.`,
+              ])
+            : a.kind === "rookie"
+              ? say(`arc-a-${a.id}`, [`He stopped playing like a rookie weeks ago.`, `Rookie of the Year is his to lose right now.`, `Every week he does something you can't coach.`])
+              : a.kind === "race"
+                ? say(`arc-a-${a.id}`, [`This is going to come down to the last two weeks. Bank on it.`, `Every game in that division is a playoff game now.`, `Tiebreakers, ${H}. Start learning the tiebreakers.`])
+                : say(`arc-a-${a.id}`, [`It's a two-man race now, and the next head-to-head stretch decides it.`, `Voters remember November. This is where it's won.`, `I've changed my ballot, and I'm not ashamed of it.`]);
+      add(`arc-${a.id}`, a.closed ? "STORY COMPLETE" : `STORYLINE · ${a.beats.length > 1 ? `WEEK ${a.opened} ON` : "NEW"}`, a.title, a.teamIds ?? (a.teamId ? [a.teamId] : []), [
+        opener,
+        reporter(`${now.text}${callback}`),
+        a.closed ? undefined : analyst(take),
+      ]);
+    }
+    /* ---------- history made this week ---------- */
+    const history = save.news
+      .filter((n) => n.year === year && n.week === save.week && n.phase === "regular" && /single-season record|all-time leader|passes \d/.test(n.headline))
+      .sort((a, b) => Number(/record|all-time/.test(b.headline)) - Number(/record|all-time/.test(a.headline)))
+      .filter((n, k) => k === 0 || /record|all-time/.test(n.headline))
+      .slice(0, 2);
+    for (const [k, n] of history.entries())
+      add(`history-${n.id}`, "HISTORY MADE", n.headline, n.teamIds, [
+        host(say(`hm-${k}`, [`Before we go on, a moment for the record books. ${R}?`, `${R}, something happened this week that'll outlive all of us.`, `Let's stop and appreciate one. ${R}?`])),
+        reporter(`${n.headline}. ${n.body}`),
+        analyst(
+          /record|all-time/.test(n.headline)
+            ? say(`hma-${k}`, [`Records like that are supposed to last forever. That one didn't.`, `Think about everybody who's played this game. Now he's at the top of that list.`, `You'll be telling your grandkids you saw that, ${H}.`])
+            : say(`hma-${k}`, [`That's longevity and greatness at the same time. You need both.`, `A round number, sure. But you have to be very good for a very long time to get there.`, `Put that on the Hall of Fame résumé.`]),
+        ),
+      ]);
+
+    // The desk owns its August division calls, every few weeks.
+    const miss = show.week % 3 === 0 ? divisionPickMisses(save)[0] : undefined;
+    if (miss && !moving.some((a) => a.teamId === miss.teamId))
+      add(`pickmiss-${miss.teamId}`, "THE DESK / OWNING IT", `Our ${miss.key} pick`, [miss.teamId, miss.leader], [
+        host(`${A}, we have to talk about your preseason pick in the ${miss.key}.`),
+        analyst(
+          say(`pm-${miss.teamId}`, [
+            `I picked the ${nick(miss.teamId)} to win it. They're ${miss.back} games back of the ${nick(miss.leader)}. I was wrong.`,
+            `The ${nick(miss.teamId)}. ${miss.back} games out. I'd like that one back, ${H}.`,
+            `Look, I had the ${nick(miss.teamId)}, and the ${nick(miss.leader)} have run away from them. Credit where it's due.`,
+          ]),
+        ),
+      ]);
 
     const rotating = show.week % 4;
     if (rotating === 0 && show.chases?.length)

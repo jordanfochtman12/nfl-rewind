@@ -5,6 +5,7 @@
  */
 import type { BoxPlayer, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
 import { addNews } from "./news.ts";
+import { leagueMarks, STAT_WORDS, WATCH_STATS } from "./boothMemory.ts";
 import { careerTotals } from "./leaders.ts";
 import { livingPlayers, playerName } from "./players.ts";
 import { displayName, gamesInSeason } from "./teams.ts";
@@ -52,6 +53,7 @@ function clubOf(p: Player): TeamId | undefined {
  */
 export function weeklyMoments(save: DynastySave, games: GameResult[]): void {
   const year = save.year;
+  let weekMarks: ReturnType<typeof leagueMarks> | undefined;
   const lines = new Map<string, BoxPlayer>();
   for (const g of games) for (const b of [...(g.boxHome ?? []), ...(g.boxAway ?? [])]) lines.set(b.playerId, b);
   for (const [id, b] of lines) {
@@ -77,6 +79,35 @@ export function weeklyMoments(save: DynastySave, games: GameResult[]): void {
     }
     const season = p.stats[year] as unknown as Record<string, number> | undefined;
     if (!season) continue;
+    // Records the week they fall: the single-season mark, and the all-time career lead.
+    if (!save.realHistory && save.phase === "regular") {
+      const marks = (weekMarks ??= leagueMarks(save));
+      for (const k of WATCH_STATS) {
+        const add = box[k] ?? 0;
+        if (add <= 0) continue;
+        const words = STAT_WORDS[k].many;
+        const sNow = season[k] ?? 0;
+        const sRec = marks.season[k] ?? 0;
+        if (sRec > 0 && sNow - add <= sRec && sNow > sRec)
+          addNews(save, {
+            kind: "award",
+            headline: `${playerName(p)} breaks the single-season record for ${words}`,
+            body: `${fmt(sNow)} and counting, past the old mark of ${fmt(sRec)}.`,
+            teamIds: club ? [club] : [],
+            playerIds: [p.id],
+          });
+        const lead = marks.career[k];
+        const cNow = career[k] ?? 0;
+        if (lead && lead.playerId === p.id && lead.second > 0 && cNow - add <= lead.second && cNow > lead.second)
+          addNews(save, {
+            kind: "award",
+            headline: `${playerName(p)} becomes the all-time leader in ${words}`,
+            body: `${fmt(cNow)} for his career. Nobody in the history of the game has more.`,
+            teamIds: club ? [club] : [],
+            playerIds: [p.id],
+          });
+      }
+    }
     for (const m of seasonMarks(year)) {
       const add = box[m.key] ?? 0;
       if (add <= 0) continue;

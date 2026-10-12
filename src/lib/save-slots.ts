@@ -81,3 +81,12 @@ export function recordSlot(slot: number, save: DynastySave | null): void {
   }
   write(INDEX_KEY, index);
 }
+
+/** Copy what the index says about one slot onto another (a duplicated save). */
+export function copySlotMeta(from: number, to: number): void {
+  const index = slotIndex();
+  const m = index[from];
+  if (!m) return;
+  index[to] = { ...m, slot: to, t: Date.now() };
+  write(INDEX_KEY, index);
+}

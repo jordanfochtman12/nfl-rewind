@@ -6,7 +6,7 @@ import { castVoices } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import type { BoothLine } from "@/lib/game/commentary";
 
-export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number) {
+export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0) {
   const [enabled, setEnabled] = useState(false);
   const [music, setMusic] = useState(false);
   const [volume, setVolume] = useState(0.3);
@@ -78,6 +78,9 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
       speaking(lines);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, active, cue, enabled, announcer]);
+  useEffect(() => {
+    engine.current?.setIntensity(intensity);
+  }, [intensity, enabled]);
   useEffect(
     () => () => {
       void engine.current?.close();
