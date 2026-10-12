@@ -862,6 +862,117 @@
   max-width: 1400px;
   margin: 0 auto;
 }
+/* The camera. Full field on a wide screen; on a phone the field is shown close up (--zoom
+   times) and panned to the play (--focus, 0-1 across the field), never past either end. */
+.field-cam {
+  --zoom: 1;
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 639px) {
+  .field-cam {
+    --zoom: 1.85;
+  }
+  .field-cam > .field-stack {
+    width: calc(100% * var(--zoom));
+    max-width: none;
+    margin-left: calc(-100% * clamp(0, var(--focus) * var(--zoom) - 0.5, var(--zoom) - 1));
+    transition: margin-left 0.7s cubic-bezier(0.3, 0.7, 0.25, 1);
+  }
+  .broadcast-event {
+    padding: 8px 18px;
+    font-size: 24px;
+  }
+  .broadcast-event span {
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-cam > .field-stack {
+    transition: none;
+  }
+}
+
+/* Live game controls: one row of square transport buttons and small sound toggles. */
+.lb-ctl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.7rem;
+  border: 1px solid #ffffff1f;
+  border-radius: 0.6rem;
+  background: linear-gradient(180deg, #222c3f, #121926);
+  color: #e8eef7;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.lb-ctl:disabled {
+  opacity: 0.35;
+}
+.lb-ctl:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.lb-ctl-on {
+  border-color: #ff96a0aa;
+  background: linear-gradient(180deg, #ff4a62, #c20d27);
+  color: #fff;
+}
+.lb-seg {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #ffffff1f;
+  border-radius: 0.6rem;
+}
+.lb-seg > .lb-ctl {
+  border: 0;
+  border-radius: 0;
+  min-width: 2.6rem;
+}
+.lb-seg > .lb-ctl + .lb-ctl {
+  border-left: 1px solid #ffffff14;
+}
+.lb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0 0.8rem;
+  border: 1px solid #ffffff1f;
+  border-radius: 999px;
+  background: #121926;
+  color: #aeb9c9;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.lb-pill::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #4a5568;
+}
+.lb-pill[aria-pressed="true"] {
+  border-color: #ffc62980;
+  color: #fff;
+}
+.lb-pill[aria-pressed="true"]::before {
+  background: #ffc629;
+  box-shadow: 0 0 8px #ffc629;
+}
 .field-layer {
   position: absolute;
   inset: 0;

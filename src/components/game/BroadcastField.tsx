@@ -353,11 +353,17 @@ export function BroadcastField({
   const team = formation(start, dir, play.snap?.kind);
   const surface = look.surface === "grass" ? "Natural grass" : look.surface === "astroturf" ? "AstroTurf" : "FieldTurf";
   const label = `${look.stadium}, ${surface.toLowerCase()}`;
+  // The camera on a phone: the field shown close up, panned to the line of scrimmage, the
+  // marker and where the ball ends up, the way a telecast frames the play.
+  const lo = Math.min(start, finish, first);
+  const hi = Math.max(start, finish, first);
+  const focus = Math.max(0, Math.min(1, (lo + hi) / 2 / VW));
   return (
     <div className="broadcast-field">
-      <div className="flex flex-wrap justify-between gap-2 px-4 py-2 text-[11px] uppercase tracking-widest text-muted">
+      <div className="flex flex-wrap justify-between gap-2 px-4 py-2 text-[11px] uppercase tracking-widest text-muted max-sm:px-3 max-sm:py-1.5 max-sm:text-[10px]">
         <span>
-          {look.stadium} · {surface} · {teamAbbr(play.poss)} {right ? "→" : "←"}
+          <span className="max-sm:hidden">{look.stadium} · {surface} · </span>
+          {teamAbbr(play.poss)} {right ? "→" : "←"}
         </span>
         <span>
           {play.snap
@@ -365,6 +371,7 @@ export function BroadcastField({
             : "Archived film · pre-snap position"}
         </span>
       </div>
+      <div className="field-cam" style={{ "--focus": focus } as CSSProperties}>
       <div className="field-stack" style={{ aspectRatio: `${VW} / ${VH}` }} role="group" aria-label={`${teamAbbr(play.poss)} at their ${play.spot}. ${play.text}`}>
         <Field look={look} label={label} />
         <svg viewBox={`0 0 ${VW} ${VH}`} className="field-layer" aria-hidden="true" shapeRendering="geometricPrecision">
@@ -419,6 +426,7 @@ export function BroadcastField({
           </g>
         </svg>
       </div>
+      </div>
       {tag && (
         <div key={`${index}-${tag}`} className="broadcast-event" role="status">
           {tag}
@@ -427,7 +435,7 @@ export function BroadcastField({
           </span>
         </div>
       )}
-      <div className="flex flex-wrap justify-between gap-2 px-4 pb-3 text-[10px] text-muted">
+      <div className="flex flex-wrap justify-between gap-2 px-4 pb-3 text-[10px] text-muted max-sm:hidden">
         <span>
           {tv ? (
             <>
