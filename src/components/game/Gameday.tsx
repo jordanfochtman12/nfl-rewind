@@ -4,7 +4,7 @@
  * live broadcast, and the postgame game-flow chart with its swing plays replayed in the booth's
  * own voice. Regular game only.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { clubInk, displayName, nicknameOf, teamAbbr, type GameResult, type PlayLog, type TeamId } from "@/lib/game";
 import { boothCall } from "@/lib/game/commentary";
 import { boothFor, firstName } from "@/lib/game/broadcastCrew";
@@ -22,11 +22,14 @@ import {
 } from "@/lib/game/gameday";
 import { pregameMemory } from "@/lib/game/boothMemory";
 import { teamStyle } from "@/lib/game/teamStyle";
-import { halftimeReport, postgameInterviews } from "@/lib/game/presentation";
+import { halftimeReport, halftimeScript, podiumScript, postgameInterviews, type DeskRead } from "@/lib/game/presentation";
+import { crewFor } from "@/lib/game/previewVoice";
 import { useGameStore } from "@/lib/game-store";
 import { BroadcastField } from "./BroadcastField";
 import { Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
+import { LowerThird } from "./ShowKit";
+import { useDeskReading, type DeskLine } from "./useDeskReading";
 
 type Save = NonNullable<ReturnType<typeof useGameStore.getState>["save"]>;
 
@@ -396,13 +399,44 @@ export function TonightsStorylines({ game }: { game: GameResult }) {
   );
 }
 
-/** The halftime report: the half's scoring, who's carrying each side, and what comes next. */
-export function HalftimeDesk({ game, log }: { game: GameResult; log: PlayLog[] }) {
+const DESK_CHAIR = { HOST: "host", ANALYST: "analyst", REPORTER: "reporter" } as const;
+
+/** The desk's script as voiced lines: the studio crew in their chairs, a guest in a voice of his own. */
+function deskLines(script: DeskRead[], year: number): DeskLine[] {
+  const crew = crewFor(year);
+  return script.map((l) =>
+    l.speaker === "GUEST"
+      ? { text: l.text, who: { key: `guest:${l.guest}`, gender: "m" as const }, rate: 0.98 }
+      : { text: l.text, who: { key: crew[l.speaker].name, gender: crew[l.speaker].gender, chair: DESK_CHAIR[l.speaker] }, rate: l.speaker === "ANALYST" ? 0.97 : l.speaker === "REPORTER" ? 1.03 : 1 },
+  );
+}
+
+const ROLE = { HOST: "Studio host", ANALYST: "Studio analyst", REPORTER: "Sideline reporter" } as const;
+
+/**
+ * The halftime report: the half's scoring, who's carrying each side, and what comes next.
+ * `voiced`: the desk reads it aloud; `onRead` fires when the last line ends (or at once, unvoiced).
+ */
+export function HalftimeDesk({ game, log, voiced = false, onRead }: { game: GameResult; log: PlayLog[]; voiced?: boolean; onRead?: () => void }) {
   const r = useMemo(() => halftimeReport(game, log), [game, log]);
+  const script = useMemo(() => halftimeScript(game, log), [game, log]);
+  const lines = useMemo(() => deskLines(script, game.year), [script, game.year]);
+  const { at, done } = useDeskReading(lines, voiced, game.year);
+  const crew = crewFor(game.year);
+  useEffect(() => {
+    if (done) onRead?.();
+  }, [done, onRead]);
   if (!r) return null;
+  const now = voiced && !done ? script[at] : undefined;
   return (
     <div className="space-y-2 px-4 pt-4 text-sm sm:px-5">
       <p className="text-xs tracking-[0.25em] text-brass">HALFTIME · {r.score.toUpperCase()}</p>
+      {now && now.speaker !== "GUEST" && (
+        <div className="relative" aria-live="polite">
+          <LowerThird name={crew[now.speaker].name} role={ROLE[now.speaker]} accent={now.speaker === "ANALYST" ? "#00d4ff" : "#e5173f"} />
+          <p className="mt-2 text-paper">{now.text}</p>
+        </div>
+      )}
       {r.scoring.length > 0 ? (
         <ol className="space-y-1 text-paper">
           {r.scoring.map((x) => (
@@ -422,18 +456,33 @@ export function HalftimeDesk({ game, log }: { game: GameResult; log: PlayLog[] }
 }
 
 /** The postgame podium: both coaches and the player of the game, quoting the real result. */
-export function PostgameInterviews({ game }: { game: GameResult }) {
+export function PostgameInterviews({ game, voiced: auto = false }: { game: GameResult; voiced?: boolean }) {
   const save = useGameStore((s) => s.save)!;
   const list = useMemo(() => postgameInterviews(save, game), [save, game]);
+  const script = useMemo(() => podiumScript(save, game), [save, game]);
+  const lines = useMemo(() => deskLines(script, game.year), [script, game.year]);
+  const [asked, setAsked] = useState(auto);
+  const { at, done } = useDeskReading(lines, asked, game.year);
+  useEffect(() => {
+    if (asked && done) setAsked(false);
+  }, [asked, done]);
   if (!list.length) return null;
+  // Each guest is two lines: the reporter's introduction, then the answer.
+  const live = asked && !done ? Math.floor(at / 2) : -1;
   return (
     <section aria-label="Postgame interviews">
-      <h4 className="mb-2 text-xs tracking-[0.2em] text-muted">At the podium</h4>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h4 className="text-xs tracking-[0.2em] text-muted">At the podium</h4>
+        <button type="button" className="bx-chip min-h-9 px-3 text-xs" aria-pressed={asked} onClick={() => setAsked(!asked)}>
+          {asked ? "■ Stop" : "▶ Hear the podium"}
+        </button>
+      </div>
       <ul className="grid gap-2 sm:grid-cols-3">
-        {list.map((x) => (
-          <li key={x.who + x.role} className="rounded-md border border-line bg-surface-2 p-3 text-sm">
+        {list.map((x, k) => (
+          <li key={x.who + x.role} className={`rounded-md border bg-surface-2 p-3 text-sm transition-colors ${k === live ? "border-brass shadow-[0_0_0_1px_#ffc62966]" : "border-line"}`}>
             <p className="flex items-center gap-2 font-display text-xs font-bold uppercase italic tracking-wide text-brass">
               <Logo id={x.teamId} size={18} /> {x.who}
+              {k === live && at % 2 === 1 && <span className="pt-mic ml-auto">● Live</span>}
             </p>
             <p className="text-[11px] text-muted">{x.role}</p>
             <p className="mt-2 text-paper">&ldquo;{x.quote}&rdquo;</p>

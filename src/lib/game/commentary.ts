@@ -77,6 +77,66 @@ function situation(play: PlayLog, ctx: BoothContext): string {
  * analyst's reaction. Built from the recorded result only, never an invented detail.
  */
 export function boothCall(play: PlayLog, index: number, ctx: BoothContext): BoothLine[] {
+  const out = snapCall(play, index, ctx);
+  const tag = scoreboard(play, index, ctx);
+  if (!tag) return out;
+  const k = out.findIndex((l) => l.speaker === "PBP");
+  if (k >= 0) out[k] = { ...out[k]!, text: `${out[k]!.text} ${tag}` };
+  else out.unshift({ speaker: "PBP", text: tag });
+  return out;
+}
+
+const NUM = ["nothing", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const said = (n: number) => (n <= 10 ? NUM[n]! : String(n));
+
+/**
+ * What the score means now, the way a play-by-play man gives it after points go up: a tie, a
+ * new lead, a lead stretched to two scores, a deficit cut. Late in a close one, the clock too.
+ */
+export function scoreboard(play: PlayLog, index: number, ctx: BoothContext): string | undefined {
+  const before = ctx.prev ? { h: ctx.prev.hs, a: ctx.prev.as } : undefined;
+  const nick = ctx.nick;
+  const h = play.hs;
+  const a = play.as;
+  const lead = h === a ? undefined : h > a ? ctx.homeId : ctx.awayId;
+  const trail = lead === ctx.homeId ? ctx.awayId : ctx.homeId;
+  const margin = Math.abs(h - a);
+  const hi = Math.max(h, a);
+  const lo = Math.min(h, a);
+  if (before && (before.h !== h || before.a !== a)) {
+    const scorer = h > before.h ? ctx.homeId : ctx.awayId;
+    const wasMargin = before.h - before.a;
+    const nowMargin = h - a;
+    if (!lead) return pick(`sb-tie`, index, [`And we're all even at ${h}.`, `That ties it, ${h} apiece.`, `All square now, ${h} to ${a}.`]);
+    // The scorer went from behind (or level) to in front.
+    const tookLead = scorer === lead && (scorer === ctx.homeId ? wasMargin <= 0 : wasMargin >= 0);
+    if (tookLead)
+      return wasMargin === 0
+        ? pick(`sb-go`, index, [`The ${nick(lead)} go in front, ${hi} to ${lo}.`, `And the ${nick(lead)} have the lead, ${hi} to ${lo}.`])
+        : pick(`sb-flip`, index, [`And the ${nick(lead)} take the lead! ${hi} to ${lo}!`, `The ${nick(lead)} are back on top, ${hi} to ${lo}!`, `Lead change! ${nick(lead)} ${hi}, ${nick(trail)} ${lo}.`]);
+    if (scorer === lead) {
+      if (margin > 8 && Math.abs(wasMargin) <= 8) return pick(`sb-two`, index, [`That makes it a two-score game, ${hi} to ${lo}.`, `The ${nick(lead)} stretch it to ${margin}. ${hi} to ${lo}.`]);
+      return pick(`sb-up`, index, [`${nick(lead)} ${hi}, ${nick(trail)} ${lo}.`, `The ${nick(lead)} lead by ${said(margin)}.`, `That's ${hi} to ${lo}, ${nick(lead)}.`]);
+    }
+    // The trailing side scored but is still behind.
+    if (margin <= 8 && Math.abs(wasMargin) > 8) return pick(`sb-back`, index, [`It's a one-score game again, ${hi} to ${lo}.`, `That cuts it to ${said(margin)}. ${hi} to ${lo}.`]);
+    return margin <= 8 && Math.abs(nowMargin) < Math.abs(wasMargin)
+      ? pick(`sb-cut`, index, [`That cuts it to ${said(margin)}. ${hi} to ${lo}.`, `The ${nick(trail)} within ${said(margin)} now.`, ...((trail === ctx.homeId ? before.h : before.a) === 0 ? [`The ${nick(trail)} get on the board. ${hi} to ${lo}.`] : [])])
+      : pick(`sb-still`, index, [`Still ${hi} to ${lo}, ${nick(lead)}.`, `The ${nick(trail)} still trail by ${margin}.`]);
+  }
+  // Late in a close one: the clock and the margin, every few snaps.
+  if (play.q >= 4 && play.clock <= 150 && play.clock > 0 && margin <= 8 && index % 3 === 0) {
+    const mins = play.clock >= 120 ? "Under three minutes" : play.clock >= 60 ? "Under two minutes" : `${play.clock} seconds`;
+    const offense = play.poss;
+    if (!lead) return `${mins} to go, tied at ${h}.`;
+    return offense === trail
+      ? pick(`sb-late`, index, [`${mins} left, and the ${nick(trail)} need ${margin <= 3 ? "a field goal to tie" : "a touchdown"}.`, `${mins} to play. ${nick(trail)} down ${said(margin)}.`])
+      : pick(`sb-milk`, index, [`${mins} left. The ${nick(lead)} are trying to run it out, up ${said(margin)}.`, `${mins} to go, ${nick(lead)} with the ball and the lead.`]);
+  }
+  return undefined;
+}
+
+function snapCall(play: PlayLog, index: number, ctx: BoothContext): BoothLine[] {
   const text = play.text;
   const out: BoothLine[] = [];
   const pbp = (t: string) => out.push({ speaker: "PBP", text: t });

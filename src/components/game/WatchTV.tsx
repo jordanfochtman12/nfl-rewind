@@ -40,7 +40,7 @@ import { DraftNight } from "./DraftNight";
 import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
-import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
+import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/studioVoice";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -507,10 +507,12 @@ function LiveTv({ game, onDone }: { game: GameResult; onDone: () => void }) {
   const [ended, setEnded] = useState(false);
   const done = useRef(onDone);
   done.current = onDone;
+  // After the final whistle the podium may be on the air: move on once it signs off.
+  const talking = useTalking((s) => s.talking);
   useEffect(() => {
-    if (!ended) return;
+    if (!ended || talking) return;
     const t = setTimeout(() => done.current(), 8000);
     return () => clearTimeout(t);
-  }, [ended]);
+  }, [ended, talking]);
   return <LiveBroadcast game={game} log={game.log!} onDone={onDone} onReachEnd={() => setEnded(true)} autoHalftime />;
 }

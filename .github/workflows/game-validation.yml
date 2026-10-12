@@ -31,6 +31,7 @@ jobs:
       - run: node --experimental-strip-types --test scripts/recaps.test.mjs
       - run: node --experimental-strip-types --test scripts/shows.test.mjs
       - run: node --experimental-strip-types --test scripts/voices.test.mjs
+      - run: node --experimental-strip-types --test scripts/broadcast-desk.test.mjs
       - run: node --experimental-strip-types --test src/lib/game/identity.test.ts src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts
       - run: npm run qa
       - run: npm run build

@@ -156,3 +156,70 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
   }
   return out;
 }
+
+export interface DeskRead {
+  speaker: "HOST" | "ANALYST" | "REPORTER" | "GUEST";
+  /** For a guest at the podium: who is talking. */
+  guest?: string;
+  text: string;
+}
+
+const QUARTER_WORDS = ["", "first", "second", "third", "fourth"];
+
+/** The halftime report as the desk reads it: host on the score and the scoring, analyst on who's carrying it. */
+export function halftimeScript(game: GameResult, log: PlayLog[]): DeskRead[] {
+  const r = halftimeReport(game, log);
+  if (!r) return [];
+  const key = `${game.id}-half`;
+  const half = log.filter((l) => l.q <= 2);
+  const last = half.at(-1)!;
+  const tied = last.hs === last.as;
+  const out: DeskRead[] = [
+    {
+      speaker: "HOST",
+      text: `${pick(key, ["Welcome back to the halftime desk.", "We're at the half.", "Halftime, and here's where we stand."])} ${tied ? `It's all square, ${last.hs} apiece.` : `${r.score}.`}`,
+    },
+  ];
+  const plays = half.filter((l, k) => k > 0 && (l.hs !== half[k - 1]!.hs || l.as !== half[k - 1]!.as));
+  if (plays.length) {
+    const told = plays.slice(-4).map((l) => {
+      const what = l.text.split(". ")[0]!.replace(/\.$/, "");
+      const finish = l.tag === "td" && !/touchdown/i.test(what) ? ", touchdown" : "";
+      return `In the ${QUARTER_WORDS[l.q]} quarter, the ${nicknameOf(game.year, l.poss)}: ${what}${finish}.`;
+    });
+    out.push({ speaker: "HOST", text: `${plays.length > 4 ? "The latest of the scoring." : "How we got here."} ${told.join(" ")}` });
+  } else {
+    out.push({ speaker: "HOST", text: "No points on the board. The defenses have owned this half." });
+  }
+  const leaders = r.leaders.map((x) => x.replace(": ", " with "));
+  const read: string[] = [];
+  if (leaders.length) read.push(`${pick(`${key}-a`, ["The story of the half:", "Here's who's carrying it.", "Look at the numbers."])} ${leaders.join(", ")}.`);
+  const giveaways = half.filter((l) => l.tag === "to");
+  if (giveaways.length) {
+    const by = [game.awayId, game.homeId].map((id) => ({ id: id as TeamId, n: giveaways.filter((l) => l.poss === id).length })).filter((x) => x.n).sort((a, b) => b.n - a.n);
+    const count = (n: number) => (n === 1 ? "one" : n === 2 ? "two" : n === 3 ? "three" : String(n));
+    read.push(
+      by.length === 1
+        ? `And the ${nicknameOf(game.year, by[0]!.id)} have turned it over ${giveaways.length === 1 ? "once" : `${count(giveaways.length)} times`}.`
+        : `${count(giveaways.length).replace(/^./, (c) => c.toUpperCase())} turnovers in the half: ${by.map((x) => `${count(x.n)} by the ${nicknameOf(game.year, x.id)}`).join(", ")}.`,
+    );
+  }
+  if (!read.length) read.push("Nobody's broken this one open yet. It's going to come down to adjustments in the locker room.");
+  out.push({ speaker: "ANALYST", text: read.join(" ") });
+  out.push({ speaker: "HOST", text: `${r.secondHalf} ${pick(`${key}-b`, ["The second half is next.", "Stay with us.", "Back to the field for the third quarter."])}` });
+  return out;
+}
+
+/** The podium as the field reporter runs it: an introduction, then each guest in his own voice. */
+export function podiumScript(save: DynastySave, game: GameResult): DeskRead[] {
+  const list = postgameInterviews(save, game);
+  const out: DeskRead[] = [];
+  for (const [k, x] of list.entries()) {
+    const intro = /coach/i.test(x.role)
+      ? pick(`${game.id}-c${k}`, [`Let's hear from ${x.who}.`, `${x.who} at the podium.`, `Here's ${x.who}.`])
+      : pick(`${game.id}-p${k}`, [`I'm down here with ${x.who}.`, `The player of the game, ${x.who}.`, `${x.who} joins us.`]);
+    out.push({ speaker: "REPORTER", text: intro });
+    out.push({ speaker: "GUEST", guest: x.who, text: x.quote });
+  }
+  return out;
+}

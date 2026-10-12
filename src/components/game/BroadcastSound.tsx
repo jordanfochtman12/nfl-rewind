@@ -110,6 +110,8 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   return {
     /** The booth is still calling the last snap: a telecast waits for it. */
     holding: announcer && active && talking,
+    /** The booth's voices are on: the desk segments (halftime, the podium) are read aloud too. */
+    voiced: announcer,
     chime: () => engine.current?.cue(),
     controls: (
       <div className="space-y-2">

@@ -3,14 +3,14 @@ import { FilmReport } from "./FilmReport";
 import { useBroadcastSound } from "./BroadcastSound";
 import { boothCall } from "@/lib/game/commentary";
 import { boothFor, firstName } from "@/lib/game/broadcastCrew";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clubInk, nicknameOf, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { useEraClass } from "./eraLook";
 import { markWatched } from "./liveWatch";
 import { wpSeries } from "@/lib/game/gameday";
-import { CueChip, HalftimeDesk, KeyMatchups, MomentumMeter } from "./Gameday";
+import { CueChip, HalftimeDesk, KeyMatchups, MomentumMeter, PostgameInterviews } from "./Gameday";
 
 const ORD = ["", "1st", "2nd", "3rd", "4th"];
 const clockText = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -131,15 +131,24 @@ export function LiveBroadcast({
     return () => clearTimeout(t);
   }, [i, playing, playMs, atEnd, log, halftime, compact, sound.holding, speed]);
 
+  // The desk reads the halftime report when the booth is on; TV mode waits for it to finish.
+  const [halfRead, setHalfRead] = useState(false);
+  const endHalfRead = useCallback(() => setHalfRead(true), []);
+  useEffect(() => {
+    if (halftime) setHalfRead(false);
+  }, [halftime]);
   useEffect(() => {
     if (!halftime || !autoHalftime) return;
-    const t = setTimeout(() => {
+    const go = () => {
       setHalftime(false);
       setI((n) => Math.min(log.length - 1, n + 1));
       setPlaying(true);
-    }, 12000);
+    };
+    // Unvoiced, the report stays up twelve seconds; voiced, a beat after the desk signs off
+    // (and never longer than ninety, whatever happens to the read).
+    const t = setTimeout(go, sound.voiced ? (halfRead ? 2500 : 90000) : 12000);
     return () => clearTimeout(t);
-  }, [halftime, autoHalftime, log.length]);
+  }, [halftime, autoHalftime, log.length, sound.voiced, halfRead]);
 
   useEffect(() => {
     if (atEnd && !doneRef.current) {
@@ -157,6 +166,7 @@ export function LiveBroadcast({
   }, [liveNow, game.id, setLiveGame]);
 
   const wp = useMemo(() => wpSeries(log, us, home, final), [log, us, home, final]);
+  const halfLog = useMemo(() => log.slice(0, i + 1), [log, i]);
   const cur = log[i];
   if (!cur) return null;
   const next = log[i + 1];
@@ -295,7 +305,7 @@ export function LiveBroadcast({
       )}
 
       <BroadcastField play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} year={game.year} game={game} />
-      {halftime && <div className="border-b border-brass/30"><HalftimeDesk game={game} log={log.slice(0, i + 1)} /><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
+      {halftime && <div className="border-b border-brass/30"><HalftimeDesk game={game} log={halfLog} voiced={sound.voiced && !compact} onRead={endHalfRead} /><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
       {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 
       {!compact && i < 4 && game.matchups?.length ? (
@@ -373,7 +383,8 @@ export function LiveBroadcast({
       </div>
 
       {ended && !compact && (
-        <div className="border-t border-white/10 px-4 py-3">
+        <div className="space-y-3 border-t border-white/10 px-4 py-3">
+          {game.played && <PostgameInterviews game={game} voiced={sound.voiced} />}
           <Btn kind="primary" onClick={() => onDone?.()}>
             Postgame film <span aria-hidden>▸</span>
           </Btn>
