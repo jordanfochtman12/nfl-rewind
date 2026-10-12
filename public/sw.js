@@ -88,7 +88,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (/^\/(art|audio|logos|brand|__grok)\//.test(url.pathname) || /\.(svg|png|jpg|webp|mp3|ogg|m4a|woff2?)$/.test(url.pathname)) {
+  if (/^\/(art|audio|logos|brand|icons)\//.test(url.pathname) || /\.(svg|png|jpg|webp|mp3|ogg|m4a|woff2?)$/.test(url.pathname)) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(MEDIA);
