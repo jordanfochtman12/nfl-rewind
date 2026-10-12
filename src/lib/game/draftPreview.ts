@@ -111,6 +111,26 @@ export function consensusBoard(save: DynastySave): PreviewProspect[] {
   }));
 }
 
+/**
+ * The whole class as the media ranked it going in, taken players included, so a pick can be
+ * measured against where the board had him. Stable through the draft (cached on the board).
+ */
+const classCache = new WeakMap<object, Map<string, number>>();
+export function classConsensus(save: DynastySave): Map<string, number> {
+  const hit = classCache.get(save.draftBoard);
+  if (hit && hit.size === save.draftBoard.length) return hit;
+  const rows = save.draftBoard
+    .filter((pr) => save.players[pr.playerId])
+    .map((pr) => {
+      const p = save.players[pr.playerId]!;
+      return { id: p.id, score: visibleOvr(p) + positionPremium(p.pos, save.year) + (draw(p.id, "media") - 0.5) * 3 };
+    })
+    .sort((a, b) => b.score - a.score);
+  const out = new Map(rows.map((r, i) => [r.id, i + 1]));
+  classCache.set(save.draftBoard, out);
+  return out;
+}
+
 /** Positions where a club is thinnest, strongest need first. */
 export function teamNeeds(save: DynastySave, teamId: TeamId, n = 3): Pos[] {
   const roster = rosterOf(save, teamId);

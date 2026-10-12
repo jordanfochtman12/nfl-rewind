@@ -11,7 +11,6 @@ import {
   draftQueue,
   formatHt,
   playerName,
-  rosterOf,
   SCOUT_KEYS,
   sessionLabel,
   visibleOvr,
@@ -31,6 +30,8 @@ import {
   scoutState,
   setScoutBudget,
   visitsLeft,
+  draftTicker,
+  draftVenue,
 } from "@/lib/game";
 import { counterOffer, gradeRange, positionalNeeds, schemeFit } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
@@ -38,6 +39,8 @@ import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { KitChips } from "./KitChips";
 import { PlayerLink } from "./PlayerProfile";
+import { NightShow } from "./ShowKit";
+import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
   "ALL",
@@ -76,16 +79,6 @@ function Meter({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Clock({ seconds }: { seconds: number }) {
-  const m = Math.floor(Math.max(0, seconds) / 60);
-  const s = Math.max(0, seconds) % 60;
-  return (
-    <div className="tabular font-display text-4xl text-brass">
-      {m}:{String(s).padStart(2, "0")}
-    </div>
-  );
-}
-
 function archLabel(p: Player): string {
   const a = p.arch as keyof typeof ARCH_LABEL | undefined;
   return a && ARCH_LABEL[a] ? ARCH_LABEL[a] : "Prospect";
@@ -101,8 +94,6 @@ function measLine(p: Player): string {
   const fy = p.forty != null ? `${p.forty.toFixed(2)} forty` : "";
   return [ht, wt, fy].filter(Boolean).join(" · ");
 }
-
-const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 
 export function DraftNight() {
   const announcer = useDraftAnnouncer();
@@ -130,17 +121,6 @@ export function DraftNight() {
   const totalPicks = useMemo(() => draftQueue(save).length, [save]);
   const openAll = save.draftBoard.filter((p) => !p.taken);
   const taken = save.draftBoard.filter((p) => p.taken);
-  // draftBoard order is big-board rank, not pick order — find the actual most recent
-  // pick via Player.draftPick (set authoritatively in makeDraftPick), not array position.
-  let last: (typeof taken)[number] | undefined;
-  let lastPlayer: Player | undefined;
-  for (const pr of taken) {
-    const pl = save.players[pr.playerId];
-    if (pl?.draftPick != null && (!lastPlayer || (lastPlayer.draftPick ?? -1) < pl.draftPick)) {
-      last = pr;
-      lastPlayer = pl;
-    }
-  }
   const namedLeft = openAll.filter((pr) => save.players[pr.playerId]?.historical).length;
 
   const board = useMemo(() => {
@@ -164,11 +144,8 @@ export function DraftNight() {
   const myPicksLeft = !save.sandbox && draftQueue(save).slice(save.draftPickIndex).some((p) => p.owner === save.userTeamId);
   const cpuUp = save.phase === "draft" && !!onClock && (save.sandbox || onClock !== save.userTeamId);
   const done = save.phase !== "draft" || !onClock;
-  const needs = onClock
-    ? [...new Set(rosterOf(save, onClock).sort((a, b) => a.ovr - b.ovr).slice(0, 5).map((p) => p.pos))].join(" · ")
-    : "";
   // The owner's own needs are measured against the league's starters, not just his weakest men.
-  const myNeeds = useMemo(() => (isUser && onClock ? positionalNeeds(save, onClock, 4).map((n) => n.pos).join(" · ") : ""), [save, isUser, onClock]);
+  const myNeeds = useMemo(() => (isUser && onClock ? positionalNeeds(save, onClock, 4).map((n) => n.pos) : undefined), [save, isUser, onClock]);
 
   useEffect(() => {
     if (!cpuUp || paused || announcer.busy || announcer.hidden) return;
@@ -181,10 +158,14 @@ export function DraftNight() {
     };
   }, [cpuUp, paused, save.draftPickIndex, step, announcer.busy, announcer.hidden]);
 
+  // Your own clock runs too. It is television: the pick is yours whenever you make it.
   useEffect(() => {
     if (!isUser) return;
     setHold(75);
+    const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
+    return () => clearInterval(tick);
   }, [isUser, save.draftPickIndex]);
+  const ticker = useMemo(() => draftTicker(save, 20), [save]);
 
   if (save.phase !== "draft") {
     return (
@@ -197,6 +178,15 @@ export function DraftNight() {
   }
 
   return (
+    <NightShow
+      id={`draft-${save.year}-${sessionOf(save)}`}
+      show={sessionOf(save) === "afl" ? "AFL DRAFT" : "NFL DRAFT"}
+      title={`The ${save.year} Draft`}
+      sub={draftVenue(save.year)}
+      year={save.year}
+      ticker={ticker}
+      tickerLabel="THE PICKS"
+    >
     <div className="space-y-4">
       <TalksReminder />
       {announcer.controls}
@@ -207,32 +197,13 @@ export function DraftNight() {
       <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
         <FilmStill still="draft" veil="full" />
         <div className="relative space-y-4 px-5 py-5">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} {sessionLabel(save).toUpperCase()}</p>
-              <h2 className="font-display text-4xl sm:text-5xl">
-                Round {rnd}
-                <span className="ml-3 text-brass">Pick {pickInRound}</span>
-              </h2>
-              <p className="text-sm text-muted">
-                Overall {Math.min(overall, totalPicks)} of {totalPicks} · {namedLeft} named
-                still on the board
-              </p>
-            </div>
-            {onClock && (
-              <div className="flex items-center gap-4 rounded-lg border border-brass/40 bg-black/65 px-4 py-3">
-                <Logo id={onClock} size={64} year={save.year} />
-                <div>
-                  <p className="text-[11px] tracking-[0.35em] text-brass">
-                    {isUser ? "YOUR WAR ROOM" : "ON THE CLOCK"}
-                  </p>
-                  <p className="font-display text-2xl">{displayName(save.year, onClock)}</p>
-                  <p className="text-xs text-muted">Needs {(isUser ? myNeeds : needs) || "best available"}</p>
-                </div>
-                <Clock seconds={hold} />
-              </div>
-            )}
-          </div>
+          <DraftMasthead round={rnd} pickInRound={pickInRound} overall={overall} total={totalPicks} />
+          <p className="text-xs text-muted">
+            {sessionLabel(save)} · {namedLeft} named prospects still on the board
+          </p>
+          <RoundRecapCard />
+          <PickReveal />
+          {onClock && <OnTheClockPlate seconds={hold} limit={isUser ? 75 : 8} isUser={isUser} needs={myNeeds} />}
 
           <div className="-mx-1 overflow-x-auto pb-1">
             <p className="mb-2 text-[11px] tracking-[0.35em] text-brass">ROUND {rnd} · THE BOARD</p>
@@ -260,30 +231,6 @@ export function DraftNight() {
               })}
             </ol>
           </div>
-
-          {last && lastPlayer && (
-            <div className="rounded-lg border border-brass/25 bg-black/55 px-4 py-4">
-              <p className="text-[11px] tracking-[0.4em] text-brass">THE PICK IS IN</p>
-              <p className="mt-1 font-display text-lg text-paper">
-                With the {ordinal(lastPlayer.draftPick ?? last.slot)} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                {last.takenBy && <Logo id={last.takenBy} size={48} year={save.year} />}
-                <div>
-                  <p className="font-display text-3xl">
-                    <PlayerLink player={lastPlayer} className="inline min-h-0 font-display text-3xl" />
-                  </p>
-                  <p className="text-sm text-muted">
-                    {lastPlayer.pos} · {archLabel(lastPlayer)} · {lastPlayer.college} · {measLine(lastPlayer)} ·{" "}
-                    {lastPlayer.revealed ? `${lastPlayer.ovr} OVR` : `Scout ${ownerGrade(save, lastPlayer)}`}
-                  </p>
-                  <div className="mt-1">
-                    <KitChips player={lastPlayer} compact />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {isUser && (
             <div className="rounded-lg border border-accent/40 bg-accent/15 px-4 py-4">
@@ -488,6 +435,7 @@ export function DraftNight() {
         </aside>
       </div>
     </div>
+    </NightShow>
   );
 }
 

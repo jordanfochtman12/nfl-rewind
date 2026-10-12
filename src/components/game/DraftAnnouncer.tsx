@@ -18,6 +18,7 @@ import {
   type DraftReaction,
 } from "@/lib/game/draftAnnouncement";
 import { footballSpeech } from "@/lib/game/footballSpeech";
+import { drafteeCall, pickBreakdown, type PickBreakdown } from "@/lib/game/draftNight";
 import { draftCrowdAudio } from "./draftCrowdAudio";
 import { stadiumAudio } from "./stadiumAudio";
 
@@ -25,12 +26,25 @@ import { DraftAudioContext } from "./draftAudio";
 import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
 
 
+function crowdFor(b: PickBreakdown): DraftReaction {
+  if (b.value === "STEAL" || b.value === "VALUE")
+    return { kind: "applause", label: "Applause from the crowd", reason: `The board had him at ${b.consensus}. He went ${b.overall}.` };
+  if (b.value === "ON THE BOARD")
+    return b.need
+      ? { kind: "applause", label: "Applause from the crowd", reason: "A strong scouted fit for a position that needs help." }
+      : { kind: "murmur", label: "Polite applause", reason: "Right about where the board had him." };
+  if (b.value === "REACH") return { kind: "murmur", label: "Mixed reaction", reason: `A little early: the board had him at ${b.consensus}.` };
+  return { kind: "boos", label: "Boos from the crowd", reason: `Fans see a reach: the board had him at ${b.consensus}, and he went ${b.overall}.` };
+}
+
 /** Stays mounted through the last pick so the closing announcement can finish. */
 export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const save = useGameStore((s) => s.save)!;
   const tab = useGameStore((s) => s.tab);
   const inRoom = tab === "draft" || tab === "office";
   const previous = useRef<DraftAudioSnapshot | null>(null);
+  const saveRef = useRef(save);
+  saveRef.current = save;
   // The desk's last few takes, so the analyst doesn't say the same thing two picks apart.
   const recentDesk = useRef<string[]>([]);
   const snapshot = useMemo(
@@ -54,6 +68,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     nextLine?: string;
     desk?: string;
     round?: number;
+    guest?: { name: string; line: string };
   } | null>(null);
   const [crowd, setCrowd] = useState(false);
   const crowdEnabled = useRef(crowd);
@@ -119,15 +134,15 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     }
   };
   const speak = useCallback(
-    (text: string, response?: DraftReaction | null, nextLine?: string, desk?: string, round = 1) => {
+    (text: string, response?: DraftReaction | null, nextLine?: string, desk?: string, round = 1, guest?: { name: string; line: string }) => {
       stop();
       if (!("speechSynthesis" in window)) {
         setError("Draft narration is unavailable in this browser.");
         setEnabled(false);
         return;
       }
-      replay.current = { text, response, nextLine, desk, round };
-      setLine([text, desk, nextLine].filter(Boolean).join(" "));
+      replay.current = { text, response, nextLine, desk, round, guest };
+      setLine([text, desk, guest ? `${guest.name}: "${guest.line}"` : "", nextLine].filter(Boolean).join(" "));
       setError("");
       const token = serial.current;
       // The commissioner reads round one (Rozelle, Tagliabue, Goodell); a league official reads
@@ -174,8 +189,11 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         ownsSpeech.current = true;
         watchdog.current = setTimeout(fail, Math.max(30000, words.split(/\s+/).length * 900));
         try {
-          const g = who === "COMM" ? commissionerFor(save.year).gender : who === "DESK" ? analyst.gender : official.gender;
-          speakLine(utterance, { key: who === "COMM" ? `comm-${commissionerFor(save.year).gender}` : who === "DESK" ? `desk-${analyst.gender}` : who, gender: g, chair: who === "DESK" ? "analyst" : "draft" });
+          if (who.startsWith("guest:")) speakLine(utterance, { key: who, gender: "m" });
+          else {
+            const g = who === "COMM" ? commissionerFor(save.year).gender : who === "DESK" ? analyst.gender : official.gender;
+            speakLine(utterance, { key: who === "COMM" ? `comm-${commissionerFor(save.year).gender}` : who === "DESK" ? `desk-${analyst.gender}` : who, gender: g, chair: who === "DESK" ? "analyst" : "draft" });
+          }
         } catch {
           fail();
         }
@@ -187,8 +205,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           if (serial.current !== token) return;
           if (serial.current !== token) return;
           const clock = () => (nextLine ? read(nextLine, () => setBusy(false)) : setBusy(false));
-          if (desk) read(desk, clock, "DESK");
-          else clock();
+          // The owner's own pick: the draftee on the phone before the next club comes up.
+          const call = () => (guest ? read(guest.line, clock, `guest:${guest.name}`) : clock());
+          if (desk) read(desk, call, "DESK");
+          else call();
         })();
       });
     },
@@ -245,9 +265,17 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const parts =
       previous.current && snapshot ? draftAnnouncementParts(previous.current, snapshot, recentDesk.current) : null;
+    // The desk breaks the pick down against the board: value, need, a run, a trade.
+    const b = parts?.pickId ? pickBreakdown(saveRef.current, parts.pickId) : undefined;
+    if (parts && b) parts.desk = b.desk;
+    const guest = b && !saveRef.current.sandbox && b.teamId === saveRef.current.userTeamId ? { name: b.name, line: drafteeCall(saveRef.current, b) } : undefined;
     if (parts?.desk) recentDesk.current = [...recentDesk.current, parts.desk.replace(/ (Good find this late|Day-two picks like that build a roster)\.$/, "")].slice(-6);
-    const response =
-      previous.current && snapshot ? draftCrowdReaction(previous.current, snapshot) : null;
+    // The room hears the pick the way the desk grades it, so the boos and the take agree.
+    const response = b
+      ? crowdFor(b)
+      : previous.current && snapshot
+        ? draftCrowdReaction(previous.current, snapshot)
+        : null;
     previous.current = snapshot;
     if (!snapshot) {
       stop();
@@ -255,10 +283,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       setCrowd(false);
     }
     if (inRoom && !document.hidden && parts) {
-      setLine([parts.podium, parts.desk, parts.onClock].filter(Boolean).join(" "));
-      replay.current = { text: parts.podium, response, nextLine: parts.onClock, desk: parts.desk, round: parts.round };
+      setLine([parts.podium, parts.desk, guest ? `${guest.name}: "${guest.line}"` : "", parts.onClock].filter(Boolean).join(" "));
+      replay.current = { text: parts.podium, response, nextLine: parts.onClock, desk: parts.desk, round: parts.round, guest };
       setReaction(response);
-      if (enabled) speak(parts.podium, response, parts.onClock, parts.desk, parts.round);
+      if (enabled) speak(parts.podium, response, parts.onClock, parts.desk, parts.round, guest);
       else if (crowd && response) {
         stop();
         void playReaction(response, serial.current);
@@ -339,7 +367,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
               disabled={!line}
               onClick={() => {
                 const r = replay.current;
-                if (r) speak(r.text, r.response, r.nextLine, r.desk, r.round);
+                if (r) speak(r.text, r.response, r.nextLine, r.desk, r.round, r.guest);
               }}
             >
               Replay announcement

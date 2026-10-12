@@ -245,7 +245,7 @@ export function draftAnnouncementParts(
   previous: DraftAudioSnapshot,
   next: DraftAudioSnapshot,
   recentDesk: readonly string[] = [],
-): { podium: string; onClock: string; desk?: string; round: number } | null {
+): { podium: string; onClock: string; desk?: string; round: number; pickId?: string } | null {
   if (!previous.drafting || previous.year !== next.year) return null;
   const heard = new Set(previous.selections.map((p) => p.id));
   const added = next.selections
@@ -265,7 +265,7 @@ export function draftAnnouncementParts(
     );
   nextLines.push(draftOnClock(next));
   const desk = last && added.length === 1 ? draftDeskTake(last, draftCrowdReaction(previous, next), next.year, recentDesk) : undefined;
-  return { podium: parts.join(" "), onClock: nextLines.join(" "), desk, round: last?.round ?? 1 };
+  return { podium: parts.join(" "), onClock: nextLines.join(" "), desk, round: last?.round ?? 1, pickId: last && added.length === 1 ? last.id : undefined };
 }
 
 export function draftAnnouncement(
