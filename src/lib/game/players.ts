@@ -1,7 +1,7 @@
 import type { DefScheme, DynastySave, OffScheme, Player, Pos, Ratings, SeasonStats, TeamId } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { deriveOvr, hasFullKit } from "./ratings.ts";
-import { eraCollege, eraName, jerseyFor, jerseyLegal } from "./names.ts";
+import { eraCollege, eraName, jerseyFor, jerseyLegal, preferredJersey } from "./names.ts";
 import { jitter, randInt } from "./rng.ts";
 import { veterans1966, type VetSeed } from "./data/veterans1966.ts";
 import { assignKit } from "./abilities.ts";
@@ -610,7 +610,8 @@ export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): numbe
   const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
   const legal = rookieYear < 1973 || jerseyLegal(p.pos, save.year, p.jersey);
   if (p.jersey > 0 && legal && !used.has(p.jersey)) return p.jersey;
-  return jerseyFor(save, p.pos, used);
+  // Otherwise as close as he can get to the number he came in wanting (or the one he wore).
+  return preferredJersey(save, p.pos, p.collegeNo ?? p.jersey, used);
 }
 
 /**

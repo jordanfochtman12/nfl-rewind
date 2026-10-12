@@ -465,7 +465,8 @@ function paceDamp(p: Player, key: "rec" | "sacks" | "ints", year: number, eraRef
   // the same 14-16 and left three ends tied for the lead; a ratio keeps the best rusher ahead.
   return key === "sacks"
     ? Math.max(0.12, Math.pow(soft / pace, 2))
-    : clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6, 0.35, 1);
+    : // Past the record pace itself the brake bites hard: the record falls rarely, by a little.
+      clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6 - Math.max(0, (pace - eraRef) / eraRef) * 2.5, 0.3, 1);
 }
 
 /** A player's season pace in one stat (per game), once he has a few games in the book. */

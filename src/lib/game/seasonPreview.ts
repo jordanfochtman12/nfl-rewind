@@ -529,7 +529,9 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
 
   /* -------------------------------------------------- award picks */
 
-  const all = Object.values(save.players).filter(isClub);
+  // Players on clubs in this season's field only: a club folded or not yet back (the 1999 Browns before the
+  // expansion draft fills them) can still hold a roster on paper.
+  const all = Object.values(save.players).filter((p) => isClub(p) && T.has(p.teamId as TeamId));
   const teamOf = (p: Player) => p.teamId as TeamId;
   const projOf = (p: Player) => T.get(teamOf(p))?.projW ?? games / 2;
   const toPicks = (rows: { p: Player; s: number; note: string }[]) => {

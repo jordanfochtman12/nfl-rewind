@@ -2,7 +2,7 @@ import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, 
 import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
 import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
-import { eraCollege, jerseyFor } from "./names.ts";
+import { collegeNumber, eraCollege, preferredJersey } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { randInt } from "./rng.ts";
 import { kitBoost } from "./abilities.ts";
@@ -13,7 +13,9 @@ import { rookieContract } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
 import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
-import { historicalNameKey } from "./identity.ts";
+import { historicalNameKey, normalizedName } from "./identity.ts";
+import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
+import { friendOf } from "./data/friends.ts";
 import { historicalYear } from "./historicalYears.ts";
 
 /** Real NFL draft lengths: 20 rounds through 1966, 17 in 1967-76, 12 in 1977-92, 8 in 1993, 7 since. */
@@ -214,6 +216,21 @@ const ROLE_PLAYERS: Record<string, { o: number; p?: Pos }> = {
   "Doug|Flutie": { o: 70 },
 };
 
+const rookieNumbers = new Map<number, Map<string, number>>();
+/** The number a real rookie actually took, read from the record by draft (or first) year. */
+function realRookieNumber(year: number, first: string, last: string): number | undefined {
+  let m = rookieNumbers.get(year);
+  if (!m) {
+    m = new Map();
+    for (const e of (AUDIT_NUMBERS[year] ?? "").split(",")) {
+      const i = e.lastIndexOf(":");
+      if (i > 0) m.set(e.slice(0, i), Number(e.slice(i + 1)));
+    }
+    rookieNumbers.set(year, m);
+  }
+  return m.get(normalizedName(first, last).replace(/[^a-z]/g, ""));
+}
+
 function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player {
   const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
   const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
@@ -236,6 +253,14 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player
     rt: s.rt,
   });
   if (s.r) p.realRound = s.r;
+  const friend = friendOf(s.f, s.l);
+  // An undrafted sleeper the scouts all missed (named, so he stays in the league unsigned).
+  if (friend) {
+    p.hometown = friend.hometown;
+    p.potential = Math.min(94, p.ovr + 12);
+  }
+  p.collegeNo = friend?.n ?? realRookieNumber(save.year, s.f, s.l) ?? collegeNumber(p.pos, p.id);
+  p.jersey = p.collegeNo;
   const found = lookupArc(save.year, s.f, s.l);
   // A role player keeps his real career span, but his Pro Bowls don't set his rating.
   const arc = found && role ? { ...found, pb: 0, ap: 0, st: Math.min(found.st, 2) } : found;
@@ -377,6 +402,8 @@ export function buildDraftBoard(save: DynastySave): void {
     p.historical = false;
     p.yearsPro = 0;
     applyScout(save, p);
+    p.collegeNo = collegeNumber(p.pos, p.id);
+    p.jersey = p.collegeNo;
     board.push({ playerId: p.id, slot, taken: false, league: session });
     slot += 1;
   }
@@ -468,7 +495,8 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftPick = save.draftPickIndex + 1;
     p.draftTeam = teamId;
     if (buzz) p.draftBuzz = buzz;
-    p.jersey = jerseyFor(save, p.pos, usedJerseys(save, teamId));
+    // He asks for his college number; the closest open one if a veteran has it.
+    p.jersey = preferredJersey(save, p.pos, p.collegeNo ?? p.jersey, usedJerseys(save, teamId));
     // Rookies are paid by slot (see rookieContract), not by grade.
     const deal = rookieContract(save.year, save.draftPickIndex + 1, round);
     p.salary = deal.salary;

@@ -16,6 +16,8 @@ import { AUDIT_DRAFTED, AUDIT_FIX, AUDIT_UNDRAFTED } from "./auditPlayers.ts";
 import { inferArch, nameVariance, ratingsFromProfile } from "../profiles.ts";
 import { primaryKeys } from "../ratings.ts";
 import { historicalYear } from "../historicalYears.ts";
+import { lookupArc } from "../careerArc.ts";
+import { FRIENDS } from "./friends.ts";
 
 export interface DraftSeed {
   f: string;
@@ -1130,6 +1132,43 @@ function auditKit(s: DraftSeed): Pick<DraftSeed, "arch" | "rt"> {
   return kit;
 }
 
+/** Short forms the catalogs use for a school, to the name the rest of the game uses. */
+const SCHOOL_NAMES: Record<string, string> = { Pitt: "Pittsburgh" };
+
+const SIDE: Partial<Record<Pos, string>> = {
+  QB: "qb", RB: "rb", FB: "rb", WR: "rec", TE: "rec",
+  LT: "ol", LG: "ol", C: "ol", RG: "ol", RT: "ol",
+  DE: "dl", DT: "dl", OLB: "lb", MLB: "lb", CB: "db", S: "db", K: "k", P: "k",
+};
+const schoolKey = (c?: string) => (SCHOOL_NAMES[c ?? ""] ?? c ?? "").toLowerCase().replace(/^university of /, "").replace(/[^a-z]/g, "").slice(0, 4);
+
+/**
+ * One player listed twice under two spellings (Stephon and Stefon Diggs, Jim and Jimbo Covert):
+ * same class, same last name, same school and round, same first initial, same side of the ball.
+ * The spelling with a real career on record stays; brothers and namesakes at other positions
+ * or in other rounds are left alone.
+ */
+function dedupeSpellings(year: number, out: DraftSeed[]): void {
+  const groups = new Map<string, DraftSeed[]>();
+  for (const s of out) {
+    const k = `${normalizedName("", s.l).replace(/[^a-z]/g, "")}|${schoolKey(s.c)}|${s.r ?? -1}|${s.f.replace(/[^A-Za-z]/g, "")[0]?.toLowerCase()}|${SIDE[s.p] ?? s.p}`;
+    const g = groups.get(k);
+    if (g) g.push(s);
+    else groups.set(k, [s]);
+  }
+  const drop = new Set<DraftSeed>();
+  for (const g of groups.values()) {
+    if (g.length < 2) continue;
+    const real = g.filter((s) => !!lookupArc(year, s.f, s.l));
+    const keep = (real.length ? real : g).slice().sort((a, b) => Number(b.src === "career") - Number(a.src === "career") || b.o - a.o)[0]!;
+    for (const s of g) if (s !== keep) drop.add(s);
+  }
+  if (!drop.size) return;
+  const kept = out.filter((s) => !drop.has(s));
+  out.length = 0;
+  out.push(...kept);
+}
+
 /**
  * A draft class as the game uses it: the catalogs, corrected against the real record by the
  * player audit (position, college, round, height, weight), plus the real players the
@@ -1161,6 +1200,9 @@ export function draftSeedsFor(year: number): DraftSeed[] {
     out.push(s);
     added = true;
   }
+  for (const fr of FRIENDS[year] ?? []) out.push({ ...fr });
+  dedupeSpellings(year, out);
+  for (const x of out) if (x.c && SCHOOL_NAMES[x.c]) x.c = SCHOOL_NAMES[x.c];
   if (added)
     out.sort((a, b) => {
       const ra = a.r && a.r > 0 ? a.r : 99;

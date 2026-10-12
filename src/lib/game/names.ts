@@ -150,3 +150,66 @@ export function jerseyFor(save: Pick<DynastySave, "rng"> & { year?: number }, po
   for (let n = 1; n <= 99; n++) if (!used.has(n)) return n;
   return randInt(save, 1, 99);
 }
+
+/** A college number for a made-up prospect, stable by id: the shapes college rosters really take. */
+export function collegeNumber(pos: string, id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  const r = (h >>> 0) / 4294967296;
+  const span = (lo: number, hi: number) => lo + Math.floor(r * (hi - lo + 1));
+  const two = (a: [number, number], b: [number, number], pa: number) => {
+    const rr = ((h >>> 8) % 1000) / 1000;
+    return rr < pa ? span(a[0], a[1]) : span(b[0], b[1]);
+  };
+  switch (pos) {
+    case "QB":
+      return two([1, 19], [1, 9], 0.7);
+    case "RB":
+    case "FB":
+      return two([1, 9], [20, 49], 0.45);
+    case "WR":
+      return two([1, 19], [80, 89], 0.75);
+    case "TE":
+      return two([80, 89], [1, 49], 0.6);
+    case "LT":
+    case "LG":
+    case "C":
+    case "RG":
+    case "RT":
+      return span(50, 79);
+    case "DE":
+    case "DT":
+      return two([90, 99], [1, 59], 0.6);
+    case "OLB":
+    case "MLB":
+      return two([1, 59], [1, 19], 0.7);
+    case "CB":
+    case "S":
+      return two([1, 9], [10, 49], 0.4);
+    default:
+      return two([1, 49], [90, 99], 0.8);
+  }
+}
+
+/**
+ * The number a player gets when he wants one: his own if it's legal and free, else the closest
+ * he can have. Same last digit counts as close (a college 7 becomes 17, or 57 for a linebacker
+ * before 2021), then the nearest number up or down.
+ */
+export function preferredJersey(save: Pick<DynastySave, "rng"> & { year?: number }, pos: string, want: number | undefined, used: Set<number>): number {
+  if (want === undefined || want < 0 || want > 99) return jerseyFor(save, pos, used);
+  const year = save.year ?? 1966;
+  const ok = (n: number) => !used.has(n) && (n > 0 || year >= 2023) && jerseyLegal(pos, year, n);
+  if (ok(want)) return want;
+  let best = -1;
+  let bestScore = Infinity;
+  for (let n = 0; n <= 99; n++) {
+    if (!ok(n)) continue;
+    const score = n % 10 === want % 10 ? 1 + Math.abs(n - want) / 20 : 2 + Math.abs(n - want) / 10;
+    if (score < bestScore) {
+      bestScore = score;
+      best = n;
+    }
+  }
+  return best >= 0 ? best : jerseyFor(save, pos, used);
+}

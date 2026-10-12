@@ -193,6 +193,19 @@ export function PickReveal() {
             {b.delta >= 0 ? "VALUE" : "EARLY"} <b>{b.delta >= 0 ? `+${b.delta}` : b.delta}</b>
           </span>
           {b.need && <span className="dn-stat is-need">FILLS A NEED</span>}
+          {last.collegeNo != null && (
+            <span className="dn-stat">
+              {last.collegeNo === last.jersey ? (
+                <>
+                  KEEPS HIS <b>#{last.jersey}</b>
+                </>
+              ) : (
+                <>
+                  WANTED <b>#{last.collegeNo}</b> · WEARS <b>#{last.jersey}</b>
+                </>
+              )}
+            </span>
+          )}
           {b.run && <span className="dn-stat is-run">{b.run.group} RUN · {b.run.count} IN {b.run.window}</span>}
         </div>
         <p className="dn-card-desk">{b.desk}</p>

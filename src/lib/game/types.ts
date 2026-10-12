@@ -225,7 +225,10 @@ export interface Player {
   age: number;
   yearsPro: number;
   jersey: number;
+  /** The number he wants: what he wore coming out of school (real rookies: the one he really took). */
+  collegeNo?: number;
   college?: string;
+  hometown?: string;
   heightIn?: number;
   weight?: number;
   forty?: number;

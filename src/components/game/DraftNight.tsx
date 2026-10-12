@@ -317,7 +317,7 @@ export function DraftNight() {
                     </span>
                   </p>
                   <p className="text-sm text-muted">
-                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
+                    {p.collegeNo != null ? `#${p.collegeNo} · ` : ""}{p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
                   {!save.sandbox && <FitLine p={p} />}

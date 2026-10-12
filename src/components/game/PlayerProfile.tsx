@@ -279,6 +279,12 @@ export function PlayerProfile() {
               <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
                 <dt className="text-muted">College</dt>
                 <dd className="font-medium">{p.college || "—"}</dd>
+                {p.hometown && (
+                  <>
+                    <dt className="text-muted">Hometown</dt>
+                    <dd>{p.hometown}</dd>
+                  </>
+                )}
                 {!real && (
                   <>
                     <dt className="text-muted">Measurables</dt>

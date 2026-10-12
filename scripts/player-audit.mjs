@@ -365,6 +365,19 @@ function knownAs(year, last, college, round) {
 
 /* ---------------- audit ---------------- */
 
+/**
+ * Schools whose every real player the game carries, whatever his career: every draftee, and
+ * every undrafted man who reached an NFL roster, not just the ones who stuck.
+ */
+const EVERY_PLAYER_FROM = [/^pitt(sburgh)?$/i];
+/** The catalog already has him under its own spelling: exact last name, same school, a year either side. */
+const sameSchoolmate = (year, p) =>
+  [year - 1, year, year + 1].some((y) => (seedsByYear.get(y) ?? []).some((s) => lastKey(s.l) === lastKey(p.last) && sameFirst(s.f, p.first) && collegesMatch(s.c, p.college)));
+const everyFrom = (college) => {
+  const school = finalSchool(college);
+  return !!school && EVERY_PLAYER_FROM.some((re) => re.test(school.trim()));
+};
+
 const on66 = new Set();
 for (const [p, list] of rosterSeasons) if (list.some((r) => r.year === FIRST)) on66.add(p);
 
@@ -380,6 +393,13 @@ for (const p of people) {
 }
 
 const fix = {}; // "year|key" -> {p,c,r,ht,wt}
+/** The number he wore as an NFL rookie, the one he asked for coming out of school. */
+const numbers = {}; // year -> {nameKey: no}
+function numberOf(year, f, l, c) {
+  const no = c.rows.find((r) => r.year <= (c.first ?? year) + 1 && r.no !== undefined)?.no;
+  if (no === undefined || no < 0 || no > 99) return;
+  (numbers[year] ??= {})[nameKey(f, l)] = no;
+}
 const addDrafted = {}; // year -> seeds
 const addUndrafted = {}; // year -> seeds
 const arcs = {}; // "first|last" -> {dy,row}
@@ -402,8 +422,9 @@ for (const p of people) {
     const s = hit.length === 1 ? hit[0] : undefined;
     if (!s) {
       if (hit.length > 1 || twins) report.collisions.push(`${d.year} ${name}`);
-      else if (c.games >= 1 && !inCatalog.has(nameKey(p.first, p.last)) && !knownAs(d.year, p.last, c.college, d.round)) {
+      else if ((c.games >= 1 || everyFrom(c.college)) && !inCatalog.has(nameKey(p.first, p.last)) && !knownAs(d.year, p.last, c.college, d.round)) {
         (addDrafted[d.year] ??= []).push({ f: p.first, l: p.last, p: c.pos, c: finalSchool(c.college), o: draftOvr(c.starters, c.games), r: d.round, ht: c.ht, wt: c.wt });
+        numberOf(d.year, p.first, p.last, c);
         arcs[arcKey(p.first, p.last)] = { dy: d.year, row: [c.last ?? 0, c.starters, c.games, 0, 0, c.ageIn ?? 22] };
         report.addedDrafted += 1;
         sample("drafted", `${d.year} R${d.round} ${name} (${c.pos}, ${c.college}) — ${c.games} games`);
@@ -432,6 +453,7 @@ for (const p of people) {
       report.unsure = (report.unsure ?? 0) + 1;
       continue;
     }
+    numberOf(d.year, s.f, s.l, c);
     // Same name, different round: likely a namesake the record doesn't separate. Leave him be.
     if (s.r && s.r !== d.round && d.year > FIRST) {
       if (Object.keys(f).length) fix[k] = f;
@@ -464,14 +486,51 @@ for (const p of people) {
   const key = nameKey(p.first, p.last);
   if (inCatalog.has(key) || vetKeys.has(key)) continue;
   if (c.first < FIRST) continue; // a pre-1966 career: a 1966 veteran, handled below
-  if (c.games < 16 && c.starters < 1) continue;
+  if (c.games < 16 && c.starters < 1 && !everyFrom(c.college)) continue;
   if (on66.has(p.id)) continue; // on a real 1966 roster: seeded as a veteran below
-  if (knownAs(c.first, p.last, c.college)) continue;
+  if (everyFrom(c.college) ? sameSchoolmate(c.first, p) : knownAs(c.first, p.last, c.college)) continue;
   const year = c.first;
   (addUndrafted[year] ??= []).push({ f: p.first, l: p.last, p: c.pos, c: finalSchool(c.college), o: draftOvr(c.starters, c.games), r: 0, ht: c.ht, wt: c.wt });
+  numberOf(year, p.first, p.last, c);
   arcs[arcKey(p.first, p.last)] = { dy: year, row: [c.last ?? 0, c.starters, c.games, 0, 0, c.ageIn ?? 23] };
   report.addedUndrafted += 1;
   sample("undrafted", `${year} ${name} (${c.pos}, ${c.college}) — ${c.games} games, ${c.starters} as a starter`);
+}
+
+// Their draftees who never played a down: the loop above only walks real careers.
+const roundOvr = (r) => Math.max(50, 64 - Math.max(0, r - 1) * 1.6);
+for (const [y, list] of Object.entries(DRAFTS)) {
+  const year = Number(y);
+  if (year < FIRST) continue;
+  const seeds = seedsByYear.get(year) ?? [];
+  for (const e of list.split("|")) {
+    const [round, , , pid] = e.split(",");
+    const p = people[id36(pid)];
+    if (!p || !everyFrom(p.college) || career(p.id).first) continue;
+    const r = Number(round);
+    if (seeds.some((s) => nameKey(s.f, s.l) === nameKey(p.first, p.last))) continue;
+    if (inCatalog.has(nameKey(p.first, p.last)) || knownAs(year, p.last, p.college, r)) continue;
+    if ((addDrafted[year] ?? []).some((s) => nameKey(s.f, s.l) === nameKey(p.first, p.last))) continue;
+    (addDrafted[year] ??= []).push({ f: p.first, l: p.last, p: p.pos && GROUP[p.pos] ? p.pos : gamePos(p.pos) ?? "WR", c: finalSchool(p.college), o: Math.round(roundOvr(r)), r });
+    report.addedDrafted += 1;
+    sample("drafted", `${year} R${r} ${p.first} ${p.last} (${p.pos}, ${p.college}) — never played`);
+  }
+}
+
+// And their undrafted men on a real roster the archive has no rows for (recent practice squads).
+for (const p of people) {
+  if (!everyFrom(p.college) || draftsOf.has(p.id) || career(p.id).first) continue;
+  const year = (rosterSeasons.get(p.id) ?? []).map((r) => r.year).sort((a, b) => a - b)[0];
+  if (!year || year <= FIRST) continue;
+  const key = nameKey(p.first, p.last);
+  if (inCatalog.has(key) || vetKeys.has(key)) continue;
+  // Same last name, same school, a year either side: the catalog's spelling of him. Exact last
+  // names only here, so Jaryd Jones-Smith isn't taken for a Jones.
+  if (sameSchoolmate(year, p)) continue;
+  if ((addUndrafted[year] ?? []).some((s) => nameKey(s.f, s.l) === key)) continue;
+  (addUndrafted[year] ??= []).push({ f: p.first, l: p.last, p: GROUP[p.pos] ? p.pos : gamePos(p.pos) ?? "WR", c: finalSchool(p.college), o: 55, r: 0 });
+  report.addedUndrafted += 1;
+  sample("undrafted", `${year} ${p.first} ${p.last} (${p.pos}, ${p.college}) — on a roster, no game rows`);
 }
 
 /* ---------------- the 1966 veterans ---------------- */
@@ -586,6 +645,8 @@ lines.push(`/** Real draft picks with NFL games the catalogs never had. */`);
 lines.push(`export const AUDIT_DRAFTED: Record<number, Seed[]> = ${json(addDrafted)};`);
 lines.push(`/** Real undrafted players (a season's worth of games, or a starting job) the catalogs never had, by first season. */`);
 lines.push(`export const AUDIT_UNDRAFTED: Record<number, Seed[]> = ${json(addUndrafted)};`);
+lines.push(`/** The number each real rookie wore, by draft (or first) year: "namekey:number" joined by ",". */`);
+lines.push(`export const AUDIT_NUMBERS: Record<number, string> = ${JSON.stringify(Object.fromEntries(Object.entries(numbers).map(([y, m]) => [y, Object.entries(m).sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, n]) => `${k}:${n}`).join(",")])))};`);
 lines.push(`/** Real careers for the added players: [lastSeason, seasonsAsStarter, games, proBowls, allPros, ageOnArrival]. */`);
 lines.push(`export const AUDIT_ARCS: Record<string, { dy: number; row: CareerArcRow }> = ${JSON.stringify(sortObj(arcs))};`);
 lines.push(`/** Corrections to the 1966 veterans by normalized name (null: not in the league in 1966). */`);
