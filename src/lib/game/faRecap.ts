@@ -101,14 +101,27 @@ export function faRecap(save: DynastySave, year = save.year): FaRecap | undefine
       from.bestLoss ??= s.name;
     }
   }
-  // Graded on the curve: net value against the rest of the league this winter.
+  // Graded on the curve among the clubs that moved: net value against the rest of the market
+  // this winter. A club that came out ahead never grades below C+, one that came out behind
+  // never above C-, and a club that stood pat (nobody in, nobody out) gets a C.
   const teams = [...lines.values()];
   for (const t of teams) t.score = t.addValue - t.lostValue * 0.75;
   const ranked = teams.slice().sort((a, b) => b.score - a.score);
-  ranked.forEach((t, i) => {
-    const pct = ranked.length > 1 ? 1 - i / (ranked.length - 1) : 0.5;
-    t.grade = GRADES.find(([cut]) => pct >= cut)![1];
-  });
+  const movers = ranked.filter((t) => t.added || t.lost);
+  const rank = (cut: number) => GRADES.findIndex(([c]) => c === cut);
+  for (const t of ranked) {
+    if (!t.added && !t.lost) {
+      t.grade = "C";
+      continue;
+    }
+    const i = movers.indexOf(t);
+    const pct = movers.length > 1 ? 1 - i / (movers.length - 1) : 0.5;
+    let g = GRADES.findIndex(([cut]) => pct >= cut);
+    if (t.score > 0) g = Math.min(g, rank(0.3));
+    else if (t.score < 0) g = Math.max(g, rank(0.15));
+    else g = rank(0.22);
+    t.grade = GRADES[g]![1];
+  }
   const unsigned = freeAgents(save)
     .filter((p) => p.ovr >= 60)
     .sort((a, b) => b.ovr - a.ovr)

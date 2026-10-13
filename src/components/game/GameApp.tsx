@@ -1848,12 +1848,23 @@ const HISTORY_TABS: { id: Tab; label: string }[] = WATCH_TABS.filter((t) => t.id
 /** The sandbox's office tab: the league desk, or whatever night the calendar is on. */
 function WatchOffice({ event }: { event: boolean }) {
   const save = useGameStore((s) => s.save)!;
+  // The winter's recap stays up through camp, under the cut-down wire.
   if (save.phase === "preseason")
-    return <WatchMoves title="Training camp" kinds={["cut", "waive", "claim", "sign"]} blurb="Cut-down week around the league. Every club trims to the limit, and the season preview is up on Primetime." />;
+    return (
+      <div className="space-y-4">
+        {save.faRecaps?.[save.year] && <FreeAgencyRecap year={save.year} compact />}
+        <WatchMoves title="Training camp" kinds={["cut", "waive", "claim", "sign"]} blurb="Cut-down week around the league. Every club trims to the limit, and the season preview is up on Primetime." />
+      </div>
+    );
   if (event) return <EventPane />;
   if (save.phase === "draft") return <DraftNight />;
   if (save.phase === "freeAgency")
-    return <WatchMoves title={save.year < 1994 ? "Rozelle-rule winter" : "Free agency"} kinds={["sign", "trade"]} blurb={save.year < 1994 ? "Stars rarely move in this era. Watch who signs where." : "The market is open. Watch who signs where."} />;
+    return (
+      <div className="space-y-4">
+        <WatchMoves title={save.year < 1994 ? "Rozelle-rule winter" : "Free agency"} kinds={["sign", "trade"]} blurb={save.year < 1994 ? "Stars rarely move in this era. Watch who signs where." : "The market is open. Watch who signs where."} />
+        <FreeAgencyRecap year={save.year} compact />
+      </div>
+    );
   if (save.phase === "deadline")
     return <WatchMoves title={save.year < 1994 ? "Trading week" : "Trade deadline"} kinds={["trade"]} blurb="The window is open around the league. Here's who dealt." />;
   return <WatchDesk />;

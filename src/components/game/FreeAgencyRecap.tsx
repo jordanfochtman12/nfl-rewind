@@ -15,10 +15,12 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
   const years = [...new Set([...(save.phase === "freeAgency" ? [save.year] : []), ...filed])];
   if (!r) return null;
   const heads = faHeadlines(save, r);
-  const mine = r.teams.find((t) => t.teamId === save.userTeamId);
+  // Watching history there's no club of your own to grade.
+  const mine = save.sandbox ? undefined : r.teams.find((t) => t.teamId === save.userTeamId);
   const top = r.signings.slice(0, compact ? 6 : 12);
-  const winners = r.teams.slice(0, 3);
-  const losers = r.teams.slice(-3).reverse();
+  // Only clubs that actually moved make the lists: a winter nobody signed has no winners.
+  const winners = r.teams.filter((t) => t.score > 0).slice(0, 3);
+  const losers = r.teams.filter((t) => t.score < 0).slice(-3).reverse();
   return (
     <section className="overflow-hidden rounded-xl border border-brass/30 bg-surface" aria-labelledby="fa-recap-title">
       <header className="flex flex-wrap items-end justify-between gap-3 border-b border-line bg-gradient-to-r from-brass/15 to-transparent px-4 py-4">
@@ -125,8 +127,8 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
           </div>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          {([["WINNERS", winners], ["LOSERS", losers]] as const).map(([label, list]) => (
+        {(winners.length > 0 || losers.length > 0) && <div className="grid gap-3 sm:grid-cols-2">
+          {([["WINNERS", winners], ["LOSERS", losers]] as const).filter(([, list]) => list.length > 0).map(([label, list]) => (
             <div key={label} className="min-w-0 rounded-lg border border-line p-3">
               <p className="text-xs tracking-[0.25em] text-muted">{label}</p>
               <ul className="mt-2 space-y-2">
@@ -146,7 +148,7 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
               </ul>
             </div>
           ))}
-        </div>
+        </div>}
 
         {!compact && (
           <div>
