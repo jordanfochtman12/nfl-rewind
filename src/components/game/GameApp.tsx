@@ -1,5 +1,5 @@
 import { DraftAnnouncerProvider } from "./DraftAnnouncer";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   ACTIVE_1966,
@@ -1093,7 +1093,8 @@ function Standings() {
                       <span className="inline-flex items-center gap-2 hover:text-brass">
                         <ClubHash id={t.id} className="h-5 w-1 rounded-full" />
                         <Logo id={t.id} size={22} />
-                        {displayName(save.year, t.id)}
+                        <span className="max-sm:hidden">{displayName(save.year, t.id)}</span>
+                        <span className="sm:hidden">{nicknameOf(save.year, t.id)}</span>
                         {i === 0 ? <span className="text-[10px] tracking-widest text-brass">1ST</span> : null}
                       </span>
                     </td>
@@ -1944,12 +1945,12 @@ function PlayShell() {
       </header>
       {watch && (
         <div className="mx-auto max-w-6xl px-3 pt-4 sm:px-4">
-          <WatchBar />
+          <WatchBar slim={tab !== "office"} />
         </div>
       )}
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
       <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
-        <div className="next-section-context"><span>{watch ? "LEAGUE" : "FRANCHISE"} / {tabs.find(t => t.id === tab)?.label}</span><span>{save.year} SEASON <i /> {save.weekLabel}</span></div>
+        <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={tabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
         {real && tab === "office" ? <HistoryDesk /> : null}
         {watch && !real && tab === "office" ? <WatchOffice event={event} /> : null}
         {!watch && (event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
@@ -2013,6 +2014,29 @@ export function GameApp() {
   if (screen === "title") return <TitleScreen />;
   if (screen === "select") return <TeamSelect />;
   return <PlayShell />;
+}
+
+/**
+ * Every screen opens like a segment on the network: the building behind it, the section's
+ * name in chrome, the season on the slate and the club at the center of it (your club, or the
+ * reigning champion when watching).
+ */
+function ScreenOpen({ kicker, title, year, week, club }: { kicker: string; title: string; year: number; week: string; club: TeamId }) {
+  const ink = clubInk(club, year);
+  return (
+    <header className="k5-open" style={{ "--club": ink.primary } as CSSProperties}>
+      <div className="k5-open-bg" aria-hidden />
+      <div className="k5-open-copy">
+        <p className="k5-open-kicker">
+          <span>{kicker}</span> {year} SEASON · {week}
+        </p>
+        <h2 className="k5-open-title">{title}</h2>
+      </div>
+      <span className="k5-open-logo" aria-hidden>
+        <Logo id={club} size={64} year={year} />
+      </span>
+    </header>
+  );
 }
 
 /** Says so when the browser has no room left to write the dynasty, so it is never lost quietly. */

@@ -38,7 +38,8 @@ function bigNight(prev: DynastySave, next: DynastySave): string | null {
   return null;
 }
 
-export function WatchBar() {
+/** `slim`: on the tabs away from the Watch desk, just the main moves on one row. */
+export function WatchBar({ slim = false }: { slim?: boolean } = {}) {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
   const watchSim = useGameStore((s) => s.watchSim);
@@ -117,7 +118,7 @@ export function WatchBar() {
           {auto ? "❚❚ Pause" : "▶ Auto-play"}
         </Btn>
         </span>
-        <label className="flex items-center gap-2 text-xs text-muted">
+        {!slim && <label className="flex items-center gap-2 text-xs text-muted">
           Speed
           <select
             className="min-h-10 rounded-md border border-line bg-surface-2 px-2 text-sm text-fg"
@@ -128,13 +129,13 @@ export function WatchBar() {
             <option value="normal">Normal</option>
             <option value="fast">Fast</option>
           </select>
-        </label>
-        <label className="flex min-h-10 items-center gap-2 text-xs text-muted">
+        </label>}
+        {!slim && <label className="flex min-h-10 items-center gap-2 text-xs text-muted">
           <input type="checkbox" checked={stopBig} onChange={(e) => setStopBig(e.target.checked)} />
           Stop for the big nights
-        </label>
+        </label>}
       </div>
-      <div className="flex flex-wrap gap-2">
+      {!slim && <div className="flex flex-wrap gap-2">
         {inSeason && (
           <Btn className="min-h-10 px-4 text-sm" disabled={!!busy} onClick={() => jump("playoffs")}>
             {busy === "playoffs" ? (real ? "Rewinding…" : "Simming…") : real ? "Skip to the playoffs ▸▸" : "Sim to the playoffs ▸▸"}
@@ -150,7 +151,7 @@ export function WatchBar() {
             {busy === "nextSeason" ? (real ? "Rewinding…" : "Simming the year…") : `${real ? "Skip" : "Sim"} to the ${save.year + 1} draft ▸▸`}
           </Btn>
         )}
-      </div>
+      </div>}
       {live && auto && <p className="text-sm text-muted">Auto-play waits while the game of the week is on.</p>}
       {draftRunsItself && auto && <p className="text-sm text-muted">The draft room reads the picks on its own clock. Auto-play picks up when it's done.</p>}
       {note && <p className="text-sm text-brass">{note}</p>}
