@@ -402,11 +402,16 @@ let generation = 0;
 /** Lines waiting to play, in order. */
 let queue: Promise<void> = Promise.resolve();
 let queued = 0;
+/** Lines the device's own voice has been handed and hasn't finished. */
+let deviceLines = 0;
+let deviceGen = 0;
+/** When the device voice should be through everything it's been handed (lines queue there). */
+let deviceBusyUntil = 0;
 
 function refreshTalking(): void {
   const making = pending.size > 0;
-  const talking = queued > 0 || !!playing;
-  const onAir = !!playing;
+  const talking = queued > 0 || !!playing || deviceLines > 0;
+  const onAir = !!playing || deviceLines > 0;
   const now = useTalking.getState();
   if (now.talking !== talking || now.making !== making || now.onAir !== onAir) useTalking.setState({ talking, making, onAir });
 }
@@ -423,8 +428,39 @@ function deviceSpeak(u: SpeechSynthesisUtterance): void {
     const v = bestDeviceVoice();
     if (v) u.voice = v;
   }
-  if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.speak(u);
-  else globalThis.setTimeout(() => fire(u, "end"), 0);
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    globalThis.setTimeout(() => fire(u, "end"), 0);
+    return;
+  }
+  // The device voice counts as on the air too, so a broadcast waits for its call the same as
+  // for a studio voice. iOS sometimes never says a line ended, so a timer from the line's
+  // length closes it out.
+  const gen = deviceGen;
+  let open = true;
+  const close = () => {
+    if (!open) return;
+    open = false;
+    globalThis.clearTimeout(guard);
+    if (gen === deviceGen) deviceLines = Math.max(0, deviceLines - 1);
+    refreshTalking();
+  };
+  const words = u.text.split(/\s+/).filter(Boolean).length;
+  const now = Date.now();
+  deviceBusyUntil = Math.max(now, deviceBusyUntil) + (words / (2.6 * (u.rate || 1))) * 1000;
+  const guard = globalThis.setTimeout(close, deviceBusyUntil - now + 4000);
+  const end = u.onend;
+  const err = u.onerror;
+  u.onend = function (ev) {
+    close();
+    end?.call(this, ev);
+  };
+  u.onerror = function (ev) {
+    close();
+    err?.call(this, ev);
+  };
+  deviceLines += 1;
+  refreshTalking();
+  window.speechSynthesis.speak(u);
 }
 
 /**
@@ -552,6 +588,9 @@ export function cancelSpeech(opts: { dropQueued?: boolean } = {}): void {
   if (opts.dropQueued) for (const l of lanes) l.w.postMessage({ type: "clear" });
   queue = Promise.resolve();
   queued = 0;
+  deviceGen += 1;
+  deviceLines = 0;
+  deviceBusyUntil = 0;
   try {
     playing?.stop();
   } catch {
