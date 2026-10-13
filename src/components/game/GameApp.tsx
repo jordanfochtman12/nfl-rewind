@@ -101,6 +101,7 @@ import { SuperBowlHistory } from "./SuperBowlHistory";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
+import { OwnerCall } from "./OwnerCall";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
 import { HistoryDesk, HistoryDraft } from "./HistoryMode";
 import { SaveSlots } from "./SaveSlots";
@@ -478,6 +479,7 @@ function Office() {
       {finale && <GradeCard grade={grade} />}
       <FranchiseHQ />
       <details className="hq-panel p-4"><summary className="cursor-pointer font-semibold">Detailed roster needs</summary><div className="mt-3"><DeskReport /></div></details>
+      <OwnerCall />
       <PhoneLine />
       {!finale && <OwnersBox />}
       {!finale && grade.seasons > 0 && <GradeCard grade={grade} compact />}

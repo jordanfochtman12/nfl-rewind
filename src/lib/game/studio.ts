@@ -727,6 +727,28 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     }
   }
 
+  /* ---------- the week's Top 5 ---------- */
+  const reel = show.reel ?? [];
+  if (reel.length >= 3 && edition !== "awards" && edition !== "superBowl") {
+    const ord = ["", "Number one", "Number two", "Number three", "Number four", "Number five"];
+    const lead5 = reel.slice().reverse();
+    const gameLine = (m: (typeof reel)[number]) => {
+      const w = m.homeScore >= m.awayScore ? m.homeId : m.awayId;
+      const l = w === m.homeId ? m.awayId : m.homeId;
+      return `${nick(w)} ${Math.max(m.homeScore, m.awayScore)}, ${nick(l)} ${Math.min(m.homeScore, m.awayScore)}`;
+    };
+    add("top5", `THE TOP ${reel.length}`, edition === "playoffs" || edition === "championship" ? "The plays of the postseason weekend" : "The plays of the week", reel.slice(0, 2).flatMap((m) => (m.teamId ? [m.teamId] : [])), [
+      host(say("t5-open", [`Time for the countdown. The ${reel.length} plays everybody will be talking about tomorrow.`, `Let's count them down: the top ${reel.length} plays of the weekend.`, `The highlight reel is cut. Here are the top ${reel.length}.`])),
+      ...lead5.map((m, i) => {
+        const who = m.teamId ? `the ${nick(m.teamId)}` : `${nick(m.awayId)} and ${nick(m.homeId)}`;
+        const kind = m.kind === "GAME-WINNER" ? "the game-winner" : m.kind === "TAKEAWAY" ? "a takeaway" : m.kind === "SPECIAL TEAMS" ? "special teams" : m.kind === "LONG FIELD GOAL" ? "a long field goal" : m.kind === "TOUCHDOWN" ? "a touchdown" : "a big play";
+        const text = `${ord[m.rank]}: ${kind} for ${who}. ${m.text} ${gameLine(m)}.`;
+        return i % 2 === 0 ? host(text) : analyst(text);
+      }),
+      analyst(say("t5-close", [`What a weekend. That number one is going to be on a lot of replays.`, `You could argue the order all night, but you can't argue with that list.`, `I'd have put that top one on the cover of the program.`])),
+    ]);
+  }
+
   /* ---------- good night ---------- */
   const sign = say("signoff", [
     `For ${A} and ${R}, I'm ${crew.HOST.name}. Good night, everybody.`,

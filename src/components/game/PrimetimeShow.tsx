@@ -15,6 +15,7 @@ import { ReportCard } from "./Storylines";
 import { DraftPreviewShow } from "./DraftPreview";
 import { SeasonPreviewShow } from "./SeasonPreview";
 import { TimelineCard } from "./Timeline";
+import { Scoreboard, TopFive } from "./TopFive";
 
 function Name({ id, name }: { id: string; name: string }) {
   const save = useGameStore((s) => s.save)!;
@@ -671,6 +672,10 @@ function WeeklyShow() {
         )}
 
         {show.episode && <StudioEpisode key={show.episode.id} episode={show.episode} year={show.year} />}
+        <div className="space-y-4 px-3 py-4 sm:px-5">
+          <TopFive show={show} />
+          <Scoreboard show={show} />
+        </div>
         <details className="pt-reference" open={!show.episode}>
           <summary>Explore the complete scorebook, awards and league reports</summary>
           <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">

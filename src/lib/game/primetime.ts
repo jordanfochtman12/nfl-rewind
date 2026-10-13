@@ -43,6 +43,7 @@ import { playoffTeamCount } from "./era.ts";
 import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
 import { calculateAwards } from "./events.ts";
 import { produceEpisode } from "./studio.ts";
+import { weekReel } from "./weekReel.ts";
 
 type Kind = NonNullable<PrimetimeShow["kind"]>;
 
@@ -849,6 +850,7 @@ export function buildPrimetime(save: DynastySave, kindArg?: Kind): void {
   }
 
   if (finale) show.title = "Regular-season finale";
+  if (show.kind !== "awards") show.reel = weekReel(save, sorted);
   show.episode = produceEpisode(save, show, sorted, upcoming, finale);
   show.open = show.episode.chapters[0]!.lines.map(l => l.text).join(" ");
   show.close = show.episode.chapters.at(-1)!.lines[0]!.text;

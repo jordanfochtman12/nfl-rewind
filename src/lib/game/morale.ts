@@ -24,6 +24,18 @@ export function moraleOf(p: Player): number {
   return p.morale ?? MORALE_DEFAULT;
 }
 
+const stamp = (year: number, week: number) => year * 100 + week;
+
+/** The notes a player's mood is carrying from the owner's calls (ownerDesk.ts), while they hold. */
+export function moodNotes(save: DynastySave, p: Player): MoraleReason[] {
+  const now = stamp(save.year, save.week);
+  const out: MoraleReason[] = [];
+  if (p.moodNote && p.moodNote.until >= now) out.push({ text: p.moodNote.text, delta: p.moodNote.delta });
+  const room = save.teams[p.teamId as TeamId]?.roomNote;
+  if (room && room.until >= now) out.push({ text: room.text, delta: room.delta });
+  return out;
+}
+
 export function moraleLabel(m: number): { label: string; tone: "good" | "ok" | "bad" } {
   if (m >= 84) return { label: "Fired up", tone: "good" };
   if (m >= 64) return { label: "Content", tone: "ok" };
@@ -65,6 +77,7 @@ export function moraleTarget(save: DynastySave, p: Player, starterIds?: Set<stri
   if (streak.startsWith("W") && n >= 4) reasons.push({ text: `${n} straight wins`, delta: 5 });
   if (p.age >= 31 && p.ovr >= 80 && played >= 4 && winPct(t) < 0.35) reasons.push({ text: "Running out of time to win", delta: -6 });
   if ((p.yearsPro ?? 0) <= 1) reasons.push({ text: "Happy to be here", delta: 5 });
+  reasons.push(...moodNotes(save, p));
   const target = Math.max(5, Math.min(98, MORALE_DEFAULT + reasons.reduce((s, r) => s + r.delta, 0)));
   return { target, reasons };
 }

@@ -287,3 +287,6 @@ export { superBowlBook, bowlGame, type SuperBowlBook, type BowlGame, type BowlCl
 export { showGraphic, showTicker, cardStats, playerGraphic, gameGraphic, type ShowGraphic, type StatCell } from "./showGraphics.ts";
 export { awardBallots, type AwardBallots } from "./events.ts";
 export { requestCeiling } from "./morale.ts";
+export { decide, openDecisions } from "./ownerDesk.ts";
+export type { OwnerDecision, OwnerDecisionKind } from "./types.ts";
+export { cleanPlay, weekReel, type ReelMoment, type ReelKind } from "./weekReel.ts";

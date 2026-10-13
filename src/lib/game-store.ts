@@ -323,7 +323,8 @@ export const useGameStore = create<GameStore>()(
           target === "playoffs"
             ? s.year > year || ["playoffs", "superBowl", "awards", "proBowl", "retirement", "hof", "carousel", "relocation", "expansion"].includes(s.phase)
             : target === "superBowl"
-              ? s.year > year || (s.phase === "superBowl" && !!s.superBowl?.played) || s.phase === "awards"
+              ? // Stop at the pregame so Super Bowl night is watched, not skipped.
+                s.year > year || s.phase === "superBowl" || s.phase === "awards"
               : s.year > year && s.phase === "draft";
         // The live call belongs to the week it aired; a jump ahead leaves it in the archive.
         set({ save: simUntil(save, done), rewind: null });

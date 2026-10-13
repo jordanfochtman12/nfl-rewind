@@ -23,6 +23,7 @@ import { resolveCamp } from "./camp.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
+import { ownerDeskBeforeWeek, ownerDeskWeek } from "./ownerDesk.ts";
 import { updateArcs } from "./arcs.ts";
 import { closeDeadline, deadlineWeek, openDeadline } from "./deadline.ts";
 import {
@@ -257,6 +258,7 @@ function userGameId(s: DynastySave, games: { id: string; homeId: string; awayId:
 }
 
 function simThisWeek(save: DynastySave): void {
+  ownerDeskBeforeWeek(save);
   tickInjuries(save);
   processWaivers(save);
   const games = gamesInWeek(save, save.week);
@@ -264,6 +266,7 @@ function simThisWeek(save: DynastySave): void {
   for (const g of games) simGame(save, g);
   weeklyMoments(save, games);
   updateMorale(save);
+  ownerDeskWeek(save);
   cpuInSeasonMoves(save);
   if (rand(save) < 0.08 && tradeWindowOpen(save)) cpuTrades(save);
   tradeDemands(save);

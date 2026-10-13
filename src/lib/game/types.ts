@@ -280,6 +280,8 @@ export interface Player {
   tradeRequest?: number;
   /** Weeks in a row a star has been miserable. */
   moraleLow?: number;
+  /** A mood the owner's call left him with (ownerDesk.ts), held until `until` (year*100+week). */
+  moodNote?: { text: string; delta: number; until: number };
   /** Postseason lines (playoffs + Super Bowl), kept apart from the regular-season record. */
   playoffStats?: Record<number, SeasonStats>;
   /** Pro Bowls, All-Pros, awards and rings, by year. */
@@ -418,6 +420,8 @@ export interface TeamState {
   streak: string;
   /** Locker-room chemistry, 0-100, updated weekly (see morale.ts). */
   chemistry?: number;
+  /** A tone the owner set for the whole room (ownerDesk.ts), held until `until` (year*100+week). */
+  roomNote?: { text: string; delta: number; until: number };
   /** Regular-season record across the dynasty. Not reset in training camp. */
   careerWins: number;
   careerLosses: number;
@@ -959,6 +963,8 @@ export interface DynastySave {
   progression?: ProgressionReport;
   /** CPU clubs on the owner's line with trade offers. */
   calls?: TradeCall[];
+  /** The owner's in-season calls: dilemmas on the desk and how they were answered. */
+  decisions?: OwnerDecision[];
   /** Free-agent bidding wars this offseason. */
   faBids?: FaBid[];
   version: number;
@@ -1099,6 +1105,29 @@ export interface RelocationOffer {
   climate: HomeClimate;
   indoor: boolean;
   pitch: string;
+}
+
+export type OwnerDecisionKind = "extension" | "rift" | "curfew" | "hurt" | "fans" | "community";
+
+/** A dilemma on the owner's desk between Sundays (ownerDesk.ts). */
+export interface OwnerDecision {
+  id: string;
+  year: number;
+  week: number;
+  kind: OwnerDecisionKind;
+  title: string;
+  body: string;
+  teamIds: TeamId[];
+  playerIds: string[];
+  /** The last option is the quiet one, taken if the call is left on the desk. */
+  options: { id: string; label: string; hint: string }[];
+  status: "open" | "done";
+  chosen?: string;
+  outcome?: string;
+  /** An extension's asking salary. */
+  ask?: number;
+  /** A star who played hurt and is going to pay for it after the game. */
+  later?: { playerId: string; weeks: number };
 }
 
 export interface OwnerState {
@@ -1312,6 +1341,8 @@ export interface PrimetimeShow {
   year: number;
   week: number;
   kind?: "regular" | "playoffs" | "superBowl" | "awards";
+  /** The week's Top 5 plays, best first (weekReel.ts). */
+  reel?: import("./weekReel.ts").ReelMoment[];
   title?: string;
   open: string;
   stories?: PrimetimeStory[];

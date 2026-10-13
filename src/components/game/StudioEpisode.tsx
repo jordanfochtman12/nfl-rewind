@@ -1,7 +1,7 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
 import { settingsNow } from "@/lib/settings-store";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { showGraphic, showTicker, type PrimetimeShow } from "@/lib/game";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { clubInk, logoSrc, showGraphic, showTicker, type PrimetimeShow } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { LowerThird, ShowGraphicView, ShowOpen, ShowTicker } from "./ShowKit";
 import { Logo } from "./chrome";
@@ -39,6 +39,7 @@ export function StudioEpisode({
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]),
     [voice, setVoice] = useState(() => settingsNow().voiceName);
   const [error, setError] = useState("");
+  const misses = useRef(0);
   const audio = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const save = useGameStore((s) => s.save);
   // The show this episode belongs to (this week's or an archived one): its boards and honorees.
@@ -154,12 +155,21 @@ export function StudioEpisode({
       if (c?.voice) speech.voice = c.voice;
       speech.pitch = c?.pitch ?? 1;
       speech.rate = c?.rate ?? 1;
-      speech.onend = next;
+      speech.onend = () => {
+        misses.current = 0;
+        next();
+      };
+      // A line the voice couldn't read is skipped, not the show: phones drop one now and then.
+      // Only when nothing will read does the show stop.
       speech.onerror = () => {
-        if (active) {
+        if (!active) return;
+        misses.current += 1;
+        if (misses.current >= 3) {
           setError("Narration stopped. You can continue with the transcript or switch voices.");
           setPlaying(false);
+          return;
         }
+        window.setTimeout(next, 600);
       };
       const person = episode.cast?.[current.speaker] ?? crew[current.speaker];
       speakLine(speech, { key: person.name, gender: who(current.speaker).gender, chair: CHAIR[current.speaker] });
@@ -191,7 +201,7 @@ export function StudioEpisode({
   };
   return (
     <section
-      className={`pt-show ${finale ? "pt-show-finale" : ""}`}
+      className={`pt-show ${finale ? "pt-show-finale" : ""} ${playing ? "is-playing" : ""}`}
       aria-label="Primetime episode player"
     >
       <div className="pt-show-control">
@@ -264,7 +274,20 @@ export function StudioEpisode({
         </p>
       )}
       <div className="pt-show-grid">
-        <div className="pt-stage">
+        <div
+          className="pt-stage k5-studio"
+          style={{ "--club": chapter.teamIds[0] ? clubInk(chapter.teamIds[0], year).primary : "#d51c38" } as CSSProperties}
+        >
+          <div className="k5-studio-set" aria-hidden />
+          {chapter.teamIds[0] && (
+            <img key={`mark-${chapter.id}`} className="k5-studio-mark" src={logoSrc(year, chapter.teamIds[0])} alt="" aria-hidden />
+          )}
+          {playing && index > 0 && (
+            <div key={`bump-${chapter.id}`} className="k5-bumper" aria-hidden>
+              <span>{chapter.kicker}</span>
+              <b>{chapter.title}</b>
+            </div>
+          )}
           {opening && (
             <ShowOpen
               show={finale ? "SUPER BOWL POSTGAME" : preview ? "SEASON PREVIEW SPECIAL" : episode.edition === "awards" ? "AWARDS NIGHT" : episode.edition === "playoffs" || episode.edition === "championship" ? "PLAYOFF PRIMETIME" : "PRIMETIME"}

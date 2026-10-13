@@ -6,6 +6,8 @@ export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?
   const y = year ?? saveYear;
   return (
     <img
+      // A new club is a new image: never show the last club's mark while this one loads.
+      key={`${y}-${id}`}
       src={logoSrc(y, id)}
       alt=""
       width={size}

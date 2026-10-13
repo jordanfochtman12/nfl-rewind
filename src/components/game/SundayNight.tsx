@@ -6,6 +6,8 @@ import { GameNight } from "./GameNight";
 import {LiveBroadcast } from "./LiveBroadcast";
 import { wasWatched } from "./liveWatch";
 import { useState } from "react";
+import { OwnerCall } from "./OwnerCall";
+import { PlayoffBracket } from "./BigNight";
 
 function slateOf(save: NonNullable<ReturnType<typeof useGameStore.getState>["save"]>): GameResult[] {
   if (save.phase === "playoffs") {
@@ -91,6 +93,7 @@ export function SundayNight() {
           </Btn>
         </div>
       </section>
+      {playoff ? <PlayoffBracket /> : <OwnerCall />}
       {mine?.log?.length ? (
         <div className="flex flex-wrap gap-2">
           <Btn onClick={() => setLive(true)}>Watch the broadcast</Btn>

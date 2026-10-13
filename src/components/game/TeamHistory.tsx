@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { ChampionBanners } from "./BigNight";
 import {
   activeTeamIds,
   displayName,
@@ -163,6 +164,7 @@ export function TeamHistory({ records }: { records: (teamId: TeamId) => ReactNod
       </Section>
 
       <Section eyebrow="The trophy case" title="Championships">
+        <ChampionBanners teamId={club} titles={trophies} />
         {trophies.length ? (
           <ul className="grid gap-1.5 sm:grid-cols-2">
             {trophies
