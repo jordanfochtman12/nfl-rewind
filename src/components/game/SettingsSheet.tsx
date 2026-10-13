@@ -91,11 +91,11 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
   const hdHint = !st.hdVoices
     ? "Off: the device's own voices read the shows."
     : hd.status === "ready"
-      ? `Neural broadcast voices, on the air${hd.rtf && hd.rtf > 1 ? ". This device makes speech slower than it's spoken, so the shows read ahead, and a live call that isn't ready yet goes to the device voice so the game never waits" : ""}.`
+      ? `Neural broadcast voices, on the air${hd.rtf && hd.rtf > 1 ? ". This device makes speech slower than it's spoken, so the shows read ahead and a live call that can't air in time is skipped rather than holding the game" : ""}.`
       : hd.status === "loading"
         ? `Downloading the studio voices, ${Math.round(hd.progress * 100)}% (about 90 MB, once).`
         : hd.status === "failed"
-          ? "The studio voices can't run in this browser; the device voices are reading instead."
+          ? "The studio voices couldn't load here, so the device voices are reading. Turn this off and on to try again."
           : "Neural broadcast voices (Kokoro). About 90 MB, downloaded once.";
   const speak = () => {
     if (!("speechSynthesis" in window)) return;
@@ -122,11 +122,11 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
               on={st.hdVoices}
               onChange={(v) => {
                 st.set({ hdVoices: v });
-                if (v) warmHdVoices();
+                if (v) warmHdVoices(true);
               }}
             />
             {st.hdVoices && <HdCastPicker />}
-            <Toggle label="Booth voices in live games" hint="The play-by-play and color men call each snap." on={st.boothVoices} onChange={(v) => st.set({ boothVoices: v })} />
+            <Toggle label="Booth voices in live games and the draft" hint="The play-by-play and color men call each snap, and the podium reads every pick." on={st.boothVoices} onChange={(v) => st.set({ boothVoices: v })} />
             <Toggle label="Music and stadium sound" on={st.music} onChange={(v) => st.set({ music: v })} />
             <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 py-2">
               <span className="text-sm text-paper">Lead voice</span>

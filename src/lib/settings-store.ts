@@ -38,7 +38,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   narration: true,
-  boothVoices: false,
+  boothVoices: true,
   music: true,
   voiceName: "",
   hdVoices: true,
@@ -97,6 +97,13 @@ export const useSettings = create<SettingsStore>()(
     {
       name: "nfl-rewind-settings",
       storage: createJSONStorage(() => safeStorage),
+      // v1: the booth and the draft podium speak by default now that every voice is a studio
+      // voice; a device that saved the old default (off) gets the new one once.
+      version: 1,
+      migrate: (old, from) => {
+        const s = (old ?? {}) as Partial<Settings>;
+        return (from < 1 ? { ...s, boothVoices: true } : s) as SettingsStore;
+      },
       partialize: (s) => {
         const { set: _set, reset: _reset, markTour: _markTour, resetTours: _resetTours, ...rest } = s;
         return rest;

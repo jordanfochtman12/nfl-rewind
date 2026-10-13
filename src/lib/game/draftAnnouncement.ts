@@ -169,7 +169,9 @@ export function announceDraftPick(p: DraftSelection, year: number): string {
   const position = footballPosition(p.pos);
   const college = collegeOf(p);
   const team = displayName(year, p.team);
-  // The AFL and NFL drafted separately through 1966, so those years always name the league.
+  // Round one gets the full podium read. While the AFL and NFL drafted separately (through
+  // 1966) every pick names its league, so the two sets of pick numbers never blur together;
+  // otherwise the later rounds come quick and short, the way they air.
   if (p.round <= 1 || year <= 1966 || p.session === "afl")
     return `With the ${ordinal(p.pick)} pick in the ${year} ${league(p.session)} draft, the ${team} select ${p.name}, ${position}${college ? `, from ${college}` : ""}.`;
   return rotate(

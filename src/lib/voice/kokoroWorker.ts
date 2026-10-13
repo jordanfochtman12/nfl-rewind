@@ -5,6 +5,15 @@
  * the main thread so the broadcast never stutters while a line is being read.
  */
 import { KokoroTTS } from "kokoro-js";
+import { env } from "@huggingface/transformers";
+import ortMjs from "../../../node_modules/@huggingface/transformers/dist/ort-wasm-simd-threaded.jsep.mjs?url";
+import ortWasm from "../../../node_modules/@huggingface/transformers/dist/ort-wasm-simd-threaded.jsep.wasm?url";
+
+// The speech engine's runtime ships with the game instead of loading from a public CDN at
+// startup, so a blocked or slow CDN (content blockers, a phone's network) never leaves the
+// studio voices dead. Only the voice model itself comes from the model hub, once.
+const onnx = env.backends.onnx as { wasm?: { wasmPaths?: unknown } };
+if (onnx.wasm) onnx.wasm.wasmPaths = { mjs: ortMjs, wasm: ortWasm };
 
 const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
 let tts: Promise<KokoroTTS> | undefined;
@@ -102,12 +111,18 @@ async function pump(): Promise<void> {
   }
 }
 
-self.onmessage = (e: MessageEvent<{ type: "load"; phone?: boolean; phoneGpu?: boolean } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
+self.onmessage = (e: MessageEvent<{ type: "load"; phone?: boolean; phoneGpu?: boolean } | { type: "clear" } | { type: "urgent"; id: number } | ({ type: "say" } & Job)>) => {
   const m = e.data;
   if (m.type === "load") {
     phone = !!m.phone;
     phoneGpu = !!m.phoneGpu;
     void load().catch(() => {});
+    return;
+  }
+  // Everything queued was cancelled (the show moved on): drop it rather than make lines
+  // nobody will hear ahead of the ones that are wanted next.
+  if (m.type === "clear") {
+    for (const j of jobs.splice(0)) self.postMessage({ type: "error", id: j.id, message: "cleared" });
     return;
   }
   if (m.type === "urgent") {

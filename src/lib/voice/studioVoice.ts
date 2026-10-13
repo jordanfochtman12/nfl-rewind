@@ -202,8 +202,11 @@ export function isPhone(): boolean {
 }
 
 /** Start loading the studio voices (idempotent). Called at startup, on the first read, or from Settings. */
-export function warmHdVoices(): void {
+export function warmHdVoices(force = false): void {
   if (!hdWanted() || lanes.length) return;
+  // After a failed load the voices stay down until asked again (Settings), so a browser that
+  // can't run them isn't made to re-download and fail on every line.
+  if (useHdVoice.getState().status === "failed" && !force) return;
   useHdVoice.setState({ status: "loading", progress: 0 });
   spawn(true);
 }
@@ -227,13 +230,11 @@ export function hdReady(): Promise<boolean> {
 
 /* ---------------- making lines ---------------- */
 
-/** Lines already made or on their way, so a show can read ahead while a line plays. */
-const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane; done: boolean }>();
+/** How long a live call may wait for its voice before the moment has passed. */
+const LIVE_LAG_MS = 3500;
 
-/** Is this line already made (read ahead), so it can go on the air with no wait? */
-function isMade(text: string, voice: string, speed: number): boolean {
-  return !!made.get(`${voice}|${speed.toFixed(2)}|${text}`)?.done;
-}
+/** Lines already made or on their way, so a show can read ahead while a line plays. */
+const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane }>();
 
 function synth(text: string, voice: string, speed: number, now: boolean): Promise<Clip> {
   const k = `${voice}|${speed.toFixed(2)}|${text}`;
@@ -252,15 +253,15 @@ function synth(text: string, voice: string, speed: number, now: boolean): Promis
     pending.set(id, { resolve, lane: l });
     l.w.postMessage({ type: "say", id, text, voice, speed, now });
   }).then((r) => {
-    const e = made.get(k);
-    if (e) e.done = true;
+    // A line that couldn't be made (or was cleared) isn't kept: asked again, it's made again.
+    if (r.error && made.get(k)?.id === id) made.delete(k);
     if (r.pcm && r.rate) {
       const secs = r.pcm.length / r.rate;
       if (secs > 0.6) rtf = rtf * 0.8 + ((performance.now() - started) / 1000 / secs) * 0.2;
     }
     return r;
   });
-  made.set(k, { clip, id, lane: l, done: false });
+  made.set(k, { clip, id, lane: l });
   if (made.size > 120) made.delete(made.keys().next().value!);
   refreshTalking();
   return clip;
@@ -375,25 +376,49 @@ function deviceSpeak(u: SpeechSynthesisUtterance): void {
 /**
  * Read a line in the studio voice. `maxLagMs`: a live call that would air later than this after
  * it was asked for is dropped instead (the moment has passed); shows wait for every line.
- * `live`: a call from the field, which never holds the game for a voice still being made.
+ * `live`: a call from the field. It is read in the studio voice or not at all: one that can't
+ * air within a few seconds of the snap is dropped, so the game is held only briefly.
+ *
+ * The studio voices are the only voices: while they're still downloading a line waits for
+ * them (a live call that waits too long is dropped) instead of going to the device's robot
+ * voice. The device voice reads only when the studio voices are switched off in Settings or
+ * can't run in this browser at all.
  */
 export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { maxLagMs?: number; live?: boolean } = {}): void {
-  if (hdWanted()) warmHdVoices();
-  if (!hdWanted() || useHdVoice.getState().status !== "ready" || !lane()) {
+  const lag = opts.maxLagMs ?? (opts.live ? LIVE_LAG_MS : undefined);
+  if (!hdWanted()) {
     deviceSpeak(u);
+    return;
+  }
+  warmHdVoices();
+  const status = useHdVoice.getState().status;
+  if (status === "failed") {
+    deviceSpeak(u);
+    return;
+  }
+  if (status !== "ready" || !lane()) {
+    const gen = generation;
+    const t0 = performance.now();
+    void hdReady().then((ok) => {
+      if (gen !== generation) return; // cancelled while the voices loaded
+      if (!ok) {
+        deviceSpeak(u);
+        return;
+      }
+      const waited = performance.now() - t0;
+      if (lag !== undefined && waited >= lag) {
+        fire(u, "end");
+        return;
+      }
+      speakLine(u, who, { ...opts, maxLagMs: lag !== undefined ? lag - waited : undefined });
+    });
     return;
   }
   const mine = generation;
   const asked = performance.now();
   const voice = hdVoiceFor(who);
   const parts = sentences(u.text);
-  // A live call on a device that makes speech slower than it's spoken: the studio voice reads
-  // it when the read-ahead already made it, otherwise the device voice calls it right now, so
-  // the game is never held for the booth.
-  if (opts.live && rtf > 1.1 && !isMade(parts[0]!, voice, clampRate(u.rate))) {
-    deviceSpeak(u);
-    return;
-  }
+  opts = { ...opts, maxLagMs: lag };
   // Making starts now for every sentence (the first ahead of any read-ahead work); playback
   // waits its turn, so queued lines read in order like the device engine's own queue.
   const clips = parts.map((t, k) => synth(t, voice, clampRate(u.rate), k === 0));
@@ -409,24 +434,13 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
           return;
         }
         if (!r.pcm || !r.rate) {
-          // A sentence the model can't read goes to the device voice; the show goes on.
-          const rest = new SpeechSynthesisUtterance(parts.slice(i).join(" "));
-          rest.rate = u.rate;
-          rest.volume = u.volume;
-          rest.onend = () => fire(u, "end");
-          rest.onerror = () => fire(u, "error");
-          deviceSpeak(rest);
-          return;
+          // A sentence the model can't read is left out; the show goes on in the studio voice.
+          continue;
         }
         ctx ??= new AudioContext();
         if (!(await awake(ctx))) {
-          // The phone hasn't let the page play yet: the device voice reads it (or it passes).
-          const rest = new SpeechSynthesisUtterance(parts.slice(i).join(" "));
-          rest.rate = u.rate;
-          rest.volume = u.volume;
-          rest.onend = () => fire(u, "end");
-          rest.onerror = () => fire(u, "end");
-          deviceSpeak(rest);
+          // The phone hasn't let the page play yet (no tap): the line passes unheard.
+          fire(u, "end");
           return;
         }
         const buf = ctx.createBuffer(1, r.pcm.length, r.rate);
@@ -458,8 +472,11 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
 }
 
 /** Stop whatever is being read, on either engine. */
-export function cancelSpeech(): void {
+export function cancelSpeech(opts: { dropQueued?: boolean } = {}): void {
   generation += 1;
+  // The show moved on for good (a new pick at the podium): lines still waiting in the workers
+  // are for what was cancelled, so they go too. A live booth keeps its read-ahead.
+  if (opts.dropQueued) for (const l of lanes) l.w.postMessage({ type: "clear" });
   queue = Promise.resolve();
   queued = 0;
   try {
