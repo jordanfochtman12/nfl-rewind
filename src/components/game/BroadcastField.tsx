@@ -1,4 +1,5 @@
 import { memo, useId, useMemo, type CSSProperties } from "react";
+import { Logo } from "./chrome";
 import { fieldLook, teamAbbr, type FieldLook, type GameResult, type PlayLog, type TeamId } from "@/lib/game";
 
 /*
@@ -353,17 +354,11 @@ export function BroadcastField({
   const team = formation(start, dir, play.snap?.kind);
   const surface = look.surface === "grass" ? "Natural grass" : look.surface === "astroturf" ? "AstroTurf" : "FieldTurf";
   const label = `${look.stadium}, ${surface.toLowerCase()}`;
-  // The camera on a phone: the field shown close up, panned to the line of scrimmage, the
-  // marker and where the ball ends up, the way a telecast frames the play.
-  const lo = Math.min(start, finish, first);
-  const hi = Math.max(start, finish, first);
-  const focus = Math.max(0, Math.min(1, (lo + hi) / 2 / VW));
   return (
     <div className="broadcast-field">
-      <div className="flex flex-wrap justify-between gap-2 px-4 py-2 text-[11px] uppercase tracking-widest text-muted max-sm:px-3 max-sm:py-1.5 max-sm:text-[10px]">
+      <div className="flex flex-wrap justify-between gap-2 px-4 py-2 text-[11px] uppercase tracking-widest text-muted">
         <span>
-          <span className="max-sm:hidden">{look.stadium} · {surface} · </span>
-          {teamAbbr(play.poss)} {right ? "→" : "←"}
+          {look.stadium} · {surface} · {teamAbbr(play.poss)} {right ? "→" : "←"}
         </span>
         <span>
           {play.snap
@@ -371,7 +366,6 @@ export function BroadcastField({
             : "Archived film · pre-snap position"}
         </span>
       </div>
-      <div className="field-cam" style={{ "--focus": focus } as CSSProperties}>
       <div className="field-stack" style={{ aspectRatio: `${VW} / ${VH}` }} role="group" aria-label={`${teamAbbr(play.poss)} at their ${play.spot}. ${play.text}`}>
         <Field look={look} label={label} />
         <svg viewBox={`0 0 ${VW} ${VH}`} className="field-layer" aria-hidden="true" shapeRendering="geometricPrecision">
@@ -426,16 +420,32 @@ export function BroadcastField({
           </g>
         </svg>
       </div>
+      {/* The lower third: who has it and what just happened, in the club's colors. */}
+      <div key={`lt-${index}`} className="k5-lower3" style={{ "--team": color } as CSSProperties}>
+        <span className="k5-lower3-logo">
+          <Logo id={play.poss} size={38} year={season} />
+        </span>
+        <span className="k5-lower3-body">
+          <span className="k5-lower3-kicker">
+            {teamAbbr(play.poss)} · {play.q > 4 ? "OT" : `Q${play.q}`} · {callLabel || "Play"}
+          </span>
+          <span className="k5-lower3-text">{play.text}</span>
+        </span>
       </div>
+      {/* The big moments take the whole screen: the club's colors wipe across behind its logo. */}
       {tag && (
-        <div key={`${index}-${tag}`} className="broadcast-event" role="status">
-          {tag}
+        <div key={`${index}-${tag}`} className="broadcast-event k5-takeover" role="status" style={{ "--team": tag === "TURNOVER" || tag === "SAFETY" ? other : color } as CSSProperties}>
+          <span className="k5-takeover-wipe" aria-hidden />
+          <span className="k5-takeover-logo">
+            <Logo id={(tag === "TURNOVER" || tag === "SAFETY" ? (play.poss === home ? away : home) : play.poss) as TeamId} size={92} year={season} />
+          </span>
+          <strong className="k5-takeover-word">{tag}</strong>
           <span>
             {play.as} — {play.hs}
           </span>
         </div>
       )}
-      <div className="flex flex-wrap justify-between gap-2 px-4 pb-3 text-[10px] text-muted max-sm:hidden">
+      <div className="flex flex-wrap justify-between gap-2 px-4 pb-3 text-[10px] text-muted">
         <span>
           {tv ? (
             <>

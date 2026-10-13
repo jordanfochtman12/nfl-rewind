@@ -125,36 +125,33 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     chime: () => engine.current?.cue(),
     controls: (
       <div className="space-y-2">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
           <button
             type="button"
-            className="lb-pill"
+            className="bx-chip min-h-9 px-3"
             aria-pressed={enabled}
-            aria-label="Stadium sound"
             onClick={async () => {
               if (enabled) setEnabled(false);
               else if (await ensureAudio()) setEnabled(true);
             }}
           >
-            Crowd
+            Stadium sound: {enabled ? "On" : "Off"}
           </button>
           <button
             type="button"
-            className="lb-pill"
+            className="bx-chip min-h-9 px-3"
             aria-pressed={music}
-            aria-label="Music"
             onClick={async () => {
               if (music) setMusic(false);
               else if (await ensureAudio()) setMusic(true);
             }}
           >
-            Music
+            Music: {music ? "On" : "Off"}
           </button>
           <button
             type="button"
-            className="lb-pill"
+            className="bx-chip min-h-9 px-3"
             aria-pressed={announcer}
-            aria-label="Announcers"
             onClick={() => {
               if (!("speechSynthesis" in window)) {
                 setUnavailable(true);
@@ -169,7 +166,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
                 ]);
             }}
           >
-            Booth
+            Announcer: {announcer ? "On" : "Off"}
           </button>
         </div>
         {music && (

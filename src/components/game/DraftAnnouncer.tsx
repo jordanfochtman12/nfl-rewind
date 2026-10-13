@@ -340,16 +340,16 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     }
   }, [snapshot, enabled, crowd, inRoom, speak, stop, playReaction]);
 
-  const deskName = draftAnalystFor(save.year).name;
-  const now = replay.current;
   const controls = (
-    <section className="rounded-lg border border-brass/30 bg-black/50 px-3 py-2.5" aria-label="Draft announcer">
-      <div className="flex flex-wrap items-center gap-1.5">
+    <section
+      className="rounded-lg border border-brass/30 bg-black/50 p-4"
+      aria-label="Draft announcer"
+    >
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          className="lb-pill"
+          className={`bx-chip min-h-11 px-4 ${enabled ? "bx-chip-on" : ""}`}
           aria-pressed={enabled}
-          aria-label="Announcer"
           onClick={() => {
             if (enabled) {
               stop();
@@ -365,13 +365,12 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
             }
           }}
         >
-          Announcer
+          Announcer: {enabled ? "on" : "off"}
         </button>
         <button
           type="button"
-          className="lb-pill"
+          className={`bx-chip min-h-11 px-4 ${crowd ? "bx-chip-on" : ""}`}
           aria-pressed={crowd}
-          aria-label="Crowd"
           onClick={() => {
             if (crowd) {
               audio.current?.stop();
@@ -379,80 +378,51 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
             } else startCrowd();
           }}
         >
-          Crowd
+          Crowd: {crowd ? "on" : "off"}
         </button>
         <button
           type="button"
-          className="lb-pill"
+          className={`bx-chip min-h-11 px-4 ${music ? "bx-chip-on" : ""}`}
           aria-pressed={music}
-          aria-label="Music"
           onClick={() => {
             if (music) setMusic(false);
             else startMusic();
           }}
         >
-          Music
+          Music: {music ? "on" : "off"}
         </button>
-        {enabled && (
-          <button
-            type="button"
-            className="lb-ctl ml-auto h-9"
-            disabled={!line}
-            aria-label="Replay announcement"
-            onClick={() => {
-              const r = replay.current;
-              if (r) speak(r.text, r.response, r.nextLine, r.desk, r.round, r.guest);
-            }}
-          >
-            <span aria-hidden>↺</span> Replay
-          </button>
+        {music && (
+          <label className="flex items-center gap-2 text-xs text-muted">
+            Music volume
+            <input
+              aria-label="Draft music volume"
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={musicVolume}
+              onChange={(e) => setMusicVolume(Number(e.target.value))}
+            />
+          </label>
         )}
-      </div>
-      {enabled && hd.status === "loading" && (
-        <p className="mt-2 text-xs text-brass" role="status">
-          Warming up the studio voices · {Math.round(hd.progress * 100)}% · the first picks wait for them (about 90 MB, once).
-        </p>
-      )}
-      {enabled && now && (
-        <div className="mt-2.5 space-y-1 border-l-2 border-red pl-3 text-sm" aria-live="polite">
-          <p className="flex items-center gap-2 font-display text-[10px] font-bold uppercase italic tracking-[0.2em] text-muted">
-            <i className={`block h-1.5 w-1.5 rounded-full ${busy ? "animate-pulse bg-red" : "bg-subtle"}`} aria-hidden />
-            {busy ? "At the podium" : "Last pick"}
-          </p>
-          <p className="text-[15px] leading-snug text-white">{now.text}</p>
-          {now.desk && (
-            <p className="italic leading-snug text-paper">
-              <span className="not-italic font-display text-[11px] font-bold uppercase tracking-wide text-brass">{deskName}: </span>
-              {now.desk}
-            </p>
-          )}
-          {now.guest && (
-            <p className="leading-snug text-paper">
-              <span className="font-display text-[11px] font-bold uppercase tracking-wide text-brass">{now.guest.name}: </span>&ldquo;{now.guest.line}&rdquo;
-            </p>
-          )}
-          {now.nextLine && <p className="text-xs text-muted">{now.nextLine}</p>}
-        </div>
-      )}
-      {reaction && (
-        <p className="mt-2 text-xs text-brass" role="status">
-          <strong>{reaction.label}.</strong> {reaction.reason}
-        </p>
-      )}
-      {error && (
-        <p role="status" className="mt-2 text-sm text-brass">
-          {error}
-        </p>
-      )}
-      <details className="mt-2 text-xs text-muted">
-        <summary className="cursor-pointer">Audio settings</summary>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          {enabled && (
-            <label>
+        {enabled && (
+          <>
+            <button
+              type="button"
+              className="bx-chip min-h-11 px-4"
+              disabled={!line}
+              onClick={() => {
+                const r = replay.current;
+                if (r) speak(r.text, r.response, r.nextLine, r.desk, r.round, r.guest);
+              }}
+            >
+              Replay announcement
+            </button>
+            <label className="text-xs text-muted">
               Voice
               <select
                 aria-label="Draft announcer voice"
-                className="ml-2 min-h-9 max-w-full rounded border border-line bg-studio px-2"
+                className="ml-2 min-h-11 max-w-full rounded border border-line bg-studio px-2"
                 value={voice}
                 onChange={(e) => setVoice(e.target.value)}
               >
@@ -464,23 +434,62 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
                 ))}
               </select>
             </label>
-          )}
-          <label className="flex items-center gap-2">
+          </>
+        )}
+        {(enabled || crowd) && (
+          <label className="flex items-center gap-2 text-xs text-muted">
             Volume
-            <input aria-label="Draft announcer volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(e) => setVolume(Number(e.target.value))} />
+            <input
+              aria-label="Draft announcer volume"
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={volume}
+              onChange={(e) => setVolume(Number(e.target.value))}
+            />
           </label>
-          <label className="flex items-center gap-2">
-            Music
-            <input aria-label="Draft music volume" type="range" min="0" max="1" step="0.05" value={musicVolume} onChange={(e) => setMusicVolume(Number(e.target.value))} />
-          </label>
-        </div>
+        )}
+      </div>
+      <p className="mt-2 text-xs text-muted">
+        {busy
+          ? "At the podium — the next automatic pick waits for the announcement."
+          : "Pick announcement, crowd reaction, then the next team on the clock."}
+      </p>
+      {enabled && hd.status === "loading" && (
+        <p className="mt-2 text-xs text-brass" role="status">
+          Warming up the studio voices · {Math.round(hd.progress * 100)}% · the first picks wait for them (about 90 MB, once).
+        </p>
+      )}
+      {enabled && line && <p className="mt-3 text-sm leading-relaxed text-paper">{line}</p>}
+      {reaction && (
+        <p className="mt-3 text-sm text-brass" role="status">
+          <strong>{reaction.label}.</strong> {reaction.reason}{" "}
+          <span className="text-muted">Fan reaction based on today's scouting.</span>
+        </p>
+      )}
+      {error && (
+        <p role="status" className="mt-2 text-sm text-brass">
+          {error}
+        </p>
+      )}
+      <details className="mt-3 text-xs text-muted">
+        <summary>Audio credits</summary>
         <p className="mt-2">
-          Fan reaction is based on today&apos;s scouting. Original draft theme: On the Clock. Crowd recordings:{" "}
-          <a href="https://soundbible.com/1964-Small-Crowd-Applause.html" target="_blank" rel="noreferrer">
+          Original draft theme: On the Clock. Crowd recordings:{" "}
+          <a
+            href="https://soundbible.com/1964-Small-Crowd-Applause.html"
+            target="_blank"
+            rel="noreferrer"
+          >
             Small Crowd Applause — Yannick Lemieux
           </a>
           ;{" "}
-          <a href="https://soundbible.com/654-Crowd-Boo-And-Heckles.html" target="_blank" rel="noreferrer">
+          <a
+            href="https://soundbible.com/654-Crowd-Boo-And-Heckles.html"
+            target="_blank"
+            rel="noreferrer"
+          >
             Crowd Boo And Heckles — Mike Koenig
           </a>
           .{" "}

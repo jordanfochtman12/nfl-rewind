@@ -806,3 +806,263 @@ table tbody tr:hover {
 .broadcast-shell {
   overflow-x: clip;
 }
+
+/* ---------- cinematic live broadcast ----------
+   The matchup open, the camera finish over the field, the lower third and the big-moment
+   takeover: 2K5 chrome and glass over the building and the clubs' own colors. */
+.k5-matchup {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 9.5rem;
+  padding: 1.1rem 1rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--k5-edge);
+  background: #03050a;
+}
+.k5-matchup-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--away) 62%, transparent) 0%, transparent 42%, transparent 58%, color-mix(in srgb, var(--home) 62%, transparent) 100%),
+    linear-gradient(180deg, rgba(3, 5, 10, 0.25) 0%, rgba(3, 5, 10, 0.55) 60%, #03050a 100%),
+    url("/art/stadium-arrival.webp") center 35% / cover no-repeat;
+  filter: saturate(1.15) contrast(1.05);
+  animation: k5-push 18s ease-in-out infinite alternate;
+}
+.k5-matchup::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: k5-sweep 6.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes k5-push {
+  from { transform: scale(1.04); }
+  to { transform: scale(1.14) translateY(-2%); }
+}
+@keyframes k5-sweep {
+  0%, 55% { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+.k5-matchup-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  text-align: center;
+}
+.k5-matchup-logo {
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.12));
+  animation: k5-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-matchup-home .k5-matchup-logo {
+  animation-delay: 0.12s;
+}
+@keyframes k5-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.k5-matchup-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 4.4vw, 1.75rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--k5-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.7));
+}
+.k5-matchup-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.k5-matchup-at {
+  padding: 0.15rem 0.7rem;
+  clip-path: polygon(0.35rem 0, 100% 0, calc(100% - 0.35rem) 100%, 0 100%);
+  background: linear-gradient(180deg, #ff5168 0%, #ee1a36 46%, #c00a24 54%, #e2132f 100%);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  color: #fff;
+}
+.k5-matchup-venue {
+  max-width: 7.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(232, 238, 247, 0.8);
+}
+
+/* The camera finish: a lens vignette and a slow light sweep across the field. */
+.broadcast-field .field-stack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.45) 100%),
+    linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
+  background-size: 100% 100%, 300% 100%;
+  animation: k5-lens 9s linear infinite;
+}
+@keyframes k5-lens {
+  from { background-position: 0 0, 150% 0; }
+  to { background-position: 0 0, -150% 0; }
+}
+
+/* The lower third. */
+.k5-lower3 {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  margin: 0 0.75rem 0.6rem;
+  overflow: hidden;
+  border: 1px solid var(--k5-edge);
+  clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--team) 55%, #0b1220) 0%, #0b1220 46%, rgba(6, 9, 16, 0.94) 100%);
+  box-shadow: inset 0 1px 0 var(--k5-edge-hi), var(--k5-shadow);
+  animation: k5-slide 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-lower3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--k5-red-bar);
+}
+@keyframes k5-slide {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: none; }
+}
+.k5-lower3-logo {
+  display: flex;
+  align-items: center;
+  padding: 0.45rem 0.7rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02));
+  border-right: 1px solid var(--k5-edge);
+}
+.k5-lower3-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 0.45rem 1.6rem 0.55rem 0.75rem;
+}
+.k5-lower3-kicker {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--k5-gold);
+}
+.k5-lower3-text {
+  font-size: 0.98rem;
+  line-height: 1.25;
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* The takeover: a color wipe, the club's logo and the word in chrome. */
+.broadcast-event.k5-takeover {
+  inset: 0;
+  top: 0;
+  left: 0;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: rgba(3, 5, 10, 0.55);
+  box-shadow: none;
+  animation: k5-takeover 0.5s ease-out both;
+}
+.k5-takeover-wipe {
+  position: absolute;
+  inset: -10% -30%;
+  background: linear-gradient(100deg, transparent 0%, color-mix(in srgb, var(--team) 85%, transparent) 30%, color-mix(in srgb, var(--team) 70%, #000) 70%, transparent 100%);
+  transform: skewX(-18deg);
+  animation: k5-takeover-sweep 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-takeover-logo {
+  position: relative;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.25));
+  animation: k5-pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 0.1s both;
+}
+.k5-takeover-word {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 9vw, 4.25rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  background: var(--k5-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.75));
+}
+.broadcast-event.k5-takeover > span:last-child {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.3em;
+  color: #fff;
+}
+@keyframes k5-takeover {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes k5-takeover-sweep {
+  from { transform: skewX(-18deg) translateX(-110%); }
+  to { transform: skewX(-18deg) translateX(0); }
+}
+@keyframes k5-pop {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k5-matchup-bg,
+  .k5-matchup::after,
+  .broadcast-field .field-stack::after,
+  .k5-lower3,
+  .k5-matchup-logo,
+  .broadcast-event.k5-takeover,
+  .k5-takeover-wipe,
+  .k5-takeover-logo {
+    animation: none;
+  }
+}

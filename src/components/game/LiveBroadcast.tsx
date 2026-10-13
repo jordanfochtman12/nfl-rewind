@@ -3,7 +3,7 @@ import { FilmReport } from "./FilmReport";
 import { useBroadcastSound } from "./BroadcastSound";
 import { boothCall } from "@/lib/game/commentary";
 import { boothFor, firstName } from "@/lib/game/broadcastCrew";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { clubInk, nicknameOf, ordersUpTo, teamAbbr, type GameResult, type Gameplan, type LiveOrder, type PlayLog, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -229,16 +229,74 @@ export function LiveBroadcast({
   return (
     <section className={`overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000] ${eraCls}`} aria-label="Live broadcast">
       {compact && !atEnd && <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs text-muted"><span>Replay to your decision</span><button type="button" className="bx-chip min-h-9 px-3" onClick={() => setI(log.length - 1)}>Jump to decision</button></div>}
+      {/* The matchup open: the building behind both clubs, face to face. */}
+      {!compact && (
+        <div className="k5-matchup" style={{ "--away": awayInk.primary, "--home": homeInk.primary } as CSSProperties}>
+          <div className="k5-matchup-bg" aria-hidden />
+          <div className="k5-matchup-side">
+            <span className="k5-matchup-logo">
+              <Logo id={away} size={76} year={game.year} />
+            </span>
+            <span className="k5-matchup-name">{nicknameOf(game.year, away)}</span>
+          </div>
+          <div className="k5-matchup-mid">
+            <span className="k5-matchup-at">{ended ? "FINAL" : "AT"}</span>
+            <span className="k5-matchup-venue">{game.stadium}</span>
+          </div>
+          <div className="k5-matchup-side k5-matchup-home">
+            <span className="k5-matchup-logo">
+              <Logo id={home} size={76} year={game.year} />
+            </span>
+            <span className="k5-matchup-name">{nicknameOf(game.year, home)}</span>
+          </div>
+        </div>
+      )}
+      {!compact && (
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e] px-4 py-2">
+          <p className="bx-primary px-2 py-0.5 font-display text-xs font-extrabold italic tracking-[0.2em] [transform:skewX(-12deg)]">
+            <span className="inline-block [transform:skewX(12deg)]">{ended ? "FINAL" : "LIVE"}</span>
+          </p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {!ended && (
+              <>
+                <button type="button" onClick={() => { sound.chime(); setPlaying((p) => !p); }} className="bx-chip min-h-8 px-3 text-[11px]">
+                  {playing ? "Pause" : "Play"}
+                </button>
+                {SPEEDS.map((s2, k) => (
+                  <button key={s2.label} type="button" onClick={() => { sound.chime(); setSpeed(k); }} className={`bx-chip min-h-8 px-2.5 text-[11px] ${speed === k ? "bx-chip-on" : ""}`}>
+                    {s2.label}
+                  </button>
+                ))}
+                <button type="button" onClick={() => { setHalftime(false); halfSeen.current = true; setI(log.length - 1); }} className="bx-chip min-h-8 px-3 text-[11px]">
+                  Skip to final
+                </button>
+              </>
+            )}
+            {ended && (
+              <button
+                type="button"
+                onClick={() => {
+                  doneRef.current = true;
+                  halfSeen.current = false;
+                  setHalftime(false);
+                  setI(0);
+                  setPlaying(true);
+                }}
+                className="bx-chip min-h-8 px-3 text-[11px]"
+              >
+                Replay
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!compact && <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2">{sound.controls}<span className="text-[11px] text-muted">{game.stadium} · {game.indoor ? "Indoors" : game.weather ?? "Clear"}</span></div>}
+
       {/* score bug */}
       <div className="grid grid-cols-[1fr_auto_1fr]">
         {slab(away, cur.as, awayInk, "l")}
         <div className="flex flex-col items-center justify-center gap-0.5 bg-black px-2 py-1 sm:px-3">
-          {!compact && !ended && (
-            <p className="flex items-center gap-1 font-display text-[9px] font-extrabold italic tracking-[0.2em] text-white">
-              <i className={`block h-1.5 w-1.5 rounded-full bg-red ${playing ? "animate-pulse" : ""}`} aria-hidden />
-              {playing ? "LIVE" : "PAUSED"}
-            </p>
-          )}
           <p className="bug-num text-lg text-brass sm:text-xl">{ended ? "FINAL" : halftime ? "HALFTIME" : `${sit.q > 4 ? "OT" : `Q${sit.q}`} ${clockText(sit.clock)}`}</p>
           {!ended && !halftime && (
             <>
@@ -253,7 +311,7 @@ export function LiveBroadcast({
       </div>
 
       {!compact && (
-        <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-black/40 px-3 py-1.5 font-display text-[11px] font-bold uppercase italic tracking-wide sm:text-xs" aria-label="Team stats">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-1.5 font-display text-[11px] font-bold uppercase italic tracking-wide sm:text-xs" aria-label="Team stats">
           {[away, home].map((id, k) => {
             const t = totals(id);
             return (
@@ -264,63 +322,13 @@ export function LiveBroadcast({
               </span>
             );
           })}
+          <span className="order-2 text-[10px] text-subtle">Play {i + 1}/{log.length}</span>
         </div>
       )}
 
       <BroadcastField play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} year={game.year} game={game} />
-      {!compact && (
-        <div className="space-y-2 border-b border-white/10 bg-gradient-to-b from-[#121826] to-[#07090e] px-3 py-2.5">
-          {/* transport: back a play, play/pause, forward a play, speed, to the final whistle */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button type="button" className="lb-ctl" aria-label="Previous play" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI((n) => Math.max(0, n - 1)); }}>
-              <span aria-hidden>⏮</span>
-            </button>
-            {!ended ? (
-              <button type="button" className={`lb-ctl sm:min-w-[4.5rem] ${playing ? "" : "lb-ctl-on"}`} onClick={() => { sound.chime(); setPlaying((p) => !p); }}>
-                <span aria-hidden>{playing ? "❚❚" : "▶"}</span> <span className="max-sm:sr-only">{playing ? "Pause" : "Play"}</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="lb-ctl min-w-[4.5rem]"
-                onClick={() => {
-                  doneRef.current = true;
-                  halfSeen.current = false;
-                  setHalftime(false);
-                  setI(0);
-                  setPlaying(true);
-                }}
-              >
-                <span aria-hidden>↺</span> Replay
-              </button>
-            )}
-            <button type="button" className="lb-ctl" aria-label="Next play" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI((n) => Math.min(log.length - 1, n + 1)); }}>
-              <span aria-hidden>⏭</span>
-            </button>
-            {!ended && (
-              <>
-                <span className="lb-seg" role="group" aria-label="Speed">
-                  {SPEEDS.map((s2, k) => (
-                    <button key={s2.label} type="button" aria-pressed={speed === k} onClick={() => { sound.chime(); setSpeed(k); }} className={`lb-ctl ${speed === k ? "lb-ctl-on" : ""}`}>
-                      {s2.label}
-                    </button>
-                  ))}
-                </span>
-                <button type="button" className="lb-ctl ml-auto" aria-label="Skip to final" onClick={() => { setHalftime(false); halfSeen.current = true; setI(log.length - 1); }}>
-                  <span className="max-sm:hidden">Final</span> <span aria-hidden>⏩</span>
-                </button>
-              </>
-            )}
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            {sound.controls}
-            <span className="text-[11px] text-muted">
-              {game.stadium} · {game.indoor ? "Indoors" : game.weather ?? "Clear"} · Play {i + 1}/{log.length}
-            </span>
-          </div>
-        </div>
-      )}
       {halftime && <div className="border-b border-brass/30"><HalftimeDesk game={game} log={halfLog} voiced={sound.voiced && !compact} onRead={endHalfRead} /><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
+      {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 
       {!compact && i < 4 && game.matchups?.length ? (
         <div className="border-b border-white/10 px-3 py-3">
