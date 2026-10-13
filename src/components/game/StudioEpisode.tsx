@@ -39,6 +39,8 @@ export function StudioEpisode({
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]),
     [voice, setVoice] = useState(() => settingsNow().voiceName);
   const [error, setError] = useState("");
+  const voicesRef = useRef(voices);
+  voicesRef.current = voices;
   const misses = useRef(0);
   const audio = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const save = useGameStore((s) => s.save);
@@ -146,7 +148,7 @@ export function StudioEpisode({
         const c = episode.cast?.[k];
         return { key: k, gender: c?.gender ?? (c ? crewGender(c.name) : undefined) ?? crew[k].gender };
       };
-      const cast = castVoices(voices, [
+      const cast = castVoices(voicesRef.current, [
         { ...who("HOST"), rate: 1 },
         { ...who("ANALYST"), pitch: 0.96, rate: 0.97 },
         { ...who("REPORTER"), rate: 1.03 },
@@ -192,7 +194,8 @@ export function StudioEpisode({
       active = false;
       window.clearTimeout(timer);
     };
-  }, [playing, index, line, narration, voice, voices, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters]);
+    // The voice list is read from a ref: the phone reloading it mid-line must not restart the read.
+  }, [playing, index, line, narration, voice, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);

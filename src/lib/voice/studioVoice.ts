@@ -446,8 +446,8 @@ function deviceSpeak(u: SpeechSynthesisUtterance): void {
   };
   const words = u.text.split(/\s+/).filter(Boolean).length;
   const now = Date.now();
-  deviceBusyUntil = Math.max(now, deviceBusyUntil) + (words / (2.6 * (u.rate || 1))) * 1000;
-  const guard = globalThis.setTimeout(close, deviceBusyUntil - now + 4000);
+  deviceBusyUntil = Math.max(now, deviceBusyUntil) + (words / (2.2 * (u.rate || 1))) * 1000;
+  const guard = globalThis.setTimeout(close, deviceBusyUntil - now + 5000);
   const end = u.onend;
   const err = u.onerror;
   u.onend = function (ev) {
@@ -460,7 +460,47 @@ function deviceSpeak(u: SpeechSynthesisUtterance): void {
   };
   deviceLines += 1;
   refreshTalking();
-  window.speechSynthesis.speak(u);
+  const synth = window.speechSynthesis;
+  // A stuck engine (iOS after an interruption) won't read anything until it's resumed.
+  if (synth.paused) synth.resume();
+  const chunks = u.text.length > 180 ? chunk(u.text) : [u.text];
+  if (chunks.length === 1) {
+    synth.speak(u);
+    return;
+  }
+  // Phone engines cut a long utterance off partway (Chrome at about 15 seconds): a long
+  // line is read as its sentences, one utterance each, and ends when the last one does.
+  let failed = false;
+  chunks.forEach((t, i) => {
+    const part = new SpeechSynthesisUtterance(t);
+    part.voice = u.voice;
+    part.rate = u.rate;
+    part.pitch = u.pitch;
+    part.volume = u.volume;
+    part.lang = u.lang;
+    if (i === chunks.length - 1) part.onend = (ev) => u.onend?.call(u, ev);
+    part.onerror = (ev) => {
+      if (failed) return;
+      failed = true;
+      u.onerror?.call(u, ev);
+    };
+    synth.speak(part);
+  });
+}
+
+/** A long line as sentence groups of up to ~180 characters. */
+function chunk(text: string): string[] {
+  const parts = text.split(/(?<=[.!?])\s+/);
+  const out: string[] = [];
+  let cur = "";
+  for (const p of parts) {
+    if (cur && cur.length + p.length + 1 > 180) {
+      out.push(cur);
+      cur = p;
+    } else cur = cur ? `${cur} ${p}` : p;
+  }
+  if (cur) out.push(cur);
+  return out;
 }
 
 /**

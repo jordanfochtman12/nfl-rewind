@@ -19,6 +19,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   const [voiceName, setVoiceName] = useState(() => settingsNow().voiceName);
   const engine = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const last = useRef(index);
+  const callSeq = useRef(0);
   const booth = boothFor(year);
   // Two people in the booth, two voices: the play-by-play man and his color analyst, each cast
   // to match (a chosen voice goes to the play-by-play call).
@@ -39,11 +40,20 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   };
   const speaking = (call: BoothLine[]) => {
     if (!("speechSynthesis" in window)) return;
+    const say = () => {
+      for (const line of call) {
+        const { speech, who } = utter(line, cue);
+        speakLine(speech, who, { live: true });
+      }
+    };
+    // Only cut a call that's still on the air, and give the phone a beat after the cut:
+    // iOS drops (or clips) a line started the instant after speech is cancelled.
+    const seq = ++callSeq.current;
+    if (!isSpeaking()) return say();
     cancelSpeech();
-    for (const line of call) {
-      const { speech, who } = utter(line, cue);
-      speakLine(speech, who, { live: true });
-    }
+    window.setTimeout(() => {
+      if (seq === callSeq.current) say();
+    }, 160);
   };
   // The next snaps' calls are made while this one is on the air, so the booth never lags the field.
   const ahead = upcoming.map((u) => `${u.cue}:${u.lines.map((l) => l.text).join("|")}`).join("#");
@@ -89,8 +99,8 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
       if (!active || document.hidden || (!enabled && !music)) {
         void engine.current?.context.suspend();
       } else void engine.current?.context.resume();
-      if ((!active || document.hidden) && "speechSynthesis" in window)
-        cancelSpeech();
+      // The last call of a half or the game plays out; only leaving the page stops it.
+      if (document.hidden && "speechSynthesis" in window) cancelSpeech();
     };
     sync();
     document.addEventListener("visibilitychange", sync);
