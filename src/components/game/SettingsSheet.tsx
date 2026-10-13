@@ -9,7 +9,7 @@ import { dynastyStorage } from "@/lib/save-idb";
 import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
 import { Btn } from "./chrome";
 import { useOfflineStatus } from "../offline-status";
-import { cancelSpeech, HD_VOICES, previewVoice, speakLine, useHdVoice, warmHdVoices, type Chair } from "@/lib/voice/studioVoice";
+import { cancelSpeech, hasPremiumDeviceVoice, HD_VOICES, isPhone, previewVoice, speakLine, useHdVoice, warmHdVoices, type Chair } from "@/lib/voice/studioVoice";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -125,6 +125,31 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
                 if (v) warmHdVoices(true);
               }}
             />
+            {isPhone() && (
+              <div className="space-y-2 rounded-md border border-line px-3 py-2">
+                <label className="flex min-h-10 flex-wrap items-center justify-between gap-2 text-sm text-paper">
+                  Voices on this phone
+                  <select
+                    aria-label="Voices on this phone"
+                    className="min-h-10 rounded-md border border-line bg-surface-2 px-2 text-sm text-fg"
+                    value={st.phoneVoice ?? "auto"}
+                    onChange={(e) => {
+                      st.set({ phoneVoice: e.target.value as "auto" | "device" | "studio" });
+                      if (e.target.value === "studio") warmHdVoices(true);
+                    }}
+                  >
+                    <option value="auto">Automatic (best on this phone)</option>
+                    <option value="device">iPhone voices (instant)</option>
+                    <option value="studio">Studio voices (slower on a phone)</option>
+                  </select>
+                </label>
+                <p className="text-xs text-muted">
+                  {hasPremiumDeviceVoice()
+                    ? "This phone has a Premium voice installed, so the broadcast reads with it: instant and clear."
+                    : "For the best voices on an iPhone, install a Premium one: Settings → Accessibility → Spoken Content → Voices → English, then download Ava, Zoe, Evan or Nathan (Premium). The broadcast picks it up on its own."}
+                </p>
+              </div>
+            )}
             {st.hdVoices && <HdCastPicker />}
             <Toggle label="Booth voices in live games and the draft" hint="The play-by-play and color men call each snap, and the podium reads every pick." on={st.boothVoices} onChange={(v) => st.set({ boothVoices: v })} />
             <Toggle label="Music and stadium sound" on={st.music} onChange={(v) => st.set({ music: v })} />

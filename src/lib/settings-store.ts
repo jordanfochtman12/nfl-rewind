@@ -18,6 +18,12 @@ export interface Settings {
   voiceName: string;
   /** Studio-grade neural voices (Kokoro, downloaded once, ~90 MB); device voices otherwise. */
   hdVoices: boolean;
+  /**
+   * On a phone: "device" reads with the phone's own voices (instant; the iPhone's Premium
+   * voices are excellent), "studio" with the neural studio voices made on the phone, "auto"
+   * with the phone's voices when it has a Premium or Enhanced one installed.
+   */
+  phoneVoice: "auto" | "device" | "studio";
   /** The viewer's pick of studio voice by chair (host, analyst, reporter, pbp, color, draft). */
   hdCast: Partial<Record<"host" | "analyst" | "reporter" | "pbp" | "color" | "draft", string>>;
   /** Watch mode auto-play pace. */
@@ -42,6 +48,7 @@ export const DEFAULT_SETTINGS: Settings = {
   music: true,
   voiceName: "",
   hdVoices: true,
+  phoneVoice: "auto",
   hdCast: {},
   autoSpeed: "normal",
   stopForBigNights: true,

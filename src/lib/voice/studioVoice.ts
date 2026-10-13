@@ -103,7 +103,35 @@ const pending = new Map<number, { resolve: (c: Clip) => void; lane: Lane }>();
 let rtf = 1;
 
 function hdWanted(): boolean {
-  return typeof window !== "undefined" && typeof Worker !== "undefined" && settingsNow().hdVoices !== false;
+  return typeof window !== "undefined" && typeof Worker !== "undefined" && settingsNow().hdVoices !== false && !phoneUsesDevice();
+}
+
+const goodDevice = (v: SpeechSynthesisVoice) => /^en([-_]|$)/i.test(v.lang) && /premium|enhanced|neural|natural/i.test(`${v.name} ${v.voiceURI}`);
+
+/** The phone has a Premium or Enhanced English voice installed (iOS: Settings → Accessibility → Spoken Content → Voices). */
+export function hasPremiumDeviceVoice(): boolean {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+  return window.speechSynthesis.getVoices().some(goodDevice);
+}
+
+/**
+ * A phone reads with its own voices when the viewer picked them, or (auto) when it has a
+ * Premium or Enhanced one: those are instant and dependable, where the studio voices made on a
+ * phone's CPU are slow enough that live calls miss their moment.
+ */
+export function phoneUsesDevice(): boolean {
+  if (!isPhone()) return false;
+  const pref = settingsNow().phoneVoice ?? "auto";
+  if (pref === "device") return true;
+  if (pref === "studio") return false;
+  return hasPremiumDeviceVoice();
+}
+
+/** The best English voice on the device: Premium/Enhanced first, then US English. */
+function bestDeviceVoice(): SpeechSynthesisVoice | undefined {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return undefined;
+  const en = window.speechSynthesis.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang));
+  return en.find(goodDevice) ?? en.find((v) => /^en[-_]US/i.test(v.lang)) ?? en[0];
 }
 
 function lane(): Lane | undefined {
@@ -238,7 +266,12 @@ export function hdReady(): Promise<boolean> {
 const LIVE_LAG_MS = 3500;
 
 /** Lines already made or on their way, so a show can read ahead while a line plays. */
-const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane }>();
+const made = new Map<string, { clip: Promise<Clip>; id: number; lane: Lane; done?: boolean }>();
+
+/** Is this line already made (read ahead), so it can go on the air with no wait? */
+function isMade(text: string, voice: string, speed: number): boolean {
+  return !!made.get(`${voice}|${speed.toFixed(2)}|${text}`)?.done;
+}
 
 function synth(text: string, voice: string, speed: number, now: boolean): Promise<Clip> {
   const k = `${voice}|${speed.toFixed(2)}|${text}`;
@@ -259,6 +292,7 @@ function synth(text: string, voice: string, speed: number, now: boolean): Promis
   }).then((r) => {
     // A line that couldn't be made (or was cleared) isn't kept: asked again, it's made again.
     if (r.error && made.get(k)?.id === id) made.delete(k);
+    else if (made.get(k)?.id === id) made.get(k)!.done = true;
     if (r.pcm && r.rate) {
       const secs = r.pcm.length / r.rate;
       if (secs > 0.6) rtf = rtf * 0.8 + ((performance.now() - started) / 1000 / secs) * 0.2;
@@ -384,6 +418,11 @@ function fire(u: SpeechSynthesisUtterance, kind: "end" | "error") {
 }
 
 function deviceSpeak(u: SpeechSynthesisUtterance): void {
+  // A line with no voice of its own reads in the device's best one, not its default.
+  if (!u.voice) {
+    const v = bestDeviceVoice();
+    if (v) u.voice = v;
+  }
   if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.speak(u);
   else globalThis.setTimeout(() => fire(u, "end"), 0);
 }
@@ -411,6 +450,12 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
     deviceSpeak(u);
     return;
   }
+  // A phone doesn't hold the broadcast for voices still downloading: its own voice reads
+  // until they're ready.
+  if ((status !== "ready" || !lane()) && isPhone()) {
+    deviceSpeak(u);
+    return;
+  }
   if (status !== "ready" || !lane()) {
     const gen = generation;
     const t0 = performance.now();
@@ -434,6 +479,12 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
   const voice = hdVoiceFor(who);
   const parts = sentences(u.text);
   opts = { ...opts, maxLagMs: lag };
+  // On a phone that makes speech slower than it's spoken, a live call the read-ahead hasn't
+  // made yet is read by the phone's own voice right away rather than missing its moment.
+  if (isPhone() && opts.live && rtf > 1.1 && !isMade(parts[0]!, voice, clampRate(u.rate))) {
+    deviceSpeak(u);
+    return;
+  }
   // Making starts now for every sentence (the first ahead of any read-ahead work); playback
   // waits its turn, so queued lines read in order like the device engine's own queue.
   const clips = parts.map((t, k) => synth(t, voice, clampRate(u.rate), k === 0));
@@ -454,8 +505,15 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
         }
         ctx ??= new AudioContext();
         if (!(await awake(ctx))) {
-          // The phone hasn't let the page play yet (no tap): the line passes unheard.
-          fire(u, "end");
+          // The phone is holding the page's audio (no tap yet, or iOS paused it): its own
+          // voice reads the rest, so the line is still heard.
+          const rest = new SpeechSynthesisUtterance(parts.slice(i).join(" "));
+          rest.rate = u.rate;
+          rest.volume = u.volume;
+          if (u.voice) rest.voice = u.voice;
+          rest.onend = () => fire(u, "end");
+          rest.onerror = () => fire(u, "end");
+          deviceSpeak(rest);
           return;
         }
         const buf = ctx.createBuffer(1, r.pcm.length, r.rate);
