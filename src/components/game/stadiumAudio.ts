@@ -1,9 +1,9 @@
-import { isSpeaking } from "@/lib/voice/studioVoice";
+import { isSpeaking, registerAudio } from "@/lib/voice/studioVoice";
 import { NETWORK_BPM, scoreStep } from "./studioScore";
 import { DRAFT_BPM, draftScoreStep } from "./draftScore";
 /** Original "Sunday Lights / Network Mix": layered brass, strings, bass and breakbeat percussion. */
 export function stadiumAudio(theme: "network" | "draft" = "network") {
-  const context = new AudioContext();
+  const context = registerAudio(new AudioContext());
   const crowd = context.createGain(),
     music = context.createGain();
   crowd.gain.value = 0;

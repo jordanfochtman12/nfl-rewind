@@ -1,8 +1,9 @@
 import type { DraftReaction } from "@/lib/game/draftAnnouncement";
+import { registerAudio } from "@/lib/voice/studioVoice";
 
 /** Licensed human crowd recordings. Local assets, with a short broadcast fade. */
 export function draftCrowdAudio() {
-  const context = new AudioContext();
+  const context = registerAudio(new AudioContext());
   const output = context.createGain();
   output.gain.value = 0.6;
   output.connect(context.destination);

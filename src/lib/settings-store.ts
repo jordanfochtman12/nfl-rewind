@@ -99,10 +99,13 @@ export const useSettings = create<SettingsStore>()(
       storage: createJSONStorage(() => safeStorage),
       // v1: the booth and the draft podium speak by default now that every voice is a studio
       // voice; a device that saved the old default (off) gets the new one once.
-      version: 1,
+      // v2: every voice and sound on (narration, studio voices, the booth, music and stadium
+      // sound, the TV studio), once, for devices that saved older choices.
+      version: 2,
       migrate: (old, from) => {
         const s = (old ?? {}) as Partial<Settings>;
-        return (from < 1 ? { ...s, boothVoices: true } : s) as SettingsStore;
+        if (from < 2) return { ...s, narration: true, hdVoices: true, boothVoices: true, music: true, tvStudio: true } as SettingsStore;
+        return s as SettingsStore;
       },
       partialize: (s) => {
         const { set: _set, reset: _reset, markTour: _markTour, resetTours: _resetTours, ...rest } = s;

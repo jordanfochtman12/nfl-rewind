@@ -8,8 +8,10 @@ import type { BoothLine } from "@/lib/game/commentary";
 import { cancelSpeech, isSpeaking, prefetchLines, speakLine, useTalking } from "@/lib/voice/studioVoice";
 
 export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0, upcoming: { lines: BoothLine[]; cue: string }[] = []) {
-  const [enabled, setEnabled] = useState(false);
-  const [music, setMusic] = useState(false);
+  // Stadium sound and music start as Settings has them (on by default); the first tap
+  // anywhere wakes them, since phones only start sound from a tap.
+  const [enabled, setEnabled] = useState(() => settingsNow().music);
+  const [music, setMusic] = useState(() => settingsNow().music);
   const [volume, setVolume] = useState(0.3);
   const [announcer, setAnnouncer] = useState(() => settingsNow().boothVoices);
   const [unavailable, setUnavailable] = useState(false);
@@ -73,6 +75,14 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     return () => window.speechSynthesis.removeEventListener("voiceschanged", refresh);
   }, []);
   useEffect(() => {
+    // On from the start: the sound is set up now and wakes with the viewer's first tap.
+    if ((enabled || music) && active && !engine.current) {
+      try {
+        engine.current = stadiumAudio();
+      } catch {
+        setUnavailable(true);
+      }
+    }
     engine.current?.setCrowd(enabled);
     engine.current?.setMusic(music, volume);
     const sync = () => {

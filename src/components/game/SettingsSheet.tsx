@@ -239,10 +239,14 @@ function HdCastPicker() {
               onChange={(e) => st.set({ hdCast: { ...(st.hdCast ?? {}), [c.chair]: e.target.value || undefined } })}
             >
               <option value="">Matched to the broadcaster</option>
-              {HD_VOICES.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.label}
-                </option>
+              {([["Premium voices", true], ["More voices", false]] as const).map(([group, premium]) => (
+                <optgroup key={group} label={group}>
+                  {HD_VOICES.filter((v) => !!v.premium === premium).map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.label}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
             <button

@@ -29,32 +29,36 @@ export interface Speaker {
   chair?: Chair;
 }
 
-/** Kokoro v1.0's voices, best first, with how they're labeled in Settings. */
-export const HD_VOICES: { id: string; label: string; gender: "m" | "f" }[] = [
-  { id: "am_michael", label: "Michael · American, warm baritone", gender: "m" },
-  { id: "am_fenrir", label: "Fenrir · American, deep and gravelly", gender: "m" },
-  { id: "am_puck", label: "Puck · American, bright and quick", gender: "m" },
-  { id: "bm_george", label: "George · British, classic", gender: "m" },
-  { id: "am_echo", label: "Echo · American, even", gender: "m" },
-  { id: "bm_fable", label: "Fable · British, storyteller", gender: "m" },
-  { id: "am_eric", label: "Eric · American, plain-spoken", gender: "m" },
-  { id: "am_liam", label: "Liam · American, young", gender: "m" },
-  { id: "bm_lewis", label: "Lewis · British, low", gender: "m" },
-  { id: "am_onyx", label: "Onyx · American, dark", gender: "m" },
-  { id: "bm_daniel", label: "Daniel · British, crisp", gender: "m" },
-  { id: "am_adam", label: "Adam · American, flat", gender: "m" },
-  { id: "af_heart", label: "Heart · American, warm", gender: "f" },
-  { id: "af_bella", label: "Bella · American, bright", gender: "f" },
-  { id: "af_nicole", label: "Nicole · American, close and calm", gender: "f" },
-  { id: "bf_emma", label: "Emma · British, polished", gender: "f" },
-  { id: "af_aoede", label: "Aoede · American, smooth", gender: "f" },
-  { id: "af_kore", label: "Kore · American, steady", gender: "f" },
-  { id: "af_sarah", label: "Sarah · American, friendly", gender: "f" },
-  { id: "bf_isabella", label: "Isabella · British, warm", gender: "f" },
-  { id: "af_nova", label: "Nova · American, clear", gender: "f" },
-  { id: "af_sky", label: "Sky · American, light", gender: "f" },
-  { id: "bf_alice", label: "Alice · British, bright", gender: "f" },
-  { id: "af_jessica", label: "Jessica · American, casual", gender: "f" },
+/**
+ * Kokoro v1.0's voices, best first, with how they're labeled in Settings. `premium`: the
+ * voices the model's own grading rates highest (C and up); the broadcast casts only these,
+ * and the rest stay in Settings for anyone who wants them.
+ */
+export const HD_VOICES: { id: string; label: string; gender: "m" | "f"; premium?: boolean }[] = [
+  { id: "am_michael", label: "Michael · American, warm baritone", gender: "m", premium: true },
+  { id: "am_fenrir", label: "Fenrir · American, deep and gravelly", gender: "m", premium: true },
+  { id: "am_puck", label: "Puck · American, bright and quick", gender: "m", premium: true },
+  { id: "bm_george", label: "George · British, classic", gender: "m", premium: true },
+  { id: "am_echo", label: "Echo · American, even", gender: "m"  },
+  { id: "bm_fable", label: "Fable · British, storyteller", gender: "m", premium: true },
+  { id: "am_eric", label: "Eric · American, plain-spoken", gender: "m"  },
+  { id: "am_liam", label: "Liam · American, young", gender: "m"  },
+  { id: "bm_lewis", label: "Lewis · British, low", gender: "m"  },
+  { id: "am_onyx", label: "Onyx · American, dark", gender: "m"  },
+  { id: "bm_daniel", label: "Daniel · British, crisp", gender: "m"  },
+  { id: "am_adam", label: "Adam · American, flat", gender: "m"  },
+  { id: "af_heart", label: "Heart · American, warm", gender: "f", premium: true },
+  { id: "af_bella", label: "Bella · American, bright", gender: "f", premium: true },
+  { id: "af_nicole", label: "Nicole · American, close and calm", gender: "f", premium: true },
+  { id: "bf_emma", label: "Emma · British, polished", gender: "f", premium: true },
+  { id: "af_aoede", label: "Aoede · American, smooth", gender: "f", premium: true },
+  { id: "af_kore", label: "Kore · American, steady", gender: "f", premium: true },
+  { id: "af_sarah", label: "Sarah · American, friendly", gender: "f", premium: true },
+  { id: "bf_isabella", label: "Isabella · British, warm", gender: "f", premium: true },
+  { id: "af_nova", label: "Nova · American, clear", gender: "f", premium: true },
+  { id: "af_sky", label: "Sky · American, light", gender: "f"  },
+  { id: "bf_alice", label: "Alice · British, bright", gender: "f"  },
+  { id: "af_jessica", label: "Jessica · American, casual", gender: "f"  },
 ];
 
 /** Each chair's first choice, so the desk sounds the same every visit. */
@@ -78,7 +82,7 @@ export function hdVoiceFor(who: Speaker): string {
   const g = who.gender === "f" ? "f" : "m";
   const taken = new Set(cast.values());
   const first = who.chair ? CHAIR_PICK[who.chair][g] : undefined;
-  const pool = HD_VOICES.filter((v) => v.gender === g).map((v) => v.id);
+  const pool = HD_VOICES.filter((v) => v.gender === g && v.premium).map((v) => v.id);
   const v = (first && !taken.has(first) ? first : pool.find((x) => !taken.has(x))) ?? pool[cast.size % pool.length]!;
   cast.set(who.key, v);
   return v;
@@ -301,7 +305,18 @@ let ctx: AudioContext | undefined;
  * instant of silence to claim them, and asks iOS to play through the silent switch like a video
  * would. Without this the studio voices on an iPhone are made but never heard.
  */
+/** The broadcasts' other sound (crowd, music): woken by the same tap as the voices. */
+const others = new Set<AudioContext>();
+export function registerAudio(c: AudioContext): AudioContext {
+  others.add(c);
+  return c;
+}
+export function forgetAudio(c: AudioContext): void {
+  others.delete(c);
+}
+
 export function unlockAudio(): void {
+  for (const c of others) if (c.state === "suspended") void c.resume().catch(() => undefined);
   if (typeof window === "undefined") return;
   try {
     const s = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;

@@ -62,7 +62,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const [volume, setVolume] = useState(0.85);
   const [line, setLine] = useState("");
   const [error, setError] = useState("");
-  const [music, setMusic] = useState(false);
+  // Crowd and music come on with the podium, as Settings has them (on by default).
+  const [music, setMusic] = useState(() => settingsNow().music && settingsNow().boothVoices !== false);
   const [musicVolume, setMusicVolume] = useState(0.28);
   const musicAudio = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const replay = useRef<{
@@ -73,7 +74,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     round?: number;
     guest?: { name: string; line: string };
   } | null>(null);
-  const [crowd, setCrowd] = useState(false);
+  const [crowd, setCrowd] = useState(() => settingsNow().music);
   const crowdEnabled = useRef(crowd);
   crowdEnabled.current = crowd;
   const [reaction, setReaction] = useState<DraftReaction | null>(null);
@@ -119,10 +120,11 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       setError("Crowd audio is unavailable in this browser.");
     }
   };
-  const stopMusic = useCallback(() => {
+  /** Close the draft theme; `off` also turns the switch off (the viewer stopped it). */
+  const stopMusic = useCallback((off = false) => {
     if (musicAudio.current) void musicAudio.current.close();
     musicAudio.current = null;
-    setMusic(false);
+    if (off) setMusic(false);
   }, []);
   const startMusic = () => {
     try {
@@ -240,13 +242,23 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     },
     [save.year, stop, voices, voice, volume, playReaction],
   );
+  // Sound that starts on is set up here; the first tap anywhere wakes it.
+  useEffect(() => {
+    if (save.phase !== "draft" || !inRoom) return;
+    try {
+      if (crowd && !audio.current) audio.current = draftCrowdAudio();
+      if (music && !musicAudio.current) musicAudio.current = stadiumAudio("draft");
+    } catch {
+      /* no Web Audio here: the podium still reads */
+    }
+  }, [crowd, music, save.phase, inRoom]);
   useEffect(() => {
     musicAudio.current?.setMusic(music, musicVolume * (busy ? 0.45 : 1));
     if (!music) void musicAudio.current?.context.suspend();
   }, [music, musicVolume, busy]);
   useEffect(() => {
     if (save.phase === "draft" || busy) return;
-    const timer = setTimeout(stopMusic, 250);
+    const timer = setTimeout(() => stopMusic(), 250);
     return () => clearTimeout(timer);
   }, [save.phase, busy, stopMusic]);
 
@@ -259,14 +271,16 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     return () => window.speechSynthesis.removeEventListener("voiceschanged", refresh);
   }, []);
   useEffect(() => {
+    // Out of sight the room goes quiet, but the switches stay as the viewer left them.
     const hide = () => {
       setHidden(document.hidden);
       if (document.hidden) {
         stop();
-        setEnabled(false);
-        setCrowd(false);
-        stopMusic();
         void audio.current?.context.suspend();
+        void musicAudio.current?.context.suspend();
+      } else {
+        void audio.current?.context.resume().catch(() => undefined);
+        void musicAudio.current?.context.resume().catch(() => undefined);
       }
     };
     hide();
@@ -280,14 +294,16 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     };
   }, [stop, stopMusic]);
   useEffect(() => {
+    // Away from the draft room (another tab) the room goes quiet until you come back.
     if (!inRoom) {
       stop();
-      setEnabled(false);
-      setCrowd(false);
-      stopMusic();
       void audio.current?.context.suspend();
+      void musicAudio.current?.context.suspend();
+    } else {
+      void audio.current?.context.resume().catch(() => undefined);
+      void musicAudio.current?.context.resume().catch(() => undefined);
     }
-  }, [inRoom, stop, stopMusic]);
+  }, [inRoom, stop]);
   useEffect(() => {
     const parts =
       previous.current && snapshot ? draftAnnouncementParts(previous.current, snapshot, recentDesk.current) : null;
@@ -303,11 +319,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         ? draftCrowdReaction(previous.current, snapshot)
         : null;
     previous.current = snapshot;
-    if (!snapshot) {
-      stop();
-      setEnabled(false);
-      setCrowd(false);
-    }
+    // Between drafts the room is silent; the switches carry over to next year's draft.
+    if (!snapshot) stop();
     if (parts) {
       // The later rounds air short: the desk speaks up for a steal, a reach or your own pick,
       // and the next club is only called in round one (or when a draft changes over).
@@ -495,7 +508,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
               stop();
               setEnabled(false);
               setCrowd(false);
-              stopMusic();
+              stopMusic(true);
             }}
           >
             Stop draft audio
