@@ -90,6 +90,9 @@ export function repairPlayerIdentities(save: DynastySave): void {
     originalNames.set(p.id, { firstName: p.firstName, lastName: p.lastName });
     Object.assign(p, cleanNameParts(p.firstName, p.lastName));
     if (!p.historical) continue;
+    // A record player is one real person by construction (his id is his person in the record):
+    // two Ron Smiths, two Willie Davises, are two men.
+    if (p.id.startsWith("r-")) continue;
     const key = identity(p);
     const original = originalNames.get(p.id)!;
     if (original.firstName !== p.firstName || original.lastName !== p.lastName) {

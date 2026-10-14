@@ -20,7 +20,7 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
-import { realIntake } from "./eraStart.ts";
+import { realIntake, restoreRecordLines } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
@@ -45,7 +45,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { fillRoster, realFreeAgents, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
@@ -58,7 +58,7 @@ import { freezePreviewPicks } from "./seasonPreview.ts";
 import { closeTalks } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { regradeClasses } from "./draftGrades.ts";
-import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, hotSeatWeek, interviewWeek } from "./staff.ts";
+import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
 import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
@@ -141,11 +141,13 @@ function runCpuFreeAgency(save: DynastySave): void {
 }
 
 function fillCpuRosters(save: DynastySave): void {
+  // One look at the market for every club (each signing takes its man off it).
+  const market = realFreeAgents(save);
   for (const id of activeTeamIds(save.year)) {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     if (!save.teams[id]) continue;
-    fillRoster(save, id);
-    swapInReal(save, id);
+    fillRoster(save, id, market);
+    swapInReal(save, id, 10, market);
     save.teams[id].payroll = teamPayroll(save, id);
     syncDepth(save, id);
   }
@@ -199,6 +201,11 @@ function startRegular(save: DynastySave): void {
 
 /** Awards night: the honors, the owner's report card, the season's chapter, the trophy case, then the show. */
 function closeSeasonBooks(s: DynastySave): void {
+  // Each man's grade at season's end, for the career arc on his page.
+  for (const p of Object.values(s.players)) {
+    const row = p.stats[s.year];
+    if (row && row.gp > 0 && p.teamId !== "retired" && p.teamId !== "hof") row.ovr = p.ovr;
+  }
   resolveAwards(s);
   gradeSeasonPlan(s);
   writeSeasonChapter(s);
@@ -317,6 +324,11 @@ export function weekIsInTheBooks(save: DynastySave): boolean {
 
 function openDraft(save: DynastySave): void {
   pruneUndraftedProspects(save);
+  // Computer front offices draft the way the real ones did that era; the owner keeps his own.
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (save.teams[id]) save.teams[id].draftStyle = draftStyleOf(id, save.year);
+  }
   save.draftSession = save.year === 1966 ? "nfl" : "common";
   ensureSeasonPicks(save);
   buildDraftBoard(save);
@@ -387,6 +399,8 @@ function closeRelocation(save: DynastySave): void {
  * the deeper a save runs.
  */
 function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
+  // A save whose real past is still coming back from the record waits for it.
+  if (s.recordLinesBefore && !restoreRecordLines(s)) return s;
   // History mode doesn't simulate anything: each step lays down what really happened.
   if (s.realHistory) {
     const from = s.phase;

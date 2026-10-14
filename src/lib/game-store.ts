@@ -6,12 +6,13 @@ import {
   compactSave,
   createNewGame,
   createEraGame,
+  restoreRecordLines,
   hydrateSave,
   createHistoryGame,
   historyCursor,
   loadHistoryData,
   hasHistoryData,
-  HISTORY_LAST,
+  ROSTERS_LAST,
   replayHistory,
   setHistoryData,
   applyLiveLines,
@@ -555,5 +556,13 @@ export const useGameStore = create<GameStore>()(
 // record loaded behind such a save (it loads once, in the background).
 useGameStore.subscribe((st) => {
   const s = st.save;
-  if (s?.realPool && s.year <= HISTORY_LAST && !hasHistoryData()) void loadHistoryData().then(setHistoryData);
+  if (!s?.realPool) return;
+  // A disk save leaves its players' real past seasons to the record: put them back on load.
+  if (s.recordLinesBefore) {
+    void loadHistoryData().then((d) => {
+      if (!hasHistoryData()) setHistoryData(d);
+      const cur = useGameStore.getState().save;
+      if (cur?.recordLinesBefore && restoreRecordLines(cur)) useGameStore.setState({ save: { ...cur } });
+    });
+  } else if (s.year <= ROSTERS_LAST && !hasHistoryData()) void loadHistoryData().then(setHistoryData);
 });

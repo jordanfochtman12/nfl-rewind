@@ -16,6 +16,7 @@ import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
 import { friendOf } from "./data/friends.ts";
+import { FUTURE_PROSPECTS } from "./data/futureProspects.ts";
 import { historicalYear } from "./historicalYears.ts";
 
 /** Real NFL draft lengths: 20 rounds through 1966, 17 in 1967-76, 12 in 1977-92, 8 in 1993, 7 since. */
@@ -411,6 +412,17 @@ export function buildDraftBoard(save: DynastySave): void {
   // with real ceilings late, and a deeper undrafted pool behind the picks.
   const fictional = named.length === 0;
   const want = fictional ? total + Math.round(teamsN * 1.5) : total;
+  // The real college players already known for this class come first; the scouts make the rest.
+  if (fictional) {
+    for (const seed of FUTURE_PROSPECTS[save.year] ?? []) {
+      const p = seedToPlayer(save, seed, 1);
+      // A projection, not a record: the ceiling is his to reach.
+      p.arc = undefined;
+      p.potential = Math.min(97, p.ovr + randInt(save, 6, 14));
+      board.push({ playerId: p.id, slot, taken: false, league: session });
+      slot += 1;
+    }
+  }
   while (board.length < want) {
     const roundGuess = Math.floor(board.length / teamsN) + 1;
     const pos = fictional ? classPosition(save) : realPos[board.length % realPos.length]!;

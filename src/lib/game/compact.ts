@@ -52,6 +52,8 @@ export function compactSaveInPlace(save: DynastySave): void {
  */
 type Packed = {
   v: 1;
+  /** Record players' real seasons before this year were left out (see restoreRecordLines). */
+  rl?: number;
   rk: string[];
   sk: string[];
   /** `players` is a column table (see toTable), and so are retirements and each club's picks. */
@@ -102,8 +104,10 @@ const isTable = (v: unknown): v is Table => !!v && typeof v === "object" && Arra
  * marked, so unpacking leaves it exactly as it was.
  */
 const AS_IS = "~";
+// A season's grade is only on the seasons that have one; it rides along, never decides a full line.
+const OPTIONAL = new Set(["ovr"]);
 function numericKeys(s: SeasonStats, into: Set<string>): void {
-  for (const [k, v] of Object.entries(s)) if (typeof v === "number") into.add(k);
+  for (const [k, v] of Object.entries(s)) if (typeof v === "number" && !OPTIONAL.has(k)) into.add(k);
 }
 function stripZeros(s: SeasonStats, keys: Set<string>): SeasonStats {
   const row = s as unknown as Record<string, unknown>;
@@ -126,7 +130,7 @@ function sameLine(a: SeasonStats, b: SeasonStats | undefined): boolean {
   return true;
 }
 
-function packPlayers(players: Record<string, Player>): { players: Record<string, Player>; packed: Packed } {
+function packPlayers(players: Record<string, Player>, recordBefore?: number): { players: Record<string, Player>; packed: Packed } {
   const rk: string[] = [];
   // Every numeric stat key in use, so a full line can be told from a partial one.
   const sk = new Set<string>();
@@ -151,7 +155,9 @@ function packPlayers(players: Record<string, Player>): { players: Record<string,
     }
     if (p.stats) {
       const st: Record<string, SeasonStats> = {};
-      for (const [y, line] of Object.entries(p.stats)) st[y] = stripZeros(line, sk);
+      // A record player's real seasons before the league began are rebuilt from the record on load.
+      const fromRecord = recordBefore !== undefined && id.startsWith("r-");
+      for (const [y, line] of Object.entries(p.stats)) if (!(fromRecord && Number(y) < recordBefore)) st[y] = stripZeros(line, sk);
       q.stats = st;
     }
     if (p.playoffStats) {
@@ -166,7 +172,9 @@ function packPlayers(players: Record<string, Player>): { players: Record<string,
 
 /** The disk layout of a save: packed players, then column tables for the long lists. */
 function packSave(save: DynastySave): Record<string, unknown> {
-  const { players, packed } = packPlayers(save.players);
+  const recordBefore = save.realPool && !save.recordLinesBefore ? save.startingYear : undefined;
+  const { players, packed } = packPlayers(save.players, recordBefore);
+  if (recordBefore !== undefined) packed.rl = recordBefore;
   const extra: Record<string, unknown> = {};
   const pt = toTable(Object.values(players));
   if (pt) {
@@ -198,6 +206,7 @@ export function unpackPlayers(raw: { players?: unknown; packed?: Packed }): void
   const pk = raw.packed;
   if (!pk || !raw.players) return;
   const r = raw as Record<string, unknown> & { players: Record<string, unknown> };
+  if (pk.rl) r.recordLinesBefore = pk.rl;
   if (pk.pt && isTable(r.players)) {
     const list = fromTable<Record<string, unknown>>(r.players);
     r.players = Object.fromEntries(list.map((p) => [p.id as string, p]));

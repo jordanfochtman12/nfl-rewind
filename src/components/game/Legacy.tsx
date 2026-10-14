@@ -17,6 +17,7 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
+import { PlayerPortrait } from "./Portrait";
 
 /** "Retire #12" and "Ring of Honor", for a player who earned them in the owner's colors. */
 export function HonorButtons({ player }: { player: Player }) {
@@ -67,8 +68,8 @@ export function InductionCard({ player, teamId, note }: { player: Player; teamId
     >
       <div className="flex items-stretch">
         <div className="flex w-20 shrink-0 flex-col items-center justify-center gap-2 border-r border-brass/30 bg-black/50 py-3 sm:w-28">
-          <Logo id={club} size={34} />
-          <span className="font-display text-3xl text-brass sm:text-4xl">{player.jersey >= 0 ? `#${player.jersey}` : "—"}</span>
+          <PlayerPortrait p={player} year={save.year} size="md" club={club} />
+          <Logo id={club} size={28} />
         </div>
         <div className="min-w-0 flex-1 px-4 py-4">
           <p className="text-[11px] tracking-[0.3em] text-brass">

@@ -254,7 +254,7 @@ export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
 export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";
 export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree.ts";
 export { careerValue, draftClassReport, gradableClasses, type ClassPick, type ClassReport } from "./draftGrades.ts";
-export { advanceHistory, applyLiveLines, coverageNote, createHistoryGame, hasHistoryData, historyCursor, historyLabel, historyRecords, replayHistory, setHistoryData, upcomingHistoryGames, HISTORY_FIRST, HISTORY_LAST, type HistoryCursor } from "./historyMode.ts";
+export { advanceHistory, applyLiveLines, coverageNote, createHistoryGame, hasHistoryData, historyCursor, historyLabel, historyRecords, replayHistory, setHistoryData, upcomingHistoryGames, HISTORY_FIRST, HISTORY_LAST, ROSTERS_LAST, type HistoryCursor } from "./historyMode.ts";
 export {
   boxFor,
   boxPlayerId,
@@ -290,4 +290,5 @@ export { requestCeiling } from "./morale.ts";
 export { decide, openDecisions } from "./ownerDesk.ts";
 export type { OwnerDecision, OwnerDecisionKind } from "./types.ts";
 export { cleanPlay, weekReel, type ReelMoment, type ReelKind } from "./weekReel.ts";
-export { createEraGame, ERA_STARTS, type EraOpts } from "./eraStart.ts";
+export { createEraGame, restoreRecordLines, ERA_STARTS, type EraOpts } from "./eraStart.ts";
+export { headshotsReady, headshotUrl, loadHeadshots } from "./headshots.ts";

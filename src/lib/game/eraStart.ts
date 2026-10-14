@@ -12,13 +12,13 @@
  * From the start season on it's a dynasty like any other: the real draft classes keep coming
  * while the record has them, then the game makes its own.
  */
-import { advanceHistory, createHistoryGame, hasHistoryData, HISTORY_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
+import { advanceHistory, createHistoryGame, hasHistoryData, ROSTERS_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
 import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { FRIENDS } from "./data/friends.ts";
 import { arcTarget, calibrateVetPeak, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
-import { DEPTH_CHART, generatePlayer, normalizeJerseys, playerName, rosterOf, signRealFa, syncDepth } from "./players.ts";
+import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, rosterOf, signRealFa, syncDepth } from "./players.ts";
 import { randInt } from "./rng.ts";
 import { deriveOvr } from "./ratings.ts";
 import { refreshContracts } from "./salary.ts";
@@ -256,7 +256,7 @@ function pruneRetired(s: DynastySave): void {
  * club's open spots go to real players. This year's draftees come through the draft instead.
  */
 export function realIntake(save: DynastySave): number {
-  if (!save.realPool || save.realHistory || !hasHistoryData() || save.year > HISTORY_LAST) return 0;
+  if (!save.realPool || save.realHistory || !hasHistoryData() || save.year > ROSTERS_LAST) return 0;
   const h = historyData();
   const year = save.year;
   const drafted = new Set(h.drafts(year).map((d) => d.person));
@@ -286,6 +286,29 @@ export function realIntake(save: DynastySave): number {
     }
   }
   return added;
+}
+
+/**
+ * Put back the real seasons a disk save leaves out (compact.ts): a record player's lines from
+ * before the league began are the record's, so they're read from it rather than stored. Needs
+ * the record loaded; returns whether the save is whole.
+ */
+export function restoreRecordLines(save: DynastySave): boolean {
+  const before = save.recordLinesBefore;
+  if (!before) return true;
+  if (!hasHistoryData()) return false;
+  const h = historyData();
+  for (let y = 1966; y < before; y++) {
+    for (const { person, team, line } of h.stats(y)) {
+      const p = save.players[`r-${person.toString(36)}`];
+      if (!p || p.stats[y]) continue;
+      const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
+      if (y < 1999) st.unknown = y < 1970 ? ["tackles", "ff", "tfl", "pd", "sacks"] : ["tackles", "ff", "tfl", "pd"];
+      p.stats[y] = st;
+    }
+  }
+  save.recordLinesBefore = undefined;
+  return true;
 }
 
 export interface EraOpts {
@@ -380,13 +403,14 @@ export function createEraGame(o: EraOpts): DynastySave {
     }
   }
   const before = new Set(Object.keys(s.players));
+  const market = Object.values(s.players).filter((p) => p.teamId === "fa" && p.historical);
   for (const id of activeTeamIds(year)) {
     balanceLine(s, id);
     // Only the depth chart's holes are filled now: the rest of the roster is for this
     // year's real draft class, which is on the board.
     for (const [pos, need] of DEPTH_CHART) {
       for (let have = rosterOf(s, id).filter((p) => p.pos === pos).length; have < need; have++) {
-        if (!signRealFa(s, id, pos)) generatePlayer(s, pos, id, 58, randInt(s, 23, 29));
+        if (!signRealFa(s, id, pos, market)) generatePlayer(s, pos, id, 58, randInt(s, 23, 29));
       }
     }
     syncDepth(s, id);

@@ -20,6 +20,7 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
+import { PlayerPortrait } from "./Portrait";
 
 /*
  * Draft night's on-air package: the club on the clock, THE PICK IS IN, the card for every
@@ -165,8 +166,8 @@ export function PickReveal() {
         </div>
         <div className="dn-card-body">
           <div className="dn-card-team">
-            <Logo id={b.teamId} year={save.year} size={92} />
-            {last.jersey != null && <span className="dn-jersey">{last.jersey}</span>}
+            <PlayerPortrait p={last} year={save.year} size="lg" club={b.teamId} />
+            <Logo id={b.teamId} year={save.year} size={44} />
           </div>
           <div className="min-w-0 flex-1">
             <p className="dn-card-club">THE {displayName(save.year, b.teamId).toUpperCase()} SELECT</p>

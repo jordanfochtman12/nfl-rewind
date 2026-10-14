@@ -1,4 +1,5 @@
 import { FollowButton, PlayerGameLog } from "./HistoryLive";
+import { CareerArc, Portrait } from "./Portrait";
 import { useEffect, useState } from "react";
 import {
   ARCH_LABEL,
@@ -240,12 +241,7 @@ export function PlayerProfile() {
         className="relative z-10 flex max-h-[100dvh] w-full max-w-3xl flex-col overflow-hidden rounded-none border-0 border-line bg-bg sm:max-h-[92dvh] sm:rounded-xl sm:border"
       >
         <header className="flex items-start gap-4 border-b border-line bg-surface px-4 py-4 sm:px-5">
-          <div
-            className="flex size-16 shrink-0 items-center justify-center rounded-lg font-display text-3xl tabular text-paper sm:size-20 sm:text-4xl"
-            style={{ background: colors.primary, color: colors.secondary }}
-          >
-            {p.jersey || "—"}
-          </div>
+          <Portrait p={p} year={save.year} primary={colors.primary} secondary={colors.secondary} />
           <div className="min-w-0 flex-1">
             <p className="text-xs tracking-[0.3em] text-brass">
               {real ? p.pos : `${p.pos} · ${archLabel(p)}`}
@@ -273,6 +269,7 @@ export function PlayerProfile() {
 
         <div className="space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
           <CareerRanks p={p} />
+          <CareerArc p={p} seasons={log} color={colors.primary} />
           <section className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border border-line bg-surface p-4">
               <p className="text-xs tracking-[0.25em] text-muted">Vital</p>

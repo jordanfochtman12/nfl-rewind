@@ -42,7 +42,18 @@ export interface BoothContext {
   colorFirst: string;
   colorBackground: string;
   prev?: PlayLog;
+  /** The season, for the decade's way of calling a score. */
+  year?: number;
 }
+
+/** How each decade's booth greets six points: measured in the '60s and '70s, loud from the '90s. */
+const ERA_TD: [number, string[]][] = [
+  [1979, ["What a fine play.", "A beautifully executed play.", "And the crowd is on its feet."]],
+  [1989, ["Touchdown, and listen to this crowd!", "How about that!", "A big-time play."]],
+  [1999, ["Boom! Right through 'em!", "Oh, my! What a play!", "Touchdown! This place is going crazy!"]],
+  [2009, ["He's gone! Nobody's catching him!", "Touchdown! What a play!", "And he takes it to the house!"]],
+  [9999, ["He's in! What a play!", "Touchdown, and that is a highlight-reel play!", "Six! And the stadium is shaking!"]],
+];
 
 function hash(s: string): number {
   let h = 2166136261;
@@ -78,6 +89,11 @@ function situation(play: PlayLog, ctx: BoothContext): string {
  */
 export function boothCall(play: PlayLog, index: number, ctx: BoothContext): BoothLine[] {
   const out = snapCall(play, index, ctx);
+  if (ctx.year && play.tag === "td" && index % 2 === 0) {
+    const lines = ERA_TD.find(([to]) => ctx.year! <= to)![1];
+    const k = out.findIndex((l) => l.speaker === "PBP");
+    if (k >= 0) out[k] = { ...out[k]!, text: `${out[k]!.text} ${pick("era-td", index, lines)}` };
+  }
   const tag = scoreboard(play, index, ctx);
   if (!tag) return out;
   const k = out.findIndex((l) => l.speaker === "PBP");

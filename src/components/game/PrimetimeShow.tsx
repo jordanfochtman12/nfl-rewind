@@ -18,6 +18,7 @@ import { DraftPreviewShow } from "./DraftPreview";
 import { SeasonPreviewShow } from "./SeasonPreview";
 import { TimelineCard } from "./Timeline";
 import { Scoreboard, TopFive } from "./TopFive";
+import { PlayerPortrait } from "./Portrait";
 
 function Name({ id, name }: { id: string; name: string }) {
   const save = useGameStore((s) => s.save)!;
@@ -63,9 +64,11 @@ function Segment({
 }
 
 function Honoree({ h, label }: { h: PrimetimeHonoree; label: string }) {
+  const save = useGameStore((s) => s.save)!;
+  const p = h.playerId ? save.players[h.playerId] : undefined;
   return (
     <div className="flex items-start gap-3 rounded-lg border border-brass/25 bg-black/40 p-3">
-      <Logo id={h.teamId} size={36} />
+      {p ? <PlayerPortrait p={p} year={save.year} size="sm" club={h.teamId as TeamId} /> : <Logo id={h.teamId} size={36} />}
       <div className="min-w-0">
         <p className="text-[10px] tracking-[0.3em] text-brass">{label.toUpperCase()}</p>
         <p className="font-display text-lg leading-tight">

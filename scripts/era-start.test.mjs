@@ -63,3 +63,33 @@ test("the owner's own class is in a league that starts after it", () => {
   const later = createEraGame({ userTeamId: "pit", startingYear: 2001, seed: 5 });
   assert.equal(find(later, "Jordan", "Fochtman"), undefined, "not before his class");
 });
+
+test("past the record: the real 2026 rosters, then real college names atop the made-up classes", async () => {
+  const { buildDraftBoard } = await import("../src/lib/game/draft.ts");
+  const { historyData, ROSTERS_LAST } = await import("../src/lib/game/historyMode.ts");
+  assert.equal(ROSTERS_LAST, 2026);
+  const r26 = historyData().rosters(2026);
+  assert.ok([...r26.values()].reduce((n, l) => n + l.length, 0) > 1800);
+  const s = createEraGame({ userTeamId: "pit", startingYear: 2020, sandbox: true, seed: 2 });
+  s.year = 2027;
+  buildDraftBoard(s);
+  const board = s.draftBoard.map((pr) => s.players[pr.playerId]);
+  const smith = board.find((p) => p.firstName === "Jeremiah" && p.lastName === "Smith");
+  assert.ok(smith?.historical && smith.college === "Ohio State");
+  assert.ok(board.length > 250, "the rest of the class is the game's own");
+});
+
+test("a league from the record saves small and loads whole", async () => {
+  const { compactSave, hydrateSave, restoreRecordLines } = await import("../src/lib/game/index.ts");
+  const s = createEraGame({ userTeamId: "pit", startingYear: 2020, sandbox: true, seed: 4 });
+  const disk = JSON.stringify(compactSave(s));
+  assert.ok(disk.length < 12e6, `${(disk.length / 1e6).toFixed(1)} MB on disk`);
+  const back = hydrateSave(JSON.parse(disk));
+  // Namesakes in the record are different men: none merged away on load.
+  assert.equal(Object.keys(back.players).length, Object.keys(s.players).length);
+  assert.equal(back.recordLinesBefore, 2020);
+  assert.ok(restoreRecordLines(back));
+  const brady = Object.values(s.players).find((p) => p.firstName === "Tom" && p.lastName === "Brady");
+  assert.deepEqual(back.players[brady.id].stats[2007], brady.stats[2007]);
+  assert.equal(Object.keys(back.players[brady.id].stats).length, Object.keys(brady.stats).length);
+});

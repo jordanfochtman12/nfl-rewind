@@ -497,7 +497,8 @@ export function resolveSuperBowl(save: DynastySave): void {
     teamIds: [home, away],
     playerIds: mvp ? [mvp.id] : [],
   });
-  touchGrade(save);
+  // History mode has no owner to grade.
+  if (!save.realHistory) touchGrade(save);
 }
 
 export function weekPrimetime(save: DynastySave): void {

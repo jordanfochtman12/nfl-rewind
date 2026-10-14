@@ -23,6 +23,8 @@ import { boxFor, boxPlayerId, boxSeason, gradeCall, ledgerGame, recordBookNow, r
 
 export const HISTORY_FIRST = 1966;
 export const HISTORY_LAST = 2025;
+/** The last season the record has real rosters for (one past History mode, whose season is still being played). */
+export const ROSTERS_LAST = 2026;
 
 let DATA: HistoryData | undefined;
 

@@ -73,6 +73,8 @@ const val = (s: SeasonStats | BoxPlayer | undefined, k: WatchStat) => ((s as unk
 const marksCache = new Map<string, LeagueMarks>();
 // A retired player's numbers never change; save copies share his object, so total him once.
 const settledTotals = new WeakMap<Player, SeasonStats>();
+// ...and his best single seasons, the same way.
+const settledBests = new WeakMap<Player, Partial<Record<WatchStat, number>>>();
 
 /** The league's all-time marks as of this week (cached per week). */
 export function leagueMarks(save: DynastySave): LeagueMarks {
@@ -103,12 +105,21 @@ export function leagueMarks(save: DynastySave): LeagueMarks {
       else if (v > cur.second) cur.second = v;
     }
     // Seasons already finished count toward the single-season mark too.
-    for (const y in p.stats) {
-      if (Number(y) >= save.year) continue;
-      for (const k of WATCH_STATS) {
-        const v = val(p.stats[y], k);
-        if (v > (season[k] ?? 0)) season[k] = v;
+    let bests = settled ? settledBests.get(p) : undefined;
+    if (!bests) {
+      bests = {};
+      for (const y in p.stats) {
+        if (Number(y) >= save.year) continue;
+        for (const k of WATCH_STATS) {
+          const v = val(p.stats[y], k);
+          if (v > (bests[k] ?? 0)) bests[k] = v;
+        }
       }
+      if (settled) settledBests.set(p, bests);
+    }
+    for (const k of WATCH_STATS) {
+      const v = bests[k] ?? 0;
+      if (v > (season[k] ?? 0)) season[k] = v;
     }
   }
   const out = { season, game, career };

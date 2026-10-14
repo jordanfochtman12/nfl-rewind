@@ -170,6 +170,8 @@ export interface SeasonStats {
   unknown?: string[];
   /** History mode: a running total from this season's box scores, replaced by the official line at season's end. */
   live?: boolean;
+  /** His overall at the end of this season (kept from the first season the game rated him). */
+  ovr?: number;
   gp: number;
   passAtt: number;
   passCmp: number;
@@ -971,6 +973,8 @@ export interface DynastySave {
   startingYear: number;
   /** A league begun from the record (eraStart.ts): each winter it signs that season's real free agents from it. */
   realPool?: boolean;
+  /** Loaded from disk without its record players' real seasons before this year: they come back from the record (restoreRecordLines). */
+  recordLinesBefore?: number;
   year: number;
   week: number;
   phase: Phase;

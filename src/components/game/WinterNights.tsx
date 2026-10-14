@@ -28,6 +28,7 @@ import { PlayerLink } from "./PlayerProfile";
 import { CoachChips } from "./KitChips";
 import { HonorButtons, InductionCard } from "./Legacy";
 import { HotNames } from "./HotNames";
+import { PlayerPortrait } from "./Portrait";
 
 function Continue({ label }: { label: string }) {
   const step = useGameStore((s) => s.step);
@@ -158,7 +159,8 @@ function AwardsCeremony({ shown, coach }: { shown: [string, string | undefined][
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs tracking-[0.25em] text-muted">{label}</span>
                 {revealed ? (
-                  <span className="font-display text-xl">
+                  <span className="flex items-center gap-3 font-display text-xl">
+                    {p && <PlayerPortrait p={p} year={save.year} size="sm" />}
                     <Name id={id} />
                     {p && p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? <span className="ml-2 text-sm text-muted">{displayName(save.year, p.teamId)}</span> : null}
                   </span>

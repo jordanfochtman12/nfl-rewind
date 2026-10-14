@@ -7,6 +7,7 @@ import { LiveBroadcast } from "./LiveBroadcast";
 import { wasWatched } from "./liveWatch";
 import { SuperBowlHistory } from "./SuperBowlHistory";
 import { RoadHere } from "./BigNight";
+import { PlayerPortrait } from "./Portrait";
 import { clockLabel, finalLine, halftimeAct, reelFrom, trophyName } from "./bigNightText";
 import { useRef, useState } from "react";
 
@@ -160,6 +161,7 @@ export function SuperBowlNight() {
           {mvp && (
             <section className="k5-sb-mvp">
               <p className="k5-sb-label">SUPER BOWL {roman(n)} MOST VALUABLE PLAYER</p>
+              <PlayerPortrait p={mvp} year={year} size="lg" club={winner} className="mx-auto mt-2" />
               <p className="k5-sb-mvp-name">
                 <PlayerLink player={mvp} className="inline min-h-0" />
               </p>

@@ -503,7 +503,7 @@ const COVERS: Partial<Record<Pos, Pos[]>> = {
 };
 
 /** The real free agents (not the game's generated ones) nobody holds a waiver claim on. */
-function realFreeAgents(save: DynastySave): Player[] {
+export function realFreeAgents(save: DynastySave): Player[] {
   const wire = new Set(save.waivers.map((w) => w.playerId));
   return Object.values(save.players).filter((p) => p.teamId === "fa" && p.historical && !wire.has(p.id) && p.injuredWeeks <= 0);
 }
@@ -542,9 +542,9 @@ export function signRealFa(save: DynastySave, teamId: TeamId, pos: Pos, pool = r
  * A club short at a spot or short of bodies signs real players off the market first; the
  * game only makes up a camp body when no real one is left who can play there.
  */
-export function fillRoster(save: DynastySave, teamId: TeamId): void {
+export function fillRoster(save: DynastySave, teamId: TeamId, market?: Player[]): void {
   pruneRoster(save, teamId);
-  const pool = realFreeAgents(save);
+  const pool = market ?? realFreeAgents(save);
   for (const [pos, need] of DEPTH_CHART) {
     let have = rosterOf(save, teamId).filter((p) => p.pos === pos).length;
     let slot = have;
@@ -585,8 +585,8 @@ export function fillRoster(save: DynastySave, teamId: TeamId): void {
  * A computer club trades a made-up player for a real one whenever the market has a real
  * free agent who can play his spot about as well: the league stays the real league.
  */
-export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10): number {
-  const pool = realFreeAgents(save);
+export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market?: Player[]): number {
+  const pool = market ?? realFreeAgents(save);
   const need = new Map(DEPTH_CHART);
   let swapped = 0;
   const fakes = rosterOf(save, teamId)
@@ -625,7 +625,7 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10): numbe
   }
   if (swapped) {
     // Whoever left a hole behind gets it filled from the real market.
-    fillRoster(save, teamId);
+    fillRoster(save, teamId, pool);
     syncDepth(save, teamId);
   }
   return swapped;

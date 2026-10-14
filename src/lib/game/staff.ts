@@ -187,7 +187,7 @@ export function seedStaff(save: DynastySave): void {
     const t = save.teams[id];
     t.offScheme = TEAM_OFF[id] ?? t.offScheme ?? "multiple";
     t.defScheme = TEAM_DEF[id] ?? t.defScheme ?? "4-3";
-    t.draftStyle = draftStyleOf(id);
+    t.draftStyle = draftStyleOf(id, save.year);
     const hc = t.coachId ? save.coaches[t.coachId] : undefined;
     if (hc) {
       t.offScheme = hc.offScheme;
@@ -206,7 +206,31 @@ export function seedStaff(save: DynastySave): void {
   }
 }
 
-export function draftStyleOf(id: TeamId): import("./types.ts").DraftStyle {
+/**
+ * The real front offices' habits, by era: who drafted the best player left, who bought speed,
+ * who built the lines. Only the well-known stretches; every other season the club's usual
+ * lean (below) applies, so this colors a war room without scripting it.
+ */
+const ERA_STYLES: Partial<Record<TeamId, [number, number, import("./types.ts").DraftStyle][]>> = {
+  rai: [[1966, 2011, "speed"]], // Al Davis: speed kills
+  dal: [[1966, 1988, "bpa"]], // Gil Brandt's computer board
+  pit: [[1969, 1983, "defense"]], // Chuck Noll's Steel Curtain drafts
+  sfo: [[1979, 1988, "bpa"]], // Bill Walsh
+  clt: [[1998, 2011, "bpa"]], // Bill Polian
+  rav: [[1996, 2018, "bpa"]], // Ozzie Newsome: stick to the board
+  nwe: [[2000, 2023, "bpa"]], // Belichick: value over need
+  gnb: [[2005, 2017, "bpa"]], // Ted Thompson
+  sea: [[2010, 2023, "defense"]], // the Legion of Boom years
+  kan: [[2017, 2040, "speed"]], // Veach and Reid: speed at receiver
+  phi: [[2016, 2040, "trench"]], // Roseman builds the lines
+  det: [[2021, 2040, "trench"]], // Holmes and Campbell
+};
+
+export function draftStyleOf(id: TeamId, year?: number): import("./types.ts").DraftStyle {
+  if (year !== undefined) {
+    const era = ERA_STYLES[id]?.find(([from, to]) => year >= from && year <= to);
+    if (era) return era[2];
+  }
   const map: Partial<Record<TeamId, import("./types.ts").DraftStyle>> = {
     gnb: "bpa",
     dal: "need",

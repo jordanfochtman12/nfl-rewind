@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { clubInk, displayName, nicknameOf, playerName, starters, type GameResult, type PlayLog, type Pos, type TeamId } from "@/lib/game";
+import { clubInk, displayName, nicknameOf, playerName, starters, type GameResult, type Player, type PlayLog, type Pos, type TeamId } from "@/lib/game";
+import { PlayerPortrait } from "./Portrait";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { rollingLine } from "./liveStats";
@@ -64,16 +65,16 @@ export function PregameIntro({ game, onDone }: { game: GameResult; onDone: () =>
     return () => clearTimeout(t);
   }, [stage, onDone]);
   const lineup = (id: TeamId) => {
-    const out: { label: string; name: string; jersey?: number; ovr: number }[] = [];
+    const out: { label: string; name: string; jersey?: number; ovr: number; p: Player }[] = [];
     for (const l of LINEUP) {
       const n = l.pos === "WR" ? 2 : 1;
-      for (const p of starters(save, id, l.pos, n)) out.push({ label: l.label, name: playerName(p), jersey: p.jersey, ovr: p.ovr });
+      for (const p of starters(save, id, l.pos, n)) out.push({ label: l.label, name: playerName(p), jersey: p.jersey, ovr: p.ovr, p });
     }
     const d = (["DE", "DT", "OLB", "MLB", "CB", "S"] as Pos[])
       .flatMap((pos) => starters(save, id, pos, pos === "CB" || pos === "DE" || pos === "DT" || pos === "OLB" || pos === "S" ? 2 : 1))
       .sort((a, b) => b.ovr - a.ovr)
       .slice(0, 2);
-    for (const p of d) out.push({ label: p.pos, name: playerName(p), jersey: p.jersey, ovr: p.ovr });
+    for (const p of d) out.push({ label: p.pos, name: playerName(p), jersey: p.jersey, ovr: p.ovr, p });
     return out;
   };
   const weather = game.indoor ? "Indoors" : game.weather && game.weather !== "clear" ? game.weather[0]!.toUpperCase() + game.weather.slice(1) : "Clear skies";
@@ -121,7 +122,7 @@ export function PregameIntro({ game, onDone }: { game: GameResult; onDone: () =>
                   <ol>
                     {lineup(id).map((r, k) => (
                       <li key={`${r.name}-${k}`} style={{ "--i": k } as CSSProperties}>
-                        <b>{r.jersey ?? ""}</b>
+                        <PlayerPortrait p={r.p} year={year} size="sm" club={id} className="k5-intro-face" />
                         <span>
                           {r.name}
                           <small>{r.label}</small>
