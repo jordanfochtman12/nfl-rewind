@@ -93,3 +93,15 @@ test("a league from the record saves small and loads whole", async () => {
   assert.deepEqual(back.players[brady.id].stats[2007], brady.stats[2007]);
   assert.equal(Object.keys(back.players[brady.id].stats).length, Object.keys(brady.stats).length);
 });
+
+test("2026 opens at its draft: the real rosters, the 2025 champion on the books, the real class on the board", () => {
+  const s = createEraGame({ userTeamId: "pit", startingYear: 2026, sandbox: true, seed: 7 });
+  assert.equal(s.year, 2026);
+  assert.equal(s.phase, "draft");
+  assert.equal(s.history.superBowls.at(-1)?.year, 2025);
+  assert.equal(find(s, "Aaron", "Rodgers")?.teamId, "pit");
+  // A 2026 draftee is a prospect, not already on a roster.
+  const mendoza = Object.values(s.players).filter((p) => p.firstName === "Fernando" && p.lastName === "Mendoza");
+  assert.equal(mendoza.length, 1);
+  assert.ok(s.draftBoard.some((pr) => pr.playerId === mendoza[0].id));
+});

@@ -33,7 +33,7 @@ import { newOwnerState } from "./owner.ts";
 import type { DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
 
 /** The seasons a league can start in. 1966 is the classic start; the rest begin from the record. */
-export const ERA_STARTS = [1966, 1975, 1985, 1992, 2001, 2010, 2020] as const;
+export const ERA_STARTS = [1966, 1975, 1985, 1992, 2001, 2010, 2020, 2026] as const;
 
 const nameKey = (f: string, l: string) => `${f}|${l}`.toLowerCase().replace(/[^a-z|]/g, "");
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
@@ -322,7 +322,14 @@ export interface EraOpts {
 export function createEraGame(o: EraOpts): DynastySave {
   const year = o.startingYear;
   const s = createHistoryGame();
-  for (let guard = 0; guard < 6000 && !(s.year === year && s.phase === "draft"); guard++) advanceHistory(s);
+  for (let guard = 0; guard < 6000 && !(s.year === year && s.phase === "draft") && s.phase !== "complete"; guard++) advanceHistory(s);
+  // The season after History mode's last: its rosters are in the record (ROSTERS_LAST) but its
+  // games aren't played yet, so the league opens at that draft straight from the record's end.
+  if (s.phase === "complete" && year === s.year + 1 && year <= ROSTERS_LAST) {
+    s.year = year;
+    s.phase = "draft";
+    s.week = 0;
+  }
   if (s.year !== year) throw new Error(`The record doesn't reach the ${year} draft`);
 
   // Hand the league to the game.
@@ -341,6 +348,17 @@ export function createEraGame(o: EraOpts): DynastySave {
 
   // Opening-day rosters for the season, minus this year's draft class (they're on the board).
   const rookies = new Set(historyData().drafts(year).map((d) => d.person));
+  // A class the record has no draft table for yet: its rookies are the men on this year's
+  // rosters for the first time who are in the year's real draft class, and they belong on the board.
+  if (!rookies.size) {
+    const named = new Set(draftSeedsFor(year).map((d) => normalizedName(d.f, d.l)));
+    for (const [, list] of historyData().rosters(year)) {
+      for (const { person } of list) {
+        const who = historyData().people[person];
+        if (who && historyData().firstSeason(person) === year && named.has(normalizedName(who.first, who.last))) rookies.add(person);
+      }
+    }
+  }
   const rosters = historyData().rosters(year);
   const on = new Set<string>();
   for (const id of Object.keys(s.teams) as TeamId[]) {
