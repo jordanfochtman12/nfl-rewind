@@ -176,8 +176,22 @@ function spawn(first: boolean): void {
       refreshTalking();
     }
   };
+  // A worker that dies (no network for the model, a runtime the browser won't run) takes its
+  // lines with it: they come back as errors, so the booth falls back to the device's voice
+  // instead of waiting on a line that will never be read. The page keeps going.
   w.onerror = (e) => {
-    if (first && !l.ready) useHdVoice.setState({ status: "failed", error: e.message });
+    e.preventDefault();
+    const at = lanes.indexOf(l);
+    if (at >= 0) lanes.splice(at, 1);
+    w.terminate();
+    for (const [id, p] of pending)
+      if (p.lane === l) {
+        pending.delete(id);
+        p.resolve({ error: e.message || "voice worker stopped" });
+      }
+    if (!lanes.some((x) => x.ready)) useHdVoice.setState({ status: "failed", error: e.message || "voice worker stopped" });
+    else useHdVoice.setState({ workers: lanes.filter((x) => x.ready).length });
+    refreshTalking();
   };
   w.postMessage({ type: "load", phone: isPhone(), phoneGpu: first && phoneGpuAllowed() });
 }

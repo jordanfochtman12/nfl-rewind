@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { draftSeedsFor } from "../src/lib/game/data/draftClasses.ts";
+import { friendBreaksOut, friendOf } from "../src/lib/game/data/friends.ts";
 import { createNewGame, simUntil, makeDraftPick, rosterOf } from "../src/lib/game/index.ts";
 import { jerseyLegal, preferredJersey } from "../src/lib/game/names.ts";
 
@@ -55,9 +56,11 @@ test("the Berlin, PA class: on the board, unscouted, undrafted, and better than 
     for (const p of mine) {
       assert.ok(p.hometown && /PA$/.test(p.hometown));
       assert.ok(p.scoutOvr < 62, `${p.lastName} scouted ${p.scoutOvr}`);
-      const want = { Tommy: [73, 93], Jordan: [72, 94], Austin: [70, 90], Tyler: [76, 95] }[p.firstName];
-      assert.deepEqual([p.ovr, p.potential], want, `${p.firstName} starts and tops out where he should`);
-      assert.ok(p.gem);
+      const [start, ceiling] = { Tommy: [73, 93], Jordan: [72, 94], Austin: [70, 90], Tyler: [76, 95] }[p.firstName];
+      // One in four breaks out to his full ceiling; the rest top out a few points past the start.
+      const breaks = friendBreaksOut(s.seed, friendOf(p.firstName, p.lastName));
+      assert.deepEqual([p.ovr, p.potential], [start, breaks ? ceiling : start + 6], `${p.firstName} starts and tops out where he should`);
+      assert.equal(!!p.gem, breaks);
       assert.ok(s.draftBoard.some((pr) => pr.playerId === p.id));
     }
     while (makeDraftPick(s));
@@ -66,6 +69,7 @@ test("the Berlin, PA class: on the board, unscouted, undrafted, and better than 
 });
 
 test("a hidden gem grows fast once he's on a roster", () => {
+  // Seed 5 is a dynasty where Jordan breaks out.
   let s = simUntil(createNewGame({ userTeamId: "pit", startingYear: 2019, seed: 5 }), (x) => x.phase === "draft");
   const jordan = Object.values(s.players).find((p) => p.firstName === "Jordan" && p.lastName === "Fochtman");
   assert.equal(jordan.arch, "dual", "a dual threat: runs as well as he throws");

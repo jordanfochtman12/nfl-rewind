@@ -45,7 +45,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, realFreeAgents, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { fillRoster, realFreeAgents, signFriends, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
@@ -138,6 +138,7 @@ function runCpuFreeAgency(save: DynastySave): void {
   closeTalks(save, (p) => expireContract(save, p));
   realIntake(save);
   cpuSignNeeds(save);
+  signFriends(save, activeTeamIds(save.year));
 }
 
 function fillCpuRosters(save: DynastySave): void {

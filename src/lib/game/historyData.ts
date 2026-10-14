@@ -77,6 +77,12 @@ function memo<T>(f: (y: number) => T): (y: number) => T {
   };
 }
 
+/** Lines the source left a hole in that the record of the game fills: name|birth|season. */
+const LINE_FIXES: Record<string, HistoryLine> = {
+  "Todd Collins|19711105|1996": { passCmp: 55 },
+  "Todd Collins|19711105|1997": { passCmp: 215 },
+};
+
 /** Parse the generated tables into the shape the engine reads. */
 export function parseHistory(mods: {
   PEOPLE: string;
@@ -134,7 +140,10 @@ export function parseHistory(mods: {
           if (v === undefined || v === "") return;
           line[k as keyof SeasonStats] = v === "?" ? -1 : Number(v);
         });
-        return { person: id36(c[0]!), team: (c[1] ?? "") as TeamId | "", line };
+        const person = id36(c[0]!);
+        const who = people[person];
+        const fix = who && LINE_FIXES[`${who.first} ${who.last}|${who.birth ?? ""}|${y}`];
+        return { person, team: (c[1] ?? "") as TeamId | "", line: fix ? { ...line, ...fix } : line };
       }),
   );
   const playoffs = memo((y) =>

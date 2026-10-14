@@ -52,6 +52,8 @@ export function gradeDynasty(save: DynastySave): DynastyGrade {
 
   const honor = (save.history.teamOfHonor[teamId] ?? []).length;
   const hof = save.history.hof.filter((h) => {
+    // Enshrined by name alone (History mode's pre-1966 players and contributors): no club to credit.
+    if (!h.playerId && !h.coachId) return false;
     if (h.kind === "coach") {
       return h.teamId === teamId;
     }

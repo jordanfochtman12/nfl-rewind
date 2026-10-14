@@ -15,6 +15,7 @@ import { applyScout } from "./scout.ts";
 import { calibrateVetPeak, lookupVetArc, moveToward } from "./careerArc.ts";
 import { historicalNameKey } from "./identity.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
+import { isFriend } from "./data/friends.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -529,7 +530,8 @@ function seatReal(save: DynastySave, teamId: TeamId, p: Player, pos: Pos): void 
 export function signRealFa(save: DynastySave, teamId: TeamId, pos: Pos, pool = realFreeAgents(save)): Player | undefined {
   for (const at of [pos, ...(COVERS[pos] ?? [])]) {
     let best: Player | undefined;
-    for (const p of pool) if (p.teamId === "fa" && p.pos === at && (!best || p.ovr > best.ovr)) best = p;
+    // The owner's friends play the position they played in college, nowhere else.
+    for (const p of pool) if (p.teamId === "fa" && p.pos === at && (at === pos || !isFriend(p)) && (!best || p.ovr > best.ovr)) best = p;
     if (best) {
       seatReal(save, teamId, best, pos);
       return best;
@@ -596,7 +598,7 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
     const covers = [fake.pos, ...(COVERS[fake.pos] ?? [])];
     let best: Player | undefined;
     for (const at of covers) {
-      for (const p of pool) if (p.teamId === "fa" && p.pos === at && (!best || p.ovr > best.ovr)) best = p;
+      for (const p of pool) if (p.teamId === "fa" && p.pos === at && (at === fake.pos || !isFriend(p)) && (!best || p.ovr > best.ovr)) best = p;
       if (best) break;
     }
     if (best && best.ovr >= fake.ovr - slack) {
@@ -610,7 +612,7 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
     const roster = rosterOf(save, teamId);
     let mate: Player | undefined;
     for (const at of covers.slice(1)) {
-      const group = roster.filter((p) => p.historical && p.pos === at);
+      const group = roster.filter((p) => p.historical && p.pos === at && !isFriend(p));
       if (group.length <= (need.get(at) ?? 0)) continue;
       const spare = group.sort((a, b) => b.ovr - a.ovr)[need.get(at) ?? 0];
       if (spare && (!mate || spare.ovr > mate.ovr)) mate = spare;
@@ -629,6 +631,29 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
     syncDepth(save, teamId);
   }
   return swapped;
+}
+
+/**
+ * The owner's friends go undrafted, but an undrafted player still gets a camp invite: any of
+ * them left on the market (and young enough to be wanted) signs with the computer club where
+ * he'd sit highest on the depth chart at his own position.
+ */
+export function signFriends(save: DynastySave, clubs: TeamId[]): void {
+  const need = new Map(DEPTH_CHART);
+  for (const p of Object.values(save.players)) {
+    if (p.teamId !== "fa" || !isFriend(p) || p.age > 31 || p.injuredWeeks > 0) continue;
+    let best: { id: TeamId; rank: number } | undefined;
+    for (const id of clubs) {
+      if (!save.teams[id] || (id === save.userTeamId && !save.cpuOnly)) continue;
+      const rank = rosterOf(save, id).filter((x) => x.pos === p.pos && x.ovr >= p.ovr).length;
+      if (!best || rank < best.rank || (rank === best.rank && randInt(save, 0, 1) === 0)) best = { id, rank };
+    }
+    // A camp body behind a full depth chart would just be cut again.
+    if (!best || best.rank >= (need.get(p.pos) ?? 1) + 1) continue;
+    seatReal(save, best.id, p, p.pos);
+    p.contractYears = 2;
+    trimRoster(save, best.id);
+  }
 }
 
 export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): void {

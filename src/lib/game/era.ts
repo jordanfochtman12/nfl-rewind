@@ -372,7 +372,12 @@ export function twoPointMakeP(year: number): number {
 
 /** Kickoff touchback rate by rule era. */
 export function kickoffTbRate(year: number): number {
-  if (year >= 2024) return 0.58;
+  // The field-position model is tuned as a whole against real scoring, so the dynamic kickoff
+  // is set by what it did to where drives start: about four yards better in 2024 than 2023
+  // (touchbacks out to the 30), about one more in 2025 (to the 35). A lower rate here put
+  // drives nine to twelve yards further out and scoring three points a game over the real one.
+  if (year >= 2025) return 0.89;
+  if (year >= 2024) return 0.77;
   if (year >= 2016) return 0.52;
   if (year >= 2011) return 0.44;
   if (year >= 1994) return 0.22;

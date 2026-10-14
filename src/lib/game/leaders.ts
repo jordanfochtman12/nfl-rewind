@@ -107,7 +107,8 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
     seen.add(s.year);
     acc.gp += s.gp;
     acc.passAtt += s.passAtt;
-    acc.passCmp += s.passCmp;
+    // An unknown completion count is in the record as -1: it adds nothing to the total.
+    acc.passCmp += Math.max(0, s.passCmp);
     acc.passYds += s.passYds;
     acc.passTd += s.passTd;
     acc.passInt += s.passInt;

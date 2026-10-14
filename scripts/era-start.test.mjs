@@ -58,10 +58,33 @@ test("the owner's own class is in a league that starts after it", () => {
   for (const [f, l] of [["Jordan", "Fochtman"], ["Tommy", "DeArmitt"], ["Austin", "Widner"], ["Tyler", "DeArmitt"]]) {
     const p = find(s, f, l);
     assert.ok(p, `${f} ${l} is in the league`);
-    assert.ok(p.historical && p.gem);
+    assert.ok(p.historical);
+    assert.equal(p.gem === true, p.potential >= 90, "a gem is a breakout and nothing less");
+    assert.notEqual(p.teamId, "fa", "signed somewhere");
   }
   const later = createEraGame({ userTeamId: "pit", startingYear: 2001, seed: 5 });
   assert.equal(find(later, "Jordan", "Fochtman"), undefined, "not before his class");
+});
+
+test("the owner's friends: one breakout in four, each at his own position", async () => {
+  const { FRIENDS, friendBreaksOut, friendCeiling } = await import("../src/lib/game/data/friends.ts");
+  const all = Object.values(FRIENDS).flat();
+  let hits = 0;
+  for (let seed = 0; seed < 4000; seed++) for (const f of all) hits += friendBreaksOut(seed, f) ? 1 : 0;
+  const rate = hits / (4000 * all.length);
+  assert.ok(rate > 0.23 && rate < 0.27, `breakout rate ${rate}`);
+  for (const f of all) {
+    assert.ok(friendCeiling(1, f) === f.ceiling || friendCeiling(1, f) <= f.start + 6);
+  }
+  for (const seed of [3, 11, 29]) {
+    const s = createEraGame({ userTeamId: "pit", startingYear: 2026, sandbox: true, seed });
+    for (const f of all) {
+      const p = find(s, f.f, f.l);
+      assert.equal(p.pos, f.p, `${f.f} ${f.l} stays a ${f.p}`);
+      assert.equal(p.potential, friendCeiling(seed, f));
+      assert.equal(!!p.gem, friendBreaksOut(seed, f));
+    }
+  }
 });
 
 test("past the record: the real 2026 rosters, then real college names atop the made-up classes", async () => {

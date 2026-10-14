@@ -18,7 +18,7 @@ import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { FRIENDS } from "./data/friends.ts";
 import { arcTarget, calibrateVetPeak, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
-import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, rosterOf, signRealFa, syncDepth } from "./players.ts";
+import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, rosterOf, signFriends, signRealFa, syncDepth } from "./players.ts";
 import { randInt } from "./rng.ts";
 import { deriveOvr } from "./ratings.ts";
 import { refreshContracts } from "./salary.ts";
@@ -405,7 +405,7 @@ export function createEraGame(o: EraOpts): DynastySave {
     rateReal(s, p, year);
   }
   // The owner's own undrafted class (data/friends.ts) is in the league however late it starts:
-  // a class already past is on the market, grown into the players they became.
+  // a class already past is on the market, a few seasons further along.
   for (const [fy, list] of Object.entries(FRIENDS)) {
     const from = Number(fy);
     if (from >= year) continue;
@@ -414,7 +414,9 @@ export function createEraGame(o: EraOpts): DynastySave {
       const years = year - from;
       p.age += years;
       p.yearsPro = years;
-      moveToward(p, Math.min(seed.ceiling, seed.start + years * 3));
+      // A real undrafted player's climb: steady, not straight to the top. The rest of the
+      // ceiling is still there for the dynasty to see him reach.
+      moveToward(p, p.gem ? Math.min(seed.ceiling - 6, Math.round(seed.start + years * 1.5)) : Math.min(p.potential, seed.start + years));
       p.peakOvr = p.ovr;
       p.scoutOvr = p.ovr;
       p.revealed = true;
@@ -440,6 +442,7 @@ export function createEraGame(o: EraOpts): DynastySave {
     p.potential = Math.min(p.potential, p.ovr + 4);
     p.peakOvr = p.ovr;
   }
+  signFriends(s, activeTeamIds(year));
   refreshContracts(s, { init: true });
   s.draftSession = "common";
   s.draftBoard = [];

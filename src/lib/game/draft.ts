@@ -15,7 +15,7 @@ import { schemeFitPos } from "./staff.ts";
 import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
-import { friendOf } from "./data/friends.ts";
+import { friendBreaksOut, friendCeiling, friendOf } from "./data/friends.ts";
 import { FUTURE_PROSPECTS } from "./data/futureProspects.ts";
 import { historicalYear } from "./historicalYears.ts";
 
@@ -270,9 +270,10 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player
   if (friend) {
     p.hometown = friend.hometown;
     moveToward(p, friend.start);
-    p.potential = friend.ceiling;
+    p.potential = friendCeiling(save.seed, friend);
     p.peakOvr = p.ovr;
-    p.gem = true;
+    // Only a breakout is a hidden gem; the rest grow at an ordinary pace.
+    if (friendBreaksOut(save.seed, friend)) p.gem = true;
   }
   p.collegeNo = friend?.n ?? realRookieNumber(save.year, s.f, s.l) ?? collegeNumber(p.pos, p.id);
   p.jersey = p.collegeNo;

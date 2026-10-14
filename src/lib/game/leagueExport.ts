@@ -105,7 +105,8 @@ export function leagueHistoryHtml(save: DynastySave): string {
     .sort((a, b) => b.year - a.year)
     .reduce<Record<number, string[]>>((acc, h) => {
       const name = personName(save, h.playerId, h.coachId) || h.name || h.blurb;
-      (acc[h.year] ??= []).push(`${esc(name)} <small>${team(h.teamId, h.year)}</small>`);
+      // A member known by name alone has no club on record.
+      (acc[h.year] ??= []).push(h.playerId || h.coachId ? `${esc(name)} <small>${team(h.teamId, h.year)}</small>` : esc(name));
       return acc;
     }, {});
   const hofHtml = Object.entries(hof)

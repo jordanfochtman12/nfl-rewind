@@ -43,3 +43,23 @@ export const friendKey = (f: string, l: string) => `${f}|${l}`;
 const BY_NAME = new Map<string, FriendSeed>();
 for (const list of Object.values(FRIENDS)) for (const s of list) BY_NAME.set(friendKey(s.f, s.l), s);
 export const friendOf = (f: string, l: string): FriendSeed | undefined => BY_NAME.get(friendKey(f, l));
+
+export const isFriend = (p: { firstName: string; lastName: string; historical?: boolean }): boolean =>
+  !!p.historical && BY_NAME.has(friendKey(p.firstName, p.lastName));
+
+/**
+ * One roll per dynasty for each of them, fixed by the save's seed: a one-in-four shot he
+ * becomes the player his ceiling says. Otherwise he's what an undrafted small-school player
+ * usually is - a few points better than the day he walked in, a backup who sticks.
+ */
+export function friendBreaksOut(saveSeed: number, f: FriendSeed): boolean {
+  let h = 2166136261 ^ saveSeed;
+  for (const ch of `${f.f}|${f.l}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  h = Math.imul(h ^ (h >>> 15), 2246822507);
+  h ^= h >>> 13;
+  return (h >>> 0) % 4 === 0;
+}
+
+/** How good he can get in this dynasty. */
+export const friendCeiling = (saveSeed: number, f: FriendSeed): number =>
+  friendBreaksOut(saveSeed, f) ? f.ceiling : Math.min(f.ceiling, f.start + 6);

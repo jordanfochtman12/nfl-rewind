@@ -119,8 +119,8 @@ function HofCard({ save }: { save: DynastySave }) {
     <section className="rounded-xl border border-brass/40 bg-surface p-4">
       <p className="text-xs tracking-[0.25em] text-brass">HALL OF FAME · CLASS OF {classYear}</p>
       <ul className="mt-3 flex flex-wrap gap-2">
-        {list.map((m) => (
-          <li key={m.playerId ?? m.name} className="rounded-md border border-line px-3 py-1.5 text-sm text-paper">
+        {list.map((m, i) => (
+          <li key={`${m.playerId ?? m.coachId ?? m.name}-${i}`} className="rounded-md border border-line px-3 py-1.5 text-sm text-paper">
             {m.playerId ? <Who save={save} id={m.playerId} /> : m.name}
             {m.playerId && save.players[m.playerId] ? <span className="ml-1 text-muted">{save.players[m.playerId]!.pos}</span> : null}
           </li>
