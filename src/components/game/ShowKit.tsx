@@ -86,13 +86,26 @@ export function ShowGraphicView({ g, year }: { g: ShowGraphic; year: number }) {
           </div>
           <table className="sg-tape-table">
             <tbody>
-              {g.rows.map((r) => (
-                <tr key={r.label}>
-                  <td className={r.edge === "away" ? "is-edge" : ""}>{r.away}</td>
-                  <th>{r.label}</th>
-                  <td className={r.edge === "home" ? "is-edge" : ""}>{r.home}</td>
-                </tr>
-              ))}
+              {g.rows.map((r, i) => {
+                // Comparison bars: each side's share of the two numbers, drawn out from the label.
+                const a = parseFloat(r.away.replace(/[^\d.-]/g, ""));
+                const h = parseFloat(r.home.replace(/[^\d.-]/g, ""));
+                const ok = Number.isFinite(a) && Number.isFinite(h) && a >= 0 && h >= 0 && a + h > 0;
+                const sa = ok ? a / (a + h) : 0;
+                return (
+                  <tr key={r.label} style={{ "--i": i, "--a": sa, "--h": ok ? 1 - sa : 0 } as CSSProperties}>
+                    <td className={r.edge === "away" ? "is-edge" : ""}>
+                      {ok && <span className="sg-cmp sg-cmp-away" aria-hidden />}
+                      <span className="sg-cmp-val">{r.away}</span>
+                    </td>
+                    <th>{r.label}</th>
+                    <td className={r.edge === "home" ? "is-edge" : ""}>
+                      {ok && <span className="sg-cmp sg-cmp-home" aria-hidden />}
+                      <span className="sg-cmp-val">{r.home}</span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </figure>
@@ -129,22 +142,40 @@ export function ShowGraphicView({ g, year }: { g: ShowGraphic; year: number }) {
         </figure>
       );
     }
-    case "board":
+    case "board": {
+      const n = g.rows.length;
       return (
-        <figure className="sg sg-board">
+        <figure className={`sg sg-board ${g.style ? `is-${g.style}` : ""}`}>
           <figcaption className="sg-title">{g.title}</figcaption>
           <ol>
-            {g.rows.map((r) => (
-              <li key={`${r.rank}-${r.name}`} style={{ "--club": ink(r.teamId, year).primary } as CSSProperties}>
+            {g.rows.map((r, i) => (
+              <li
+                key={`${r.rank}-${r.name}`}
+                style={
+                  {
+                    "--club": ink(r.teamId, year).primary,
+                    // A countdown reveals the bottom of the board first and the top last.
+                    "--i": g.style === "reveal" ? n - 1 - i : i,
+                    "--share": r.share ?? 0,
+                  } as CSSProperties
+                }
+              >
                 <span className="sg-rank">{r.rank}</span>
                 {r.teamId ? <Logo id={r.teamId} year={year} size={30} /> : <span />}
                 <strong>{r.name}</strong>
+                {r.move !== undefined && (
+                  <i className={`sg-move ${r.move > 0 ? "is-up" : r.move < 0 ? "is-down" : ""}`} aria-label={r.move ? `${r.move > 0 ? "up" : "down"} ${Math.abs(r.move)}` : "no change"}>
+                    {r.move > 0 ? `▲${r.move}` : r.move < 0 ? `▼${-r.move}` : "—"}
+                  </i>
+                )}
                 <b>{r.value}</b>
+                {g.style === "race" && <span className="sg-bar" aria-hidden />}
               </li>
             ))}
           </ol>
         </figure>
       );
+    }
     case "scores":
       return (
         <figure className="sg sg-scores">

@@ -11,8 +11,11 @@ import { useEraClass } from "./eraLook";
 import { markWatched } from "./liveWatch";
 import { wpSeries } from "@/lib/game/gameday";
 import { CueChip, HalftimeDesk, KeyMatchups, MomentumMeter, PostgameInterviews } from "./Gameday";
+import { PregameIntro, StatPop, WinMeter } from "./LiveExtras";
 
 const ORD = ["", "1st", "2nd", "3rd", "4th"];
+/** Games whose pregame already ran this session. */
+const introSeen = new Set<string>();
 const clockText = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 function spotText(l: PlayLog, opp: TeamId): string {
   if (l.spot === 50) return "midfield";
@@ -76,6 +79,12 @@ export function LiveBroadcast({
   const doneRef = useRef(false);
   const held = useRef(false);
   const [halftime, setHalftime] = useState(false);
+  // The pregame (stadium, tunnels, starters) runs once per game, before the opening kick.
+  const [intro, setIntro] = useState(() => !compact && startAt === 0 && !introSeen.has(game.id));
+  const endIntro = useCallback(() => {
+    introSeen.add(game.id);
+    setIntro(false);
+  }, [game.id]);
   const halfSeen = useRef(startAt > 0);
   const booth = boothFor(game.year);
   const callAt = (k: number) =>
@@ -109,12 +118,12 @@ export function LiveBroadcast({
           (atNow.cue === "crowd" ? 0.2 : 0),
       )
     : 0;
-  const sound = useBroadcastSound(playing && !halftime && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity, upcoming);
+  const sound = useBroadcastSound(playing && !halftime && !intro && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity, upcoming);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 
   useEffect(() => {
-    if (!playing || atEnd || halftime) return;
+    if (!playing || atEnd || halftime || intro) return;
     if (!compact && !halfSeen.current && log[i]?.q <= 2 && (log[i + 1]?.q ?? 0) >= 3) {
       halfSeen.current = true; setHalftime(true); return;
     }
@@ -129,7 +138,7 @@ export function LiveBroadcast({
     held.current = false;
     const t = setTimeout(() => setI((n) => Math.min(log.length - 1, n + 1)), wait);
     return () => clearTimeout(t);
-  }, [i, playing, playMs, atEnd, log, halftime, compact, sound.holding, speed]);
+  }, [i, playing, playMs, atEnd, log, halftime, compact, sound.holding, speed, intro]);
 
   // The desk reads the halftime report when the booth is on; TV mode waits for it to finish.
   const [halfRead, setHalfRead] = useState(false);
@@ -178,6 +187,16 @@ export function LiveBroadcast({
   const ended = final && atEnd;
   const feed = log.slice(Math.max(0, i - (compact ? 3 : 7)), i + 1).reverse();
   const keyPlays = log.slice(0, i + 1).filter((l) => l.tag && l.tag !== "big");
+  // This drive so far: back to the first snap since the ball last changed hands or a score.
+  const drive = (() => {
+    let k = i;
+    while (k > 0) {
+      const prev = log[k - 1]!;
+      if (prev.poss !== cur.poss || prev.tag === "td" || prev.tag === "fg" || prev.tag === "safety" || prev.tag === "to") break;
+      k -= 1;
+    }
+    return { start: log[k]!.spot, plays: i - k + 1 };
+  })();
 
   // Win-probability path, drawn up to the current play.
   const W = 600;
@@ -310,6 +329,7 @@ export function LiveBroadcast({
         {slab(home, cur.hs, homeInk, "r")}
       </div>
 
+      {!compact && <WinMeter wp={usWp} us={us} home={home} away={away} year={game.year} />}
       {!compact && (
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-1.5 font-display text-[11px] font-bold uppercase italic tracking-wide sm:text-xs" aria-label="Team stats">
           {[away, home].map((id, k) => {
@@ -326,7 +346,10 @@ export function LiveBroadcast({
         </div>
       )}
 
-      <BroadcastField play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} year={game.year} game={game} />
+      <div className="relative">
+        {intro ? <PregameIntro game={game} onDone={endIntro} /> : <BroadcastField driveStart={drive.start} drivePlays={drive.plays} play={cur} home={home} away={away} homeColor={homeInk.primary} awayColor={awayInk.primary} playing={playing && !halftime} index={i} duration={Math.min(1100, playMs * .8)} year={game.year} game={game} />}
+        {!compact && !intro && <StatPop log={log} i={i} year={game.year} />}
+      </div>
       {halftime && <div className="border-b border-brass/30"><HalftimeDesk game={game} log={halfLog} voiced={sound.voiced && !compact} onRead={endHalfRead} /><FilmReport game={game} log={log.slice(0, i + 1)} halftime /><div className="px-5 pb-4"><Btn kind="primary" onClick={() => { setHalftime(false); setI(n => Math.min(log.length - 1, n + 1)); setPlaying(true); }}>Start second half ▸</Btn></div></div>}
       {!compact && <div className="flex flex-wrap gap-2 px-3 pt-3"><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={i === 0} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.max(0,n-1)); }}>Previous play</button><button className="bx-chip min-h-9 px-3 text-xs" type="button" disabled={atEnd} onClick={() => { setHalftime(false); setPlaying(false); setI(n => Math.min(log.length-1,n+1)); }}>Next play</button><span className="self-center text-xs text-muted">Select a key moment below to replay it.</span></div>}
 

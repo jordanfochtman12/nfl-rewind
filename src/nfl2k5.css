@@ -2199,3 +2199,652 @@ table tbody tr:hover {
     display: none;
   }
 }
+
+/* ---------- animated studio graphics ---------- */
+.sg-board li {
+  position: relative;
+  grid-template-columns: 28px 34px minmax(0, 1fr) auto auto;
+  animation: sg-board-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.32s);
+}
+.sg-board.is-reveal li {
+  animation-delay: calc(var(--i, 0) * 0.7s + 0.2s);
+}
+@keyframes sg-board-in {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+}
+.sg-board.is-reveal li:first-child {
+  box-shadow: inset 0 0 0 1px rgba(255, 198, 41, 0.5), 0 0 22px rgba(255, 198, 41, 0.18);
+}
+.sg-move {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 900;
+  color: rgba(232, 238, 247, 0.55);
+}
+.sg-move.is-up {
+  color: #35f29a;
+}
+.sg-move.is-down {
+  color: #ff5168;
+}
+.sg-board.is-race li {
+  overflow: hidden;
+}
+.sg-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: calc(var(--share, 0) * 100%);
+  background: linear-gradient(90deg, var(--club), var(--k5-gold));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--club) 70%, transparent);
+  transform-origin: left;
+  animation: sg-race 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.32s + 0.25s);
+}
+@keyframes sg-race {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.sg-tape-table td {
+  position: relative;
+}
+.sg-cmp-val {
+  position: relative;
+}
+.sg-cmp {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  opacity: 0.32;
+  animation: sg-race 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.15s + 0.2s);
+}
+.sg-cmp-away {
+  right: 0;
+  width: calc(var(--a, 0) * 100%);
+  background: linear-gradient(270deg, #3fd2ff, transparent);
+  transform-origin: right;
+}
+.sg-cmp-home {
+  left: 0;
+  width: calc(var(--h, 0) * 100%);
+  background: linear-gradient(90deg, #ff5168, transparent);
+  transform-origin: left;
+}
+
+/* ---------- a studio set for every era ---------- */
+.k5-studio.is-era-70s .k5-studio-set {
+  background:
+    linear-gradient(180deg, rgba(20, 10, 4, 0.5) 0%, rgba(14, 8, 4, 0.9) 50%, #0b0703 100%),
+    repeating-linear-gradient(90deg, #3a2414 0 22px, #4a2e19 22px 26px, #33200f 26px 48px),
+    radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--club) 40%, transparent), transparent 60%);
+  filter: sepia(0.35) saturate(1.1);
+}
+.k5-studio.is-era-70s::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.5) 0.5px, transparent 0.6px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+  animation: k5-grain 0.8s steps(4) infinite;
+}
+@keyframes k5-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    transform: translate(1px, -1px);
+  }
+  75% {
+    transform: translate(-1px, -1px);
+  }
+}
+.k5-studio.is-era-90s .k5-studio-set {
+  background:
+    linear-gradient(180deg, rgba(10, 4, 24, 0.45) 0%, rgba(10, 4, 24, 0.88) 55%, #08031a 100%),
+    linear-gradient(transparent 95%, rgba(255, 60, 220, 0.45) 95%) 0 0 / 100% 34px,
+    linear-gradient(90deg, transparent 95%, rgba(46, 230, 255, 0.4) 95%) 0 0 / 34px 100%,
+    radial-gradient(ellipse at 85% 0%, color-mix(in srgb, var(--club) 55%, #ff3cdc 20%), transparent 60%),
+    #0b0420;
+}
+.k5-studio.is-era-90s h3 {
+  text-shadow: 0 0 18px rgba(255, 60, 220, 0.55), 0 0 2px #fff;
+}
+.k5-studio.is-era-now .k5-studio-set {
+  background:
+    linear-gradient(180deg, rgba(6, 10, 18, 0.35) 0%, rgba(6, 10, 18, 0.82) 45%, #060a12 100%),
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.07) 45%, transparent 60%),
+    radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--club) 55%, transparent), transparent 60%),
+    url("/art/primetime.jpg") center 30% / cover no-repeat;
+  backdrop-filter: blur(2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sg-board li,
+  .sg-bar,
+  .sg-cmp,
+  .k5-studio.is-era-70s::after {
+    animation: none;
+  }
+}
+
+/* ---------- Primetime's open ---------- */
+.k5-pt-open {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 2rem 1.15rem 1.5rem;
+  border-bottom: 1px solid var(--k5-edge);
+}
+.k5-pt-open-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(180deg, rgba(3, 5, 10, 0.2) 0%, rgba(3, 5, 10, 0.78) 65%, #03050a 100%),
+    radial-gradient(ellipse at 85% 10%, color-mix(in srgb, var(--club) 55%, transparent), transparent 60%),
+    url("/art/primetime.jpg") center 30% / cover no-repeat;
+  animation: k5-push 22s ease-in-out infinite alternate;
+}
+.k5-pt-open.is-era-70s .k5-pt-open-bg {
+  filter: sepia(0.45) saturate(1.1);
+}
+.k5-pt-open.is-era-90s .k5-pt-open-bg {
+  background:
+    linear-gradient(180deg, rgba(10, 4, 24, 0.25) 0%, rgba(10, 4, 24, 0.8) 65%, #08031a 100%),
+    linear-gradient(transparent 95%, rgba(255, 60, 220, 0.4) 95%) 0 0 / 100% 30px,
+    radial-gradient(ellipse at 85% 10%, color-mix(in srgb, var(--club) 55%, #ff3cdc 20%), transparent 60%),
+    url("/art/primetime.jpg") center 30% / cover no-repeat;
+}
+.k5-pt-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.15) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: k5-sweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.k5-pt-open-mark {
+  position: absolute;
+  right: -4%;
+  top: 0.8rem;
+  z-index: -1;
+  width: min(40%, 240px);
+  height: auto;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 40px color-mix(in srgb, var(--club) 60%, transparent));
+  pointer-events: none;
+  animation: k5-studio-mark-in 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-pt-open-kicker {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.24em;
+  color: rgba(232, 238, 247, 0.82);
+}
+.k5-pt-open-kicker span {
+  margin-right: 0.4rem;
+  padding: 0.08rem 0.55rem;
+  clip-path: polygon(0.3rem 0, 100% 0, calc(100% - 0.3rem) 100%, 0 100%);
+  background: linear-gradient(180deg, #ff5168 0%, #ee1a36 46%, #c00a24 54%, #e2132f 100%);
+  color: #fff;
+}
+.k5-pt-open-title {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 7rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.85;
+  background: var(--k5-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.75)) drop-shadow(0 0 26px rgba(255, 255, 255, 0.16));
+  animation: k5-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-pt-open.is-era-90s .k5-pt-open-title {
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.75)) drop-shadow(0 0 22px rgba(255, 60, 220, 0.55));
+}
+.k5-pt-open-chip {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.7rem;
+  transform: skewX(-12deg);
+  background: linear-gradient(180deg, #ff5168 0%, #ee1a36 46%, #c00a24 54%, #e2132f 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+.k5-pt-open-chip span {
+  display: inline-block;
+  transform: skewX(12deg);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.k5-pt-open-head {
+  margin-top: 0.9rem;
+  max-width: 46rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 5.5vw, 2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+}
+.k5-pt-open-sub {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: rgba(232, 238, 247, 0.72);
+}
+
+/* ---------- the broadcast camera over the field ---------- */
+.k5-cam {
+  position: relative;
+  overflow: hidden;
+  perspective: 1300px;
+  perspective-origin: 50% 0%;
+}
+.k5-cam > .field-stack {
+  transform-origin: 50% 50%;
+  transform: rotateX(14deg) scale(1.04);
+  transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+/* On a phone the camera comes down to the ball: a tight, tilted shot centered on the snap. */
+@media (max-width: 640px) {
+  /* Drawn wider rather than scaled up, so the vector field stays sharp at the zoom. */
+  .k5-cam > .field-stack {
+    width: 180%;
+    max-width: none;
+    transform: rotateX(14deg) translateX(clamp(-44.4%, calc(27.8% - var(--cam-x, 50%)), 0%));
+  }
+}
+.k5-redzone rect {
+  animation: k5-rz 1.6s ease-in-out infinite alternate;
+}
+@keyframes k5-rz {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 0.32;
+  }
+}
+.k5-drive rect:first-child {
+  animation: k5-drive-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+@keyframes k5-drive-in {
+  from {
+    opacity: 0;
+  }
+}
+.k5-path {
+  stroke-dashoffset: 0;
+  animation: k5-path-draw 0.9s ease-out both;
+}
+@keyframes k5-path-draw {
+  from {
+    stroke-dashoffset: 120;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k5-cam > .field-stack {
+    transition: none;
+  }
+  .k5-redzone rect,
+  .k5-drive rect,
+  .k5-path {
+    animation: none;
+  }
+}
+
+/* ---------- score bug: win probability and the stat pop ---------- */
+.k5-wp {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem 0.4rem;
+  background: #05070c;
+  border-bottom: 1px solid var(--k5-edge);
+}
+.k5-wp-side {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #fff;
+}
+.k5-wp-bar {
+  position: relative;
+  height: 0.5rem;
+  overflow: hidden;
+  background: var(--home);
+  clip-path: polygon(0.3rem 0, 100% 0, calc(100% - 0.3rem) 100%, 0 100%);
+}
+.k5-wp-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--split);
+  background: var(--away);
+  box-shadow: 2px 0 0 #fff;
+  transition: width 0.8s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.k5-wp small {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: -0.1rem;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.22em;
+  color: rgba(232, 238, 247, 0.55);
+}
+.k5-statpop {
+  position: absolute;
+  left: 0.6rem;
+  top: 0.6rem;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.55rem;
+  max-width: min(92%, 22rem);
+  padding: 0.45rem 0.7rem 0.45rem 0.45rem;
+  border-left: 4px solid var(--club2);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--club) 92%, #000), rgba(3, 5, 10, 0.94) 75%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.8rem) 100%, 0 100%);
+  animation: k5-statpop 4.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes k5-statpop {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  10%,
+  85% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+.k5-statpop-kicker {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.18em;
+  color: var(--k5-gold);
+}
+.k5-statpop-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k5-statpop-value {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  background: var(--k5-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.k5-statpop-line {
+  grid-column: 2;
+  font-size: 0.7rem;
+  color: rgba(232, 238, 247, 0.75);
+}
+
+/* ---------- the pregame: stadium, tunnels, starters ---------- */
+.k5-intro {
+  position: relative;
+  min-height: 21rem;
+  overflow: hidden;
+  background: #03050a;
+  cursor: pointer;
+}
+.k5-intro-stadium,
+.k5-intro-tunnel,
+.k5-intro-lineups {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 21rem;
+  padding: 1.5rem 1rem 3rem;
+  text-align: center;
+  animation: k5-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.k5-intro-stadium-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(3, 5, 10, 0.2), rgba(3, 5, 10, 0.85)),
+    url("/art/stadium-arrival.webp") center 40% / cover no-repeat;
+  animation: k5-push 8s ease-out both;
+}
+.k5-intro-kicker {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.26em;
+  color: var(--k5-gold);
+}
+.k5-intro-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 9vw, 3.4rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.95;
+  background: var(--k5-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.7));
+}
+.k5-intro-facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.k5-intro-facts span {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--k5-edge);
+  background: rgba(3, 5, 10, 0.6);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+.k5-intro-match {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+.k5-intro-match i {
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--k5-gold);
+}
+.k5-intro-tunnel {
+  background:
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--club) 80%, transparent), transparent 70%),
+    linear-gradient(180deg, #000, color-mix(in srgb, var(--club) 35%, #000));
+}
+.k5-intro-tunnel img {
+  filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.7));
+  animation: k5-tunnel 2.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes k5-tunnel {
+  from {
+    transform: scale(0.4) translateY(40px);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+  }
+}
+.k5-intro-smoke {
+  position: absolute;
+  inset: auto -20% -30% -20%;
+  height: 70%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.28), transparent 65%);
+  filter: blur(12px);
+  animation: k5-smoke 2.8s ease-out both;
+}
+@keyframes k5-smoke {
+  from {
+    opacity: 0;
+    transform: translateY(30%) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.k5-intro-lineups {
+  justify-content: flex-start;
+  background: linear-gradient(180deg, #060912, #03050a);
+}
+.k5-intro-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.k5-intro-col {
+  border-top: 3px solid var(--club);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--club) 30%, transparent), rgba(3, 5, 10, 0.6));
+  text-align: left;
+}
+.k5-intro-col-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #fff;
+}
+.k5-intro-col li {
+  display: grid;
+  grid-template-columns: 1.8rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.5rem;
+  border-top: 1px solid var(--k5-edge);
+  animation: sg-board-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.25s);
+}
+.k5-intro-col li b {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--club2);
+  text-shadow: 0 0 1px #000;
+}
+.k5-intro-col li span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: #fff;
+}
+.k5-intro-col li small {
+  margin-left: 0.3rem;
+  font-size: 0.62rem;
+  color: rgba(232, 238, 247, 0.6);
+}
+.k5-intro-col li em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 900;
+  color: var(--k5-gold);
+}
+.k5-intro-skip {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  z-index: 3;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--k5-edge);
+  background: rgba(3, 5, 10, 0.75);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .k5-statpop,
+  .k5-intro-tunnel img,
+  .k5-intro-smoke,
+  .k5-intro-col li {
+    animation: none;
+  }
+}

@@ -1,8 +1,10 @@
 import { StudioEpisode } from "./StudioEpisode";
 import { useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
+  clubInk,
   displayName,
+  logoSrc,
   teamAbbr,
   type PrimetimeHonoree,
   type PrimetimeShow as Show,
@@ -137,6 +139,7 @@ function WeeklyShow() {
     );
   }
 
+  const leadTeam = (show.episode?.chapters[0]?.teamIds[0] ?? show.stories?.[0]?.teamIds[0] ?? show.recaps[0]?.homeId) as TeamId | undefined;
   const segs: { id: string; title: string; node: ReactNode }[] = [];
 
   if (show.awards?.length) {
@@ -613,27 +616,24 @@ function WeeklyShow() {
 
   return (
     <article className="relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_30px_80px_-30px_#000]">
-      <FilmStill still="primetime" veil="bottom" className="h-[440px]" />
       <div className="relative">
-        <header className="sheen border-b border-white/10 px-5 pb-6 pt-8 sm:px-8 sm:pt-12">
-          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">
-            THE REWIND NETWORK / STUDIO COVERAGE
+        <header
+          className={`k5-pt-open ${show.year < 1980 ? "is-era-70s" : show.year < 2000 ? "is-era-90s" : "is-era-now"}`}
+          style={{ "--club": leadTeam ? clubInk(leadTeam, show.year).primary : "#d51c38" } as CSSProperties}
+        >
+          <div className="k5-pt-open-bg" aria-hidden />
+          {leadTeam && <img className="k5-pt-open-mark" src={logoSrc(show.year, leadTeam)} alt="" aria-hidden />}
+          <p className="k5-pt-open-kicker">
+            <span>{show.kind === "playoffs" ? "PLAYOFF EDITION" : show.kind === "superBowl" ? "SUPER BOWL EDITION" : show.kind === "awards" ? "AWARDS NIGHT" : "ON THE AIR"}</span> THE REWIND NETWORK
           </p>
-          <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="bg-gradient-to-b from-white via-[#e9edf3] to-[#9aa4b4] bg-clip-text pr-2 text-6xl font-black leading-[0.85] text-transparent sm:text-8xl">
-              Primetime
-            </h2>
-            <span className="bx-primary mb-1 inline-flex px-3 py-1 font-display text-sm font-extrabold uppercase italic tracking-wider [transform:skewX(-12deg)]">
-              <span className="[transform:skewX(12deg)]">
-                {show.year} /{" "}
-                {show.episode?.edition === "superBowl" ? "Championship celebration" : show.title}
-              </span>
+          <h2 className="k5-pt-open-title">PRIMETIME</h2>
+          <p className="k5-pt-open-chip">
+            <span>
+              {show.year} / {show.episode?.edition === "superBowl" ? "Championship celebration" : show.title}
             </span>
-          </div>
-          <p className="mt-4 max-w-3xl font-display text-2xl text-white">
-            {show.episode?.headline ?? show.open}
           </p>
-          <p className="mt-2 text-sm text-muted">{show.episode?.subtitle}</p>
+          <p className="k5-pt-open-head">{show.episode?.headline ?? show.open}</p>
+          {show.episode?.subtitle && <p className="k5-pt-open-sub">{show.episode.subtitle}</p>}
           {episodes.length > 1 && (
             <label className="pt-archive">
               Broadcast archive

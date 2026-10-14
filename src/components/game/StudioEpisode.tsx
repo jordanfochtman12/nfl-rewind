@@ -278,7 +278,7 @@ export function StudioEpisode({
       )}
       <div className="pt-show-grid">
         <div
-          className="pt-stage k5-studio"
+          className={`pt-stage k5-studio ${year < 1980 ? "is-era-70s" : year < 2000 ? "is-era-90s" : "is-era-now"}`}
           style={{ "--club": chapter.teamIds[0] ? clubInk(chapter.teamIds[0], year).primary : "#d51c38" } as CSSProperties}
         >
           <div className="k5-studio-set" aria-hidden />

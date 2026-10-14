@@ -322,7 +322,12 @@ export function BroadcastField({
   duration = 1100,
   year,
   game,
+  driveStart,
+  drivePlays = 0,
 }: {
+  /** Where this drive began (offense's own yard line) and how many snaps it's run. */
+  driveStart?: number;
+  drivePlays?: number;
   play: PlayLog;
   home: TeamId;
   away: TeamId;
@@ -354,6 +359,21 @@ export function BroadcastField({
   const team = formation(start, dir, play.snap?.kind);
   const surface = look.surface === "grass" ? "Natural grass" : look.surface === "astroturf" ? "AstroTurf" : "FieldTurf";
   const label = `${look.stadium}, ${surface.toLowerCase()}`;
+  const kind = play.snap?.kind;
+  // The red zone: inside the opponent's 20, the end the offense is attacking glows.
+  const redZone = play.spot >= 80 && play.spot < 100;
+  const rz0 = x(80);
+  const rz1 = x(100);
+  const drive = driveStart !== undefined && drivePlays > 1 && driveStart !== play.spot ? x(driveStart) : undefined;
+  const downText = `${["", "1ST", "2ND", "3RD", "4TH"][Math.min(4, play.down)] ?? "4TH"} & ${play.spot + play.togo >= 100 ? "GOAL" : play.togo}`;
+  // A run cuts once on its way; a pass flies; a sack drives the passer back.
+  const path =
+    kind === "pass"
+      ? `M${start} ${MID} Q${(start + finish) / 2} ${MID - 14 * U} ${finish} ${MID}`
+      : kind === "run"
+        ? `M${start} ${MID} C${start + dir * 2 * U} ${MID + 4 * U} ${start + (finish - start) * 0.45} ${MID - 3 * U} ${finish} ${MID + U}`
+        : `M${start} ${MID} L${finish} ${MID}`;
+  const camX = `${((start / VW) * 100).toFixed(1)}%`;
   return (
     <div className="broadcast-field">
       <div className="flex flex-wrap justify-between gap-2 px-4 py-2 text-[11px] uppercase tracking-widest text-muted">
@@ -366,9 +386,28 @@ export function BroadcastField({
             : "Archived film · pre-snap position"}
         </span>
       </div>
+      <div className="k5-cam" style={{ "--cam-x": camX } as CSSProperties}>
       <div className="field-stack" style={{ aspectRatio: `${VW} / ${VH}` }} role="group" aria-label={`${teamAbbr(play.poss)} at their ${play.spot}. ${play.text}`}>
         <Field look={look} label={label} />
         <svg viewBox={`0 0 ${VW} ${VH}`} className="field-layer" aria-hidden="true" shapeRendering="geometricPrecision">
+          {redZone && (
+            <g className="k5-redzone">
+              <rect x={Math.min(rz0, rz1)} y={Y0} width={Math.abs(rz1 - rz0)} height={Y1 - Y0} fill="#ff1f3d" opacity=".22" />
+              <text x={(rz0 + rz1) / 2} y={Y0 + U * 3.2} textAnchor="middle" fontSize={U * 2.2} fontWeight="900" fontStyle="italic" fill="#ffd0d6" letterSpacing={U * 0.3}>
+                RED ZONE
+              </text>
+            </g>
+          )}
+          {drive !== undefined && (
+            <g className="k5-drive">
+              <rect x={Math.min(drive, start)} y={MID - U * 0.9} width={Math.abs(start - drive)} height={U * 1.8} fill={color} opacity=".55" rx={U * 0.4} />
+              <rect x={Math.min(drive, start)} y={MID - U * 0.9} width={Math.abs(start - drive)} height={U * 1.8} fill="none" stroke="#fff" strokeOpacity=".5" strokeWidth={U * 0.12} rx={U * 0.4} />
+              <circle cx={drive} cy={MID} r={U * 0.7} fill="#fff" opacity=".8" />
+              <text x={(drive + start) / 2} y={MID + U * 3.2} textAnchor="middle" fontSize={U * 1.9} fontWeight="900" fontStyle="italic" fill="#fff" stroke="#000" strokeWidth={U * 0.25} paintOrder="stroke">
+                DRIVE · {drivePlays} PLAYS · {Math.abs(play.spot - (driveStart ?? play.spot))} YDS
+              </text>
+            </g>
+          )}
           {tv ? (
             <>
               <line x1={start} x2={start} y1={Y0} y2={Y1} stroke="#3fb8ff" strokeWidth={U * 0.45} opacity=".9" />
@@ -394,13 +433,28 @@ export function BroadcastField({
           </g>
           <g key={index} style={{ animationPlayState: playing ? "running" : "paused" }}>
             <path
-              d={`M${start} ${MID} Q${(start + finish) / 2} ${play.snap?.kind === "pass" ? MID - 14 * U : MID} ${finish} ${MID}`}
+              className="k5-path"
+              d={path}
               fill="none"
-              stroke="#ffe6a2"
-              strokeWidth={U * 0.35}
+              stroke={kind === "sack" ? "#ff5168" : kind === "pass" ? "#ffe6a2" : "#9ff0ff"}
+              strokeWidth={U * 0.4}
               strokeDasharray={`${U * 0.8} ${U * 0.6}`}
-              opacity={moving ? 0.95 : 0}
+              opacity={moving || kind === "sack" ? 0.95 : 0}
             />
+            {kind === "sack" && (
+              <path d={`M${finish - U} ${MID - U}L${finish + U} ${MID + U}M${finish + U} ${MID - U}L${finish - U} ${MID + U}`} stroke="#ff5168" strokeWidth={U * 0.45} />
+            )}
+            {!moving && (
+              <g>
+                <ellipse cx={start} cy={MID} rx={U * 0.75} ry={U * 0.45} fill="#8a4b22" stroke="#fff" strokeWidth={U * 0.1} />
+              </g>
+            )}
+            <g className="k5-downflag">
+              <rect x={first - U * 4} y={MID - U * 9} width={U * 8} height={U * 2.4} rx={U * 0.3} fill={tv ? "#ffd400" : "#ff6a13"} stroke="#000" strokeOpacity=".4" strokeWidth={U * 0.12} />
+              <text x={first} y={MID - U * 7.2} textAnchor="middle" fontSize={U * 1.7} fontWeight="900" fontStyle="italic" fill="#140d00">
+                {downText}
+              </text>
+            </g>
             {moving && (
               <g
                 className="broadcast-ball"
@@ -419,6 +473,7 @@ export function BroadcastField({
             {moving && <circle cx={finish} cy={MID} r={U * 1.3} fill="none" stroke="#ffe6a2" strokeWidth={U * 0.2} />}
           </g>
         </svg>
+      </div>
       </div>
       {/* The lower third: who has it and what just happened, in the club's colors. */}
       <div key={`lt-${index}`} className="k5-lower3" style={{ "--team": color } as CSSProperties}>

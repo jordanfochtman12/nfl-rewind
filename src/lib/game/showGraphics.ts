@@ -32,7 +32,14 @@ export type ShowGraphic =
     }
   | { kind: "tape"; title: string; awayId: TeamId; homeId: TeamId; rows: { label: string; away: string; home: string; edge?: "away" | "home" }[] }
   | { kind: "player"; title: string; playerId: string; name: string; teamId?: TeamId; pos: string; jersey?: number; age: number; stats: StatCell[]; caption?: string }
-  | { kind: "board"; title: string; unit?: string; rows: { rank: number; teamId?: TeamId; name: string; value: string; playerId?: string }[] }
+  | {
+      kind: "board";
+      title: string;
+      unit?: string;
+      /** "race": bars sized to the value (a leaderboard); "reveal": counted down, last row first (power rankings). */
+      style?: "race" | "reveal";
+      rows: { rank: number; teamId?: TeamId; name: string; value: string; playerId?: string; share?: number; move?: number }[];
+    }
   | { kind: "scores"; title: string; games: { awayId: TeamId; homeId: TeamId; awayScore: number; homeScore: number; ot?: boolean }[] }
   | { kind: "road"; title: string; teamId: TeamId; rows: { label: string; text: string; won: boolean }[] }
   | { kind: "team"; title: string; teamId: TeamId; stats: StatCell[] };
@@ -185,7 +192,10 @@ export function showGraphic(save: DynastySave, year: number, ep: Episode, ch: Ch
   }
   if ((k = after("leader-"))) {
     const b = show?.leaders?.find((x) => x.label === k);
-    if (b) return { kind: "board", title: `LEAGUE LEADERS · ${k.toUpperCase()}`, rows: b.rows.slice(0, 5).map((r, i) => ({ rank: i + 1, teamId: r.teamId, name: r.name, value: num(r.value), playerId: r.playerId })) };
+    if (b) {
+      const top = Math.max(1, ...b.rows.slice(0, 5).map((r) => r.value));
+      return { kind: "board", style: "race", title: `LEAGUE LEADERS · ${k.toUpperCase()}`, rows: b.rows.slice(0, 5).map((r, i) => ({ rank: i + 1, teamId: r.teamId, name: r.name, value: num(r.value), playerId: r.playerId, share: r.value / top })) };
+    }
   }
   if ((k = after("history-"))) {
     const n = (save.news ?? []).find((x) => x.id === k);
@@ -197,7 +207,7 @@ export function showGraphic(save: DynastySave, year: number, ep: Episode, ch: Ch
     if (a?.playerId) return playerCard(save, year, a.playerId, "STORYLINE", a.beats.at(-1)?.short);
   }
   if (id === "contender" && show?.power?.length)
-    return { kind: "board", title: "POWER RANKINGS", rows: show.power.slice(0, 6).map((p, i) => ({ rank: i + 1, teamId: p.teamId, name: displayName(year, p.teamId), value: p.record })) };
+    return { kind: "board", style: "reveal", title: "POWER RANKINGS", rows: show.power.slice(0, 6).map((p, i) => ({ rank: i + 1, teamId: p.teamId, name: displayName(year, p.teamId), value: p.record, move: p.prev ? p.prev - p.rank : undefined })) };
   if ((k = after("road-"))) {
     const tid = k as TeamId;
     const rows = games
