@@ -31,6 +31,11 @@ export function setHistoryData(d: HistoryData): void {
   DATA = d;
 }
 
+/** The loaded record, for building a dynasty from a real season (eraStart.ts). */
+export function historyData(): HistoryData {
+  return data();
+}
+
 function data(): HistoryData {
   if (!DATA) throw new Error("History mode data is not loaded");
   return DATA;
@@ -39,7 +44,7 @@ function data(): HistoryData {
 const pid = (person: number) => `r-${person.toString(36)}`;
 
 /** The save's player for a real person, made the first time he appears. */
-function playerFor(save: DynastySave, person: number, year: number, teamId: Player["teamId"]): Player {
+export function playerFor(save: DynastySave, person: number, year: number, teamId: Player["teamId"]): Player {
   const id = pid(person);
   const have = save.players[id];
   if (have) return have;
@@ -287,7 +292,7 @@ function coachAfter(list: { name: string; games: number }[], played: number): st
 }
 
 /** Put the season's real head coaches on the sidelines (and note the new ones). */
-function seatCoaches(save: DynastySave): void {
+export function seatCoaches(save: DynastySave): void {
   const y = save.year;
   const real = data().coaches(y);
   const hired: string[] = [];

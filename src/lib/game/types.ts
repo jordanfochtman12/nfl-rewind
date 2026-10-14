@@ -2,7 +2,7 @@
 
 export const SAVE_VERSION = 18;
 export const STARTING_YEAR = 1966;
-export const END_YEAR = 2027;
+export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
 export const HOF_WAIT_YEARS = 5;
 export const COACH_HOF_WAIT_YEARS = 3;

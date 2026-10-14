@@ -480,7 +480,7 @@ function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void 
               {calls.map((c) => (
                 <li key={c.partner} className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
                   <Logo id={c.partner} size={28} year={save.year} />
-                  <span className="min-w-0 flex-1 text-paper">{c.pitch}</span>
+                  <span className="min-w-0 flex-1 basis-[14rem] text-paper">{c.pitch}</span>
                   <span className="tabular text-xs text-muted">
                     chart {Math.round(c.getValue)} for {Math.round(c.giveValue)}
                   </span>

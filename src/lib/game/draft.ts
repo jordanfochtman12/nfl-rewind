@@ -4,7 +4,7 @@ import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
 import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
 import { collegeNumber, eraCollege, preferredJersey } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
-import { randInt } from "./rng.ts";
+import { rand, randInt } from "./rng.ts";
 import { kitBoost } from "./abilities.ts";
 import { addNews, addTx } from "./news.ts";
 import { winPct } from "./standings.ts";
@@ -231,6 +231,17 @@ function realRookieNumber(year: number, first: string, last: string): number | u
   return m.get(normalizedName(first, last).replace(/[^a-z]/g, ""));
 }
 
+/** A real draftee as the draft room would have made him that year: ratings kit, arc, peak. */
+export function realDraftee(save: DynastySave, seed: DraftSeed, year: number): Player {
+  const was = save.year;
+  save.year = year;
+  try {
+    return seedToPlayer(save, seed, seed.r ?? 1);
+  } finally {
+    save.year = was;
+  }
+}
+
 function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player {
   const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
   const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
@@ -395,16 +406,31 @@ export function buildDraftBoard(save: DynastySave): void {
     "FB",
   ];
   const teamsN = Math.max(1, sessionTeams(save.year, session).length);
-  while (board.length < total) {
-    const pos = realPos[board.length % realPos.length]!;
+  // Past the record (no real class at all), the scouts build a whole class of their own:
+  // positions drafted the way the league drafts them, a few blue-chippers up top, sleepers
+  // with real ceilings late, and a deeper undrafted pool behind the picks.
+  const fictional = named.length === 0;
+  const want = fictional ? total + Math.round(teamsN * 1.5) : total;
+  while (board.length < want) {
     const roundGuess = Math.floor(board.length / teamsN) + 1;
-    const ovr = 78 - Math.floor(board.length / teamsN) * 3 - randInt(save, 0, 8);
+    const pos = fictional ? classPosition(save) : realPos[board.length % realPos.length]!;
+    const ovr = fictional
+      ? Math.round(Math.max(46, Math.min(84, 74 - (roundGuess - 1) * 2.6 + randInt(save, -6, 6) + (board.length < 6 ? 5 : 0))))
+      : 78 - Math.floor(board.length / teamsN) * 3 - randInt(save, 0, 8);
     const p = generatePlayer(save, pos, "fa", Math.max(48, ovr), randInt(save, 21, 23));
     p.draftYear = save.year;
     p.draftRound = roundGuess;
     p.historical = false;
     p.yearsPro = 0;
     applyScout(save, p);
+    if (fictional) {
+      // Ceilings: everyone has one, the top of the class has the highest, and one in twenty
+      // late picks turns out to be the steal of the draft.
+      const sleeper = roundGuess >= 3 && rand(save) < 0.05;
+      const lift = randInt(save, 3, 12) + (roundGuess <= 1 ? randInt(save, 2, 6) : 0) + (sleeper ? randInt(save, 8, 14) : 0);
+      p.potential = Math.min(97, p.ovr + lift);
+      if (sleeper) p.gem = true;
+    }
     p.collegeNo = collegeNumber(p.pos, p.id);
     p.jersey = p.collegeNo;
     board.push({ playerId: p.id, slot, taken: false, league: session });
@@ -412,6 +438,22 @@ export function buildDraftBoard(save: DynastySave): void {
   }
   save.draftBoard = board;
   save.draftPickIndex = 0;
+}
+
+/** Positions in a draft class as the league really takes them (per 100 picks). */
+const CLASS_MIX: [Pos, number][] = [
+  ["QB", 5], ["RB", 7], ["FB", 1], ["WR", 13], ["TE", 6], ["LT", 5], ["LG", 4], ["C", 3], ["RG", 4], ["RT", 5],
+  ["DE", 9], ["DT", 8], ["OLB", 8], ["MLB", 4], ["CB", 11], ["S", 7], ["K", 1], ["P", 1],
+];
+const MIX_TOTAL = CLASS_MIX.reduce((n, [, w]) => n + w, 0);
+
+function classPosition(save: DynastySave): Pos {
+  let r = rand(save) * MIX_TOTAL;
+  for (const [pos, w] of CLASS_MIX) {
+    r -= w;
+    if (r < 0) return pos;
+  }
+  return "WR";
 }
 
 function needScore(save: DynastySave, teamId: TeamId, pos: Pos): number {

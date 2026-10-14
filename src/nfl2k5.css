@@ -2848,3 +2848,45 @@ table tbody tr:hover {
     animation: none;
   }
 }
+
+/* ---------- start year picker ---------- */
+.k5-years {
+  margin: 0.4rem 0 0.8rem;
+}
+.k5-years p {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.18em;
+  color: rgba(232, 238, 247, 0.75);
+}
+.k5-years p span {
+  margin-right: 0.4rem;
+  color: var(--k5-gold);
+}
+.k5-years > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+.k5-years button {
+  min-height: 2.6rem;
+  min-width: 3.9rem;
+  padding: 0 0.7rem;
+  transform: skewX(-10deg);
+  border: 1px solid var(--k5-edge);
+  background: linear-gradient(180deg, var(--k5-glass-top), var(--k5-glass-low));
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  font-style: italic;
+  color: rgba(232, 238, 247, 0.85);
+}
+.k5-years button.is-on {
+  border-color: var(--k5-gold);
+  background: linear-gradient(180deg, #fff2b8 0%, #ffc629 50%, #c98d00 100%);
+  color: #140d00;
+  box-shadow: 0 0 18px rgba(255, 198, 41, 0.35);
+}

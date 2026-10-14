@@ -2,10 +2,11 @@ import { DraftAnnouncerProvider } from "./DraftAnnouncer";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
-  ACTIVE_1966,
   activateFromIR,
   activeRosterOf,
   activeTeamIds,
+  conferenceOf,
+  ERA_STARTS,
   allDecadeTeam,
   availableCoaches,
   availableDecades,
@@ -124,7 +125,7 @@ import {
 } from "./WinterNights";
 
 function TitleScreen() {
-  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox, newHistory, historyLoading } = useGameStore();
+  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox, newHistory, historyLoading, startYear, eraBuilding } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [watchReady, setWatchReady] = useState(false);
   const [historyReady, setHistoryReady] = useState(false);
@@ -146,13 +147,14 @@ function TitleScreen() {
   return (
     <main className="next-title">
       <div className="next-title-scene" aria-hidden />
-      <header className="next-title-header"><NetworkBug /><span className="next-edition"><span className="next-edition-label">FRANCHISE FOOTBALL</span><i /> 1966—2027</span></header>
+      <header className="next-title-header"><NetworkBug /><span className="next-edition"><span className="next-edition-label">FRANCHISE FOOTBALL</span><i /> 1966—2040</span></header>
       <div className="next-title-layout">
       <div className="next-title-copy">
       <p className="next-kicker"><span /> THE FRANCHISE IS YOURS</p>
       <h1 className="next-wordmark"><span>NFL</span><strong>REWIND<span className="next-wordmark-dot">.</span></strong></h1>
       <p className="next-title-tagline">History made them legends.<br /><strong>Your decisions change everything.</strong></p>
       <p className="next-title-description">Take the front office. Draft the real classes. Build a dynasty from the first Super Bowl to a new era of football.</p>
+      <StartYearPicker />
       <div className="next-title-actions">
         <Btn kind="primary" onClick={() => setScreen("select")}>
           New dynasty <span aria-hidden>↗</span>
@@ -163,10 +165,11 @@ function TitleScreen() {
               setWatchReady(true);
               return;
             }
-            newSandbox();
+            void newSandbox();
           }}
+          disabled={eraBuilding}
         >
-          {save && watchReady ? "Replace save and watch" : "Watch history"} <span aria-hidden>▸</span>
+          {eraBuilding ? `Building the ${startYear} league…` : save && watchReady ? "Replace save and watch" : startYear === 1966 ? "Watch history" : `Watch history from ${startYear}`} <span aria-hidden>▸</span>
         </Btn>
         <Btn
           disabled={historyLoading}
@@ -196,7 +199,8 @@ function TitleScreen() {
         </p>
       )}
       {historyError && <p role="alert" className="text-sm text-brick">{historyError}</p>}
-      <p className="text-sm text-muted">Watch history: no team to run. The computer runs every club from 1966 on, and you watch it unfold.</p>
+      <p className="text-sm text-muted">Watch history: no team to run. The computer runs every club from your start year on, and you watch it unfold.</p>
+      <p className="text-sm text-muted">Start years after 1966 open on the real rosters of that season, with every real stat line, champion and Hall of Famer before it. Real draft classes come in through 2025; after that the scouts find their own. Seasons run to 2040.</p>
       <p className="text-sm text-muted">History mode: the NFL exactly as it happened, 1966 to {HISTORY_LAST}. Real rosters, scores, playoffs, drafts, awards, stats and Hall of Fame classes, step by step. Nothing simulated.</p>
       <SaveSlots />
       <div className="next-file-actions">
@@ -234,18 +238,47 @@ function TitleScreen() {
         {save && watching ? <><div className="next-resume-club"><div><span>{save.year} / {save.weekLabel}</span><h2>{realHistory ? "History mode" : "Watching history"}</h2></div></div><div className="next-resume-stats"><div><span>SEASONS</span><strong>{save.history.superBowls.length}</strong></div><div><span>LAST CHAMP</span><strong>{(() => { const b = save.history.superBowls.at(-1); return b ? nicknameOf(b.year, (b.homeScore >= b.awayScore ? b.homeId : b.awayId) as TeamId) : '—'; })()}</strong></div></div><button className="next-card-action" onClick={continueGame}>Back to the broadcast <span aria-hidden>↗</span></button></> : save ? <><div className="next-resume-club"><Logo id={save.userTeamId} year={save.year} size={72} /><div><span>{save.year} / {save.weekLabel}</span><h2>{displayName(save.year, save.userTeamId)}</h2></div></div><div className="next-resume-stats"><div><span>RECORD</span><strong>{save.teams[save.userTeamId].wins}–{save.teams[save.userTeamId].losses}{save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ''}</strong></div><div><span>DYNASTY GRADE</span><strong>{grade?.letter ?? '—'}</strong></div></div><button className="next-card-action" onClick={continueGame}>Return to the front office <span aria-hidden>↗</span></button></> : <><span className="next-year">1966</span><h2>A new league.<br />An unwritten legacy.</h2><p>24 clubs. The first Super Bowl. Every future draft class waiting for your call.</p><button className="next-card-action" onClick={() => setScreen('select')}>Choose your franchise <span aria-hidden>↗</span></button></>}
       </aside>
       </div>
-      <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2027</span></div>
+      <div className="next-title-bottom"><div className="title-pillars"><div><span className="next-feature-number">01 / BUILD</span><strong>The front office</strong><span>Real draft classes. Your roster. Your identity.</span></div><div><span className="next-feature-number">02 / COMPETE</span><strong>Every Sunday matters</strong><span>Set the call sheet. Watch the story unfold.</span></div><div><span className="next-feature-number">03 / BECOME</span><strong>A lasting dynasty</strong><span>Six decades of football. One legacy.</span></div></div><div className="next-title-footnote"><span>HISTORICAL DYNASTY EXPERIENCE</span><span>1966 <i /> 2040</span></div>
       </div>
     </main>
   );
 }
 
+/** The season to start in: 1966, or a later year built from the real rosters. */
+function StartYearPicker() {
+  const year = useGameStore((s) => s.startYear);
+  const setYear = useGameStore((s) => s.setStartYear);
+  return (
+    <div className="k5-years" role="radiogroup" aria-label="Start year">
+      <p>
+        <span>START YEAR</span> {year === 1966 ? "The first Super Bowl season" : `The real ${year} rosters`}
+      </p>
+      <div>
+        {ERA_STARTS.map((y) => (
+          <button key={y} type="button" role="radio" aria-checked={year === y} className={year === y ? "is-on" : ""} onClick={() => setYear(y)}>
+            {y}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function TeamSelect() {
   const { newGame, setScreen, save } = useGameStore();
+  const year = useGameStore((s) => s.startYear);
+  const building = useGameStore((s) => s.eraBuilding);
   const [selectedTeam, setSelectedTeam] = useState<TeamId | null>(null);
   const [replaceReady, setReplaceReady] = useState(false);
-  const nfl = ACTIVE_1966.filter((id) => originalLeague(id) === "NFL");
-  const afl = ACTIVE_1966.filter((id) => originalLeague(id) === "AFL");
+  const [buildError, setBuildError] = useState("");
+  const clubs = activeTeamIds(year);
+  const merged = year >= 1970;
+  const nfl = merged ? clubs.filter((id) => conferenceOf(year, id) === "AFC") : clubs.filter((id) => originalLeague(id) === "NFL");
+  const afl = merged ? clubs.filter((id) => conferenceOf(year, id) === "NFC") : clubs.filter((id) => originalLeague(id) === "AFL");
+  const begin = (id: TeamId) => {
+    setBuildError("");
+    newGame(id).catch(() => setBuildError(`The ${year} league couldn't be built. Check your connection and try again.`));
+  };
   const Group = ({ title, ids }: { title: string; ids: readonly TeamId[] }) => (
     <section className="space-y-3">
       <h2 className="text-lg tracking-[0.2em] text-muted">{title}</h2>
@@ -260,13 +293,13 @@ function TeamSelect() {
           >
             <span
               className="flex h-full min-h-16 w-16 shrink-0 items-center justify-center [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]"
-              style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${clubInk(id, 1966).primary} 75%, white), ${clubInk(id, 1966).primary} 50%, color-mix(in srgb, ${clubInk(id, 1966).primary} 65%, black))` }}
+              style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${clubInk(id, year).primary} 75%, white), ${clubInk(id, year).primary} 50%, color-mix(in srgb, ${clubInk(id, year).primary} 65%, black))` }}
             >
-              <Logo id={id} size={40} year={1966} />
+              <Logo id={id} size={40} year={year} />
             </span>
             <span className="min-w-0">
-              <span className="block font-display text-xs font-bold uppercase italic tracking-[0.14em] text-muted">{locationOf(1966, id)}</span>
-              <span className="block font-display text-2xl font-extrabold uppercase italic leading-none">{nicknameOf(1966, id)}</span>
+              <span className="block font-display text-xs font-bold uppercase italic tracking-[0.14em] text-muted">{locationOf(year, id)}</span>
+              <span className="block font-display text-2xl font-extrabold uppercase italic leading-none">{nicknameOf(year, id)}</span>
             </span>
             <span className="ml-auto font-display text-xl font-black italic text-red opacity-0 transition group-hover:opacity-100" aria-hidden>
               ▸
@@ -282,15 +315,18 @@ function TeamSelect() {
       <div className="relative mx-auto max-w-4xl space-y-8 px-5 py-10">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="font-display text-xs tracking-[0.35em] text-brass">1966 media guide</p>
+          <p className="font-display text-xs tracking-[0.35em] text-brass">{year} media guide</p>
           <h1 className="text-5xl sm:text-6xl">Choose your club</h1>
         </div>
         <Btn onClick={() => setScreen("title")}>Back</Btn>
       </div>
-      <Group title="National Football League" ids={nfl} />
-      <Group title="American Football League" ids={afl} />
+      <StartYearPicker />
+      <Group title={merged ? "American Football Conference" : "National Football League"} ids={nfl} />
+      <Group title={merged ? "National Football Conference" : "American Football League"} ids={afl} />
       {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
-        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={1966} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · 1966</p><h2 className="mt-1 text-2xl">{displayName(1966, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(1966, selectedTeam).stadium} · {originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" onClick={() => { if (save && !emptySlot() && !replaceReady) { setReplaceReady(true); return; } newGame(selectedTeam); }}>{save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
+        <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={year} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · {year}</p><h2 className="mt-1 text-2xl">{displayName(year, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(year, selectedTeam).stadium} · {merged ? conferenceOf(year, selectedTeam) : originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" disabled={building} onClick={() => { if (save && !emptySlot() && !replaceReady) { setReplaceReady(true); return; } begin(selectedTeam); }}>{building ? `Building the ${year} league…` : save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
+        {building && <p role="status" className="mt-3 text-sm text-muted">Loading every real roster, stat line and champion up to {year}. This takes a few seconds.</p>}
+        {buildError && <p role="alert" className="mt-3 text-sm text-brick">{buildError}</p>}
         {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">All five save slots are full, so starting replaces the {displayName(save.year, save.userTeamId)} dynasty in this one. Go back to the title and clear a slot to keep it.</p>}
       </section>}
       <p className="text-xs text-subtle">

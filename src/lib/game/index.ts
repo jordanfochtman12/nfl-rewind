@@ -290,3 +290,4 @@ export { requestCeiling } from "./morale.ts";
 export { decide, openDecisions } from "./ownerDesk.ts";
 export type { OwnerDecision, OwnerDecisionKind } from "./types.ts";
 export { cleanPlay, weekReel, type ReelMoment, type ReelKind } from "./weekReel.ts";
+export { createEraGame, ERA_STARTS, type EraOpts } from "./eraStart.ts";

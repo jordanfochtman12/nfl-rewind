@@ -5,6 +5,7 @@ import {
   cloneSave,
   compactSave,
   createNewGame,
+  createEraGame,
   hydrateSave,
   createHistoryGame,
   historyCursor,
@@ -62,9 +63,15 @@ interface GameStore {
   closeProfile: () => void;
   openTeam: (id: TeamId) => void;
   closeTeam: () => void;
-  newGame: (teamId: TeamId) => void;
+  /** A new dynasty in the chosen start year (later years build the league from the record first). */
+  newGame: (teamId: TeamId) => Promise<void>;
   /** Watch mode: the computer runs every club and the owner just watches history unfold. */
-  newSandbox: () => void;
+  newSandbox: () => Promise<void>;
+  /** The season a new dynasty or Watch history league starts in (see ERA_STARTS). */
+  startYear: number;
+  setStartYear: (y: number) => void;
+  /** True while a later start year's league is being built from the record. */
+  eraBuilding: boolean;
   /** History mode: the real league, step by step from the 1966 draft. Loads its tables first. */
   newHistory: () => Promise<void>;
   /** True while History mode's tables load (and a saved History game replays to where it was). */
@@ -292,10 +299,28 @@ export const useGameStore = create<GameStore>()(
       closeProfile: () => set({ profileId: null }),
       openTeam: (viewTeamId) => set({ viewTeamId, profileId: null }),
       closeTeam: () => set({ viewTeamId: null }),
-      newGame: (teamId) => {
-        freshSlot();
-        const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
-        set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+      startYear: 1966,
+      setStartYear: (startYear) => set({ startYear }),
+      eraBuilding: false,
+      newGame: async (teamId) => {
+        const year = get().startYear;
+        if (year === 1966) {
+          freshSlot();
+          const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
+          set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+          return;
+        }
+        set({ eraBuilding: true });
+        try {
+          setHistoryData(await loadHistoryData());
+          // Let "Building the league" paint before the replay takes the main thread.
+          await new Promise((r) => setTimeout(r, 30));
+          const save = createEraGame({ userTeamId: teamId, startingYear: year });
+          freshSlot();
+          set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+        } finally {
+          set({ eraBuilding: false });
+        }
       },
       historyLoading: false,
       newHistory: async () => {
@@ -309,11 +334,25 @@ export const useGameStore = create<GameStore>()(
           set({ historyLoading: false });
         }
       },
-      newSandbox: () => {
+      newSandbox: async () => {
         // The engine wants a club id for the owner's seat; in a sandbox nothing treats it as anyone's.
-        freshSlot();
-        const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
-        set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+        const year = get().startYear;
+        if (year === 1966) {
+          freshSlot();
+          const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
+          set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+          return;
+        }
+        set({ eraBuilding: true });
+        try {
+          setHistoryData(await loadHistoryData());
+          await new Promise((r) => setTimeout(r, 30));
+          const save = createEraGame({ userTeamId: "gnb", startingYear: year, sandbox: true, seed: Date.now() % 2147483647 });
+          freshSlot();
+          set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+        } finally {
+          set({ eraBuilding: false });
+        }
       },
       watchSim: (target) => {
         const { save } = get();
