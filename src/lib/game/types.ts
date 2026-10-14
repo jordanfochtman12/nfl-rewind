@@ -969,6 +969,8 @@ export interface DynastySave {
   faBids?: FaBid[];
   version: number;
   startingYear: number;
+  /** A league begun from the record (eraStart.ts): each winter it signs that season's real free agents from it. */
+  realPool?: boolean;
   year: number;
   week: number;
   phase: Phase;

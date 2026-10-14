@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { draftSeedsFor } from "../src/lib/game/data/draftClasses.ts";
-import { createNewGame, simUntil, makeDraftPick } from "../src/lib/game/index.ts";
+import { createNewGame, simUntil, makeDraftPick, rosterOf } from "../src/lib/game/index.ts";
 import { jerseyLegal, preferredJersey } from "../src/lib/game/names.ts";
 
 const pitt = (y) => draftSeedsFor(y).filter((s) => /^pitt(sburgh)?$/i.test(s.c ?? ""));
@@ -38,7 +38,10 @@ test("rookies ask for their number and get it, or the closest legal one", () => 
   for (let k = 0; k < 64; k++) makeDraftPick(s);
   const made = Object.values(s.players).filter((p) => p.draftYear === 2004 && p.draftPick);
   const fitz = made.find((p) => p.lastName === "Fitzgerald" && p.firstName === "Larry");
-  assert.equal(fitz.jersey, 11, "Larry Fitzgerald wears 11");
+  // His college 11, unless a teammate already wears it (then the closest legal number).
+  const elevenTaken = rosterOf(s, fitz.teamId).some((p) => p.id !== fitz.id && p.jersey === 11);
+  if (elevenTaken) assert.ok(jerseyLegal(fitz.pos, 2004, fitz.jersey) && fitz.jersey !== 11);
+  else assert.equal(fitz.jersey, 11, "Larry Fitzgerald wears 11");
   assert.ok(made.every((p) => p.collegeNo != null));
   assert.ok(made.every((p) => jerseyLegal(p.pos, 2004, p.jersey)), "first two rounds: all legal");
   assert.ok(made.filter((p) => p.jersey === p.collegeNo).length >= made.length * 0.5);

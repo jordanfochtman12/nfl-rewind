@@ -10,6 +10,8 @@ import {
   createHistoryGame,
   historyCursor,
   loadHistoryData,
+  hasHistoryData,
+  HISTORY_LAST,
   replayHistory,
   setHistoryData,
   applyLiveLines,
@@ -54,6 +56,9 @@ interface GameStore {
   tab: Tab;
   profileId: string | null;
   viewTeamId: TeamId | null;
+  /** Watch and History modes: the club the Roster, Depth, Staff and Schedule tabs show. */
+  watchClub: TeamId | null;
+  setWatchClub: (id: TeamId) => void;
   pendingTeam: TeamId | null;
   lastDeskNote: string | null;
   hasHydrated: boolean;
@@ -286,6 +291,8 @@ export const useGameStore = create<GameStore>()(
       tab: "office",
       profileId: null,
       viewTeamId: null,
+      watchClub: null,
+      setWatchClub: (watchClub) => set({ watchClub }),
       pendingTeam: null,
       lastDeskNote: null,
       hasHydrated: false,
@@ -543,3 +550,10 @@ export const useGameStore = create<GameStore>()(
     },
   ),
 );
+
+// A league begun from the record signs each winter's real free agents from it, so keep the
+// record loaded behind such a save (it loads once, in the background).
+useGameStore.subscribe((st) => {
+  const s = st.save;
+  if (s?.realPool && s.year <= HISTORY_LAST && !hasHistoryData()) void loadHistoryData().then(setHistoryData);
+});

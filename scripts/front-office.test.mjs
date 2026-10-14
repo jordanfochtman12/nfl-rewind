@@ -66,9 +66,10 @@ test("CPU clubs judge trades through their own eyes", () => {
 test("draft-day trades: move up for later picks, trade down near the chart", () => {
   const t = structuredClone(s);
   const q = draftQueue(t);
-  // A club's pick a few slots ahead of the owner's first.
+  // A club's pick a couple of slots ahead of the owner's first (never more than the owner's
+  // picks can buy: from the fourth slot, three ahead is the first overall pick).
   const mine = q.findIndex((p) => p.owner === "pit" && p.year === t.year);
-  const target = q.slice(t.draftPickIndex, mine).reverse().find((p, i) => i >= 2 && p.owner !== "pit");
+  const target = q.slice(t.draftPickIndex, mine).reverse().find((p, i) => i >= 1 && p.owner !== "pit");
   const up = tradeUpPackage(t, target.id);
   assert.ok(!("error" in up), "error" in up ? up.error : "");
   assert.ok(up.giveValue >= up.getValue);

@@ -12,7 +12,7 @@ import { seedPriorCareer } from "./data/careerPrior.ts";
 import { salaryFor } from "./salary.ts";
 import { measurables } from "./development.ts";
 import { applyScout } from "./scout.ts";
-import { calibrateVetPeak, lookupVetArc } from "./careerArc.ts";
+import { calibrateVetPeak, lookupVetArc, moveToward } from "./careerArc.ts";
 import { historicalNameKey } from "./identity.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 
@@ -481,21 +481,94 @@ export function seedVeterans(save: DynastySave): void {
   }
 }
 
+/** Who can cover a spot when nobody at it is on the market, closest fit first. */
+const COVERS: Partial<Record<Pos, Pos[]>> = {
+  LT: ["RT", "LG", "RG"],
+  RT: ["LT", "RG", "LG"],
+  LG: ["RG", "C", "LT", "RT"],
+  RG: ["LG", "C", "RT", "LT"],
+  C: ["LG", "RG"],
+  FB: ["RB", "TE"],
+  RB: ["FB", "WR"],
+  TE: ["FB", "WR"],
+  WR: ["RB", "TE"],
+  DE: ["DT", "OLB"],
+  DT: ["DE"],
+  OLB: ["MLB", "DE"],
+  MLB: ["OLB"],
+  CB: ["S"],
+  S: ["CB"],
+  K: ["P"],
+  P: ["K"],
+};
+
+/** The real free agents (not the game's generated ones) nobody holds a waiver claim on. */
+function realFreeAgents(save: DynastySave): Player[] {
+  const wire = new Set(save.waivers.map((w) => w.playerId));
+  return Object.values(save.players).filter((p) => p.teamId === "fa" && p.historical && !wire.has(p.id) && p.injuredWeeks <= 0);
+}
+
+/** Put a real free agent on a club's roster on a one-year deal, playing `pos`. */
+function seatReal(save: DynastySave, teamId: TeamId, p: Player, pos: Pos): void {
+  if (p.pos !== pos) {
+    const ovr = p.ovr;
+    p.pos = pos;
+    p.ovr = deriveOvr(pos, p.ratings);
+    moveToward(p, ovr);
+  }
+  p.salary = salaryFor(save.year, p.ovr, p.age, p.pos);
+  p.contractYears = 1;
+  p.jersey = carryJersey(save, p, teamId);
+  addToRoster(save, teamId, p.id);
+}
+
+/**
+ * The best real free agent for a hole at `pos` (his own position first, then whoever can
+ * cover it), signed onto the club. Undefined when the market has no real player for it.
+ */
+export function signRealFa(save: DynastySave, teamId: TeamId, pos: Pos, pool = realFreeAgents(save)): Player | undefined {
+  for (const at of [pos, ...(COVERS[pos] ?? [])]) {
+    let best: Player | undefined;
+    for (const p of pool) if (p.teamId === "fa" && p.pos === at && (!best || p.ovr > best.ovr)) best = p;
+    if (best) {
+      seatReal(save, teamId, best, pos);
+      return best;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * A club short at a spot or short of bodies signs real players off the market first; the
+ * game only makes up a camp body when no real one is left who can play there.
+ */
 export function fillRoster(save: DynastySave, teamId: TeamId): void {
   pruneRoster(save, teamId);
+  const pool = realFreeAgents(save);
   for (const [pos, need] of DEPTH_CHART) {
     let have = rosterOf(save, teamId).filter((p) => p.pos === pos).length;
     let slot = have;
     while (have < need) {
-      const ovr =
-        slot === 0 ? randInt(save, 68, 78) : slot === 1 ? randInt(save, 58, 70) : randInt(save, 48, 62);
-      generatePlayer(save, pos, teamId, ovr);
+      if (!signRealFa(save, teamId, pos, pool)) {
+        const ovr =
+          slot === 0 ? randInt(save, 68, 78) : slot === 1 ? randInt(save, 58, 70) : randInt(save, 48, 62);
+        generatePlayer(save, pos, teamId, ovr);
+      }
       have += 1;
       slot += 1;
     }
   }
+  // The rest of the roster: the best real players left, at spots that aren't already deep.
+  const count = (pos: Pos) => rosterOf(save, teamId).filter((p) => p.pos === pos).length;
+  const room = new Map(DEPTH_CHART.map(([pos, need]) => [pos, need + (pos === "K" || pos === "P" || pos === "FB" ? 0 : 2)]));
   let guard = 0;
   while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 80) {
+    let best: Player | undefined;
+    for (const p of pool) if (p.teamId === "fa" && count(p.pos) < (room.get(p.pos) ?? 0) && (!best || p.ovr > best.ovr)) best = p;
+    if (best) {
+      seatReal(save, teamId, best, best.pos);
+      continue;
+    }
     const pos = DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
     generatePlayer(save, pos, teamId, randInt(save, 48, 64));
   }
@@ -503,9 +576,59 @@ export function fillRoster(save: DynastySave, teamId: TeamId): void {
   guard = 0;
   while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 40) {
     const pos = DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
-    generatePlayer(save, pos, teamId, randInt(save, 48, 64));
+    if (!signRealFa(save, teamId, pos, pool)) generatePlayer(save, pos, teamId, randInt(save, 48, 64));
   }
   syncDepth(save, teamId);
+}
+
+/**
+ * A computer club trades a made-up player for a real one whenever the market has a real
+ * free agent who can play his spot about as well: the league stays the real league.
+ */
+export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10): number {
+  const pool = realFreeAgents(save);
+  const need = new Map(DEPTH_CHART);
+  let swapped = 0;
+  const fakes = rosterOf(save, teamId)
+    .filter((p) => !p.historical)
+    .sort((a, b) => a.ovr - b.ovr);
+  for (const fake of fakes) {
+    const covers = [fake.pos, ...(COVERS[fake.pos] ?? [])];
+    let best: Player | undefined;
+    for (const at of covers) {
+      for (const p of pool) if (p.teamId === "fa" && p.pos === at && (!best || p.ovr > best.ovr)) best = p;
+      if (best) break;
+    }
+    if (best && best.ovr >= fake.ovr - slack) {
+      movePlayer(save, fake.id, "fa");
+      seatReal(save, teamId, best, fake.pos);
+      swapped += 1;
+      continue;
+    }
+    // Nobody on the market: a real teammate the club has extra of at a spot that covers it
+    // (a third left guard, a fifth corner) moves over.
+    const roster = rosterOf(save, teamId);
+    let mate: Player | undefined;
+    for (const at of covers.slice(1)) {
+      const group = roster.filter((p) => p.historical && p.pos === at);
+      if (group.length <= (need.get(at) ?? 0)) continue;
+      const spare = group.sort((a, b) => b.ovr - a.ovr)[need.get(at) ?? 0];
+      if (spare && (!mate || spare.ovr > mate.ovr)) mate = spare;
+    }
+    if (!mate || mate.ovr < fake.ovr - slack) continue;
+    const ovr = mate.ovr;
+    mate.pos = fake.pos;
+    mate.ovr = deriveOvr(fake.pos, mate.ratings);
+    moveToward(mate, ovr);
+    movePlayer(save, fake.id, "fa");
+    swapped += 1;
+  }
+  if (swapped) {
+    // Whoever left a hole behind gets it filled from the real market.
+    fillRoster(save, teamId);
+    syncDepth(save, teamId);
+  }
+  return swapped;
 }
 
 export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): void {

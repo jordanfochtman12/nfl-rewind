@@ -12,11 +12,13 @@
  * From the start season on it's a dynasty like any other: the real draft classes keep coming
  * while the record has them, then the game makes its own.
  */
-import { advanceHistory, createHistoryGame, historyData, playerFor, seatCoaches } from "./historyMode.ts";
+import { advanceHistory, createHistoryGame, hasHistoryData, HISTORY_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
+import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
+import { FRIENDS } from "./data/friends.ts";
 import { arcTarget, calibrateVetPeak, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
-import { DEPTH_CHART, generatePlayer, normalizeJerseys, playerName, rosterOf, syncDepth } from "./players.ts";
+import { DEPTH_CHART, generatePlayer, normalizeJerseys, playerName, rosterOf, signRealFa, syncDepth } from "./players.ts";
 import { randInt } from "./rng.ts";
 import { deriveOvr } from "./ratings.ts";
 import { refreshContracts } from "./salary.ts";
@@ -110,7 +112,7 @@ function seedFor(p: Player): Seed | undefined {
 }
 
 /** Give a real player his rating for `year`. */
-function rateReal(save: DynastySave, p: Player, year: number): void {
+export function rateReal(save: DynastySave, p: Player, year: number): void {
   const seed = seedFor(p);
   const arc = p.draftYear ? lookupArc(p.draftYear, p.firstName, p.lastName) : undefined;
   if (seed && arc) {
@@ -247,6 +249,45 @@ function pruneRetired(s: DynastySave): void {
   }
 }
 
+/**
+ * Free agency's real market. Everyone the record has on an NFL roster this season who isn't
+ * in the league yet (an undrafted rookie, a man out of the league last year, a player the
+ * classic start never knew) comes in as a free agent, rated from what he really did, so a
+ * club's open spots go to real players. This year's draftees come through the draft instead.
+ */
+export function realIntake(save: DynastySave): number {
+  if (!save.realPool || save.realHistory || !hasHistoryData() || save.year > HISTORY_LAST) return 0;
+  const h = historyData();
+  const year = save.year;
+  const drafted = new Set(h.drafts(year).map((d) => d.person));
+  // Players already in the save by name (the draft room and the classic start make their
+  // own ids), with when they came into the league, so a namesake isn't mistaken for him.
+  const known = new Map<string, number[]>();
+  for (const p of Object.values(save.players)) {
+    if (!p.historical) continue;
+    const k = normalizedName(p.firstName, p.lastName);
+    const list = known.get(k) ?? [];
+    list.push(p.draftYear ?? p.arc?.dy ?? year - p.yearsPro);
+    known.set(k, list);
+  }
+  let added = 0;
+  for (const [, list] of h.rosters(year)) {
+    for (const { person } of list) {
+      if (drafted.has(person) || save.players[`r-${person.toString(36)}`]) continue;
+      const who = h.people[person];
+      if (!who) continue;
+      const first = h.firstSeason(person) ?? year;
+      if (known.get(normalizedName(who.first, who.last))?.some((dy) => Math.abs(dy - first) <= 2)) continue;
+      const p = playerFor(save, person, year, "fa");
+      if (who.birth) p.age = year - Number(who.birth.slice(0, 4));
+      p.yearsPro = Math.max(0, year - first);
+      rateReal(save, p, year);
+      added += 1;
+    }
+  }
+  return added;
+}
+
 export interface EraOpts {
   userTeamId: TeamId;
   startingYear: number;
@@ -270,6 +311,7 @@ export function createEraGame(o: EraOpts): DynastySave {
   s.cpuOnly = !!o.sandbox;
   s.userTeamId = o.userTeamId;
   s.startingYear = year;
+  s.realPool = true;
   s.seed = o.seed ?? year * 97 + o.userTeamId.charCodeAt(0);
   s.rng = s.seed >>> 0;
   s.owner = newOwnerState();
@@ -321,13 +363,31 @@ export function createEraGame(o: EraOpts): DynastySave {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     rateReal(s, p, year);
   }
+  // The owner's own undrafted class (data/friends.ts) is in the league however late it starts:
+  // a class already past is on the market, grown into the players they became.
+  for (const [fy, list] of Object.entries(FRIENDS)) {
+    const from = Number(fy);
+    if (from >= year) continue;
+    for (const seed of list) {
+      const p = realDraftee(s, seed, from);
+      const years = year - from;
+      p.age += years;
+      p.yearsPro = years;
+      moveToward(p, Math.min(seed.ceiling, seed.start + years * 3));
+      p.peakOvr = p.ovr;
+      p.scoutOvr = p.ovr;
+      p.revealed = true;
+    }
+  }
   const before = new Set(Object.keys(s.players));
   for (const id of activeTeamIds(year)) {
     balanceLine(s, id);
     // Only the depth chart's holes are filled now: the rest of the roster is for this
     // year's real draft class, which is on the board.
     for (const [pos, need] of DEPTH_CHART) {
-      for (let have = rosterOf(s, id).filter((p) => p.pos === pos).length; have < need; have++) generatePlayer(s, pos, id, 58, randInt(s, 23, 29));
+      for (let have = rosterOf(s, id).filter((p) => p.pos === pos).length; have < need; have++) {
+        if (!signRealFa(s, id, pos)) generatePlayer(s, pos, id, 58, randInt(s, 23, 29));
+      }
     }
     syncDepth(s, id);
   }

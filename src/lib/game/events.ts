@@ -2,7 +2,7 @@ import type { AwardsResult, DynastySave, Player, Pos, TeamId } from "./types.ts"
 import { recordAward, recordAwards, recordProBowl, recordRings } from "./honors.ts";
 import { activeTeamIds, conferenceOf, displayName, gamesInSeason, roman, superBowlNumber } from "./teams.ts";
 import { proBowlSite, superBowlSite } from "./data/bowlSites.ts";
-import { generatePlayer, livingPlayers, playerName, rosterOf } from "./players.ts";
+import { generatePlayer, livingPlayers, playerName, rosterOf, signRealFa } from "./players.ts";
 import { simGame } from "./sim.ts";
 import { addNews } from "./news.ts";
 import { rand, randInt } from "./rng.ts";
@@ -597,7 +597,7 @@ export function cpuInSeasonMoves(save: DynastySave): void {
   save.teams[teamId].roster = save.teams[teamId].roster.filter((id) => id !== cut.id);
   cut.teamId = "fa";
   save.waivers.push({ playerId: cut.id, from: teamId, week: save.week, year: save.year });
-  generatePlayer(save, cut.pos, teamId, randInt(save, 54, 66));
+  if (!signRealFa(save, teamId, cut.pos)) generatePlayer(save, cut.pos, teamId, randInt(save, 54, 66));
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, teamId)} churn the bottom of the roster`,

@@ -31,6 +31,11 @@ export function setHistoryData(d: HistoryData): void {
   DATA = d;
 }
 
+/** Whether the record is loaded (a dynasty draws its real free agents from it when it is). */
+export function hasHistoryData(): boolean {
+  return !!DATA;
+}
+
 /** The loaded record, for building a dynasty from a real season (eraStart.ts). */
 export function historyData(): HistoryData {
   return data();

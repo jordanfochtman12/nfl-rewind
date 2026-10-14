@@ -20,6 +20,7 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
+import { realIntake } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
@@ -44,7 +45,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { fillRoster, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
@@ -135,6 +136,7 @@ function ageAndRegen(save: DynastySave): void {
 function runCpuFreeAgency(save: DynastySave): void {
   // Free agency opening is the deadline for the owner's contract talks.
   closeTalks(save, (p) => expireContract(save, p));
+  realIntake(save);
   cpuSignNeeds(save);
 }
 
@@ -143,6 +145,7 @@ function fillCpuRosters(save: DynastySave): void {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     if (!save.teams[id]) continue;
     fillRoster(save, id);
+    swapInReal(save, id);
     save.teams[id].payroll = teamPayroll(save, id);
     syncDepth(save, id);
   }
@@ -386,7 +389,30 @@ function closeRelocation(save: DynastySave): void {
 function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
   // History mode doesn't simulate anything: each step lays down what really happened.
   if (s.realHistory) {
+    const from = s.phase;
+    const week = s.week;
     advanceHistory(s);
+    // The same Primetime as a dynasty: an episode after every Sunday and every round of the
+    // real postseason, then the Super Bowl and awards shows.
+    try {
+      if (from === "regular" && (s.week !== week || s.phase !== "regular")) {
+        // The show is about the Sunday just played, as it is in a dynasty.
+        const [phase, now] = [s.phase, s.week];
+        s.phase = "regular";
+        s.week = week;
+        try {
+          buildPrimetime(s, "regular");
+        } finally {
+          s.phase = phase;
+          s.week = now;
+        }
+      }
+      else if (from === "playoffs" && s.phase === "playoffs") buildPrimetime(s, "playoffs");
+      else if (s.phase === "superBowl" && from !== "superBowl") buildPrimetime(s, "superBowl");
+      else if (s.phase === "awards" && from !== "awards") buildPrimetime(s, "awards");
+    } catch {
+      // A show is a bonus; the record stepping forward is what matters.
+    }
     return s;
   }
   // A sandbox steps one moment at a time like a dynasty does, so each Sunday and each pick can

@@ -155,6 +155,8 @@ export function pickBreakdown(save: DynastySave, playerId: string, made: Player[
   const col = collegeLine(save, p);
   if (col.honor && p.college && p.college !== "Campus") facts.push(`${col.honor} at ${p.college}.`);
   if (from) facts.push(`The ${nick} got this pick from the ${nicknameOf(save.year, from)}.`);
+  // Nothing on the board stands out: the desk still says who he is.
+  if (!facts.length) facts.push(`${/^[aeiou]/.test(position) ? "An" : "A"} ${position}${p.college && p.college !== "Campus" ? ` out of ${p.college}` : ""}, and the ${nick} have their man.`);
 
   const lead = {
     STEAL: [`That's a steal.`, `What a value for the ${nick}.`, `I can't believe he was still there.`, `The ${nick} got the best player in this range, and it's not close.`],

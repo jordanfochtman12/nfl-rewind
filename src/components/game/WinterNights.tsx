@@ -86,7 +86,9 @@ export function AwardsNight() {
         <p className="max-w-xl text-paper">
           {yours.length
             ? `The room stands up for your club ${yours.length === 1 ? "once" : `${yours.length} times`}.`
-            : "Nobody from your club takes a trophy home. The writers had other names."}
+            : save.sandbox
+              ? "The writers have their names. One envelope at a time."
+              : "Nobody from your club takes a trophy home. The writers had other names."}
         </p>
         <AwardsCeremony shown={shown} coach={coach ? { name: coach.name, teamId: coach.teamId ?? undefined } : undefined} />
         {allPro.length > 0 && (

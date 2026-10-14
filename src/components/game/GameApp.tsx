@@ -684,24 +684,83 @@ function InjuryReport() {
   );
 }
 
+/**
+ * The club a club tab is about: the owner's own, or in Watch and History modes whichever club
+ * the viewer picked (the reigning champion until they pick one).
+ */
+function useClubId(): TeamId {
+  const save = useGameStore((s) => s.save)!;
+  const pick = useGameStore((s) => s.watchClub);
+  if (!save.sandbox) return save.userTeamId;
+  if (pick && save.teams[pick]?.active) return pick;
+  const champ = save.history.superBowls.at(-1);
+  const id = champ ? ((champ.homeScore >= champ.awayScore ? champ.homeId : champ.awayId) as TeamId) : undefined;
+  return id && save.teams[id]?.active ? id : activeTeamIds(save.year)[0]!;
+}
+
+/** Watch and History modes: pick the club the tab follows. Nothing in a dynasty. */
+function ClubPicker() {
+  const save = useGameStore((s) => s.save)!;
+  const setWatchClub = useGameStore((s) => s.setWatchClub);
+  const id = useClubId();
+  if (!save.sandbox) return null;
+  const clubs = activeTeamIds(save.year)
+    .slice()
+    .sort((a, b) => displayName(save.year, a).localeCompare(displayName(save.year, b)));
+  const t = save.teams[id]!;
+  const inSeason = ["regular", "deadline", "playoffs", "superBowl"].includes(save.phase);
+  return (
+    <section className="hq-panel space-y-3 p-3" aria-label="Club">
+      <div className="flex items-center gap-3">
+        <Logo id={id} year={save.year} size={48} />
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] tracking-[0.3em] text-muted">
+            {save.realHistory ? "THE REAL" : "WATCHING"} {save.year}
+            {inSeason ? ` · ${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}` : ""}
+          </p>
+          <p className="font-display text-xl font-bold uppercase italic leading-tight">{displayName(save.year, id)}</p>
+        </div>
+      </div>
+      <label className="block text-xs text-muted">
+        <span className="sr-only">Club</span>
+        <select
+          className="min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-sm text-fg"
+          value={id}
+          onChange={(e) => setWatchClub(e.target.value as TeamId)}
+        >
+          {clubs.map((c) => (
+            <option key={c} value={c}>
+              {displayName(save.year, c)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p className="text-xs text-subtle">The computer runs every club. This is the club as it stands, for a look.</p>
+    </section>
+  );
+}
+
 function Roster() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
   const lastDeskNote = useGameStore((s) => s.lastDeskNote);
-  const rows = rosterOf(save, save.userTeamId)
+  const clubId = useClubId();
+  const look = !!save.sandbox;
+  const rows = rosterOf(save, clubId)
     .slice()
     .sort((a, b) => visibleOvr(b) - visibleOvr(a));
   return (
     <div className="space-y-3">
-      {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
-      {!save.realHistory && <LockerRoom />}
+      <ClubPicker />
+      {lastDeskNote && !look && <p className="text-sm text-brick">{lastDeskNote}</p>}
+      {!save.sandbox && <LockerRoom />}
       <div className="overflow-x-auto rounded-xl border border-line">
       <table className="w-full min-w-[1040px] text-left text-sm">
         <thead className="text-xs tracking-wider text-muted">
           <tr>
             <th className="sticky left-0 z-10 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
             <th className="sticky left-12 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Mood", "Status", ""].map((h) => (
+            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Mood", "Status", ...(look ? [] : [""])].map((h) => (
               <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                 {h}
               </th>
@@ -725,11 +784,11 @@ function Roster() {
                 </span>
               </td>
               <td className="tabular px-3 py-2">{p.age}</td>
-              <td className="tabular px-3 py-2 text-muted">{p.contractYears}</td>
+              <td className="tabular px-3 py-2 text-muted">{save.realHistory ? p.yearsPro : p.contractYears}</td>
               <td className="px-3 py-2">
                 <KitChips player={p} compact />
               </td>
-              <td className="tabular px-3 py-2 text-muted">{formatMoney(p.salary ?? 0, save.year)}</td>
+              <td className="tabular px-3 py-2 text-muted">{save.realHistory ? "—" : formatMoney(p.salary ?? 0, save.year)}</td>
               <td className="px-3 py-2 text-xs">
                 <MoodCell p={p} />
               </td>
@@ -746,7 +805,7 @@ function Roster() {
                   <span className="text-good">active</span>
                 )}
               </td>
-              <td className="px-3 py-2">
+              {!look && <td className="px-3 py-2">
                 <div className="flex flex-wrap gap-2">
                   {p.onIR ? (
                     canReturnFromIR(save.year) ? (
@@ -791,7 +850,7 @@ function Roster() {
                     Cut
                   </Btn>
                 </div>
-              </td>
+              </td>}
             </tr>
           ))}
         </tbody>
@@ -804,14 +863,19 @@ function Roster() {
 function Depth() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
-  const team = save.teams[save.userTeamId];
-  const groups = depthChart(save, save.userTeamId);
+  const clubId = useClubId();
+  const look = !!save.sandbox;
+  const team = save.teams[clubId]!;
+  const groups = depthChart(save, clubId);
   return (
     <div className="space-y-8">
+      <ClubPicker />
       <p className="text-sm text-muted">
-        This order is what Sunday uses. Injured players skip. Move names up and down — the next man is actually next.
+        {look
+          ? "The order the staff will use on Sunday. Injured players skip."
+          : "This order is what Sunday uses. Injured players skip. Move names up and down — the next man is actually next."}
       </p>
-      <DepthField />
+      <DepthField teamId={clubId} />
       {groups.map((g) => (
         <section key={g.label}>
           <h3 className="mb-3 text-sm tracking-[0.2em] text-muted">{g.label}</h3>
@@ -837,7 +901,7 @@ function Depth() {
                         <span className={`stat-glow tabular ${gradeTone(p.revealed ? p.ovr : visibleOvr(p))}`}>
                           {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
                         </span>
-                        <button
+                        {!look && <><button
                           type="button"
                           className="min-h-11 min-w-11 text-muted hover:text-fg"
                           aria-label="Move up"
@@ -852,7 +916,7 @@ function Depth() {
                           onClick={() => desk((s) => void moveDepth(s, s.userTeamId, row.pos, p.id, 1))}
                         >
                           Down
-                        </button>
+                        </button></>}
                       </span>
                     </li>
                   ))}
@@ -955,8 +1019,10 @@ function Staff() {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
   const lastDeskNote = useGameStore((s) => s.lastDeskNote);
-  const t = save.teams[save.userTeamId];
-  const pool = availableCoaches(save);
+  const clubId = useClubId();
+  const look = !!save.sandbox;
+  const t = save.teams[clubId]!;
+  const pool = look ? [] : availableCoaches(save);
   const row = (role: "HC" | "OC" | "DC", id: string | null) => {
     const c = id ? save.coaches[id] : undefined;
     const winning = !!c && c.careerWins > c.careerLosses;
@@ -988,7 +1054,7 @@ function Staff() {
           </div>
         )}
         <div className="mt-3 flex flex-wrap gap-2">
-          {c && (
+          {c && !look && (
             <Btn kind="brick" onClick={() => desk((s) => {
               const r = deskFire(s, s.userTeamId, role);
               return r.ok ? `Fired ${c.name}.` : r.reason;
@@ -1028,15 +1094,17 @@ function Staff() {
   const carousel = (save.carousel ?? []).filter((m) => m.year >= save.year - 1);
   return (
     <div className="space-y-6">
-      {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
-      <p className="text-sm text-muted">
+      <ClubPicker />
+      {lastDeskNote && !look && <p className="text-sm text-brick">{lastDeskNote}</p>}
+      {!look && <p className="text-sm text-muted">
         Scheme, attributes, and abilities change how the club plays and how the war room picks. Fire a man, hire another, live with it on Sunday. The league will not hire your head coach.
-      </p>
+      </p>}
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="rounded-xl border border-line bg-surface p-4 text-sm">
           <span className="text-xs tracking-[0.2em] text-muted">Offense</span>
           <select
             className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            disabled={look}
             value={t.offScheme}
             onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { offScheme: e.target.value as typeof t.offScheme }))}
           >
@@ -1051,6 +1119,7 @@ function Staff() {
           <span className="text-xs tracking-[0.2em] text-muted">Defense</span>
           <select
             className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            disabled={look}
             value={t.defScheme}
             onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { defScheme: e.target.value as typeof t.defScheme }))}
           >
@@ -1065,6 +1134,7 @@ function Staff() {
           <span className="text-xs tracking-[0.2em] text-muted">Draft style</span>
           <select
             className="mt-2 min-h-11 w-full rounded-md border border-line bg-surface-2 px-2 text-fg"
+            disabled={look}
             value={t.draftStyle}
             onChange={(e) => desk((s) => void deskScheme(s, s.userTeamId, { draftStyle: e.target.value as typeof t.draftStyle }))}
           >
@@ -1076,7 +1146,7 @@ function Staff() {
           </select>
         </label>
       </div>
-      <SundayCallSheet />
+      {!look && <SundayCallSheet />}
       <div className="grid gap-3 sm:grid-cols-3">
         {row("HC", t.coachId)}
         {row("OC", t.ocId)}
@@ -1155,16 +1225,18 @@ function Standings() {
 
 function Schedule() {
   const save = useGameStore((s) => s.save)!;
-  const games = gamesForTeam(save, save.userTeamId);
+  const clubId = useClubId();
+  const games = gamesForTeam(save, clubId);
   const extra = [...save.playoffGames, ...(save.superBowl ? [save.superBowl] : [])];
   const [openId, setOpenId] = useState<string | null>(null);
   const opened = [...games, ...extra].find((g) => g.id === openId);
   return (
     <div className="space-y-4">
+      <ClubPicker />
       <ul className="space-y-2">
         {games.map((g) => {
-          const opp = (g.homeId === save.userTeamId ? g.awayId : g.homeId) as TeamId;
-          const home = g.homeId === save.userTeamId;
+          const opp = (g.homeId === clubId ? g.awayId : g.homeId) as TeamId;
+          const home = g.homeId === clubId;
           return (
             <li key={g.id}>
               <button
@@ -1212,8 +1284,8 @@ function Schedule() {
                   ) : (
                     <span className="tabular block">—</span>
                   )}
-                  {realResultFor(g, save.userTeamId) ? (
-                    <span className="tabular block text-[10px] text-subtle">real {realResultFor(g, save.userTeamId)}</span>
+                  {realResultFor(g, clubId) ? (
+                    <span className="tabular block text-[10px] text-subtle">real {realResultFor(g, clubId)}</span>
                   ) : null}
                 </span>
               </button>
@@ -1221,7 +1293,7 @@ function Schedule() {
           );
         })}
         {extra
-          .filter((g) => g.homeId === save.userTeamId || g.awayId === save.userTeamId)
+          .filter((g) => g.homeId === clubId || g.awayId === clubId)
           .map((g) => (
             <li key={g.id}>
               <button
@@ -1870,8 +1942,12 @@ const TABS: { id: Tab; label: string }[] = [
 const WATCH_TABS: { id: Tab; label: string }[] = [
   { id: "office", label: "Watch" },
   { id: "primetime", label: "Primetime" },
+  { id: "roster", label: "Roster" },
+  { id: "depth", label: "Depth" },
+  { id: "staff", label: "Staff" },
   { id: "standings", label: "Standings" },
   { id: "league", label: "League" },
+  { id: "schedule", label: "Schedule" },
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
   { id: "history", label: "History" },
@@ -1880,7 +1956,7 @@ const WATCH_TABS: { id: Tab; label: string }[] = [
   { id: "hof", label: "Hall of Fame" },
 ];
 
-const HISTORY_TABS: { id: Tab; label: string }[] = WATCH_TABS.filter((t) => t.id !== "primetime").map((t) =>
+const HISTORY_TABS: { id: Tab; label: string }[] = WATCH_TABS.map((t) =>
   t.id === "office" ? { id: t.id, label: "Rewind" } : t,
 );
 
@@ -1989,6 +2065,7 @@ function PlayShell() {
       <div key={`wipe-${tab}`} className="wipe" aria-hidden />
       <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
         <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={tabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
+        {real && event && tab === "office" && save.phase !== "preseason" ? <EventPane /> : null}
         {real && tab === "office" ? <HistoryDesk /> : null}
         {watch && !real && tab === "office" ? <WatchOffice event={event} /> : null}
         {!watch && (event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
@@ -1998,12 +2075,12 @@ function PlayShell() {
         {!watch && showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {!watch && showDeadline && tab === "office" ? <DeadlineNight /> : null}
         {!watch && !event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
-        {!watch && tab === "roster" && <Roster />}
-        {!watch && tab === "depth" && <Depth />}
-        {!watch && tab === "staff" && <Staff />}
+        {tab === "roster" && <Roster />}
+        {tab === "depth" && <Depth />}
+        {tab === "staff" && <Staff />}
         {!watch && tab === "market" && <MarketDesk />}
         {tab === "standings" && <Standings />}
-        {!watch && tab === "schedule" && <Schedule />}
+        {tab === "schedule" && <Schedule />}
         {tab === "stats" && <Stats />}
         {tab === "draft" && real && <HistoryDraft />}
         {tab === "draft" && !showDraft && !real && <DraftNight />}

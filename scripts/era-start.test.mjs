@@ -42,3 +42,24 @@ test("a 2020 Watch history league plays its first season", () => {
   assert.equal(s.history.superBowls.at(-1)?.year, 2020);
   assert.equal(END_YEAR, 2040);
 });
+
+test("the league stays the real league: real players fill the rosters season after season", () => {
+  let s = createEraGame({ userTeamId: "chi", startingYear: 1985, sandbox: true, seed: 11 });
+  for (const y of [1985, 1986, 1987]) {
+    s = simUntil(s, (x) => x.year === y && x.phase === "regular");
+    const on = Object.values(s.players).filter((p) => s.teams[p.teamId]?.active);
+    const real = on.filter((p) => p.historical).length / on.length;
+    assert.ok(real >= 0.96, `${y}: ${(real * 100).toFixed(1)}% real`);
+  }
+});
+
+test("the owner's own class is in a league that starts after it", () => {
+  const s = createEraGame({ userTeamId: "pit", startingYear: 2020, sandbox: true, seed: 5 });
+  for (const [f, l] of [["Jordan", "Fochtman"], ["Tommy", "DeArmitt"], ["Austin", "Widner"], ["Tyler", "DeArmitt"]]) {
+    const p = find(s, f, l);
+    assert.ok(p, `${f} ${l} is in the league`);
+    assert.ok(p.historical && p.gem);
+  }
+  const later = createEraGame({ userTeamId: "pit", startingYear: 2001, seed: 5 });
+  assert.equal(find(later, "Jordan", "Fochtman"), undefined, "not before his class");
+});
