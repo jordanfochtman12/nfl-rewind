@@ -96,8 +96,7 @@ import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
 import { FreeAgencyNight } from "./FreeAgencyNight";
 import { FreeAgencyRecap } from "./FreeAgencyRecap";
-import { warmHdVoices } from "@/lib/voice/studioVoice";
-import { settingsNow } from "@/lib/settings-store";
+import { clearOldVoiceModel } from "@/lib/voice/speech";
 import { SuperBowlHistory } from "./SuperBowlHistory";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
@@ -2108,24 +2107,8 @@ function PlayShell() {
 
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
-  // The studio voices start downloading once the page has settled, so the first show has them,
-  // phones included (the 92 MB CPU model). Only a device nearly out of storage waits until a
-  // voice is needed, so the model never crowds out the saved dynasties.
-  useEffect(() => {
-    const t = window.setTimeout(() => {
-      if (!settingsNow().hdVoices) return;
-      void (async () => {
-        try {
-          const est = await navigator.storage?.estimate?.();
-          if (est?.quota && est.quota - (est.usage ?? 0) < 4e8) return;
-        } catch {
-          /* can't tell: go ahead */
-        }
-        warmHdVoices();
-      })();
-    }, 4000);
-    return () => window.clearTimeout(t);
-  }, []);
+  // The voices are the device's own now: the old studio-voice download is cleared off the device.
+  useEffect(() => clearOldVoiceModel(), []);
   if (screen === "title") return <TitleScreen />;
   if (screen === "select") return <TeamSelect />;
   return <PlayShell />;

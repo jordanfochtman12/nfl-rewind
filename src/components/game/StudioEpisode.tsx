@@ -8,10 +8,9 @@ import { Logo } from "./chrome";
 import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { crewFor, crewGender } from "@/lib/game/previewVoice";
-import { cancelSpeech, prefetchLine, prefetchLines, speakLine, useTalking } from "@/lib/voice/studioVoice";
+import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/speech";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
-const CHAIR = { HOST: "host", ANALYST: "analyst", REPORTER: "reporter" } as const;
 
 /**
  * A directed, chapter-by-chapter broadcast. The frozen script is also the accessible transcript.
@@ -78,24 +77,6 @@ export function StudioEpisode({
       setError("Music is unavailable. The show transcript remains available.");
     }
   };
-  // While the open rolls, the first reads are being made, so the desk comes up talking.
-  useEffect(() => {
-    if (!opening || !narration) return;
-    const crew = crewFor(year);
-    const first = episode.chapters.slice(index, index + 2).flatMap((c) => c.lines).slice(0, 5);
-    prefetchLines(
-      first.map((l) => {
-        const person = episode.cast?.[l.speaker] ?? crew[l.speaker];
-        const c = episode.cast?.[l.speaker];
-        return {
-          text: footballSpeech(l.text, year),
-          who: { key: person.name, gender: c?.gender ?? (c ? crewGender(c.name) : undefined) ?? crew[l.speaker].gender, chair: CHAIR[l.speaker] },
-          rate: l.speaker === "ANALYST" ? 0.97 : l.speaker === "REPORTER" ? 1.03 : 1,
-        };
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opening]);
   const air = useTalking();
   // The open rolls, then the desk comes up and the show starts.
   const endOpen = useCallback(() => {
@@ -173,14 +154,7 @@ export function StudioEpisode({
         }
         window.setTimeout(next, 600);
       };
-      const person = episode.cast?.[current.speaker] ?? crew[current.speaker];
-      speakLine(speech, { key: person.name, gender: who(current.speaker).gender, chair: CHAIR[current.speaker] });
-      // Read ahead: the next line is being made while this one is on the air.
-      const after = chapter.lines[line + 1] ?? episode.chapters[index + 1]?.lines[0];
-      if (after) {
-        const nextPerson = episode.cast?.[after.speaker] ?? crew[after.speaker];
-        prefetchLine(footballSpeech(after.text, year), { key: nextPerson.name, gender: who(after.speaker).gender, chair: CHAIR[after.speaker] }, after.speaker === "ANALYST" ? 0.97 : after.speaker === "REPORTER" ? 1.03 : 1);
-      }
+      speakLine(speech);
       return () => {
         active = false;
         cancelSpeech();
@@ -340,7 +314,7 @@ export function StudioEpisode({
           )}
           <div className="pt-stage-top">
             <span className="pt-onair">{playing ? "ON AIR" : preview ? "SEASON PREVIEW" : "STUDIO REPLAY"}</span>
-            {playing && narration && air.talking && !air.onAir && <span className="pt-mic" role="status">● On the mic…</span>}
+            {playing && narration && air.talking && <span className="pt-mic" role="status">● On the mic…</span>}
             <span>
               {String(index + 1).padStart(2, "0")} /{" "}
               {String(episode.chapters.length).padStart(2, "0")} SEGMENTS

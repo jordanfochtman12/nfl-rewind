@@ -9,7 +9,7 @@ import { dynastyStorage } from "@/lib/save-idb";
 import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
 import { Btn } from "./chrome";
 import { useOfflineStatus } from "../offline-status";
-import { cancelSpeech, hasPremiumDeviceVoice, HD_VOICES, isPhone, previewVoice, speakLine, useHdVoice, warmHdVoices, type Chair } from "@/lib/voice/studioVoice";
+import { cancelSpeech, hasPremiumDeviceVoice, isPhone, speakLine } from "@/lib/voice/speech";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -87,23 +87,13 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
     useGameStore.setState({ save: { ...s, schedule: s.schedule.map(drop), playoffGames: s.playoffGames.map(drop) } });
     setNote("Cleared the play-by-play film of games that weren't broadcast.");
   };
-  const hd = useHdVoice();
-  const hdHint = !st.hdVoices
-    ? "Off: the device's own voices read the shows."
-    : hd.status === "ready"
-      ? `Neural broadcast voices, on the air${hd.rtf && hd.rtf > 1 ? ". This device makes speech slower than it's spoken, so the shows read ahead and a live call that can't air in time is skipped rather than holding the game" : ""}.`
-      : hd.status === "loading"
-        ? `Downloading the studio voices, ${Math.round(hd.progress * 100)}% (about 90 MB, once).`
-        : hd.status === "failed"
-          ? "The studio voices couldn't load here, so the device voices are reading. Turn this off and on to try again."
-          : "Neural broadcast voices (Kokoro). About 90 MB, downloaded once.";
   const speak = () => {
     if (!("speechSynthesis" in window)) return;
     cancelSpeech();
     const u = new SpeechSynthesisUtterance("Welcome to the broadcast. Here's how I'll sound.");
     const v = voices.find((x) => x.name === st.voiceName);
     if (v) u.voice = v;
-    speakLine(u, { key: "settings-preview", gender: "m", chair: "host" });
+    speakLine(u);
   };
 
   return (
@@ -116,41 +106,13 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
         <div className="space-y-4">
           <Section title="SOUND AND VOICES">
             <Toggle label="Narration" hint="Studio shows, the whip-around and the TV host read aloud." on={st.narration} onChange={(v) => st.set({ narration: v })} />
-            <Toggle
-              label="Studio voices (HD)"
-              hint={hdHint}
-              on={st.hdVoices}
-              onChange={(v) => {
-                st.set({ hdVoices: v });
-                if (v) warmHdVoices(true);
-              }}
-            />
             {isPhone() && (
-              <div className="space-y-2 rounded-md border border-line px-3 py-2">
-                <label className="flex min-h-10 flex-wrap items-center justify-between gap-2 text-sm text-paper">
-                  Voices on this phone
-                  <select
-                    aria-label="Voices on this phone"
-                    className="min-h-10 rounded-md border border-line bg-surface-2 px-2 text-sm text-fg"
-                    value={st.phoneVoice ?? "auto"}
-                    onChange={(e) => {
-                      st.set({ phoneVoice: e.target.value as "auto" | "device" | "studio" });
-                      if (e.target.value === "studio") warmHdVoices(true);
-                    }}
-                  >
-                    <option value="auto">Automatic (best on this phone)</option>
-                    <option value="device">iPhone voices (instant)</option>
-                    <option value="studio">Studio voices (slower on a phone)</option>
-                  </select>
-                </label>
-                <p className="text-xs text-muted">
-                  {hasPremiumDeviceVoice()
-                    ? "This phone has a Premium voice installed, so the broadcast reads with it: instant and clear."
-                    : "For the best voices on an iPhone, install a Premium one: Settings → Accessibility → Spoken Content → Voices → English, then download Ava, Zoe, Evan or Nathan (Premium). The broadcast picks it up on its own."}
-                </p>
-              </div>
+              <p className="rounded-md border border-line px-3 py-2 text-xs text-muted">
+                {hasPremiumDeviceVoice()
+                  ? "This phone has a Premium voice installed, so the broadcast reads with it."
+                  : "For the best voices on an iPhone, install a Premium one: Settings → Accessibility → Spoken Content → Voices → English, then download Ava, Zoe, Evan or Nathan (Premium). The broadcast picks it up on its own."}
+              </p>
             )}
-            {st.hdVoices && <HdCastPicker />}
             <Toggle label="Booth voices in live games and the draft" hint="The play-by-play and color men call each snap, and the podium reads every pick." on={st.boothVoices} onChange={(v) => st.set({ boothVoices: v })} />
             <Toggle label="Music and stadium sound" on={st.music} onChange={(v) => st.set({ music: v })} />
             <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 py-2">
@@ -233,58 +195,6 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           </Section>
         </div>
       </div>
-    </div>
-  );
-}
-
-const CHAIRS: { chair: Chair; label: string; line: string }[] = [
-  { chair: "host", label: "Studio host", line: "Hello again from the studio. We've got a lot to get to tonight." },
-  { chair: "analyst", label: "Studio analyst", line: "That's a star taking over a football game. You can't coach that." },
-  { chair: "reporter", label: "Sideline reporter", line: "He's expected to play Sunday. The trainers like what they've seen." },
-  { chair: "pbp", label: "Play-by-play", line: "Drops back, fires deep... touchdown!" },
-  { chair: "color", label: "Color analyst", line: "Watch the left tackle. He sealed the edge, and that's the ballgame." },
-  { chair: "draft", label: "Draft podium", line: "With the first pick in the draft, the club selects..." },
-];
-
-/** Recast the desk: a studio voice for each chair, with a sample read. */
-function HdCastPicker() {
-  const st = useSettings();
-  const hd = useHdVoice();
-  return (
-    <div className="space-y-2 rounded-lg border border-line p-3">
-      <p className="text-xs tracking-[0.2em] text-muted">THE CAST {hd.status === "ready" ? "" : "· voices play once the download finishes"}</p>
-      {CHAIRS.map((c) => (
-        <div key={c.chair} className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-sm">{c.label}</span>
-          <span className="flex items-center gap-2">
-            <select
-              aria-label={`${c.label} voice`}
-              className="min-h-9 max-w-[12.5rem] rounded-md border border-line bg-surface-2 px-2 text-xs text-fg"
-              value={st.hdCast?.[c.chair] ?? ""}
-              onChange={(e) => st.set({ hdCast: { ...(st.hdCast ?? {}), [c.chair]: e.target.value || undefined } })}
-            >
-              <option value="">Matched to the broadcaster</option>
-              {([["Premium voices", true], ["More voices", false]] as const).map(([group, premium]) => (
-                <optgroup key={group} label={group}>
-                  {HD_VOICES.filter((v) => !!v.premium === premium).map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.label}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="bx-chip min-h-9 px-2 text-xs"
-              aria-label={`Hear the ${c.label.toLowerCase()}`}
-              onClick={() => previewVoice(st.hdCast?.[c.chair] ?? (c.chair === "draft" ? "bm_george" : c.chair === "analyst" || c.chair === "color" ? "am_fenrir" : c.chair === "reporter" ? "am_puck" : "am_michael"), c.line)}
-            >
-              ▶
-            </button>
-          </span>
-        </div>
-      ))}
     </div>
   );
 }

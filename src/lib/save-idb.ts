@@ -33,7 +33,7 @@ function keepStorage(): void {
   }
 }
 
-/** The studio voices' downloaded model: the first thing to go when a save needs the room. */
+/** The old studio voices' downloaded model (no longer used): the first thing to go when a save needs the room. */
 async function dropVoiceCache(): Promise<boolean> {
   try {
     if (typeof caches === "undefined") return false;

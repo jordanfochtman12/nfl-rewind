@@ -16,16 +16,6 @@ export interface Settings {
   music: boolean;
   /** A preferred device voice for the lead voice ("" = best available). */
   voiceName: string;
-  /** Studio-grade neural voices (Kokoro, downloaded once, ~90 MB); device voices otherwise. */
-  hdVoices: boolean;
-  /**
-   * On a phone: "device" reads with the phone's own voices (instant; the iPhone's Premium
-   * voices are excellent), "studio" with the neural studio voices made on the phone, "auto"
-   * with the phone's voices when it has a Premium or Enhanced one installed.
-   */
-  phoneVoice: "auto" | "device" | "studio";
-  /** The viewer's pick of studio voice by chair (host, analyst, reporter, pbp, color, draft). */
-  hdCast: Partial<Record<"host" | "analyst" | "reporter" | "pbp" | "color" | "draft", string>>;
   /** Watch mode auto-play pace. */
   autoSpeed: AutoSpeed;
   /** Auto-play pauses for the draft, the Super Bowl, awards night and the Hall of Fame. */
@@ -47,9 +37,6 @@ export const DEFAULT_SETTINGS: Settings = {
   boothVoices: true,
   music: true,
   voiceName: "",
-  hdVoices: true,
-  phoneVoice: "auto",
-  hdCast: {},
   autoSpeed: "normal",
   stopForBigNights: true,
   tvStudio: true,
@@ -106,12 +93,13 @@ export const useSettings = create<SettingsStore>()(
       storage: createJSONStorage(() => safeStorage),
       // v1: the booth and the draft podium speak by default now that every voice is a studio
       // voice; a device that saved the old default (off) gets the new one once.
-      // v2: every voice and sound on (narration, studio voices, the booth, music and stadium
-      // sound, the TV studio), once, for devices that saved older choices.
-      version: 2,
+      // v2: every voice and sound on (narration, the booth, music and stadium sound, the TV
+      // studio), once, for devices that saved older choices.
+      // v3: the studio voices are gone (every voice is the device's own): their settings go too.
+      version: 3,
       migrate: (old, from) => {
-        const s = (old ?? {}) as Partial<Settings>;
-        if (from < 2) return { ...s, narration: true, hdVoices: true, boothVoices: true, music: true, tvStudio: true } as SettingsStore;
+        const { hdVoices: _hd, phoneVoice: _phone, hdCast: _cast, ...s } = (old ?? {}) as Partial<Settings> & { hdVoices?: unknown; phoneVoice?: unknown; hdCast?: unknown };
+        if (from < 2) return { ...s, narration: true, boothVoices: true, music: true, tvStudio: true } as SettingsStore;
         return s as SettingsStore;
       },
       partialize: (s) => {

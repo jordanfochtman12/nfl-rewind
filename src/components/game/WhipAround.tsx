@@ -12,7 +12,7 @@ import { boothFor } from "@/lib/game/broadcastCrew";
 import { castVoices } from "@/lib/voiceCast";
 import { Logo } from "./chrome";
 import { useEraClass } from "./eraLook";
-import { cancelSpeech, speakLine } from "@/lib/voice/studioVoice";
+import { cancelSpeech, speakLine } from "@/lib/voice/speech";
 
 /** Seconds of game time since kickoff. Overtime runs on past the end of the fourth. */
 const gameTime = (l: Pick<PlayLog, "q" | "clock">) => (l.q - 1) * 900 + (900 - l.clock);
@@ -156,8 +156,7 @@ export function WhipAround({
       u.rate = c?.rate ?? 1.08;
       u.pitch = c?.pitch ?? 1;
       cancelSpeech();
-      // The whip-around cuts game to game; a call that would land late is dropped.
-      speakLine(u, { key: pbp.name, gender: pbp.gender, chair: "pbp" }, { maxLagMs: 3500, live: true });
+      speakLine(u);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now]);

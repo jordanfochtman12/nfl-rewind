@@ -102,12 +102,6 @@ export function LiveBroadcast({
       : [];
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const call = useMemo(() => callAt(i), [i, log, game.year]);
-  // The next three snaps' calls, so the booth's voices are made before the ball is snapped.
-  const upcoming = useMemo(
-    () => [1, 2, 3].filter((d) => log[i + d]).map((d) => ({ lines: callAt(i + d), cue: log[i + d]?.tag ?? "" })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [i, log, game.year],
-  );
   // How loud the building is: tight and late, a big stage, a team on a run, the crowd cue itself.
   const atNow = log[i];
   const intensity = atNow
@@ -119,7 +113,7 @@ export function LiveBroadcast({
           (atNow.cue === "crowd" ? 0.2 : 0),
       )
     : 0;
-  const sound = useBroadcastSound(playing && !halftime && !intro && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity, upcoming);
+  const sound = useBroadcastSound(playing && !halftime && !intro && i < log.length - 1, log[i]?.tag ?? "", call, i, game.year, intensity);
   const atEnd = i >= log.length - 1;
   const playMs = compact ? 300 : SPEEDS[speed]!.ms;
 

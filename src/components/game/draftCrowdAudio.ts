@@ -1,5 +1,5 @@
 import type { DraftReaction } from "@/lib/game/draftAnnouncement";
-import { registerAudio } from "@/lib/voice/studioVoice";
+import { registerAudio } from "@/lib/voice/speech";
 
 /** Licensed human crowd recordings. Local assets, with a short broadcast fade. */
 export function draftCrowdAudio() {

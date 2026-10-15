@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { footballSpeech } from "@/lib/game/footballSpeech";
-import { cancelSpeech, prefetchLines, speakLine, type Speaker } from "@/lib/voice/studioVoice";
+import { castVoices } from "@/lib/voiceCast";
+import { cancelSpeech, speakLine, type Speaker } from "@/lib/voice/speech";
 
 export interface DeskLine {
   text: string;
@@ -9,7 +10,7 @@ export interface DeskLine {
 }
 
 /**
- * A desk segment read aloud, line by line, in the studio voices: the halftime report, the
+ * A desk segment read aloud, line by line, each person in a voice of their own: the halftime report, the
  * postgame podium. `at` is the line on the air (-1 before the first), `done` once the last
  * line ends (or right away when the voices are off, so whatever waits on it never stalls).
  */
@@ -22,12 +23,17 @@ export function useDeskReading(lines: DeskLine[], on: boolean, year: number): { 
     let live = true;
     const l = lines[at]!;
     const u = new SpeechSynthesisUtterance(footballSpeech(l.text, year));
-    u.rate = l.rate ?? 1;
+    // Each person on the desk keeps one device voice for the whole segment.
+    const all = "speechSynthesis" in window ? window.speechSynthesis.getVoices() : [];
+    const people = [...new Map(lines.map((x) => [x.who.key, x.who])).values()];
+    const c = castVoices(all, people.map((w) => ({ key: w.key, gender: w.gender ?? "m" }))).get(l.who.key);
+    if (c?.voice) u.voice = c.voice;
+    u.pitch = c?.pitch ?? 1;
+    u.rate = (l.rate ?? 1) * (c?.rate ?? 1);
     const next = () => live && setAt((k) => (k === at ? k + 1 : k));
     u.onend = next;
     u.onerror = next;
-    speakLine(u, l.who);
-    prefetchLines(lines.slice(at + 1, at + 3).map((x) => ({ text: footballSpeech(x.text, year), who: x.who, rate: x.rate })));
+    speakLine(u);
     return () => {
       live = false;
       cancelSpeech();

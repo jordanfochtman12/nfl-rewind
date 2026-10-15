@@ -40,7 +40,7 @@ import { DraftNight } from "./DraftNight";
 import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
-import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/studioVoice";
+import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/speech";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -186,7 +186,7 @@ function useHost(year: number, on: boolean) {
       u.rate = c?.rate ?? 1;
       u.pitch = c?.pitch ?? 1;
       cancelSpeech();
-      speakLine(u, { key: host.name, gender: host.gender, chair: "host" });
+      speakLine(u);
     },
     [voices, year, on],
   );

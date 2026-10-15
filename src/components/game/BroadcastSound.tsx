@@ -5,9 +5,9 @@ import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import type { BoothLine } from "@/lib/game/commentary";
-import { cancelSpeech, isSpeaking, prefetchLines, speakLine, useTalking } from "@/lib/voice/studioVoice";
+import { cancelSpeech, isSpeaking, speakLine, useTalking } from "@/lib/voice/speech";
 
-export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0, upcoming: { lines: BoothLine[]; cue: string }[] = []) {
+export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0) {
   // Stadium sound and music start as Settings has them (on by default); the first tap
   // anywhere wakes them, since phones only start sound from a tap.
   const [enabled, setEnabled] = useState(() => settingsNow().music);
@@ -35,15 +35,13 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     // The play-by-play man picks up the pace on a touchdown.
     speech.rate = (c?.rate ?? 1) * (line.speaker === "PBP" && playCue === "td" ? 1.08 : 1);
     speech.volume = line.speaker === "PBP" ? 0.9 : 0.85;
-    const person = line.speaker === "PBP" ? booth.pbp : booth.color;
-    return { speech, who: { key: person.name, gender: person.gender, chair: line.speaker === "PBP" ? ("pbp" as const) : ("color" as const) } };
+    return speech;
   };
   const speaking = (call: BoothLine[]) => {
     if (!("speechSynthesis" in window)) return;
     const say = () => {
       for (const line of call) {
-        const { speech, who } = utter(line, cue);
-        speakLine(speech, who, { live: true });
+        speakLine(utter(line, cue));
       }
     };
     // Only cut a call that's still on the air, and give the phone a beat after the cut:
@@ -55,16 +53,6 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
       if (seq === callSeq.current) say();
     }, 160);
   };
-  // The next snaps' calls are made while this one is on the air, so the booth never lags the field.
-  const ahead = upcoming.map((u) => `${u.cue}:${u.lines.map((l) => l.text).join("|")}`).join("#");
-  useEffect(() => {
-    if (!announcer || !active) return;
-    prefetchLines(upcoming.flatMap((u) => u.lines.map((l) => {
-      const { speech, who } = utter(l, u.cue);
-      return { text: speech.text, who, rate: speech.rate };
-    })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ahead, announcer, active, voices]);
   const talking = useTalking((t) => t.talking);
   const ensureAudio = async () => {
     try {

@@ -1,35 +1,17 @@
-/** The studio voices: casting the desk and cutting reads into sentences. */
+/** The voices are the device's own: a line always ends, so a show never stalls on one. */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { HD_VOICES, hdVoiceFor, sentences, studioKeepsUp, useHdVoice } from "../src/lib/voice/studioVoice.ts";
-import { useSettings } from "../src/lib/settings-store.ts";
+import { cancelSpeech, isSpeaking, speakLine, useTalking } from "../src/lib/voice/speech.ts";
 
-test("every broadcaster gets a voice of his or her own, and a chair the viewer recast wins", () => {
-  const host = hdVoiceFor({ key: "Walt Prescott", gender: "m", chair: "host" });
-  const analyst = hdVoiceFor({ key: "Hank Mullins", gender: "m", chair: "analyst" });
-  const reporter = hdVoiceFor({ key: "Bob Kessler", gender: "m", chair: "reporter" });
-  assert.equal(new Set([host, analyst, reporter]).size, 3, "three men on the desk, three voices");
-  assert.equal(hdVoiceFor({ key: "Walt Prescott", gender: "m", chair: "host" }), host, "a person keeps his voice");
-  const her = hdVoiceFor({ key: "Andrea Kremer", gender: "f", chair: "reporter" });
-  assert.ok(HD_VOICES.find((v) => v.id === her)?.gender === "f");
-  useSettings.getState().set({ hdCast: { host: "bm_george" } });
-  assert.equal(hdVoiceFor({ key: "Walt Prescott", gender: "m", chair: "host" }), "bm_george");
-  useSettings.getState().set({ hdCast: {} });
-});
-
-test("reads split at sentence ends so the first words air while the rest are made", () => {
-  assert.deepEqual(sentences("Starr drops back to throw. He fires deep for Dowler! Touchdown, Green Bay!"), ["Starr drops back to throw.", "He fires deep for Dowler!", "Touchdown, Green Bay!"]);
-  const s = sentences("The Packers win it, twelve to six, and the Lions go home with the loss. Rivalry week. These two don't like each other.");
-  assert.ok(s.length >= 2 && s.join(" ").replace(/\s+/g, " ") === "The Packers win it, twelve to six, and the Lions go home with the loss. Rivalry week. These two don't like each other.");
-  assert.ok(s.every((x) => x.length >= 18), "no tiny fragments on their own");
-  assert.deepEqual(sentences("No punctuation at all"), ["No punctuation at all"]);
-  assert.deepEqual(sentences("Wow. What a catch by Dowler there."), ["Wow. What a catch by Dowler there."], "a one-word sentence rides with the next");
-});
-
-test("the draft podium never waits on studio voices that are downloading or can't keep up", () => {
-  for (const status of ["idle", "loading", "failed", "off"]) {
-    useHdVoice.setState({ status });
-    assert.equal(studioKeepsUp(), false, `${status}: the device's voice reads`);
-  }
-  useHdVoice.setState({ status: "idle", progress: 0 });
+test("with no device voice a line still ends, and nothing is left on the air", async () => {
+  // Node has no speechSynthesis: the line closes out on its own.
+  const u = { text: "With the first pick in the draft, the club selects...", onend: null, onerror: null };
+  const ended = new Promise((resolve) => {
+    u.onend = resolve;
+  });
+  speakLine(u);
+  await ended;
+  assert.equal(useTalking.getState().talking, false);
+  cancelSpeech();
+  assert.equal(isSpeaking(), false);
 });

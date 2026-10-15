@@ -1,4 +1,4 @@
-import { isSpeaking, registerAudio } from "@/lib/voice/studioVoice";
+import { isSpeaking, registerAudio } from "@/lib/voice/speech";
 import { NETWORK_BPM, scoreStep } from "./studioScore";
 import { DRAFT_BPM, draftScoreStep } from "./draftScore";
 /** Original "Sunday Lights / Network Mix": layered brass, strings, bass and breakbeat percussion. */

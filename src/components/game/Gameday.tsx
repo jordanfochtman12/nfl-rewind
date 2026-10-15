@@ -399,15 +399,13 @@ export function TonightsStorylines({ game }: { game: GameResult }) {
   );
 }
 
-const DESK_CHAIR = { HOST: "host", ANALYST: "analyst", REPORTER: "reporter" } as const;
-
 /** The desk's script as voiced lines: the studio crew in their chairs, a guest in a voice of his own. */
 function deskLines(script: DeskRead[], year: number): DeskLine[] {
   const crew = crewFor(year);
   return script.map((l) =>
     l.speaker === "GUEST"
       ? { text: l.text, who: { key: `guest:${l.guest}`, gender: "m" as const }, rate: 0.98 }
-      : { text: l.text, who: { key: crew[l.speaker].name, gender: crew[l.speaker].gender, chair: DESK_CHAIR[l.speaker] }, rate: l.speaker === "ANALYST" ? 0.97 : l.speaker === "REPORTER" ? 1.03 : 1 },
+      : { text: l.text, who: { key: crew[l.speaker].name, gender: crew[l.speaker].gender }, rate: l.speaker === "ANALYST" ? 0.97 : l.speaker === "REPORTER" ? 1.03 : 1 },
   );
 }
 

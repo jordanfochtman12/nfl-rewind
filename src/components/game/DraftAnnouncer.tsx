@@ -23,7 +23,7 @@ import { draftCrowdAudio } from "./draftCrowdAudio";
 import { stadiumAudio } from "./stadiumAudio";
 
 import { DraftAudioContext } from "./draftAudio";
-import { cancelSpeech, prefetchLines, speakLine, studioKeepsUp, useHdVoice, type Speaker } from "@/lib/voice/studioVoice";
+import { cancelSpeech, speakLine } from "@/lib/voice/speech";
 import { settingsNow } from "@/lib/settings-store";
 
 
@@ -55,7 +55,6 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   );
   // On by default, like the booth on game day (Settings → booth voices turns it off).
   const [enabled, setEnabled] = useState(() => settingsNow().boothVoices !== false);
-  const hd = useHdVoice();
   const [busy, setBusy] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -87,7 +86,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     serial.current++;
     clearTimeout(watchdog.current);
     audio.current?.stop();
-    if (ownsSpeech.current && "speechSynthesis" in window) cancelSpeech({ dropQueued: true });
+    if (ownsSpeech.current && "speechSynthesis" in window) cancelSpeech();
     ownsSpeech.current = false;
     setBusy(false);
   }, []);
@@ -167,11 +166,6 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       const readerKey = pickReaderFor(save.year, round).key;
       // Round one is read at the podium's pace; the later rounds move.
       const pace = round <= 1 ? 0.95 : 1.08;
-      const speakerFor = (who: string): Speaker => {
-        if (who.startsWith("guest:")) return { key: who, gender: "m" };
-        const g = who === "COMM" ? commissionerFor(save.year).gender : who === "DESK" ? analyst.gender : official.gender;
-        return { key: who === "COMM" ? `comm-${commissionerFor(save.year).gender}` : who === "DESK" ? `desk-${analyst.gender}` : who, gender: g, chair: who === "DESK" ? "analyst" : "draft" };
-      };
       setBusy(true);
       const read = (words: string, onEnd: () => void, who = readerKey) => {
         const reader = cast.get(who);
@@ -193,8 +187,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           ownsSpeech.current = false;
           onEnd();
         };
-        // A line stuck far past its length is let go. (The podium never waits on the studio
-        // voices: until they keep up, the device's own voice reads.)
+        // A line stuck far past its length is let go.
         const guard = () => {
           watchdog.current = setTimeout(() => {
             cancelSpeech();
@@ -211,20 +204,11 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         ownsSpeech.current = true;
         guard();
         try {
-          speakLine(utterance, speakerFor(who), { timely: true });
+          speakLine(utterance);
         } catch {
           fail();
         }
       };
-      // The podium line is asked for first, so it's made first; then every other line of this
-      // pick is made behind it, so the desk and the next club follow with no gap.
-      const prefetchRest = () =>
-        studioKeepsUp() &&
-        prefetchLines(
-          ([[desk, "DESK"], [guest?.line, guest ? `guest:${guest.name}` : ""], [nextLine, readerKey]] as const)
-            .filter(([w]) => !!w)
-            .map(([w, who]) => ({ text: footballSpeech(w!, save.year), who: speakerFor(who), rate: 0.95 * pace * (cast.get(who)?.rate ?? 1) })),
-        );
       read(text, () => {
         void (async () => {
           // The room reacts under the desk's take instead of holding the show for it.
@@ -237,7 +221,6 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           else call();
         })();
       });
-      prefetchRest();
     },
     [save.year, stop, voices, voice, volume, playReaction],
   );
@@ -463,11 +446,6 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           ? "At the podium — the next automatic pick waits for the announcement."
           : "Pick announcement, crowd reaction, then the next team on the clock."}
       </p>
-      {enabled && hd.status === "loading" && (
-        <p className="mt-2 text-xs text-brass" role="status">
-          Warming up the studio voices · {Math.round(hd.progress * 100)}% · the device's voice reads until they're ready (about 90 MB, once).
-        </p>
-      )}
       {enabled && line && <p className="mt-3 text-sm leading-relaxed text-paper">{line}</p>}
       {reaction && (
         <p className="mt-3 text-sm text-brass" role="status">
