@@ -1687,3 +1687,72 @@
 /* 2000s: glass and a silver edge. */
 .era-00s .k5-era-plate { background: linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(0 0 0 / 0.6)); color: #dfe6f2; }
 .era-00s .bug-slab { box-shadow: inset 0 0 0 1px rgb(200 210 225 / 0.45); }
+
+/* ---------- Draft night cold open: the welcome before the first pick ---------- */
+.dn-open {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+  border: 1px solid #9fc6ff40;
+  background: #03060f;
+  box-shadow: inset 0 1px 0 #ffffff40, 0 30px 80px -30px #000, 0 0 60px -20px #3fd2ff66;
+}
+.dn-open-stage { position: relative; min-height: clamp(340px, 46vw, 520px); display: flex; align-items: flex-end; }
+.dn-open-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dn-open-wall { font: 900 italic 56px "Barlow Condensed", sans-serif; letter-spacing: 0.12em; fill: #3fd2ff; opacity: 0.35; }
+.dn-open-plate { font: 900 italic 22px "Barlow Condensed", sans-serif; fill: #ffd56b; }
+.dn-open-beams { transform-origin: 600px 0; animation: dn-open-sweep 7s ease-in-out infinite alternate; mix-blend-mode: screen; }
+@keyframes dn-open-sweep { from { transform: rotate(-3deg); opacity: 0.75; } to { transform: rotate(3deg); opacity: 1; } }
+.dn-open-veil { position: absolute; inset: 0; background: linear-gradient(90deg, #03060fdd 0%, #03060f88 38%, #03060f00 62%), linear-gradient(180deg, #03060f00 60%, #03060f 100%); }
+.dn-open-head { position: relative; padding: 24px 24px 8px; max-width: 760px; }
+.dn-open-body { position: relative; width: 100%; padding: 8px 24px 26px; }
+.dn-open-kicker { font: 800 italic 12px/1.3 "Barlow Condensed", sans-serif; letter-spacing: 0.3em; color: #7fdcff; text-shadow: 0 0 12px #3fd2ff88; }
+.dn-open-welcome { margin-top: 10px; font: 800 italic clamp(18px, 3vw, 26px)/1 "Barlow Condensed", sans-serif; letter-spacing: 0.35em; color: #dfe9ff; }
+.dn-open-title {
+  margin-top: 2px;
+  font: 900 italic clamp(48px, 11vw, 112px)/0.9 "Barlow Condensed", sans-serif;
+  letter-spacing: 0.01em;
+  background: var(--k5-chrome, linear-gradient(180deg, #fff, #cfe3ff 52%, #fff));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 0 #000) drop-shadow(0 0 28px #3fd2ff77);
+}
+.dn-open-title span { background: linear-gradient(180deg, #ffd56b, #ffb000 60%, #fff1c2); -webkit-background-clip: text; background-clip: text; }
+.dn-open-sub { margin-top: 8px; font-size: 14px; color: #c7d4ee; }
+.dn-open-grid { display: grid; gap: 12px; margin-top: 10px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.dn-open-tile { padding: 14px 16px; background: linear-gradient(180deg, #ffffff1a, #ffffff05); border: 1px solid #9fc6ff33; backdrop-filter: blur(6px); }
+.dn-open-label { font: 800 italic 11px "Barlow Condensed", sans-serif; letter-spacing: 0.3em; color: #ffb000; }
+.dn-open-club { display: flex; align-items: center; gap: 12px; margin-top: 8px; font: 900 italic 26px/1 "Barlow Condensed", sans-serif; color: #fff; }
+.dn-open-mine { margin-top: 8px; font-size: 13px; color: #35f29a; }
+.dn-open-top ol { display: grid; gap: 8px; margin-top: 8px; }
+.dn-open-top li { display: flex; align-items: center; gap: 10px; }
+.dn-open-top b { display: block; font: 800 italic 18px/1.1 "Barlow Condensed", sans-serif; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dn-open-top small { font-size: 12px; color: #9fb3d6; }
+.dn-open-start {
+  margin-top: 20px;
+  width: 100%;
+  min-height: 60px;
+  font: 900 italic clamp(22px, 4vw, 30px)/1 "Barlow Condensed", sans-serif;
+  letter-spacing: 0.18em;
+  color: #0b1020;
+  background: linear-gradient(180deg, #fff1c2, #ffb000 55%, #d98a00);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  box-shadow: 0 0 40px -6px #ffb000aa;
+  transition: filter 0.15s, transform 0.15s;
+}
+.dn-open-start:hover { filter: brightness(1.08); }
+.dn-open-start:active { transform: translateY(1px); }
+.dn-open-start:focus-visible { outline: 3px solid #3fd2ff; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .dn-open-head { padding: 18px 16px 6px; }
+  .dn-open-body { padding: 6px 16px 18px; }
+  .dn-open-stage { display: block; min-height: 0; padding-top: 250px; }
+  .dn-open-art { height: 300px; bottom: auto; }
+  .dn-open-veil { background: linear-gradient(180deg, #03060f00 0, #03060f00 180px, #03060f 300px); }
+  .dn-open-grid { grid-template-columns: minmax(0, 1fr); }
+  .dn-open-wall { font-size: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dn-open-beams { animation: none; }
+}

@@ -41,6 +41,7 @@ import { KitChips } from "./KitChips";
 import { PlayerLink } from "./PlayerProfile";
 import { NightShow } from "./ShowKit";
 import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
+import { DraftOpening } from "./DraftOpening";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
   "ALL",
@@ -104,6 +105,9 @@ export function DraftNight() {
   const desk = useGameStore((s) => s.desk);
   // The room opens on hold: the draft starts when the owner says so, not the moment it loads.
   const [paused, setPaused] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
+  // Before the first pick the room opens on the welcome; the owner starts the draft from it.
+  const [opening, setOpening] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
+  const showOpening = opening && save.phase === "draft" && save.draftPickIndex === 0;
   const [hold, setHold] = useState(8);
   const [scoutId, setScoutId] = useState<string | null>(null);
   const [posFilter, setPosFilter] = useState<Pos | "ALL">("ALL");
@@ -195,7 +199,15 @@ export function DraftNight() {
         <ScoutDesk /><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades are your scouts' read, not the truth.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
         {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
       </section>}
-      <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
+      {showOpening && (
+        <DraftOpening
+          onStart={() => {
+            setOpening(false);
+            setPaused(false);
+          }}
+        />
+      )}
+      <section className={`relative overflow-hidden rounded-xl border border-brass/30 bg-studio ${showOpening ? "hidden" : ""}`}>
         <FilmStill still="draft" veil="full" />
         <div className="relative space-y-4 px-5 py-5">
           <DraftMasthead round={rnd} pickInRound={pickInRound} overall={overall} total={totalPicks} />
@@ -232,18 +244,6 @@ export function DraftNight() {
               })}
             </ol>
           </div>
-
-          {cpuUp && paused && save.draftPickIndex === 0 && (
-            <div className="rounded-lg border border-brass/50 bg-brass/10 px-4 py-4">
-              <p className="text-[11px] tracking-[0.35em] text-brass">COMMISSIONER · THE PODIUM</p>
-              <p className="mt-1 font-display text-2xl">The {save.year} draft is ready when you are.</p>
-              <div className="mt-3">
-                <Btn kind="gold" onClick={() => setPaused(false)}>
-                  Start the draft
-                </Btn>
-              </div>
-            </div>
-          )}
 
           {isUser && (
             <div className="rounded-lg border border-accent/40 bg-accent/15 px-4 py-4">
