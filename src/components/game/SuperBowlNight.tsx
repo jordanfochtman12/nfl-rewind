@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { clubInk, displayName, nicknameOf, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
+import { clubInk, displayName, nicknameOf, playerName, roman, rosterOf, superBowlNumber, superBowlSite, type DynastySave, type Player, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
@@ -10,6 +10,8 @@ import { RoadHere } from "./BigNight";
 import { PlayerPortrait } from "./Portrait";
 import { clockLabel, finalLine, halftimeAct, reelFrom, trophyName } from "./bigNightText";
 import { useRef, useState } from "react";
+import { NightOpening, StadiumArt } from "./NightOpening";
+import { markOpeningSeen, openingSeen } from "./openingSeen";
 
 /**
  * Super Bowl night. Before kickoff: the open, the two clubs and their roads here, the
@@ -23,6 +25,8 @@ export function SuperBowlNight() {
   // The owner's Super Bowl airs live the first time it's shown after kickoff.
   const seenAtKickoff = useRef<boolean | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const openKey = `sb-${save.year}`;
+  const [opening, setOpening] = useState(() => !openingSeen(openKey));
   const rewindId = useGameStore((s) => s.rewind?.gameId);
   if (g?.played && seenAtKickoff.current === null) seenAtKickoff.current = wasWatched(g.id);
   if (!g) return null;
@@ -38,6 +42,15 @@ export function SuperBowlNight() {
       />
     );
   }
+  if (!g.played && opening)
+    return (
+      <SuperBowlOpening
+        onStart={() => {
+          markOpeningSeen(openKey);
+          setOpening(false);
+        }}
+      />
+    );
   const year = save.year;
   const site = superBowlSite(year);
   const home = g.homeId as TeamId;
@@ -257,5 +270,70 @@ export function SuperBowlNight() {
         </section>
       )}
     </article>
+  );
+}
+
+/** The face of a club on the poster: its quarterback when he's a good one, else its best man. */
+function faceOf(save: DynastySave, id: TeamId): Player | undefined {
+  // Linemen and kickers don't sell a poster.
+  const roster = rosterOf(save, id).filter((p) => p.injuredWeeks <= 0 && !["LT", "LG", "C", "RG", "RT", "K", "P"].includes(p.pos));
+  const qb = roster.filter((p) => p.pos === "QB").sort((a, b) => b.ovr - a.ovr)[0];
+  const best = roster.slice().sort((a, b) => b.ovr - a.ovr)[0];
+  return qb && best && qb.ovr >= best.ovr - 6 ? qb : best;
+}
+
+/** Super Bowl night's cold open: the stadium under the lights, the two clubs, their stars. */
+function SuperBowlOpening({ onStart }: { onStart: () => void }) {
+  const save = useGameStore((s) => s.save)!;
+  const g = save.superBowl!;
+  const year = save.year;
+  const site = superBowlSite(year);
+  const n = roman(superBowlNumber(year));
+  const home = g.homeId as TeamId;
+  const away = g.awayId as TeamId;
+  const mine = !save.sandbox && (home === save.userTeamId || away === save.userTeamId);
+  return (
+    <NightOpening
+      label={`Super Bowl ${n}`}
+      art={<StadiumArt wall={`SUPER BOWL ${n}`} home={clubInk(home, year).primary} away={clubInk(away, year).primary} />}
+      kicker={`${site.site.toUpperCase()} · ${site.city.toUpperCase()}`}
+      welcome="THE WORLD CHAMPIONSHIP GAME"
+      title={
+        <>
+          SUPER BOWL <span>{n}</span>
+        </>
+      }
+      sub={mine ? "Your club, one game from the trophy." : `${displayName(year, away)} against ${displayName(year, home)}.`}
+      compact
+      startLabel="START THE BROADCAST"
+      onStart={onStart}
+    >
+      <div className="dn-open-grid dn-open-pair">
+        {[away, home].map((id) => {
+          const t = save.teams[id];
+          const star = faceOf(save, id);
+          return (
+            <div key={id} className="dn-open-tile">
+              <p className="dn-open-label">{id === home ? "HOME" : "AWAY"} · {t ? `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}` : ""}</p>
+              <div className="dn-open-club">
+                <Logo id={id} size={56} year={year} />
+                <span>{displayName(year, id)}</span>
+              </div>
+              {star && (
+                <div className="dn-open-star">
+                  <PlayerPortrait p={star} year={year} size="sm" club={id} />
+                  <div className="min-w-0">
+                    <b>{playerName(star)}</b>
+                    <small>
+                      {star.pos} · #{star.jersey}
+                    </small>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </NightOpening>
   );
 }

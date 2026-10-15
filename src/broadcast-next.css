@@ -1718,6 +1718,8 @@
   color: transparent;
   filter: drop-shadow(0 4px 0 #000) drop-shadow(0 0 28px #3fd2ff77);
 }
+.dn-open-title.is-compact { font-size: clamp(40px, 8vw, 84px); }
+@media (min-width: 641px) { .dn-open-title.is-compact { white-space: nowrap; } .dn-open-head:has(.is-compact) { max-width: none; } }
 .dn-open-title span { background: linear-gradient(180deg, #ffd56b, #ffb000 60%, #fff1c2); -webkit-background-clip: text; background-clip: text; }
 .dn-open-sub { margin-top: 8px; font-size: 14px; color: #c7d4ee; }
 .dn-open-grid { display: grid; gap: 12px; margin-top: 10px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
@@ -1744,13 +1746,20 @@
 .dn-open-start:hover { filter: brightness(1.08); }
 .dn-open-start:active { transform: translateY(1px); }
 .dn-open-start:focus-visible { outline: 3px solid #3fd2ff; outline-offset: 3px; }
+.dn-open-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.dn-open-one { grid-template-columns: minmax(0, 1fr); }
+.dn-open-star { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.dn-open-star b { display: block; font: 800 italic 18px/1.1 "Barlow Condensed", sans-serif; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dn-open-star small { font-size: 12px; color: #9fb3d6; }
+.dn-open-top ol.dn-open-faces { grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
 @media (max-width: 640px) {
   .dn-open-head { padding: 18px 16px 6px; }
+  .dn-open-start { letter-spacing: 0.08em; font-size: 22px; }
   .dn-open-body { padding: 6px 16px 18px; }
   .dn-open-stage { display: block; min-height: 0; padding-top: 250px; }
   .dn-open-art { height: 300px; bottom: auto; }
   .dn-open-veil { background: linear-gradient(180deg, #03060f00 0, #03060f00 180px, #03060f 300px); }
-  .dn-open-grid { grid-template-columns: minmax(0, 1fr); }
+  .dn-open-grid, .dn-open-pair { grid-template-columns: minmax(0, 1fr); }
   .dn-open-wall { font-size: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {

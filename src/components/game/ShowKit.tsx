@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
+import { showOpened } from "./openingSeen";
 import { clubInk, displayName, nicknameOf, teamAbbr, type ShowGraphic, type TeamId } from "@/lib/game";
 import { Logo } from "./chrome";
 
@@ -308,7 +309,7 @@ export function ShowOpen({ show, title, sub, teamIds = [], year, onDone }: { sho
   );
 }
 
-const opened = new Set<string>();
+const opened = showOpened;
 
 /**
  * A night of television around any screen: the show open the first time it airs this session,

@@ -19,8 +19,10 @@ import {
   playerName,
   type AwardBallots,
 } from "@/lib/game";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { NightShow, ShowGraphicView } from "./ShowKit";
+import { NightOpening, StageArt } from "./NightOpening";
+import { markOpeningSeen, markShowOpened, openingSeen } from "./openingSeen";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
@@ -51,10 +53,73 @@ function ours(save: { userTeamId: TeamId; sandbox?: boolean; players: Record<str
   return !save.sandbox && !!p && (p.teamId === save.userTeamId || p.userTied);
 }
 
+/** Shows a night's full opening the first time it airs; Start goes on to the night itself. */
+function useOpening(key: string): [boolean, () => void] {
+  const [open, setOpen] = useState(() => !openingSeen(key));
+  return [
+    open,
+    () => {
+      markOpeningSeen(key);
+      markShowOpened(key);
+      setOpen(false);
+    },
+  ];
+}
+
+function FaceRow({ label, players, year, note }: { label: string; players: Player[]; year: number | ((p: Player) => number); note?: (p: Player) => ReactNode }) {
+  if (!players.length) return null;
+  return (
+    <div className="dn-open-tile dn-open-top">
+      <p className="dn-open-label">{label}</p>
+      <ol className="dn-open-faces">
+        {players.map((p) => (
+          <li key={p.id}>
+            <PlayerPortrait p={p} year={typeof year === "number" ? year : year(p)} size="sm" />
+            <div className="min-w-0">
+              <b>{playerName(p)}</b>
+              <small>{note ? note(p) : p.pos}</small>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export function AwardsNight() {
   const save = useGameStore((s) => s.save)!;
   const a = save.awards;
+  const [opening, start] = useOpening(`awards-${save.year}`);
+  // The three names in the MVP envelope, not who's inside it.
+  const finalists = useMemo(() => (a ? awardBallots(save, { top: 3 }).mvp : []), [save, a]);
   if (!a) return null;
+  if (opening)
+    return (
+      <NightOpening
+        label={`${save.year} Awards Night`}
+        art={<StageArt wall={`AWARDS ${save.year}`} plate={String(save.year)} glow="#ffb000" accent="#ffe08a" />}
+        kicker="THE WRITERS' DINNER"
+        welcome="WELCOME TO THE"
+        title={
+          <>
+            {save.year} <span>AWARDS</span>
+          </>
+        }
+        sub="Six envelopes. One room."
+        compact
+        startLabel="OPEN THE ENVELOPES"
+        onStart={start}
+      >
+        <div className="dn-open-grid dn-open-one">
+          <FaceRow
+            label="MOST VALUABLE PLAYER · THE FINALISTS"
+            players={finalists}
+            year={save.year}
+            note={(p) => `${p.pos} · ${p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? displayName(save.year, p.teamId as TeamId) : ""}`}
+          />
+        </div>
+      </NightOpening>
+    );
   const rows: [string, string | undefined][] = [
     ["Most Valuable Player", a.mvp],
     ["Offensive Player of the Year", a.offPoy],
@@ -379,6 +444,32 @@ export function HofNight() {
   const save = useGameStore((s) => s.save)!;
   const klass = save.pendingHof.map((id) => save.players[id]).filter(Boolean) as Player[];
   const coaches = (save.pendingCoachHof ?? []).map((id) => save.coaches[id]).filter(Boolean) as Coach[];
+  const [opening, start] = useOpening(`hof-${save.year}`);
+  if (opening && klass.length + coaches.length > 0)
+    return (
+      <NightOpening
+        label={`Hall of Fame, Class of ${save.year + 1}`}
+        art={<StageArt wall={`CANTON ${save.year + 1}`} plate="HOF" glow="#c9a24a" accent="#ffe08a" />}
+        kicker="CANTON, OHIO · ENSHRINEMENT"
+        welcome="THE HALL OF FAME CLASS OF"
+        title={<span>{save.year + 1}</span>}
+        sub={`${klass.length + coaches.length} through the door.${coaches.length ? ` ${coaches.map((c) => c.name).join(" and ")} from the sideline.` : ""}`}
+        startLabel="BEGIN THE ENSHRINEMENT"
+        onStart={start}
+      >
+        <div className="dn-open-grid dn-open-one">
+          <FaceRow
+            label="THE CLASS"
+            players={klass.slice(0, 8)}
+            year={(p) => p.retiredYear ?? save.year}
+            note={(p) => {
+              const club = signatureClub(p);
+              return `${p.pos}${club ? ` · ${displayName(save.year, club.teamId)}` : ""}`;
+            }}
+          />
+        </div>
+      </NightOpening>
+    );
   // Coaches share the wall; only the players get a link here.
   const honor = (save.sandbox ? [] : save.history.teamOfHonor[save.userTeamId] ?? [])
     .map((id) => save.players[id])
