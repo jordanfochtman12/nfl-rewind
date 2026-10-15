@@ -573,3 +573,6 @@ table tbody tr:hover {
 @media (prefers-reduced-motion: reduce) {
   .score-pop { animation: none; }
 }
+
+/* A slider is a fingertip's target on a phone: the track stays thin, the touch area doesn't. */
+input[type="range"] { min-height: 32px; }

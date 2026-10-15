@@ -100,7 +100,7 @@ export function ProfileExtras({ p }: { p: Player }) {
             {path.map((s, i) => (
               <li key={`${s.teamId}-${s.from}`} className="flex items-center gap-2">
                 <span className="w-5 text-xs text-subtle">{i + 1}</span>
-                <button type="button" onClick={() => openTeam(s.teamId)} className="flex items-center gap-2 hover:text-brass" disabled={!save.teams[s.teamId]}>
+                <button type="button" onClick={() => openTeam(s.teamId)} className="flex min-h-8 items-center gap-2 hover:text-brass" disabled={!save.teams[s.teamId]}>
                   <Logo id={s.teamId} size={22} year={s.to} />
                   <span className="font-medium">{displayName(s.to, s.teamId)}</span>
                 </button>
@@ -156,7 +156,7 @@ export function ProfileExtras({ p }: { p: Player }) {
         <div className="flex items-baseline justify-between">
           <p className="text-xs tracking-[0.25em] text-muted">{year} game by game</p>
           {log.length > 8 && (
-            <button type="button" onClick={() => setAllGames((v) => !v)} className="text-xs text-brass">
+            <button type="button" onClick={() => setAllGames((v) => !v)} className="min-h-9 min-w-9 px-1 text-xs text-brass">
               {allGames ? "Show fewer" : `All ${log.length}`}
             </button>
           )}

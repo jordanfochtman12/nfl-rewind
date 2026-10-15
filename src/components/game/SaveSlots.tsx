@@ -159,7 +159,7 @@ export function SaveSlots() {
                   </button>
                   <button
                     type="button"
-                    className={`min-h-11 rounded-md border border-line px-2 text-xs text-muted hover:text-white ${menu === n ? "border-brass text-white" : ""}`}
+                    className={`min-h-11 min-w-11 rounded-md border border-line px-2 text-xs text-muted hover:text-white ${menu === n ? "border-brass text-white" : ""}`}
                     aria-label={`More for slot ${n}`}
                     aria-expanded={menu === n}
                     onClick={() => setMenu(menu === n ? null : n)}

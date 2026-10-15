@@ -28,7 +28,7 @@ function Name({ id, name }: { id: string; name: string }) {
     <button
       type="button"
       onClick={() => open(id)}
-      className="text-left font-medium hover:text-brass"
+      className="min-h-8 py-1 text-left font-medium hover:text-brass"
     >
       {name}
     </button>

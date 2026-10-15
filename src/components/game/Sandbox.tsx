@@ -323,7 +323,7 @@ export function WatchDesk() {
           <section className="rounded-xl border border-line bg-surface p-4">
             <div className="flex items-baseline justify-between gap-2">
               <p className="text-xs tracking-[0.25em] text-muted">BEST RECORDS</p>
-              <button type="button" className="text-xs text-brass underline" onClick={() => setTab("standings")}>
+              <button type="button" className="min-h-9 text-xs text-brass underline" onClick={() => setTab("standings")}>
                 Full standings
               </button>
             </div>

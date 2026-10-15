@@ -112,9 +112,9 @@ export function SuperBowlHistory({ compact = false }: { compact?: boolean }) {
               <li key={c.teamId} className="flex items-center gap-3">
                 <span className="tabular w-5 text-right text-sm text-muted">{i + 1}</span>
                 <Logo id={c.teamId} size={28} />
-                <span className="min-w-0 flex-1 truncate">
-                  <span className="font-display text-base">{nick(c.teamId)}</span>{" "}
-                  <span className="text-xs text-muted">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-display text-base">{nick(c.teamId)}</span>
+                  <span className="block truncate text-xs text-muted">
                     {c.wins}–{c.losses} in Super Bowls{c.years.length ? ` · ${c.years.slice(-4).join(", ")}${c.years.length > 4 ? "…" : ""}` : ""}
                   </span>
                 </span>
@@ -209,7 +209,7 @@ export function SuperBowlHistory({ compact = false }: { compact?: boolean }) {
           <p className="text-xs tracking-[0.25em] text-muted">{compact ? "RECENT CHAMPIONS" : "EVERY SUPER BOWL"}</p>
           {!compact && (
             <div className="flex flex-wrap gap-2 text-sm">
-              <select aria-label="Club" className="rounded-md border border-line bg-studio px-2 py-1" value={club} onChange={(e) => setClub(e.target.value as TeamId | "all")}>
+              <select aria-label="Club" className="min-h-11 rounded-md border border-line bg-studio px-2 py-1" value={club} onChange={(e) => setClub(e.target.value as TeamId | "all")}>
                 <option value="all">All clubs</option>
                 {book.clubs.map((c) => (
                   <option key={c.teamId} value={c.teamId}>
@@ -217,7 +217,7 @@ export function SuperBowlHistory({ compact = false }: { compact?: boolean }) {
                   </option>
                 ))}
               </select>
-              <select aria-label="Order" className="rounded-md border border-line bg-studio px-2 py-1" value={order} onChange={(e) => setOrder(e.target.value as "new" | "old")}>
+              <select aria-label="Order" className="min-h-11 rounded-md border border-line bg-studio px-2 py-1" value={order} onChange={(e) => setOrder(e.target.value as "new" | "old")}>
                 <option value="new">Newest first</option>
                 <option value="old">Oldest first</option>
               </select>

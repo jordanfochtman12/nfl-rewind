@@ -77,7 +77,7 @@ function ClubCell({ s }: { s: SeasonStats }) {
   if (!s.teamId || s.teamId === "two") return <span className="text-muted">{s.teamId === "two" ? "2 teams" : "—"}</span>;
   const id = s.teamId as TeamId;
   return (
-    <button type="button" disabled={!teams?.[id]} onClick={() => openTeam(id)} className="flex items-center gap-1.5 whitespace-nowrap text-left hover:text-brass">
+    <button type="button" disabled={!teams?.[id]} onClick={() => openTeam(id)} className="flex min-h-8 items-center gap-1.5 whitespace-nowrap text-left hover:text-brass">
       <Logo id={id} size={18} year={s.year} />
       <span className="font-display text-xs font-bold uppercase italic">{nicknameOf(s.year, id)}</span>
     </button>
@@ -251,7 +251,7 @@ export function PlayerProfile() {
             </h2>
             <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
               {p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? (
-                <button type="button" onClick={() => openTeam(p.teamId as TeamId)} className="inline-flex items-center gap-2 hover:text-brass">
+                <button type="button" onClick={() => openTeam(p.teamId as TeamId)} className="inline-flex min-h-10 items-center gap-2 hover:text-brass">
                   <Logo id={p.teamId} size={22} year={save.year} />
                   <span className="underline decoration-white/20 underline-offset-2">{club}</span>
                 </button>
