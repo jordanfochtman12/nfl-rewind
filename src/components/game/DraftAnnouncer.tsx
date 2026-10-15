@@ -23,7 +23,7 @@ import { draftCrowdAudio } from "./draftCrowdAudio";
 import { stadiumAudio } from "./stadiumAudio";
 
 import { DraftAudioContext } from "./draftAudio";
-import { cancelSpeech, prefetchLines, speakLine, useHdVoice, type Speaker } from "@/lib/voice/studioVoice";
+import { cancelSpeech, prefetchLines, speakLine, studioKeepsUp, useHdVoice, type Speaker } from "@/lib/voice/studioVoice";
 import { settingsNow } from "@/lib/settings-store";
 
 
@@ -48,6 +48,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   saveRef.current = save;
   // The desk's last few takes, so the analyst doesn't say the same thing two picks apart.
   const recentDesk = useRef<string[]>([]);
+  const opened = useRef(new Set<string>());
   const snapshot = useMemo(
     () => (save.phase === "draft" || previous.current?.drafting ? draftAudioSnapshot(save) : null),
     [save],
@@ -192,15 +193,12 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           ownsSpeech.current = false;
           onEnd();
         };
-        // A line stuck far past its length is let go, but not while the studio voices are
-        // still downloading: the room waits for them.
+        // A line stuck far past its length is let go. (The podium never waits on the studio
+        // voices: until they keep up, the device's own voice reads.)
         const guard = () => {
           watchdog.current = setTimeout(() => {
-            if (useHdVoice.getState().status === "loading") guard();
-            else {
-              cancelSpeech();
-              fail();
-            }
+            cancelSpeech();
+            fail();
           }, Math.max(30000, words.split(/\s+/).length * 900));
         };
         utterance.onend = () => {
@@ -213,7 +211,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         ownsSpeech.current = true;
         guard();
         try {
-          speakLine(utterance, speakerFor(who));
+          speakLine(utterance, speakerFor(who), { timely: true });
         } catch {
           fail();
         }
@@ -221,6 +219,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       // The podium line is asked for first, so it's made first; then every other line of this
       // pick is made behind it, so the desk and the next club follow with no gap.
       const prefetchRest = () =>
+        studioKeepsUp() &&
         prefetchLines(
           ([[desk, "DESK"], [guest?.line, guest ? `guest:${guest.name}` : ""], [nextLine, readerKey]] as const)
             .filter(([w]) => !!w)
@@ -328,6 +327,12 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       if (parts.round > 1 && !notable) parts.desk = undefined;
       if (parts.round > 1 && !/complete|concludes/.test(parts.onClock)) parts.onClock = "";
     }
+    // The commissioner opens the draft the first time the room is open before the first pick.
+    const openKey = snapshot ? `${saveRef.current.year}-${snapshot.session}` : "";
+    if (!parts && snapshot && saveRef.current.draftPickIndex === 0 && inRoom && !document.hidden && enabled && !opened.current.has(openKey)) {
+      opened.current.add(openKey);
+      speak(`Welcome to the ${saveRef.current.year} ${snapshot.session === "afl" ? "AFL" : "NFL"} draft. ${draftOnClock(snapshot)}`);
+    }
     if (inRoom && !document.hidden && parts) {
       setLine([parts.podium, parts.desk, guest ? `${guest.name}: "${guest.line}"` : "", parts.onClock].filter(Boolean).join(" "));
       replay.current = { text: parts.podium, response, nextLine: parts.onClock, desk: parts.desk, round: parts.round, guest };
@@ -358,10 +363,12 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
               setEnabled(true);
               if (!audio.current) startCrowd();
               if (!musicAudio.current) startMusic();
-              if (snapshot)
+              if (snapshot) {
+                opened.current.add(`${save.year}-${snapshot.session}`);
                 speak(
                   `Welcome to the ${save.year} ${snapshot.session === "afl" ? "AFL" : "NFL"} draft. ${draftOnClock(snapshot)}`,
                 );
+              }
             }
           }}
         >
@@ -458,7 +465,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       </p>
       {enabled && hd.status === "loading" && (
         <p className="mt-2 text-xs text-brass" role="status">
-          Warming up the studio voices · {Math.round(hd.progress * 100)}% · the first picks wait for them (about 90 MB, once).
+          Warming up the studio voices · {Math.round(hd.progress * 100)}% · the device's voice reads until they're ready (about 90 MB, once).
         </p>
       )}
       {enabled && line && <p className="mt-3 text-sm leading-relaxed text-paper">{line}</p>}

@@ -1,7 +1,7 @@
 /** The studio voices: casting the desk and cutting reads into sentences. */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { HD_VOICES, hdVoiceFor, sentences } from "../src/lib/voice/studioVoice.ts";
+import { HD_VOICES, hdVoiceFor, sentences, studioKeepsUp, useHdVoice } from "../src/lib/voice/studioVoice.ts";
 import { useSettings } from "../src/lib/settings-store.ts";
 
 test("every broadcaster gets a voice of his or her own, and a chair the viewer recast wins", () => {
@@ -24,4 +24,12 @@ test("reads split at sentence ends so the first words air while the rest are mad
   assert.ok(s.every((x) => x.length >= 18), "no tiny fragments on their own");
   assert.deepEqual(sentences("No punctuation at all"), ["No punctuation at all"]);
   assert.deepEqual(sentences("Wow. What a catch by Dowler there."), ["Wow. What a catch by Dowler there."], "a one-word sentence rides with the next");
+});
+
+test("the draft podium never waits on studio voices that are downloading or can't keep up", () => {
+  for (const status of ["idle", "loading", "failed", "off"]) {
+    useHdVoice.setState({ status });
+    assert.equal(studioKeepsUp(), false, `${status}: the device's voice reads`);
+  }
+  useHdVoice.setState({ status: "idle", progress: 0 });
 });

@@ -334,6 +334,11 @@ export function sentences(text: string): string[] {
 const clampRate = (r: number | undefined) => Math.max(0.8, Math.min(1.3, r || 1));
 
 /** Start making lines before they're read: the next lines of a show, the next snaps' calls. */
+/** The studio voices are loaded and make speech at least as fast as it's spoken. */
+export function studioKeepsUp(): boolean {
+  return hdWanted() && useHdVoice.getState().status === "ready" && !!lane() && rtf <= 1.1;
+}
+
 export function prefetchLines(lines: { text: string; who: Speaker; rate?: number }[]): void {
   if (useHdVoice.getState().status !== "ready") return;
   for (const l of lines) for (const part of sentences(l.text)) void synth(part, hdVoiceFor(l.who), clampRate(l.rate), false);
@@ -528,7 +533,12 @@ function chunk(text: string): string[] {
  * voice. The device voice reads only when the studio voices are switched off in Settings or
  * can't run in this browser at all.
  */
-export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { maxLagMs?: number; live?: boolean } = {}): void {
+/**
+ * `timely`: a show that can't hide the wait (the draft podium: nobody knows the pick until it's
+ * made) never goes quiet for a studio voice. While the voices download, or on a device that makes
+ * speech slower than it's spoken, the device's own voice reads it (see studioKeepsUp).
+ */
+export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { maxLagMs?: number; live?: boolean; timely?: boolean } = {}): void {
   const lag = opts.maxLagMs ?? (opts.live ? LIVE_LAG_MS : undefined);
   if (!hdWanted()) {
     deviceSpeak(u);
@@ -536,7 +546,7 @@ export function speakLine(u: SpeechSynthesisUtterance, who: Speaker, opts: { max
   }
   warmHdVoices();
   const status = useHdVoice.getState().status;
-  if (status === "failed") {
+  if (status === "failed" || (opts.timely && !studioKeepsUp())) {
     deviceSpeak(u);
     return;
   }
