@@ -84,7 +84,7 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1999) {
     return {
       name: "nineties",
-      cmpPct: 0.682,
+      cmpPct: 0.645,
       passAtt: 32.5,
       ypa: 6.9,
       intRate: 0.034,
@@ -201,11 +201,12 @@ export function fgEraMod(year: number): number {
   if (year <= 1969) return 0.78;
   if (year <= 1973) return 0.75;
   if (year <= 1977) return 0.79;
-  if (year <= 1985) return 0.88;
-  if (year <= 1993) return 0.91;
-  if (year <= 1999) return 0.97;
-  if (year <= 2009) return 1;
-  return 1.07;
+  // From the 80s on, real kickers try (and make) the longer ones the range gives them.
+  if (year <= 1985) return 0.94;
+  if (year <= 1993) return 0.98;
+  if (year <= 1999) return 1.03;
+  if (year <= 2009) return 1.08;
+  return 1.14;
 }
 
 /** College football stops the clock to move the chains; the NFL never did. */
@@ -372,12 +373,10 @@ export function twoPointMakeP(year: number): number {
 
 /** Kickoff touchback rate by rule era. */
 export function kickoffTbRate(year: number): number {
-  // The field-position model is tuned as a whole against real scoring, so the dynamic kickoff
-  // is set by what it did to where drives start: about four yards better in 2024 than 2023
-  // (touchbacks out to the 30), about one more in 2025 (to the 35). A lower rate here put
-  // drives nine to twelve yards further out and scoring three points a game over the real one.
-  if (year >= 2025) return 0.89;
-  if (year >= 2024) return 0.77;
+  // The dynamic kickoff (2024): about two kicks in three still a touchback, with the ball out
+  // to the 30; from 2025 the touchback comes out to the 35 and kickers land it short instead.
+  if (year >= 2025) return 0.3;
+  if (year >= 2024) return 0.62;
   if (year >= 2016) return 0.52;
   if (year >= 2011) return 0.44;
   if (year >= 1994) return 0.22;
@@ -395,7 +394,8 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptemp
   // Snap-to-snap on a running clock: the play itself plus the huddle and most of the
   // play clock (30s from the ready signal before 1976, 40s from the previous whistle after).
   if (year <= 1969) return [36, 43];
-  if (year <= 1977) return [36, 43];
+  // The 70s ran about 66 snaps a side, a couple more than the huddle-and-clock model gave them.
+  if (year <= 1977) return [34, 41];
   // The 2020s offense spends the play clock (motion, shifts, checks at the line): about 63
   // snaps a side, a few fewer than the 2010s' 65-66.
   if (year >= 2020) return [38, 45];
@@ -472,7 +472,8 @@ export function leaderPace(year: number): { pass: number; rush: number; recYds: 
   if (year <= 2003) return { pass: 248, rush: 104, recYds: 97 };
   if (year <= 2009) return { pass: 270, rush: 108, recYds: 100 };
   if (year <= 2019) return { pass: 295, rush: 98, recYds: 106 };
-  return { pass: 283, rush: 100, recYds: 104 };
+  if (year <= 2023) return { pass: 283, rush: 100, recYds: 104 };
+  return { pass: 274, rush: 100, recYds: 102 };
 }
 
 /**

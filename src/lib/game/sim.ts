@@ -617,17 +617,23 @@ function pickThief(save: DynastySave, def: TeamUnits): Player | undefined {
 function fgRange(k: Player | undefined, year: number, altitude: number): number {
   const pow = k?.ratings.kickPow ?? 70;
   const air = altitude >= 4000 ? 4 : 0;
-  return Math.round((38 + (pow - 70) * 0.55 + air) * (year <= 1973 ? 0.92 : 1));
+  // Legs got longer with the soccer-style kickers and year-round specialists: a 2020s kicker
+  // tries from 55 as a matter of course, where a 70s one was stretching at 45.
+  // Before 1974 the posts sat on the goal line: the same leg reached from further out, and the
+  // field goal was half the scoring (2.3 tries a game in the late 60s).
+  const era = year >= 2010 ? 8 : year >= 2000 ? 6 : year >= 1978 ? 4 : year >= 1974 ? 7 : 6;
+  return Math.round(38 + era + (pow - 70) * 0.55 + air);
 }
 
 function fgMakeP(k: Player | undefined, distYds: number, wx: Wx, year: number, clutch: number, altitude: number): number {
   const acc = k?.ratings.kickAcc ?? 70;
   const pow = k?.ratings.kickPow ?? 70;
-  let p = 0.97 - Math.max(0, distYds - 28) * 0.018;
+  // Every yard costs less for the modern specialist (real 40-49 makes: ~65% in the 80s, ~85% now).
+  let p = 0.97 - Math.max(0, distYds - 28) * (year >= 2000 ? 0.011 : year >= 1994 ? 0.014 : 0.018);
   p += (acc - 74) / 220;
   p += hashFgMod(year);
   if (altitude >= 4000) p += 0.04;
-  if (distYds > 48) p -= (distYds - 48) * 0.03;
+  if (distYds > 48) p -= (distYds - 48) * (year >= 2000 ? 0.016 : year >= 1990 ? 0.022 : 0.03);
   if (distYds > fgRange(k, year, altitude) + 2) p -= 0.25;
   if (pow < 72 && distYds >= 45) p -= 0.12;
   if (wx === "wind" || wx === "snow") p -= 0.12;
@@ -739,6 +745,8 @@ function callPlay(
   if (spot >= 90 && plan.redZone === "spread") passW += 0.05;
   if (trail >= 8) passW += 0.12;
   if (trail <= -10 && !desperate) passW -= 0.1;
+  // Three scores up after the half: hand it off and let the clock run.
+  if (trail <= -21 && q >= 3) passW -= 0.15;
   // A ball-control plan leans on the run most when it's ahead; the clock-killing push at the end stays strong.
   if (chew) passW -= q >= 4 && trail <= -7 && clock < 240 ? 0.1 : trail <= 0 ? 0.05 : 0.02;
   if (wx === "snow" || wx === "rain") passW -= 0.08;
@@ -895,19 +903,18 @@ function redZoneSqueeze(year: number): number {
   // field goals and completions were set to each era's real rates.
   // With the posts back on the goal line before 1974, stalled trips kick real field goals
   // (2.3-2.7 tries a game) instead of being finished at an inflated touchdown rate.
-  if (year <= 1969) return -0.16;
-  if (year <= 1973) return -0.02;
-  if (year <= 1977) return -0.11;
-  if (year <= 1983) return 0.0;
-  if (year <= 1989) return 0.1;
-  if (year <= 1999) return 0.15;
-  if (year <= 2009) return 0.095;
-  // 2010 had the 2010s passing game but still kicked off from the 30 (long fields came in
-  // 2011): with the decade's value it ran ~26 points a game against the real 22.0.
-  if (year === 2010) return 0.14;
-  if (year <= 2019) return -0.04;
-  // The spread era finished drives: scoring ran ~2 points a game light at 0.02.
-  return -0.12;
+  if (year <= 1969) return -0.32;
+  if (year <= 1973) return -0.32;
+  if (year <= 1977) return -0.48;
+  if (year <= 1983) return -0.2;
+  if (year <= 1989) return -0.25;
+  if (year <= 1999) return -0.2;
+  if (year <= 2009) return -0.2;
+  if (year === 2010) return -0.15;
+  if (year <= 2019) return -0.18;
+  // From 2024 the dynamic kickoff starts drives further out: the red zone tightens to match.
+  if (year >= 2024) return -0.2;
+  return -0.3;
 }
 
 function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, brake: number, pass = false): number {
@@ -920,13 +927,12 @@ function pinAtGoal(save: DynastySave, spot: number, yds: number, year: number, b
   return yds;
 }
 
-function deadBall(year: number, score: number): number {
+function deadBall(year: number, score: number, trail = 0, q = 1): number {
   let m = 1;
+  // Up big in the second half, the starters sit and the calls go vanilla: the long ones dry up.
+  if (q >= 3 && trail <= -21) m *= q >= 4 || trail <= -28 ? 0.7 : 0.82;
   // Softer than it once was: this used to offset the extra snaps from a (college-only)
   // first-down clock stop. With real snap counts it just shaves the era's big plays.
-  if (year <= 1969) m = 0.86;
-  else if (year <= 1977) m = 0.88;
-  else if (year <= 1989) m = 0.94;
   if (year <= 1969 && score >= 28) m *= 0.85;
   if (year <= 1977 && score >= 35) m *= 0.8;
   return m;
@@ -1662,7 +1668,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const ret = ru.returner;
     if (fairCatchKickoff(year) && rand(save) < 0.32) {
       poss = receiving;
-      spot = clamp(100 - Math.round(hang), 20, 40);
+      // A fair catch inside the 25 comes out to the 25 (2021-23); before that, where it's caught.
+      spot = Math.max(ko.tb, clamp(100 - ko.from - Math.round(hang + 2), 1, 40));
       down = 1;
       togo = 10;
       driveStart = spot;
@@ -1673,12 +1680,18 @@ export function simGame(save: DynastySave, game: GameResult): void {
       driveRz = false;
       return;
     }
-    let yds = sampleYds(save, 20, 6, 4, 34);
+    // The dynamic kickoff (2024) sets the coverage up five yards from the return man: the
+    // returns run longer, and the drive starts around the 30.
+    let yds = sampleYds(save, year >= 2024 ? 25 : 20, 6, 4, 34);
     const house = 0.007 * big * (ret ? ret.ratings.speed / 80 : 0.6) * (ret?.traits?.includes("Return man") ? 1.6 : 1);
     if (rand(save) < house) yds = randInt(save, 88, 109);
     else if (ret && rand(save) < 0.04 * big) yds += randInt(save, 12, 28);
     if (ret) bumpBox(boxOf(receiving), ret.id, { krYds: Math.min(yds, 109) });
-    const land = clamp(100 - Math.round(hang) + yds, 1, 100);
+    // Where the return man fields it, in his own team's yards: the kick carries about sixty
+    // yards from the kicking line (the 40 before 1974, the 35, the 30 from 1994 to 2010), so a
+    // normal kick is caught at the goal line or a few yards out of it.
+    const caught = 100 - ko.from - Math.round(hang + 2);
+    const land = clamp(caught + yds, 1, 100);
     if (land >= 100) {
       addPts(receiving, 6);
       if (ret) {
@@ -1952,7 +1965,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
 
     const offScore = poss === homeId ? homeScore : awayScore;
-    const brake = deadBall(year, offScore);
+    const brake = deadBall(year, offScore, trail, q);
     const garbage = q >= 4 && trail <= -17 && clock <= 360;
     const prevent = garbage && trail <= -17;
     const pressure = pressureAdjustment(defensivePlan.blitz);
@@ -2400,7 +2413,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (year < 1978) cmpP -= Math.max(0, cov - 74) / 400;
       if (was3rd && togo >= 7) cmpP -= 0.07;
       // Tight windows near the goal line separate the passers: the great ones still find a man.
-      if (spot >= 80) cmpP -= 0.04 + redZoneSqueeze(year) - ((off.qb?.ratings.throwAcc ?? 70) - 72) / 260;
+      // The squeeze on completions stays small (the field shrinks either way); how much a trip
+      // finishes is mostly the run game's and the gain's.
+      if (spot >= 80) cmpP -= 0.04 + Math.max(-0.12, redZoneSqueeze(year)) - ((off.qb?.ratings.throwAcc ?? 70) - 72) / 260;
       if (tightCatchRule(year) && (call === "deep" || call === "med")) cmpP -= 0.02;
       // The top corner follows the No. 1 receiver; that one-on-one counts a little more.
       const shadow = matchupOf("wr-cb", poss);
@@ -2506,11 +2521,19 @@ export function simGame(save: DynastySave, game: GameResult): void {
               : 7;
       const hi = call === "deep" || call === "pa" ? Math.round(48 * (0.75 + 0.25 * big)) : 22;
       let yds = sampleYds(save, mu + edge / 34, call === "deep" ? 7 : 4, call === "deep" ? 11 : 2, hi);
-      if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) yds += randInt(save, 8, Math.round(28 * big + 6));
-      if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
-      if (was3rd && togo >= 6) yds = Math.round(yds * 0.88);
+      // Yards after the catch: now and then the receiver breaks it, and some of those go the
+      // distance (real: about one completion in forty goes for 40 or more).
+      if (rec && rand(save) < (rec.ratings.speed / 1700) * big * brake) {
+        yds += randInt(save, 8, Math.round(28 * big + 6));
+        if (rand(save) < 0.4) yds += randInt(save, 10, 45);
+      }
+      // Third and long: the defense sits on the sticks (looser before the 80s' sub packages).
+      if (was3rd && togo >= 6) yds = Math.round(yds * (year <= 1977 ? 1 : year <= 1989 ? 0.94 : 0.88));
       // A passer on a record pace sees the coverage roll his way: fewer chunk gains.
       yds = Math.round(yds * passGainScale(year) * passTaper(seasonPace(off.qb, "passYds", year), leaderPace(year).pass));
+      // In the red zone the field runs out: the catch is at most the end zone. (Scaled first, so
+      // a ball thrown into the end zone isn't shrunk back to the two after it got there.)
+      if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));
       yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
@@ -2598,13 +2621,18 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (spot >= 95) mu *= 0.5;
     if (spot >= 80) mu *= 0.72 * (1 - redZoneSqueeze(year) * 2);
     if (spot >= 80 && plan.redZone === "power") mu += 0.25;
-    if (was3rd && togo >= 5) mu -= 0.7;
-    let yds = sampleYds(save, mu, call === "sneak" ? 1.2 : 3.0, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 12);
+    if (was3rd && togo >= 5) mu -= year <= 1977 ? 0.3 : 0.7;
+    // A run is mostly a few yards, with a real share of 10-to-15-yard pops (about one carry in
+    // nine goes for 10+); the mean comes down a touch so yards per carry holds.
+    let yds = sampleYds(save, call === "sneak" ? mu : mu - 0.35, call === "sneak" ? 1.2 : 3.6, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 17);
     // The era big-play curve is a passing-game story; long runs didn't get longer or more
     // common the way deep balls did, so ground breakaways stop scaling at the late-70s level.
     const runBig = Math.min(big, 0.72);
     if (call !== "sneak" && rusher && rand(save) < ((rusher.ratings.speed / 1500) * runBig + kitBoost(rusher, "td") * 0.2) * brake) {
       yds += randInt(save, 9, Math.round(32 * runBig + 6));
+      // A few of those get to the second level clean and keep going (real: 40+ on about one
+      // carry in two hundred).
+      if (rand(save) < 0.18) yds += randInt(save, 12, 55);
     }
     yds = pinAtGoal(save, spot, yds, year, brake);
     if (rusher) {
@@ -2638,7 +2666,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
     // Ball security is a small edge around the era's fumble rate. It used to subtract btk/2000
     // from a 1.1% base, so any back with a break-tackle rating over ~22 simply never fumbled.
-    const fumBase = year <= 1977 ? 0.028 : year <= 1989 ? 0.024 : year <= 2005 ? 0.019 : 0.016;
+    // Lost fumbles ran about 1.2 a team-game in the 70s, 1.0 in the 80s, 0.75 in the 2000s and
+    // 0.55 now: this is most of them.
+    const fumBase = year <= 1977 ? 0.04 : year <= 1989 ? 0.033 : year <= 2005 ? 0.026 : 0.02;
     const fumP = Math.max(
       0.003,
       fumBase + (rusher ? kitBoost(rusher, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.012 : 0) - (rusher ? (rusher.ratings.btk - 70) / 3000 : 0) -
