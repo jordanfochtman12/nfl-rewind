@@ -304,3 +304,53 @@ export function drafteeCall(save: DynastySave, b: PickBreakdown): string {
           ];
   return pick(`${b.playerId}-call`, pool);
 }
+
+const GRADE_POINTS: Record<string, number> = { "A+": 4.3, A: 4, "A-": 3.7, "B+": 3.3, B: 3, "B-": 2.7, "C+": 2.3, C: 2, "C-": 1.7, D: 1 };
+
+function gpaLetter(gpa: number): string {
+  return gpa >= 4.15 ? "A+" : gpa >= 3.85 ? "A" : gpa >= 3.5 ? "A-" : gpa >= 3.15 ? "B+" : gpa >= 2.85 ? "B" : gpa >= 2.5 ? "B-" : gpa >= 2.15 ? "C+" : gpa >= 1.85 ? "C" : gpa >= 1.5 ? "C-" : "D";
+}
+
+export interface DraftRecap {
+  year: number;
+  picks: PickBreakdown[];
+  /** Every club's class, best first. Early picks weigh more: a first-rounder is most of a grade. */
+  teams: { teamId: TeamId; grade: string; gpa: number; picks: PickBreakdown[]; best?: PickBreakdown }[];
+  steals: PickBreakdown[];
+  reaches: PickBreakdown[];
+}
+
+/** The draft in review the night it ends: each club's class graded the way the desk graded each pick. */
+export function draftRecap(save: DynastySave): DraftRecap | undefined {
+  const made = picksMade(save);
+  if (!made.length) return undefined;
+  const picks = made.map((p) => pickBreakdown(save, p.id, made)).filter((b): b is PickBreakdown => !!b);
+  const byTeam = new Map<TeamId, PickBreakdown[]>();
+  for (const b of picks) byTeam.set(b.teamId, [...(byTeam.get(b.teamId) ?? []), b]);
+  const teams = [...byTeam.entries()].map(([teamId, list]) => {
+    let w = 0;
+    let pts = 0;
+    for (const b of list) {
+      const wt = 1 / Math.pow(b.round, 0.8);
+      w += wt;
+      pts += wt * (GRADE_POINTS[b.grade] ?? 3);
+    }
+    const gpa = w ? pts / w : 3;
+    // The pick the desk liked most, the higher one when two graded the same.
+    const best = list.slice().sort((a, b) => (GRADE_POINTS[b.grade] ?? 0) - (GRADE_POINTS[a.grade] ?? 0) || a.overall - b.overall)[0];
+    return { teamId, grade: "", gpa, picks: list, best };
+  });
+  teams.sort((a, b) => b.gpa - a.gpa);
+  // Graded on the curve, the way the morning-after columns do it: against this year's league.
+  const mean = teams.reduce((n, t) => n + t.gpa, 0) / Math.max(1, teams.length);
+  const sd = Math.sqrt(teams.reduce((n, t) => n + (t.gpa - mean) ** 2, 0) / Math.max(1, teams.length)) || 0.25;
+  for (const t of teams) t.grade = gpaLetter(3.1 + ((t.gpa - mean) / sd) * 0.55);
+  const early = picks.filter((b) => b.round <= 4);
+  return {
+    year: save.year,
+    picks,
+    teams,
+    steals: early.filter((b) => b.delta > 0).sort((a, b) => b.delta - a.delta).slice(0, 5),
+    reaches: early.filter((b) => b.delta < 0).sort((a, b) => a.delta - b.delta).slice(0, 5),
+  };
+}

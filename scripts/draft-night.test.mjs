@@ -16,6 +16,7 @@ import {
   drafteeCall,
   tradeUpPackage,
   executePickDeal,
+  draftRecap,
 } from "../src/lib/game/index.ts";
 
 const atDraft = (year, team = "chi") => simUntil(createNewGame({ userTeamId: team, startingYear: year, seed: 7 }), (x) => x.phase === "draft");
@@ -82,4 +83,18 @@ test("the venue follows the real draft's home", () => {
   assert.match(draftVenue(2010), /Radio City/);
   assert.match(draftVenue(2020), /virtual/);
   assert.match(draftVenue(2024), /Detroit/);
+});
+
+test("the morning after: every club's class graded on the curve, with the steals and reaches", () => {
+  const s = atDraft(1985);
+  while (makeDraftPick(s));
+  const r = draftRecap(s);
+  assert.ok(r, "a recap once the board is done");
+  assert.equal(r.picks.length, picksMade(s).length);
+  assert.equal(r.teams.length, new Set(r.picks.map((b) => b.teamId)).size, "one row per club");
+  const letters = new Set(r.teams.map((t) => t.grade[0]));
+  assert.ok(letters.has("A") && (letters.has("C") || letters.has("D")), `grades spread out: ${[...letters].join("")}`);
+  for (let i = 1; i < r.teams.length; i++) assert.ok(r.teams[i - 1].gpa >= r.teams[i].gpa, "best class first");
+  assert.ok(r.steals.every((b) => b.delta > 0) && r.reaches.every((b) => b.delta < 0));
+  for (const t of r.teams) assert.ok(t.picks.every((b) => b.teamId === t.teamId));
 });

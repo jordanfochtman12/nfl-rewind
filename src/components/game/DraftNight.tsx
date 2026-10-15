@@ -42,6 +42,7 @@ import { PlayerLink } from "./PlayerProfile";
 import { NightShow } from "./ShowKit";
 import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
 import { DraftOpening } from "./DraftOpening";
+import { DraftRecapView } from "./DraftRecap";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
   "ALL",
@@ -171,7 +172,10 @@ export function DraftNight() {
     return () => clearInterval(tick);
   }, [isUser, save.draftPickIndex]);
   const ticker = useMemo(() => draftTicker(save, 20), [save]);
+  // After the last pick the room becomes the morning-after review, until next year's board.
+  const hasRecap = save.draftBoard.some((pr) => pr.taken && save.players[pr.playerId]?.draftYear === save.year);
 
+  if (save.phase !== "draft" && hasRecap) return <DraftRecapView />;
   if (save.phase !== "draft") {
     return (
       <section className="relative overflow-hidden rounded-xl border border-line bg-surface p-6">

@@ -1765,3 +1765,42 @@
 @media (prefers-reduced-motion: reduce) {
   .dn-open-beams { animation: none; }
 }
+
+/* ---------- The draft in review: the morning after ---------- */
+.dr { display: grid; gap: 14px; padding: 22px 20px 20px; background: radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--club, #3fd2ff) 22%, transparent), transparent 60%), #050a17; border: 1px solid #9fc6ff40; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px)); }
+.dr > * { min-width: 0; }
+.dr-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.dr-title { margin-top: 6px; font: 900 italic clamp(38px, 7vw, 72px)/0.92 "Barlow Condensed", sans-serif; background: var(--k5-chrome, linear-gradient(180deg, #fff, #cfe3ff 52%, #fff)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 #000) drop-shadow(0 0 22px #3fd2ff55); }
+.dr-title span { background: linear-gradient(180deg, #ffd56b, #ffb000 60%, #fff1c2); -webkit-background-clip: text; background-clip: text; }
+.dr-sub { margin-top: 8px; font-size: 14px; color: #c7d4ee; max-width: 46rem; }
+.dr-mygrade { flex: none; display: grid; justify-items: center; padding: 10px 18px; background: linear-gradient(180deg, #ffffff1f, #ffffff05); border: 1px solid #ffb00066; font-family: "Barlow Condensed", sans-serif; }
+.dr-mygrade b { font: 900 italic 64px/1 "Barlow Condensed", sans-serif; color: #ffb000; text-shadow: 0 0 22px #ffb00077; }
+.dr-mygrade small { font-size: 11px; letter-spacing: 0.25em; color: #c7d4ee; }
+.dr-panel { padding: 14px 14px 10px; background: linear-gradient(180deg, #ffffff14, #ffffff04); border: 1px solid #9fc6ff2e; }
+.dr-two { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.dr-picks { display: grid; gap: 6px; margin-top: 8px; }
+.dr-pick { display: flex; width: 100%; min-height: 52px; align-items: center; gap: 10px; padding: 4px 6px; text-align: left; border-radius: 6px; }
+.dr-pick:hover, .dr-pick:focus-visible { background: #ffffff10; }
+.dr-pick-main { min-width: 0; flex: 1; }
+.dr-pick-main b { display: block; font: 800 italic 18px/1.1 "Barlow Condensed", sans-serif; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-pick-main small { display: block; font-size: 12px; color: #9fb3d6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-pick-tag { flex: none; font: 800 italic 11px "Barlow Condensed", sans-serif; letter-spacing: 0.14em; }
+.dr-pick-grade { flex: none; width: 2.4em; text-align: right; font: 900 italic 22px/1 "Barlow Condensed", sans-serif; color: #fff; }
+.dr-grades { display: grid; gap: 4px 16px; margin-top: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.dr-grades li { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 2px 6px; border-radius: 6px; }
+.dr-grades li.is-mine { background: color-mix(in srgb, var(--club, #ffb000) 26%, transparent); outline: 1px solid #ffb00066; }
+.dr-rank { width: 1.6em; text-align: right; font: 800 italic 14px "Barlow Condensed", sans-serif; color: #7f93b8; }
+.dr-club { min-width: 0; flex: 1; }
+.dr-club b { display: block; font: 800 italic 16px/1.1 "Barlow Condensed", sans-serif; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-club small { display: block; font-size: 11px; color: #9fb3d6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-letter { flex: none; width: 2.2em; text-align: right; font: 900 italic 24px/1 "Barlow Condensed", sans-serif; color: #ffd56b; }
+@media (max-width: 640px) {
+  .dr { padding: 18px 14px 16px; }
+  .dr-head { flex-direction: column; align-items: stretch; }
+  .dr-title { font-size: 34px; }
+  .dr-head .dn-open-kicker { letter-spacing: 0.18em; }
+  .dr-mygrade { justify-self: start; grid-auto-flow: column; align-items: baseline; gap: 10px; }
+  .dr-mygrade b { font-size: 48px; }
+  .dr-two { grid-template-columns: minmax(0, 1fr); }
+  .dr-pick-tag { display: none; }
+}
