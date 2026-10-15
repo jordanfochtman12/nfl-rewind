@@ -145,10 +145,11 @@ export interface TeamUnits {
 function passTaper(perGame: number | undefined, ref: number): number {
   if (!perGame) return 1;
   const r = perGame / ref;
-  if (r <= 1) return 1;
-  // Past 20% over the leader's pace (the real record ran 16% over) the coverage really rolls:
-  // a 6,000-yard season stays out of reach while a record season stays possible.
-  return Math.max(0.55, 1 - (r - 1) * 1.6 - Math.max(0, r - 1.2) * 2);
+  if (r <= 0.95) return 1;
+  // Closing on a typical leader's pace, defenses key on him and the staff spreads it around;
+  // past 15% over (the real record ran 16% over) the coverage really rolls: a 6,000-yard
+  // season stays out of reach while a record season stays possible.
+  return Math.max(0.5, 1 - (r - 0.95) * 1.9 - Math.max(0, r - 1.15) * 2);
 }
 
 /** A typical league-leading interception total for the era (real decade leaders). */
@@ -466,7 +467,8 @@ function paceDamp(p: Player, key: "rec" | "sacks" | "ints", year: number, eraRef
   return key === "sacks"
     ? Math.max(0.12, Math.pow(soft / pace, 2))
     : // Past the record pace itself the brake bites hard: the record falls rarely, by a little.
-      clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6 - Math.max(0, (pace - eraRef) / eraRef) * 2.5, 0.3, 1);
+      // Past the record pace the floor drops too, so one man can't soak up a thin room's targets.
+      clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6 - Math.max(0, (pace - eraRef) / eraRef) * 2.5, pace > eraRef ? 0.08 : 0.3, 1);
 }
 
 /** A player's season pace in one stat (per game), once he has a few games in the book. */
@@ -733,7 +735,7 @@ function callPlay(
   if (down === 2 && togo <= 3) passW -= 0.08;
   if (spot >= 95 && plan.redZone === "power") passW -= 0.07;
   // Red-zone offense moved to the air over the decades: by the 2010s most TDs inside the 20 were passes.
-  if (spot >= 80) passW += year >= 2010 ? 0.2 : year >= 2000 ? 0.08 : year >= 1990 ? 0.04 : 0;
+  if (spot >= 80) passW += year >= 2010 ? 0.1 : year >= 2000 ? 0.05 : year >= 1990 ? 0.03 : 0;
   if (spot >= 90 && plan.redZone === "spread") passW += 0.05;
   if (trail >= 8) passW += 0.12;
   if (trail <= -10 && !desperate) passW -= 0.1;

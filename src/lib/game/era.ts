@@ -32,7 +32,7 @@ export function eraProfile(year: number): EraProfile {
       rushAtt: 32,
       ypc: 3.85,
       pointsMu: 21.4,
-      teRecCap: 55,
+      teRecCap: 50,
       recCap: 70,
       rushTdCap: 16,
       passTdCap: 36,
@@ -65,7 +65,7 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "pass-boom",
       cmpPct: 0.662,
-      passAtt: 33,
+      passAtt: 32,
       ypa: 6.9,
       intRate: 0.042,
       sackRate: 0.022,
@@ -85,7 +85,7 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "nineties",
       cmpPct: 0.682,
-      passAtt: 33.5,
+      passAtt: 32.5,
       ypa: 6.9,
       intRate: 0.034,
       sackRate: -0.002,
@@ -105,7 +105,7 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "aughts",
       cmpPct: 0.695,
-      passAtt: 32.5,
+      passAtt: 31.5,
       ypa: 7.0,
       intRate: 0.03,
       sackRate: 0.007,
@@ -125,7 +125,7 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "spread",
       cmpPct: 0.683,
-      passAtt: 35.5,
+      passAtt: 33.5,
       ypa: 7.2,
       intRate: 0.025,
       sackRate: 0.013,
@@ -143,8 +143,8 @@ export function eraProfile(year: number): EraProfile {
   }
   return {
     name: "modern",
-    cmpPct: 0.685,
-    passAtt: 34,
+    cmpPct: 0.665,
+    passAtt: 31.5,
     ypa: 7.2,
     intRate: 0.023,
     sackRate: 0.055,
@@ -396,6 +396,9 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptemp
   // play clock (30s from the ready signal before 1976, 40s from the previous whistle after).
   if (year <= 1969) return [36, 43];
   if (year <= 1977) return [36, 43];
+  // The 2020s offense spends the play clock (motion, shifts, checks at the line): about 63
+  // snaps a side, a few fewer than the 2010s' 65-66.
+  if (year >= 2020) return [38, 45];
   return [36, 43];
 }
 
