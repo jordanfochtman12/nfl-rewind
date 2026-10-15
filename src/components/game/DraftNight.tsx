@@ -102,7 +102,8 @@ export function DraftNight() {
   const setTab = useGameStore((s) => s.setTab);
   const openProfile = useGameStore((s) => s.openProfile);
   const desk = useGameStore((s) => s.desk);
-  const [paused, setPaused] = useState(false);
+  // The room opens on hold: the draft starts when the owner says so, not the moment it loads.
+  const [paused, setPaused] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
   const [hold, setHold] = useState(8);
   const [scoutId, setScoutId] = useState<string | null>(null);
   const [posFilter, setPosFilter] = useState<Pos | "ALL">("ALL");
@@ -231,6 +232,18 @@ export function DraftNight() {
               })}
             </ol>
           </div>
+
+          {cpuUp && paused && save.draftPickIndex === 0 && (
+            <div className="rounded-lg border border-brass/50 bg-brass/10 px-4 py-4">
+              <p className="text-[11px] tracking-[0.35em] text-brass">COMMISSIONER · THE PODIUM</p>
+              <p className="mt-1 font-display text-2xl">The {save.year} draft is ready when you are.</p>
+              <div className="mt-3">
+                <Btn kind="gold" onClick={() => setPaused(false)}>
+                  Start the draft
+                </Btn>
+              </div>
+            </div>
+          )}
 
           {isUser && (
             <div className="rounded-lg border border-accent/40 bg-accent/15 px-4 py-4">
