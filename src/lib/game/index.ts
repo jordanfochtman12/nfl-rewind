@@ -292,3 +292,4 @@ export type { OwnerDecision, OwnerDecisionKind } from "./types.ts";
 export { cleanPlay, weekReel, type ReelMoment, type ReelKind } from "./weekReel.ts";
 export { createEraGame, restoreRecordLines, ERA_STARTS, type EraOpts } from "./eraStart.ts";
 export { headshotsReady, headshotUrl, loadHeadshots } from "./headshots.ts";
+export { helmetOf, maskOf, type Helmet, type HelmetMark, type MaskStyle } from "./helmets.ts";

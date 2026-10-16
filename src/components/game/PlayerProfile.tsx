@@ -241,7 +241,7 @@ export function PlayerProfile() {
         className="relative z-10 flex max-h-[100dvh] w-full max-w-3xl flex-col overflow-hidden rounded-none border-0 border-line bg-bg sm:max-h-[92dvh] sm:rounded-xl sm:border"
       >
         <header className="flex items-start gap-4 border-b border-line bg-surface px-4 py-4 sm:px-5">
-          <Portrait p={p} year={save.year} primary={colors.primary} secondary={colors.secondary} />
+          <Portrait p={p} year={save.year} primary={colors.primary} secondary={colors.secondary} club={teamId} />
           <div className="min-w-0 flex-1">
             <p className="text-xs tracking-[0.3em] text-brass">
               {real ? p.pos : `${p.pos} · ${archLabel(p)}`}
