@@ -13,7 +13,7 @@ import type {
   TradePiece,
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
-import { activeRosterOf, addToRoster, carryJersey, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
@@ -561,6 +561,55 @@ export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
     for (let i = 0; i < cutN; i++) {
       const p = extras[i];
       if (p) cutPlayer(save, teamId, p.id);
+    }
+  }
+}
+
+/** Healthy men a club needs at each spot to play a Sunday. */
+const GAME_DAY: Partial<Record<Pos, number>> = {
+  QB: 2, RB: 2, WR: 4, TE: 2, LT: 1, LG: 1, C: 1, RG: 1, RT: 1, DE: 2, DT: 2, OLB: 2, MLB: 1, CB: 3, S: 2, K: 1, P: 1,
+};
+
+/**
+ * A computer club covers its injuries during the season, like a real one: a man out a month
+ * or more goes on IR, and a spot without enough healthy bodies for Sunday gets a free agent
+ * signed. Nobody did this, so a club whose backups got hurt played the year short: Carolina's
+ * one healthy back carried 593 times in 1998.
+ */
+export function cpuCoverInjuries(save: DynastySave): void {
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!save.teams[id]?.active) continue;
+    // From 2012 a man can come back from IR: a healed one rejoins the active roster.
+    if (canReturnFromIR(save.year)) for (const p of rosterOf(save, id)) if (p.onIR && p.injuredWeeks <= 0) p.onIR = false;
+    // Before then IR ended a season, so only a long injury went on it.
+    const irWeeks = canReturnFromIR(save.year) ? 4 : 8;
+    let signed = 0;
+    for (const [pos, need] of Object.entries(GAME_DAY) as [Pos, number][]) {
+      if (signed >= 2) break;
+      const group = rosterOf(save, id).filter((p) => p.pos === pos);
+      const healthy = group.filter((p) => p.injuredWeeks <= 0 && !p.onIR).length;
+      if (healthy >= need) continue;
+      for (const p of group) if (p.injuredWeeks >= irWeeks && !p.onIR) placeOnIR(save, id, p.id);
+      const pool = Object.values(save.players)
+        .filter((p) => p.teamId === "fa" && p.pos === pos && p.injuredWeeks <= 0 && !save.waivers.some((w) => w.playerId === p.id))
+        .sort((a, b) => Number(leaguePlayer(b)) - Number(leaguePlayer(a)) || b.ovr - a.ovr);
+      let got = false;
+      for (const p of pool.slice(0, 12)) {
+        if (signPlayer(save, id, p.id, 1).ok) {
+          got = true;
+          break;
+        }
+      }
+      if (!got && activeRosterOf(save, id).length < ROSTER_TARGET + 8) {
+        const body = generatePlayer(save, pos, id, randInt(save, 50, 60));
+        const cap = save.salaryCap ?? salaryCapFor(save.year);
+        if (cap != null) body.salary = Math.min(body.salary, Math.round((cap * 0.0028) / 10_000) * 10_000);
+        body.contractYears = 1;
+        syncDepth(save, id);
+        got = true;
+      }
+      if (got) signed += 1;
     }
   }
 }

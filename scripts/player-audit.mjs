@@ -449,6 +449,10 @@ for (const p of people) {
     const debut = (rosterSeasons.get(p.id) ?? []).filter((r) => r.year === c.first || r.year === (rosterSeasons.get(p.id) ?? [])[0]?.year);
     const sure = debut.some((r) => r.team === d.team) || (rosterSeasons.get(p.id) ?? []).some((r) => r.year <= d.year + 1 && r.team === d.team);
     if (!sure) {
+      // Traded on draft day (Eli Manning and Philip Rivers, John Elway): not with the club that
+      // took him, but the same name from the same school in the same class is still him, and
+      // the number he broke in wearing is his.
+      if (c.college && s.c && collegesMatch(s.c, c.college) && c.first !== undefined && c.first <= d.year + 1) numberOf(d.year, s.f, s.l, c);
       if (Object.keys(f).length) fix[k] = f;
       report.unsure = (report.unsure ?? 0) + 1;
       continue;

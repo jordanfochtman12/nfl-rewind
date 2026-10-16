@@ -1,4 +1,6 @@
-import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
+import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, Ratings, TeamId } from "./types.ts";
+import type { Arch } from "./profiles.ts";
+import { RATING_FIX } from "./data/ratingAudit.ts";
 import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
 import { addToRoster, generatePlayer, leaguePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
@@ -233,20 +235,22 @@ function realRookieNumber(year: number, first: string, last: string): number | u
 }
 
 /** A real draftee as the draft room would have made him that year: ratings kit, arc, peak. */
-export function realDraftee(save: DynastySave, seed: DraftSeed, year: number): Player {
+export function realDraftee(save: DynastySave, seed: DraftSeed, year: number, audited = true): Player {
   const was = save.year;
   save.year = year;
   try {
-    return seedToPlayer(save, seed, seed.r ?? 1);
+    return seedToPlayer(save, seed, seed.r ?? 1, audited);
   } finally {
     save.year = was;
   }
 }
 
-function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player {
+function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited = true): Player {
   const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
   const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
+  const fix = audited ? (RATING_FIX[`${save.year}|${s.f}|${s.l}`] as { rt?: Partial<Ratings>; arch?: Arch } | undefined) : undefined;
   const p = makePlayer(save, {
+    fix,
     firstName: s.f,
     lastName: s.l,
     pos: s.p,

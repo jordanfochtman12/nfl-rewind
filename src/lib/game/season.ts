@@ -45,7 +45,7 @@ import {
   seedPlayoffs,
   simPlayoffWeek,
 } from "./playoffs.ts";
-import { fillRoster, realFreeAgents, signFriends, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
+import { fillRoster, fillUnderCap, realFreeAgents, signFriends, swapInReal, livingPlayers, normalizeJerseys, rosterOf, syncDepth } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { expansionForYear } from "./data/expansions.ts";
 import { rand } from "./rng.ts";
@@ -60,7 +60,7 @@ import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
+import { cpuCoverInjuries, cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -160,6 +160,13 @@ function capAndRefill(save: DynastySave): void {
   if (save.salaryCap == null) return;
   fillCpuRosters(save);
   enforceCapCompliance(save);
+  // The second trip under the cap cut clubs below a full roster; fill back up within it.
+  for (const id of marketOrder(save)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!save.teams[id]) continue;
+    fillUnderCap(save, id, save.salaryCap);
+    save.teams[id].payroll = teamPayroll(save, id);
+  }
 }
 
 function fillThinRosters(save: DynastySave): void {
@@ -282,6 +289,7 @@ function simThisWeek(save: DynastySave): void {
   ownerDeskBeforeWeek(save);
   tickInjuries(save);
   processWaivers(save);
+  cpuCoverInjuries(save);
   const games = gamesInWeek(save, save.week);
   pickFeaturedGame(save, games);
   for (const g of games) simGame(save, g);

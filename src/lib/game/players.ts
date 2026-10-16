@@ -114,17 +114,20 @@ export function makePlayer(
     weight?: number;
     forty?: number;
     rt?: Partial<Ratings>;
+    /** What his real career stats say, over the catalog and star profile (scripts/rating-audit.mjs). */
+    fix?: { rt?: Partial<Ratings>; arch?: Arch };
   },
 ): Player {
   const prof = lookupProfile(opts.pos, opts.firstName, opts.lastName);
   const star = STAR_PROFILES[nameKey(opts.firstName, opts.lastName)];
-  const arch = star?.arch ?? opts.arch ?? prof.arch;
-  const extra = { ...opts.rt, ...prof.rt };
+  const arch = opts.fix?.arch ?? star?.arch ?? opts.arch ?? prof.arch;
+  const extra = { ...opts.rt, ...prof.rt, ...opts.fix?.rt };
   const hasLock = Object.keys(extra).length > 0;
   const jitterFn = opts.historical
     ? nameVariance(opts.firstName, opts.lastName, hasLock ? 1 : 2)
     : (n: number) => jitter(save, n, hasLock ? 1 : 2);
-  const ratings = ratingsFromProfile(opts.pos, opts.ovr, arch, extra, jitterFn);
+  const pinned = opts.fix?.rt ? new Set(Object.keys(opts.fix.rt) as (keyof Ratings)[]) : undefined;
+  const ratings = ratingsFromProfile(opts.pos, opts.ovr, arch, extra, jitterFn, pinned);
   const ovr = deriveOvr(opts.pos, ratings);
   const kit = assignKit(opts.pos, ratings, opts.firstName, opts.lastName);
   const id =
@@ -590,6 +593,44 @@ export function fillRoster(save: DynastySave, teamId: TeamId, market?: Player[])
   while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 40) {
     const pos = DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
     if (!signRealFa(save, teamId, pos, pool)) generatePlayer(save, pos, teamId, randInt(save, 48, 64));
+  }
+  syncDepth(save, teamId);
+}
+
+/**
+ * Bring a capped club back to a full roster without going over: the open spots at positions
+ * it's short of first, then the best player the room allows, always leaving enough for the
+ * spots still to fill at the minimum. Refilling at market price and cutting back to the cap
+ * left clubs near the cap with 37 to 41 men all season. A camp body at the minimum is the
+ * last resort.
+ */
+export function fillUnderCap(save: DynastySave, teamId: TeamId, cap: number): void {
+  pruneRoster(save, teamId);
+  const minPay = Math.round((cap * 0.004 * 0.7) / 10_000) * 10_000;
+  const payroll = () => rosterOf(save, teamId).reduce((n, p) => n + (p.salary ?? 0), 0);
+  const wire = new Set(save.waivers.map((w) => w.playerId));
+  let guard = 0;
+  while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 60) {
+    const roster = rosterOf(save, teamId);
+    const open = ROSTER_TARGET - roster.length;
+    const room = cap - payroll() - (open - 1) * minPay;
+    if (room < minPay) break;
+    const short = DEPTH_CHART.filter(([pos, need]) => roster.filter((p) => p.pos === pos).length < need).map(([pos]) => pos);
+    let best: Player | undefined;
+    for (const p of Object.values(save.players)) {
+      if (p.teamId !== "fa" || wire.has(p.id) || p.injuredWeeks > 0 || !leaguePlayer(p)) continue;
+      if (short.length && !short.includes(p.pos)) continue;
+      if (salaryFor(save.year, p.ovr, p.age, p.pos) > room) continue;
+      if (!best || p.ovr > best.ovr) best = p;
+    }
+    if (best) {
+      seatReal(save, teamId, best, best.pos);
+      continue;
+    }
+    const pos = short[0] ?? DEPTH_CHART[randInt(save, 0, DEPTH_CHART.length - 1)]![0];
+    const body = generatePlayer(save, pos, teamId, randInt(save, 48, 56));
+    body.salary = Math.min(body.salary, minPay);
+    body.contractYears = 1;
   }
   syncDepth(save, teamId);
 }

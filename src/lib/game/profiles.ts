@@ -182,6 +182,8 @@ export function ratingsFromProfile(
   arch: Arch | undefined,
   extra: Partial<Ratings> | undefined,
   jitterFn: (n: number) => number,
+  /** Ratings his real career set (scripts/rating-audit.mjs): the rest of the kit carries his level. */
+  pinned?: ReadonlySet<RatingKey>,
 ): Ratings {
   const r = emptyRatings(36);
   const base = POS_BASE[pos];
@@ -220,6 +222,7 @@ export function ratingsFromProfile(
     const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.5));
     let moved = false;
     for (const k of primaries) {
+      if (pinned?.has(k)) continue;
       const v = clamp(r[k] + step, 25, 99);
       if (v !== r[k]) moved = true;
       r[k] = v;

@@ -89,6 +89,8 @@ export function agePlayer(save: DynastySave, p: Player): void {
   p.yearsPro += 1;
   p.injuredWeeks = 0;
   p.injuryName = undefined;
+  // A new season starts everyone off injured reserve (nothing ever took them off before).
+  p.onIR = false;
   maybeReveal(p, 0);
   if (p.yearsPro >= 2) p.revealed = true;
 
@@ -113,7 +115,9 @@ export function agePlayer(save: DynastySave, p: Player): void {
   const room = pot - p.ovr;
   const climbing = p.age < peak && room >= 3 && p.teamId !== "fa";
   if (climbing && rand(save) < 0.85 + devBump) {
-    const pace = (starter ? 0.36 : gp >= 3 ? 0.3 : 0.24) * (0.6 + rand(save) * 0.8);
+    // Practice develops a prospect too: benched behind veterans, the first scouts-built classes
+    // took five years to make a star and the league went through a lean stretch after 2026.
+    const pace = (starter ? 0.38 : gp >= 3 ? 0.35 : 0.31) * (0.6 + rand(save) * 0.8);
     delta = Math.max(1, Math.round(room * pace));
   } else if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
   else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45 + devBump * 0.5) delta = randInt(save, 1, 2);

@@ -110,7 +110,7 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
       }
       const slate = playedSlate(save);
       const key = `whip-${y}-${slate[0]?.id ?? save.week}`;
-      if (!seen.has(key)) return { k: "whip", key, slate, title: save.phase === "playoffs" ? slate[0]?.round ?? "Playoffs" : `Week ${save.week}` };
+      if (!seen.has(key)) return { k: "whip", key, slate, title: save.phase === "playoffs" ? slateTitle(slate, "Playoffs") : `Week ${save.week}` };
       if (studio) return { k: "studio", key: studio.id, episode: studio };
       return card("next", watchLabel(save), save.weekLabel.toUpperCase(), "", [], {}, 0);
     }
@@ -396,6 +396,18 @@ function Countdown({ left, label, onGo }: { left: number; label: string; onGo: (
   );
 }
 
+/**
+ * A playoff slate's name. The NFL and AFL title games of 1966-69 share a weekend, and the
+ * first game's round alone put "AFL Championship" over the NFL game on the screen.
+ */
+function slateTitle(slate: GameResult[], fallback: string): string {
+  const rounds = [...new Set(slate.map((g) => g.round).filter((r): r is string => !!r))];
+  if (rounds.length <= 1) return rounds[0] ?? fallback;
+  const leagues = rounds.map((r) => r.match(/^(\S+) Championship$/)?.[1]);
+  if (leagues.every(Boolean)) return `${leagues.sort((a, b) => (a === "NFL" ? -1 : b === "NFL" ? 1 : a!.localeCompare(b!))).join(" & ")} Championships`;
+  return rounds.join(" · ");
+}
+
 function Pregame({ save, slate, say, paused, onGo }: { save: DynastySave; slate: GameResult[]; say: (t: string) => void; paused: boolean; onGo: () => void }) {
   const left = useCountdown(save.phase === "superBowl" ? 15 : 14, paused, onGo);
   const played = Math.max(0, ...Object.values(save.teams).map((t) => t.wins + t.losses + t.ties));
@@ -404,7 +416,7 @@ function Pregame({ save, slate, say, paused, onGo }: { save: DynastySave; slate:
     [save, slate],
   );
   const focus = useMemo(() => (slate.length <= 2 ? slate.flatMap((g) => [g.homeId, g.awayId] as TeamId[]) : undefined), [slate]);
-  const title = save.phase === "superBowl" ? save.superBowl?.round ?? "The Super Bowl" : save.phase === "playoffs" ? slate[0]?.round ?? "The playoffs" : `Week ${save.week}`;
+  const title = save.phase === "superBowl" ? save.superBowl?.round ?? "The Super Bowl" : save.phase === "playoffs" ? slateTitle(slate, "The playoffs") : `Week ${save.week}`;
   useEffect(() => {
     const f = featured;
     const line = f

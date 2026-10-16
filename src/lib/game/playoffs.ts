@@ -216,6 +216,9 @@ export function simPlayoffWeek(save: DynastySave): void {
 
 export function playoffWeekLabel(save: DynastySave): string {
   const u = unfinished(save);
+  // The NFL and AFL title games of 1966-69 share a weekend: name both, not whichever is first.
+  const titles = [...new Set(u.map((g) => g.round).filter((r): r is string => !!r && /^(NFL|AFL) Championship$/.test(r)))];
+  if (titles.length === 2) return "NFL & AFL Championships";
   if (u[0]?.round) return u[0].round;
   const last = save.playoffGames[save.playoffGames.length - 1];
   return last?.round ?? "Playoffs";
