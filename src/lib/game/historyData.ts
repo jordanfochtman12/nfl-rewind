@@ -164,11 +164,75 @@ export function parseHistory(mods: {
         return { round: Number(round), pick: Number(pick), team: team as TeamId, person: id36(person!), league: (league || undefined) as HistoryPick["league"] };
       }),
   );
+  // Pass rushers the record files as middle linebackers (it has one linebacker code for most
+  // careers): Kevin Greene, Pat Swilling and Leslie O'Neal were rated on tackles and lined up
+  // inside. A real sack season, or sacks year after year, makes him an outside linebacker.
+  // (Brian Urlacher, 8 at best and under 5 a year, stays in the middle.)
+  const rush = new Map<number, { best: number; total: number; seasons: number }>();
+  for (const y of Object.keys(mods.STATS).map(Number)) {
+    for (const { person, line } of stats(y)) {
+      if (people[person]?.pos !== "MLB" || line.sacks == null || line.sacks < 0) continue;
+      const r = rush.get(person) ?? { best: 0, total: 0, seasons: 0 };
+      r.best = Math.max(r.best, line.sacks);
+      r.total += line.sacks;
+      r.seasons += 1;
+      rush.set(person, r);
+    }
+  }
+  for (const [person, r] of rush) if (r.best >= 9 || (r.best >= 7.5 && r.total / r.seasons >= 5.5)) people[person]!.pos = "OLB";
+  // Namesakes, for an award the record pinned on the wrong one.
+  let byName: Map<string, number[]> | undefined;
+  const namesakes = (person: number): number[] => {
+    if (!byName) {
+      byName = new Map();
+      people.forEach((w, i) => {
+        const k = `${w.first}|${w.last}`;
+        byName!.set(k, [...(byName!.get(k) ?? []), i]);
+      });
+    }
+    const w = people[person];
+    return w ? byName.get(`${w.first}|${w.last}`) ?? [] : [];
+  };
+  const OFFENSE = new Set(["mvp", "opoy", "oroy", "cpoy"]);
+  const DEFENSE = new Set(["dpoy", "droy"]);
   const awards = memo((y) => {
     const out: Record<string, (number | string)[]> = {};
+    let lines: Map<number, HistoryLine> | undefined;
+    const lineOf = (person: number) => {
+      if (!lines) {
+        lines = new Map();
+        for (const r of stats(y)) {
+          const o = lines.get(r.person) ?? {};
+          for (const [k, v] of Object.entries(r.line)) if (v >= 0) o[k as keyof SeasonStats] = (o[k as keyof SeasonStats] ?? 0) + v;
+          lines.set(r.person, o);
+        }
+      }
+      return lines.get(person);
+    };
+    const fits = (k: string, l: HistoryLine | undefined) => {
+      if (!l) return -1;
+      const yards = (l.passYds ?? 0) + (l.rushYds ?? 0) + (l.recYds ?? 0) + (l.fgMade ?? 0) * 30;
+      const stops = ((l.sacks ?? 0) + (l.ints ?? 0)) * 100 + (l.tackles ?? 0) * 5;
+      return OFFENSE.has(k) ? yards : DEFENSE.has(k) ? stops : yards + stops;
+    };
     for (const part of (mods.AWARDS[y] ?? "").split(";")) {
       const [k, v] = part.split(":");
-      if (k && v) out[k] = v.split("/").map(ref);
+      if (!k || !v) continue;
+      // The 1972 MVP is Washington's Larry Brown, not the Steelers lineman of the same name.
+      out[k] = v.split("/").map(ref).map((who) => {
+        if (typeof who !== "number" || k === "coy") return who;
+        const mine = fits(k, lineOf(who));
+        let best = who;
+        let bestFit = mine;
+        for (const other of namesakes(who)) {
+          const f = fits(k, lineOf(other));
+          if (other !== who && f > bestFit) {
+            best = other;
+            bestFit = f;
+          }
+        }
+        return bestFit > mine * 2 + 100 ? best : who;
+      });
     }
     return out;
   });

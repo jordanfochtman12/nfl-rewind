@@ -43,25 +43,61 @@ const nameKey = (f: string, l: string) => `${f}|${l}`.toLowerCase().replace(/[^a
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
 /** What a season's line says about a player, on the game's overall scale. */
+/**
+ * How a season's passing and rushing compare with the 2010s, per team-game, from the record: a
+ * 2,400-yard passer in 1972 was a top-five quarterback, and on modern yardage bars he scored like
+ * a backup (John Hadl, Fran Tarkenton and Jim Hart all rated in the 70s).
+ */
+const eraScales = new Map<number, { pass: number; rush: number }>();
+function eraScale(year: number): { pass: number; rush: number } {
+  const have = eraScales.get(year);
+  if (have) return have;
+  const league = (y: number) => {
+    let pass = 0;
+    let rush = 0;
+    for (const { line } of historyData().stats(y)) {
+      if ((line.passYds ?? 0) > 0) pass += line.passYds!;
+      if ((line.rushYds ?? 0) > 0) rush += line.rushYds!;
+    }
+    const teamGames = activeTeamIds(y).length * gamesInSeason(y);
+    return { pass: pass / teamGames, rush: rush / teamGames };
+  };
+  let out = { pass: 1, rush: 1 };
+  if (hasHistoryData()) {
+    const now = league(year);
+    let pass = 0;
+    let rush = 0;
+    for (let y = 2010; y <= 2019; y++) {
+      const l = league(y);
+      pass += l.pass / 10;
+      rush += l.rush / 10;
+    }
+    if (now.pass > 0 && now.rush > 0) out = { pass: clamp(pass / now.pass, 0.8, 1.8), rush: clamp(rush / now.rush, 0.8, 1.4) };
+  }
+  eraScales.set(year, out);
+  return out;
+}
+
 function lineScore(pos: Pos, st: SeasonStats): number | undefined {
   const k = 16 / Math.max(12, gamesInSeason(st.year));
+  const era = eraScale(st.year);
   const gp = st.gp ?? 0;
   const unknown = new Set((st as SeasonStats & { unknown?: string[] }).unknown ?? []);
   const games = 58 + Math.min(gp * k, 16) * 0.85;
   switch (pos) {
     case "QB": {
       if ((st.passAtt ?? 0) < 120) return gp ? 60 + Math.min(gp, 8) : undefined;
-      const v = (st.passYds ?? 0) * k;
+      const v = (st.passYds ?? 0) * k * era.pass;
       return 60 + clamp((v - 1200) / 3300, 0, 1) * 28 + clamp(((st.passTd ?? 0) - (st.passInt ?? 0)) * k, -10, 25) * 0.25;
     }
     case "RB":
-      return 58 + clamp((((st.rushYds ?? 0) + 0.6 * (st.recYds ?? 0)) * k) / 1800, 0, 1) * 32;
+      return 58 + clamp((((st.rushYds ?? 0) * era.rush + 0.6 * (st.recYds ?? 0) * era.pass) * k) / 1800, 0, 1) * 32;
     case "FB":
-      return 62 + clamp((((st.rushYds ?? 0) + (st.recYds ?? 0)) * k) / 900, 0, 1) * 18;
+      return 62 + clamp((((st.rushYds ?? 0) * era.rush + (st.recYds ?? 0) * era.pass) * k) / 900, 0, 1) * 18;
     case "WR":
-      return 58 + clamp(((st.recYds ?? 0) * k) / 1450, 0, 1) * 32;
+      return 58 + clamp(((st.recYds ?? 0) * k * era.pass) / 1450, 0, 1) * 32;
     case "TE":
-      return 60 + clamp(((st.recYds ?? 0) * k) / 1050, 0, 1) * 28;
+      return 60 + clamp(((st.recYds ?? 0) * k * era.pass) / 1050, 0, 1) * 28;
     case "DE":
     case "DT":
     case "OLB":
@@ -97,7 +133,9 @@ function productionOvr(p: Player, year: number): number {
   v = Math.max(v, Math.max(...scores) - 3);
   const honors = p.honors?.awards?.length ?? 0;
   if (honors) v = Math.max(v, 87);
-  if (p.age >= 32) v -= (p.age - 31) * 1.2;
+  // His recent seasons already show any slide; this is only the next year's. At 1.2 a year from
+  // 32, Rich Gannon came into his 2002 MVP season a 72 and Reggie White his DPOY year an 80.
+  if (p.age >= 34) v -= (p.age - 33) * 0.7;
   return Math.round(clamp(v, 48, 95));
 }
 
@@ -139,7 +177,13 @@ export function rateReal(save: DynastySave, p: Player, year: number): void {
     moveToward(p, arcTarget(p, idx));
     // Production can't lift him past his real peak, but a lean arc gives way to a big year.
     const real = productionOvr(p, year);
-    if (real > p.ovr + 4) moveToward(p, Math.min(p.potential, real - 2));
+    if (real > p.ovr + 2) {
+      // A late bloomer's real peak came after the counting stats that set his seed: Gannon's
+      // journeyman years capped him below the MVP he became. What he's doing now sets it, and a
+      // final season after a 2,000-yard one (Barry Sanders, 1998) doesn't start on the fade.
+      if (real - 1 > p.potential) p.potential = real - 1;
+      moveToward(p, Math.min(p.potential, real - 2));
+    }
     p.peakOvr = Math.max(peak, p.ovr);
   } else {
     moveToward(p, productionOvr(p, year));
