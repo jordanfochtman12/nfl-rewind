@@ -15,6 +15,7 @@ import {
   bidEligible,
   placeBid,
   signPlayer,
+  faAsk,
   tradeWindowOpen,
   visibleOvr,
   type Player,
@@ -134,11 +135,11 @@ export function MarketDesk() {
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Free agents</h3>
         <div className="overflow-x-auto rounded-xl border border-line">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="text-xs tracking-wider text-muted">
               <tr>
                 <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-                {["", "Pos", "Grade", "Age", "College"].map((h) => (
+                {["", "Asking", "Pos", "Grade", "Age", "College"].map((h) => (
                   <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                     {h}
                   </th>
@@ -161,13 +162,24 @@ export function MarketDesk() {
                       onClick={() =>
                         desk((s) => {
                           if (bidEligible(s, s.players[p.id]!)) return placeBid(s, p.id, 0);
-                          const r = signPlayer(s, s.userTeamId, p.id);
+                          const r = signPlayer(s, s.userTeamId, p.id, faAsk(s, s.players[p.id]!).years);
                           return r.ok ? `Signed ${playerName(p)}.` : r.reason;
                         })
                       }
                     >
                       {bidEligible(save, p) ? "Make offer" : "Sign"}
                     </Btn>
+                  </td>
+                  <td className="tabular whitespace-nowrap px-3 py-2">
+                    {(() => {
+                      const ask = faAsk(save, p);
+                      return (
+                        <>
+                          {formatMoney(ask.salary, save.year)}
+                          <span className="text-muted"> · {ask.years} yr</span>
+                        </>
+                      );
+                    })()}
                   </td>
                   <td className="px-3 py-2">{p.pos}</td>
                   <td className="px-3 py-2">
@@ -179,7 +191,7 @@ export function MarketDesk() {
               ))}
               {!fa.length && (
                 <tr>
-                  <td className="px-3 py-4 text-muted" colSpan={6}>
+                  <td className="px-3 py-4 text-muted" colSpan={7}>
                     No one left on the street.
                   </td>
                 </tr>

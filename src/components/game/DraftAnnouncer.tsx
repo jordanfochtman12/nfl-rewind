@@ -330,13 +330,13 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
 
   const controls = (
     <section
-      className="rounded-lg border border-brass/30 bg-black/50 p-4"
+      className="rounded-lg border border-brass/30 bg-black/50 px-3 py-2 sm:p-4"
       aria-label="Draft announcer"
     >
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <button
           type="button"
-          className={`bx-chip min-h-11 px-4 ${enabled ? "bx-chip-on" : ""}`}
+          className={`bx-chip min-h-10 px-3 text-xs sm:min-h-11 sm:px-4 sm:text-sm ${enabled ? "bx-chip-on" : ""}`}
           aria-pressed={enabled}
           onClick={() => {
             if (enabled) {
@@ -359,7 +359,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         </button>
         <button
           type="button"
-          className={`bx-chip min-h-11 px-4 ${crowd ? "bx-chip-on" : ""}`}
+          className={`bx-chip min-h-10 px-3 text-xs sm:min-h-11 sm:px-4 sm:text-sm ${crowd ? "bx-chip-on" : ""}`}
           aria-pressed={crowd}
           onClick={() => {
             if (crowd) {
@@ -372,7 +372,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         </button>
         <button
           type="button"
-          className={`bx-chip min-h-11 px-4 ${music ? "bx-chip-on" : ""}`}
+          className={`bx-chip min-h-10 px-3 text-xs sm:min-h-11 sm:px-4 sm:text-sm ${music ? "bx-chip-on" : ""}`}
           aria-pressed={music}
           onClick={() => {
             if (music) setMusic(false);
@@ -381,6 +381,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         >
           Music: {music ? "on" : "off"}
         </button>
+      </div>
+      <details className="mt-2 text-xs text-muted">
+        <summary className="cursor-pointer py-1">Sound options</summary>
+        <div className="mt-2 flex flex-wrap items-center gap-3">
         {music && (
           <label className="flex items-center gap-2 text-xs text-muted">
             Music volume
@@ -440,8 +444,9 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
             />
           </label>
         )}
-      </div>
-      <p className="mt-2 text-xs text-muted">
+        </div>
+      </details>
+      <p className="mt-2 hidden text-xs text-muted sm:block">
         {busy
           ? "At the podium — the next automatic pick waits for the announcement."
           : "Pick announcement, crowd reaction, then the next team on the clock."}

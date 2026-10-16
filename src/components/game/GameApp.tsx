@@ -759,7 +759,7 @@ function Roster() {
           <tr>
             <th className="sticky left-0 z-10 w-12 bg-surface-2 px-3 py-2 font-medium">#</th>
             <th className="sticky left-12 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-            {["Pos", "College", "Grade", "Age", "Yrs", "Kit", "Sal", "Mood", "Status", ...(look ? [] : [""])].map((h) => (
+            {["Pos", "Grade", "Age", "Yrs", "Kit", "Sal", "Mood", "Status", "College", ...(look ? [] : [""])].map((h) => (
               <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                 {h}
               </th>
@@ -776,7 +776,6 @@ function Roster() {
                 {p.historical ? "" : <span className="ml-2 text-xs text-subtle">camp</span>}
               </td>
               <td className="px-3 py-2">{p.pos}</td>
-              <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
               <td className="tabular px-3 py-2">
                 <span className={`stat-glow text-base ${gradeTone(visibleOvr(p))}`}>
                   {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
@@ -804,6 +803,7 @@ function Roster() {
                   <span className="text-good">active</span>
                 )}
               </td>
+              <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
               {!look && <td className="px-3 py-2">
                 <div className="flex flex-wrap gap-2">
                   {p.onIR ? (

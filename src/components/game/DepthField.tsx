@@ -15,7 +15,7 @@ function Chip({ p, label }: { p?: Player; label: string }) {
     <button
       type="button"
       onClick={() => openProfile(p.id)}
-      className={`min-w-[84px] rounded-md border px-2 py-1 text-center ${
+      className={`min-w-0 max-w-[84px] flex-1 basis-0 rounded-md border px-1 py-1 text-center sm:min-w-[84px] sm:flex-none sm:basis-auto sm:px-2 ${
         hurt ? "border-brick/70 bg-brick/40" : "border-white/20 bg-gradient-to-b from-[#1b2130]/95 to-black/90 shadow-[inset_0_2px_0_#ffc629,0_4px_10px_#0008] hover:border-brass"
       }`}
     >

@@ -182,6 +182,11 @@ export function activateFromIR(save: DynastySave, teamId: TeamId, playerId: stri
   return ok();
 }
 
+/** What a free agent asks before he signs: his salary at today's market, and a term by age. */
+export function faAsk(save: DynastySave, p: Player): { salary: number; years: number } {
+  return { salary: salaryFor(save.year, p.ovr, p.age, p.pos), years: p.age <= 26 ? 3 : p.age <= 30 ? 2 : 1 };
+}
+
 export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, years?: number): GmResult {
   const p = save.players[playerId];
   if (!p) return fail("No such player.");

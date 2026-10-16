@@ -123,9 +123,17 @@ export function classConsensus(save: DynastySave): Map<string, number> {
     .filter((pr) => save.players[pr.playerId])
     .map((pr) => {
       const p = save.players[pr.playerId]!;
-      return { id: p.id, score: visibleOvr(p) + positionPremium(p.pos, save.year) + (draw(p.id, "media") - 0.5) * 3 };
+      return { id: p.id, slot: pr.slot, score: visibleOvr(p) + positionPremium(p.pos, save.year) + (draw(p.id, "media") - 0.5) * 3 };
     })
     .sort((a, b) => b.score - a.score);
+  // A real class's board is listed in the order history took it, and the room knew that
+  // order's reasons (the workouts, the interviews, the film the grades don't carry). The
+  // consensus is half the scouts' grades and half where he really went, so a club taking a
+  // man near his real slot isn't called a reach.
+  const gradeRank = new Map(rows.map((r, i) => [r.id, i]));
+  const bySlot = [...rows].sort((a, b) => a.slot - b.slot);
+  const slotRank = new Map(bySlot.map((r, i) => [r.id, i]));
+  rows.sort((a, b) => gradeRank.get(a.id)! + slotRank.get(a.id)! - (gradeRank.get(b.id)! + slotRank.get(b.id)!));
   const out = new Map(rows.map((r, i) => [r.id, i + 1]));
   classCache.set(save.draftBoard, out);
   return out;

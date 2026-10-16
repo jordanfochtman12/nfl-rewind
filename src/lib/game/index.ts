@@ -168,6 +168,7 @@ export { visibleOvr, visibleRatings, scoutLetter, scoutLine, applyScout, maybeRe
 export {
   cutPlayer,
   signPlayer,
+  faAsk,
   claimWaiver,
   executeTrade,
   setDepthOrder,
