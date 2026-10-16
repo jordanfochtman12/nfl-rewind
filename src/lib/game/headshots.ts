@@ -47,6 +47,9 @@ export function headshotsReady(): boolean {
 function urlOf(key: string): string {
   if (key[0] === "e") return `https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/${key.slice(1)}.png&w=240&h=175`;
   if (key[0] === "w") return `https://commons.wikimedia.org/wiki/Special:FilePath/${key.slice(1)}?width=240`;
+  // The league's retired-player portrait is an action cutout: cropped to the face, it sits in
+  // the card like a studio headshot.
+  if (key[0] === "n") return `https://static.www.nfl.com/image/private/c_thumb,g_face,z_0.7,w_240,h_175,f_auto,q_auto/league/${key.slice(1)}`;
   return `https://static.www.nfl.com/image/${key[0] === "u" ? "upload" : "private"}/f_auto,q_auto,w_240/league/${key.slice(1)}`;
 }
 
