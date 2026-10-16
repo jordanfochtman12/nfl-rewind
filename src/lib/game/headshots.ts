@@ -1,7 +1,7 @@
 /**
  * Real players' portraits (data/history/headshots.ts), loaded on first use: the studio
  * headshot a broadcast shows where there is one, then the league's photo, then a freely
- * licensed Wikimedia Commons photo. A
+ * licensed Wikimedia Commons photo or his Wikipedia article's free lead photo. A
  * record player is found by his id. One the draft room or a classic start made is found by
  * name, but only when exactly one photographed man of that name was born within two years of
  * him, so a 1970s namesake never wears a 2020 face.
@@ -47,6 +47,8 @@ export function headshotsReady(): boolean {
 function urlOf(key: string): string {
   if (key[0] === "e") return `https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/${key.slice(1)}.png&w=240&h=175`;
   if (key[0] === "w") return `https://commons.wikimedia.org/wiki/Special:FilePath/${key.slice(1)}?width=240`;
+  // His Wikipedia article's free lead photo: some are kept on Wikipedia, not Commons.
+  if (key[0] === "x") return `https://en.wikipedia.org/wiki/Special:FilePath/${key.slice(1)}?width=240`;
   // The league's retired-player portrait is an action cutout: cropped to the face, it sits in
   // the card like a studio headshot.
   if (key[0] === "n") return `https://static.www.nfl.com/image/private/c_thumb,g_face,z_0.7,w_240,h_175,f_auto,q_auto/league/${key.slice(1)}`;
