@@ -142,14 +142,26 @@ export interface TeamUnits {
  * chunk gains. It starts at the leader's pace and firms up quickly above it, so ordinary
  * starters are untouched and record seasons stay rare rather than impossible.
  */
-function passTaper(perGame: number | undefined, ref: number): number {
+function passTaper(perGame: number | undefined, ref: number, hot = false): number {
   if (!perGame) return 1;
-  const r = perGame / ref;
+  // A career year: the coverage never quite catches up with him.
+  const r = perGame / (ref * (hot ? 1.12 : 1));
   if (r <= 0.95) return 1;
   // Closing on a typical leader's pace, defenses key on him and the staff spreads it around;
-  // past 15% over (the real record ran 16% over) the coverage really rolls: a 6,000-yard
-  // season stays out of reach while a record season stays possible.
-  return Math.max(0.5, 1 - (r - 0.95) * 1.9 - Math.max(0, r - 1.15) * 2);
+  // well past it the coverage rolls harder, so a record falls now and then, by a little.
+  return Math.max(0.55, 1 - (r - 0.95) * 1.6 - Math.max(0, r - 1.18) * 1.2);
+}
+
+/**
+ * Anything can happen: each season a few players have the year of their lives (about one in
+ * twenty-five), and nothing slows them down. Fixed by player and season, so it holds all year.
+ */
+export function careerYear(p: Player | undefined, year: number): boolean {
+  if (!p) return false;
+  let h = 2166136261 ^ year;
+  for (const ch of p.id) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  h ^= h >>> 13;
+  return (h >>> 0) % 25 === 0;
 }
 
 /** A typical league-leading interception total for the era (real decade leaders). */
@@ -171,7 +183,7 @@ function intTaper(p: Player | undefined, year: number): number {
   const pace = (s.passInt / s.gp) * gamesInSeason(year);
   const soft = intLeaderRef(year) * 0.8;
   if (pace <= soft) return 1;
-  return clamp(1 - ((pace - soft) / intLeaderRef(year)) * 1.2, 0.45, 1);
+  return clamp(1 - ((pace - soft) / intLeaderRef(year)) * 1.2, 0.6, 1);
 }
 
 /** A quarterback whose interceptions this season run far past his era's normal rate. */
@@ -455,6 +467,8 @@ function bumpBox(box: BoxPlayer[], id: string | undefined, patch: Partial<BoxPla
 function paceDamp(p: Player, key: "rec" | "sacks" | "ints", year: number, eraRef: number): number {
   const s = p.stats[year];
   if (!s || s.gp < 3) return 1;
+  // A career year: the brake comes on later for him.
+  if (careerYear(p, year)) eraRef *= 1.12;
   const pace = (s[key] / s.gp) * gamesInSeason(year);
   // The taper starts at a typical leader's pace (about three-quarters of the record), so
   // leaders land where real leaders did and the record itself takes a rare season. Sacks
@@ -464,11 +478,11 @@ function paceDamp(p: Player, key: "rec" | "sacks" | "ints", year: number, eraRef
   if (pace <= soft) return 1;
   // Sacks taper by ratio, not a straight slope: a slope flattened everyone past the knee onto
   // the same 14-16 and left three ends tied for the lead; a ratio keeps the best rusher ahead.
+  // No wall at the record: the brake eases a leader toward the pack, and a man who keeps
+  // beating it keeps his numbers.
   return key === "sacks"
-    ? Math.max(0.12, Math.pow(soft / pace, 2))
-    : // Past the record pace itself the brake bites hard: the record falls rarely, by a little.
-      // Past the record pace the floor drops too, so one man can't soak up a thin room's targets.
-      clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6 - Math.max(0, (pace - eraRef) / eraRef) * 2.5, pace > eraRef ? 0.08 : 0.3, 1);
+    ? Math.max(0.15, Math.pow(soft / pace, 2))
+    : clamp(1 - ((pace - soft) / (eraRef * 0.26)) * 0.6 - Math.max(0, (pace - eraRef) / eraRef) * 1.5, 0.2, 1);
 }
 
 /** A player's season pace in one stat (per game), once he has a few games in the book. */
@@ -479,7 +493,7 @@ function seasonPace(p: Player | undefined, key: "passYds" | "rushYds" | "recYds"
 }
 const taperOf = (p: Player | undefined, key: "passYds" | "rushYds" | "recYds", year: number, ref: number): number => {
   const pace = seasonPace(p, key, year);
-  return pace === undefined ? 1 : starTaper(pace, ref);
+  return pace === undefined ? 1 : starTaper(pace, ref * (careerYear(p, year) ? 1.12 : 1));
 };
 
 function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number, redZone: boolean): Player | undefined {
@@ -2530,7 +2544,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       // Third and long: the defense sits on the sticks (looser before the 80s' sub packages).
       if (was3rd && togo >= 6) yds = Math.round(yds * (year <= 1977 ? 1 : year <= 1989 ? 0.94 : 0.88));
       // A passer on a record pace sees the coverage roll his way: fewer chunk gains.
-      yds = Math.round(yds * passGainScale(year) * passTaper(seasonPace(off.qb, "passYds", year), leaderPace(year).pass));
+      yds = Math.round(yds * passGainScale(year) * passTaper(seasonPace(off.qb, "passYds", year), leaderPace(year).pass, careerYear(off.qb, year)));
       // In the red zone the field runs out: the catch is at most the end zone. (Scaled first, so
       // a ball thrown into the end zone isn't shrunk back to the two after it got there.)
       if (spot >= 80) yds = Math.min(yds, Math.max(2, 100 - spot - (rand(save) < 0.15 ? 1 : 0)));

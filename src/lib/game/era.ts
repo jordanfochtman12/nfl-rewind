@@ -483,5 +483,5 @@ export function leaderPace(year: number): { pass: number; rush: number; recYds: 
 export function starTaper(perGame: number, ref: number): number {
   const r = perGame / ref;
   if (r <= 0.95) return 1;
-  return Math.max(0.45, 1 - ((r - 0.95) / 0.35) * 0.55);
+  return Math.max(0.5, 1 - ((r - 0.95) / 0.35) * 0.55);
 }
