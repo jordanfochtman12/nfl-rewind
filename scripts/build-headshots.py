@@ -11,6 +11,9 @@ Every real player's portrait we can find, for data/history/headshots.ts.
                   stand-in helmet silhouette is one image, so its hash tells a missing photo
                   from a real one
   espn.txt        "<espn id> <http status>" for each player's ESPN studio headshot
+  espn2.tsv       (optional) "<person id>\t<espn id>" for men nflverse never linked to ESPN,
+                  matched in ESPN's own athlete directory by name and birth date, kept only where
+                  ESPN lists a headshot
   wd.csv          Wikidata football players with a Commons photo (item, itemLabel, birth, image)
   wp.tsv          (optional) "<person id>\t<Commons file>": the freely licensed lead photo of his
                   English Wikipedia article (the API's pageimages, free licenses only), for men
@@ -112,6 +115,12 @@ for r in csv.DictReader(open(d / "players.csv", encoding="utf-8")):
     if e in espn_ok and i is not None:
         n_espn += i not in shot or not shot[i].startswith("e")
         shot[i] = "e" + e
+if (d / "espn2.tsv").exists():
+    for line in open(d / "espn2.tsv"):
+        f = line.split()
+        if len(f) == 2 and f[0].isdigit() and int(f[0]) not in shot:
+            n_espn += 1
+            shot[int(f[0])] = "e" + f[1]
 n_league = len(shot)
 # The league's retired-player pages: a key that turns up for more than one man is a stand-in.
 nfl_rows = [l.rstrip("\n").split("\t") for l in open(d / "nfl.tsv")] if (d / "nfl.tsv").exists() else []
