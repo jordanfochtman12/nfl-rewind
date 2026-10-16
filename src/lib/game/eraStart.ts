@@ -33,8 +33,11 @@ import { MORE_COACHES } from "./data/coachesMore.ts";
 import { newOwnerState } from "./owner.ts";
 import type { DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
 
-/** The seasons a league can start in. 1966 is the classic start; the rest begin from the record. */
-export const ERA_STARTS = [1966, 1975, 1985, 1992, 2001, 2010, 2020, 2026] as const;
+/**
+ * The seasons a league can start in: every one the record has rosters for. 1966 is the classic
+ * start; the rest begin from that year's real rosters.
+ */
+export const ERA_STARTS: readonly number[] = Array.from({ length: ROSTERS_LAST - 1966 + 1 }, (_, i) => 1966 + i);
 
 const nameKey = (f: string, l: string) => `${f}|${l}`.toLowerCase().replace(/[^a-z|]/g, "");
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));

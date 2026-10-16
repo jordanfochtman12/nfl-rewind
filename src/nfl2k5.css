@@ -2884,6 +2884,17 @@ table tbody tr:hover {
   font-style: italic;
   color: rgba(232, 238, 247, 0.85);
 }
+.k5-years .k5-decades button {
+  min-width: 3.4rem;
+  min-height: 2.1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: rgba(232, 238, 247, 0.6);
+}
+.k5-years .k5-decades button.is-open {
+  border-color: var(--k5-gold);
+  color: var(--k5-gold);
+}
 .k5-years button.is-on {
   border-color: var(--k5-gold);
   background: linear-gradient(180deg, #fff2b8 0%, #ffc629 50%, #c98d00 100%);

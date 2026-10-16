@@ -243,17 +243,29 @@ function TitleScreen() {
   );
 }
 
-/** The season to start in: 1966, or a later year built from the real rosters. */
+/** The season to start in: 1966, or any later year built from the real rosters. A decade, then its seasons. */
 function StartYearPicker() {
   const year = useGameStore((s) => s.startYear);
   const setYear = useGameStore((s) => s.setStartYear);
+  const decadeOf = (y: number) => Math.floor(y / 10) * 10;
+  // The decade follows the chosen season, so it survives the title screen redrawing.
+  const decade = decadeOf(year);
+  const decades = [...new Set(ERA_STARTS.map(decadeOf))];
+  const seasons = ERA_STARTS.filter((y) => decadeOf(y) === decade);
   return (
     <div className="k5-years" role="radiogroup" aria-label="Start year">
       <p>
         <span>START YEAR</span> {year === 1966 ? "The first Super Bowl season" : `The real ${year} rosters`}
       </p>
+      <div className="k5-decades" role="tablist" aria-label="Decade">
+        {decades.map((d) => (
+          <button key={d} type="button" role="tab" aria-selected={decade === d} className={decade === d ? "is-open" : ""} onClick={() => decade !== d && setYear(ERA_STARTS.find((y) => decadeOf(y) === d)!)}>
+            {d === 2000 ? "2000s" : d === 2010 ? "2010s" : d === 2020 ? "2020s" : `'${String(d).slice(2)}s`}
+          </button>
+        ))}
+      </div>
       <div>
-        {ERA_STARTS.map((y) => (
+        {seasons.map((y) => (
           <button key={y} type="button" role="radio" aria-checked={year === y} className={year === y ? "is-on" : ""} onClick={() => setYear(y)}>
             {y}
           </button>
