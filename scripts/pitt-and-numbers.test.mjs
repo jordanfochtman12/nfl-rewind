@@ -44,7 +44,10 @@ test("rookies ask for their number and get it, or the closest legal one", () => 
   if (elevenTaken) assert.ok(jerseyLegal(fitz.pos, 2004, fitz.jersey) && fitz.jersey !== 11);
   else assert.equal(fitz.jersey, 11, "Larry Fitzgerald wears 11");
   assert.ok(made.every((p) => p.collegeNo != null));
-  assert.ok(made.every((p) => jerseyLegal(p.pos, 2004, p.jersey)), "first two rounds: all legal");
+  // Legal, or the number the record has him in: Chris Cooley really wore 47 at tight end.
+  assert.ok(made.every((p) => jerseyLegal(p.pos, 2004, p.jersey) || p.jersey === p.recordNo), "first two rounds: all legal");
+  const cooley = made.find((p) => p.firstName === "Chris" && p.lastName === "Cooley");
+  if (cooley && !rosterOf(s, cooley.teamId).some((p) => p.id !== cooley.id && p.jersey === 47)) assert.equal(cooley.jersey, 47);
   assert.ok(made.filter((p) => p.jersey === p.collegeNo).length >= made.length * 0.5);
 });
 

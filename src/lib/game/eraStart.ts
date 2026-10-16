@@ -18,7 +18,8 @@ import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { FRIENDS } from "./data/friends.ts";
 import { arcTarget, calibrateVetPeak, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
-import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, rosterOf, signFriends, signRealFa, syncDepth } from "./players.ts";
+import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, retiredFor, rosterOf, signFriends, signRealFa, syncDepth } from "./players.ts";
+import { jerseyFor } from "./names.ts";
 import { randInt } from "./rng.ts";
 import { deriveOvr } from "./ratings.ts";
 import { refreshContracts } from "./salary.ts";
@@ -255,6 +256,100 @@ function pruneRetired(s: DynastySave): void {
  * classic start never knew) comes in as a free agent, rated from what he really did, so a
  * club's open spots go to real players. This year's draftees come through the draft instead.
  */
+interface RealNumber {
+  team: TeamId;
+  n: number;
+  person: number;
+  pos: Pos;
+  /** Games he played for that club that year: two men in one number, the regular wears it. */
+  gp: number;
+}
+
+const numbersByYear = new Map<number, Map<string, RealNumber[]>>();
+
+/** Who wore what in `year`, by name, from the record's rosters. */
+function realNumbers(year: number): Map<string, RealNumber[]> {
+  let idx = numbersByYear.get(year);
+  if (idx) return idx;
+  idx = new Map();
+  const h = historyData();
+  const games = new Map<string, number>();
+  for (const { person, team, line } of h.stats(year)) games.set(`${person}|${team}`, (games.get(`${person}|${team}`) ?? 0) + (line.gp ?? 0));
+  for (const [team, list] of h.rosters(year)) {
+    for (const { person, jersey } of list) {
+      const who = h.people[person];
+      if (!who || jersey == null) continue;
+      const k = normalizedName(who.first, who.last);
+      const rows = idx.get(k) ?? [];
+      rows.push({ team, n: jersey, person, pos: who.pos, gp: games.get(`${person}|${team}`) ?? 0 });
+      idx.set(k, rows);
+    }
+  }
+  numbersByYear.set(year, idx);
+  return idx;
+}
+
+const GROUP: Record<Pos, string> = {
+  QB: "qb", RB: "rb", FB: "rb", WR: "rec", TE: "rec", LT: "ol", LG: "ol", C: "ol", RG: "ol", RT: "ol",
+  DE: "front", DT: "front", OLB: "front", MLB: "lb", CB: "db", S: "db", K: "kick", P: "kick",
+};
+
+/**
+ * Each season the record covers, a real player wears the number he really wore that year:
+ * the rookie who switched (Nick Chubb's 44 to 24), the veteran who changed it on a new club.
+ * Numbers were set once and kept, so a league begun in 2012 had three in four of them wrong by
+ * 2021. The man who really wore a number for this club gets it over a teammate who wore it
+ * somewhere else (who takes another); on a club the record never had him on, his real number
+ * that year comes along when it's free.
+ */
+export function syncRealNumbers(save: DynastySave): number {
+  // Only a league begun from the record keeps it loaded: a classic league plays the same either way.
+  if (!save.realPool || !hasHistoryData() || save.realHistory || save.year > ROSTERS_LAST) return 0;
+  const idx = realNumbers(save.year);
+  if (!idx.size) return 0;
+  const recordOf = (p: Player): RealNumber[] => {
+    if (!p.historical) return [];
+    const rows = idx.get(normalizedName(p.firstName, p.lastName)) ?? [];
+    // The record's own players are that exact man; anyone else has to fit the position too,
+    // or a defensive tackle takes the number of the corner who shares his name.
+    if (p.id.startsWith("r-")) return rows.filter((r) => r.person === parseInt(p.id.slice(2), 36));
+    if (new Set(rows.map((r) => r.person)).size <= 1) return rows;
+    return rows.filter((r) => GROUP[r.pos] === GROUP[p.pos]);
+  };
+  let fixed = 0;
+  for (const id of activeTeamIds(save.year)) {
+    const roster = rosterOf(save, id);
+    const retired = retiredFor(save, id);
+    // His number here, or the one he wore elsewhere that year (if the record has just one).
+    const claim = (p: Player): { n: number; here: boolean; gp: number } | undefined => {
+      const rows = recordOf(p);
+      const here = rows.filter((r) => r.team === id).sort((a, b) => b.gp - a.gp)[0];
+      if (here) return { n: here.n, here: true, gp: here.gp };
+      if (rows.length && rows.every((r) => r.n === rows[0]!.n)) return { n: rows[0]!.n, here: false, gp: 0 };
+      return undefined;
+    };
+    const claims = new Map(roster.map((p) => [p.id, claim(p)]));
+    // Real numbers here first, the regulars before the men cut in camp; carried numbers after.
+    const order = roster
+      .filter((p) => claims.get(p.id))
+      .sort((a, b) => Number(claims.get(b.id)!.here) - Number(claims.get(a.id)!.here) || claims.get(b.id)!.gp - claims.get(a.id)!.gp);
+    const settled = new Set<string>();
+    for (const p of order) {
+      const c = claims.get(p.id)!;
+      p.recordNo = c.n;
+      if (retired.has(c.n) && retired.get(c.n) !== p.id) continue;
+      const holder = roster.find((x) => x.id !== p.id && x.jersey === c.n);
+      if (holder && settled.has(holder.id)) continue;
+      settled.add(p.id);
+      if (p.jersey === c.n) continue;
+      p.jersey = c.n;
+      fixed += 1;
+      if (holder) holder.jersey = jerseyFor(save, holder.pos, new Set([...roster.map((x) => x.jersey), ...retired.keys()]));
+    }
+  }
+  return fixed;
+}
+
 export function realIntake(save: DynastySave): number {
   if (!save.realPool || save.realHistory || !hasHistoryData() || save.year > ROSTERS_LAST) return 0;
   const h = historyData();
@@ -455,6 +550,7 @@ export function createEraGame(o: EraOpts): DynastySave {
   s.phase = "draft";
   s.week = 0;
   setLabel(s);
+  syncRealNumbers(s);
   normalizeJerseys(s);
   s.jerseyEra = true;
   const champ = s.history.superBowls.at(-1);

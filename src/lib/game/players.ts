@@ -472,6 +472,7 @@ export function seedVeterans(save: DynastySave): void {
       college: v.c ?? lookupCollege(v.f, v.l),
       jersey,
     });
+    if (v.n) p.recordNo = v.n;
     if (p.yearsPro > 0) p.career = seedPriorCareer(p, save.year - 1);
     const arc = lookupVetArc(v.f, v.l, v.p);
     if (arc) {
@@ -713,7 +714,9 @@ export function hasKit(p: Player): boolean {
 export function normalizeJerseys(save: DynastySave): number {
   let changed = 0;
   for (const id of Object.keys(save.teams) as TeamId[]) {
-    const roster = rosterOf(save, id).slice().sort((a, b) => b.ovr - a.ovr);
+    // The man in his real number keeps it over a teammate who just happens to have it too.
+    const real = (p: Player) => (p.recordNo !== undefined && p.jersey === p.recordNo ? 1 : 0);
+    const roster = rosterOf(save, id).slice().sort((a, b) => real(b) - real(a) || b.ovr - a.ovr);
     if (!roster.length) continue;
     const retired = retiredFor(save, id);
     const used = new Set<number>(retired.keys());
@@ -721,6 +724,10 @@ export function normalizeJerseys(save: DynastySave): number {
     for (const p of roster) {
       const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
       const grandfathered = rookieYear < 1973;
+      if (real(p) && !used.has(p.jersey)) {
+        used.add(p.jersey);
+        continue;
+      }
       const legal = grandfathered || jerseyLegal(p.pos, save.year, p.jersey);
       // The man whose number it is keeps wearing it until he's gone.
       if (retired.get(p.jersey) === p.id) continue;
@@ -770,8 +777,8 @@ export function carryJersey(save: DynastySave, p: Player, teamId: TeamId): numbe
   const used = new Set(rosterOf(save, teamId).filter((x) => x.id !== p.id).map((x) => x.jersey));
   for (const [n, owner] of retiredFor(save, teamId)) if (owner !== p.id) used.add(n);
   const rookieYear = p.draftYear ?? save.year - (p.yearsPro ?? 0);
-  const legal = rookieYear < 1973 || jerseyLegal(p.pos, save.year, p.jersey);
-  if (p.jersey > 0 && legal && !used.has(p.jersey)) return p.jersey;
+  const legal = rookieYear < 1973 || p.jersey === p.recordNo || jerseyLegal(p.pos, save.year, p.jersey);
+  if ((p.jersey > 0 || p.jersey === p.recordNo) && legal && !used.has(p.jersey)) return p.jersey;
   // Otherwise as close as he can get to the number he came in wanting (or the one he wore).
   return preferredJersey(save, p.pos, p.collegeNo ?? p.jersey, used);
 }

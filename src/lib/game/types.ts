@@ -229,6 +229,12 @@ export interface Player {
   jersey: number;
   /** The number he wants: what he wore coming out of school (real rookies: the one he really took). */
   collegeNo?: number;
+  /**
+   * The number the record has him wearing (a season's real roster, his real rookie number, the
+   * 1966 roster). It stands even where the year's position bands say otherwise: long snappers in
+   * the 40s, a kicker in 2021's new numbers, a tackle listed at tight end still in his 71.
+   */
+  recordNo?: number;
   college?: string;
   hometown?: string;
   /** A sleeper who grows fast toward his ceiling (the owner's own class). */

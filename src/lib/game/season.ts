@@ -20,7 +20,7 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
-import { realIntake, restoreRecordLines } from "./eraStart.ts";
+import { realIntake, restoreRecordLines, syncRealNumbers } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
@@ -185,6 +185,8 @@ function startRegular(save: DynastySave): void {
   // The preview's calls go on the record before the records reset (it reads last season's).
   if (!save.cpuOnly || save.sandbox) save.previewPicks = freezePreviewPicks(save);
   for (const id of activeTeamIds(save.year)) resetSeasonRecord(save.teams[id]!);
+  // Rosters are set: everyone the record covers suits up in the number he really wore this year.
+  if (syncRealNumbers(save)) normalizeJerseys(save);
   rebuildSchedule(save);
   save.waiverOrder = activeTeamIds(save.year).slice().sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!));
   save.phase = "regular";

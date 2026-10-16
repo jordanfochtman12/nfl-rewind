@@ -275,7 +275,9 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player
     // Only a breakout is a hidden gem; the rest grow at an ordinary pace.
     if (friendBreaksOut(save.seed, friend)) p.gem = true;
   }
-  p.collegeNo = friend?.n ?? realRookieNumber(save.year, s.f, s.l) ?? collegeNumber(p.pos, p.id);
+  const rookieNo = friend ? undefined : realRookieNumber(save.year, s.f, s.l);
+  if (rookieNo !== undefined) p.recordNo = rookieNo;
+  p.collegeNo = friend?.n ?? rookieNo ?? collegeNumber(p.pos, p.id);
   p.jersey = p.collegeNo;
   const found = lookupArc(save.year, s.f, s.l);
   // A role player keeps his real career span, but his Pro Bowls don't set his rating.
@@ -555,7 +557,9 @@ export function makeDraftPick(save: DynastySave, playerId?: string): boolean {
     p.draftTeam = teamId;
     if (buzz) p.draftBuzz = buzz;
     // He asks for his college number; the closest open one if a veteran has it.
-    p.jersey = preferredJersey(save, p.pos, p.collegeNo ?? p.jersey, usedJerseys(save, teamId));
+    const taken = usedJerseys(save, teamId);
+    // His real rookie number stands as the record has it, rules or not.
+    p.jersey = p.recordNo !== undefined && !taken.has(p.recordNo) ? p.recordNo : preferredJersey(save, p.pos, p.collegeNo ?? p.jersey, taken);
     // Rookies are paid by slot (see rookieContract), not by grade.
     const deal = rookieContract(save.year, save.draftPickIndex + 1, round);
     p.salary = deal.salary;

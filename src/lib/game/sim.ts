@@ -556,6 +556,14 @@ function pickRusher(
         taperOf(off.rb, "rushYds", year, leaderPace(year).rush),
     });
   if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
+  // No healthy second back: the fullback takes the backup's carries, or a receiver some of them.
+  // Without anyone in that share the lead back got every run (Stephen Davis, 593 carries for
+  // 3,187 yards behind an injured depth chart; the real record is 416 carries).
+  else if (off.rb) {
+    const spell = (passingDown ? 0.32 : 1 - rb1) * 0.8;
+    if (off.fb) pool.push({ p: off.fb, w: spell });
+    else if (off.wr[0]) pool.push({ p: off.wr[0], w: spell * 0.4 });
+  }
   if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? (year <= 1995 ? 0.22 : 0.08) : year <= 1995 ? 0.12 : 0.05 });
   if (off.qb && (off.kit.scramble > 6 || goal)) pool.push({ p: off.qb, w: goal ? 0.08 + off.kit.scramble / 180 : 0.03 + off.kit.scramble / 220 });
   if (!pool.length) return off.qb;

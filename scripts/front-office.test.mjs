@@ -68,7 +68,8 @@ test("draft-day trades: move up for later picks, trade down near the chart", () 
   const q = draftQueue(t);
   // A club's pick a couple of slots ahead of the owner's first (never more than the owner's
   // picks can buy: from the fourth slot, three ahead is the first overall pick).
-  const mine = q.findIndex((p) => p.owner === "pit" && p.year === t.year);
+  // Holding the first overall pick, there's nobody ahead of it: move up from his next one.
+  const mine = q.findIndex((p, i) => p.owner === "pit" && p.year === t.year && q.slice(t.draftPickIndex, i).filter((x) => x.owner !== "pit").length >= 2);
   const target = q.slice(t.draftPickIndex, mine).reverse().find((p, i) => i >= 1 && p.owner !== "pit");
   const up = tradeUpPackage(t, target.id);
   assert.ok(!("error" in up), "error" in up ? up.error : "");
