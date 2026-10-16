@@ -242,6 +242,11 @@ export interface Player {
   combine?: { forty?: number; bench?: number; vertical?: number; cone?: number; satOut?: boolean; proDay?: boolean };
   historical: boolean;
   generated: boolean;
+  /**
+   * Out of a scouts-built draft class past the real record. Made up, but one of the league's
+   * own players from then on: the market treats him like a real player, not a camp body.
+   */
+  classOf?: boolean;
   draftYear?: number;
   draftRound?: number;
   draftPick?: number;

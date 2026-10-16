@@ -157,19 +157,43 @@ export function calibrateVetPeak(p: Player, season: number): void {
  * undersells stars from low-volume eras and positions (Bradshaw: 4 rings, MVP, 3 Pro
  * Bowls, seeded at 76). Only ever raises a peak, never lowers one.
  */
-export function honorsFloor(arc: NonNullable<Player["arc"]>): number {
-  if (arc.pb <= 0 && arc.ap <= 0) return 0;
-  const base = arc.pb >= 9 ? 89 : arc.pb >= 6 ? 87 : arc.pb >= 3 ? 84 : 80;
-  return Math.min(97, base + Math.min(arc.ap, 4));
+export function honorsFloor(arc: NonNullable<Player["arc"]>, pos?: Pos): number {
+  let { pb, ap } = arc;
+  // A career still going at the data cutoff has only banked part of its honors: five Pro Bowls
+  // in five seasons is a nine-Pro-Bowl career in the making, not a three-to-five one. With a
+  // few seasons to go on, carry most of his pace through a typical career at his position.
+  const played = arc.to - arc.dy + 1;
+  if (pos && isOpen(arc) && played >= 3 && played < TYPICAL_LEN[pos]) {
+    const left = (TYPICAL_LEN[pos] - played) * 0.7;
+    pb = Math.round(pb + (pb / played) * left);
+    ap = Math.round(ap + (ap / played) * left);
+  }
+  if (pb <= 0 && ap <= 0) return 0;
+  const base = pb >= 9 ? 89 : pb >= 6 ? 87 : pb >= 3 ? 84 : 80;
+  return Math.min(97, base + Math.min(ap, 4));
 }
 
 function isOpen(arc: NonNullable<Player["arc"]>): boolean {
-  return arc.to >= ARC_DATA_LAST;
+  return arc.to >= ARC_DATA_LAST || unplayed(arc);
+}
+
+/**
+ * Drafted after the data ends: the table's 0 means "no seasons on record yet", not "never
+ * played". Read as a career that ended on draft day, the whole 2026 class retired after its
+ * rookie year.
+ */
+function unplayed(arc: NonNullable<Player["arc"]>): boolean {
+  return arc.to <= 0 && arc.dy > ARC_DATA_LAST;
+}
+
+/** He really never played a down: the real record is done with him on draft day. */
+function neverPlayed(arc: NonNullable<Player["arc"]>): boolean {
+  return arc.to <= 0 && !unplayed(arc);
 }
 
 function careerLength(p: Player, arc: NonNullable<Player["arc"]>): number {
-  if (arc.to <= 0) return 1;
-  const real = arc.to - arc.dy + 1;
+  if (neverPlayed(arc)) return 1;
+  const real = Math.max(0, arc.to - arc.dy + 1);
   return isOpen(arc) ? Math.max(real, TYPICAL_LEN[p.pos]) : Math.max(1, real);
 }
 
@@ -178,8 +202,9 @@ export function arcTarget(p: Player, idx: number): number {
   const arc = p.arc!;
   const peak = p.potential;
   const L = careerLength(p, arc);
-  const starterShare = clamp(arc.st / L, 0, 1);
   const round = p.draftRound ?? 4;
+  // No seasons on record yet: his draft slot is the best read on how ready he is.
+  const starterShare = unplayed(arc) ? (round <= 1 ? 0.7 : round <= 2 ? 0.5 : round <= 4 ? 0.3 : 0.15) : clamp(arc.st / L, 0, 1);
   // How far from finished he arrived: guys who started nearly every year were ready early;
   // late-round picks and QBs came in rawest.
   let gap = 3 + 10 * (1 - starterShare);
@@ -187,7 +212,7 @@ export function arcTarget(p: Player, idx: number): number {
   if (p.pos === "RB") gap -= 2;
   if (round >= 6) gap += 5;
   else if (round >= 4) gap += 3;
-  if (arc.to <= 0) gap = 3;
+  if (neverPlayed(arc)) gap = 3;
   gap = Math.round(clamp(gap, 1, 18));
 
   const ramp = L <= 2 ? 1 : Math.round(clamp(L * 0.3, 1, p.pos === "QB" ? 5 : 4));
@@ -218,7 +243,15 @@ export function moveToward(p: Player, target: number): void {
 export function arcRetiresNow(p: Player, seasonJustPlayed: number): boolean | undefined {
   const arc = p.arc;
   if (!arc) return undefined;
-  if (arc.to <= 0) return seasonJustPlayed >= arc.dy;
-  if (isOpen(arc)) return undefined;
+  if (neverPlayed(arc)) return seasonJustPlayed >= arc.dy;
+  if (isOpen(arc)) {
+    // Still going when the record stops: done once he's had a typical career for his position
+    // and slipped, or two years past it unless he's still a star. Left to the generic age rules,
+    // 2017-19 draftees were still on rosters at 36 as 70s, a tenth of the 2030s league past 33.
+    const past = seasonJustPlayed - arc.dy + 1 - careerLength(p, arc);
+    if (past >= 2 && p.ovr < 85) return true;
+    if (past >= 0 && p.ovr < 78) return true;
+    return undefined;
+  }
   return seasonJustPlayed >= arc.to;
 }

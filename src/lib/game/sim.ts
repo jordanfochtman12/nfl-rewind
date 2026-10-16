@@ -1980,6 +1980,12 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
     const offScore = poss === homeId ? homeScore : awayScore;
     const brake = deadBall(year, offScore, trail, q);
+    // Up three scores after halftime the starters come out and the calls go vanilla: the whole
+    // offense slows, not only the long ones. A 24-point halftime lead kept growing by 19 more,
+    // twice real 1966's share of 35-point games.
+    const vanilla = q >= 3 && trail <= -21 ? (q >= 4 || trail <= -28 ? 1 : 0.6) : 0;
+    // The other side of it: the leader's second-string defense gives some of it back.
+    const soft = q >= 3 && trail >= 21 ? (q >= 4 || trail >= 28 ? 1 : 0.6) : 0;
     const garbage = q >= 4 && trail <= -17 && clock <= 360;
     const prevent = garbage && trail <= -17;
     const pressure = pressureAdjustment(defensivePlan.blitz);
@@ -2440,6 +2446,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         cmpP += mismatch / (shadowed ? 340 : 420);
       }
       if (spot >= 80) cmpP += focusOf(poss, "redZone") * 0.015;
+      cmpP += soft * 0.05 - vanilla * 0.08;
       cmpP = clamp(cmpP, 0.3, year <= 1969 ? 0.64 : year < 2000 ? 0.78 : 0.82);
       let intP =
         era.intRate *
@@ -2615,7 +2622,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak", (id) =>
       boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
     );
-    let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80;
+    let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80 - vanilla * 0.9 + soft * 0.5;
     const lane = matchupOf("rb-lb", poss);
     if (rusher && pairOn(lane) && rusher.id === lane.offId) mu += (lane.offGrade - lane.defGrade) / 90;
     // A back's legs go after twenty carries; the drop is steeper for one without stamina.

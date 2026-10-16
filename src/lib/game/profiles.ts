@@ -211,6 +211,21 @@ export function ratingsFromProfile(
       r[k] = clamp(r[k] + Math.round(diff * 0.32), 25, 99);
     }
   }
+  // A star profile can lock nearly every key rating, leaving nothing above to move: Manning's
+  // locks alone came out a 91 against his 96 seed. The locks are his shape, the seed is his
+  // level, so the whole profile shifts together until he lands on it.
+  for (let i = 0; i < 8; i++) {
+    const diff = ovr - deriveOvr(pos, r);
+    if (Math.abs(diff) <= 1) break;
+    const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.5));
+    let moved = false;
+    for (const k of primaries) {
+      const v = clamp(r[k] + step, 25, 99);
+      if (v !== r[k]) moved = true;
+      r[k] = v;
+    }
+    if (!moved) break;
+  }
   return r;
 }
 

@@ -107,13 +107,21 @@ export function agePlayer(save: DynastySave, p: Player): void {
     moveToward(p, Math.min(target, pot + 1));
   } else {
   let delta = 0;
-  if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
+  // A young player grows by how far he still has to go, the way a real draftee climbs his arc:
+  // a raw first-rounder with a big ceiling makes most of the jump in his first three or four
+  // years. A point or two a year left the scouts' classes well short of their ceilings at 28.
+  const room = pot - p.ovr;
+  const climbing = p.age < peak && room >= 3 && p.teamId !== "fa";
+  if (climbing && rand(save) < 0.85 + devBump) {
+    const pace = (starter ? 0.36 : gp >= 3 ? 0.3 : 0.24) * (0.6 + rand(save) * 0.8);
+    delta = Math.max(1, Math.round(room * pace));
+  } else if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
   else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45 + devBump * 0.5) delta = randInt(save, 1, 2);
   else if (p.age <= peak && starter && rand(save) < 0.28 + devBump * 0.4) delta = 1;
   else if (p.age >= cliff) delta = -randInt(save, 2, 5);
-  else if (p.age >= peak + 2 && rand(save) < 0.55) delta = -1;
+  else if (p.age >= peak + 2 && rand(save) < 0.65) delta = -randInt(save, 1, p.age >= cliff - 2 ? 3 : 2);
   if (p.pos === "RB" && p.age >= 29) delta = Math.min(delta, -1);
-  if (!starter && p.age < peak && gp < 3 && rand(save) < 0.55) delta = Math.min(delta, 0);
+  if (!starter && !climbing && p.age < peak && gp < 3 && rand(save) < 0.55) delta = Math.min(delta, 0);
   if (rand(save) < 0.14) delta += randInt(save, -1, 1);
   if ((p.morale ?? 70) < 42 && rand(save) < 0.2) delta = Math.min(delta, 0);
   // A hidden gem climbs fast once he's in a building: two to four a year until he hits it.
@@ -133,7 +141,7 @@ export function agePlayer(save: DynastySave, p: Player): void {
 export function shouldRetire(save: DynastySave, p: Player): boolean {
   // A real player nobody has signed for two straight seasons is done - he stays in the
   // league's history as retired instead of sitting in the free-agent pool forever.
-  if (p.historical && p.teamId === "fa" && p.yearsPro >= 1 && !p.stats[save.year] && !p.stats[save.year - 1]) return true;
+  if ((p.historical || p.classOf) && p.teamId === "fa" && p.yearsPro >= 1 && !p.stats[save.year] && !p.stats[save.year - 1]) return true;
   const real = arcRetiresNow(p, save.year);
   if (real !== undefined) return real;
   if (p.pos === "K" || p.pos === "P") {
@@ -149,6 +157,8 @@ export function shouldRetire(save: DynastySave, p: Player): boolean {
     return false;
   }
   if (p.age >= 39) return true;
+  // Past his position's cliff only a star hangs on: real careers rarely run to 34.
+  if (p.age >= CLIFF[p.pos] + 1 && p.ovr < 84 && rand(save) < 0.45) return true;
   if (p.pos === "RB" && p.age >= 32 && p.ovr < 76 && rand(save) < 0.45) return true;
   if (p.age >= 34 && p.ovr < 70 && rand(save) < 0.4) return true;
   if (p.age >= 31 && p.ovr < 64 && rand(save) < 0.22) return true;

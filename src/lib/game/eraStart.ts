@@ -127,7 +127,7 @@ export function rateReal(save: DynastySave, p: Player, year: number): void {
     p.weight ??= made.weight;
     p.forty ??= made.forty;
     p.arc = made.arc ?? arc;
-    p.potential = made.arc ? made.potential : Math.max(made.potential, honorsFloor(arc));
+    p.potential = made.arc ? made.potential : Math.max(made.potential, honorsFloor(arc, p.pos));
     delete save.players[made.id];
     const idx = year - p.draftYear!;
     let peak = p.ovr;
@@ -146,7 +146,7 @@ export function rateReal(save: DynastySave, p: Player, year: number): void {
     const age = p.age - (year - first);
     p.arc = { dy: first, to: last, st: Math.max(1, last - first + 1), g: 0, pb: 0, ap: 0, age: clamp(age, 20, 30) };
     calibrateVetPeak(p, year);
-    if (honorsFloor(p.arc) > p.potential) p.potential = honorsFloor(p.arc);
+    if (honorsFloor(p.arc, p.pos) > p.potential) p.potential = honorsFloor(p.arc, p.pos);
     p.peakOvr = Math.max(p.peakOvr ?? 0, p.ovr);
   }
   p.scoutOvr = p.ovr;

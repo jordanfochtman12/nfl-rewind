@@ -1,7 +1,7 @@
 import type { DraftPickAsset, DraftSession, DynastySave, Player, Pos, Prospect, TeamId } from "./types.ts";
 import { activeTeamIds, originalLeague } from "./teams.ts";
 import { draftSeedsFor, type DraftSeed } from "./data/draftClasses.ts";
-import { addToRoster, generatePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
+import { addToRoster, generatePlayer, leaguePlayer, makePlayer, playerName, rosterOf, syncDepth, touchPlayers, usedJerseys } from "./players.ts";
 import { collegeNumber, eraCollege, preferredJersey } from "./names.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { rand, randInt } from "./rng.ts";
@@ -284,7 +284,7 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number): Player
     // Seed overall is his real career peak - he arrives short of it and grows into it.
     p.arc = arc;
     if (arc.age >= 20 && arc.age <= 30) p.age = arc.age;
-    const floor = honorsFloor(arc);
+    const floor = honorsFloor(arc, p.pos);
     if (p.ovr < floor) moveToward(p, floor);
     p.potential = p.ovr;
     moveToward(p, arcTarget(p, 0));
@@ -330,7 +330,7 @@ export function pruneUndraftedProspects(save: DynastySave): void {
   for (const pr of save.draftBoard) {
     if (pr.taken) continue;
     const p = save.players[pr.playerId];
-    if (p && !p.historical) delete save.players[pr.playerId]; touchPlayers();
+    if (p && !leaguePlayer(p)) delete save.players[pr.playerId]; touchPlayers();
   }
   const protectedIds = recordProtectedIds(save);
   for (const [id, p] of Object.entries(save.players)) {
@@ -338,7 +338,7 @@ export function pruneUndraftedProspects(save: DynastySave): void {
     // cpuSignNeeds only offers a couple slots a team a year and always takes the best
     // player on the wire, so a generated FA nobody signed by the next draft realistically
     // never gets picked up - no age gate needed, this was the dominant source of growth.
-    if (!p.historical && p.teamId === "fa") {
+    if (!leaguePlayer(p) && p.teamId === "fa") {
       delete save.players[id]; touchPlayers();
       continue;
     }
@@ -443,6 +443,7 @@ export function buildDraftBoard(save: DynastySave): void {
       const lift = randInt(save, 3, 12) + (roundGuess <= 1 ? randInt(save, 2, 6) : 0) + (sleeper ? randInt(save, 8, 14) : 0);
       p.potential = Math.min(97, p.ovr + lift);
       if (sleeper) p.gem = true;
+      p.classOf = true;
     }
     p.collegeNo = collegeNumber(p.pos, p.id);
     p.jersey = p.collegeNo;

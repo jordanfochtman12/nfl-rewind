@@ -503,10 +503,20 @@ const COVERS: Partial<Record<Pos, Pos[]>> = {
   P: ["K"],
 };
 
+/**
+ * A real player, or one of the scouts' draft classes past the record. Once the real classes
+ * run out those are the league's future, so the market can't trade them away for camp bodies'
+ * treatment: before this, every club swapped its whole rookie class for aging real veterans
+ * and the league got older every year.
+ */
+export function leaguePlayer(p: Player): boolean {
+  return p.historical || p.classOf === true;
+}
+
 /** The real free agents (not the game's generated ones) nobody holds a waiver claim on. */
 export function realFreeAgents(save: DynastySave): Player[] {
   const wire = new Set(save.waivers.map((w) => w.playerId));
-  return Object.values(save.players).filter((p) => p.teamId === "fa" && p.historical && !wire.has(p.id) && p.injuredWeeks <= 0);
+  return Object.values(save.players).filter((p) => p.teamId === "fa" && leaguePlayer(p) && !wire.has(p.id) && p.injuredWeeks <= 0);
 }
 
 /** Put a real free agent on a club's roster on a one-year deal, playing `pos`. */
@@ -592,7 +602,7 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
   const need = new Map(DEPTH_CHART);
   let swapped = 0;
   const fakes = rosterOf(save, teamId)
-    .filter((p) => !p.historical)
+    .filter((p) => !leaguePlayer(p))
     .sort((a, b) => a.ovr - b.ovr);
   for (const fake of fakes) {
     const covers = [fake.pos, ...(COVERS[fake.pos] ?? [])];
@@ -612,7 +622,7 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
     const roster = rosterOf(save, teamId);
     let mate: Player | undefined;
     for (const at of covers.slice(1)) {
-      const group = roster.filter((p) => p.historical && p.pos === at && !isFriend(p));
+      const group = roster.filter((p) => leaguePlayer(p) && p.pos === at && !isFriend(p));
       if (group.length <= (need.get(at) ?? 0)) continue;
       const spare = group.sort((a, b) => b.ovr - a.ovr)[need.get(at) ?? 0];
       if (spare && (!mate || spare.ovr > mate.ovr)) mate = spare;
@@ -658,7 +668,11 @@ export function signFriends(save: DynastySave, clubs: TeamId[]): void {
 
 export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): void {
   pruneRoster(save, teamId);
-  const roster = rosterOf(save, teamId).slice().sort((a, b) => b.ovr - a.ovr);
+  // Camp cuts weigh more than today's grade: a 22-year-old with a ceiling keeps his spot over a
+  // 33-year-old a few points better, the way real clubs cut veterans for rookies every August.
+  const keepScore = (p: Player) =>
+    p.ovr + (p.age <= 25 ? Math.min(6, Math.max(0, (p.potential ?? p.ovr) - p.ovr) * 0.5) : 0) - Math.max(0, p.age - 31);
+  const roster = rosterOf(save, teamId).slice().sort((a, b) => keepScore(b) - keepScore(a));
   if (roster.length <= cap) return;
   const keep = new Set<string>();
   for (const [pos, need] of DEPTH_CHART) {
