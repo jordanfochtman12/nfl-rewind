@@ -40,7 +40,7 @@ import { DraftNight } from "./DraftNight";
 import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
-import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/speech";
+import { cancelSpeech, isSpeaking, speakLine, useTalking } from "@/lib/voice/speech";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -371,11 +371,21 @@ function useCountdown(seconds: number, paused: boolean, onGo: () => void) {
   useEffect(() => {
     if (paused) return;
     if (left <= 0) {
-      if (!fired.current) {
+      // The host finishes his line before the channel moves on: the next screen's first line
+      // used to cut him off mid-sentence. (A tap on the button still moves on at once.)
+      let waited = 0;
+      const fire = () => {
+        if (fired.current) return;
+        if (isSpeaking() && waited < 45_000) {
+          waited += 300;
+          t = setTimeout(fire, 300);
+          return;
+        }
         fired.current = true;
         go.current();
-      }
-      return;
+      };
+      let t = setTimeout(fire, 0);
+      return () => clearTimeout(t);
     }
     const t = setTimeout(() => setLeft((n) => n - 1), 1000);
     return () => clearTimeout(t);

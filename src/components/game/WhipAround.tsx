@@ -12,7 +12,7 @@ import { boothFor } from "@/lib/game/broadcastCrew";
 import { castVoices } from "@/lib/voiceCast";
 import { Logo } from "./chrome";
 import { useEraClass } from "./eraLook";
-import { cancelSpeech, speakLine } from "@/lib/voice/speech";
+import { cancelSpeech, isSpeaking, speakLine } from "@/lib/voice/speech";
 
 /** Seconds of game time since kickoff. Overtime runs on past the end of the fourth. */
 const gameTime = (l: Pick<PlayLog, "q" | "clock">) => (l.q - 1) * 900 + (900 - l.clock);
@@ -107,7 +107,16 @@ export function WhipAround({
   // Hand back to the show a few seconds after the last final.
   useEffect(() => {
     if (!finished) return;
-    const t = setTimeout(() => doneRef.current?.(), 6000);
+    // The last call finishes before the show takes it back.
+    let waited = 0;
+    let t = setTimeout(function hand() {
+      if (isSpeaking() && waited < 30_000) {
+        waited += 500;
+        t = setTimeout(hand, 500);
+        return;
+      }
+      doneRef.current?.();
+    }, 6000);
     return () => clearTimeout(t);
   }, [finished]);
 
@@ -119,6 +128,8 @@ export function WhipAround({
   };
   const state = feeds.map((f) => ({ f, i: at(f, now) }));
   const prevNow = useRef(0);
+  /** How big the call on the air is (0 when the booth is quiet). */
+  const onAir = useRef(0);
 
   // Cuts: look at what happened since the last tick and move the channel.
   useEffect(() => {
@@ -155,7 +166,16 @@ export function WhipAround({
       if (c?.voice) u.voice = c.voice;
       u.rate = c?.rate ?? 1.08;
       u.pitch = c?.pitch ?? 1;
-      cancelSpeech();
+      // A call on the air finishes; only a touchdown breaks in over a lesser one. Cutting every
+      // call for the next highlight left the booth stopping mid-sentence all afternoon.
+      if (isSpeaking()) {
+        if (best.score < 10 || onAir.current >= 10) return;
+        cancelSpeech();
+      }
+      onAir.current = best.score;
+      u.onend = () => {
+        onAir.current = 0;
+      };
       speakLine(u);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
