@@ -19,6 +19,7 @@ import {
   type TeamId,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
+import { isSpeaking } from "@/lib/voice/speech";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { startTv } from "./tvStart";
@@ -75,7 +76,17 @@ export function WatchBar({ slim = false }: { slim?: boolean } = {}) {
   const draftRunsItself = !real && save.phase === "draft" && stopBig && (tab === "office" || tab === "draft");
   useEffect(() => {
     if (!auto || done || live || draftRunsItself) return;
-    const t = setTimeout(() => onceRef.current(), SPEED_MS[speed]);
+    // A show or the draft room still reading waits: stepping on swapped the screen out from
+    // under the voice and cut it off mid-sentence. (The button still steps at once.)
+    let waited = 0;
+    let t = setTimeout(function tick() {
+      if (isSpeaking() && waited < 60_000) {
+        waited += 400;
+        t = setTimeout(tick, 400);
+        return;
+      }
+      onceRef.current();
+    }, SPEED_MS[speed]);
     return () => clearTimeout(t);
   }, [auto, speed, done, live, draftRunsItself, save]);
 
