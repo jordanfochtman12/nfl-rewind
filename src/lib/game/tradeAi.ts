@@ -121,7 +121,7 @@ export function evaluateTrade(save: DynastySave, clubId: TeamId, clubGets: Trade
   if (cap != null) {
     const inPay = clubGets.reduce((n, x) => n + (x.playerId ? save.players[x.playerId]?.salary ?? 0 : 0), 0);
     const outPay = clubGives.reduce((n, x) => n + (x.playerId ? save.players[x.playerId]?.salary ?? 0 : 0), 0);
-    if (teamPayroll(save, clubId) + inPay - outPay > cap * 1.02)
+    if (teamPayroll(save, clubId) + inPay - outPay > cap)
       return { accept: false, gets, gives, reason: "They can't fit that salary under the cap." };
   }
   if (gets >= gives * MARGIN) return { accept: true, gets, gives, reason: "They'll do it." };

@@ -50,7 +50,7 @@ export function freeAgents(save: DynastySave): Player[] {
 export function canAfford(save: DynastySave, teamId: TeamId, salary: number): boolean {
   const cap = save.salaryCap ?? salaryCapFor(save.year);
   if (cap == null) return true;
-  return teamPayroll(save, teamId) + salary <= cap * 1.02;
+  return teamPayroll(save, teamId) + salary <= cap;
 }
 
 export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, opts?: { waive?: boolean }): GmResult {
@@ -110,7 +110,7 @@ export function enforceCapCompliance(save: DynastySave): void {
     // be cut deep enough to actually reach compliance.
     const floor = lastYearIds.has(id) ? 0 : 40;
     let guard = 0;
-    while (teamPayroll(save, id) > cap * 1.02 && guard++ < 60) {
+    while (teamPayroll(save, id) > cap && guard++ < 60) {
       const roster = rosterOf(save, id);
       if (roster.length <= floor) break;
       const cuttable = roster.filter((p) => roster.filter((x) => x.pos === p.pos).length > 1);
@@ -314,7 +314,7 @@ function fitsCapAfterTrade(save: DynastySave, teamId: TeamId, outgoing: Player[]
   const outSalary = outgoing.reduce((n, p) => n + (p.salary ?? 0), 0);
   const inSalary = incoming.reduce((n, p) => n + (p.salary ?? 0), 0);
   const newPayroll = teamPayroll(save, teamId) - outSalary + inSalary;
-  return newPayroll <= cap * 1.02;
+  return newPayroll <= cap;
 }
 
 export function executeTrade(
@@ -565,9 +565,28 @@ export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
   }
 }
 
+/**
+ * The order clubs work the market in: worst record first, like the waiver wire, with a
+ * fresh shuffle each year to break ties. (Going through the clubs in league order gave the
+ * same few - Atlanta, the Rams, Pittsburgh, Philadelphia - first look at every real free
+ * agent every winter, and they won a third of the Super Bowls between them.)
+ */
+export function marketOrder(save: DynastySave): TeamId[] {
+  const ids = activeTeamIds(save.year).filter((id) => save.teams[id]);
+  // A brand-new league's first market fills the opening rosters the era start built; the
+  // order only matters once there's a record to go by.
+  if (!ids.some((id) => save.teams[id]!.wins + save.teams[id]!.losses + save.teams[id]!.ties > 0)) return ids;
+  const tie = (id: string) => {
+    let h = 2166136261 ^ save.year;
+    for (const ch of id) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+    return (h >>> 0) / 4294967296;
+  };
+  return ids.sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!) || tie(a) - tie(b));
+}
+
 export function cpuSignNeeds(save: DynastySave): void {
   const pool = freeAgents(save).slice().sort((a, b) => b.ovr - a.ovr);
-  for (const id of activeTeamIds(save.year)) {
+  for (const id of marketOrder(save)) {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     const t = save.teams[id];
     const n = rosterOf(save, id).length;

@@ -60,7 +60,7 @@ import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance } from "./gm.ts";
+import { cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -144,7 +144,7 @@ function runCpuFreeAgency(save: DynastySave): void {
 function fillCpuRosters(save: DynastySave): void {
   // One look at the market for every club (each signing takes its man off it).
   const market = realFreeAgents(save);
-  for (const id of activeTeamIds(save.year)) {
+  for (const id of marketOrder(save)) {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     if (!save.teams[id]) continue;
     fillRoster(save, id, market);
@@ -152,6 +152,14 @@ function fillCpuRosters(save: DynastySave): void {
     save.teams[id].payroll = teamPayroll(save, id);
     syncDepth(save, id);
   }
+}
+
+/** Get every club under the cap, refill the camp spots that cost, and make sure it still fits. */
+function capAndRefill(save: DynastySave): void {
+  enforceCapCompliance(save);
+  if (save.salaryCap == null) return;
+  fillCpuRosters(save);
+  enforceCapCompliance(save);
 }
 
 function fillThinRosters(save: DynastySave): void {
@@ -355,7 +363,7 @@ function finishOffseason(save: DynastySave): void {
   fillCpuRosters(save);
   refreshContracts(save);
   fillCpuRosters(save);
-  enforceCapCompliance(save);
+  capAndRefill(save);
   normalizeJerseys(save);
   for (const id of activeTeamIds(save.year)) syncDepth(save, id);
   touchGrade(save);
@@ -488,6 +496,10 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       if (auto || opts.closeFa) {
         resolveAllBids(s);
         runFreeAgency(s);
+        // The draft class and the market's signings came after the winter's cap sweep; under
+        // a hard cap a club has to be back under it before camp opens, like the real thing,
+        // and a club that cut deep to get there fills out its camp roster again (then checks).
+        capAndRefill(s);
         if (!s.cpuOnly || s.sandbox) fileFaRecap(s);
         s.faOpened = false;
         s.phase = "preseason";

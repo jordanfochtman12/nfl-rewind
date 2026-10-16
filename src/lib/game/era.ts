@@ -70,7 +70,7 @@ export function eraProfile(year: number): EraProfile {
       intRate: 0.042,
       sackRate: 0.022,
       rushAtt: 31,
-      ypc: 3.95,
+      ypc: 3.72,
       pointsMu: 20.8,
       teRecCap: 89,
       recCap: 106,
@@ -321,7 +321,10 @@ export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3:
 /** RB1 carry share. Workhorse era through the 90s, committees later. */
 export function eraRb1Share(year: number): number {
   if (year <= 1977) return 0.6;
-  if (year <= 1999) return 0.64;
+  // The 1980s split the work: a lead back and a fullback who carried it 100+ times, and a
+  // second back for the passing downs. Real 1980s: about 13 thousand-yard rushers a year.
+  if (year <= 1989) return 0.57;
+  if (year <= 1999) return 0.62;
   if (year <= 2014) return 0.6;
   return 0.54;
 }
