@@ -20,13 +20,22 @@ const norm = (s: string) =>
     .replace(/\b(jr|sr|ii|iii|iv|v)\b\.?/g, "")
     .replace(/[^a-z]/g, "");
 
+/**
+ * Record players whose league photo is someone else, found by looking at every league photo the
+ * game shows (person id, base 36). They wear the helmet stand-in until a right one turns up.
+ */
+const WRONG_PHOTO = new Set([
+  "a2y", // Cedrick Wilson (WR, 2001-07): a 1970s 49ers #86
+  "7v6", // Ernest Jones (LB, 1994-99): the Rams linebacker of the same name, 2021-
+]);
+
 export function loadHeadshots(): Promise<void> {
   loading ??= import("./data/history/headshots.ts").then(({ HEADSHOTS }) => {
     const ids = new Map<string, string>();
     const names = new Map<string, { born: number; key: string }[]>();
     for (const row of HEADSHOTS.split(";")) {
       const [id, key, name, born] = row.split(":");
-      if (!id || !key) continue;
+      if (!id || !key || WRONG_PHOTO.has(id)) continue;
       ids.set(id, key);
       if (name && born) {
         const list = names.get(name) ?? [];
