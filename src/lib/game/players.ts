@@ -16,6 +16,7 @@ import { calibrateVetPeak, lookupVetArc, moveToward } from "./careerArc.ts";
 import { historicalNameKey } from "./identity.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { isFriend } from "./data/friends.ts";
+import { addTx } from "./news.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -535,6 +536,9 @@ function seatReal(save: DynastySave, teamId: TeamId, p: Player, pos: Pos): void 
   p.contractYears = 1;
   p.jersey = carryJersey(save, p, teamId);
   addToRoster(save, teamId, p.id);
+  // On the record like any signing (the winter's market recap reads it), once the league is
+  // under way: the opening rosters a start builds aren't moves.
+  if (save.year > save.startingYear) addTx(save, "sign", p.id, "fa", teamId, `Signed ${playerName(p)}, 1 yr`);
 }
 
 /**

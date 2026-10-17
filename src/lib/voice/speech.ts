@@ -198,6 +198,11 @@ export function cancelSpeech(): void {
   if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
 }
 
+/** Bumped by every cancelSpeech: a caller pacing its own lines knows when it was cut off. */
+export function speechGeneration(): number {
+  return gen;
+}
+
 /** Is anything on the air (or queued to be) right now? */
 export function isSpeaking(): boolean {
   return useTalking.getState().talking || (typeof window !== "undefined" && "speechSynthesis" in window && window.speechSynthesis.speaking);

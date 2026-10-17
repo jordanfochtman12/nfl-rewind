@@ -5,7 +5,7 @@ import { stadiumAudio } from "./stadiumAudio";
 import { castVoices } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import type { BoothLine } from "@/lib/game/commentary";
-import { cancelSpeech, isSpeaking, speakLine, useTalking } from "@/lib/voice/speech";
+import { cancelSpeech, isSpeaking, speakLine, speechGeneration, useTalking } from "@/lib/voice/speech";
 
 export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine[], index: number, year: number, intensity = 0) {
   // Stadium sound and music start as Settings has them (on by default); the first tap
@@ -37,20 +37,56 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     speech.volume = line.speaker === "PBP" ? 0.9 : 0.85;
     return speech;
   };
-  const speaking = (call: BoothLine[]) => {
-    if (!("speechSynthesis" in window)) return;
-    const say = () => {
-      for (const line of call) {
-        speakLine(utter(line, cue));
+  // The booth hands the device one line at a time, so whatever is being said can always finish:
+  // a big play replaces what's still waiting and is the next thing said, instead of cancelling
+  // the sentence on the air (the call used to stop mid-word on every touchdown).
+  const waiting = useRef<{ line: BoothLine; cue: string }[]>([]);
+  const onAir = useRef(0);
+  const next = () => {
+    const item = waiting.current.shift();
+    if (!item) {
+      onAir.current = 0;
+      return;
+    }
+    const id = ++onAir.current;
+    const g = speechGeneration();
+    const u = utter(item.line, item.cue);
+    const words = u.text.split(/\s+/).filter(Boolean).length;
+    let done = false;
+    const finish = () => {
+      if (done || onAir.current !== id) return;
+      done = true;
+      window.clearTimeout(guard);
+      // Cut off from elsewhere (the announcer switched off, the page hidden): nothing follows.
+      if (speechGeneration() !== g) {
+        waiting.current = [];
+        onAir.current = 0;
+        return;
       }
+      next();
     };
-    // Only cut a call that's still on the air, and give the phone a beat after the cut:
-    // iOS drops (or clips) a line started the instant after speech is cancelled.
+    // Some phone engines never say a line ended: its length closes it out.
+    const guard = window.setTimeout(finish, (words / (2.2 * (u.rate || 1))) * 1000 + 4000);
+    u.onend = finish;
+    u.onerror = finish;
+    speakLine(u);
+  };
+  const speaking = (call: BoothLine[], big = false) => {
+    if (!("speechSynthesis" in window)) return;
+    const items = call.map((line) => ({ line, cue }));
+    if (onAir.current) {
+      // Ours on the air: a big play takes the place of what's queued; an ordinary call waits its turn.
+      waiting.current = big ? items : [...waiting.current, ...items];
+      return;
+    }
+    waiting.current = items;
+    // Someone else's voice on the air (the desk, the opener): give the phone a beat after the
+    // cut, since iOS drops a line started the instant after speech is cancelled.
     const seq = ++callSeq.current;
-    if (!isSpeaking()) return say();
+    if (!isSpeaking()) return next();
     cancelSpeech();
     window.setTimeout(() => {
-      if (seq === callSeq.current) say();
+      if (seq === callSeq.current) next();
     }, 160);
   };
   const talking = useTalking((t) => t.talking);
@@ -99,9 +135,10 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     last.current = index;
     if (!sequential || !active || document.hidden) return;
     if (enabled && ["td", "to", "fg", "safety"].includes(cue)) engine.current?.cue(cue === "td");
-    // Finish ordinary calls. Only a major event interrupts the current sentence.
-    if (announcer && (["td", "to", "safety"].includes(cue) || !isSpeaking()))
-      speaking(lines);
+    // Ordinary calls are said when the booth is free; a major event is said next, once the
+    // sentence on the air is finished.
+    const big = ["td", "to", "safety"].includes(cue);
+    if (announcer && (big || !isSpeaking())) speaking(lines, big);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, active, cue, enabled, announcer]);
   useEffect(() => {
@@ -156,7 +193,10 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
                 return;
               }
               setAnnouncer(!announcer);
-              if (announcer) cancelSpeech();
+              if (announcer) {
+                waiting.current = [];
+                cancelSpeech();
+              }
               else
                 speaking([
                   { speaker: "PBP", text: `Hello again, everybody. I'm ${booth.pbp.name}, alongside ${booth.color.name}, and it is a great day for football.` },

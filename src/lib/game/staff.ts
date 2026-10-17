@@ -667,9 +667,27 @@ function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string):
   return coach;
 }
 
+/**
+ * Who a club looks at for a coordinator's job: career assistants who coach that side of the
+ * ball. A former head coach out of work takes one now and then (Romeo Crennel, Wade Phillips),
+ * but a head coach the record hasn't given a team yet isn't anyone's coordinator in the
+ * meantime: the best-graded market was all head coaches, and Jim Harbaugh ran a defense in 2016.
+ */
+function coordinatorPool(save: DynastySave, role: "OC" | "DC"): Coach[] {
+  const side = (c: Coach) => (role === "OC" ? c.offense - c.defense : c.defense - c.offense);
+  const assistants: Coach[] = [];
+  const formerHeads: Coach[] = [];
+  for (const c of availableCoaches(save, role)) {
+    if (side(c) < -2) continue;
+    if (c.role === role) assistants.push(c);
+    else if (c.careerWins + c.careerLosses + (c.careerTies ?? 0) > 0 && c.age <= 64) formerHeads.push(c);
+  }
+  return formerHeads.length && rand(save) < 0.12 ? formerHeads : assistants;
+}
+
 export function autoHireCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC"): Coach {
   const t = save.teams[teamId];
-  const pool = availableCoaches(save, role);
+  const pool = coordinatorPool(save, role);
   let coach: Coach;
   if (pool.length && rand(save) < 0.55) {
     coach = pool[randInt(save, 0, Math.min(6, pool.length - 1))]!;
