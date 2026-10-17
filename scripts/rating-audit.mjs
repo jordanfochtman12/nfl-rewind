@@ -18,7 +18,7 @@
  * Writes src/lib/game/data/ratingAudit.ts and data/audit/rating-audit.md.
  * Run: node --experimental-strip-types scripts/rating-audit.mjs
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -33,6 +33,7 @@ const { createNewGame } = await import(join(G, "index.ts"));
 const { realDraftee } = await import(join(G, "draft.ts"));
 
 const id36 = (s) => parseInt(s, 36);
+const PEOPLE_BIRTH = PEOPLE.split("\n").map((l) => l.split("|")[3]?.slice(0, 4));
 const people = PEOPLE.split("\n").map((l) => {
   const [first, last, pos] = l.split("|");
   return { first, last, pos };
@@ -312,11 +313,252 @@ for (const r of rows) {
   if (Object.keys(fix).length) fixes[`${r.year}|${r.seed.f}|${r.seed.l}`] = fix;
 }
 
+/* ---------------- measurements: the real 40, height and weight ---------------- */
+
+/*
+ * The draft catalog's 40s were a position's usual time nudged by a hash of the name, so speed
+ * barely followed real speed (receivers under 4.45 and over 4.65 averaged 61 and 56). From the
+ * combine (2000 on) each man's real 40 goes on his card, and his speed and acceleration are
+ * re-ranked by it within his position: the position keeps its spread of speeds (the engine is
+ * balanced on it), the fastest men in it get the top of it. Height and weight come from the
+ * combine, else the league's bios. A star whose speed would move a lot, and anyone's that would
+ * move very far, waits for a decision (scripts/audit-decisions.json): a 40 isn't everything.
+ */
+const decisions = JSON.parse(readFileSync(join(ROOT, "scripts/audit-decisions.json"), "utf8"));
+// A player the owner moved to his real position is measured among that position's players.
+const asPlayed = (seed, year) => {
+  const call = decisions.calls?.[`position|${year}|${seed.f}|${seed.l}`];
+  return call && call.call !== "keep" && call.value && call.value !== seed.p ? { ...seed, p: call.value, rt: undefined, arch: undefined } : seed;
+};
+const { STAR_PROFILES } = await import(join(G, "data/starProfiles.ts"));
+const { nameKey } = await import(join(G, "profiles.ts"));
+// The star profiles carry their own, wider speed scale (a star tight end at 91 where the
+// catalog's run near 50): each is ranked among its own kind at his position.
+const scaleOf = (seed) => `${GROUP[seed.p]}${STAR_PROFILES[nameKey(seed.f, seed.l)]?.rt?.speed !== undefined ? "*" : ""}`;
+const GROUP = { QB: "QB", RB: "RB", FB: "RB", WR: "WR", TE: "TE", LT: "OL", LG: "OL", C: "OL", RG: "OL", RT: "OL", DE: "DL", DT: "DL", OLB: "LB", MLB: "LB", CB: "DB", S: "DB", K: "K", P: "P" };
+const BIO = { QB: "QB", RB: "RB", FB: "RB", WR: "WR", TE: "TE", T: "OL", G: "OL", C: "OL", OL: "OL", OT: "OL", OG: "OL", DE: "DL", DT: "DL", NT: "DL", DL: "DL", LB: "LB", ILB: "LB", OLB: "LB", MLB: "LB", CB: "DB", S: "DB", SS: "DB", FS: "DB", DB: "DB", K: "K", P: "P" };
+function readCsv(path) {
+  const text = readFileSync(path, "utf8").trim().split("\n");
+  const head = text[0].split(",");
+  return text.slice(1).map((l) => {
+    const cells = l.match(/("([^"]|"")*"|[^,]*)(,|$)/g) ?? [];
+    return Object.fromEntries(head.map((h, i) => [h, (cells[i] ?? "").replace(/,$/, "").replace(/^"|"$/g, "")]));
+  });
+}
+const inches = (v) => {
+  const m = /^(\d+)-(\d+)$/.exec(v ?? "");
+  return m ? Number(m[1]) * 12 + Number(m[2]) : Number(v) || 0;
+};
+const combine = new Map();
+for (const r of readCsv(join(ROOT, "data/combine/combine.csv"))) {
+  const [f, ...l] = r.player_name.split(" ");
+  combine.set(`${r.draft_year || r.season}|${normalizedName(f, l.join(" "))}`, { forty: Number(r.forty) || 0, ht: inches(r.ht), wt: Number(r.wt) || 0 });
+}
+// 1987-99: the combine's times as FantasyPros keeps them (about 150-230 a year).
+for (const r of readCsv(join(ROOT, "data/combine/combine-1987-1999.csv"))) {
+  const [f, ...l] = r.player_name.split(" ");
+  const k = `${r.season}|${normalizedName(f, l.join(" "))}`;
+  if (!combine.has(k) && Number(r.forty)) combine.set(k, { forty: Number(r.forty), ht: 0, wt: 0 });
+}
+// Wikidata's heights and weights (football players born 1925-82), by name and birth year.
+const wikiSize = new Map();
+for (const r of readCsv(join(ROOT, "data/players/wikidata-sizes.csv"))) {
+  const [f, ...l] = r.name.split(" ");
+  const k = `${normalizedName(f, l.join(" "))}|${r.birth.slice(0, 4)}`;
+  wikiSize.set(k, wikiSize.has(k) ? null : { ht: Number(r.height_in) || 0, wt: Number(r.weight_lb) || 0 });
+}
+const bios = new Map();
+for (const r of readCsv(join(ROOT, "data/players/players.csv"))) {
+  const k = normalizedName(r.first_name, r.last_name);
+  if (!bios.has(k)) bios.set(k, []);
+  bios.get(k).push({ rookie: Number(r.rookie_season) || 0, ht: Number(r.height) || 0, wt: Number(r.weight) || 0, g: BIO[r.position] });
+}
+const measured = [];
+for (let year = 1966; year <= 2025; year++) {
+  for (const catalogSeed of draftSeedsFor(year)) {
+    const seed = asPlayed(catalogSeed, year);
+    const k = normalizedName(seed.f, seed.l);
+    const c = combine.get(`${year}|${k}`);
+    const b = (bios.get(k) ?? []).filter((x) => Math.abs(x.rookie - year) <= 1 && x.wt && x.g === GROUP[seed.p]);
+    // Before the bios begin, Wikidata by his birth year (the record's man, so a namesake can't match).
+    const who = drafted.get(`${year}|${k}`) ?? [];
+    const born = who.length === 1 ? PEOPLE_BIRTH[who[0]] : undefined;
+    const wd = born ? wikiSize.get(`${k}|${born}`) : undefined;
+    const size = c?.wt ? c : b.length === 1 ? b[0] : wd?.wt || wd?.ht ? wd : undefined;
+    if (!c?.forty && !size) continue;
+    let built;
+    if (c?.forty) {
+      const p = realDraftee(save, seed, year, false);
+      delete save.players[p.id];
+      const lift = p.potential - p.ovr;
+      built = { speed: Math.min(99, p.ratings.speed + lift), accel: Math.min(99, p.ratings.accel + lift), level: p.potential };
+    }
+    measured.push({ year, seed, forty: c?.forty || undefined, ht: size?.ht || undefined, wt: size?.wt || undefined, built });
+  }
+}
+// Within a position the catalog ties speed to overall (a better player is faster on it), so a
+// man is ranked against his level: the speed usual for a player that good at his position, then
+// as far above or below it as his 40 ranks among theirs.
+const groups = new Map();
+for (const m of measured) {
+  if (!m.built) continue;
+  const g = scaleOf(m.seed);
+  if (!groups.has(g)) groups.set(g, []);
+  groups.get(g).push(m);
+}
+const fitLine = (pts) => {
+  const mx = pts.reduce((n, [x]) => n + x, 0) / pts.length;
+  const my = pts.reduce((n, [, y]) => n + y, 0) / pts.length;
+  const b = pts.reduce((n, [x, y]) => n + (x - mx) * (y - my), 0) / Math.max(1e-9, pts.reduce((n, [x]) => n + (x - mx) ** 2, 0));
+  const a = my - b * mx;
+  return { a, b, resid: pts.map(([x, y]) => y - (a + b * x)).sort((u, v) => u - v) };
+};
+for (const [g, list] of groups) {
+  groups.set(g, {
+    n: list.length,
+    forties: list.map((m) => m.forty).sort((a, b) => a - b),
+    speed: fitLine(list.map((m) => [m.built.level, m.built.speed])),
+    accel: fitLine(list.map((m) => [m.built.level, m.built.accel])),
+  });
+}
+const rankOf = (list, v) => {
+  let n = 0;
+  for (const x of list) if (x < v) n++;
+  return n / list.length;
+};
+const at = (list, q) => list[Math.min(list.length - 1, Math.max(0, Math.floor(q * list.length)))];
+const byForty = (f, level, q) => Math.max(25, Math.min(99, Math.round(f.a + f.b * level + at(f.resid, q))));
+const borderline = [];
+let speedFixed = 0;
+for (const m of measured) {
+  const key = `${m.year}|${m.seed.f}|${m.seed.l}`;
+  const fix = (fixes[key] ??= {});
+  if (m.forty) fix.fy = m.forty;
+  if (m.ht && Math.abs(m.ht - (m.seed.ht ?? 0)) >= 1) fix.ht = m.ht;  // 0 = not on record
+  if (m.wt && Math.abs(m.wt - (m.seed.wt ?? 0)) >= 5) fix.wt = m.wt;
+  const d = m.built && groups.get(scaleOf(m.seed));
+  if (d && d.n >= (scaleOf(m.seed).endsWith("*") ? 12 : 30)) {
+    // Faster is a lower 40: his share of the position he beat.
+    const q = 1 - rankOf(d.forties, m.forty + 1e-9);
+    const speed = byForty(d.speed, m.built.level, q);
+    const accel = byForty(d.accel, m.built.level, q);
+    const ds = speed - m.built.speed;
+    if (Math.abs(ds) >= 4) {
+      const wait = (m.built.level >= 85 && Math.abs(ds) >= 10) || Math.abs(ds) >= 25;
+      const call = decisions.calls?.[`speed|${key}`];
+      if (wait && call?.call === "custom") {
+        fix.rt = { ...(fix.rt ?? {}), speed: call.value };
+        speedFixed++;
+      } else if (wait && call?.call === "keep") {
+        // The owner's call: as built.
+      } else if (wait && call?.call !== "apply") {
+        borderline.push({ key, who: `${m.year} ${m.seed.f} ${m.seed.l}`, pos: m.seed.p, level: m.built.level, forty: m.forty, from: m.built.speed, to: speed, call: "pending" });
+      } else {
+        fix.rt = { ...(fix.rt ?? {}), speed, ...(Math.abs(accel - m.built.accel) >= 4 ? { accel } : {}) };
+        speedFixed++;
+      }
+    }
+  }
+  if (!Object.keys(fix).length) delete fixes[key];
+}
+borderline.sort((a, b) => b.level - a.level || Math.abs(b.to - b.from) - Math.abs(a.to - a.from));
+writeFileSync(
+  join(ROOT, "data/audit/borderline-speed.md"),
+  [
+    "# Speed: waiting for a call",
+    "",
+    `Stars whose speed would move 10+ on their real 40, and anyone's that would move 25+. Mark each "apply" or "keep" in scripts/audit-decisions.json (speed). Applied automatically: ${speedFixed}.`,
+    "",
+    "| Player | Pos | Peak | Real 40 | Speed now | By his 40 | Call |",
+    "| --- | --- | --- | --- | --- | --- | --- |",
+    ...borderline.map((b) => `| ${b.who} | ${b.pos} | ${b.level} | ${b.forty.toFixed(2)} | ${b.from} | ${b.to} | ${b.call} |`),
+    "",
+  ].join("\n"),
+);
+writeFileSync(join(ROOT, "data/audit/borderline-speed.json"), JSON.stringify(borderline));
+/*
+ * Before the combine (1966-86): the speed his Wikipedia article documents, a 40 time (scouting
+ * reports' hand times, a tenth fast against the combine's electric ones) or a sprinter's record
+ * (a 9.5 hundred, a college relay). Anecdote, not measurement: every one waits for a decision,
+ * and a sprinter's is only ever a raise, to the top tenth of his position at his level.
+ */
+const evidence = JSON.parse(readFileSync(join(ROOT, "data/audit/pre1987-speed-evidence.json"), "utf8"));
+const pre = [];
+for (const e of evidence) {
+  const found = draftSeedsFor(e.year).find((x) => x.f === e.first && x.l === e.last);
+  const seed = found && asPlayed(found, e.year);
+  const d = seed && groups.get(scaleOf(seed));
+  if (!d || d.n < 12) continue;
+  const p = realDraftee(save, seed, e.year, false);
+  delete save.players[p.id];
+  const lift = p.potential - p.ovr;
+  const now = Math.min(99, p.ratings.speed + lift);
+  const q = e.kind === "forty" ? 1 - rankOf(d.forties, e.forty + 0.1 + 1e-9) : 0.9;
+  const want = byForty(d.speed, p.potential, q);
+  if (Math.abs(want - now) < 4 || (e.kind === "track" && want <= now)) continue;
+  const key = `${e.year}|${e.first}|${e.last}`;
+  const call = decisions.calls?.[`speed1987|${key}`];
+  if (call?.call === "apply" || call?.call === "custom") {
+    fixes[key] = { ...(fixes[key] ?? {}), rt: { ...(fixes[key]?.rt ?? {}), speed: call.call === "apply" ? want : call.value } };
+    continue;
+  }
+  if (call?.call === "keep") continue;
+  pre.push({ key, who: `${e.year} ${e.first} ${e.last}`, pos: seed.p, level: p.potential, from: now, to: want, kind: e.kind, forty: e.forty, quote: e.quote, call: "pending" });
+}
+writeFileSync(join(ROOT, "data/audit/borderline-speed-pre1987.json"), JSON.stringify(pre));
+console.log(`before the combine: ${evidence.length} documented, ${pre.length} waiting for a call`);
+
+console.log(`measurements: ${measured.length} matched; speed re-ranked for ${speedFixed}; ${borderline.length} waiting for a call`);
+
+/*
+ * Age at the draft from his real birth date (the record's man, so a namesake can't match), where
+ * the game's differs: a draftee without a career-arc row was 21-23 at random. Draft day taken as
+ * May 1; the owner's own age calls below still win.
+ */
+const BIRTH = PEOPLE.split("\n").map((l) => l.split("|")[3]);
+let agesFixed = 0;
+for (let year = 1966; year <= 2025; year++) {
+  for (const seed of draftSeedsFor(year)) {
+    const who = drafted.get(`${year}|${normalizedName(seed.f, seed.l)}`) ?? [];
+    const b = who.length === 1 ? BIRTH[who[0]] : undefined;
+    if (!b || b.length < 8) continue;
+    const age = year - Number(b.slice(0, 4)) - (Number(b.slice(4, 8)) > 501 ? 1 : 0);
+    if (age < 20 || age > 32) continue;
+    const p = realDraftee(save, seed, year, false);
+    delete save.players[p.id];
+    if (p.age === age) continue;
+    (fixes[`${year}|${seed.f}|${seed.l}`] ??= {}).age = age;
+    agesFixed++;
+  }
+}
+console.log(`ages from birth dates: ${agesFixed}`);
+
+/*
+ * The owner's calls on the full audit's borderline players (scripts/player-full-audit.mjs, the
+ * Rating Calls page): a peak, an archetype, a durability, an age at the draft, a position.
+ * "apply" and "custom" both carry the value to use; "keep" leaves him as built.
+ */
+let ownerCalls = 0;
+for (const [item, call] of Object.entries(decisions.calls ?? {})) {
+  const [cat, ...rest] = item.split("|");
+  const key = rest.join("|");
+  if (call.call === "keep" || call.value === undefined || cat.startsWith("speed")) continue;
+  const fix = (fixes[key] ??= {});
+  if (cat === "peak") fix.peak = call.value;
+  else if (cat === "archetype") fix.arch = call.value;
+  else if (cat === "durability") fix.rt = { ...(fix.rt ?? {}), inj: call.value };
+  else if (cat === "age") fix.age = call.value;
+  else if (cat === "position") fix.pos = call.value;
+  else continue;
+  ownerCalls++;
+}
+console.log(`owner's calls applied: ${ownerCalls}`);
+
 writeFileSync(
   join(G, "data/ratingAudit.ts"),
   "/** Auto-generated by scripts/rating-audit.mjs. Do not hand-edit. */\n" +
     '/** "draft year|first|last" : ratings the record\'s career stats correct, and a corrected archetype. */\n' +
-    `export const RATING_FIX: Record<string, { rt?: Record<string, number>; arch?: string }> = ${JSON.stringify(fixes)};\n`,
+    `export const RATING_FIX: Record<string, { rt?: Record<string, number>; arch?: string; fy?: number; ht?: number; wt?: number; peak?: number; age?: number; pos?: string }> = ${JSON.stringify(fixes)};\n`,
 );
 mkdirSync(join(ROOT, "data/audit"), { recursive: true });
 const big = report.filter((x) => x.k !== "arch").sort((a, b) => Math.abs(b.to - b.from) - Math.abs(a.to - a.from));

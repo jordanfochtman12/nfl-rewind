@@ -255,25 +255,32 @@ function projectionLift(save: DynastySave, round: number): number {
 function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited = true): Player {
   const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
   const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
-  const fix = audited ? (RATING_FIX[`${save.year}|${s.f}|${s.l}`] as { rt?: Partial<Ratings>; arch?: Arch } | undefined) : undefined;
+  const fix = audited
+    ? (RATING_FIX[`${save.year}|${s.f}|${s.l}`] as { rt?: Partial<Ratings>; arch?: Arch; fy?: number; ht?: number; wt?: number; peak?: number; age?: number; pos?: Pos } | undefined)
+    : undefined;
+  const draftAge = randInt(save, 21, 23);
   const p = makePlayer(save, {
     fix,
     firstName: s.f,
     lastName: s.l,
-    pos: s.p,
+    // The owner's calls from the ratings audit (scripts/audit-decisions.json): his real position,
+    // his peak, his age at the draft.
+    pos: fix?.pos ?? s.p,
     teamId: "fa",
-    ovr: s.o,
-    age: randInt(save, 21, 23),
+    ovr: fix?.peak ?? s.o,
+    age: fix?.age ?? draftAge,
     historical: true,
     generated: false,
     college: s.c ?? lookupCollege(s.f, s.l) ?? eraCollege(save),
     draftYear: save.year,
     draftRound: s.r ?? round,
-    arch: s.arch,
-    heightIn: s.ht,
-    weight: s.wt,
-    forty: s.fy,
-    rt: s.rt,
+    // Moved to his real position, he's built for it: the old position's kit and label don't follow.
+    arch: fix?.pos && fix.pos !== s.p ? undefined : s.arch,
+    // His real measurements where the record has them (the combine, the league's bios).
+    heightIn: fix?.ht ?? s.ht,
+    weight: fix?.wt ?? s.wt,
+    forty: fix?.fy ?? s.fy,
+    rt: fix?.pos && fix.pos !== s.p ? undefined : s.rt,
   });
   if (s.r) p.realRound = s.r;
   const friend = friendOf(s.f, s.l);
@@ -297,8 +304,11 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     // Seed overall is his real career peak - he arrives short of it and grows into it.
     p.arc = arc;
     if (arc.age >= 20 && arc.age <= 30) p.age = arc.age;
-    const floor = honorsFloor(arc, p.pos);
+    if (fix?.age) p.age = fix.age;
+    // A peak the owner set is his peak: the honors floor doesn't lift it.
+    const floor = fix?.peak ? 0 : honorsFloor(arc, p.pos);
     if (p.ovr < floor) moveToward(p, floor);
+    if (fix?.peak) moveToward(p, fix.peak);
     p.potential = p.ovr;
     const start = arcTarget(p, 0);
     // No seasons on record yet: his peak is a projection, and some of every class beats theirs.

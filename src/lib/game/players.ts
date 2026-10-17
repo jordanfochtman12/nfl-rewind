@@ -116,7 +116,7 @@ export function makePlayer(
     forty?: number;
     rt?: Partial<Ratings>;
     /** What his real career stats say, over the catalog and star profile (scripts/rating-audit.mjs). */
-    fix?: { rt?: Partial<Ratings>; arch?: Arch };
+    fix?: { rt?: Partial<Ratings>; arch?: Arch; fy?: number; ht?: number; wt?: number };
   },
 ): Player {
   const prof = lookupProfile(opts.pos, opts.firstName, opts.lastName);
@@ -172,9 +172,10 @@ export function makePlayer(
     stats: {},
     career: [],
     ...measurables(opts.pos, ovr, ratings.speed, salt),
-    ...(star?.ht || opts.heightIn || prof.ht ? { heightIn: star?.ht ?? opts.heightIn ?? prof.ht } : {}),
-    ...(star?.wt || opts.weight || prof.wt ? { weight: star?.wt ?? opts.weight ?? prof.wt } : {}),
-    ...(star?.fy || opts.forty || prof.fy ? { forty: star?.fy ?? opts.forty ?? prof.fy } : {}),
+    // A measurement on record (the combine, the league's bios) beats a star profile's estimate.
+    ...(opts.fix?.ht || star?.ht || opts.heightIn || prof.ht ? { heightIn: opts.fix?.ht ?? star?.ht ?? opts.heightIn ?? prof.ht } : {}),
+    ...(opts.fix?.wt || star?.wt || opts.weight || prof.wt ? { weight: opts.fix?.wt ?? star?.wt ?? opts.weight ?? prof.wt } : {}),
+    ...(opts.fix?.fy || star?.fy || opts.forty || prof.fy ? { forty: opts.fix?.fy ?? star?.fy ?? opts.forty ?? prof.fy } : {}),
   };
   applyScout(save, p);
   save.players[p.id] = p;

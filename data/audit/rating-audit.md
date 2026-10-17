@@ -1,6 +1,6 @@
 # Rating audit
 
-Draftees measured: 6669. Players corrected: 2746. Ratings changed: 3049. Archetypes changed: 7.
+Draftees measured: 6669. Players corrected: 11475. Ratings changed: 3049. Archetypes changed: 7.
 
 | Player | Rating | Was | Now | Career percentile |
 | --- | --- | --- | --- | --- |
