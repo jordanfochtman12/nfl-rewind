@@ -40,7 +40,8 @@ export function addTx(
     to,
     detail,
   });
-  if (save.transactions.length > 500) save.transactions.length = 500;
+  // A whole season's moves (a 32-club league runs to a thousand-odd): the screen reads them all.
+  if (save.transactions.length > 1500) save.transactions.length = 1500;
 }
 
 export function teamIdsOf(ids: TeamId[]): TeamId[] {

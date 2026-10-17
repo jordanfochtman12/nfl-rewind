@@ -49,7 +49,8 @@ export type Tab =
   | "superbowl"
   | "team"
   | "hof"
-  | "league";
+  | "league"
+  | "moves";
 
 interface GameStore {
   save: DynastySave | null;

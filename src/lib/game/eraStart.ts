@@ -31,6 +31,7 @@ import { autoHireCoord, fillCoachFields, makeCoachFromSeed, realCoordinator, see
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
 import { MORE_COACHES } from "./data/coachesMore.ts";
 import { newOwnerState } from "./owner.ts";
+import { ensureContracts } from "./coachContracts.ts";
 import type { Coach, DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
 
 /**
@@ -549,6 +550,7 @@ export function createEraGame(o: EraOpts): DynastySave {
   rateCoaches(s, year);
   seedStaff(s);
   seatRealCoordinators(s, year, false);
+  ensureContracts(s);
 
   for (const p of Object.values(s.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;

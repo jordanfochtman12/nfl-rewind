@@ -21,6 +21,7 @@ import { applyStaffSchemes, syncRealSchemes } from "./gameplans.ts";
 import { playbookFor } from "./data/coachPlans.ts";
 import { EXPANSION_SPECS } from "./data/expansions.ts";
 import { mentorOf } from "./coachingTree.ts";
+import { ensureContracts, finalYear, renew, tearUp, tickContracts } from "./coachContracts.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -351,6 +352,7 @@ export function fireCoach(save: DynastySave, teamId: TeamId, role: CoachRole): G
   const id = role === "HC" ? t.coachId : role === "OC" ? t.ocId : t.dcId;
   if (!id) return { ok: false, reason: "The chair is already empty." };
   const c = save.coaches[id];
+  const owed = tearUp(save, c);
   if (c) {
     c.firedCount = (c.firedCount ?? 0) + 1;
     vacate(save, c, role, teamId);
@@ -358,7 +360,7 @@ export function fireCoach(save: DynastySave, teamId: TeamId, role: CoachRole): G
   addNews(save, {
     kind: "headline",
     headline: `${displayName(save.year, teamId)} fire ${c?.name ?? "their coach"}`,
-    body: `${role} is vacant. The building is loud.`,
+    body: `${role} is vacant. The building is loud.${owed}`,
     teamIds: [teamId],
     playerIds: [],
   });
@@ -462,6 +464,7 @@ export function hireCoach(save: DynastySave, teamId: TeamId, coachId: string, ro
     role,
     note: `${displayName(save.year, teamId)} hire ${c.name} (${role}).`,
   });
+  ensureContracts(save);
   return { ok: true };
 }
 
@@ -722,6 +725,8 @@ export function runCoachingCarousel(save: DynastySave): void {
   }
   const avgPf = ids.length ? leaguePf / ids.length : 250;
   const avgPa = ids.length ? leaguePa / ids.length : 250;
+  // Every deal loses the season just played; the ones that ran out are decided below.
+  const expired = tickContracts(save);
 
   for (const id of ids) {
     const t = save.teams[id];
@@ -749,7 +754,12 @@ export function runCoachingCarousel(save: DynastySave): void {
       progressCoach(save, dc, id);
     }
 
-    if (isUserClub(save, id)) continue;
+    const up = expired.filter((e) => e.teamId === id);
+    // The owner's staff: a deal he didn't extend runs out, and the man walks.
+    if (isUserClub(save, id)) {
+      for (const e of up) contractRunsOut(save, id, e.role, e.coach);
+      continue;
+    }
 
     // Black Monday already made the call; an older save mid-winter rolls it here.
     const fire = search?.monday ? search.cuts.includes(id) : wantsNewCoach(save, id);
@@ -794,7 +804,36 @@ export function runCoachingCarousel(save: DynastySave): void {
       const hired = autoHireCoord(save, id, "DC");
       noteCarousel(save, id, "DC", fired, hired.name);
     }
+    // Deals that ran out on a computer club: a head coach still in the job is re-signed (Black
+    // Monday already let a loser's lapse); a coordinator is kept when his unit held up.
+    for (const e of up) {
+      const t3 = save.teams[id];
+      const holds = e.role === "HC" ? t3.coachId : e.role === "OC" ? t3.ocId : t3.dcId;
+      if (holds !== e.coach.id) continue;
+      const good = e.role === "HC" || (e.role === "OC" ? t.pf >= avgPf : t.pa <= avgPa);
+      if (e.role === "HC" || rand(save) < (good ? 0.8 : 0.35)) renew(save, e.coach, e.role);
+      else contractRunsOut(save, id, e.role, e.coach);
+    }
   }
+  ensureContracts(save);
+}
+
+/** His deal is up and nobody re-signed him: he leaves the staff, and a coordinator's job is filled. */
+function contractRunsOut(save: DynastySave, teamId: TeamId, role: CoachRole, c: Coach): void {
+  c.contract = undefined;
+  vacate(save, c, role, teamId);
+  const team = displayName(save.year, teamId);
+  if (role !== "HC" && !isUserClub(save, teamId)) {
+    const fill = autoHireCoord(save, teamId, role);
+    noteCarousel(save, teamId, role, c.name, fill.name, `${team} let ${c.name}'s contract run out; ${fill.name} is the new ${role}.`);
+  } else noteCarousel(save, teamId, role, c.name, "vacant", `${c.name}'s contract with the ${team} runs out; the ${role} job is open.`);
+  addNews(save, {
+    kind: "headline",
+    headline: `${c.name}'s deal runs out in ${team}`,
+    body: `The ${role === "HC" ? "head coach" : role === "OC" ? "offensive coordinator" : "defensive coordinator"} leaves when his contract is up.`,
+    teamIds: [teamId],
+    playerIds: [],
+  });
 }
 
 /**
@@ -845,6 +884,7 @@ export function ensureStaff(save: DynastySave): void {
     save.teams[id].depth = {};
     syncDepth(save, id);
   });
+  ensureContracts(save);
 }
 
 export function staffOf(save: DynastySave, teamId: TeamId): { hc?: Coach; oc?: Coach; dc?: Coach } {
@@ -935,6 +975,7 @@ function fireMidseason(save: DynastySave, id: TeamId, hc: Coach): void {
   const team = displayName(save.year, id);
   const coords = [t.ocId ? save.coaches[t.ocId] : undefined, t.dcId ? save.coaches[t.dcId] : undefined].filter((c): c is Coach => !!c);
   const pick = coords.sort((a, b) => Math.max(b.offense, b.defense) + b.leadership / 4 - (Math.max(a.offense, a.defense) + a.leadership / 4))[0];
+  const owed = tearUp(save, hc, false);
   hc.firedCount = (hc.firedCount ?? 0) + 1;
   vacate(save, hc, "HC", id);
   let interim: Coach;
@@ -959,11 +1000,12 @@ function fireMidseason(save: DynastySave, id: TeamId, hc: Coach): void {
   interim.interimFrom = { w: t.wins, l: t.losses };
   t.coachId = interim.id;
   searchOf(save).midseason += 1;
+  ensureContracts(save);
   noteCarousel(save, id, "HC", hc.name, interim.name, `${team} fire ${hc.name} at ${recordOf(t)}; ${interim.name} is the interim coach.`);
   addNews(save, {
     kind: "headline",
     headline: `${team} fire ${hc.name}`,
-    body: `At ${recordOf(t)}, the club can't wait for the winter. ${interim.name}${was ? `, the ${was === "OC" ? "offensive" : "defensive"} coordinator,` : ""} finishes the year as interim head coach.`,
+    body: `At ${recordOf(t)}, the club can't wait for the winter. ${interim.name}${was ? `, the ${was === "OC" ? "offensive" : "defensive"} coordinator,` : ""} finishes the year as interim head coach.${owed}`,
     teamIds: [id],
     playerIds: [],
   });
@@ -987,14 +1029,27 @@ export function blackMonday(save: DynastySave): void {
     if (!hc) continue;
     // The record's carousel (realBlackMonday) already made this club's call.
     if (search.cuts.includes(id) || search.keep?.includes(id)) continue;
-    if (wantsNewCoach(save, id)) {
+    // His deal is up after this season: a club that didn't win lets it run out.
+    const lapse = finalYear(hc) && hc.interimYear !== save.year && winPct(t) < 0.4 && rand(save) < 0.6;
+    if (lapse) {
       search.cuts.push(id);
+      const owed = tearUp(save, hc, true);
+      addNews(save, {
+        kind: "headline",
+        headline: `${hc.name} won't be back in ${displayName(save.year, id)}`,
+        body: `His contract is up after ${recordOf(t)}, and the club lets it run out. The search starts today.${owed}`,
+        teamIds: [id],
+        playerIds: [],
+      });
+    } else if (wantsNewCoach(save, id)) {
+      search.cuts.push(id);
+      const owed = tearUp(save, hc, true);
       addNews(save, {
         kind: "headline",
         headline: `${displayName(save.year, id)} fire ${hc.name}`,
         body: hc.interimYear === save.year
           ? `The interim tag comes off the other way: after ${recordOf(t)}, the club opens a full search.`
-          : `After ${recordOf(t)}, the club turns the page. The search starts today.`,
+          : `After ${recordOf(t)}, the club turns the page. The search starts today.${owed}`,
         teamIds: [id],
         playerIds: [],
       });

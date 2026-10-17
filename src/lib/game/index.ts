@@ -175,6 +175,7 @@ export {
   moveDepth,
   deskHire,
   deskFire,
+  deskExtend,
   deskScheme,
   deskPlan,
   deskResetPlan,
@@ -294,3 +295,6 @@ export { cleanPlay, weekReel, type ReelMoment, type ReelKind } from "./weekReel.
 export { createEraGame, restoreRecordLines, ERA_STARTS, type EraOpts } from "./eraStart.ts";
 export { headshotsReady, headshotUrl, loadHeadshots } from "./headshots.ts";
 export { helmetOf, maskOf, type Helmet, type HelmetMark, type MaskStyle } from "./helmets.ts";
+
+export { transactionWire, wireSeasons, wireWhen, type WireRow, type WireKind } from "./transactions.ts";
+export { coachPay, extensionTerms, finalYear } from "./coachContracts.ts";

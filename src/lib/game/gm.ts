@@ -25,6 +25,7 @@ import { planFor } from "./sim.ts";
 import { visibleOvr } from "./scout.ts";
 import { winPct } from "./standings.ts";
 import { clubWindow, evaluateTrade, needFor, type ClubWindow } from "./tradeAi.ts";
+import { extendCoach } from "./coachContracts.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
 
@@ -423,6 +424,12 @@ export function moveDepth(save: DynastySave, teamId: TeamId, pos: Pos, playerId:
 
 export function deskHire(save: DynastySave, teamId: TeamId, coachId: string, role: CoachRole): GmResult {
   return hireCoach(save, teamId, coachId, role);
+}
+
+/** The owner adds years to a man on his staff, at the price extensionTerms quotes. */
+export function deskExtend(save: DynastySave, teamId: TeamId, role: CoachRole, years: number): GmResult {
+  const r = extendCoach(save, teamId, role, years);
+  return r.ok ? ok() : fail(r.reason ?? "He won't sign.");
 }
 
 export function deskFire(save: DynastySave, teamId: TeamId, role: CoachRole): GmResult {

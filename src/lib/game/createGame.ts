@@ -11,6 +11,7 @@ import { addNews } from "./news.ts";
 import { setLabel } from "./season.ts";
 import { displayName } from "./teams.ts";
 import { seedStaff, makeCoachFromSeed } from "./staff.ts";
+import { ensureContracts } from "./coachContracts.ts";
 import { refreshContracts } from "./salary.ts";
 
 function seedCoaches(save: DynastySave): void {
@@ -40,6 +41,7 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   }
   seedCoaches(save);
   seedStaff(save);
+  ensureContracts(save);
   seedVeterans(save);
   for (const id of ACTIVE_1966) fillRoster(save, id);
   for (const id of ACTIVE_1966) syncDepth(save, id);

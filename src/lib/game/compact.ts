@@ -1,5 +1,6 @@
 /** Strip film we don't need so a 60-year file still loads. */
 import type { DynastySave, GameResult, Player, SeasonStats } from "./types.ts";
+import { archiveTransactions, liveTransactions } from "./transactions.ts";
 
 const FILM_PHASES = new Set(["regular", "deadline", "playoffs", "superBowl", "proBowl"]);
 
@@ -39,7 +40,8 @@ export function compactSaveInPlace(save: DynastySave): void {
   }
   if (save.news.length > NEWS_KEEP) save.news = save.news.slice(0, NEWS_KEEP);
   if (save.weekNews.length > WEEK_NEWS_KEEP) save.weekNews = save.weekNews.slice(0, WEEK_NEWS_KEEP);
-  if (save.transactions.length > TX_KEEP) save.transactions = save.transactions.slice(0, TX_KEEP);
+  archiveTransactions(save);
+  save.transactions = liveTransactions(save, TX_KEEP);
 }
 
 /*
@@ -258,7 +260,7 @@ export function compactSave(save: DynastySave): DynastySave {
     proBowl: save.proBowl && strippedCopy(save, save.proBowl),
     news: save.news.slice(0, NEWS_KEEP),
     weekNews: save.weekNews.slice(0, WEEK_NEWS_KEEP),
-    transactions: save.transactions.slice(0, TX_KEEP),
+    transactions: liveTransactions(save, TX_KEEP),
   };
 }
 

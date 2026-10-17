@@ -18,6 +18,9 @@ import {
   depthChart,
   deskFire,
   deskHire,
+  deskExtend,
+  extensionTerms,
+  finalYear,
   deskScheme,
   deskPlan,
   deskResetPlan,
@@ -91,6 +94,7 @@ import { HistoryBoxModal } from "./HistoryLive";
 import { PlayerLink, PlayerProfile } from "./PlayerProfile";
 import { TeamRosterModal } from "./TeamRoster";
 import { LeagueDirectory } from "./LeagueDirectory";
+import { Transactions } from "./Transactions";
 import { ExpansionNight } from "./ExpansionNight";
 import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
@@ -1062,9 +1066,32 @@ function Staff() {
               {c.careerTitles ? <span className="text-muted"> · {c.careerTitles} titles</span> : null}
             </p>
             <CoachChips coach={c} />
+            {c.contract && (
+              <p className="text-sm">
+                <span className="text-muted">
+                  Contract: {c.contract.years} {c.contract.years === 1 ? "season" : "seasons"} left · {formatMoney(c.contract.salary, save.year)} a year
+                </span>
+                {finalYear(c) && !look && <span className="text-brick"> · Final year: extend him or he walks after the season</span>}
+              </p>
+            )}
           </div>
         )}
         <div className="mt-3 flex flex-wrap gap-2">
+          {c?.contract && !look && c.contract.years < 6 &&
+            [2, 3].map((n) => (
+              <Btn
+                key={n}
+                onClick={() =>
+                  desk((s) => {
+                    const r = deskExtend(s, s.userTeamId, role, n);
+                    const k = s.coaches[c.id]?.contract;
+                    return r.ok && k ? `Extended ${c.name}: ${k.years} seasons at ${formatMoney(k.salary, s.year)} a year.` : r.reason;
+                  })
+                }
+              >
+                Extend +{n} yrs · {formatMoney(extensionTerms(save, clubId, c, role).salary, save.year)}
+              </Btn>
+            ))}
           {c && !look && (
             <Btn kind="brick" onClick={() => desk((s) => {
               const r = deskFire(s, s.userTeamId, role);
@@ -1941,6 +1968,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "market", label: "Market" },
   { id: "standings", label: "Standings" },
   { id: "league", label: "League" },
+  { id: "moves", label: "Transactions" },
   { id: "schedule", label: "Schedule" },
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
@@ -1958,6 +1986,7 @@ const WATCH_TABS: { id: Tab; label: string }[] = [
   { id: "staff", label: "Staff" },
   { id: "standings", label: "Standings" },
   { id: "league", label: "League" },
+  { id: "moves", label: "Transactions" },
   { id: "schedule", label: "Schedule" },
   { id: "stats", label: "Stats" },
   { id: "draft", label: "Draft" },
@@ -2103,6 +2132,7 @@ function PlayShell() {
         )}
         {tab === "hof" && <HallOfFame />}
         {tab === "league" && <LeagueDirectory />}
+        {tab === "moves" && <Transactions />}
         <PlayerProfile />
         <TeamRosterModal />
         {save.realHistory && <HistoryBoxModal />}

@@ -381,6 +381,8 @@ export interface Coach {
   /** Interim head coach this season, and the club's record when he took over. */
   interimYear?: number;
   interimFrom?: { w: number; l: number };
+  /** His deal with the club he coaches for (coachContracts.ts): seasons left counting the one it's in. */
+  contract?: { teamId: TeamId; role: CoachRole; years: number; salary: number; signed: number };
 }
 
 /** One winter's coaching cycle: who was cut on Black Monday, the hot names, who talked to whom. */
@@ -1048,6 +1050,8 @@ export interface DynastySave {
   powerRanks?: Record<string, number>;
   salaryCap: number | null;
   carousel: CarouselMove[];
+  /** Past seasons' notable moves, kept when the live transaction log is trimmed (transactions.ts). */
+  txArchive?: Record<number, Transaction[]>;
   waiverOrder: TeamId[];
   waivers: WaiverWire[];
   faOpened: boolean;
