@@ -713,13 +713,39 @@ export function signFriends(save: DynastySave, clubs: TeamId[]): void {
   }
 }
 
-export function trimRoster(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): void {
+/** The active-roster limit: an era league carries the year's real one, the classic game its 45. */
+export function rosterCap(save: DynastySave): number {
+  if (!save.realPool) return ROSTER_TARGET;
+  const y = save.year;
+  if (y >= 1993) return 53;
+  if (y >= 1991) return 47;
+  if (y >= 1985) return 45;
+  if (y >= 1982) return 49;
+  if (y >= 1978) return 45;
+  if (y >= 1975) return 43;
+  if (y === 1974) return 47;
+  return 40;
+}
+
+/** He really opened this season with the club he's on (an era league's first year). */
+export function madeRealRoster(save: DynastySave, p: Player): boolean {
+  const o = save.openingRoster;
+  return !!o && o.year === save.year && o.keep[p.id] === p.teamId;
+}
+
+export function trimRoster(save: DynastySave, teamId: TeamId, cap = rosterCap(save)): void {
   pruneRoster(save, teamId);
   // Camp cuts weigh more than today's grade: a 22-year-old with a ceiling keeps his spot over a
   // 33-year-old a few points better, the way real clubs cut veterans for rookies every August.
+  // A man who really made the club that year keeps his spot first.
   const keepScore = (p: Player) =>
+    (madeRealRoster(save, p) ? 200 : 0) +
     p.ovr + (p.age <= 25 ? Math.min(6, Math.max(0, (p.potential ?? p.ovr) - p.ovr) * 0.5) : 0) - Math.max(0, p.age - 31);
-  const roster = rosterOf(save, teamId).slice().sort((a, b) => keepScore(b) - keepScore(a));
+  // An era league counts the active roster against the limit, as the league does: injured
+  // reserve doesn't take a spot.
+  const roster = rosterOf(save, teamId)
+    .filter((p) => !(save.realPool && p.onIR))
+    .sort((a, b) => keepScore(b) - keepScore(a));
   if (roster.length <= cap) return;
   const keep = new Set<string>();
   for (const [pos, need] of DEPTH_CHART) {

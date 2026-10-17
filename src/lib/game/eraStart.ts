@@ -698,10 +698,15 @@ export function createEraGame(o: EraOpts): DynastySave {
   const seasonPos = historyData().seasonPos(year);
   const spotOf = new Map<number, Pos>();
   let placed = rosters;
+  // On the club's reserve list in week one (injured reserve, PUP, a suspension).
+  const reserve = new Set<number>();
   if (opening.size) {
     placed = new Map();
     for (const [teamId, list] of opening) {
-      for (const { person, pos } of list) spotOf.set(person, pos);
+      for (const { person, pos, reserve: r } of list) {
+        spotOf.set(person, pos);
+        if (r) reserve.add(person);
+      }
       placed.set(teamId, list.map(({ person }) => ({ person, jersey: jerseyOf.get(`${teamId}|${person}`) })));
     }
   }
@@ -727,6 +732,11 @@ export function createEraGame(o: EraOpts): DynastySave {
       const born = historyData().people[person]?.birth;
       if (born) p.age = year - Number(born.slice(0, 4));
       p.yearsPro = Math.max(0, year - (historyData().firstSeason(person) ?? year));
+      if (reserve.has(person)) {
+        p.onIR = true;
+        p.injuredWeeks = Math.max(p.injuredWeeks, 6);
+        p.injuryName ??= "reserve list";
+      }
       t.roster.push(p.id);
     }
   }
@@ -741,6 +751,16 @@ export function createEraGame(o: EraOpts): DynastySave {
     } else p.teamId = "fa";
   }
   pruneRetired(s);
+  // Who really made each club that season, so the first cuts keep them: week one where the record
+  // has it (2002 on, with the rookies the club really kept), before that the men who played at
+  // least four games for the club.
+  const keep: Record<string, TeamId> = {};
+  if (opening.size) {
+    for (const [teamId, list] of opening) for (const { person } of list) keep[`r-${person.toString(36)}`] = teamId;
+  } else {
+    for (const row of historyData().stats(year)) if (row.team && (row.line.gp ?? 0) >= 4) keep[`r-${row.person.toString(36)}`] = row.team;
+  }
+  s.openingRoster = { year, keep };
   // The year's real head coaches, rated.
   s.year = year;
   seatCoaches(s);

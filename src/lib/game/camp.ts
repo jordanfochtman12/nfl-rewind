@@ -2,15 +2,20 @@
 import type { CampReport, DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
-import { DEPTH_CHART, fillRoster, movePlayer, playerName, rosterOf, syncDepth } from "./players.ts";
+import { DEPTH_CHART, fillRoster, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, syncDepth } from "./players.ts";
 import { signPlayer } from "./gm.ts";
 import { rand, randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
 
 const CAMP_BUGS = ["ankle", "hamstring", "shoulder", "groin", "knee", "wrist", "foot", "ribs"];
 
-function cpuTrim(save: DynastySave, teamId: TeamId, cap = ROSTER_TARGET): { playerId: string; teamId: TeamId }[] {
-  const roster = rosterOf(save, teamId).slice().sort((a, b) => b.ovr - a.ovr);
+function cpuTrim(save: DynastySave, teamId: TeamId, cap = rosterCap(save)): { playerId: string; teamId: TeamId }[] {
+  // The men who really made the club that year go first in line to stay.
+  const rank = (p: Player) => p.ovr + (madeRealRoster(save, p) ? 200 : 0);
+  // Injured reserve doesn't take an active spot in an era league.
+  const roster = rosterOf(save, teamId)
+    .filter((p) => !(save.realPool && p.onIR))
+    .sort((a, b) => rank(b) - rank(a));
   if (roster.length <= cap) return [];
   const keep = new Set<string>();
   for (const [pos, need] of DEPTH_CHART) {
@@ -111,7 +116,7 @@ export function resolveCamp(save: DynastySave): CampReport {
     if (id === save.userTeamId && !save.cpuOnly) {
       // The owner sets his own 45, but nobody carries more than the active limit into the
       // season: anything past it goes, lowest grades first, depth-chart starters protected.
-      const limit = ROSTER_TARGET + 8;
+      const limit = Math.max(ROSTER_TARGET + 8, rosterCap(save));
       staffFill(save, id);
       const mine = cpuTrim(save, id, limit);
       if (mine.length) {

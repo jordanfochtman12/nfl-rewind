@@ -994,6 +994,12 @@ export interface DynastySave {
   startingYear: number;
   /** A league begun from the record (eraStart.ts): each winter it signs that season's real free agents from it. */
   realPool?: boolean;
+  /**
+   * A league begun from the record: who really opened that first season with each club
+   * (player id -> club). Through that season's cuts they keep their spots unless a cut can't be
+   * avoided; the rookies the club really kept are in it too, for when the draft hands them over.
+   */
+  openingRoster?: { year: number; keep: Record<string, TeamId> };
   /** Loaded from disk without its record players' real seasons before this year: they come back from the record (restoreRecordLines). */
   recordLinesBefore?: number;
   year: number;

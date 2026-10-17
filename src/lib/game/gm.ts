@@ -14,7 +14,7 @@ import type {
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { posLabel } from "./posLabel.ts";
-import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
@@ -111,8 +111,24 @@ export function enforceCapCompliance(save: DynastySave): void {
     // real life - everyone else has had years to plan around the cap and can
     // be cut deep enough to actually reach compliance.
     const floor = lastYearIds.has(id) ? 0 : 40;
+    // Over the cap, a front office restructures before it cuts: the big deals give back some of
+    // this year's money for an extra year on the back end. Cutting by "most overpaid" alone had
+    // the 2006 Chiefs releasing Tony Gonzalez and the Ravens Jonathan Ogden at final cuts.
+    const over = () => teamPayroll(save, id) - cap;
+    if (over() > 0) {
+      const deals = rosterOf(save, id)
+        .filter((p) => p.ovr >= 78 && p.contractYears >= 1 && p.salary > salaryFor(save.year, 70, p.age, p.pos))
+        .sort((a, b) => b.salary - a.salary);
+      for (const p of deals) {
+        if (over() <= 0) break;
+        const give = Math.min(Math.round(p.salary * 0.3), over() + 250_000);
+        p.salary = Math.round((p.salary - give) / 10_000) * 10_000;
+        p.contractYears += 1;
+      }
+      save.teams[id]!.payroll = teamPayroll(save, id);
+    }
     let guard = 0;
-    while (teamPayroll(save, id) > cap && guard++ < 60) {
+    while (over() > 0 && guard++ < 60) {
       const roster = rosterOf(save, id);
       if (roster.length <= floor) break;
       const cuttable = roster.filter((p) => roster.filter((x) => x.pos === p.pos).length > 1);
@@ -124,18 +140,26 @@ export function enforceCapCompliance(save: DynastySave): void {
       // getting cut and backfilled with a fresh, mediocre generated replacement far
       // more often than a real front office would ever let happen.
       const qb1 = roster.filter((p) => p.pos === "QB").sort((a, b) => b.ovr - a.ovr)[0];
-      const pool = qb1 ? cuttable.filter((p) => p.id !== qb1.id) : cuttable;
-      const candidates = pool.length ? pool : cuttable;
+      // Then the cap casualties a real club picks: an overpaid backup first, then a starter who
+      // isn't a star; a star or the quarterback only when nothing else gets them under.
+      const starters = new Set(roster.slice().sort((a, b) => b.ovr - a.ovr).slice(0, 24).map((p) => p.id));
+      const real = (p: Player) => madeRealRoster(save, p);
+      const tiers = [
+        cuttable.filter((p) => !starters.has(p.id) && p.id !== qb1?.id && !real(p)),
+        cuttable.filter((p) => !starters.has(p.id) && p.id !== qb1?.id),
+        cuttable.filter((p) => p.ovr < 85 && p.id !== qb1?.id),
+        cuttable.filter((p) => p.id !== qb1?.id),
+        cuttable,
+      ];
       // ovr/salary alone picks the highest earner almost every time regardless of
       // whether he's actually good - salary swings by 100x across the roster while
       // ovr swings by maybe 2x, so it drowned out skill entirely and was gutting
       // franchise QBs and other properly-paid stars instead of bad contracts.
       // Cut whoever is furthest above what their ovr/age would actually cost at
       // market rate - the real "cap casualty" candidate, not just the best player.
-      const worst = candidates.sort(
-        (a, b) =>
-          b.salary - salaryFor(save.year, b.ovr, b.age, b.pos) - (a.salary - salaryFor(save.year, a.ovr, a.age, a.pos)),
-      )[0]!;
+      const surplus = (p: Player) => p.salary - salaryFor(save.year, p.ovr, p.age, p.pos);
+      const pool = tiers.find((t) => t.some((p) => surplus(p) > 0)) ?? tiers.find((t) => t.length)!;
+      const worst = pool.sort((a, b) => surplus(b) - surplus(a))[0]!;
       cutPlayer(save, id, worst.id);
     }
   }
@@ -608,16 +632,20 @@ export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
   if (teamId === save.userTeamId && !save.cpuOnly) return;
   const t = save.teams[teamId];
   if (!t?.active) return;
-  const roster = rosterOf(save, teamId);
-  if (roster.length > ROSTER_TARGET) {
+  // Injured reserve doesn't take an active spot in an era league.
+  const roster = rosterOf(save, teamId).filter((p) => !(save.realPool && p.onIR));
+  const cap = rosterCap(save);
+  if (roster.length > cap) {
+    // A man who really made the club that year (an era league's first season) is cut last.
+    const keep = (p: Player) => (madeRealRoster(save, p) ? 200 : 0);
     const extras = roster
       .filter((p) => !LAST_POS.includes(p.pos) || roster.filter((x) => x.pos === p.pos).length > 1)
       .sort((a, b) => {
-        const fitA = a.ovr + schemeFitPos(a.pos, t.offScheme, t.defScheme) - (a.age >= 30 ? 4 : 0);
-        const fitB = b.ovr + schemeFitPos(b.pos, t.offScheme, t.defScheme) - (b.age >= 30 ? 4 : 0);
+        const fitA = keep(a) + a.ovr + schemeFitPos(a.pos, t.offScheme, t.defScheme) - (a.age >= 30 ? 4 : 0);
+        const fitB = keep(b) + b.ovr + schemeFitPos(b.pos, t.offScheme, t.defScheme) - (b.age >= 30 ? 4 : 0);
         return fitA - fitB;
       });
-    const cutN = Math.min(roster.length - ROSTER_TARGET, extras.length);
+    const cutN = Math.min(roster.length - cap, extras.length);
     for (let i = 0; i < cutN; i++) {
       const p = extras[i];
       if (p) cutPlayer(save, teamId, p.id);
