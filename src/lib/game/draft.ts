@@ -14,7 +14,8 @@ import { applyScout, visibleOvr } from "./scout.ts";
 import { rookieContract } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
-import { arcTarget, honorsFloor, lookupArc, moveToward, projectedOnly } from "./careerArc.ts";
+import { arcTarget, gradeTo, honorsFloor, lookupArc, moveToward, projectedOnly } from "./careerArc.ts";
+import { OWNER_GRADES } from "./data/ownerGrades.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
 import { friendBreaksOut, friendCeiling, friendOf } from "./data/friends.ts";
@@ -319,6 +320,16 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
       p.potential = p.ovr;
     }
     moveToward(p, start);
+    p.peakOvr = p.ovr;
+    p.scoutOvr = p.ovr;
+  }
+  // The owner's grade from the QB board: his overall on draft day and the peak he climbs to.
+  // The owner's friends keep their own start, hidden ceiling and breakout (data/friends.ts).
+  const grade = audited && !friend ? OWNER_GRADES[`${save.year}|${s.f}|${s.l}`] : undefined;
+  if (grade) {
+    gradeTo(p, grade.d);
+    p.potential = Math.max(grade.p, p.ovr);
+    p.arcGap = p.potential - p.ovr;
     p.peakOvr = p.ovr;
     p.scoutOvr = p.ovr;
   }

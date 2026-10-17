@@ -5,11 +5,12 @@
  * age at draft) he now arrives raw, climbs to that peak on a realistic ramp, holds it for
  * the stretch he actually held it, fades at the end, and retires the year he really did.
  */
-import type { Player, Pos } from "./types.ts";
+import type { Player, Pos, RatingKey } from "./types.ts";
 import { CAREER_ARCS, VET_ARCS, type CareerArcRow, type VetArcRow } from "./data/careerArcs.ts";
 import { UNDRAFTED_ARCS } from "./data/undrafted.ts";
 import { AUDIT_ARCS, AUDIT_VET_ARCS } from "./data/auditPlayers.ts";
 import { applyAgeDelta } from "./profiles.ts";
+import { deriveOvr, primaryKeys } from "./ratings.ts";
 import { clamp } from "./rng.ts";
 
 /** Last season the source data can speak to; careers still going then are open-ended. */
@@ -68,6 +69,7 @@ const SUPPLEMENTAL: Record<string, { dy: number; row: CareerArcRow }> = {
   "bernie|kosar": { dy: 1985, row: [1996, 9, 124, 1, 0, 21] },
   "cris|carter": { dy: 1987, row: [2002, 12, 234, 8, 2, 21] },
   "brian|bosworth": { dy: 1987, row: [1989, 2, 24, 0, 0, 22] },
+  "steve|young": { dy: 1984, row: [1999, 10, 169, 7, 3, 22] },
 };
 
 function lookupArcRow(year: number, first: string, last: string): Player["arc"] | undefined {
@@ -231,6 +233,8 @@ export function arcTarget(p: Player, idx: number): number {
   else if (round >= 4) gap += 3;
   if (neverPlayed(arc)) gap = 3;
   gap = Math.round(clamp(gap, 1, 18));
+  // The owner set his draft-day grade and his peak: the climb between them is his.
+  if (p.arcGap !== undefined) gap = p.arcGap;
 
   const ramp = L <= 2 ? 1 : Math.round(clamp(L * 0.3, 1, p.pos === "QB" ? 5 : 4));
   const decline = L >= 6 ? Math.round(clamp(L * 0.25, 1, 4)) : L >= 3 ? 1 : 0;
@@ -243,6 +247,32 @@ export function arcTarget(p: Player, idx: number): number {
     return Math.round(peak - endDrop * frac);
   }
   return peak;
+}
+
+/**
+ * Set an owner's grade exactly. His core skills move a point at a time, so the overall can't
+ * skip past the target; release, then pocket movement, rise only once those top out. Speed
+ * stays at his real 40 time. A grade his ratings can't carry stops at the closest one they can.
+ */
+export function gradeTo(p: Player, target: number): void {
+  const bump = (keys: RatingKey[], d: number): boolean => {
+    let moved = false;
+    for (const k of keys) {
+      const v = clamp(p.ratings[k] + d, 25, 99);
+      if (v !== p.ratings[k]) {
+        p.ratings[k] = v;
+        moved = true;
+      }
+    }
+    return moved;
+  };
+  const core = primaryKeys(p.pos);
+  for (let i = 0; i < 400 && p.ovr !== target; i++) {
+    const up = target > p.ovr;
+    const moved = up ? bump(core, 1) || bump(["rel"], 1) || bump(["agi"], 1) : bump(core, -1) || bump(["rel"], -1);
+    if (!moved) return;
+    p.ovr = deriveOvr(p.pos, p.ratings);
+  }
 }
 
 /** Nudge ratings until overall lands on target (ovr is derived, so one shift isn't exact). */

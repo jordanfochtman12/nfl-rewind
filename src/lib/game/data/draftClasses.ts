@@ -1174,6 +1174,41 @@ function dedupeSpellings(year: number, out: DraftSeed[]): void {
  * player audit (position, college, round, height, weight), plus the real players the
  * catalogs never had (draft picks who played, and undrafted players who stuck).
  */
+/**
+ * One man, one draft class. The sources list some players in two or three classes: a pick who
+ * didn't sign and went back in (Erickson, Bo Jackson), a supplemental pick (Cris Carter, Steve
+ * Young), or a row filed under the wrong year. He stays in the class he signed out of.
+ * Fathers and sons from the same school (the Matthewses, the Runyans) are two people and stay.
+ */
+const EXTRA_CLASS = new Set([
+  "1966|Randy|Matson",
+  "1967|John|Robinson",
+  "1967|Clarence|Spencer",
+  "1969|Willie|Davenport",
+  "1970|Brownie|Wheless",
+  "1970|Chris|Myers",
+  "1971|Steve|Booras",
+  "1973|Charlie|Hall",
+  "1973|Charlie|Johnson",
+  "1978|Reggie|Williams",
+  "1980|Mike|Davis",
+  "1980|Johnny|Robinson",
+  "1984|Sean|Landeta",
+  "1984|Ron|Holmes",
+  "1984|Keith|Jackson",
+  "1985|Gary|Clark",
+  "1985|Matt|Darwin",
+  "1986|Bo|Jackson",
+  "1988|Cris|Carter",
+  "1989|Cris|Carter",
+  "1989|Mel|Bratton",
+  "1991|Craig|Erickson",
+  "1992|Keith|Jackson",
+  "2002|David|Martin",
+  "2003|John|Henderson",
+  "2005|Josh|Brown",
+]);
+
 export function draftSeedsFor(year: number): DraftSeed[] {
   const out = draftSeedsBase(year);
   for (const s of out) {
@@ -1202,6 +1237,7 @@ export function draftSeedsFor(year: number): DraftSeed[] {
   }
   for (const fr of FRIENDS[year] ?? []) out.push({ ...fr });
   dedupeSpellings(year, out);
+  for (let i = out.length - 1; i >= 0; i--) if (EXTRA_CLASS.has(`${year}|${out[i].f}|${out[i].l}`)) out.splice(i, 1);
   for (const x of out) if (x.c && SCHOOL_NAMES[x.c]) x.c = SCHOOL_NAMES[x.c];
   if (added)
     out.sort((a, b) => {

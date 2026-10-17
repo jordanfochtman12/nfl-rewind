@@ -3,7 +3,7 @@ import { rand, randInt } from "./rng.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
-import { arcRetiresNow, arcTarget, moveToward } from "./careerArc.ts";
+import { arcRetiresNow, arcTarget, gradeTo, moveToward } from "./careerArc.ts";
 
 const PEAK: Record<Pos, number> = {
   QB: 30,
@@ -106,7 +106,10 @@ export function agePlayer(save: DynastySave, p: Player): void {
     let target = arcTarget(p, save.year - p.arc.dy);
     if (rand(save) < 0.3) target += randInt(save, -1, 1);
     if (devBump > 0 && rand(save) < devBump) target += 1;
-    moveToward(p, Math.min(target, pot + 1));
+    const want = Math.min(target, pot + 1);
+    moveToward(p, want);
+    // An owner-graded peak can sit past where the usual shifts top out (a slow passer at 96).
+    if (p.arcGap !== undefined && p.ovr < want) gradeTo(p, want);
   } else {
   let delta = 0;
   // A young player grows by how far he still has to go, the way a real draftee climbs his arc:

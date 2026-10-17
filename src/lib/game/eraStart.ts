@@ -17,7 +17,7 @@ import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { FRIENDS } from "./data/friends.ts";
-import { arcTarget, calibrateVetPeak, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
+import { arcTarget, calibrateVetPeak, gradeTo, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
 import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, retiredFor, rosterOf, signFriends, signRealFa, syncDepth } from "./players.ts";
 import { jerseyFor } from "./names.ts";
 import { randInt } from "./rng.ts";
@@ -171,14 +171,17 @@ export function rateReal(save: DynastySave, p: Player, year: number): void {
     p.forty ??= made.forty;
     p.arc = made.arc ?? arc;
     p.potential = made.arc ? made.potential : Math.max(made.potential, honorsFloor(arc, p.pos));
+    p.arcGap = made.arcGap;
     delete save.players[made.id];
     const idx = year - p.draftYear!;
     let peak = p.ovr;
     for (let i = 0; i <= idx; i++) peak = Math.max(peak, arcTarget(p, i));
     moveToward(p, arcTarget(p, idx));
+    if (p.arcGap !== undefined && p.ovr < arcTarget(p, idx)) gradeTo(p, arcTarget(p, idx));
     // Production can't lift him past his real peak, but a lean arc gives way to a big year.
+    // An owner-graded peak is his peak: production doesn't move it.
     const real = productionOvr(p, year);
-    if (real > p.ovr + 2) {
+    if (real > p.ovr + 2 && p.arcGap === undefined) {
       // A late bloomer's real peak came after the counting stats that set his seed: Gannon's
       // journeyman years capped him below the MVP he became. What he's doing now sets it, and a
       // final season after a 2,000-yard one (Barry Sanders, 1998) doesn't start on the fade.

@@ -283,6 +283,8 @@ export interface Player {
   career: SeasonStats[];
   /** The round history actually took him in (real draftees), for draft retrospectives. */
   realRound?: number;
+  /** The owner graded him (scripts/qb-grades.json): how far below his peak he arrives on draft day. */
+  arcGap?: number;
   /** The club that drafted him in this dynasty. */
   draftTeam?: TeamId;
   /** Announced final season (a real player's farewell tour). */

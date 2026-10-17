@@ -62,7 +62,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Roy", l: "Green", p: "WR", c: "Henderson State", o: 82, r: 4 },
     { f: "Mark", l: "Bavaro", p: "TE", c: "Notre Dame", o: 72, r: 4 },
     { f: "Reggie", l: "White", p: "DE", c: "Tennessee", o: 88, r: 1 },
-    { f: "Steve", l: "Young", p: "QB", c: "BYU", o: 84, r: 1 },
   ],
   1984: [
     { f: "Keith", l: "Byars", p: "RB", c: "Ohio State", o: 74, r: 1 },
@@ -245,7 +244,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Rodney", l: "Harrison", p: "S", c: "Western Illinois", o: 86, r: 5 },
     { f: "Adam", l: "Vinatieri", p: "K", c: "South Dakota State", o: 86, r: 0 },
     { f: "Wane", l: "McGarity", p: "WR", c: "Texas", o: 70, r: 4 },
-    { f: "Bret", l: "Favre", p: "QB", c: "Southern Miss", o: 70, r: 2 },
   ],
   1995: [
     { f: "J.J.", l: "Stokes", p: "WR", c: "UCLA", o: 76, r: 1 },

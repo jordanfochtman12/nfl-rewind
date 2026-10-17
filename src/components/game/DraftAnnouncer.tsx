@@ -82,8 +82,15 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const serial = useRef(0);
   const ownsSpeech = useRef(false);
   const watchdog = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // A pick that comes in while the podium or the desk is still talking waits for the sentence
+  // to finish instead of cutting it off; only the latest one waits (Auto skips ahead).
+  const onAir = useRef(false);
+  const pending = useRef<Parameters<typeof speak> | null>(null);
+  const speakRef = useRef<typeof speak | null>(null);
   const stop = useCallback(() => {
     serial.current++;
+    onAir.current = false;
+    pending.current = null;
     clearTimeout(watchdog.current);
     audio.current?.stop();
     if (ownsSpeech.current && "speechSynthesis" in window) cancelSpeech();
@@ -140,6 +147,10 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   };
   const speak = useCallback(
     (text: string, response?: DraftReaction | null, nextLine?: string, desk?: string, round = 1, guest?: { name: string; line: string }) => {
+      if (onAir.current) {
+        pending.current = [text, response, nextLine, desk, round, guest];
+        return;
+      }
       stop();
       if (!("speechSynthesis" in window)) {
         setError("Draft narration is unavailable in this browser.");
@@ -167,6 +178,22 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
       // Round one is read at the podium's pace; the later rounds move.
       const pace = round <= 1 ? 0.95 : 1.08;
       setBusy(true);
+      onAir.current = true;
+      // The last line is through: the pick that waited goes on next, a beat later (iOS drops a
+      // line started the instant another ends), or the room is free for the next club.
+      const done = () => {
+        if (serial.current !== token) return;
+        onAir.current = false;
+        const next = pending.current;
+        pending.current = null;
+        if (!next) {
+          setBusy(false);
+          return;
+        }
+        setTimeout(() => {
+          if (serial.current === token) speakRef.current?.(...next);
+        }, 150);
+      };
       const read = (words: string, onEnd: () => void, who = readerKey) => {
         const reader = cast.get(who);
         const chosen = reader?.voice;
@@ -214,7 +241,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           // The room reacts under the desk's take instead of holding the show for it.
           if (response) void playReaction(response, token, true);
           if (serial.current !== token) return;
-          const clock = () => (nextLine ? read(nextLine, () => setBusy(false)) : setBusy(false));
+          const clock = () => (nextLine ? read(nextLine, done) : done());
           // The owner's own pick: the draftee on the phone before the next club comes up.
           const call = () => (guest ? read(guest.line, clock, `guest:${guest.name}`) : clock());
           if (desk) read(desk, call, "DESK");
@@ -224,6 +251,9 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
     },
     [save.year, stop, voices, voice, volume, playReaction],
   );
+  useEffect(() => {
+    speakRef.current = speak;
+  }, [speak]);
   // Sound that starts on is set up here; the first tap anywhere wakes it.
   useEffect(() => {
     if (save.phase !== "draft" || !inRoom) return;

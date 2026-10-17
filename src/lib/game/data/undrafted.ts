@@ -96,6 +96,7 @@ export const UNDRAFTED_ARCS: Record<string, { dy: number; row: CareerArcRow }> =
   "everson|walls": { dy: 1981, row: [1993, 12, 183, 4, 1, 21] },
   "nate|newton": { dy: 1986, row: [1999, 13, 198, 6, 1, 24] },
   "warren|moon": { dy: 1984, row: [2000, 13, 208, 9, 1, 27] },
+  "jim|hart": { dy: 1966, row: [1984, 13, 201, 4, 0, 22] },
   "adam|vinatieri": { dy: 1996, row: [2019, 23, 365, 3, 3, 23] },
   // new to the classes
   "emmitt|thomas": { dy: 1966, row: [1978, 11, 181, 5, 1, 23] },
