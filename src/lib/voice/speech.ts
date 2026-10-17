@@ -58,6 +58,10 @@ export function forgetAudio(c: AudioContext): void {
 export function unlockAudio(): void {
   for (const c of others) if (c.state === "suspended") void c.resume().catch(() => undefined);
   if (typeof window === "undefined") return;
+  // A voice on the air is proof the sound is already unlocked. While it talks, an iPhone marks
+  // the page's own audio "interrupted", and waking it again (or changing the audio mode) stops
+  // the voice: every touch, even the start of a scroll, used to cut the line off.
+  if (lines > 0 || ("speechSynthesis" in window && window.speechSynthesis.speaking)) return;
   try {
     const s = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
     if (s && s.type !== "playback") s.type = "playback";
@@ -164,29 +168,67 @@ export function speakLine(u: SpeechSynthesisUtterance): void {
   const synth = window.speechSynthesis;
   // A stuck engine (iOS after an interruption) won't read anything until it's resumed.
   if (synth.paused) synth.resume();
-  const chunks = u.text.length > 180 ? chunk(u.text) : [u.text];
-  if (chunks.length === 1) {
-    synth.speak(u);
-    return;
-  }
   // Phone engines cut a long utterance off partway (Chrome at about 15 seconds): a long
   // line is read as its sentences, one utterance each, and ends when the last one does.
+  const pieces = u.text.length > 180 ? chunk(u.text) : [u.text];
+  readPieces(u, pieces, mine);
+}
+
+/**
+ * Read a line's pieces in order. A phone stops the voice on its own when other sound wakes up
+ * (a tap that starts the crowd or the music on an iPhone): a piece cut off that way, when
+ * nobody here cancelled it, picks up again from the word it was on instead of ending the line.
+ */
+function readPieces(u: SpeechSynthesisUtterance, pieces: string[], mine: number): void {
+  const synth = window.speechSynthesis;
   let failed = false;
-  chunks.forEach((t, i) => {
-    const part = new SpeechSynthesisUtterance(t);
+  const say = (text: string, last: boolean, tries: number) => {
+    const part = new SpeechSynthesisUtterance(text);
     part.voice = u.voice;
     part.rate = u.rate;
     part.pitch = u.pitch;
     part.volume = u.volume;
     part.lang = u.lang;
-    if (i === chunks.length - 1) part.onend = (ev) => u.onend?.call(u, ev);
+    // Where the voice got to: the start of the word it's on.
+    let at = -1;
+    part.onboundary = (ev) => {
+      if (ev.name === "word" || ev.name === undefined) at = ev.charIndex;
+    };
+    let settled = false;
+    const resume = (): boolean => {
+      // Cut off by us (cancelSpeech) or tried enough: this piece is over.
+      if (mine !== gen || tries >= 3) return false;
+      const rest = text.slice(Math.max(0, at)).trim();
+      if (!rest) return false;
+      globalThis.setTimeout(() => {
+        if (mine !== gen) return;
+        if (synth.paused) synth.resume();
+        say(rest, last, tries + 1);
+      }, 250);
+      return true;
+    };
+    part.onend = (ev) => {
+      if (settled) return;
+      settled = true;
+      // Ended with words still to say (the engine reported where it was) and nothing queued
+      // behind it: the phone cut it off.
+      const left = at >= 0 ? text.slice(at).trim().split(/\s+/).filter(Boolean).length : 0;
+      if (left > 2 && !synth.pending && resume()) return;
+      if (last) u.onend?.call(u, ev);
+    };
     part.onerror = (ev) => {
+      if (settled) return;
+      settled = true;
+      const kind = (ev as SpeechSynthesisErrorEvent).error;
+      if ((kind === "interrupted" || kind === "canceled" || kind === "audio-busy") && resume()) return;
       if (failed) return;
       failed = true;
       u.onerror?.call(u, ev);
     };
     synth.speak(part);
-  });
+  };
+  // Every piece is handed over now, so lines queued after this one still read after it.
+  pieces.forEach((t, k) => say(t, k === pieces.length - 1, 0));
 }
 
 /** Stop whatever is being read. */
