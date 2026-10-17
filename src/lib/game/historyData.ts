@@ -47,6 +47,12 @@ export type HistoryLine = Partial<Record<keyof SeasonStats, number>>;
 export interface HistoryData {
   people: HistoryPerson[];
   rosters(year: number): Map<TeamId, { person: number; jersey?: number }[]>;
+  /** Week one of the regular season, club by club, at the spot each man played (2002 on; empty before). */
+  opening(year: number): Map<TeamId, { person: number; pos: Pos }[]>;
+  /** The position a person played that season, where it's another unit than his career one. */
+  seasonPos(year: number): Map<number, Pos>;
+  /** That season's honors: 1 first-team All-Pro, 2 second-team, p Pro Bowl. */
+  honors(year: number): Map<number, "1" | "2" | "p">;
   stats(year: number): { person: number; team: TeamId | ""; line: HistoryLine }[];
   playoffs(year: number): HistoryPlayoffGame[];
   drafts(year: number): HistoryPick[];
@@ -102,6 +108,9 @@ export function parseHistory(mods: {
   SERIES_BEFORE?: Record<string, [number, number, number, number, string, string, number]>;
   RECORD_MOMENTS?: string;
   RECORDS_1966?: Record<string, [string, number, number]>;
+  OPENING?: Record<number, string>;
+  SEASON_POS?: Record<number, string>;
+  HONORS?: Record<number, string>;
 }): HistoryData {
   const people = mods.PEOPLE.split("\n").map((l) => {
     const [first, last, pos, birth, college] = l.split("|");
@@ -294,9 +303,45 @@ export function parseHistory(mods: {
       }),
   );
   const hof = memo((y) => (mods.HOF_CLASSES[y] ?? "").split("/").filter(Boolean).map(ref));
+  const opening = memo((y) => {
+    const out = new Map<TeamId, { person: number; pos: Pos }[]>();
+    for (const chunk of (mods.OPENING?.[y] ?? "").split(";")) {
+      if (!chunk) continue;
+      const [team, list] = chunk.split(":");
+      out.set(
+        team as TeamId,
+        (list ?? "").split(",").filter(Boolean).map((e) => {
+          const [i, pos] = e.split(".");
+          return { person: id36(i!), pos: pos as Pos };
+        }),
+      );
+    }
+    return out;
+  });
+  const seasonPos = memo((y) => {
+    const out = new Map<number, Pos>();
+    for (const e of (mods.SEASON_POS?.[y] ?? "").split(",")) {
+      if (!e) continue;
+      const [i, pos] = e.split(".");
+      out.set(id36(i!), pos as Pos);
+    }
+    return out;
+  });
+  const honors = memo((y) => {
+    const out = new Map<number, "1" | "2" | "p">();
+    for (const e of (mods.HONORS?.[y] ?? "").split(",")) {
+      if (!e) continue;
+      const [i, code] = e.split(".");
+      out.set(id36(i!), code as "1" | "2" | "p");
+    }
+    return out;
+  });
   return {
     people,
     rosters,
+    opening,
+    seasonPos,
+    honors,
     stats,
     playoffs,
     drafts,
@@ -329,7 +374,9 @@ export function loadHistoryData(): Promise<HistoryData> {
     import("./data/history/before1966.ts"),
     import("./data/history/recordMoments.ts"),
     import("./data/history/coordinators.ts"),
-  ]).then(([p, r, s, po, d, a, h, c, t, b, rm, co]) =>
+    import("./data/history/opening.ts"),
+    import("./data/history/honors.ts"),
+  ]).then(([p, r, s, po, d, a, h, c, t, b, rm, co, op, hn]) =>
     parseHistory({
       PEOPLE: p.PEOPLE,
       ROSTERS: r.ROSTERS,
@@ -341,6 +388,9 @@ export function loadHistoryData(): Promise<HistoryData> {
       HOF_CLASSES: h.HOF_CLASSES,
       COACHES: c.COACHES,
       COORDINATORS: co.COORDINATORS,
+      OPENING: op.OPENING,
+      SEASON_POS: op.SEASON_POS,
+      HONORS: hn.HONORS,
       TRADES: t.TRADES,
       FRANCHISE_BEFORE: b.FRANCHISE_BEFORE,
       SERIES_BEFORE: b.SERIES_BEFORE,

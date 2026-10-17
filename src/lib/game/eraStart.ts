@@ -140,6 +140,86 @@ function productionOvr(p: Player, year: number): number {
   return Math.round(clamp(v, 48, 95));
 }
 
+/**
+ * How good a real player was the season a league opens on, from that season itself: the career
+ * arc is a smooth curve through a man's prime, and the year a league starts on can sit anywhere
+ * on it (Brett Favre's 2006 was no 95; Larry Johnson's 1,789 yards were no 85).
+ * - That season's honors set a floor: first-team All-Pro, second team, the Pro Bowl, the MVP.
+ * - Where the box score measures the job (passers, runners, receivers, kickers), that season's
+ *   line, with the one before it, pulls the rating toward what he really did.
+ * - No honor that season or either side of it, and no 90s: those are for the men who won them.
+ */
+const HONOR_BAND = { "1": 93, "2": 90, p: 87 } as const;
+const MEASURED: ReadonlySet<Pos> = new Set(["QB", "RB", "WR", "TE", "K", "P"]);
+const DEFENSE: ReadonlySet<Pos> = new Set(["DE", "DT", "OLB", "MLB", "CB", "S"]);
+/** The season's line has the stat his position is judged on. */
+function recorded(pos: Pos, st: SeasonStats): boolean {
+  if (pos === "DE" || pos === "DT" || pos === "OLB") return st.sacks !== undefined;
+  if (pos === "MLB") return st.tackles !== undefined;
+  if (pos === "CB" || pos === "S") return st.ints !== undefined;
+  return true;
+}
+const seasonLines = new Map<number, Map<number, SeasonStats>>();
+function seasonLine(person: number, year: number): SeasonStats | undefined {
+  let byPerson = seasonLines.get(year);
+  if (!byPerson) {
+    byPerson = new Map();
+    for (const { person: who, line } of historyData().stats(year)) {
+      const have = byPerson.get(who) ?? ({ year } as SeasonStats);
+      for (const [k, v] of Object.entries(line)) {
+        if (typeof v === "number") (have as unknown as Record<string, number>)[k] = ((have as unknown as Record<string, number>)[k] ?? 0) + v;
+      }
+      byPerson.set(who, have);
+    }
+    seasonLines.set(year, byPerson);
+  }
+  return byPerson.get(person);
+}
+function openingLevel(p: Player, year: number): number | undefined {
+  if (!p.id.startsWith("r-") || p.yearsPro < 1) return undefined;
+  const person = parseInt(p.id.slice(2), 36);
+  const h = historyData();
+  const honor = (y: number) => h.honors(y).get(person);
+  const awards = h.awards(year);
+  const won = (k: string) => (awards[k] ?? []).includes(person);
+  let floor = 0;
+  const now = honor(year);
+  const after = honor(year + 1);
+  // Honored the seasons around it too: a fixture at the top, not a one-year pick.
+  if (now) floor = HONOR_BAND[now] + (honor(year - 1) ? 1 : 0) + (after ? 1 : 0) + (honor(year - 1) === "1" && now === "1" ? 1 : 0);
+  const before = honor(year - 1);
+  if (before) floor = Math.max(floor, HONOR_BAND[before] - 2);
+  if (won("mvp")) floor = Math.max(floor, 97);
+  if (won("opoy") || won("dpoy")) floor = Math.max(floor, 95);
+  let level = p.ovr;
+  // That season and the two before it, the nearest counting most. A defender's line counts
+  // only where the record kept his stat (sacks from 1982, tackles from 1999) and counts less:
+  // the box score sees less of his job.
+  const weights = [0.5, 0.35, 0.15];
+  let sum = 0;
+  let total = 0;
+  [year, year - 1, year - 2].forEach((y, k) => {
+    const st = seasonLine(person, y);
+    if (!st || !recorded(p.pos, st)) return;
+    const v = lineScore(p.pos, st);
+    if (v === undefined) return;
+    sum += v * weights[k]!;
+    total += weights[k]!;
+  });
+  if (total > 0) {
+    const prod = sum / total;
+    const share = MEASURED.has(p.pos) ? 0.7 : DEFENSE.has(p.pos) ? 0.4 : 0;
+    level = Math.round(level * (1 - share) + prod * share);
+  }
+  level = Math.max(level, floor);
+  // The 90s are for the men honored around this season; nobody else is that good.
+  const honoredNear = now || before || after;
+  // Where the record has no Pro Bowl rosters for the season, a Pro Bowler can't be told apart.
+  const pbKnown = [...h.honors(year).values()].filter((c) => c === "p").length >= 20;
+  if (!honoredNear) level = Math.min(level, (p.pos === "QB" ? 88 : 86) + (pbKnown ? 0 : 2));
+  return level;
+}
+
 type Seed = ReturnType<typeof draftSeedsFor>[number];
 const classes = new Map<number, Map<string, Seed>>();
 
@@ -540,6 +620,21 @@ export function createEraGame(o: EraOpts): DynastySave {
     }
   }
   const rosters = historyData().rosters(year);
+  // Week one where the record has it (2002 on): the men the club really opened with, not
+  // everyone it had at some point that season (December signings, the practice squad).
+  const opening = historyData().opening(year);
+  const jerseyOf = new Map<string, number>();
+  for (const [teamId, list] of rosters) for (const { person, jersey } of list) if (jersey) jerseyOf.set(`${teamId}|${person}`, jersey);
+  const seasonPos = historyData().seasonPos(year);
+  const spotOf = new Map<number, Pos>();
+  let placed = rosters;
+  if (opening.size) {
+    placed = new Map();
+    for (const [teamId, list] of opening) {
+      for (const { person, pos } of list) spotOf.set(person, pos);
+      placed.set(teamId, list.map(({ person }) => ({ person, jersey: jerseyOf.get(`${teamId}|${person}`) })));
+    }
+  }
   const on = new Set<string>();
   for (const id of Object.keys(s.teams) as TeamId[]) {
     const t = s.teams[id]!;
@@ -547,11 +642,13 @@ export function createEraGame(o: EraOpts): DynastySave {
     t.depth = {};
     t.active = activeTeamIds(year).includes(id);
   }
-  for (const [teamId, list] of rosters) {
+  for (const [teamId, list] of placed) {
     const t = s.teams[teamId];
     if (!t) continue;
     for (const { person, jersey } of list) {
       if (rookies.has(person)) continue;
+      // 1987's strike games: the replacement players weren't anyone's opening roster.
+      if (year === 1987 && historyData().firstSeason(person) === 1987 && historyData().lastSeason(person) === 1987) continue;
       const p = playerFor(s, person, year, teamId);
       if (on.has(p.id)) continue;
       on.add(p.id);
@@ -585,6 +682,26 @@ export function createEraGame(o: EraOpts): DynastySave {
   for (const p of Object.values(s.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     rateReal(s, p, year);
+    // The spot he played that season (a corner moved to safety, an end stood up at
+    // linebacker), at the level he's rated.
+    if (!p.id.startsWith("r-")) continue;
+    const person = parseInt(p.id.slice(2), 36);
+    const spot = spotOf.get(person) ?? seasonPos.get(person);
+    if (spot && spot !== p.pos) {
+      const level = p.ovr;
+      p.pos = spot;
+      p.ovr = deriveOvr(spot, p.ratings);
+      moveToward(p, level);
+    }
+    // Rated on the season the league opens on (an owner-graded peak is still his ceiling).
+    const level = openingLevel(p, year);
+    if (level !== undefined && level !== p.ovr) {
+      const target = p.arcGap !== undefined ? Math.min(level, p.potential) : level;
+      moveToward(p, target);
+      if (p.ovr < target) gradeTo(p, target);
+      p.potential = Math.max(p.potential, p.ovr);
+      p.peakOvr = Math.max(p.peakOvr, p.ovr);
+    }
   }
   // The owner's own undrafted class (data/friends.ts) is in the league however late it starts:
   // a class already past is on the market, a few seasons further along.
