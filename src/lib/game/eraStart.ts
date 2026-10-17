@@ -12,6 +12,7 @@
  * From the start season on it's a dynasty like any other: the real draft classes keep coming
  * while the record has them, then the game makes its own.
  */
+import { ageBodyBetween } from "./body.ts";
 import { advanceHistory, coachFor, createHistoryGame, hasHistoryData, ROSTERS_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
 import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
@@ -272,8 +273,10 @@ function rankSeason(s: DynastySave, year: number): void {
       const honor = h.honors(year).get(parseInt(p.id.slice(2), 36));
       if (honor) target = Math.max(target, FLOOR[honor]);
       target = Math.round(Math.min(target, CEILING[unit] ?? 99));
-      // An owner-graded peak is still his ceiling.
-      if (p.arcGap !== undefined) target = Math.min(target, p.potential);
+      // An owner-graded player follows the owner's arc: the league's ranking doesn't pull him
+      // under it (it had Roethlisberger at 76 in 2005, speed and all, against an 83 draft grade),
+      // and only an honor lifts him above it, never past the owner's peak.
+      if (p.arcGap !== undefined) target = Math.min(Math.max(p.ovr, honor ? FLOOR[honor] : 0), p.potential);
       if (target === p.ovr) return;
       moveToward(p, target);
       if (p.ovr < target) gradeTo(p, target);
@@ -317,6 +320,9 @@ export function rateReal(save: DynastySave, p: Player, year: number): void {
     p.arcGap = made.arcGap;
     delete save.players[made.id];
     const idx = year - p.draftYear!;
+    // Draft-day legs, aged to this season.
+    ageBodyBetween(p, p.age - idx, p.age);
+    p.ovr = deriveOvr(p.pos, p.ratings);
     let peak = p.ovr;
     for (let i = 0; i <= idx; i++) peak = Math.max(peak, arcTarget(p, i));
     moveToward(p, arcTarget(p, idx));

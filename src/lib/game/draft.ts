@@ -15,6 +15,7 @@ import { rookieContract } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
 import { arcTarget, gradeTo, honorsFloor, lookupArc, moveToward, projectedOnly } from "./careerArc.ts";
+import { deriveOvr } from "./ratings.ts";
 import { OWNER_GRADES } from "./data/ownerGrades.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
@@ -289,6 +290,8 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
   if (friend) {
     p.hometown = friend.hometown;
     moveToward(p, friend.start);
+    // His start is exact: the skills move in steps, so the last point comes one at a time.
+    if (p.ovr !== friend.start) gradeTo(p, friend.start);
     p.potential = friendCeiling(save.seed, friend);
     p.peakOvr = p.ovr;
     // Only a breakout is a hidden gem; the rest grow at an ordinary pace.
@@ -333,8 +336,23 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     p.peakOvr = p.ovr;
     p.scoutOvr = p.ovr;
   }
+  // What the owner measured in the ratings audit stays measured: easing him from his peak to his
+  // draft-day grade above takes speed and burst down with the overall (Roethlisberger's 70 speed
+  // arrived as 63). The overall is kept where the grade put it.
+  if (fix?.rt) {
+    const level = p.ovr;
+    for (const k of MEASURED_BODY) {
+      const v = fix.rt[k];
+      if (v !== undefined) p.ratings[k] = v;
+    }
+    p.ovr = deriveOvr(p.pos, p.ratings);
+    if (p.ovr !== level) gradeTo(p, level);
+  }
   return p;
 }
+
+/** The audit's physical numbers: what a man is, not how good he plays. */
+const MEASURED_BODY = ["speed", "accel", "agi", "str", "stamina", "inj"] as const;
 
 /**
  * save.players only ever grew - by a dynasty's end year that's 50k+ entries and an

@@ -2,6 +2,7 @@ import type { Player, Pos, RatingKey, Ratings } from "./types.ts";
 import { RATING_KEYS } from "./types.ts";
 import { clamp } from "./rng.ts";
 import { deriveOvr, emptyRatings, POS_BASE, primaryKeys } from "./ratings.ts";
+import { isBody } from "./body.ts";
 import { STAR_PROFILES } from "./data/starProfiles.ts";
 
 /** How a player is built. Secondaries stay low — overall is derived, not copied onto every attribute. */
@@ -232,20 +233,18 @@ export function ratingsFromProfile(
   return r;
 }
 
+/**
+ * A move in how well he plays: his skills, never his body. Speed, burst, agility, strength,
+ * stamina and durability age on their own clock (body.ts), so a star climbing to his peak or
+ * eased down to a draft grade keeps the legs he has.
+ */
 export function applyAgeDelta(p: Player, delta: number): void {
   if (!delta) return;
-  const primaries = primaryKeys(p.pos);
-  for (const k of primaries) {
+  const skills = primaryKeys(p.pos).filter((k) => !isBody(k));
+  for (const k of skills) {
     p.ratings[k] = clamp(p.ratings[k] + delta, 25, 99);
   }
-  if (delta < 0) {
-    p.ratings.speed = clamp(p.ratings.speed + delta, 25, 99);
-    p.ratings.accel = clamp(p.ratings.accel + delta, 25, 99);
-    p.ratings.agi = clamp(p.ratings.agi + Math.min(-1, delta), 25, 99);
-    p.ratings.inj = clamp(p.ratings.inj + Math.min(-1, delta), 25, 99);
-  } else {
-    p.ratings.awareness = clamp(p.ratings.awareness + 1, 25, 99);
-  }
+  if (delta > 0) p.ratings.awareness = clamp(p.ratings.awareness + 1, 25, 99);
   p.ovr = deriveOvr(p.pos, p.ratings);
 }
 

@@ -11,6 +11,7 @@ import { UNDRAFTED_ARCS } from "./data/undrafted.ts";
 import { AUDIT_ARCS, AUDIT_VET_ARCS } from "./data/auditPlayers.ts";
 import { applyAgeDelta } from "./profiles.ts";
 import { deriveOvr, primaryKeys } from "./ratings.ts";
+import { isBody } from "./body.ts";
 import { clamp } from "./rng.ts";
 
 /** Last season the source data can speak to; careers still going then are open-ended. */
@@ -266,10 +267,11 @@ export function gradeTo(p: Player, target: number): void {
     }
     return moved;
   };
-  const core = primaryKeys(p.pos);
+  // Skills only: the body ages on its own clock (body.ts).
+  const core = primaryKeys(p.pos).filter((k) => !isBody(k));
   for (let i = 0; i < 400 && p.ovr !== target; i++) {
     const up = target > p.ovr;
-    const moved = up ? bump(core, 1) || bump(["rel"], 1) || bump(["agi"], 1) : bump(core, -1) || bump(["rel"], -1);
+    const moved = up ? bump(core, 1) || bump(["rel"], 1) || bump(["awareness"], 1) : bump(core, -1) || bump(["rel"], -1) || bump(["awareness"], -1);
     if (!moved) return;
     p.ovr = deriveOvr(p.pos, p.ratings);
   }

@@ -4,6 +4,8 @@ import { applyAgeDelta } from "./profiles.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { arcRetiresNow, arcTarget, gradeTo, moveToward } from "./careerArc.ts";
+import { ageBody } from "./body.ts";
+import { deriveOvr } from "./ratings.ts";
 
 const PEAK: Record<Pos, number> = {
   QB: 30,
@@ -93,6 +95,11 @@ export function agePlayer(save: DynastySave, p: Player): void {
   p.onIR = false;
   maybeReveal(p, 0);
   if (p.yearsPro >= 2) p.revealed = true;
+  // A year older: the legs, the strength and the wear move on their own clock first.
+  const beforeBody = p.ovr;
+  ageBody(p, p.age);
+  p.ovr = deriveOvr(p.pos, p.ratings);
+  const bodyMove = p.ovr - beforeBody;
 
   const peak = PEAK[p.pos];
   const cliff = CLIFF[p.pos];
@@ -134,6 +141,9 @@ export function agePlayer(save: DynastySave, p: Player): void {
   // A hidden gem climbs fast once he's in a building: two to four a year until he hits it.
   if (p.gem && p.ovr < pot && p.age <= peak + 1 && p.teamId !== "fa") delta = Math.max(delta, starter ? randInt(save, 3, 4) : randInt(save, 2, 3));
   if (p.ovr + delta > pot && delta > 0 && (p.gem || rand(save) < 0.7)) delta = Math.max(0, pot - p.ovr);
+  // The year's change is the whole of it: what the body already gave or took comes off the
+  // skills' share, so aging isn't counted twice.
+  delta -= bodyMove;
 
   if (delta !== 0) applyAgeDelta(p, delta);
   }
