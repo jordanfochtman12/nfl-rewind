@@ -27,7 +27,7 @@ import { rebuildSchedule } from "./schedule.ts";
 import { activeTeamIds, displayName, gamesInSeason } from "./teams.ts";
 import { addNews } from "./news.ts";
 import { setLabel } from "./season.ts";
-import { fillCoachFields, makeCoachFromSeed, seedStaff } from "./staff.ts";
+import { autoHireCoord, fillCoachFields, makeCoachFromSeed, realCoordinator, seedStaff } from "./staff.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
 import { MORE_COACHES } from "./data/coachesMore.ts";
 import { newOwnerState } from "./owner.ts";
@@ -548,6 +548,7 @@ export function createEraGame(o: EraOpts): DynastySave {
   seatCoaches(s);
   rateCoaches(s, year);
   seedStaff(s);
+  seatRealCoordinators(s, year, false);
 
   for (const p of Object.values(s.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
@@ -648,14 +649,22 @@ export function realBlackMonday(save: DynastySave): void {
     if (id === save.userTeamId && !save.cpuOnly) continue;
     const t = save.teams[id];
     const hc = t?.coachId ? save.coaches[t.coachId] : undefined;
-    const was = now.get(id)?.at(-1)?.name;
+    const year = now.get(id) ?? [];
+    const was = year.at(-1)?.name;
     const will = next.get(id)?.[0]?.name;
     if (!t || !hc || !was || !will) continue;
-    if (hc.name.toLowerCase() !== was.toLowerCase()) continue;
     const g = t.wins + t.losses + t.ties;
     const pct = g ? (t.wins + t.ties / 2) / g : 0.5;
+    // Still on the record's path if he's any of the men who coached the club that year (Marion
+    // Campbell in Philadelphia 1985, though an interim had the last game).
+    if (!year.some((x) => x.name.toLowerCase() === hc.name.toLowerCase())) {
+      // Off the record's path: the club makes its own calls, but in a winter the real one kept its
+      // coach it is slower to fire (Black Monday ran two or three over the real league's six or so).
+      if (was === will && pct >= 0.22 && randInt(save, 0, 1) === 0) (search.keep ??= []).push(id);
+      continue;
+    }
     // The record kept him: only a collapse here costs him the job.
-    if (was === will) {
+    if (hc.name.toLowerCase() === will.toLowerCase()) {
       if (pct >= 0.25) (search.keep ??= []).push(id);
       continue;
     }
@@ -674,5 +683,66 @@ export function realBlackMonday(save: DynastySave): void {
       teamIds: [id],
       playerIds: [],
     });
+  }
+}
+
+/**
+ * The record's coordinators. At the start every club gets the ones it really had that season;
+ * each winter after (onPath) a computer club still on the record's head coach takes on his real
+ * staff for the next one (McVay running Washington's offense before the Rams hire him). Clubs
+ * off the record's path, and seasons whose staff the record doesn't name, hire as they always have.
+ */
+export function seatRealCoordinators(save: DynastySave, year: number, onPath: boolean): void {
+  if (!save.realPool || !hasHistoryData() || save.realHistory) return;
+  const rec = historyData().coordinators(year);
+  if (!rec.size) return;
+  const heads = historyData().coaches(year);
+  const vacated: [TeamId, "OC" | "DC"][] = [];
+  for (const id of activeTeamIds(year)) {
+    const t = save.teams[id];
+    const names = rec.get(id);
+    if (!t || !names) continue;
+    if (onPath) {
+      if (id === save.userTeamId && !save.cpuOnly) continue;
+      const hc = t.coachId ? save.coaches[t.coachId] : undefined;
+      const real = heads.get(id)?.[0]?.name;
+      if (!hc || !real || hc.name.toLowerCase() !== real.toLowerCase()) continue;
+    }
+    for (const role of ["OC", "DC"] as const) {
+      const name = role === "OC" ? names.oc : names.dc;
+      const slot = role === "OC" ? "ocId" : "dcId";
+      if (!name) continue;
+      const now = t[slot] ? save.coaches[t[slot]!] : undefined;
+      if (now?.name.toLowerCase() === name.toLowerCase()) continue;
+      const c = realCoordinator(save, name, role, id);
+      // A head coach somewhere in this league stays one.
+      if (activeTeamIds(year).some((o) => save.teams[o]?.coachId === c.id)) continue;
+      // Hired away from another staff: that club refills the job once everyone has moved.
+      const from = c.teamId && c.teamId !== id ? c.teamId : undefined;
+      if (from) {
+        const ft = save.teams[from];
+        if (ft?.ocId === c.id) {
+          ft.ocId = null;
+          vacated.push([from, "OC"]);
+        }
+        if (ft?.dcId === c.id) {
+          ft.dcId = null;
+          vacated.push([from, "DC"]);
+        }
+      }
+      // The man in the job leaves it, unless he's moved up to head coach here.
+      if (now && now.id !== t.coachId) {
+        now.teamId = null;
+        now.yearsOnJob = 0;
+      }
+      c.role = role;
+      c.teamId = id;
+      c.yearsOnJob = 1;
+      t[slot] = c.id;
+    }
+  }
+  for (const [id, role] of vacated) {
+    const t = save.teams[id];
+    if (t && !(role === "OC" ? t.ocId : t.dcId)) autoHireCoord(save, id, role);
   }
 }

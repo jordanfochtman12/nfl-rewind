@@ -20,7 +20,7 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
-import { realBlackMonday, realIntake, restoreRecordLines, syncRealNumbers } from "./eraStart.ts";
+import { realBlackMonday, realIntake, restoreRecordLines, seatRealCoordinators, syncRealNumbers } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
@@ -619,6 +619,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.history.grade = g;
       } else {
         runCoachingCarousel(s);
+        seatRealCoordinators(s, s.year + 1, true);
         s.phase = "carousel";
         s.week = 0;
       }

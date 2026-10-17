@@ -54,6 +54,8 @@ export interface HistoryData {
   awards(year: number): Record<string, (number | string)[]>;
   /** Head coaches per club, in order, with the regular-season games each coached (99 = all). */
   coaches(year: number): Map<TeamId, { name: string; games: number }[]>;
+  /** Offensive and defensive coordinators per club, where the record names them. */
+  coordinators(year: number): Map<TeamId, { oc?: string; dc?: string }>;
   trades(year: number): HistoryTrade[];
   /** Hall of Fame class of that year: person ids or names (coaches, contributors, pre-1966 players). */
   hof(year: number): (number | string)[];
@@ -94,6 +96,7 @@ export function parseHistory(mods: {
   AWARDS: Record<number, string>;
   HOF_CLASSES: Record<number, string>;
   COACHES?: Record<number, string>;
+  COORDINATORS?: Record<number, string>;
   TRADES?: Record<number, string>;
   FRANCHISE_BEFORE?: Record<string, Ledger>;
   SERIES_BEFORE?: Record<string, [number, number, number, number, string, string, number]>;
@@ -255,6 +258,16 @@ export function parseHistory(mods: {
     }
     return out;
   });
+  const coordinators = memo((y) => {
+    const out = new Map<TeamId, { oc?: string; dc?: string }>();
+    for (const chunk of (mods.COORDINATORS?.[y] ?? "").split(";")) {
+      const at = chunk.indexOf(":");
+      if (at < 0) continue;
+      const [oc, dc] = chunk.slice(at + 1).split("/");
+      out.set(chunk.slice(0, at) as TeamId, { oc: oc || undefined, dc: dc || undefined });
+    }
+    return out;
+  });
   const trades = memo((y) =>
     (mods.TRADES?.[y] ?? "")
       .split("#")
@@ -289,6 +302,7 @@ export function parseHistory(mods: {
     drafts,
     awards,
     coaches,
+    coordinators,
     trades,
     hof,
     before1966: { franchise: mods.FRANCHISE_BEFORE ?? {}, series: mods.SERIES_BEFORE ?? {} },
@@ -314,7 +328,8 @@ export function loadHistoryData(): Promise<HistoryData> {
     import("./data/history/trades.ts"),
     import("./data/history/before1966.ts"),
     import("./data/history/recordMoments.ts"),
-  ]).then(([p, r, s, po, d, a, h, c, t, b, rm]) =>
+    import("./data/history/coordinators.ts"),
+  ]).then(([p, r, s, po, d, a, h, c, t, b, rm, co]) =>
     parseHistory({
       PEOPLE: p.PEOPLE,
       ROSTERS: r.ROSTERS,
@@ -325,6 +340,7 @@ export function loadHistoryData(): Promise<HistoryData> {
       AWARDS: a.AWARDS,
       HOF_CLASSES: h.HOF_CLASSES,
       COACHES: c.COACHES,
+      COORDINATORS: co.COORDINATORS,
       TRADES: t.TRADES,
       FRANCHISE_BEFORE: b.FRANCHISE_BEFORE,
       SERIES_BEFORE: b.SERIES_BEFORE,

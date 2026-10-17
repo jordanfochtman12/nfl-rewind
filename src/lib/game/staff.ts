@@ -168,6 +168,29 @@ function genCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC" | "HC"): 
   return c;
 }
 
+/**
+ * A real coordinator the record names, made the first time the league needs him: from the
+ * coach catalogs (his ratings and playbook) when he's in them, else a staff man with his name.
+ * Found again by name after that, so the coordinator who becomes a head coach is the same man.
+ */
+export function realCoordinator(save: DynastySave, name: string, role: "OC" | "DC", teamId: TeamId): Coach {
+  const key = name.toLowerCase();
+  const have = Object.values(save.coaches).find((c) => c.name.toLowerCase() === key && !c.retiredYear && !c.hofYear);
+  if (have) return have;
+  const seed = [...COORDINATORS_1966, ...LATER_COACHES, ...MORE_COACHES].find((x) => x.name.toLowerCase() === key);
+  let c: Coach;
+  if (seed && !save.coaches[seed.id]) c = bump(seed, role, save.year, { teamId: null });
+  else {
+    c = genCoord(save, teamId, role);
+    c.id = `rc-${key.replace(/[^a-z0-9]+/g, "-")}`;
+    c.name = name;
+    c.historical = true;
+    c.teamId = null;
+  }
+  save.coaches[c.id] = c;
+  return c;
+}
+
 export function seedStaff(save: DynastySave): void {
   for (const c of Object.values(save.coaches)) fillCoachFields(c, save.year);
   for (const seed of COORDINATORS_1966) {
@@ -644,7 +667,7 @@ function autoHireHeadCoach(save: DynastySave, teamId: TeamId, exclude?: string):
   return coach;
 }
 
-function autoHireCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC"): Coach {
+export function autoHireCoord(save: DynastySave, teamId: TeamId, role: "OC" | "DC"): Coach {
   const t = save.teams[teamId];
   const pool = availableCoaches(save, role);
   let coach: Coach;
@@ -1061,6 +1084,11 @@ function realHire(save: DynastySave, teamId: TeamId, search: CoachSearch | undef
     const was = save.teams[at]?.ocId === c.id ? "OC" : "DC";
     vacate(save, c, was, at);
     from = { teamId: at, role: was };
+  } else if (t.ocId === c.id || t.dcId === c.id) {
+    // His own coordinator promoted (Jerry Burns in Minnesota): that job opens.
+    const was = t.ocId === c.id ? "OC" : "DC";
+    vacate(save, c, was, teamId);
+    from = { teamId, role: was };
   }
   c.role = "HC";
   c.teamId = teamId;
@@ -1073,10 +1101,10 @@ function realHire(save: DynastySave, teamId: TeamId, search: CoachSearch | undef
   leaveOtherPosts(save, c);
   if (from) {
     const fill = autoHireCoord(save, from.teamId, from.role);
-    noteCarousel(save, from.teamId, from.role, c.name, fill.name, `${displayName(save.year, from.teamId)} lose ${c.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${from.role}.`);
+    if (from.teamId !== teamId) noteCarousel(save, from.teamId, from.role, c.name, fill.name, `${displayName(save.year, from.teamId)} lose ${c.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${from.role}.`);
   }
   if (search) search.hot = search.hot.filter((id) => id !== c.id);
-  return { coach: c, from };
+  return { coach: c, from: from && from.teamId !== teamId ? from : undefined };
 }
 
 /** Fill an opening: a hot name the club talked to first, then the usual market. */

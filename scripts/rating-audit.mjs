@@ -8,7 +8,8 @@
  *   QB  throwAcc  completion rate over the league's that season
  *       throwAwr  touchdown rate less interception rate, over the league's
  *       arch      a "precision passer" who wasn't one becomes a gunslinger or a game manager
- *   DE / OLB / DT  prs  sacks a game (sacks are kept from 1982)
+ *   DE / OLB / DT  prs  sacks a game over his position's (researched totals from 1970,
+ *                       official from 1982)
  *   K   kickAcc   field-goal rate over the league's
  *   P   kickPow   gross average over the league's
  *   RB, WR, TE, CB, S, MLB, OLB: see RATES below. Their skills are ranked among their position's,
@@ -87,6 +88,9 @@ for (const [y, s] of Object.entries(DRAFTS))
 
 /* ---------------- career measures, each season against its league ---------------- */
 
+/** The first season with sack totals (unofficial until 1982). */
+const SACKS_FROM = 1970;
+
 // out[key] = { v, n, g, shrink }: the measure, how much career it rests on, the group it's ranked
 // in, and how much career it takes to count for half (a short one is pulled toward usual).
 function measures(person, pos) {
@@ -111,9 +115,16 @@ function measures(person, pos) {
     }
   }
   if (pos === "DE" || pos === "OLB" || pos === "DT") {
-    const since = ls.filter((l) => l.year >= 1982);
-    const gp = since.reduce((n, l) => n + (l.gp ?? 0), 0);
-    if (gp >= 32) put("prs", since.reduce((n, l) => n + (l.sacks ?? 0), 0) / gp, gp, pos === "DT" ? "DT" : "DE", 50);
+    // Sacks a game against his position's that season. The league made them official in 1982;
+    // the researched totals go back to 1970 (Deacon Jones's last seasons, Youngblood's prime).
+    let gp = 0, v = 0;
+    for (const l of ls) {
+      const base = posLeague.get(l.year)?.[pos];
+      if (l.year < SACKS_FROM || !l.gp || !base?.gp) continue;
+      gp += l.gp;
+      v += (l.sacks ?? 0) - l.gp * ((base.sacks ?? 0) / base.gp);
+    }
+    if (gp >= 32) put("prs", v / gp, gp, pos, 50);
   }
   if (pos === "K") {
     const att = sum("fgAtt");
@@ -267,7 +278,8 @@ for (const r of rows) {
     ranks[k] = q;
     const now = r.built[k];
     let target;
-    if (CENTERED.has(k)) target = r.level + (q - 0.5) * 2 * SPREAD;
+    // An outside linebacker's rush sits under his overall (Jack Ham covered): it's shaped, not centered.
+    if (CENTERED.has(k) && r.seed.p !== "OLB") target = r.level + (q - 0.5) * 2 * SPREAD;
     else {
       const rf = f.rating;
       // Where his rating already ranks among his position's at his level: only a rank the
