@@ -408,6 +408,33 @@ export function syncRealNumbers(save: DynastySave): number {
   return fixed;
 }
 
+/**
+ * The first season of a league begun from the record opens on the real rosters exactly, with
+ * no signings before the draft. Once the draft is in, every club (the owner's too) fills what
+ * its depth chart is still missing: real free agents first, a camp body at the spot only when
+ * the market has nobody for it.
+ */
+export function openingFill(save: DynastySave): void {
+  if (!save.realPool || save.realHistory || save.year !== save.startingYear) return;
+  const before = new Set(Object.keys(save.players));
+  const market = Object.values(save.players).filter((p) => p.teamId === "fa" && p.historical);
+  for (const id of activeTeamIds(save.year)) {
+    for (const [pos, need] of DEPTH_CHART) {
+      for (let have = rosterOf(save, id).filter((p) => p.pos === pos).length; have < need; have++) {
+        if (!signRealFa(save, id, pos, market)) generatePlayer(save, pos, id, 58, randInt(save, 23, 29));
+      }
+    }
+    syncDepth(save, id);
+  }
+  // Depth the game had to add is depth: it never outranks the real players it stands behind.
+  for (const [pid, p] of Object.entries(save.players)) {
+    if (before.has(pid) || !save.teams[p.teamId as TeamId]) continue;
+    if (p.ovr > 64) moveToward(p, 60 + (p.ovr % 5));
+    p.potential = Math.min(p.potential, p.ovr + 4);
+    p.peakOvr = p.ovr;
+  }
+}
+
 export function realIntake(save: DynastySave): number {
   if (!save.realPool || save.realHistory || !hasHistoryData() || save.year > ROSTERS_LAST) return 0;
   const h = historyData();
@@ -577,25 +604,11 @@ export function createEraGame(o: EraOpts): DynastySave {
       p.revealed = true;
     }
   }
-  const before = new Set(Object.keys(s.players));
-  const market = Object.values(s.players).filter((p) => p.teamId === "fa" && p.historical);
+  // The league opens on the real rosters and nothing else: no club signs anyone before the
+  // draft. The holes are filled after it, in free agency, the way the clubs really filled them.
   for (const id of activeTeamIds(year)) {
     balanceLine(s, id);
-    // Only the depth chart's holes are filled now: the rest of the roster is for this
-    // year's real draft class, which is on the board.
-    for (const [pos, need] of DEPTH_CHART) {
-      for (let have = rosterOf(s, id).filter((p) => p.pos === pos).length; have < need; have++) {
-        if (!signRealFa(s, id, pos, market)) generatePlayer(s, pos, id, 58, randInt(s, 23, 29));
-      }
-    }
     syncDepth(s, id);
-  }
-  // Depth the game had to add is depth: it never outranks the real players it stands behind.
-  for (const [pid, p] of Object.entries(s.players)) {
-    if (before.has(pid) || !s.teams[p.teamId as TeamId]) continue;
-    if (p.ovr > 64) moveToward(p, 60 + (p.ovr % 5));
-    p.potential = Math.min(p.potential, p.ovr + 4);
-    p.peakOvr = p.ovr;
   }
   signFriends(s, activeTeamIds(year));
   refreshContracts(s, { init: true });
