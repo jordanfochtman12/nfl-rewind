@@ -39,7 +39,7 @@ SKIP = {"CUT", "DEV", "UFA", "RFA", "EXE"}
 # A listing that only names the unit ("LB", "DB", "T") says nothing about which spot in it.
 GENERIC = {"LB", "DB", "T", "G", "OL", "OT", "OG", "DL", "SPEC", ""}
 GROUP = {"QB": "QB", "RB": "B", "FB": "B", "WR": "WR", "TE": "TE", "LT": "OL", "LG": "OL", "C": "OL", "RG": "OL", "RT": "OL",
-         "DE": "DE", "DT": "DT", "OLB": "LB", "MLB": "LB", "CB": "CB", "S": "S", "K": "K", "P": "P"}
+         "DE": "DE", "DT": "DT", "OLB": "OLB", "MLB": "MLB", "CB": "CB", "S": "S", "K": "K", "P": "P"}
 
 
 def season_spot(r: dict) -> str | None:

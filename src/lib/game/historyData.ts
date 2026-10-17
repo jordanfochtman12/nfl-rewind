@@ -53,6 +53,10 @@ export interface HistoryData {
   seasonPos(year: number): Map<number, Pos>;
   /** That season's honors: 1 first-team All-Pro, 2 second-team, p Pro Bowl. */
   honors(year: number): Map<number, "1" | "2" | "p">;
+  /** The depth charts (2001 on): regular-season weeks first string, the spot he was listed at most. */
+  starters(year: number): Map<number, { starts: number; spot: Pos }>;
+  /** Weeks the depth charts cover that season (0 before 2001). */
+  chartWeeks(year: number): number;
   stats(year: number): { person: number; team: TeamId | ""; line: HistoryLine }[];
   playoffs(year: number): HistoryPlayoffGame[];
   drafts(year: number): HistoryPick[];
@@ -111,6 +115,8 @@ export function parseHistory(mods: {
   OPENING?: Record<number, string>;
   SEASON_POS?: Record<number, string>;
   HONORS?: Record<number, string>;
+  STARTERS?: Record<number, string>;
+  WEEKS?: Record<number, number>;
 }): HistoryData {
   const people = mods.PEOPLE.split("\n").map((l) => {
     const [first, last, pos, birth, college] = l.split("|");
@@ -336,12 +342,23 @@ export function parseHistory(mods: {
     }
     return out;
   });
+  const starters = memo((y) => {
+    const out = new Map<number, { starts: number; spot: Pos }>();
+    for (const e of (mods.STARTERS?.[y] ?? "").split(",")) {
+      if (!e) continue;
+      const [i, starts, spot] = e.split(".");
+      out.set(id36(i!), { starts: Number(starts), spot: spot as Pos });
+    }
+    return out;
+  });
   return {
     people,
     rosters,
     opening,
     seasonPos,
     honors,
+    starters,
+    chartWeeks: (y) => mods.WEEKS?.[y] ?? 0,
     stats,
     playoffs,
     drafts,
@@ -376,7 +393,8 @@ export function loadHistoryData(): Promise<HistoryData> {
     import("./data/history/coordinators.ts"),
     import("./data/history/opening.ts"),
     import("./data/history/honors.ts"),
-  ]).then(([p, r, s, po, d, a, h, c, t, b, rm, co, op, hn]) =>
+    import("./data/history/starters.ts"),
+  ]).then(([p, r, s, po, d, a, h, c, t, b, rm, co, op, hn, st]) =>
     parseHistory({
       PEOPLE: p.PEOPLE,
       ROSTERS: r.ROSTERS,
@@ -391,6 +409,8 @@ export function loadHistoryData(): Promise<HistoryData> {
       OPENING: op.OPENING,
       SEASON_POS: op.SEASON_POS,
       HONORS: hn.HONORS,
+      STARTERS: st.STARTERS,
+      WEEKS: st.WEEKS,
       TRADES: t.TRADES,
       FRANCHISE_BEFORE: b.FRANCHISE_BEFORE,
       SERIES_BEFORE: b.SERIES_BEFORE,

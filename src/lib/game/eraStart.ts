@@ -149,7 +149,6 @@ function productionOvr(p: Player, year: number): number {
  *   line, with the one before it, pulls the rating toward what he really did.
  * - No honor that season or either side of it, and no 90s: those are for the men who won them.
  */
-const HONOR_BAND = { "1": 93, "2": 90, p: 87 } as const;
 const MEASURED: ReadonlySet<Pos> = new Set(["QB", "RB", "WR", "TE", "K", "P"]);
 const DEFENSE: ReadonlySet<Pos> = new Set(["DE", "DT", "OLB", "MLB", "CB", "S"]);
 /** The season's line has the stat his position is judged on. */
@@ -175,26 +174,22 @@ function seasonLine(person: number, year: number): SeasonStats | undefined {
   }
   return byPerson.get(person);
 }
-function openingLevel(p: Player, year: number): number | undefined {
-  if (!p.id.startsWith("r-") || p.yearsPro < 1) return undefined;
+/** The units a league ranks a season's men in, and how many of each a club starts. */
+const UNIT: Record<Pos, string> = {
+  QB: "QB", RB: "RB", FB: "FB", WR: "WR", TE: "TE", LT: "T", RT: "T", LG: "G", RG: "G", C: "C",
+  DE: "DE", DT: "DT", OLB: "OLB", MLB: "MLB", CB: "CB", S: "S", K: "K", P: "P",
+};
+/** A fullback, a kicker or a punter is never the best player in the league. */
+const CEILING: Record<string, number> = { FB: 88, K: 95, P: 95 };
+const STARTING: Record<string, number> = { QB: 1, RB: 1, FB: 0.7, WR: 2.5, TE: 1, T: 2, G: 2, C: 1, DE: 2, DT: 2, OLB: 2, MLB: 1.3, CB: 2.4, S: 2, K: 1, P: 1 };
+
+/** What the record says about a man's season, on the overall scale, before he's ranked. */
+function seasonScore(p: Player, year: number): number {
   const person = parseInt(p.id.slice(2), 36);
   const h = historyData();
-  const honor = (y: number) => h.honors(y).get(person);
-  const awards = h.awards(year);
-  const won = (k: string) => (awards[k] ?? []).includes(person);
-  let floor = 0;
-  const now = honor(year);
-  const after = honor(year + 1);
-  // Honored the seasons around it too: a fixture at the top, not a one-year pick.
-  if (now) floor = HONOR_BAND[now] + (honor(year - 1) ? 1 : 0) + (after ? 1 : 0) + (honor(year - 1) === "1" && now === "1" ? 1 : 0);
-  const before = honor(year - 1);
-  if (before) floor = Math.max(floor, HONOR_BAND[before] - 2);
-  if (won("mvp")) floor = Math.max(floor, 97);
-  if (won("opoy") || won("dpoy")) floor = Math.max(floor, 95);
-  let level = p.ovr;
+  let score = p.ovr;
   // That season and the two before it, the nearest counting most. A defender's line counts
-  // only where the record kept his stat (sacks from 1982, tackles from 1999) and counts less:
-  // the box score sees less of his job.
+  // only where the record kept his stat (sacks from 1982, tackles from 1999) and counts less.
   const weights = [0.5, 0.35, 0.15];
   let sum = 0;
   let total = 0;
@@ -207,17 +202,78 @@ function openingLevel(p: Player, year: number): number | undefined {
     total += weights[k]!;
   });
   if (total > 0) {
-    const prod = sum / total;
-    const share = MEASURED.has(p.pos) ? 0.7 : DEFENSE.has(p.pos) ? 0.4 : 0;
-    level = Math.round(level * (1 - share) + prod * share);
+    const share = MEASURED.has(p.pos) ? 0.75 : DEFENSE.has(p.pos) ? 0.35 : 0;
+    score = score * (1 - share) + (sum / total) * share;
   }
-  level = Math.max(level, floor);
-  // The 90s are for the men honored around this season; nobody else is that good.
-  const honoredNear = now || before || after;
-  // Where the record has no Pro Bowl rosters for the season, a Pro Bowler can't be told apart.
-  const pbKnown = [...h.honors(year).values()].filter((c) => c === "p").length >= 20;
-  if (!honoredNear) level = Math.min(level, (p.pos === "QB" ? 88 : 86) + (pbKnown ? 0 : 2));
-  return level;
+  const BONUS = { "1": 7, "2": 5, p: 3 } as const;
+  const now = h.honors(year).get(person);
+  const before = h.honors(year - 1).get(person);
+  const after = h.honors(year + 1).get(person);
+  if (now) score += BONUS[now];
+  if (before) score += BONUS[before] / 2;
+  if (after) score += 1;
+  const awards = h.awards(year);
+  if ((awards.mvp ?? []).includes(person)) score += 5;
+  if ((awards.opoy ?? []).includes(person) || (awards.dpoy ?? []).includes(person)) score += 3;
+  // The depth charts (2001 on): a starter all season, or a man who didn't start.
+  const weeks = h.chartWeeks(year);
+  if (weeks) {
+    const share = Math.min(1, (h.starters(year).get(person)?.starts ?? 0) / weeks);
+    score += share * 10 - 4;
+    const prior = h.chartWeeks(year - 1);
+    if (prior) score += (Math.min(1, (h.starters(year - 1).get(person)?.starts ?? 0) / prior) - 0.5) * 3;
+  }
+  return score;
+}
+
+/**
+ * Every real man on a club, rated on his season against the league: within each unit
+ * (quarterbacks, tackles, corners...), what the record says about him sets his rank, and the
+ * rank sets his rating on a depth chart's scale. The best at his job is in the high 90s, the
+ * last regular starter in the mid-70s, the backups below; honors keep a floor.
+ */
+function rankSeason(s: DynastySave, year: number): void {
+  const teams = activeTeamIds(year).length;
+  const h = historyData();
+  const units = new Map<string, { p: Player; score: number }[]>();
+  for (const id of activeTeamIds(year)) {
+    for (const p of rosterOf(s, id)) {
+      if (!p.id.startsWith("r-") || p.yearsPro < 1) continue;
+      const unit = UNIT[p.pos];
+      const list = units.get(unit) ?? [];
+      list.push({ p, score: seasonScore(p, year) });
+      units.set(unit, list);
+    }
+  }
+  const FLOOR = { "1": 90, "2": 87, p: 84 } as const;
+  const weeks = h.chartWeeks(year);
+  const started = (p: Player) => (h.starters(year).get(parseInt(p.id.slice(2), 36))?.starts ?? 0) / Math.max(1, weeks) >= 0.5;
+  for (const [unit, list] of units) {
+    // Where the depth charts say who started (2001 on), the men who started half the season
+    // are the starters, ranked among themselves; before that, a club's usual number at the job.
+    let starters = Math.max(1, Math.round(teams * STARTING[unit]!));
+    if (weeks) {
+      list.sort((a, b) => Number(started(b.p)) - Number(started(a.p)) || b.score - a.score);
+      starters = Math.max(1, list.filter(({ p }) => started(p)).length);
+    } else list.sort((a, b) => b.score - a.score);
+    list.forEach(({ p }, i) => {
+      let target: number;
+      // The few best at a job stand apart; the rest of the starters spread down to the mid-70s.
+      const top = 1 - i / Math.max(1, starters - 1);
+      if (i < starters) target = 74 + 23 * (0.7 * Math.pow(top, 4.5) + 0.3 * top);
+      else target = 72 - 14 * Math.pow((i - starters) / Math.max(1, list.length - starters), 0.8);
+      const honor = h.honors(year).get(parseInt(p.id.slice(2), 36));
+      if (honor) target = Math.max(target, FLOOR[honor]);
+      target = Math.round(Math.min(target, CEILING[unit] ?? 99));
+      // An owner-graded peak is still his ceiling.
+      if (p.arcGap !== undefined) target = Math.min(target, p.potential);
+      if (target === p.ovr) return;
+      moveToward(p, target);
+      if (p.ovr < target) gradeTo(p, target);
+      p.potential = Math.max(p.potential, p.ovr);
+      p.peakOvr = Math.max(p.peakOvr, p.ovr);
+    });
+  }
 }
 
 type Seed = ReturnType<typeof draftSeedsFor>[number];
@@ -301,8 +357,9 @@ const heft = (p: Player) => p.weight ?? 0;
  * across the depth chart the way a roster is built (the heavier men inside and deep), so
  * every spot is a real player before the game adds anyone.
  */
-function balanceLine(s: DynastySave, id: TeamId): void {
-  const roster = rosterOf(s, id);
+function balanceLine(s: DynastySave, id: TeamId, known: ReadonlySet<string> = new Set()): void {
+  // A man the record puts at a spot stays at it: only the ones it doesn't place are moved.
+  const roster = rosterOf(s, id).filter((p) => !known.has(p.id));
   for (const [left, right] of [["LT", "RT"], ["LG", "RG"]] as const) {
     const group = roster.filter((p) => p.pos === left || p.pos === right).sort((a, b) => b.ovr - a.ovr);
     group.forEach((p, i) => {
@@ -319,7 +376,7 @@ function balanceLine(s: DynastySave, id: TeamId): void {
     ["S", "CB", 4],
   ];
   for (const [from, to, want] of moves) {
-    const have = roster.filter((p) => p.pos === to).length;
+    const have = rosterOf(s, id).filter((p) => p.pos === to).length;
     const pool = roster.filter((p) => p.pos === from).sort((a, b) => heft(b) - heft(a) || a.ovr - b.ovr);
     // Never strip the spot he's moving from below what it needs itself.
     const keep = DEPTH_CHART.find(([pos]) => pos === from)?.[1] ?? 2;
@@ -679,6 +736,8 @@ export function createEraGame(o: EraOpts): DynastySave {
   seatRealCoordinators(s, year, false);
   ensureContracts(s);
 
+  // Men the record puts at a spot that season: the depth chart's, or the roster's own listing.
+  const placedAt = new Set<string>();
   for (const p of Object.values(s.players)) {
     if (p.teamId === "retired" || p.teamId === "hof") continue;
     rateReal(s, p, year);
@@ -686,23 +745,18 @@ export function createEraGame(o: EraOpts): DynastySave {
     // linebacker), at the level he's rated.
     if (!p.id.startsWith("r-")) continue;
     const person = parseInt(p.id.slice(2), 36);
-    const spot = spotOf.get(person) ?? seasonPos.get(person);
+    // The depth chart's spot first (it names the side and the linebacker's job), then the roster's.
+    const charted = historyData().starters(year).get(person)?.spot;
+    const spot = charted ?? spotOf.get(person) ?? seasonPos.get(person);
+    if (charted || seasonPos.has(person)) placedAt.add(p.id);
     if (spot && spot !== p.pos) {
       const level = p.ovr;
       p.pos = spot;
       p.ovr = deriveOvr(spot, p.ratings);
       moveToward(p, level);
     }
-    // Rated on the season the league opens on (an owner-graded peak is still his ceiling).
-    const level = openingLevel(p, year);
-    if (level !== undefined && level !== p.ovr) {
-      const target = p.arcGap !== undefined ? Math.min(level, p.potential) : level;
-      moveToward(p, target);
-      if (p.ovr < target) gradeTo(p, target);
-      p.potential = Math.max(p.potential, p.ovr);
-      p.peakOvr = Math.max(p.peakOvr, p.ovr);
-    }
   }
+  rankSeason(s, year);
   // The owner's own undrafted class (data/friends.ts) is in the league however late it starts:
   // a class already past is on the market, a few seasons further along.
   for (const [fy, list] of Object.entries(FRIENDS)) {
@@ -724,7 +778,7 @@ export function createEraGame(o: EraOpts): DynastySave {
   // The league opens on the real rosters and nothing else: no club signs anyone before the
   // draft. The holes are filled after it, in free agency, the way the clubs really filled them.
   for (const id of activeTeamIds(year)) {
-    balanceLine(s, id);
+    balanceLine(s, id, placedAt);
     syncDepth(s, id);
   }
   signFriends(s, activeTeamIds(year));
