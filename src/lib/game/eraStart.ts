@@ -970,3 +970,4 @@ export function seatRealCoordinators(save: DynastySave, year: number, onPath: bo
     if (t && !(role === "OC" ? t.ocId : t.dcId)) autoHireCoord(save, id, role);
   }
 }
+

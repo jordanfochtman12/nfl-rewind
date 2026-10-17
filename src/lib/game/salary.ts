@@ -117,6 +117,18 @@ function resignInPlace(save: DynastySave, p: Player): void {
  * year) couldn't come close to absorbing the full post-1994 churn, and good veterans
  * - QBs especially, since a team only carries one - just fell into permanent
  * unsigned limbo while their old team backfilled with a fresh, weak generated player. */
+/**
+ * How likely a club is to keep its own man when his deal runs out (cap era). Real front offices
+ * extend or tag their stars and young starters and let the aging and the replaceable walk; the
+ * old flat odds (a 90 kept barely half the time) sent eight to twelve young stars a year to the
+ * market (Steven Jackson at 23, Vince Wilfork at 26).
+ */
+function keepChance(p: Player): number {
+  const base = p.ovr >= 88 ? 0.92 : p.ovr >= 82 ? 0.8 : p.ovr >= 75 ? 0.62 : p.ovr >= 68 ? 0.42 : 0.22;
+  const age = p.age >= 33 ? 0.6 : p.age >= 30 ? 0.85 : 1;
+  return clamp(base * age, 0.1, 0.95);
+}
+
 export function expireContract(save: DynastySave, p: Player): void {
   if (p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof") return;
   const from = p.teamId;
@@ -126,7 +138,7 @@ export function expireContract(save: DynastySave, p: Player): void {
       resignInPlace(save, p);
       return;
     }
-  } else if (rand(save) < clamp(0.3 + (p.ovr - 65) * 0.01, 0.1, 0.75)) {
+  } else if (rand(save) < keepChance(p)) {
     // Not cap-gated here: enforceCapCompliance runs at the end of every offseason
     // and already knows how to shed a bad contract rather than a fairly-priced one,
     // so a team is better off retaining a good player and letting that later sweep

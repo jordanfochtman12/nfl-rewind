@@ -9,7 +9,7 @@ import { lookupProfile, nameKey, nameSalt, nameVariance, ratingsFromProfile, typ
 import { STAR_PROFILES } from "./data/starProfiles.ts";
 import { lookupCollege } from "./data/colleges.ts";
 import { seedPriorCareer } from "./data/careerPrior.ts";
-import { salaryFor } from "./salary.ts";
+import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { measurables } from "./development.ts";
 import { applyScout } from "./scout.ts";
 import { calibrateVetPeak, lookupVetArc, moveToward } from "./careerArc.ts";
@@ -525,6 +525,21 @@ export function realFreeAgents(save: DynastySave): Player[] {
   return Object.values(save.players).filter((p) => p.teamId === "fa" && leaguePlayer(p) && !wire.has(p.id) && p.injuredWeeks <= 0);
 }
 
+/**
+ * Whether a computer club can take this man off the market: it has to fit him under the cap,
+ * and a star (85+) comes only through a real signing, two a winter at most (gm.signPlayer).
+ * Topping a roster up used to hand out Pro Bowlers as one-year camp bodies with no cap check,
+ * so the club with the most open spots took the market's best (the 2008 Saints: Jared Allen,
+ * Richard Seymour, Nnamdi Asomugha).
+ */
+export function cpuCanAdd(save: DynastySave, teamId: TeamId, p: Player, starOk = false): boolean {
+  if (teamId === save.userTeamId && !save.cpuOnly) return true;
+  const cap = save.salaryCap ?? salaryCapFor(save.year);
+  if (cap != null && teamPayroll(save, teamId) + salaryFor(save.year, p.ovr, p.age, p.pos) > cap) return false;
+  if (p.ovr >= 85 && !starOk) return false;
+  return true;
+}
+
 /** Put a real free agent on a club's roster on a one-year deal, playing `pos`. */
 function seatReal(save: DynastySave, teamId: TeamId, p: Player, pos: Pos): void {
   if (p.pos !== pos) {
@@ -550,7 +565,7 @@ export function signRealFa(save: DynastySave, teamId: TeamId, pos: Pos, pool = r
   for (const at of [pos, ...(COVERS[pos] ?? [])]) {
     let best: Player | undefined;
     // The owner's friends play the position they played in college, nowhere else.
-    for (const p of pool) if (p.teamId === "fa" && p.pos === at && (at === pos || !isFriend(p)) && (!best || p.ovr > best.ovr)) best = p;
+    for (const p of pool) if (p.teamId === "fa" && p.pos === at && (at === pos || !isFriend(p)) && (!best || p.ovr > best.ovr) && cpuCanAdd(save, teamId, p)) best = p;
     if (best) {
       seatReal(save, teamId, best, pos);
       return best;
@@ -585,7 +600,8 @@ export function fillRoster(save: DynastySave, teamId: TeamId, market?: Player[])
   let guard = 0;
   while (rosterOf(save, teamId).length < ROSTER_TARGET && guard++ < 80) {
     let best: Player | undefined;
-    for (const p of pool) if (p.teamId === "fa" && count(p.pos) < (room.get(p.pos) ?? 0) && (!best || p.ovr > best.ovr)) best = p;
+    // Depth, not stars: the back of a roster is filled with men at a backup's level.
+    for (const p of pool) if (p.teamId === "fa" && p.ovr <= 76 && count(p.pos) < (room.get(p.pos) ?? 0) && (!best || p.ovr > best.ovr) && cpuCanAdd(save, teamId, p)) best = p;
     if (best) {
       seatReal(save, teamId, best, best.pos);
       continue;
@@ -654,8 +670,12 @@ export function swapInReal(save: DynastySave, teamId: TeamId, slack = 10, market
   for (const fake of fakes) {
     const covers = [fake.pos, ...(COVERS[fake.pos] ?? [])];
     let best: Player | undefined;
+    // A camp body is replaced by a real man of about his level, not the best star on the market:
+    // a club carrying a dozen fillers used to swap in a dozen Pro Bowlers for nothing (the 2006
+    // Lions signing Walter Jones, Donald Driver, Steven Jackson and four more).
+    const ceiling = fake.ovr + 10;
     for (const at of covers) {
-      for (const p of pool) if (p.teamId === "fa" && p.pos === at && (at === fake.pos || !isFriend(p)) && (!best || p.ovr > best.ovr)) best = p;
+      for (const p of pool) if (p.teamId === "fa" && p.pos === at && p.ovr <= ceiling && (at === fake.pos || !isFriend(p)) && (!best || p.ovr > best.ovr) && cpuCanAdd(save, teamId, p)) best = p;
       if (best) break;
     }
     if (best && best.ovr >= fake.ovr - slack) {
@@ -739,7 +759,7 @@ export function trimRoster(save: DynastySave, teamId: TeamId, cap = rosterCap(sa
   // 33-year-old a few points better, the way real clubs cut veterans for rookies every August.
   // A man who really made the club that year keeps his spot first.
   const keepScore = (p: Player) =>
-    (madeRealRoster(save, p) ? 200 : 0) +
+    (madeRealRoster(save, p) ? 12 : 0) +
     p.ovr + (p.age <= 25 ? Math.min(6, Math.max(0, (p.potential ?? p.ovr) - p.ovr) * 0.5) : 0) - Math.max(0, p.age - 31);
   // An era league counts the active roster against the limit, as the league does: injured
   // reserve doesn't take a spot.

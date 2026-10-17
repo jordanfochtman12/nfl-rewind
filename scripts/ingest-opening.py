@@ -162,6 +162,8 @@ for y in range(1966, 2027):
         clubs: dict[str, list[tuple[int, str, bool]]] = defaultdict(list)
         seen: set[int] = set()
         anywhere: set[int] = set()
+        # Each man's first week with each club, for the ones who missed only the opener.
+        early: dict[tuple[int, str], int] = {}
         miss = 0
         for r in rows:
             if off_roster(r) or not r["week"].isdigit():
@@ -172,6 +174,10 @@ for y in range(1966, 2027):
                 miss += opening_row
                 continue
             anywhere.add(i)
+            wk_here = int(r["week"])
+            if wk_here >= first_week.get(r["team"], 99):
+                key = (i, r["team"])
+                early[key] = min(early.get(key, 99), wk_here)
             spot = season_spot(r)
             if spot:
                 pos_seen[i][spot] += 1
@@ -187,6 +193,16 @@ for y in range(1966, 2027):
         # has only from later weeks really wasn't (a holdout, a practice-squad call-up).
         this_year, last_year = season_clubs(y), season_clubs(y - 1)
         backfilled = 0
+        # A man who missed only the opener (a one-game suspension, Antonio Gates in 2005) and
+        # was back with last year's club by week three was on it all along.
+        for (i, raw), wk in sorted(early.items()):
+            t = team_of(raw, y)
+            if i in seen or not t or t not in last_year.get(i, set()) or t not in this_year.get(i, set()):
+                continue
+            if wk <= first_week[raw] + 2:
+                clubs[t].append((i, people[i][2], False))
+                seen.add(i)
+                backfilled += 1
         for i, teams in this_year.items():
             if i in seen or i in anywhere:
                 continue

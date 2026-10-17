@@ -358,9 +358,11 @@ export function wantTwoPoint(year: number, trailAfterTd: number, q: number, cloc
   const late = q >= 4 || (q >= 5);
   if (year <= 1969 && afl && !late) return false;
   const t = trailAfterTd;
-  if (late && clock <= 240) {
+  // The chart, all fourth quarter: down 2 to tie, down 5 to make it a field goal, down 10, 16-18;
+  // up 1 or 5 to stretch it to 3 or 7 once the game is in its last ten minutes.
+  if (late) {
     if (t === 2 || t === 5 || t === 10 || t === 16 || t === 17 || t === 18) return true;
-    if (t === -1 && clock <= 40) return true;
+    if ((t === -1 || t === -5) && clock <= 600) return true;
   }
   if (late && clock <= 90 && (t === 8 || t === 9)) return true;
   if (year <= 1969 && afl) return false;

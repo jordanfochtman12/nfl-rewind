@@ -60,7 +60,7 @@ import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuCoverInjuries, cpuOffseasonDeals, cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
+import { cpuCoverInjuries, cpuOffseasonDeals, cpuTrades, processWaivers, cpuSignNeeds, cpuMarket, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -140,6 +140,7 @@ function runCpuFreeAgency(save: DynastySave): void {
   realIntake(save);
   cpuOffseasonDeals(save);
   cpuSignNeeds(save);
+  cpuMarket(save);
   signFriends(save, activeTeamIds(save.year));
 }
 

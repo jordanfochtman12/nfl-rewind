@@ -271,6 +271,8 @@ export interface Player {
   arch?: string;
   injuredWeeks: number;
   injuryName?: string;
+  /** The club that last released him, and when (a computer club doesn't bring back a man it just cut). */
+  releasedBy?: { year: number; teamId: TeamId };
   /** When the current injury happened (for the weekly injury report). */
   injuredOn?: { year: number; week: number; phase: Phase };
   /** Parked off the 53-man count by a desk decision; frees a roster spot while hurt. */

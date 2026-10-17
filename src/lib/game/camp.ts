@@ -11,7 +11,7 @@ const CAMP_BUGS = ["ankle", "hamstring", "shoulder", "groin", "knee", "wrist", "
 
 function cpuTrim(save: DynastySave, teamId: TeamId, cap = rosterCap(save)): { playerId: string; teamId: TeamId }[] {
   // The men who really made the club that year go first in line to stay.
-  const rank = (p: Player) => p.ovr + (madeRealRoster(save, p) ? 200 : 0);
+  const rank = (p: Player) => p.ovr + (madeRealRoster(save, p) ? 12 : 0);
   // Injured reserve doesn't take an active spot in an era league.
   const roster = rosterOf(save, teamId)
     .filter((p) => !(save.realPool && p.onIR))

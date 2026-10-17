@@ -14,7 +14,7 @@ import type {
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { posLabel } from "./posLabel.ts";
-import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, starterCount, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
@@ -63,6 +63,7 @@ export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, o
     return fail(`You cannot cut your last ${p.pos}.`);
   }
   const inSeason = save.phase === "regular" || save.phase === "playoffs";
+  p.releasedBy = { year: save.year, teamId };
   if (opts?.waive || inSeason) {
     movePlayer(save, p.id, "fa");
     save.waivers.push({ playerId: p.id, from: teamId, week: save.week, year: save.year });
@@ -221,6 +222,19 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
     return fail("He is on waivers — claim him instead.");
   }
   if (activeRosterOf(save, teamId).length >= ROSTER_TARGET + 8) return fail("Roster is full.");
+  const cpu = teamId !== save.userTeamId || save.cpuOnly;
+  // A computer club doesn't sign back a man it released this same year.
+  if (cpu && p.releasedBy?.year === save.year && p.releasedBy.teamId === teamId) {
+    return fail("They just released him.");
+  }
+  // Nor does it buy the whole market: two stars a winter at most, the way even the big spenders
+  // work (a club with cap room was signing four and five Pro Bowlers in one offseason).
+  if (cpu && p.ovr >= 85) {
+    const stars = save.transactions.filter(
+      (t) => t.kind === "sign" && t.year === save.year && t.to === teamId && (save.players[t.playerId]?.ovr ?? 0) >= 85,
+    ).length;
+    if (stars >= 2) return fail("They've already landed their big names this year.");
+  }
   const salary = salaryFor(save.year, p.ovr, p.age, p.pos);
   if (!canAfford(save, teamId, salary)) return fail("Over the cap.");
   if (save.year < 1994 && p.historical && p.yearsPro >= 4 && p.ovr >= 84) {
@@ -637,7 +651,7 @@ export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
   const cap = rosterCap(save);
   if (roster.length > cap) {
     // A man who really made the club that year (an era league's first season) is cut last.
-    const keep = (p: Player) => (madeRealRoster(save, p) ? 200 : 0);
+    const keep = (p: Player) => (madeRealRoster(save, p) ? 12 : 0);
     const extras = roster
       .filter((p) => !LAST_POS.includes(p.pos) || roster.filter((x) => x.pos === p.pos).length > 1)
       .sort((a, b) => {
@@ -762,3 +776,52 @@ export function cpuSignNeeds(save: DynastySave): void {
     cpuManageRoster(save, id);
   }
 }
+
+/**
+ * The open market, best man first. Each real free agent worth a job goes to the computer club he
+ * helps most at his position that can fit him under the cap: a contender pushes a little harder,
+ * a rebuilding club passes on a man past 30, and once a club has its two stars for the winter
+ * (signPlayer) the next-best fit gets him. A full roster makes room by letting its weakest
+ * spare go. Nobody good sits unsigned while a club that needs him has the room.
+ */
+export function cpuMarket(save: DynastySave): number {
+  const clubs = activeTeamIds(save.year).filter((id) => save.teams[id] && (id !== save.userTeamId || save.cpuOnly));
+  const wire = new Set(save.waivers.map((w) => w.playerId));
+  const pool = Object.values(save.players)
+    .filter((p) => p.teamId === "fa" && leaguePlayer(p) && p.ovr >= 70 && p.injuredWeeks <= 0 && !wire.has(p.id))
+    .sort((a, b) => b.ovr - a.ovr);
+  let signed = 0;
+  for (const p of pool) {
+    if (p.teamId !== "fa") continue;
+    const salary = salaryFor(save.year, p.ovr, p.age, p.pos);
+    const bids: { id: TeamId; score: number }[] = [];
+    for (const id of clubs) {
+      const t = save.teams[id]!;
+      const n = Math.max(1, starterCount(p.pos, t.offScheme, t.defScheme));
+      const at = activeRosterOf(save, id).filter((x) => x.pos === p.pos).sort((a, b) => b.ovr - a.ovr);
+      const gain = p.ovr - (at[n - 1]?.ovr ?? 40);
+      if (gain < 3 || !canAfford(save, id, salary)) continue;
+      const win = clubWindow(save, id);
+      const score = gain + (win === "contend" ? 2 : 0) - (win === "rebuild" && p.age >= 30 ? 6 : 0);
+      if (score > 0) bids.push({ id, score });
+    }
+    bids.sort((a, b) => b.score - a.score);
+    for (const { id } of bids) {
+      if (activeRosterOf(save, id).length >= ROSTER_TARGET + 8) {
+        // Room for him: the weakest man at a spot the club is deep at.
+        const roster = activeRosterOf(save, id);
+        const spare = roster
+          .filter((x) => x.ovr < p.ovr - 5 && roster.filter((y) => y.pos === x.pos).length > (DEPTH_CHART.find(([q]) => q === x.pos)?.[1] ?? 1))
+          .sort((a, b) => a.ovr - b.ovr)[0];
+        if (!spare) continue;
+        cutPlayer(save, id, spare.id);
+      }
+      if (signPlayer(save, id, p.id).ok) {
+        signed += 1;
+        break;
+      }
+    }
+  }
+  return signed;
+}
+

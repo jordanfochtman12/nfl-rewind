@@ -713,7 +713,8 @@ function callPlay(
   const late = q >= 4 && clock <= 180;
   const last = q >= 4 && clock <= 40;
   const desperate = late && trail >= 3;
-  const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -7 && clock < 240)) && !desperate;
+  // Ahead in the last five minutes, any lead: run it and keep the clock moving.
+  const chew = (plan.tempo === "chew" || (q >= 4 && trail <= -1 && clock < 300)) && !desperate;
   const twoMin = (q === 2 || q >= 4) && clock <= 120;
   const finalCall = finalPossessionCall(q, clock, down, spot, trail,
     fgRange(k, year, altitude) + (wx === "wind" || wx === "snow" ? -6 : 0), fgSnapYards(year));
@@ -731,7 +732,21 @@ function callPlay(
       (plan.fourth === "aggressive" ? 0.14 : plan.fourth === "conservative" ? -0.1 : 0);
     const short = togo <= 1;
     const mid = spot >= 55 && spot < 70;
+    // Behind in the fourth with the clock going: a punt is giving up. Under two minutes any deficit
+    // goes (unless a field goal ties or wins it); under four, a deficit a field goal won't fix;
+    // under seven, two scores down. Too deep in his own end with time left, he still punts.
+    const fgSaves = trail <= 3 && fgDist <= range;
+    // Three scores down there's nothing to save: he punts like anyone would.
+    const urgent =
+      q === 4 &&
+      trail >= 1 &&
+      trail <= 16 &&
+      !fgSaves &&
+      ((clock <= 120 && togo <= 20) ||
+        (clock <= 240 && trail >= 4 && togo <= 10 && spot >= 25) ||
+        (clock <= 420 && trail >= 9 && togo <= 6 && spot >= 35));
     const go =
+      urgent ||
       (plan.fourth === "aggressive" && togo <= 3 && spot >= 55) ||
       (plan.fourth === "normal" && togo <= 1 && spot >= 60) ||
       // Down a field goal, kick to tie; down more than that, a field goal doesn't help.
