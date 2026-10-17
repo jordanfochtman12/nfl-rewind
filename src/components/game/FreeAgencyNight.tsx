@@ -7,6 +7,7 @@ import {
   bidEligible,
   signPlayer,
   visibleOvr,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn } from "./chrome";
@@ -50,7 +51,7 @@ export function FreeAgencyNight() {
             <ul className="flex flex-wrap gap-2">
               {holes.map((h) => (
                 <li key={h.pos} className="rounded-md border border-brick/50 px-2 py-1 text-sm text-brick">
-                  {h.pos} {h.healthy}/{h.need}
+                  {posLabel(h)} {h.healthy}/{h.need}
                 </li>
               ))}
             </ul>
@@ -78,7 +79,7 @@ export function FreeAgencyNight() {
                 <p className="font-display text-lg">
                   <PlayerLink player={p} className="inline min-h-0" />{" "}
                   <span className="text-sm text-muted">
-                    {p.pos} · {p.age}
+                    {posLabel(p)} · {p.age}
                   </span>
                 </p>
                 <KitChips player={p} compact />

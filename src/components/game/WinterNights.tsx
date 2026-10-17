@@ -18,6 +18,7 @@ import {
   playerGraphic,
   playerName,
   type AwardBallots,
+  posLabel,
 } from "@/lib/game";
 import { useMemo, useState, type ReactNode } from "react";
 import { NightShow, ShowGraphicView } from "./ShowKit";
@@ -77,7 +78,7 @@ function FaceRow({ label, players, year, note }: { label: string; players: Playe
             <PlayerPortrait p={p} year={typeof year === "number" ? year : year(p)} size="sm" />
             <div className="min-w-0">
               <b>{playerName(p)}</b>
-              <small>{note ? note(p) : p.pos}</small>
+              <small>{note ? note(p) : posLabel(p)}</small>
             </div>
           </li>
         ))}
@@ -115,7 +116,7 @@ export function AwardsNight() {
             label="MOST VALUABLE PLAYER · THE FINALISTS"
             players={finalists}
             year={save.year}
-            note={(p) => `${p.pos} · ${p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? displayName(save.year, p.teamId as TeamId) : ""}`}
+            note={(p) => `${posLabel(p)} · ${p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? displayName(save.year, p.teamId as TeamId) : ""}`}
           />
         </div>
       </NightOpening>
@@ -169,7 +170,7 @@ export function AwardsNight() {
                   }`}
                 >
                   <PlayerLink player={p} className="inline min-h-0" />{" "}
-                  <span className="text-muted">{p.pos}</span>
+                  <span className="text-muted">{posLabel(p)}</span>
                 </li>
               ))}
             </ul>
@@ -239,7 +240,7 @@ function AwardsCeremony({ shown, coach }: { shown: [string, string | undefined][
               </div>
               {!revealed && live && pool.length > 1 && (
                 <p className="mt-2 text-sm text-muted">
-                  The finalists: {pool.map((x) => `${playerName(x)} (${x.pos})`).join(", ")}
+                  The finalists: {pool.map((x) => `${playerName(x)} (${posLabel(x)})`).join(", ")}
                 </p>
               )}
               {card && (
@@ -293,7 +294,7 @@ export function ProBowlNight() {
         {rows.slice(0, 14).map((p) => (
           <li key={p.id} className={!save.sandbox && p.teamId === save.userTeamId ? "text-brass" : ""}>
             <PlayerLink player={p} className="inline min-h-0" />{" "}
-            <span className="text-muted">{p.pos}</span>
+            <span className="text-muted">{posLabel(p)}</span>
           </li>
         ))}
       </ol>
@@ -307,7 +308,7 @@ export function ProBowlNight() {
       title={`${awayLabel} ${g.awayScore}, ${homeLabel} ${g.homeScore}`}
       sub={g.stadium ?? "All-star game"}
       year={save.year}
-      ticker={[...home, ...away].slice(0, 24).map((p) => `${playerName(p).toUpperCase()} · ${p.pos}`)}
+      ticker={[...home, ...away].slice(0, 24).map((p) => `${playerName(p).toUpperCase()} · ${posLabel(p)}`)}
       tickerLabel="THE ROSTERS"
     >
     <article className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
@@ -352,7 +353,7 @@ function retireCard(p: Player, blurb: string, mine: boolean, honors = false) {
       <p className="font-display text-xl">
         <PlayerLink player={p} className="inline min-h-0" />{" "}
         <span className="text-sm text-muted">
-          {p.pos} · {p.age}
+          {posLabel(p)} · {p.age}
         </span>
       </p>
       <p className="mt-1 text-sm text-paper">{blurb || line || `Peak ${p.peakOvr}.`}</p>
@@ -464,7 +465,7 @@ export function HofNight() {
             year={(p) => p.retiredYear ?? save.year}
             note={(p) => {
               const club = signatureClub(p);
-              return `${p.pos}${club ? ` · ${displayName(save.year, club.teamId)}` : ""}`;
+              return `${posLabel(p)}${club ? ` · ${displayName(save.year, club.teamId)}` : ""}`;
             }}
           />
         </div>
@@ -491,7 +492,7 @@ export function HofNight() {
       title={`The Class of ${save.year + 1}`}
       sub={klass.length + coaches.length ? `${klass.length + coaches.length} through the door` : "The vote is in"}
       year={save.year}
-      ticker={[...klass.map((p) => `${playerName(p).toUpperCase()} · ${p.pos}`), ...coaches.map((c) => `${c.name.toUpperCase()} · COACH`)]}
+      ticker={[...klass.map((p) => `${playerName(p).toUpperCase()} · ${posLabel(p)}`), ...coaches.map((c) => `${c.name.toUpperCase()} · COACH`)]}
       tickerLabel="THE CLASS"
     >
     <article className="relative overflow-hidden rounded-xl border border-brass/50 bg-studio">

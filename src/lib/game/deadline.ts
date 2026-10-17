@@ -7,6 +7,7 @@ import { evaluateTrade } from "./tradeAi.ts";
 import { allPicks } from "./draft.ts";
 import { randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
+import { posLabel } from "./posLabel.ts";
 
 export function deadlineWeek(year: number): number {
   const n = gamesInSeason(year);
@@ -16,7 +17,7 @@ export function deadlineWeek(year: number): number {
 function pieceName(save: DynastySave, piece: TradePiece): string {
   if (piece.playerId) {
     const p = save.players[piece.playerId];
-    return p ? `${playerName(p)} (${p.pos})` : "a player";
+    return p ? `${playerName(p)} (${posLabel(p)})` : "a player";
   }
   if (piece.pickId) {
     const pk = allPicks(save).find((x) => x.id === piece.pickId);

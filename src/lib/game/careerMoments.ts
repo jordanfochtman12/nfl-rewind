@@ -14,6 +14,7 @@ import { winPct } from "./standings.ts";
 import { executeTrade, tradeWindowOpen } from "./gm.ts";
 import { rosterOf } from "./players.ts";
 import { rand } from "./rng.ts";
+import { posLabel } from "./posLabel.ts";
 
 type Key = "passYds" | "passTd" | "rushYds" | "rushTd" | "rec" | "recYds" | "recTd" | "sacks" | "ints";
 
@@ -180,7 +181,7 @@ export function contractYearBreakouts(save: DynastySave): { player: Player; line
     const a = score(now, now.gp);
     const b = score(prev, prev.gp);
     if (a < 8 || a < b * 1.35) continue;
-    out.push({ player: p, line: `${p.pos}, ${displayName(year, clubOf(p)!)}: up from last year with a new deal on the line.`, jump: a / Math.max(1, b) });
+    out.push({ player: p, line: `${posLabel(p)}, ${displayName(year, clubOf(p)!)}: up from last year with a new deal on the line.`, jump: a / Math.max(1, b) });
   }
   return out.sort((x, y) => y.jump - x.jump).slice(0, 3);
 }

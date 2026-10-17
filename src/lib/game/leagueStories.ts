@@ -15,6 +15,7 @@ import { realPostseason, realRecords } from "./timeline.ts";
 import { contractYearBreakouts } from "./careerMoments.ts";
 import { risingRivalries } from "./h2h.ts";
 import { maxWeek } from "./schedule.ts";
+import { posLabel } from "./posLabel.ts";
 
 const rec = (t: { wins: number; losses: number; ties: number }) => `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}`;
 /** Standings points: two for a win, one for a tie, so ties never need fractions. */
@@ -155,7 +156,7 @@ export function awardRaces(save: DynastySave, top = 5): AwardLadder[] {
   const b = awardBallots(save, { live: true, top });
   const row = (p: Player): LadderRow => {
     const team = clubOf(p, year);
-    return { id: p.id, name: playerName(p), line: `${p.pos}${team ? `, ${displayName(year, team)}` : ""} · ${statLine(p, year)}`, teamId: team };
+    return { id: p.id, name: playerName(p), line: `${posLabel(p)}${team ? `, ${displayName(year, team)}` : ""} · ${statLine(p, year)}`, teamId: team };
   };
   const out: AwardLadder[] = [{ key: "mvp", label: "MVP", rows: b.mvp.map(row) }];
   if (awardExists(year, "offPoy")) out.push({ key: "offPoy", label: "Offensive Player of the Year", rows: b.offPoy.map(row) });

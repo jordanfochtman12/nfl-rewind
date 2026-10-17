@@ -16,6 +16,7 @@ import {
   teamNeeds,
   type PickBreakdown,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -112,7 +113,7 @@ export function OnTheClockPlate({ seconds, limit, isUser, needs: mine }: { secon
               const p = save.players[f.playerId]!;
               return (
                 <span key={f.playerId} className="dn-fit">
-                  {playerName(p)} <small>{p.pos} · #{f.rank}</small>
+                  {playerName(p)} <small>{posLabel(p)} · #{f.rank}</small>
                 </span>
               );
             })}
@@ -175,7 +176,7 @@ export function PickReveal() {
               <PlayerLink player={last} className="inline min-h-0" />
             </h3>
             <p className="dn-card-meta">
-              {b.pos}
+              {posLabel(b)}
               {b.college && b.college !== "Campus" ? ` · ${b.college.toUpperCase()}` : ""}
               {meas.length ? ` · ${meas.join(" · ")}` : ""}
             </p>
@@ -262,7 +263,7 @@ export function RoundRecapCard() {
             <span className="dn-label">YOUR PICKS</span>
             {recap.mine.map((m) => (
               <p key={m.playerId}>
-                {m.name} <small>{m.pos} · No. {m.overall}</small> <b className="dn-grade-sm">{m.grade}</b>
+                {m.name} <small>{posLabel(m)} · No. {m.overall}</small> <b className="dn-grade-sm">{m.grade}</b>
               </p>
             ))}
           </div>

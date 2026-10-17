@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { clubInk, decide, displayName, formatMoney, openDecisions, type OwnerDecision } from "@/lib/game";
+import { clubInk, decide, displayName, formatMoney, openDecisions, type OwnerDecision, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
@@ -48,7 +48,7 @@ export function OwnerCall() {
               <p className="k5-call-who">
                 {players.map((p) => (
                   <span key={p.id}>
-                    <PlayerLink player={p} className="inline min-h-0" /> <small>{p.pos} · {p.ovr} OVR · age {p.age}</small>
+                    <PlayerLink player={p} className="inline min-h-0" /> <small>{posLabel(p)} · {p.ovr} OVR · age {p.age}</small>
                   </span>
                 ))}
                 {d.ask ? <span className="k5-call-ask">Asking {formatMoney(d.ask, save.year)} a year</span> : null}

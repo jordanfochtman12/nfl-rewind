@@ -11,6 +11,7 @@ import {
   scoutLetter,
   sessionLabel,
   type PosGroup,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -95,7 +96,7 @@ export function DraftPreviewShow() {
                   <p className="flex flex-wrap items-center gap-x-2">
                     <Who id={id} />
                     <span className="text-sm text-muted">
-                      {p.pos} · {p.college ?? "—"}
+                      {posLabel(p)} · {p.college ?? "—"}
                     </span>
                     <Grade g={d.board.find((b) => b.playerId === id)?.grade ?? (p.scoutOvr ?? p.ovr)} />
                   </p>
@@ -131,7 +132,7 @@ export function DraftPreviewShow() {
                       <span className="min-w-0">
                         <Who id={b.playerId} />
                         <span className="block text-xs text-muted">
-                          {P(b.playerId)?.pos} · {P(b.playerId)?.college} · #{b.rank}
+                          {P(b.playerId) ? posLabel(P(b.playerId)!) : ""} · {P(b.playerId)?.college} · #{b.rank}
                         </span>
                       </span>
                       <Grade g={b.grade} />
@@ -169,7 +170,7 @@ export function DraftPreviewShow() {
                 <td className="px-2 py-1.5">
                   <Who id={b.playerId} />
                 </td>
-                <td className="px-2 py-1.5">{P(b.playerId)?.pos}</td>
+                <td className="px-2 py-1.5">{P(b.playerId) ? posLabel(P(b.playerId)!) : ""}</td>
                 <td className="px-2 py-1.5 text-muted">{P(b.playerId)?.college}</td>
                 <td className="tabular px-2 py-1.5 text-muted">{meas(b.playerId)}</td>
                 <td className="px-2 py-1.5">
@@ -209,7 +210,7 @@ export function DraftPreviewShow() {
                       <Who id={b.playerId} />
                     </p>
                     <p className="text-xs text-muted">
-                      {p.pos} · {p.college ?? "—"} · {meas(b.playerId)}
+                      {posLabel(p)} · {p.college ?? "—"} · {meas(b.playerId)}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
@@ -252,7 +253,7 @@ export function DraftPreviewShow() {
                     <td className="px-2 py-2">
                       <Who id={b.playerId} />
                       <span className="block text-xs text-muted">
-                        {p.pos}
+                        {posLabel(p)}
                         {p.realRound ? ` · went Rd ${p.realRound} in real life` : ""}
                       </span>
                     </td>
@@ -311,7 +312,7 @@ export function DraftPreviewShow() {
                   <span>
                     <Who id={b.playerId} />
                     <span className="block text-sm text-muted">
-                      {P(b.playerId)?.pos} · {P(b.playerId)?.college} · board #{b.rank}, projected Rd {b.projRound}
+                      {P(b.playerId) ? posLabel(P(b.playerId)!) : ""} · {P(b.playerId)?.college} · board #{b.rank}, projected Rd {b.projRound}
                     </span>
                   </span>
                   <Grade g={b.grade} />
@@ -328,7 +329,7 @@ export function DraftPreviewShow() {
   const mockTicker = d.mock.slice(0, 16).map((m) => {
     const pid = m.actualId ?? m.mockId;
     const p = pid ? save.players[pid] : undefined;
-    return `NO. ${m.overall} ${teamAbbr(m.teamId)}: ${p ? `${playerName(p).toUpperCase()}, ${p.pos}` : "ON THE CLOCK"}`;
+    return `NO. ${m.overall} ${teamAbbr(m.teamId)}: ${p ? `${playerName(p).toUpperCase()}, ${posLabel(p)}` : "ON THE CLOCK"}`;
   });
   return (
     <NightShow id={`draft-preview-${save.year}`} show="DRAFT PREVIEW SPECIAL" title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">

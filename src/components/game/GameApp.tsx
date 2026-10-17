@@ -64,6 +64,7 @@ import {
   type TeamId,
   type Gameplan,
   type HofMember,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
@@ -452,7 +453,7 @@ function DeskReport() {
         <ul className="mt-2 space-y-1 text-sm">
           {holes.map((h) => (
             <li key={h.pos} className="flex justify-between gap-3">
-              <span className="text-brick">{h.pos}</span>
+              <span className="text-brick">{posLabel(h)}</span>
               <span className="tabular text-muted">
                 {h.healthy} healthy / need {h.need}
               </span>
@@ -643,7 +644,7 @@ function InjuryReport() {
           {hurt.map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-3">
               <span>
-                <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
+                <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)}</span>
               </span>
               <span className="flex items-center gap-2">
                 <span className="tabular text-brick">
@@ -791,7 +792,7 @@ function Roster() {
                 {isStarter(save, p) ? <span className="ml-2 text-[10px] tracking-widest text-brass">STARTER</span> : null}
                 {p.historical ? "" : <span className="ml-2 text-xs text-subtle">camp</span>}
               </td>
-              <td className="px-3 py-2">{p.pos}</td>
+              <td className="px-3 py-2">{posLabel(p)}</td>
               <td className="tabular px-3 py-2">
                 <span className={`stat-glow text-base ${gradeTone(visibleOvr(p))}`}>
                   {p.revealed ? p.ovr : `sc ${visibleOvr(p)}`}
@@ -899,7 +900,7 @@ function Depth() {
               const starterN = starterCount(row.pos, team.offScheme, team.defScheme);
               return (
               <div key={row.pos} className="rounded-lg border border-line bg-surface p-3">
-                <p className="text-xs tracking-widest text-muted">{row.pos}</p>
+                <p className="text-xs tracking-widest text-muted">{posLabel(row)}</p>
                 <ol className="mt-1 space-y-1">
                   {row.players.map((p, i) => (
                     <li key={p.id} className={`flex items-center justify-between gap-2 rounded-md px-1.5 py-1 text-sm ${i < starterN ? "lead-row" : ""}`}>
@@ -1562,7 +1563,7 @@ function Stats() {
                           {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">LEADS</span> : null}
                         </td>
                         <td className="px-3 py-2">
-                          {p.pos}
+                          {posLabel(p)}
                           {isStarter(save, p) ? <span className="ml-1 text-[10px] tracking-widest text-brass">•ST</span> : null}
                         </td>
                         <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
@@ -1644,7 +1645,7 @@ function RecordBookSection({ title, teamId }: { title: string; teamId?: TeamId }
                       r.name
                     )}{" "}
                     <span className="text-muted">
-                      {teamId ? r.pos : `${r.pos} · ${r.team}`} · {r.year || "—"}
+                      {teamId ? posLabel(r) : `${posLabel(r)} · ${r.team}`} · {r.year || "—"}
                     </span>
                   </span>
                   <span className={`stat-glow shrink-0 tabular ${i === 0 ? "text-brass" : "text-fg"}`}>{r.value.toLocaleString("en-US")}</span>
@@ -1755,7 +1756,7 @@ function History() {
                       ) : (
                         r.name
                       )}{" "}
-                      <span className="text-muted">{r.pos}</span>
+                      <span className="text-muted">{posLabel(r)}</span>
                     </span>
                     <span className="tabular">{r.value}</span>
                   </li>
@@ -1912,7 +1913,7 @@ function AllDecadeTeams() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {slots.map((slot) => (
           <article key={slot.pos} className="chrome-bevel rounded-lg border border-line bg-surface p-3">
-            <p className="text-xs tracking-widest text-brass">{slot.pos}</p>
+            <p className="text-xs tracking-widest text-brass">{posLabel(slot)}</p>
             <ul className="mt-2 space-y-1.5 text-sm">
               {slot.players.map((p) => (
                 <li key={p.playerId} className="min-w-0">

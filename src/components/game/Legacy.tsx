@@ -13,6 +13,7 @@ import {
   ringOfHonor,
   type Player,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -77,7 +78,7 @@ export function InductionCard({ player, teamId, note }: { player: Player; teamId
             {(teamId ? c.seasons : c.clubs?.[0]?.seasons ?? c.seasons) === 1 ? "" : "S"}
           </p>
           <p className="font-display text-3xl leading-tight">
-            <PlayerLink player={player} className="inline min-h-0" /> <span className="text-sm text-muted">{player.pos}</span>
+            <PlayerLink player={player} className="inline min-h-0" /> <span className="text-sm text-muted">{posLabel(player)}</span>
           </p>
           {others.length > 0 && (
             <p className="text-xs text-muted">
@@ -181,7 +182,7 @@ export function LegacySection() {
               return (
                 <li key={r.playerId} className="rounded-md border border-line bg-black/50 px-3 py-2">
                   <p className="text-sm">
-                    <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
+                    <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)}</span>
                     {p.hofYear ? <span className="ml-2 text-[11px] tracking-[0.2em] text-brass">HOF {p.hofYear}</span> : null}
                   </p>
                   <p className="text-xs text-muted">
@@ -203,7 +204,7 @@ export function LegacySection() {
                 <li key={p.id} className="rounded-md border border-line bg-black/50 px-3 py-2">
                   <p className="text-sm">
                     <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">
-                      {p.pos} · #{p.jersey} · {c?.span}
+                      {posLabel(p)} · #{p.jersey} · {c?.span}
                     </span>
                   </p>
                   {c?.honors.length ? <p className="text-xs text-paper">{c.honors.join(" · ")}</p> : null}

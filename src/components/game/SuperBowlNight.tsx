@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { clubInk, displayName, nicknameOf, playerName, roman, rosterOf, superBowlNumber, superBowlSite, type DynastySave, type Player, type TeamId } from "@/lib/game";
+import { clubInk, displayName, nicknameOf, playerName, roman, rosterOf, superBowlNumber, superBowlSite, type DynastySave, type Player, type TeamId, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
@@ -179,7 +179,7 @@ export function SuperBowlNight() {
                 <PlayerLink player={mvp} className="inline min-h-0" />
               </p>
               <p className="k5-sb-mvp-meta">
-                {mvp.pos} · #{mvp.jersey}
+                {posLabel(mvp)} · #{mvp.jersey}
               </p>
             </section>
           )}
@@ -325,7 +325,7 @@ function SuperBowlOpening({ onStart }: { onStart: () => void }) {
                   <div className="min-w-0">
                     <b>{playerName(star)}</b>
                     <small>
-                      {star.pos} · #{star.jersey}
+                      {posLabel(star)} · #{star.jersey}
                     </small>
                   </div>
                 </div>

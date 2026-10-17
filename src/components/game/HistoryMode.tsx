@@ -17,6 +17,7 @@ import {
   type GameResult,
   type Player,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -122,7 +123,7 @@ function HofCard({ save }: { save: DynastySave }) {
         {list.map((m, i) => (
           <li key={`${m.playerId ?? m.coachId ?? m.name}-${i}`} className="rounded-md border border-line px-3 py-1.5 text-sm text-paper">
             {m.playerId ? <Who save={save} id={m.playerId} /> : m.name}
-            {m.playerId && save.players[m.playerId] ? <span className="ml-1 text-muted">{save.players[m.playerId]!.pos}</span> : null}
+            {m.playerId && save.players[m.playerId] ? <span className="ml-1 text-muted">{posLabel(save.players[m.playerId]!)}</span> : null}
           </li>
         ))}
       </ul>
@@ -145,7 +146,7 @@ function DraftCard({ save }: { save: DynastySave }) {
             <span className="tabular w-6 text-right text-muted">{p.draftPick}</span>
             {p.draftTeam && <Logo id={p.draftTeam} size={20} year={year} />}
             <span className="min-w-0 truncate">
-              <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}{p.college ? `, ${p.college}` : ""}</span>
+              <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)}{p.college ? `, ${p.college}` : ""}</span>
             </span>
           </li>
         ))}
@@ -312,7 +313,7 @@ export function HistoryDraft() {
               {p.draftTeam && <Logo id={p.draftTeam} size={22} year={shown} />}
               <span className="w-40 truncate text-muted max-sm:hidden">{p.draftTeam ? displayName(shown, p.draftTeam) : ""}</span>
               <span className="min-w-0 flex-1 truncate">
-                <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
+                <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)}</span>
               </span>
               <span className="truncate text-xs text-subtle max-sm:hidden">{p.college}</span>
             </li>

@@ -15,7 +15,8 @@ Reads:
 
 Writes src/lib/game/data/history/starters.ts:
   STARTERS[year] = "person.starts.spot,..."  starts = regular-season weeks he was first string
-                   (out of the season's weeks), spot = where he was listed most (LT, RG, OLB, FS...)
+                   (out of the season's weeks), spot = where he was listed most (LT, RG, OLB, FS...;
+                   a safety is FS or SS where the record says which, S where it doesn't)
 """
 from __future__ import annotations
 
@@ -63,7 +64,7 @@ SPOT = {
     "DE": "DE", "LDE": "DE", "RDE": "DE", "LE": "DE", "RE": "DE", "EDGE": "DE", "DT": "DT", "LDT": "DT", "RDT": "DT",
     "NT": "DT", "MLB": "MLB", "ILB": "MLB", "LILB": "MLB", "RILB": "MLB", "MIKE": "MLB", "WLB": "OLB",
     "SLB": "OLB", "LOLB": "OLB", "ROLB": "OLB", "OLB": "OLB", "WILL": "OLB", "SAM": "OLB",
-    "CB": "CB", "LCB": "CB", "RCB": "CB", "NB": "CB", "NCB": "CB", "FS": "S", "SS": "S", "S": "S",
+    "CB": "CB", "LCB": "CB", "RCB": "CB", "NB": "CB", "NCB": "CB", "FS": "FS", "SS": "SS", "S": "S",
     "K": "K", "PK": "K", "P": "P",
 }
 
@@ -90,7 +91,7 @@ PFA_SPOT = {
     "DE": "DE", "LDE": "DE", "RDE": "DE", "DT": "DT", "LDT": "DT", "RDT": "DT", "NT": "DT", "MG": "DT", "NG": "DT",
     "UT": "DT", "MLB": "MLB", "ILB": "MLB", "LILB": "MLB", "RILB": "MLB", "WILB": "MLB", "SILB": "MLB",
     "OLB": "OLB", "LLB": "OLB", "RLB": "OLB", "LOLB": "OLB", "ROLB": "OLB", "SLB": "OLB", "WLB": "OLB",
-    "CB": "CB", "LCB": "CB", "RCB": "CB", "NB": "CB", "S": "S", "SS": "S", "FS": "S", "LS": "S", "RS": "S", "WS": "S",
+    "CB": "CB", "LCB": "CB", "RCB": "CB", "NB": "CB", "S": "S", "SS": "SS", "FS": "FS", "LS": "S", "RS": "S", "WS": "S",
     "K": "K", "P": "P",
 }
 

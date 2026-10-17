@@ -1,4 +1,4 @@
-import { playerName, starterCount, starters, type Player, type Pos, type TeamId } from "@/lib/game";
+import { playerName, safetyPair, starterCount, starters, type Player, type Pos, type TeamId } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 
 function Chip({ p, label }: { p?: Player; label: string }) {
@@ -53,6 +53,7 @@ export function DepthField({ teamId }: { teamId?: TeamId }) {
   const mlb = at("MLB");
   const cb = at("CB");
   const s = at("S");
+  const [s0, s1] = safetyPair(s[0], s[1]);
   const k = at("K")[0];
   const p = at("P")[0];
 
@@ -135,8 +136,8 @@ export function DepthField({ teamId }: { teamId?: TeamId }) {
         </div>
         <div className="mt-3 flex justify-around">
           <Chip p={cb[0]} label="CB" />
-          <Chip p={s[0]} label="S" />
-          <Chip p={s[1]} label="S" />
+          <Chip p={s[0]} label={s0} />
+          <Chip p={s[1]} label={s1} />
           <Chip p={cb[1]} label="CB" />
         </div>
         <div className="mt-5 flex justify-center gap-4">

@@ -8,6 +8,7 @@ import {
   userExpansionPick,
   visibleOvr,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -113,7 +114,7 @@ export function ExpansionNight() {
                             <span>
                               <PlayerLink player={p} className="inline min-h-0" />{" "}
                               <span className="text-muted">
-                                {p.pos} · {visibleOvr(p)}
+                                {posLabel(p)} · {visibleOvr(p)}
                               </span>
                             </span>
                             {canTake ? (
@@ -153,7 +154,7 @@ export function ExpansionNight() {
                         <li key={p.id} className="flex justify-between gap-2">
                           <span>
                             <PlayerLink player={p} className="inline min-h-0" />{" "}
-                            <span className="text-muted">{p.pos}</span>
+                            <span className="text-muted">{posLabel(p)}</span>
                           </span>
                           <span className="text-subtle">
                             {from ? displayName(save.year, from) : p.historical ? "leftover" : "UDFA"}
@@ -179,7 +180,7 @@ export function ExpansionNight() {
               .map((p) => (
                 <li key={p.id} className="text-sm">
                   <PlayerLink player={p} className="inline min-h-0" />{" "}
-                  <span className="text-muted">{p.pos}</span>
+                  <span className="text-muted">{posLabel(p)}</span>
                 </li>
               ))}
           </ul>

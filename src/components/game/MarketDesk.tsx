@@ -21,6 +21,7 @@ import {
   type Player,
   type TeamId,
   type TradePiece,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -112,7 +113,7 @@ export function MarketDesk() {
                   <span>
                     <PlayerLink player={p} className="inline min-h-0" />{" "}
                     <span className="text-muted">
-                      {p.pos} · from {displayName(save.year, w.from)}
+                      {posLabel(p)} · from {displayName(save.year, w.from)}
                     </span>
                   </span>
                   <Btn
@@ -181,7 +182,7 @@ export function MarketDesk() {
                       );
                     })()}
                   </td>
-                  <td className="px-3 py-2">{p.pos}</td>
+                  <td className="px-3 py-2">{posLabel(p)}</td>
                   <td className="px-3 py-2">
                     <Grade p={p} />
                   </td>
@@ -243,7 +244,7 @@ export function MarketDesk() {
                         <span onClick={(e) => e.preventDefault()}>
                           <PlayerLink player={p} className="inline min-h-0" />
                         </span>{" "}
-                        · {p.pos} · <Grade p={p} />
+                        · {posLabel(p)} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -279,7 +280,7 @@ export function MarketDesk() {
                         <span onClick={(e) => e.preventDefault()}>
                           <PlayerLink player={p} className="inline min-h-0" />
                         </span>{" "}
-                        · {p.pos} · <Grade p={p} />
+                        · {posLabel(p)} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -350,7 +351,7 @@ export function MarketDesk() {
             .map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm">
                 <span>
-                  <PlayerLink player={p} className="inline min-h-0" /> {p.pos} · <Grade p={p} />
+                  <PlayerLink player={p} className="inline min-h-0" /> {posLabel(p)} · <Grade p={p} />
                 </span>
                 <Btn
                   kind="brick"

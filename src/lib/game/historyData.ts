@@ -55,7 +55,7 @@ export interface HistoryData {
   honors(year: number): Map<number, "1" | "2" | "p">;
   /** Games or weeks he started that season, and his spot: Pro Football Archives' rosters to 2000,
    * the depth charts from 2001. A man listed only as "LB" or "DB" has no spot. */
-  starters(year: number): Map<number, { starts: number; spot?: Pos }>;
+  starters(year: number): Map<number, { starts: number; spot?: Pos; role?: "FS" | "SS" }>;
   /** Games (to 2000) or depth-chart weeks (2001 on) the season's starts are out of. */
   chartWeeks(year: number): number;
   stats(year: number): { person: number; team: TeamId | ""; line: HistoryLine }[];
@@ -344,11 +344,13 @@ export function parseHistory(mods: {
     return out;
   });
   const starters = memo((y) => {
-    const out = new Map<number, { starts: number; spot?: Pos }>();
+    const out = new Map<number, { starts: number; spot?: Pos; role?: "FS" | "SS" }>();
     for (const e of (mods.STARTERS?.[y] ?? "").split(",")) {
       if (!e) continue;
       const [i, starts, spot] = e.split(".");
-      out.set(id36(i!), { starts: Number(starts), spot: spot ? (spot as Pos) : undefined });
+      // A free or strong safety plays the game's one safety spot.
+      const role = spot === "FS" || spot === "SS" ? spot : undefined;
+      out.set(id36(i!), { starts: Number(starts), spot: role ? "S" : spot ? (spot as Pos) : undefined, role });
     }
     return out;
   });

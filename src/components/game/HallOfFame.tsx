@@ -13,6 +13,7 @@ import {
   type HofMember,
   type Player,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -44,7 +45,7 @@ export function HangingJersey({
       <span className="mt-1 block w-full truncate font-display text-xs font-bold uppercase italic text-white group-hover:text-brass">
         {player.firstName} {player.lastName}
       </span>
-      <span className="block text-[11px] text-muted">{caption ?? `${player.pos} · ${look.year}`}</span>
+      <span className="block text-[11px] text-muted">{caption ?? `${posLabel(player)} · ${look.year}`}</span>
     </button>
   );
 }
@@ -107,7 +108,7 @@ export function HofPlaque({ target, onClose }: { target: PlaqueTarget | null; on
               {p.firstName} {p.lastName}
             </h3>
             <p className="text-sm text-muted">
-              {p.pos} · {p.college ?? "—"} · {c?.span ?? ""}
+              {posLabel(p)} · {p.college ?? "—"} · {c?.span ?? ""}
             </p>
           </div>
           <p className="text-sm leading-relaxed text-paper">{hofWriteUp(save, p)}</p>

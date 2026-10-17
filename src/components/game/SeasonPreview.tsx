@@ -12,6 +12,7 @@ import {
   type PreviewTeam,
   type SeasonPreview,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -31,7 +32,7 @@ function Who({ id, sub }: { id?: string; sub?: string }) {
         {p.firstName} {p.lastName}
       </button>
       <span className="ml-1.5 text-xs text-muted">
-        {p.pos}
+        {posLabel(p)}
         {sub ? ` · ${sub}` : ""}
       </span>
     </span>

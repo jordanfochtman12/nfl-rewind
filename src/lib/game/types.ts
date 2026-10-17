@@ -211,6 +211,8 @@ export interface Player {
   firstName: string;
   lastName: string;
   pos: Pos;
+  /** A safety's job, free or strong, where the record names it (shown, not played: see posLabel). */
+  role?: "FS" | "SS";
   teamId: TeamId | "fa" | "retired" | "hof";
   ratings: Ratings;
   ovr: number;

@@ -11,6 +11,7 @@ import {
   placeBid,
   resolveBid,
   type Player,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -155,7 +156,7 @@ export function BiddingWars() {
           return (
             <li key={b.playerId} className="flex flex-wrap items-baseline gap-x-2">
               <PlayerLink player={p} className="inline min-h-0" />
-              <span className="text-muted">{p.pos}</span>
+              <span className="text-muted">{posLabel(p)}</span>
               <span className={b.status === "won" ? "text-brass" : b.status === "lost" ? "text-brick" : "text-paper"}>
                 {b.status === "open"
                   ? `still deciding · you vs the ${b.rivals.map((r) => displayName(save.year, r.teamId)).join(", ")}`

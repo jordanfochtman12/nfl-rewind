@@ -7,6 +7,7 @@ import {
   playerName,
   rosterOf,
   visibleOvr,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn } from "./chrome";
@@ -60,7 +61,7 @@ export function CampNight() {
           <ul className="mt-3 space-y-3">
             {camp.battles.map((b) => (
               <li key={b.pos} className="rounded-lg border border-line bg-bg/40 px-3 py-3">
-                <p className="text-xs tracking-[0.2em] text-brass">{b.pos}</p>
+                <p className="text-xs tracking-[0.2em] text-brass">{posLabel(b)}</p>
                 <p className="mt-1 text-sm text-paper">{b.note}</p>
               </li>
             ))}
@@ -78,7 +79,7 @@ export function CampNight() {
                 <li key={x.playerId} className="flex justify-between gap-3">
                   <span>
                     {p ? <PlayerLink player={p} className="inline min-h-0" /> : x.playerId}{" "}
-                    <span className="text-muted">{p?.pos}</span>
+                    <span className="text-muted">{p ? posLabel(p) : ""}</span>
                   </span>
                   <span className="tabular text-brick">
                     {x.name} · {x.weeks}w
@@ -99,7 +100,7 @@ export function CampNight() {
               <div>
                 <PlayerLink player={p} className="font-display text-base" />
                 <p className="text-sm text-muted">
-                  {p.pos} · scout {visibleOvr(p)} · {p.age} yrs
+                  {posLabel(p)} · scout {visibleOvr(p)} · {p.age} yrs
                 </p>
                 <KitChips player={p} compact />
               </div>

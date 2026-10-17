@@ -27,6 +27,7 @@ import {
   type TeamId,
   honorLines,
   playoffTotals,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -244,7 +245,7 @@ export function PlayerProfile() {
           <Portrait p={p} year={save.year} primary={colors.primary} secondary={colors.secondary} club={teamId} />
           <div className="min-w-0 flex-1">
             <p className="text-xs tracking-[0.3em] text-brass">
-              {real ? p.pos : `${p.pos} · ${archLabel(p)}`}
+              {real ? posLabel(p) : `${posLabel(p)} · ${archLabel(p)}`}
             </p>
             <h2 id="player-profile-name" className="font-display text-3xl leading-none sm:text-4xl">
               {playerName(p)}

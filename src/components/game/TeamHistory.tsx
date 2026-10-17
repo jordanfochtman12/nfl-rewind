@@ -11,6 +11,7 @@ import {
   retiredNumbers,
   ringOfHonor,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -125,7 +126,7 @@ export function TeamHistory({ records }: { records: (teamId: TeamId) => ReactNod
               const p = save.players[r.playerId];
               if (!p) return null;
               const c = legacyCase(save, p, club);
-              return <HangingJersey key={r.playerId} player={p} teamId={club} width={88} caption={`${p.pos} · ${c?.span ?? ""} · in ${r.year}`} onOpen={() => setPlaque({ kind: "player", id: p.id })} />;
+              return <HangingJersey key={r.playerId} player={p} teamId={club} width={88} caption={`${posLabel(p)} · ${c?.span ?? ""} · in ${r.year}`} onOpen={() => setPlaque({ kind: "player", id: p.id })} />;
             })}
           </Rafter>
         ) : (
@@ -138,7 +139,7 @@ export function TeamHistory({ records }: { records: (teamId: TeamId) => ReactNod
               {waiting.map((p) => (
                 <li key={p.id} className="rounded-md border border-line bg-black/50 px-3 py-2">
                   <p className="text-sm">
-                    <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos} · #{p.jersey} · {legacyCase(save, p, club)?.span}</span>
+                    <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)} · #{p.jersey} · {legacyCase(save, p, club)?.span}</span>
                   </p>
                   <HonorButtons player={p} />
                 </li>
@@ -152,7 +153,7 @@ export function TeamHistory({ records }: { records: (teamId: TeamId) => ReactNod
         {hof.players.length + hof.coaches.length ? (
           <Rafter label="Enshrined">
             {hof.players.map((p) => (
-              <HangingJersey key={p.id} player={p} teamId={club} caption={`${p.pos} · Class of ${p.hofYear ?? ""}`} onOpen={() => setPlaque({ kind: "player", id: p.id })} />
+              <HangingJersey key={p.id} player={p} teamId={club} caption={`${posLabel(p)} · Class of ${p.hofYear ?? ""}`} onOpen={() => setPlaque({ kind: "player", id: p.id })} />
             ))}
             {hof.coaches.map((c) => (
               <CoachBanner key={c.id} coach={c} teamId={club} caption={`Coach · Class of ${c.hofYear ?? ""}`} onOpen={() => setPlaque({ kind: "coach", id: c.id, teamId: club })} />

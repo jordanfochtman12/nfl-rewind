@@ -16,6 +16,8 @@ import {
   type Player,
   type TeamId,
   staffSystems,
+  posLabel,
+  safetyPair,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -215,12 +217,18 @@ export function TeamRosterModal() {
                       <p className="font-display text-[11px] font-bold uppercase italic tracking-wider text-brass">{g.label}</p>
                       <ul className="mt-1 space-y-0.5 text-sm">
                         {g.rows
-                          .filter((r) => r.players[0])
+                          // The two safeties, free and strong.
+                          .flatMap((r) => {
+                            if (r.pos !== "S") return [{ key: r.pos, label: r.pos as string, p: r.players[0] }];
+                            const [a, b] = safetyPair(r.players[0], r.players[1]);
+                            return [{ key: "S1", label: a as string, p: r.players[0] }, { key: "S2", label: b as string, p: r.players[1] }];
+                          })
+                          .filter((r) => r.p)
                           .map((r) => (
-                            <li key={r.pos} className="flex items-center gap-2">
-                              <span className="w-9 shrink-0 text-xs text-muted">{r.pos}</span>
-                              <PlayerLink player={r.players[0]!} className="min-h-0 truncate text-paper" />
-                              {!save.realHistory && <span className="tabular ml-auto text-xs text-subtle">{visibleOvr(r.players[0]!)}</span>}
+                            <li key={r.key} className="flex items-center gap-2">
+                              <span className="w-9 shrink-0 text-xs text-muted">{r.label}</span>
+                              <PlayerLink player={r.p!} className="min-h-0 truncate text-paper" />
+                              {!save.realHistory && <span className="tabular ml-auto text-xs text-subtle">{visibleOvr(r.p!)}</span>}
                             </li>
                           ))}
                       </ul>
@@ -293,7 +301,7 @@ export function TeamRosterModal() {
                         <PlayerLink player={p} className="font-display text-base" />
                         <span className="block text-[11px] text-subtle">{p.college ?? ""}</span>
                       </td>
-                      <td className="px-3 py-2">{p.pos}</td>
+                      <td className="px-3 py-2">{posLabel(p)}</td>
                       {save.realHistory ? (
                         <>
                           <td className="tabular px-3 py-2">{p.age}</td>

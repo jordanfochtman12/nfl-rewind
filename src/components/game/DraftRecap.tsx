@@ -1,5 +1,5 @@
 import { useMemo, type CSSProperties } from "react";
-import { clubInk, displayName, draftRecap, sessionOf, type PickBreakdown, type TeamId } from "@/lib/game";
+import { clubInk, displayName, draftRecap, sessionOf, type PickBreakdown, type TeamId, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerPortrait } from "./Portrait";
@@ -24,7 +24,7 @@ function PickRow({ b }: { b: PickBreakdown }) {
         <span className="dr-pick-main">
           <b>{b.name}</b>
           <small>
-            Rd {b.round} · #{b.overall} · {b.pos}
+            Rd {b.round} · #{b.overall} · {posLabel(b)}
             {b.college ? ` · ${b.college}` : ""}
           </small>
         </span>

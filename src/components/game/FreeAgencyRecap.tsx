@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { clubInk, displayName, faHeadlines, faRecap, formatMoney, nicknameOf, teamAbbr, type TeamId } from "@/lib/game";
+import { clubInk, displayName, faHeadlines, faRecap, formatMoney, nicknameOf, teamAbbr, type TeamId, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
@@ -98,7 +98,7 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
                         <td className="py-2 pr-2">
                           {p ? <PlayerLink player={p} className="inline min-h-0 font-display text-base" /> : s.name}{" "}
                           <span className="text-muted">
-                            {s.pos} · {s.age}
+                            {posLabel(s)} · {s.age}
                           </span>
                         </td>
                         <td className="py-2 pr-2">
@@ -177,7 +177,7 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
               return (
                 <span key={u.playerId}>
                   {i ? ", " : ""}
-                  {p ? <PlayerLink player={p} className="inline min-h-0" /> : u.name} ({u.pos} {u.ovr})
+                  {p ? <PlayerLink player={p} className="inline min-h-0" /> : u.name} ({posLabel(u)} {u.ovr})
                 </span>
               );
             })}

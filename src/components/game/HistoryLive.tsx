@@ -30,6 +30,7 @@ import {
   type GameResult,
   type Player,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -499,7 +500,7 @@ export function FollowingPanel() {
             return (
               <li key={pid} className="space-y-0.5">
                 <p className="text-sm">
-                  <PlayerLink player={p} className="inline min-h-0 font-display text-lg" /> <span className="text-muted">{p.pos}{save.teams[team] ? `, ${displayName(year, team)}` : ""}</span>
+                  <PlayerLink player={p} className="inline min-h-0 font-display text-lg" /> <span className="text-muted">{posLabel(p)}{save.teams[team] ? `, ${displayName(year, team)}` : ""}</span>
                 </p>
                 <p className="text-xs text-muted">{seasonLine(p, year)}</p>
                 {line && box && (
@@ -534,7 +535,7 @@ export function CallsPanel() {
     return [...ids].map((id) => save.players[id]).filter((p): p is Player => !!p && ["QB", "RB", "WR", "TE", "DE", "DT", "OLB", "MLB", "CB", "S"].includes(p.pos));
   }, [save, year, seasonOpen]);
   const mvpPick = calls[`mvp:${year}`] ? save.players[calls[`mvp:${year}`]!] : undefined;
-  const label = (p: Player) => `${p.firstName} ${p.lastName} (${p.pos}, ${teamAbbr(p.teamId as TeamId)})`;
+  const label = (p: Player) => `${p.firstName} ${p.lastName} (${posLabel(p)}, ${teamAbbr(p.teamId as TeamId)})`;
   const pickMvp = (text: string) => {
     setMvpText(text);
     const p = candidates.find((c) => label(c) === text);

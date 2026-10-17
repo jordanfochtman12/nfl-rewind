@@ -8,6 +8,7 @@ import {
   type BoxPlayer,
   type GameResult,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -391,7 +392,7 @@ export function GameNight({ game, onClose }: { game: GameResult; onClose?: () =>
         <div className="chrome-bevel flex items-center justify-between gap-3 rounded-md bg-gradient-to-r from-brass/25 via-brass/5 to-transparent px-4 py-3">
           <span className="bx-gold px-2 py-0.5 text-[11px] tracking-[0.2em] text-[#140f00] [transform:skewX(-12deg)]">PLAYER OF THE GAME</span>
           <span className="font-display text-xl font-bold uppercase italic">
-            <PlayerLink player={mvp} className="inline min-h-0" /> <span className="text-sm text-muted">{mvp.pos}</span>
+            <PlayerLink player={mvp} className="inline min-h-0" /> <span className="text-sm text-muted">{posLabel(mvp)}</span>
           </span>
         </div>
       )}

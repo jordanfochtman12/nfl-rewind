@@ -20,6 +20,7 @@ import { writeSeasonChapter } from "./almanac.ts";
 import { addNews, addTx } from "./news.ts";
 import { rulesTakingEffect } from "./rulebook.ts";
 import { boxFor, boxPlayerId, boxSeason, gradeCall, ledgerGame, recordBookNow, recordNews, seedLedgers, type RecordHolder } from "./historyExtras.ts";
+import { posLabel } from "./posLabel.ts";
 
 export const HISTORY_FIRST = 1966;
 export const HISTORY_LAST = 2025;
@@ -390,7 +391,7 @@ function applyTrades(save: DynastySave, week: number, move: boolean): void {
       let what = part.pick ? `a ${part.pick} pick${part.name ? ` (${part.name})` : ""}` : part.name ?? "";
       if (part.person !== undefined && !part.pick) {
         const p = playerFor(save, part.person, y, part.gave);
-        what = `${playerName(p)} (${p.pos})`;
+        what = `${playerName(p)} (${posLabel(p)})`;
         players.push(p.id);
         if (move && p.teamId === part.gave) {
           const from = save.teams[part.gave];
@@ -434,7 +435,7 @@ function applyDraft(save: DynastySave): void {
     addNews(save, {
       kind: "headline",
       headline: `The ${save.year} draft: ${playerName(p)} goes first`,
-      body: `The ${displayName(save.year, first.team)} take ${playerName(p)} (${p.pos}${p.college ? `, ${p.college}` : ""}) with the first pick. ${picks.length} players were drafted.`,
+      body: `The ${displayName(save.year, first.team)} take ${playerName(p)} (${posLabel(p)}${p.college ? `, ${p.college}` : ""}) with the first pick. ${picks.length} players were drafted.`,
       teamIds: [first.team],
       playerIds: [p.id],
     });

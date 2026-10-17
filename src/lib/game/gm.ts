@@ -13,6 +13,7 @@ import type {
   TradePiece,
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
+import { posLabel } from "./posLabel.ts";
 import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, movePlayer, playerName, rosterOf, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
@@ -69,7 +70,7 @@ export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, o
     addNews(save, {
       kind: "transaction",
       headline: `${displayName(save.year, teamId)} waive ${playerName(p)}`,
-      body: `${p.pos}, ${p.ovr} true / scout ${p.scoutOvr}.`,
+      body: `${posLabel(p)}, ${p.ovr} true / scout ${p.scoutOvr}.`,
       teamIds: [teamId],
       playerIds: [p.id],
     });
@@ -79,7 +80,7 @@ export function cutPlayer(save: DynastySave, teamId: TeamId, playerId: string, o
     addNews(save, {
       kind: "transaction",
       headline: `${displayName(save.year, teamId)} release ${playerName(p)}`,
-      body: `${p.pos} hits the street.`,
+      body: `${posLabel(p)} hits the street.`,
       teamIds: [teamId],
       playerIds: [p.id],
     });
@@ -150,7 +151,7 @@ export function placeOnIR(save: DynastySave, teamId: TeamId, playerId: string): 
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, teamId)} place ${playerName(p)} on IR`,
-    body: `${p.pos}, ${p.injuryName ?? "hurt"} · ${p.injuredWeeks}w. Opens a roster spot.`,
+    body: `${posLabel(p)}, ${p.injuryName ?? "hurt"} · ${p.injuredWeeks}w. Opens a roster spot.`,
     teamIds: [teamId],
     playerIds: [p.id],
   });
@@ -176,7 +177,7 @@ export function activateFromIR(save: DynastySave, teamId: TeamId, playerId: stri
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, teamId)} activate ${playerName(p)} off IR`,
-    body: `${p.pos} is back on the 53.`,
+    body: `${posLabel(p)} is back on the 53.`,
     teamIds: [teamId],
     playerIds: [p.id],
   });
@@ -212,7 +213,7 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, teamId)} sign ${playerName(p)}`,
-    body: `${p.pos} · ${p.contractYears} year${p.contractYears === 1 ? "" : "s"} · camp body or veteran, depending who you asked.`,
+    body: `${posLabel(p)} · ${p.contractYears} year${p.contractYears === 1 ? "" : "s"} · camp body or veteran, depending who you asked.`,
     teamIds: [teamId],
     playerIds: [p.id],
   });

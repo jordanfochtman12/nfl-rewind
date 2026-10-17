@@ -9,6 +9,7 @@ import {
   type PrimetimeHonoree,
   type PrimetimeShow as Show,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -72,7 +73,7 @@ function Honoree({ h, label }: { h: PrimetimeHonoree; label: string }) {
       <div className="min-w-0">
         <p className="text-[10px] tracking-[0.3em] text-brass">{label.toUpperCase()}</p>
         <p className="font-display text-lg leading-tight">
-          <Name id={h.playerId} name={h.name} /> <span className="text-sm text-muted">{h.pos}</span>
+          <Name id={h.playerId} name={h.name} /> <span className="text-sm text-muted">{posLabel(h)}</span>
         </p>
         <p className="text-sm text-muted">{h.line}</p>
       </div>
@@ -340,7 +341,7 @@ function WeeklyShow() {
         <ul className="grid gap-x-6 gap-y-1.5 text-sm sm:grid-cols-2">
           {show.allPro.map((h) => (
             <li key={h.playerId} className="flex min-w-0 items-center gap-2">
-              <span className="w-9 shrink-0 text-xs text-brass">{h.pos}</span>
+              <span className="w-9 shrink-0 text-xs text-brass">{posLabel(h)}</span>
               <Logo id={h.teamId} size={20} />
               <Name id={h.playerId} name={h.name} />
               <span className="ml-auto truncate text-xs text-muted">{h.line}</span>
@@ -436,7 +437,7 @@ function WeeklyShow() {
             <li key={i.playerId} className="flex flex-wrap items-center gap-x-2 gap-y-0.5 py-2">
               <Logo id={i.teamId} size={20} />
               <Name id={i.playerId} name={i.name} />
-              <span className="text-xs text-muted">{i.pos}</span>
+              <span className="text-xs text-muted">{posLabel(i)}</span>
               {i.fresh ? (
                 <span className="rounded bg-brick/30 px-1.5 text-[10px] tracking-widest text-brick">
                   NEW

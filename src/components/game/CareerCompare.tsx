@@ -1,6 +1,6 @@
 /** All-time ranks on a player's page, and a side-by-side career comparison (lib/game/careerBook.ts). */
 import { useMemo, useState } from "react";
-import { playerName, teamAbbr, type Player, type TeamId } from "@/lib/game";
+import { playerName, teamAbbr, type Player, type TeamId, posLabel } from "@/lib/game";
 import { careerRanks, compareCandidates, comparePlayers } from "@/lib/game/careerBook";
 import { signatureClub } from "@/lib/game/legacy";
 import { useGameStore } from "@/lib/game-store";
@@ -49,7 +49,7 @@ export function CareerCompare({ p }: { p: Player }) {
       <div className="mt-2 flex flex-wrap gap-1.5">
         {options.slice(0, 8).map((x) => (
           <button key={x.id} type="button" onClick={() => setOtherId(x.id)} className={`bx-chip min-h-8 px-2.5 text-[11px] ${otherId === x.id ? "bx-chip-on" : ""}`}>
-            {playerName(x)} <span className="text-subtle">{x.pos}</span>
+            {playerName(x)} <span className="text-subtle">{posLabel(x)}</span>
           </button>
         ))}
       </div>

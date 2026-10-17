@@ -7,6 +7,7 @@ import type { DynastySave, TeamId } from "./types.ts";
 import { displayName, roman } from "./teams.ts";
 import { playerName } from "./players.ts";
 import { careerRecordBook, seasonRecordBook } from "./records.ts";
+import { posLabel } from "./posLabel.ts";
 
 const esc = (s: unknown): string =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -16,7 +17,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? n.toLocaleString("en-US") : n.
 function personName(save: DynastySave, playerId?: string, coachId?: string): string {
   if (playerId) {
     const p = save.players[playerId];
-    return p ? `${playerName(p)} (${p.pos})` : "";
+    return p ? `${playerName(p)} (${posLabel(p)})` : "";
   }
   if (coachId) return save.coaches[coachId]?.name ?? "";
   return "";

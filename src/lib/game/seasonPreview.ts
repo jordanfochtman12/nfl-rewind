@@ -27,6 +27,7 @@ import { REAL_POSTSEASON } from "./data/realPostseason.ts";
 import { realRecords } from "./timeline.ts";
 import { compose, crewFor, eraColor, fill, ORD_WORDS, P, tenure, vary } from "./previewVoice.ts";
 import { seriesNote } from "./h2h.ts";
+import { posLabel } from "./posLabel.ts";
 
 type Episode = SeasonPreview["episode"];
 type Line = Episode["chapters"][number]["lines"][number];
@@ -401,7 +402,7 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
     else if (sr > ids.length - 4) facts.push(vary(k + "sos", year, [`The schedule is a gift, one of the softest in football.`, `Few teams get an easier slate.`]));
     if (lr.playoffs) facts.push(compose(k + "po", year, [[`They made the playoffs a year ago at ${recText(lr.w, lr.l, lr.t)}`, `Back after a ${recText(lr.w, lr.l, lr.t)} playoff season`, `A ${recText(lr.w, lr.l, lr.t)} playoff team last year`], [".", ", and the expectations went up.", ", so January is the standard now.", ", and they want more."]]));
     const star = stars[0] ? save.players[stars[0]] : undefined;
-    if (star) facts.push(compose(k + "star", year, [[`${playerName(star)} `, `The ${star.pos}, ${playerName(star)}, `], ["is the best player on the field most Sundays", "is the reason to buy a ticket", "makes the whole thing go", "is a matchup nightmare", "is worth the price of admission"], [".", ", plain and simple.", ", and every opponent game-plans for him.", ", and he's in his prime."]]));
+    if (star) facts.push(compose(k + "star", year, [[`${playerName(star)} `, `The ${posLabel(star)}, ${playerName(star)}, `], ["is the best player on the field most Sundays", "is the reason to buy a ticket", "makes the whole thing go", "is a matchup nightmare", "is worth the price of admission"], [".", ", plain and simple.", ", and every opponent game-plans for him.", ", and he's in his prime."]]));
     const chosen = facts.length <= 2 ? facts : [facts[(hash(k) + year) % facts.length]!, facts[(hash(k) + year + 1 + (year % 2)) % facts.length]!].filter((f, i, arr) => arr.indexOf(f) === i);
     const trend =
       delta >= 2.5 ? vary(k + "up", year, P.outlookUp) : delta <= -2.5 ? vary(k + "dn", year, P.outlookDown) : vary(k + "fl", year, P.outlookFlat);
@@ -612,14 +613,14 @@ export function buildSeasonPreview(save: DynastySave): SeasonPreview {
       return {
         playerId: p.id,
         teamId: teamOf(p),
-        note: `${p.pos}, ${p.college ?? "college"}${p.draftRound ? `, ${ordinal(p.draftRound)} round` : ""}. ${starting ? "Starts from day one." : "Has to earn snaps."}`,
+        note: `${posLabel(p)}, ${p.college ?? "college"}${p.draftRound ? `, ${ordinal(p.draftRound)} round` : ""}. ${starting ? "Starts from day one." : "Has to earn snaps."}`,
       };
     });
   const breakouts = all
     .filter((p) => p.age <= 25 && p.potential - p.ovr >= 6 && p.ovr >= 68 && p.draftYear !== year && p.pos !== "K" && p.pos !== "P")
     .sort((a, b) => b.potential - b.ovr - (a.potential - a.ovr) + (b.ovr - a.ovr) * 0.4)
     .slice(0, 5)
-    .map((p) => ({ playerId: p.id, teamId: teamOf(p), note: `${p.pos}, ${p.age}. ${vary(p.id + "b", year, P.breakout)}` }));
+    .map((p) => ({ playerId: p.id, teamId: teamOf(p), note: `${posLabel(p)}, ${p.age}. ${vary(p.id + "b", year, P.breakout)}` }));
   const lastRide = all
     .filter((p) => p.age >= 33 && p.ovr >= 76 && p.pos !== "K" && p.pos !== "P")
     .sort((a, b) => b.ovr - a.ovr + (b.age - a.age))

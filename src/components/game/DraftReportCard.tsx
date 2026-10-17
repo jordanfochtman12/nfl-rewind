@@ -1,6 +1,6 @@
 /** Draft classes revisited: the re-draft, the steals and busts, and every club's grade. */
 import { useMemo, useState } from "react";
-import { displayName, draftClassReport, gradableClasses, teamAbbr, type ClassPick } from "@/lib/game";
+import { displayName, draftClassReport, gradableClasses, teamAbbr, type ClassPick, posLabel } from "@/lib/game";
 import { crowdVerdicts } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -13,7 +13,7 @@ function PickLine({ x, year, note }: { x: ClassPick; year: number; note?: string
       <button type="button" className="min-h-8 truncate text-left text-paper hover:text-brass" onClick={() => openProfile(x.playerId)}>
         {x.name}
       </button>
-      <span className="text-xs text-muted">{x.pos}</span>
+      <span className="text-xs text-muted">{posLabel(x)}</span>
       <span className="ml-auto shrink-0 text-xs tabular text-muted">{note}</span>
     </li>
   );

@@ -9,6 +9,7 @@ import { DEPTH_CHART, rosterOf } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { draftQueue, sessionOf, sessionTeams } from "./draft.ts";
 import { displayName } from "./teams.ts";
+import { posLabel } from "./posLabel.ts";
 
 export interface PreviewProspect {
   playerId: string;
@@ -344,7 +345,7 @@ export function draftPreview(save: DynastySave): DraftPreviewData {
     .filter((x) => x.p.forty != null && (x.p.weight ?? 0) >= 240)
     .sort((a, b) => a.p.forty! - b.p.forty!)[0];
   if (bigFast && !combine.some((c) => c.playerId === bigFast.p.id)) {
-    combine.push({ playerId: bigFast.p.id, note: `${bigFast.p.forty!.toFixed(2)} at ${bigFast.p.weight} lbs - rare for a ${bigFast.p.pos}` });
+    combine.push({ playerId: bigFast.p.id, note: `${bigFast.p.forty!.toFixed(2)} at ${bigFast.p.weight} lbs - rare for a ${posLabel(bigFast.p)}` });
   }
   const tallest = top.filter((x) => x.p.heightIn && groupOf(x.p.pos) === "WR").sort((a, b) => b.p.heightIn! - a.p.heightIn!)[0];
   if (tallest) combine.push({ playerId: tallest.p.id, note: `the biggest target in the class at ${Math.floor(tallest.p.heightIn! / 12)}-${tallest.p.heightIn! % 12}` });

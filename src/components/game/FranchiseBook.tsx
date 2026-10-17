@@ -1,4 +1,4 @@
-import { displayName, gradeDynasty, type SeasonChapter } from "@/lib/game";
+import { displayName, gradeDynasty, type SeasonChapter, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerLink } from "./PlayerProfile";
@@ -39,7 +39,7 @@ function Chapter({ ch }: { ch: SeasonChapter }) {
               <li key={d.playerId} className="rounded-md border border-line px-2 py-1 text-xs">
                 {p ? <PlayerLink player={p} className="inline min-h-0 text-xs" /> : d.name}{" "}
                 <span className="text-muted">
-                  {d.pos}
+                  {posLabel(d)}
                   {d.round ? ` · Rd ${d.round}` : ""}
                 </span>
               </li>

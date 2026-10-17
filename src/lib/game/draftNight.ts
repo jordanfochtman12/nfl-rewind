@@ -11,6 +11,7 @@ import { footballPosition } from "./footballSpeech.ts";
 import { playerName, rosterOf } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { nicknameOf } from "./teams.ts";
+import { posLabel } from "./posLabel.ts";
 
 export type PickValue = "STEAL" | "VALUE" | "ON THE BOARD" | "REACH" | "BIG REACH";
 
@@ -198,7 +199,7 @@ export function draftTicker(save: DynastySave, n = 16): string[] {
   return picksMade(save)
     .slice(-n)
     .reverse()
-    .map((p) => `${p.draftPick} · ${(p.draftTeam ?? "").toUpperCase()} · ${playerName(p)}, ${p.pos}${p.college && p.college !== "Campus" ? `, ${p.college}` : ""}`);
+    .map((p) => `${p.draftPick} · ${(p.draftTeam ?? "").toUpperCase()} · ${playerName(p)}, ${posLabel(p)}${p.college && p.college !== "Campus" ? `, ${p.college}` : ""}`);
 }
 
 export interface RoundRecap {

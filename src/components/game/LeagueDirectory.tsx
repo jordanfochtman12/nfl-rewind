@@ -11,6 +11,7 @@ import {
   type Player,
   type Pos,
   type TeamId,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -217,7 +218,7 @@ export function LeagueDirectory() {
                       </button>
                       <span className="block text-[11px] text-subtle">{p.college ?? ""}</span>
                     </td>
-                    <td className="px-2 py-1 text-paper">{p.pos}</td>
+                    <td className="px-2 py-1 text-paper">{posLabel(p)}</td>
                     <td className="px-2 py-1">{clubCell(p)}</td>
                     <td className="tabular px-2 py-1 text-right text-white">
                       {save.realHistory ? "—" : retired ? <span title="Career peak">{p.peakOvr ?? p.ovr}</span> : p.revealed ? p.ovr : <span className="text-paper">sc {visibleOvr(p)}</span>}

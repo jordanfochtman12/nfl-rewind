@@ -4,6 +4,7 @@ import {
   displayName,
   type TradeOffer,
   type TradePiece,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn } from "./chrome";
@@ -17,7 +18,7 @@ export function Piece({ piece }: { piece: TradePiece }) {
     if (!p) return <span>a player</span>;
     return (
       <span>
-        <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{p.pos}</span>
+        <PlayerLink player={p} className="inline min-h-0" /> <span className="text-muted">{posLabel(p)}</span>
       </span>
     );
   }

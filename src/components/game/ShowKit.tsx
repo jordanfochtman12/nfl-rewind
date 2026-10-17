@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { showOpened } from "./openingSeen";
-import { clubInk, displayName, nicknameOf, teamAbbr, type ShowGraphic, type TeamId } from "@/lib/game";
+import { clubInk, displayName, nicknameOf, teamAbbr, type ShowGraphic, type TeamId, posLabel } from "@/lib/game";
 import { Logo } from "./chrome";
 
 /*
@@ -123,7 +123,7 @@ export function ShowGraphicView({ g, year }: { g: ShowGraphic; year: number }) {
             <div>
               <strong>{g.name.toUpperCase()}</strong>
               <small>
-                {g.pos} · AGE {g.age}
+                {posLabel(g)} · AGE {g.age}
                 {g.teamId ? ` · ${displayName(year, g.teamId).toUpperCase()}` : ""}
               </small>
             </div>

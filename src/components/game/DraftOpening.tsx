@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { classConsensus, displayName, draftQueue, draftVenue, onTheClock, playerName, sessionOf, type TeamId } from "@/lib/game";
+import { classConsensus, displayName, draftQueue, draftVenue, onTheClock, playerName, sessionOf, type TeamId, posLabel } from "@/lib/game";
 import { commissionerFor } from "@/lib/game/broadcastCrew";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -67,7 +67,7 @@ export function DraftOpening({ onStart }: { onStart: () => void }) {
                         {i + 1}. {playerName(p)}
                       </b>
                       <small>
-                        {p.pos} · {p.college ?? "Campus"}
+                        {posLabel(p)} · {p.college ?? "Campus"}
                       </small>
                     </div>
                   </li>

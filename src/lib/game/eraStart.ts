@@ -753,7 +753,9 @@ export function createEraGame(o: EraOpts): DynastySave {
     if (!p.id.startsWith("r-")) continue;
     const person = parseInt(p.id.slice(2), 36);
     // The depth chart's spot first (it names the side and the linebacker's job), then the roster's.
-    const charted = historyData().starters(year).get(person)?.spot;
+    const chart = historyData().starters(year).get(person);
+    const charted = chart?.spot;
+    if (chart?.role) p.role = chart.role;
     const spot = charted ?? spotOf.get(person) ?? seasonPos.get(person);
     if (charted || seasonPos.has(person)) placedAt.add(p.id);
     if (spot && spot !== p.pos) {

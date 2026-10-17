@@ -1,3 +1,4 @@
+import { posLabel } from "@/lib/game";
 /** Morale on the roster and the locker room's chemistry (see lib/game/morale.ts). */
 import { useMemo } from "react";
 import type { Player } from "@/lib/game";
@@ -57,7 +58,7 @@ export function LockerRoom() {
         <ul className="mt-3 space-y-1 text-sm">
           {unhappy.map((p) => (
             <li key={p.id} className="flex flex-wrap items-baseline gap-x-2">
-              <PlayerLink player={p} className="inline min-h-0" /> <span className="text-xs text-muted">{p.pos}</span> <MoodCell p={p} />
+              <PlayerLink player={p} className="inline min-h-0" /> <span className="text-xs text-muted">{posLabel(p)}</span> <MoodCell p={p} />
               {p.tradeRequest === save.year && <span className="text-xs font-semibold text-brick">TRADE REQUEST</span>}
             </li>
           ))}

@@ -9,6 +9,7 @@ import {
   tagPrice,
   talksSummary,
   type Negotiation,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn } from "./chrome";
@@ -58,7 +59,7 @@ function Talk({ t }: { t: Negotiation }) {
           <p className="flex flex-wrap items-center gap-2">
             <PlayerLink player={p} className="inline min-h-0 font-display text-lg font-bold uppercase italic" />
             <span className="text-sm text-muted">
-              {p.pos} · {p.age} · {p.ovr} ovr
+              {posLabel(p)} · {p.age} · {p.ovr} ovr
             </span>
             <span className={`px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase italic tracking-wider ${st.tone}`}>{st.label}</span>
           </p>

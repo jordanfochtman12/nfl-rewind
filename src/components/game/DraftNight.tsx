@@ -32,6 +32,7 @@ import {
   visitsLeft,
   draftTicker,
   draftVenue,
+  posLabel,
 } from "@/lib/game";
 import { counterOffer, gradeRange, positionalNeeds, schemeFit } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
@@ -201,7 +202,7 @@ export function DraftNight() {
       {announcer.controls}
       {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
         <ScoutDesk /><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades are your scouts' read, not the truth.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
-        {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{p.pos} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
+        {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{posLabel(p)} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
       </section>}
       {showOpening && (
         <DraftOpening
@@ -334,7 +335,7 @@ export function DraftNight() {
                     </span>
                   </p>
                   <p className="text-sm text-muted">
-                    {p.collegeNo != null ? `#${p.collegeNo} · ` : ""}{p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
+                    {p.collegeNo != null ? `#${p.collegeNo} · ` : ""}{posLabel(p)} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
                   {!save.sandbox && <FitLine p={p} />}
@@ -380,7 +381,7 @@ export function DraftNight() {
                 <PlayerLink player={scout} className="inline min-h-0 font-display text-2xl" />
               </p>
               <p className="text-sm text-muted">
-                {scout.pos} · {archLabel(scout)} · {scout.college ?? "campus"}
+                {posLabel(scout)} · {archLabel(scout)} · {scout.college ?? "campus"}
               </p>
               <p className="mt-1 font-display text-3xl tabular text-brass">{ownerGrade(save, scout)}</p>
               <p className="text-xs tracking-widest text-muted">

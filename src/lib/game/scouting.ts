@@ -17,6 +17,7 @@ import { clamp } from "./rng.ts";
 import { visibleOvr, visibleRatings } from "./scout.ts";
 import { addNews } from "./news.ts";
 import { playerName } from "./players.ts";
+import { posLabel } from "./posLabel.ts";
 
 export const COMBINE_FROM = 1982;
 
@@ -82,7 +83,7 @@ export function runCombine(save: DynastySave): void {
   const risers = moves.filter((m) => m.d > 0).sort((a, b) => b.d - a.d || (b.p.scoutOvr ?? 0) - (a.p.scoutOvr ?? 0)).slice(0, 3);
   const fallers = moves.filter((m) => m.d < 0).sort((a, b) => a.d - b.d || (b.p.scoutOvr ?? 0) - (a.p.scoutOvr ?? 0)).slice(0, 2);
   if (risers.length || fallers.length) {
-    const line = (m: { p: Player }) => `${playerName(m.p)} (${m.p.pos}${m.p.combine?.forty ? `, ${m.p.combine.forty.toFixed(2)}` : ""})`;
+    const line = (m: { p: Player }) => `${playerName(m.p)} (${posLabel(m.p)}${m.p.combine?.forty ? `, ${m.p.combine.forty.toFixed(2)}` : ""})`;
     addNews(save, {
       kind: "headline",
       headline: `Combine week: ${risers[0] ? `${playerName(risers[0].p)} turns heads` : "a few stock drops"}`,

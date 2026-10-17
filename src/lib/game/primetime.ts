@@ -44,6 +44,7 @@ import { leagueChampions, seedPlayoffs } from "./playoffs.ts";
 import { calculateAwards } from "./events.ts";
 import { produceEpisode } from "./studio.ts";
 import { weekReel } from "./weekReel.ts";
+import { posLabel } from "./posLabel.ts";
 
 type Kind = NonNullable<PrimetimeShow["kind"]>;
 
@@ -149,7 +150,7 @@ function performers(save: DynastySave, g: GameResult): string[] {
     .filter((r) => !!r.p && r.s > 4)
     .sort((a, b) => b.s - a.s)
     .slice(0, 3)
-    .map((r) => `${playerName(r.p!)} (${teamAbbr(r.teamId)} ${r.p!.pos}) — ${statLine(r.b)}`);
+    .map((r) => `${playerName(r.p!)} (${teamAbbr(r.teamId)} ${posLabel(r.p!)}) — ${statLine(r.b)}`);
 }
 
 /* ---------- segments ---------- */

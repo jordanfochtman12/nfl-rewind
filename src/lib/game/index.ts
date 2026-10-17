@@ -127,6 +127,7 @@ export { assignCoachKit, coachAbilityLine, coachKitLine, coachKitDef, COACH_ABIL
 export { playerHofScore, coachHofScore } from "./hof.ts";
 
 export { formatHt } from "./development.ts";
+export { posLabel, safetyRole, safetyPair } from "./posLabel.ts";
 export { venueOf, pickWeather, bowlVenue, crowdNoise } from "./venues.ts";
 export { fieldLook, type FieldLook, type EndZoneLook, type Surface } from "./fieldLook.ts";
 export { seasonLeaders, careerTotals, playoffTotals } from "./leaders.ts";

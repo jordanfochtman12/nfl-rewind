@@ -10,6 +10,7 @@ import {
   type TeamId,
   type WireKind,
   type WireRow,
+  posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
@@ -174,7 +175,7 @@ export function Transactions() {
                           {r.text}
                           <span className="text-muted">
                             {" "}
-                            · {p.pos}
+                            · {posLabel(p)}
                           </span>
                         </button>
                       ) : (

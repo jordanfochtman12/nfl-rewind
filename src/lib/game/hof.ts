@@ -3,6 +3,7 @@ import type { Coach, DynastySave, Player, TeamId } from "./types.ts";
 import { COACH_HOF_WAIT_YEARS, HOF_WAIT_YEARS } from "./types.ts";
 import { careerTotals } from "./leaders.ts";
 import { playerName } from "./players.ts";
+import { posLabel } from "./posLabel.ts";
 
 export function playerHofScore(save: DynastySave, p: Player): number {
   const c = careerTotals(p);
@@ -98,7 +99,7 @@ export function playerHofBlurb(save: DynastySave, p: Player): string {
     c.sacks ? `${c.sacks} sacks` : "",
     c.ints ? `${c.ints} INT` : "",
   ].filter(Boolean);
-  return `${playerName(p)}, ${p.pos}. Peak ${p.peakOvr}. ${bits.join(" · ") || "The film is the argument."}`;
+  return `${playerName(p)}, ${posLabel(p)}. Peak ${p.peakOvr}. ${bits.join(" · ") || "The film is the argument."}`;
 }
 
 export function coachHofBlurb(c: Coach): string {
