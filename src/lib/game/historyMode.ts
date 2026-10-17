@@ -248,7 +248,7 @@ function labelFor(save: DynastySave): string {
 const coachId = (name: string) => `rc-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
 /** The save's coach for a real head coach, made the first time he's on a sideline. */
-function coachFor(save: DynastySave, name: string, year: number): Coach {
+export function coachFor(save: DynastySave, name: string, year: number): Coach {
   const id = coachId(name);
   const have = save.coaches[id];
   if (have) return have;

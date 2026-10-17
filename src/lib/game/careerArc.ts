@@ -21,6 +21,12 @@ const TYPICAL_LEN: Record<Pos, number> = {
   DE: 10, DT: 10, OLB: 10, MLB: 10, CB: 9, S: 10, K: 16, P: 16,
 };
 
+/** The age a good player at each spot usually plays to. */
+const END_AGE: Record<Pos, number> = {
+  QB: 37, RB: 30, FB: 31, WR: 32, TE: 33, LT: 34, LG: 33, C: 34, RG: 33, RT: 34,
+  DE: 32, DT: 32, OLB: 32, MLB: 32, CB: 31, S: 32, K: 38, P: 38,
+};
+
 function key(first: string, last: string): string {
   return `${first}|${last}`.toLowerCase().replace(/[.'’`]/g, "");
 }
@@ -186,6 +192,11 @@ function unplayed(arc: NonNullable<Player["arc"]>): boolean {
   return arc.to <= 0 && arc.dy > ARC_DATA_LAST;
 }
 
+/** Drafted after the record ends: his peak is still the scouts' projection. */
+export function projectedOnly(arc: NonNullable<Player["arc"]>): boolean {
+  return unplayed(arc);
+}
+
 /** He really never played a down: the real record is done with him on draft day. */
 function neverPlayed(arc: NonNullable<Player["arc"]>): boolean {
   return arc.to <= 0 && !unplayed(arc);
@@ -194,7 +205,13 @@ function neverPlayed(arc: NonNullable<Player["arc"]>): boolean {
 function careerLength(p: Player, arc: NonNullable<Player["arc"]>): number {
   if (neverPlayed(arc)) return 1;
   const real = Math.max(0, arc.to - arc.dy + 1);
-  return isOpen(arc) ? Math.max(real, TYPICAL_LEN[p.pos]) : Math.max(1, real);
+  if (!isOpen(arc)) return Math.max(1, real);
+  const L = Math.max(real, TYPICAL_LEN[p.pos]);
+  // A star still going when the record stops plays to his position's usual end, not an average
+  // career's length: given a typical one, every 2017-20 Pro Bowler was fading by 2027 and the
+  // league had four 90s left in 2031.
+  if (p.potential >= 86 && !unplayed(arc)) return Math.max(L, END_AGE[p.pos] - (arc.age || 22) + 1);
+  return L;
 }
 
 /** Where his rating should sit in season `idx` of his career (0 = rookie year). */

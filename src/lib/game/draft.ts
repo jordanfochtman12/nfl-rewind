@@ -14,7 +14,7 @@ import { applyScout, visibleOvr } from "./scout.ts";
 import { rookieContract } from "./salary.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { schemeFitPos } from "./staff.ts";
-import { arcTarget, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
+import { arcTarget, honorsFloor, lookupArc, moveToward, projectedOnly } from "./careerArc.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
 import { friendBreaksOut, friendCeiling, friendOf } from "./data/friends.ts";
@@ -245,6 +245,13 @@ export function realDraftee(save: DynastySave, seed: DraftSeed, year: number, au
   }
 }
 
+/** How far past his projection a prospect turns out: a first-rounder most, now and then a late steal. */
+function projectionLift(save: DynastySave, round: number): number {
+  if (round <= 1) return randInt(save, 0, 7);
+  if (round <= 2) return randInt(save, 0, 5);
+  return rand(save) < 0.08 ? randInt(save, 3, 9) : randInt(save, 0, 2);
+}
+
 function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited = true): Player {
   const role = ROLE_PLAYERS[`${seed.f}|${seed.l}`];
   const s: DraftSeed = role ? { ...seed, o: role.o, p: role.p ?? seed.p, rt: undefined, arch: undefined, src: undefined } : seed;
@@ -293,7 +300,15 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     const floor = honorsFloor(arc, p.pos);
     if (p.ovr < floor) moveToward(p, floor);
     p.potential = p.ovr;
-    moveToward(p, arcTarget(p, 0));
+    const start = arcTarget(p, 0);
+    // No seasons on record yet: his peak is a projection, and some of every class beats theirs.
+    // Held to it, the 2026 class had no ceiling past 87 and the league ran out of stars by 2031.
+    // He arrives where the projection had him and grows into the rest.
+    if (projectedOnly(arc)) {
+      moveToward(p, Math.min(97, p.ovr + projectionLift(save, p.draftRound ?? 7)));
+      p.potential = p.ovr;
+    }
+    moveToward(p, start);
     p.peakOvr = p.ovr;
     p.scoutOvr = p.ovr;
   }

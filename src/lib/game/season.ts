@@ -20,7 +20,7 @@ import { compactSaveInPlace } from "./compact.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { closeOwnerSeason, followHistory, isCityMove, ownerOf, postRelocationNews, relocationsFor } from "./owner.ts";
 import { resolveCamp } from "./camp.ts";
-import { realIntake, restoreRecordLines, syncRealNumbers } from "./eraStart.ts";
+import { realBlackMonday, realIntake, restoreRecordLines, syncRealNumbers } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
 import { updateMorale } from "./morale.ts";
@@ -60,7 +60,7 @@ import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuCoverInjuries, cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
+import { cpuCoverInjuries, cpuOffseasonDeals, cpuTrades, processWaivers, cpuSignNeeds, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -137,6 +137,7 @@ function runCpuFreeAgency(save: DynastySave): void {
   // Free agency opening is the deadline for the owner's contract talks.
   closeTalks(save, (p) => expireContract(save, p));
   realIntake(save);
+  cpuOffseasonDeals(save);
   cpuSignNeeds(save);
   signFriends(save, activeTeamIds(save.year));
 }
@@ -324,6 +325,7 @@ function leaveRegularWeek(save: DynastySave): void {
   if (save.week >= last) {
     clampSeasonStats(save);
     seedPlayoffs(save);
+    realBlackMonday(save);
     blackMonday(save);
     save.phase = "playoffs";
     save.week = 1;

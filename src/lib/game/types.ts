@@ -395,6 +395,10 @@ export interface CoachSearch {
   interviews: { coachId: string; teamId: TeamId }[];
   /** Head coaches fired during the season. */
   midseason: number;
+  /** A league begun from the record: the coach each club really hired this winter (eraStart.ts). */
+  real?: Partial<Record<TeamId, string>>;
+  /** A league begun from the record: clubs whose coach the record kept, safe from Black Monday. */
+  keep?: TeamId[];
 }
 
 

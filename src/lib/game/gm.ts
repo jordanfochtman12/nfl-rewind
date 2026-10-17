@@ -24,7 +24,7 @@ import { editsAgainst, staffPlan } from "./gameplans.ts";
 import { planFor } from "./sim.ts";
 import { visibleOvr } from "./scout.ts";
 import { winPct } from "./standings.ts";
-import { evaluateTrade } from "./tradeAi.ts";
+import { clubWindow, evaluateTrade, needFor, type ClubWindow } from "./tradeAi.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
 
@@ -483,13 +483,27 @@ export function contendScore(save: DynastySave, teamId: TeamId): number {
   return Math.max(0, Math.min(1, (avgOvr - 60) / 25));
 }
 
-/** A future (next-year) day-two pick — what a buyer actually parts with for a rental veteran. */
-function tradeablePick(save: DynastySave, teamId: TeamId): string | undefined {
+/**
+ * A future pick a buyer parts with: day two (rounds 2-4) for a rental veteran, a first or
+ * second for a star still in his prime.
+ */
+function tradeablePick(save: DynastySave, teamId: TeamId, rounds: [number, number] = [2, 4]): string | undefined {
   const picks = allPicks(save).filter(
-    (p) => p.owner === teamId && !p.used && p.round >= 2 && p.round <= 4 && p.year > save.year,
+    (p) => p.owner === teamId && !p.used && p.round >= rounds[0] && p.round <= rounds[1] && p.year > save.year,
   );
-  picks.sort((a, b) => a.round - b.round || a.year - b.year);
+  picks.sort((a, b) => b.round - a.round || a.year - b.year);
   return picks[0]?.id;
+}
+
+/** A seller's young core: a rebuilding club keeps the men it is rebuilding around. */
+function keeper(p: Player): boolean {
+  return p.age <= 25 && p.potential >= p.ovr + 3;
+}
+
+/** The price of a man: a prime-age star costs a first or second, anyone else a day-two pick. */
+function priceFor(save: DynastySave, buyer: TeamId, p: Player): string | undefined {
+  if (p.ovr >= 82 && p.age <= 30) return tradeablePick(save, buyer, [1, 2]);
+  return tradeablePick(save, buyer);
 }
 
 /** Contenders send picks for a proven vet at a real hole; rebuilders sell surplus vets for picks. Real deadline dynamics. */
@@ -505,21 +519,59 @@ function dealerTrade(save: DynastySave, ids: TeamId[]): boolean {
 
   const holes = deskHoles(save, buyer).map((h) => h.pos);
   if (!holes.length) return false;
+  // A seller moves its veterans first, and never the young men it is building around.
   const target = holes
     .flatMap((pos) =>
       rosterOf(save, seller).filter(
-        (p) => p.pos === pos && p.injuredWeeks <= 0 && p.ovr >= 68 && !rozelleLock(save, p),
+        (p) => p.pos === pos && p.injuredWeeks <= 0 && p.ovr >= 68 && !rozelleLock(save, p) && !keeper(p),
       ),
     )
-    .sort((a, b) => b.ovr - a.ovr)[0];
+    .sort((a, b) => b.ovr + (b.age >= 29 ? 6 : 0) - (a.ovr + (a.age >= 29 ? 6 : 0)))[0];
   if (!target) return false;
   // The seller keeps at least one body at that spot — this is a sale, not a fire sale.
   const remaining = rosterOf(save, seller).filter((p) => p.pos === target.pos && p.id !== target.id);
   if (!remaining.length) return false;
 
-  const pickId = tradeablePick(save, buyer);
+  const pickId = priceFor(save, buyer, target);
   if (!pickId) return false;
   return executeTrade(save, buyer, seller, [{ pickId }], [{ playerId: target.id }], { force: true }).ok;
+}
+
+/**
+ * The winter market: a rebuilding club sells a veteran it won't be good again in time for to a
+ * contender with a real hole at his spot, for a pick, before free agency opens. Real clubs
+ * moved a dozen-odd veterans a year this way; the computer's never did, so a 3-14 club kept
+ * its 31-year-old Pro Bowler until he retired.
+ */
+export function cpuOffseasonDeals(save: DynastySave): void {
+  if (!tradeWindowOpen(save)) return;
+  const ids = activeTeamIds(save.year).filter((id) => save.teams[id]?.active && (id !== save.userTeamId || save.cpuOnly));
+  const by = (w: ClubWindow) => ids.filter((id) => clubWindow(save, id) === w);
+  const sellers = by("rebuild");
+  const buyers = by("contend");
+  if (!sellers.length || !buyers.length) return;
+  let deals = 0;
+  const most = Math.max(1, Math.round(ids.length / 5));
+  for (const seller of sellers) {
+    if (deals >= most) break;
+    if (rand(save) > 0.5) continue;
+    const vets = rosterOf(save, seller)
+      .filter((p) => p.age >= 29 && p.ovr >= 74 && p.injuredWeeks <= 0 && !rozelleLock(save, p))
+      .sort((a, b) => b.ovr - a.ovr);
+    for (const vet of vets) {
+      // The contender he'd help most, at a starting spot.
+      const buyer = buyers
+        .map((id) => ({ id, need: needFor(save, id, vet) }))
+        .filter((b) => b.need >= 1.05)
+        .sort((a, b) => b.need - a.need)[0]?.id;
+      if (!buyer) continue;
+      const pickId = tradeablePick(save, buyer);
+      if (pickId && executeTrade(save, buyer, seller, [{ pickId }], [{ playerId: vet.id }], { force: true }).ok) {
+        deals += 1;
+        break;
+      }
+    }
+  }
 }
 
 export function cpuTrades(save: DynastySave): void {
@@ -633,6 +685,16 @@ export function marketOrder(save: DynastySave): TeamId[] {
   return ids.sort((a, b) => winPct(save.teams[a]!) - winPct(save.teams[b]!) || tie(a) - tie(b));
 }
 
+/**
+ * How a club's window bends its free-agent board: a rebuilder wants men who'll still be good
+ * when it is, a contender will pay a proven veteran for one more run.
+ */
+function windowLean(win: ClubWindow, p: Player): number {
+  if (win === "rebuild") return -Math.max(0, p.age - 27) * 1.5 + (p.age <= 25 ? 2 : 0);
+  if (win === "contend") return p.age >= 29 && p.ovr >= 75 ? 1.5 : 0;
+  return -Math.max(0, p.age - 30);
+}
+
 export function cpuSignNeeds(save: DynastySave): void {
   const pool = freeAgents(save).slice().sort((a, b) => b.ovr - a.ovr);
   for (const id of marketOrder(save)) {
@@ -646,8 +708,9 @@ export function cpuSignNeeds(save: DynastySave): void {
     // one of (like QB).
     const want = n < 44 ? 3 + (n < 40 ? 3 : 0) : rand(save) < 0.55 ? 2 : 1;
     let signed = 0;
+    const win = clubWindow(save, id);
     const ranked = pool
-      .map((p) => ({ p, s: p.ovr + schemeFitPos(p.pos, t.offScheme, t.defScheme) }))
+      .map((p) => ({ p, s: p.ovr + schemeFitPos(p.pos, t.offScheme, t.defScheme) + windowLean(win, p) }))
       .sort((a, b) => b.s - a.s);
     for (const { p } of ranked) {
       if (signed >= want) break;
@@ -655,6 +718,8 @@ export function cpuSignNeeds(save: DynastySave): void {
       const have = rosterOf(save, id).filter((x) => x.pos === p.pos);
       const best = have.sort((a, b) => b.ovr - a.ovr)[0];
       if (best && best.ovr >= p.ovr - 1 && have.length >= 2) continue;
+      // A rebuilding club doesn't spend on a man past 30 unless it has nobody at all there.
+      if (win === "rebuild" && p.age >= 31 && have.length > 0) continue;
       if (save.year < 1994 && p.ovr >= 84 && p.yearsPro >= 5 && rand(save) > 0.08) continue;
       if (signPlayer(save, id, p.id).ok) signed += 1;
     }

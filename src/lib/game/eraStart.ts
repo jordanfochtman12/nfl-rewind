@@ -12,7 +12,7 @@
  * From the start season on it's a dynasty like any other: the real draft classes keep coming
  * while the record has them, then the game makes its own.
  */
-import { advanceHistory, createHistoryGame, hasHistoryData, ROSTERS_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
+import { advanceHistory, coachFor, createHistoryGame, hasHistoryData, ROSTERS_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
 import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
@@ -31,7 +31,7 @@ import { fillCoachFields, makeCoachFromSeed, seedStaff } from "./staff.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
 import { MORE_COACHES } from "./data/coachesMore.ts";
 import { newOwnerState } from "./owner.ts";
-import type { DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
+import type { Coach, DynastySave, Player, Pos, SeasonStats, TeamId } from "./types.ts";
 
 /**
  * The seasons a league can start in: every one the record has rosters for. 1966 is the classic
@@ -245,8 +245,15 @@ function balanceLine(s: DynastySave, id: TeamId): void {
 
 /** Coaches the record seated get the game's ratings: from the coach catalogs when he's in them. */
 function rateCoaches(save: DynastySave, year: number): void {
-  const catalog = new Map([...COACHES_1966, ...EXPANSION_COACHES, ...LATER_COACHES, ...MORE_COACHES].map((c) => [c.name.toLowerCase(), c]));
-  for (const c of Object.values(save.coaches)) {
+  for (const c of Object.values(save.coaches)) rateCoach(c, year);
+}
+
+let catalogByName: Map<string, (typeof LATER_COACHES)[number]> | undefined;
+
+function rateCoach(c: Coach, year: number): void {
+  catalogByName ??= new Map([...COACHES_1966, ...EXPANSION_COACHES, ...LATER_COACHES, ...MORE_COACHES].map((x) => [x.name.toLowerCase(), x]));
+  const catalog = catalogByName;
+  {
     const seed = catalog.get(c.name.toLowerCase());
     if (seed) {
       const made = makeCoachFromSeed(seed, year, { teamId: c.teamId, role: c.role ?? "HC" });
@@ -619,4 +626,53 @@ export function createEraGame(o: EraOpts): DynastySave {
         playerIds: star ? [star.id] : [],
       });
   return s;
+}
+
+/**
+ * The record's coaching carousel, in a league begun from it: a club still on the head coach it
+ * really had makes the change it really made that winter (Cowher out and Tomlin in at
+ * Pittsburgh after 2006), unless he's winning big here, where the record's reason to move on
+ * is gone. A club the league has already taken off the record's path (a coach it fired or
+ * hired on its own) goes its own way, and one whose coach the record kept keeps him unless the
+ * season here was a collapse. Runs just before Black Monday's own calls; the carousel makes the hire.
+ */
+export function realBlackMonday(save: DynastySave): void {
+  if (!save.realPool || !hasHistoryData() || save.realHistory) return;
+  const now = historyData().coaches(save.year);
+  const next = historyData().coaches(save.year + 1);
+  if (!now.size || !next.size) return;
+  if (save.coachSearch?.year !== save.year) save.coachSearch = { year: save.year, cuts: [], hot: [], interviews: [], midseason: 0 };
+  const search = save.coachSearch;
+  const inPlayoffs = new Set(save.playoffGames.filter((g) => g.year === save.year).flatMap((g) => [g.homeId, g.awayId]));
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    const t = save.teams[id];
+    const hc = t?.coachId ? save.coaches[t.coachId] : undefined;
+    const was = now.get(id)?.at(-1)?.name;
+    const will = next.get(id)?.[0]?.name;
+    if (!t || !hc || !was || !will) continue;
+    if (hc.name.toLowerCase() !== was.toLowerCase()) continue;
+    const g = t.wins + t.losses + t.ties;
+    const pct = g ? (t.wins + t.ties / 2) / g : 0.5;
+    // The record kept him: only a collapse here costs him the job.
+    if (was === will) {
+      if (pct >= 0.25) (search.keep ??= []).push(id);
+      continue;
+    }
+    if (pct >= 0.7) continue;
+    const c = Object.values(save.coaches).find((x) => x.name.toLowerCase() === will.toLowerCase() && !x.retiredYear) ?? coachFor(save, will, save.year + 1);
+    if (!c.offense && !c.defense) rateCoach(c, save.year + 1);
+    save.coaches[c.id] = c;
+    (search.real ??= {})[id] = c.id;
+    if (search.cuts.includes(id)) continue;
+    search.cuts.push(id);
+    if (inPlayoffs.has(id)) continue;
+    addNews(save, {
+      kind: "headline",
+      headline: `${displayName(save.year, id)} move on from ${hc.name}`,
+      body: `After ${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}, the club starts a search.`,
+      teamIds: [id],
+      playerIds: [],
+    });
+  }
 }

@@ -712,7 +712,9 @@ export function runCoachingCarousel(save: DynastySave): void {
 
     // Black Monday already made the call; an older save mid-winter rolls it here.
     const fire = search?.monday ? search.cuts.includes(id) : wantsNewCoach(save, id);
-    if (fire) {
+    // A head coach who retired this winter leaves the job open: it's filled now, in the
+    // carousel, not quietly in camp (the club went through the draft without one).
+    if (fire || !hc) {
       const fired = hc?.name;
       if (hc) {
         hc.firedCount = (hc.firedCount ?? 0) + 1;
@@ -942,6 +944,8 @@ export function blackMonday(save: DynastySave): void {
     const t = save.teams[id];
     const hc = t.coachId ? save.coaches[t.coachId] : undefined;
     if (!hc) continue;
+    // The record's carousel (realBlackMonday) already made this club's call.
+    if (search.cuts.includes(id) || search.keep?.includes(id)) continue;
     if (wantsNewCoach(save, id)) {
       search.cuts.push(id);
       addNews(save, {
@@ -1039,6 +1043,42 @@ export function interviewWeek(save: DynastySave): void {
   }
 }
 
+/**
+ * The record's hire for this opening (realBlackMonday): a head coach elsewhere comes over when
+ * that club is changing too, a coordinator is hired away, a man out of work just signs.
+ */
+function realHire(save: DynastySave, teamId: TeamId, search: CoachSearch | undefined): { coach: Coach; from?: { teamId: TeamId; role: "OC" | "DC" } } | undefined {
+  const c = search?.real?.[teamId] ? save.coaches[search.real[teamId]!] : undefined;
+  if (!c || c.retiredYear || c.hofYear) return undefined;
+  const t = save.teams[teamId];
+  const at = c.teamId && c.teamId !== teamId ? c.teamId : undefined;
+  let from: { teamId: TeamId; role: "OC" | "DC" } | undefined;
+  if (at && save.teams[at]?.coachId === c.id) {
+    // Andy Reid to Kansas City: only once Philadelphia is making its own change.
+    if (!search!.cuts.includes(at)) return undefined;
+    vacate(save, c, "HC", at);
+  } else if (at) {
+    const was = save.teams[at]?.ocId === c.id ? "OC" : "DC";
+    vacate(save, c, was, at);
+    from = { teamId: at, role: was };
+  }
+  c.role = "HC";
+  c.teamId = teamId;
+  c.yearsOnJob = 1;
+  c.interimYear = undefined;
+  c.interimFrom = undefined;
+  t.coachId = c.id;
+  t.offScheme = c.offScheme;
+  t.defScheme = c.defScheme;
+  leaveOtherPosts(save, c);
+  if (from) {
+    const fill = autoHireCoord(save, from.teamId, from.role);
+    noteCarousel(save, from.teamId, from.role, c.name, fill.name, `${displayName(save.year, from.teamId)} lose ${c.name} to ${displayName(save.year, teamId)}; ${fill.name} is the new ${from.role}.`);
+  }
+  if (search) search.hot = search.hot.filter((id) => id !== c.id);
+  return { coach: c, from };
+}
+
 /** Fill an opening: a hot name the club talked to first, then the usual market. */
 function hireForVacancy(
   save: DynastySave,
@@ -1046,6 +1086,8 @@ function hireForVacancy(
   exclude: string | undefined,
   search: CoachSearch | undefined,
 ): { coach: Coach; from?: { teamId: TeamId; role: "OC" | "DC" } } {
+  const real = realHire(save, teamId, search);
+  if (real) return real;
   const talked = new Set((search?.interviews ?? []).filter((x) => x.teamId === teamId).map((x) => x.coachId));
   const options = (search?.hot ?? [])
     .map((id) => save.coaches[id])
