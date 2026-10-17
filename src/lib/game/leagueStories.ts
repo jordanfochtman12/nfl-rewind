@@ -435,6 +435,31 @@ export function breakingNews(save: DynastySave): NewsItem[] {
       const p = save.players[n.playerIds[0] ?? ""];
       return !!p && p.ovr >= 80;
     }
+    const p = save.players[n.playerIds[0] ?? ""];
+    const star = (min: number) => !!p && Math.max(p.ovr, p.peakOvr ?? 0) >= min;
+    // Moves: a star changing clubs or signing, a coach hired to run a club.
+    if (/ traded to the /.test(n.headline)) return true;
+    if (/ sign .+$/.test(n.headline) || / re-signs with the /.test(n.headline)) return star(84);
+    if (/ hits free agency$/.test(n.headline)) return star(86);
+    if (/^Bidding war for /.test(n.headline)) return true;
+    if (/ hired as head coach /.test(n.headline) || /: .+ takes over$/.test(n.headline)) return true;
+    // The locker room: holdouts and the men who want out.
+    if (/ holds out$/.test(n.headline) || /ends his holdout/.test(n.headline)) return star(80);
+    if (/ wants out of /.test(n.headline)) return true;
+    if (/ on the hot seat$/.test(n.headline)) return true;
+    // Stars hurt, and the greats calling it a career.
+    if (/ goes down$/.test(n.headline) || / week-to-week$/.test(n.headline)) return star(85);
+    if (/ retires$/.test(n.headline) || /^Farewell tour: /.test(n.headline)) return star(88);
+    if (/breaks the single-season record|becomes the all-time leader/.test(n.headline)) return true;
     return false;
   });
+}
+
+/** How the channel tags a story: news that just happened, a report from sources, or an update. */
+export type NewsTag = "BREAKING" | "REPORT" | "UPDATE";
+export function newsTag(n: NewsItem): NewsTag {
+  const h = n.headline;
+  if (/ on the hot seat$| wants out of |^Bidding war for | asks the .* for a trade$/.test(h)) return "REPORT";
+  if (/ week-to-week$| activate | ends his holdout|^Farewell tour: /.test(h)) return "UPDATE";
+  return "BREAKING";
 }

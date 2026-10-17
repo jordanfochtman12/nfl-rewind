@@ -3,6 +3,11 @@
  * channel stays on a game until something better happens somewhere else - a score, a turnover,
  * a drive inside the twenty, a close finish - and cuts there. The scoreboard tiles always show
  * the whole slate; tap one to lock the channel on it.
+ *
+ * The booth calls one play at a time and never stops mid-sentence: calls wait their turn, the
+ * picture stays on the game being called, and the next call hands over to its game ("Over to the
+ * Bears and the Packers."). A call that has gone stale while it waited is dropped, and the clock
+ * eases off while calls back up.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { settingsNow } from "@/lib/settings-store";
@@ -30,6 +35,19 @@ const TICK_MS = 250;
 const HOLD_S = 4;
 
 type Cut = { gameId: string; why: string; at: number };
+/** A call waiting for the booth: its line, how big it is, and when on the game clock it happened. */
+type Call = { gameId: string; why: string; score: number; at: number; line: string };
+/** Calls waiting at most: past this the smallest give way. */
+const QUEUE_MAX = 3;
+/** Game seconds a call keeps before it's old news: a touchdown keeps longer. */
+const STALE_S = (score: number) => (score >= 10 ? 300 : 120);
+/** The handoff to another game, in turn. */
+const HANDOFF = [
+  (a: string, h: string) => `Over to the ${a} and the ${h}.`,
+  (a: string, h: string) => `Meanwhile, ${a} and ${h}.`,
+  (a: string, h: string) => `Let's go to the ${a} at the ${h}.`,
+  (a: string, h: string) => `Now, the ${a} and the ${h}.`,
+];
 
 interface Feed {
   game: GameResult;
@@ -85,6 +103,22 @@ export function WhipAround({
   const finished = now >= end;
   const doneRef = useRef(onDone);
   doneRef.current = onDone;
+  // The booth reads from callbacks that outlive a render: what it needs, current.
+  const nowRef = useRef(now);
+  nowRef.current = now;
+  const lockRef = useRef(lock);
+  lockRef.current = lock;
+  const voiceRef = useRef(voice);
+  voiceRef.current = voice;
+  const voicesRef = useRef(voices);
+  voicesRef.current = voices;
+  /** Calls waiting for the booth. */
+  const queue = useRef<Call[]>([]);
+  /** The game the booth is calling right now (the picture stays on it). */
+  const onAirGame = useRef<string | null>(null);
+  /** The last game the booth called, so a call elsewhere hands over first. */
+  const lastCalled = useRef<string | null>(null);
+  const handoffs = useRef(0);
 
   useEffect(() => {
     if (!("speechSynthesis" in window)) return;
@@ -93,6 +127,8 @@ export function WhipAround({
     window.speechSynthesis.addEventListener("voiceschanged", load);
     return () => {
       window.speechSynthesis.removeEventListener("voiceschanged", load);
+      queue.current = [];
+      voiceRef.current = false;
       cancelSpeech();
     };
   }, []);
@@ -100,7 +136,11 @@ export function WhipAround({
   // The clock.
   useEffect(() => {
     if (!playing || finished) return;
-    const t = setInterval(() => setNow((n) => Math.min(end, n + (SPEEDS[speed]!.rate * TICK_MS) / 1000)), TICK_MS);
+    // While calls back up, the clock eases off so the booth can catch up.
+    const t = setInterval(() => {
+      const ease = queue.current.length >= 2 ? 0.4 : queue.current.length === 1 ? 0.7 : 1;
+      setNow((n) => Math.min(end, n + (SPEEDS[speed]!.rate * ease * TICK_MS) / 1000));
+    }, TICK_MS);
     return () => clearInterval(t);
   }, [playing, finished, speed, end]);
 
@@ -110,7 +150,7 @@ export function WhipAround({
     // The last call finishes before the show takes it back.
     let waited = 0;
     let t = setTimeout(function hand() {
-      if (isSpeaking() && waited < 30_000) {
+      if ((isSpeaking() || queue.current.length > 0) && waited < 30_000) {
         waited += 500;
         t = setTimeout(hand, 500);
         return;
@@ -131,17 +171,62 @@ export function WhipAround({
   /** How big the call on the air is (0 when the booth is quiet). */
   const onAir = useRef(0);
 
+  /** Put the next waiting call on the air: the biggest still fresh, then the oldest. */
+  function nextCall(): void {
+    if (!voiceRef.current) {
+      queue.current = [];
+      return;
+    }
+    const t = nowRef.current;
+    queue.current = queue.current.filter((c) => t - c.at <= STALE_S(c.score) && (!lockRef.current || c.gameId === lockRef.current));
+    if (!queue.current.length) return;
+    queue.current.sort((x, y) => y.score - x.score || x.at - y.at);
+    const call = queue.current.shift()!;
+    const f = feeds.find((x) => x.game.id === call.gameId);
+    let text = call.line;
+    if (f && lastCalled.current && lastCalled.current !== call.gameId) {
+      const hand = HANDOFF[handoffs.current++ % HANDOFF.length]!;
+      text = `${hand(nicknameOf(year, f.game.awayId as TeamId), nicknameOf(year, f.game.homeId as TeamId))} ${text}`;
+    }
+    lastCalled.current = call.gameId;
+    const u = new SpeechSynthesisUtterance(footballSpeech(text, year));
+    const pbp = boothFor(year).pbp;
+    const c = castVoices(voicesRef.current, [{ key: pbp.name, gender: pbp.gender, rate: 1.08 }], settingsNow().voiceName).get(pbp.name);
+    if (c?.voice) u.voice = c.voice;
+    u.rate = c?.rate ?? 1.08;
+    u.pitch = c?.pitch ?? 1;
+    onAir.current = call.score;
+    onAirGame.current = call.gameId;
+    if (!lockRef.current) setCut({ gameId: call.gameId, why: call.why, at: t });
+    // onend fires however the line ends (spoken, failed, or cut by Voice off).
+    u.onend = () => {
+      onAir.current = 0;
+      onAirGame.current = null;
+      nextCall();
+    };
+    speakLine(u);
+  }
+
   // Cuts: look at what happened since the last tick and move the channel.
   useEffect(() => {
     const from = prevNow.current;
     prevNow.current = now;
     if (now <= from) return;
-    const hot: { gameId: string; why: string; score: number; text?: string }[] = [];
+    const hot: { gameId: string; why: string; score: number; text?: string; poss?: string }[] = [];
     for (const { f, i } of state) {
       if (i < 0) continue;
       for (let k = at(f, from) + 1; k <= i; k++) {
         const l = f.log[k]!;
-        if (l.tag && l.tag !== "call" && l.tag !== "big") hot.push({ gameId: f.game.id, why: CUE[l.tag], score: l.tag === "td" ? 10 : l.tag === "to" ? 8 : 6, text: l.text });
+        // Who scored, from the scoreboard (a punt or a pick returned for six is the defense's).
+        const prev = f.log[k - 1];
+        const dh = l.hs - (prev?.hs ?? 0);
+        const da = l.as - (prev?.as ?? 0);
+        const scorer = dh > da ? f.game.homeId : da > dh ? f.game.awayId : l.poss;
+        // An extra point is logged like a kick: only a real field goal is a call.
+        if (l.tag === "fg" && dh !== 3 && da !== 3) continue;
+        // "Touchdown!" only when the board moved by six.
+        const why = l.tag === "td" && Math.max(dh, da) < 6 ? (Math.max(dh, da) === 3 ? "FIELD GOAL" : "BIG PLAY") : l.tag ? CUE[l.tag] : "";
+        if (l.tag && l.tag !== "call" && l.tag !== "big") hot.push({ gameId: f.game.id, why, score: why === "TOUCHDOWN" ? 10 : l.tag === "to" ? 8 : 6, text: l.text, poss: scorer });
         else if (l.tag === "big") hot.push({ gameId: f.game.id, why: CUE.big, score: 4, text: l.text });
       }
       const next = f.log[i + 1];
@@ -149,35 +234,24 @@ export function WhipAround({
       const cur = f.log[i]!;
       if (cur.q >= 4 && cur.clock <= 300 && Math.abs(cur.hs - cur.as) <= 8 && i < f.log.length - 1) hot.push({ gameId: f.game.id, why: cur.q > 4 ? "OVERTIME" : "CLOSE FINISH", score: 3 });
     }
-    if (lock || !hot.length) return;
+    if (voice && "speechSynthesis" in window) {
+      for (const h of hot) {
+        if (!h.text || h.score < 6 || (lock && h.gameId !== lock)) continue;
+        // The club that scored on that play (by now the next one may be a kickoff the other way).
+        const scorer = h.poss ? nicknameOf(year, h.poss as TeamId) : "";
+        const line = h.why === "TOUCHDOWN" ? `Touchdown, ${scorer}! ${h.text}` : h.why === "TURNOVER" ? `Turnover! ${h.text}` : h.text;
+        queue.current.push({ gameId: h.gameId, why: h.why, score: h.score, at: now, line });
+      }
+      if (queue.current.length > QUEUE_MAX) queue.current = queue.current.sort((x, y) => y.score - x.score || x.at - y.at).slice(0, QUEUE_MAX);
+      if (!onAirGame.current && !isSpeaking()) nextCall();
+    }
+    // The picture follows the booth while it's calling a play.
+    if (lock || !hot.length || onAirGame.current) return;
     const held = cut && now - cut.at < HOLD_S * SPEEDS[speed]!.rate;
     const best = hot.sort((a, b) => b.score - a.score)[0]!;
     if (held && best.score < 8 && best.gameId !== cut?.gameId) return;
     if (cut && best.gameId === cut.gameId && best.why === cut.why && best.score < 6) return;
     setCut({ gameId: best.gameId, why: best.why, at: now });
-    if (voice && best.text && best.score >= 6 && "speechSynthesis" in window) {
-      const f = feeds.find((x) => x.game.id === best.gameId)!;
-      const l = f.log[at(f, now)];
-      const scorer = l ? nicknameOf(year, l.poss as TeamId) : "";
-      const line = best.why === "TOUCHDOWN" ? `Touchdown, ${scorer}! ${best.text}` : best.why === "TURNOVER" ? `Turnover! ${best.text}` : best.text;
-      const u = new SpeechSynthesisUtterance(footballSpeech(line, year));
-      const pbp = boothFor(year).pbp;
-      const c = castVoices(voices, [{ key: pbp.name, gender: pbp.gender, rate: 1.08 }], settingsNow().voiceName).get(pbp.name);
-      if (c?.voice) u.voice = c.voice;
-      u.rate = c?.rate ?? 1.08;
-      u.pitch = c?.pitch ?? 1;
-      // A call on the air finishes; only a touchdown breaks in over a lesser one. Cutting every
-      // call for the next highlight left the booth stopping mid-sentence all afternoon.
-      if (isSpeaking()) {
-        if (best.score < 10 || onAir.current >= 10) return;
-        cancelSpeech();
-      }
-      onAir.current = best.score;
-      u.onend = () => {
-        onAir.current = 0;
-      };
-      speakLine(u);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now]);
 
@@ -206,7 +280,14 @@ export function WhipAround({
               ))}
             </>
           )}
-          <button type="button" className="bx-chip min-h-9 px-3 text-xs" aria-pressed={voice} onClick={() => { if (voice) window.speechSynthesis?.cancel(); setVoice(!voice); }}>
+          <button type="button" className="bx-chip min-h-9 px-3 text-xs" aria-pressed={voice} onClick={() => {
+              if (voice) {
+                voiceRef.current = false;
+                queue.current = [];
+                cancelSpeech();
+              }
+              setVoice(!voice);
+            }}>
             Voice: {voice ? "on" : "off"}
           </button>
           {lock && (

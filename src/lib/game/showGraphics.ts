@@ -46,7 +46,7 @@ export type ShowGraphic =
 
 const isTeam = (id: string): id is TeamId => !["afc", "nfc", "afl", "nfl"].includes(id);
 
-function allGames(save: DynastySave): GameResult[] {
+export function allGames(save: DynastySave): GameResult[] {
   return [...save.schedule, ...(save.playoffGames ?? []), ...(save.superBowl ? [save.superBowl] : [])];
 }
 
