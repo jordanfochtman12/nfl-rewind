@@ -247,10 +247,17 @@ function rankSeason(s: DynastySave, year: number): void {
   }
   const FLOOR = { "1": 90, "2": 87, p: 84 } as const;
   const weeks = h.chartWeeks(year);
-  const started = (p: Player) => (h.starters(year).get(parseInt(p.id.slice(2), 36))?.starts ?? 0) / Math.max(1, weeks) >= 0.5;
+  const startedIn = (y: number, person: number) => (h.starters(y).get(person)?.starts ?? 0) / Math.max(1, h.chartWeeks(y)) >= 0.5;
+  // A star who started and was honored the year before is still a starter when the season opens,
+  // though he went down early that year (Rod Woodson's knee, 1995).
+  const started = (p: Player) => {
+    const person = parseInt(p.id.slice(2), 36);
+    return startedIn(year, person) || (startedIn(year - 1, person) && h.honors(year - 1).has(person));
+  };
   for (const [unit, list] of units) {
-    // Where the depth charts say who started (2001 on), the men who started half the season
-    // are the starters, ranked among themselves; before that, a club's usual number at the job.
+    // Where the record says who started (games started to 2000, the depth charts from 2001), the
+    // men who started half the season are the starters, ranked among themselves; otherwise a
+    // club's usual number at the job.
     let starters = Math.max(1, Math.round(teams * STARTING[unit]!));
     if (weeks) {
       list.sort((a, b) => Number(started(b.p)) - Number(started(a.p)) || b.score - a.score);

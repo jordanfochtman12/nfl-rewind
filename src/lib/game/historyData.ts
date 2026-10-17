@@ -53,9 +53,10 @@ export interface HistoryData {
   seasonPos(year: number): Map<number, Pos>;
   /** That season's honors: 1 first-team All-Pro, 2 second-team, p Pro Bowl. */
   honors(year: number): Map<number, "1" | "2" | "p">;
-  /** The depth charts (2001 on): regular-season weeks first string, the spot he was listed at most. */
-  starters(year: number): Map<number, { starts: number; spot: Pos }>;
-  /** Weeks the depth charts cover that season (0 before 2001). */
+  /** Games or weeks he started that season, and his spot: Pro Football Archives' rosters to 2000,
+   * the depth charts from 2001. A man listed only as "LB" or "DB" has no spot. */
+  starters(year: number): Map<number, { starts: number; spot?: Pos }>;
+  /** Games (to 2000) or depth-chart weeks (2001 on) the season's starts are out of. */
   chartWeeks(year: number): number;
   stats(year: number): { person: number; team: TeamId | ""; line: HistoryLine }[];
   playoffs(year: number): HistoryPlayoffGame[];
@@ -343,11 +344,11 @@ export function parseHistory(mods: {
     return out;
   });
   const starters = memo((y) => {
-    const out = new Map<number, { starts: number; spot: Pos }>();
+    const out = new Map<number, { starts: number; spot?: Pos }>();
     for (const e of (mods.STARTERS?.[y] ?? "").split(",")) {
       if (!e) continue;
       const [i, starts, spot] = e.split(".");
-      out.set(id36(i!), { starts: Number(starts), spot: spot as Pos });
+      out.set(id36(i!), { starts: Number(starts), spot: spot ? (spot as Pos) : undefined });
     }
     return out;
   });

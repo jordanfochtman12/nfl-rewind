@@ -1,5 +1,9 @@
 """
-Who started, and at which exact spot, every season the depth charts cover (2001 on).
+Who started, and at which exact spot, every season from 1966.
+
+1966-2000: Pro Football Archives' rosters (data/history/pfa/YYYY.csv, already kept for
+ingest-history.py): every man's games played and started for each club, and his spot (LOT,
+ROG, RLB, LCB, LS for the left safety...). 2001 on: nflverse's depth charts, below.
 
 Reads:
   history/depth/depth_charts_YYYY.csv   nflverse depth charts (weekly to 2024; dated snapshots
@@ -79,6 +83,40 @@ def gsis_people(y: int) -> dict[str, int]:
     return out
 
 
+# Pro Football Archives' spot codes (a man who played two is listed "LDE-RDE": the first is his).
+PFA_SPOT = {
+    "QB": "QB", "RB": "RB", "HB": "RB", "TB": "RB", "LHB": "RB", "RHB": "RB", "FB": "FB", "WR": "WR", "FL": "WR",
+    "SE": "WR", "TE": "TE", "HBK": "TE", "UBK": "TE", "LOT": "LT", "ROT": "RT", "LOG": "LG", "ROG": "RG", "C": "C",
+    "DE": "DE", "LDE": "DE", "RDE": "DE", "DT": "DT", "LDT": "DT", "RDT": "DT", "NT": "DT", "MG": "DT", "NG": "DT",
+    "UT": "DT", "MLB": "MLB", "ILB": "MLB", "LILB": "MLB", "RILB": "MLB", "WILB": "MLB", "SILB": "MLB",
+    "OLB": "OLB", "LLB": "OLB", "RLB": "OLB", "LOLB": "OLB", "ROLB": "OLB", "SLB": "OLB", "WLB": "OLB",
+    "CB": "CB", "LCB": "CB", "RCB": "CB", "NB": "CB", "S": "S", "SS": "S", "FS": "S", "LS": "S", "RS": "S", "WS": "S",
+    "K": "K", "P": "P",
+}
+
+
+def pfa_season(y: int) -> tuple[dict[int, tuple[int, str | None]], int]:
+    """person -> (games started, spot at the club he started most for), and the season's games."""
+    pfa_ids = {pid: int(i) for pid, i in csv.reader(open(DATA / "pfa_ids.csv", encoding="utf-8"))}
+    starts: dict[int, int] = defaultdict(int)
+    best: dict[int, tuple[int, str | None]] = {}
+    most = 0
+    for r in csv.reader(open(DATA / "pfa" / f"{y}.csv", encoding="utf-8")):
+        if len(r) < 12 or r[1] != "ROSTER" or not r[2]:
+            continue
+        i = pfa_ids.get(r[2])
+        if i is None:
+            continue
+        gs = int(r[11]) if r[11].strip().isdigit() else 0
+        most = max(most, gs)
+        code = (r[5] or "").upper().replace(" ", "").split("-")[0]
+        spot = PFA_SPOT.get(code)
+        starts[i] += gs
+        if i not in best or gs > best[i][0] or (spot and not best[i][1]):
+            best[i] = (gs, spot or (best[i][1] if i in best else None))
+    return {i: (starts[i], best[i][1]) for i in starts}, most
+
+
 def b36(n: int) -> str:
     s = ""
     while True:
@@ -95,6 +133,13 @@ def main() -> None:
         "export const STARTERS: Record<number, string> = {",
     ]
     weeks_of: dict[int, int] = {}
+    for y in range(1966, 2001):
+        got, games = pfa_season(y)
+        weeks_of[y] = games
+        # A man with no spot of his own here (a bare LB or DB) still counts his starts.
+        body = [f"{b36(i)}.{gs}.{spot or ''}" for i, (gs, spot) in sorted(got.items())]
+        lines.append(f'  {y}: "{",".join(body)}",')
+        print(y, "games", games, "players", len(got), "starters (half+)", sum(1 for gs, _ in got.values() if gs * 2 >= games))
     for y in range(2001, 2027):
         path = DATA / "depth" / f"depth_charts_{y}.csv"
         if not path.exists():
