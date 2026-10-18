@@ -48,7 +48,7 @@ export interface HistoryData {
   people: HistoryPerson[];
   rosters(year: number): Map<TeamId, { person: number; jersey?: number }[]>;
   /** Week one of the regular season, club by club, at the spot each man played (2002 on; empty before). */
-  opening(year: number): Map<TeamId, { person: number; pos: Pos; reserve?: boolean }[]>;
+  opening(year: number): Map<TeamId, { person: number; pos: Pos; reserve?: boolean; weeksOut?: number }[]>;
   /** The position a person played that season, where it's another unit than his career one. */
   seasonPos(year: number): Map<number, Pos>;
   /** That season's honors: 1 first-team All-Pro, 2 second-team, p Pro Bowl. */
@@ -311,7 +311,7 @@ export function parseHistory(mods: {
   );
   const hof = memo((y) => (mods.HOF_CLASSES[y] ?? "").split("/").filter(Boolean).map(ref));
   const opening = memo((y) => {
-    const out = new Map<TeamId, { person: number; pos: Pos; reserve?: boolean }[]>();
+    const out = new Map<TeamId, { person: number; pos: Pos; reserve?: boolean; weeksOut?: number }[]>();
     for (const chunk of (mods.OPENING?.[y] ?? "").split(";")) {
       if (!chunk) continue;
       const [team, list] = chunk.split(":");
@@ -319,7 +319,8 @@ export function parseHistory(mods: {
         team as TeamId,
         (list ?? "").split(",").filter(Boolean).map((e) => {
           const [i, pos, flag] = e.split(".");
-          return { person: id36(i!), pos: pos as Pos, ...(flag === "r" ? { reserve: true } : {}) };
+          const weeksOut = flag?.startsWith("r") ? Number(flag.slice(1)) || undefined : undefined;
+          return { person: id36(i!), pos: pos as Pos, ...(flag?.startsWith("r") ? { reserve: true } : {}), ...(weeksOut ? { weeksOut } : {}) };
         }),
       );
     }

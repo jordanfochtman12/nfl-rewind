@@ -699,13 +699,13 @@ export function createEraGame(o: EraOpts): DynastySave {
   const spotOf = new Map<number, Pos>();
   let placed = rosters;
   // On the club's reserve list in week one (injured reserve, PUP, a suspension).
-  const reserve = new Set<number>();
+  const reserve = new Map<number, number | undefined>();
   if (opening.size) {
     placed = new Map();
     for (const [teamId, list] of opening) {
-      for (const { person, pos, reserve: r } of list) {
+      for (const { person, pos, reserve: r, weeksOut } of list) {
         spotOf.set(person, pos);
-        if (r) reserve.add(person);
+        if (r) reserve.set(person, weeksOut);
       }
       placed.set(teamId, list.map(({ person }) => ({ person, jersey: jerseyOf.get(`${teamId}|${person}`) })));
     }
@@ -733,9 +733,17 @@ export function createEraGame(o: EraOpts): DynastySave {
       if (born) p.age = year - Number(born.slice(0, 4));
       p.yearsPro = Math.max(0, year - (historyData().firstSeason(person) ?? year));
       if (reserve.has(person)) {
-        p.onIR = true;
-        p.injuredWeeks = Math.max(p.injuredWeeks, 6);
-        p.injuryName ??= "reserve list";
+        const out = reserve.get(person);
+        if (out) {
+          // Away from the club for the first weeks (a suspension, the PUP list) and back the week
+          // he really returned. Not injured reserve, which before 2012 ended a man's season.
+          p.injuredWeeks = Math.max(p.injuredWeeks, out);
+          p.injuryName ??= "reserve list";
+        } else {
+          p.onIR = true;
+          p.injuredWeeks = Math.max(p.injuredWeeks, 6);
+          p.injuryName ??= "reserve list";
+        }
       }
       t.roster.push(p.id);
     }
