@@ -44,10 +44,10 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.635,
+      cmpPct: 0.66,
       passAtt: 29.5,
       ypa: 6.6,
-      intRate: 0.05,
+      intRate: 0.056,
       sackRate: 0.031,
       rushAtt: 34,
       ypc: 3.8,
@@ -64,11 +64,11 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1989) {
     return {
       name: "pass-boom",
-      cmpPct: 0.662,
-      passAtt: 32,
+      cmpPct: 0.637,
+      passAtt: 31,
       ypa: 6.9,
-      intRate: 0.042,
-      sackRate: 0.022,
+      intRate: 0.0475,
+      sackRate: 0.052,
       rushAtt: 31,
       ypc: 3.72,
       pointsMu: 20.8,
@@ -84,10 +84,10 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1999) {
     return {
       name: "nineties",
-      cmpPct: 0.645,
-      passAtt: 32.5,
+      cmpPct: 0.652,
+      passAtt: 31.5,
       ypa: 6.9,
-      intRate: 0.034,
+      intRate: 0.0375,
       sackRate: -0.002,
       rushAtt: 28.5,
       ypc: 3.8,
@@ -104,11 +104,11 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 2009) {
     return {
       name: "aughts",
-      cmpPct: 0.695,
-      passAtt: 31.5,
+      cmpPct: 0.66,
+      passAtt: 30,
       ypa: 7.0,
-      intRate: 0.03,
-      sackRate: 0.007,
+      intRate: 0.0366,
+      sackRate: 0.016,
       rushAtt: 28,
       ypc: 3.95,
       pointsMu: 21.8,
@@ -125,10 +125,10 @@ export function eraProfile(year: number): EraProfile {
     return {
       name: "spread",
       cmpPct: 0.683,
-      passAtt: 33.5,
+      passAtt: 30,
       ypa: 7.2,
-      intRate: 0.025,
-      sackRate: 0.013,
+      intRate: 0.035,
+      sackRate: 0.02,
       rushAtt: 26,
       ypc: 4.05,
       pointsMu: 23.2,
@@ -144,11 +144,11 @@ export function eraProfile(year: number): EraProfile {
   return {
     name: "modern",
     cmpPct: 0.665,
-    passAtt: 31.5,
+    passAtt: 30.5,
     ypa: 7.2,
-    intRate: 0.023,
-    sackRate: 0.055,
-    rushAtt: 27,
+    intRate: 0.0288,
+    sackRate: 0.069,
+    rushAtt: 28,
     ypc: 4.1,
     pointsMu: 23.0,
     teRecCap: 116,
@@ -403,8 +403,9 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptemp
   if (year <= 1977) return [34, 41];
   // The 2020s offense spends the play clock (motion, shifts, checks at the line): about 63
   // snaps a side, a few fewer than the 2010s' 65-66.
-  if (year >= 2020) return [38, 45];
-  return [36, 43];
+  // Measured against the record (2026): about 63 snaps a side from the 80s on, counting sacks.
+  if (year >= 2020) return [40, 47];
+  return [38, 45];
 }
 
 /**
@@ -413,12 +414,14 @@ export function huddleSeconds(year: number, tempo: "chew" | "standard" | "uptemp
  */
 export function passGainScale(year: number): number {
   if (year <= 1969) return 1.2;
-  if (year <= 1977) return 1.12;
-  if (year <= 1989) return 1.08;
-  if (year <= 1999) return 1.0;
-  if (year <= 2009) return 0.935;
-  if (year <= 2019) return 0.93;
-  return 0.9;
+  if (year <= 1977) return 1.18;
+  // Measured against the record's league totals (2026): completions trimmed to real rates in the
+  // 80s and 2000s, each catch carrying its real length.
+  if (year <= 1989) return 1.12;
+  if (year <= 1999) return 1.05;
+  if (year <= 2009) return 1.01;
+  if (year <= 2019) return 0.96;
+  return 0.87;
 }
 
 /** 1974 NFL: DPI becomes a spot foul. Before that (and AFL), 15 yards. */

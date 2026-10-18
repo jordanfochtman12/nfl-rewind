@@ -60,7 +60,7 @@ import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
 import { expireContract, refreshContracts, teamPayroll } from "./salary.ts";
-import { cpuCoverInjuries, cpuOffseasonDeals, cpuTrades, processWaivers, cpuSignNeeds, cpuMarket, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
+import { cpuCoverInjuries, cpuQbBenchings, cpuOffseasonDeals, cpuTrades, processWaivers, cpuSignNeeds, cpuMarket, tradeWindowOpen, enforceCapCompliance, marketOrder } from "./gm.ts";
 import { prunePastPicks, sessionLabel } from "./draft.ts";
 import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
@@ -293,6 +293,7 @@ function simThisWeek(save: DynastySave): void {
   tickInjuries(save);
   processWaivers(save);
   cpuCoverInjuries(save);
+  cpuQbBenchings(save);
   const games = gamesInWeek(save, save.week);
   pickFeaturedGame(save, games);
   for (const g of games) simGame(save, g);

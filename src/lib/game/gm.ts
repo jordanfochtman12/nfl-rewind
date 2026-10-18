@@ -14,7 +14,7 @@ import type {
 } from "./types.ts";
 import { ROSTER_TARGET } from "./types.ts";
 import { posLabel } from "./posLabel.ts";
-import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, starterCount, syncDepth, DEPTH_CHART } from "./players.ts";
+import { activeRosterOf, addToRoster, carryJersey, generatePlayer, leaguePlayer, madeRealRoster, movePlayer, playerName, rosterCap, rosterOf, starterCount, starters, syncDepth, DEPTH_CHART } from "./players.ts";
 import { addNews, addTx } from "./news.ts";
 import { salaryCapFor, salaryFor, teamPayroll } from "./salary.ts";
 import { activeTeamIds, displayName } from "./teams.ts";
@@ -823,5 +823,44 @@ export function cpuMarket(save: DynastySave): number {
     }
   }
   return signed;
+}
+
+/** NFL passer rating from a season line. */
+function passerRating(s: { passAtt: number; passCmp: number; passYds: number; passTd: number; passInt: number }): number {
+  if (!s.passAtt) return 0;
+  const c = (x: number) => Math.max(0, Math.min(2.375, x));
+  const a = c((s.passCmp / s.passAtt - 0.3) * 5);
+  const b = c((s.passYds / s.passAtt - 3) * 0.25);
+  const t = c((s.passTd / s.passAtt) * 20);
+  const i = c(2.375 - (s.passInt / s.passAtt) * 25);
+  return ((a + b + t + i) / 6) * 100;
+}
+
+/**
+ * Weekly: a computer club's staff benches a struggling quarterback. Four starts in, a passer
+ * rating under 65 with a backup about as good means the backup starts, and the starter has to
+ * win it back. Real starters threw about four in five of their club's passes; with nobody ever
+ * benched they threw more than nine in ten.
+ */
+export function cpuQbBenchings(save: DynastySave): void {
+  if (save.phase !== "regular" || save.week < 5) return;
+  for (const id of activeTeamIds(save.year)) {
+    if (id === save.userTeamId && !save.cpuOnly) continue;
+    const [qb, backup] = starters(save, id, "QB", 2);
+    if (!qb || !backup || qb.benchedYear === save.year) continue;
+    const st = qb.stats[save.year];
+    if (!st || st.teamId !== id || st.gp < 4 || st.passAtt < 100) continue;
+    const rating = passerRating(st);
+    if (rating >= 65 || backup.ovr < qb.ovr - 4) continue;
+    qb.benchedYear = save.year;
+    syncDepth(save, id);
+    addNews(save, {
+      kind: "transaction",
+      headline: `${displayName(save.year, id)} bench ${playerName(qb)}`,
+      body: `A ${rating.toFixed(1)} passer rating through ${st.gp} games. ${playerName(backup)} starts.`,
+      teamIds: [id],
+      playerIds: [qb.id, backup.id],
+    });
+  }
 }
 

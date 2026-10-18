@@ -771,8 +771,11 @@ function callPlay(
   if (spot >= 99 && togo <= 1) return rand(save) < 0.55 ? "sneak" : "run";
   if (spot >= 95 && plan.redZone === "power") return rand(save) < 0.72 ? "run" : "short";
   let passW = eraPassW;
-  if (plan.attack === "pass") passW += 0.08;
-  if (plan.attack === "run") passW -= 0.07;
+  // A plan leans a club, it doesn't remake it: real clubs' pass volume ran about 420 to 640
+  // a season, and a full plan push had them at 360 to 780.
+  const planPush = year <= 1977 ? 0.6 : 1;
+  if (plan.attack === "pass") passW += 0.045 * planPush;
+  if (plan.attack === "run") passW -= 0.04 * planPush;
   if (down === 3 && togo >= 6) passW += 0.22;
   if (down === 3 && togo <= 2) passW -= 0.18;
   if (down === 2 && togo <= 3) passW -= 0.08;
@@ -785,7 +788,7 @@ function callPlay(
   // Three scores up after the half: hand it off and let the clock run.
   if (trail <= -21 && q >= 3) passW -= 0.15;
   // A ball-control plan leans on the run most when it's ahead; the clock-killing push at the end stays strong.
-  if (chew) passW -= q >= 4 && trail <= -7 && clock < 240 ? 0.1 : trail <= 0 ? 0.05 : 0.02;
+  if (chew) passW -= q >= 4 && trail <= -7 && clock < 240 ? 0.1 : trail <= 0 ? 0.03 : 0.015;
   if (wx === "snow" || wx === "rain") passW -= 0.08;
   if (wx === "wind") passW -= 0.04;
   if (desperate) passW += 0.18;
@@ -868,7 +871,9 @@ const POS_INJURY_RISK: Partial<Record<Pos, number>> = {
 function posInjuryRisk(p: Player, year: number): number {
   // Modern starting QBs miss real time (only about half play every game); the lower modern
   // base injury rate had them near-indestructible, taking ~94% of their team's attempts.
-  if (p.pos === "QB") return year >= 2000 ? 1.6 : 1.35;
+  // Measured against the record (2026): a club's leading passer played about 14 of 16 games
+  // and threw about four in five of its passes; at 1.6 he missed under one game a year.
+  if (p.pos === "QB") return year >= 2000 ? 3.0 : 2.0;
   return POS_INJURY_RISK[p.pos] ?? 1;
 }
 
@@ -880,7 +885,7 @@ function maybeInGameInjury(save: DynastySave, p: Player | undefined, wx: Wx, tur
   const chance = eraHit * ((100 - p.ratings.inj) / 55) * kitInjMult(p) * wxHit * turfHit * posInjuryRisk(p, save.year);
   if (rand(save) > chance) return false;
   const durable = p.ratings.inj >= 88 || kitInjMult(p) <= 0.8;
-  p.injuredWeeks = durable ? 1 : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
+  p.injuredWeeks = durable ? (p.pos === "QB" ? randInt(save, 1, 3) : 1) : p.ratings.inj >= 70 ? randInt(save, 1, 4) : randInt(save, 2, 7);
   p.injuryName = INJURIES[randInt(save, 0, INJURIES.length - 1)];
   p.injuredOn = { year: save.year, week: save.week, phase: save.phase };
   return true;
@@ -1286,6 +1291,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let orderAt = 0;
   let ownerPlan: Partial<Gameplan> = {};
   const benched = new Set<string>();
+  /** Clubs whose starter came out of a blowout. */
+  const pulled = new Set<TeamId>();
   const planNow = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
     const auto = planNowAuto(id, trail, qq, ck);
     return id === save.userTeamId ? { ...auto, ...ownerPlan } : auto;
@@ -1559,7 +1566,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
 
   const rebuild = (id: TeamId) => {
-    const next = teamUnits(save, id, id === save.userTeamId ? benched : undefined);
+    const next = teamUnits(save, id, benched);
     if (id === homeId && !neutral) {
       next.offPass += homeField;
       next.offRun += 1.6;
@@ -1985,6 +1992,18 @@ export function simGame(save: DynastySave, game: GameResult): void {
       break;
     }
 
+    // Up three scores in the fourth with ten minutes left, the starter sits and the backup
+    // finishes it: real starters threw about four in five of a club's passes, here they threw 94%.
+    if (q >= 4 && clock <= 600 && trailOf(poss) <= -21 && !pulled.has(poss)) {
+      const qb = live(poss).qb;
+      const second = qb ? starters(save, poss, "QB", 2, benched).find((x) => x.id !== qb.id) : undefined;
+      if (qb && second) {
+        pulled.add(poss);
+        benched.add(qb.id);
+        rebuild(poss);
+        if (logOn) note(`${playerName(second)} comes in at quarterback.`);
+      }
+    }
     const off = live(poss);
     const defId = poss === homeId ? awayId : homeId;
     const def = live(defId);
@@ -2009,8 +2028,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const vanilla = q >= 3 && trail <= -21 ? (q >= 4 || trail <= -28 ? 1 : 0.6) : 0;
     // The other side of it: the leader's second-string defense gives some of it back.
     const soft = q >= 3 && trail >= 21 ? (q >= 4 || trail >= 28 ? 1 : 0.6) : 0;
-    const garbage = q >= 4 && trail <= -17 && clock <= 360;
-    const prevent = garbage && trail <= -17;
+    // Garbage time is the trailing side's: three scores down late it throws on every down into
+    // a prevent shell. (The sign was flipped: the club up 17 was the one throwing more, which
+    // ran the best quarterbacks' attempts past 700.)
+    const garbage = q >= 4 && trail >= 17 && clock <= 360;
+    const prevent = garbage;
     const pressure = pressureAdjustment(defensivePlan.blitz);
 
     const offU = poss === homeId ? homeU : awayU;

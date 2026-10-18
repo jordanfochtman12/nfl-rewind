@@ -378,7 +378,7 @@ export function syncDepth(save: DynastySave, teamId: TeamId): void {
   for (const [pos] of DEPTH_CHART) {
     const prevOrder = team.depth[pos] ?? [];
     const score = (p: Player) =>
-      p.ovr + schemeDepthScore(p, team.offScheme, team.defScheme) + (cpu && prevOrder[0] === p.id ? 2 : 0);
+      p.ovr + schemeDepthScore(p, team.offScheme, team.defScheme) + (cpu && prevOrder[0] === p.id ? 2 : 0) - (cpu && p.benchedYear === save.year ? 8 : 0);
     const have = roster.filter((p) => p.pos === pos).sort((a, b) => score(b) - score(a));
     if (cpu) {
       team.depth[pos] = have.map((p) => p.id);
