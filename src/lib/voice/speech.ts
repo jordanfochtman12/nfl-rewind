@@ -5,6 +5,8 @@
  * on a line that can't be read.
  */
 import { create } from "zustand";
+import { settingsNow } from "@/lib/settings-store";
+import { PHONE_VOICE } from "@/lib/voiceCast";
 
 /** Who is reading a line, so a desk can cast each person a device voice of their own. */
 export interface Speaker {
@@ -130,8 +132,9 @@ function chunk(text: string): string[] {
 
 /** Read a line. Lines queue in order, the way the device engine queues them. */
 export function speakLine(u: SpeechSynthesisUtterance): void {
-  // A line with no voice of its own reads in the device's best one, not its default.
-  if (!u.voice) {
+  // A line with no voice of its own reads in the device's best one, not its default (unless the
+  // viewer chose the phone's own voice).
+  if (!u.voice && settingsNow().voiceName !== PHONE_VOICE) {
     const v = bestDeviceVoice();
     if (v) u.voice = v;
   }

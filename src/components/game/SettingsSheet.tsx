@@ -10,7 +10,7 @@ import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-st
 import { Btn } from "./chrome";
 import { useOfflineStatus } from "../offline-status";
 import { cancelSpeech, hasPremiumDeviceVoice, isPhone, speakLine } from "@/lib/voice/speech";
-import { findVoice, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
+import { findVoice, PHONE_VOICE, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -111,7 +111,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
               <p className="rounded-md border border-line px-3 py-2 text-xs text-muted">
                 {hasPremiumDeviceVoice()
                   ? "This phone has a Premium voice installed, so the broadcast reads with it."
-                  : "For the best voices on an iPhone, install a Premium one: Settings → Accessibility → Spoken Content → Voices → English, then download Ava, Zoe, Evan or Nathan (Premium). The broadcast picks it up on its own."}
+                  : "On an iPhone, Safari only gives web apps Apple's built-in voices, so voices you download (like Tom or Nathan Enhanced) can't be picked by name. Try Lead voice → Phone's voice: the phone may then read with the voice set under Spoken Content."}
               </p>
             )}
             <Toggle label="Booth voices in live games and the draft" hint="The play-by-play and color men call each snap, and the podium reads every pick." on={st.boothVoices} onChange={(v) => st.set({ boothVoices: v })} />
@@ -121,6 +121,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
               <div className="flex gap-2">
                 <select aria-label="Lead voice" className="min-h-10 max-w-[13rem] rounded-md border border-line bg-surface-2 px-2 text-sm text-fg" value={st.voiceName} onChange={(e) => st.set({ voiceName: e.target.value })}>
                   <option value="">Best available</option>
+                  <option value={PHONE_VOICE}>Phone's voice (Spoken Content)</option>
                   {voiceChoices(voices).map((v) => (
                     <option key={voiceKey(v)} value={voiceKey(v)}>
                       {voiceLabel(v)}

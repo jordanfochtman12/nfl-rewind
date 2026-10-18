@@ -37,7 +37,7 @@ const MALE =
   /\b(male|guy|davis|tony|jason|andrew|brian|christopher|eric|roger|steffan|ryan|thomas|george|daniel|alex|fred|tom|aaron|arthur|evan|nathan|reed|rocko|eddy|ralph|bruce|oliver|gordon|lee|rishi|james|william|liam|mark|david|richard|matthew|joey|justin|kevin|russell|geraint|brandon|ethan|noah|jacob|connor|elliot|harry|alfie|jack|oscar|sam|ollie|dan|grandpa|stephen|gregory|kai|luke|mitchell|neil|william|wayne|tim|duncan|prabhat|ravi)\b/i;
 /** Novelty voices nobody wants calling a football game. */
 const NOVELTY =
-  /\b(bahh|bells|boing|bubbles|cellos|wobble|whisper|zarvox|trinoids|organ|jester|hysterical|good news|bad news|superstar|deranged|pipe organ|albert)\b/i;
+  /\b(bahh|bells|boing|bubbles|cellos|wobble|whisper|zarvox|trinoids|organ|jester|hysterical|good news|bad news|superstar|deranged|pipe organ|albert|fred|junior|kathy|ralph)\b/i;
 
 export function voiceGender(v: VoiceLike): Gender | undefined {
   // "Google UK English Male/Female" spell it out; Google's plain US English voice is a woman.
@@ -59,6 +59,12 @@ export function voiceTier(v: VoiceLike): number {
   return 0;
 }
 
+/**
+ * The menu choice that leaves the lead voice to the phone itself: no voice is set on the line,
+ * so iOS can read it in the voice picked under Spoken Content, which Safari won't hand to pages.
+ */
+export const PHONE_VOICE = "phone";
+
 /** The key a chosen voice is saved under: the voiceURI where the browser gives one. */
 export const voiceKey = (v: VoiceLike) => v.voiceURI || v.name;
 
@@ -77,7 +83,14 @@ export function voiceChoices<V extends VoiceLike>(all: V[]): V[] {
   const seen = new Set<string>();
   return all
     .filter((v) => /^en([-_]|$)/i.test(v.lang) && !NOVELTY.test(v.name))
-    .filter((v) => (seen.has(voiceKey(v)) ? false : (seen.add(voiceKey(v)), true)))
+    // iOS lists some voices twice under different IDs; one entry per voice a person can hear.
+    .filter((v) => {
+      const k = [voiceKey(v), voiceLabel(v)].find((x) => seen.has(x));
+      if (k) return false;
+      seen.add(voiceKey(v));
+      seen.add(voiceLabel(v));
+      return true;
+    })
     .sort((a, b) => voiceTier(b) - voiceTier(a) || voiceLabel(a).localeCompare(voiceLabel(b)));
 }
 
@@ -108,6 +121,10 @@ export function castVoices<V extends VoiceLike>(all: V[], personas: Persona[], p
   const out = new Map<string, Casting<V>>();
   personas.forEach((p, i) => {
     let voice: V | undefined;
+    if (i === 0 && preferred === PHONE_VOICE) {
+      out.set(p.key, { pitch: p.pitch ?? 1, rate: p.rate ?? 1 });
+      return;
+    }
     if (i === 0 && preferred) voice = findVoice(english, preferred);
     const matches = ranked.filter((v) => voiceGender(v) === p.gender);
     const unknown = ranked.filter((v) => voiceGender(v) === undefined);
