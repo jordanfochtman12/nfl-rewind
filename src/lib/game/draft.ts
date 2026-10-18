@@ -326,7 +326,7 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     p.peakOvr = p.ovr;
     p.scoutOvr = p.ovr;
   }
-  // The owner's grade from the QB board: his overall on draft day and the peak he climbs to.
+  // The owner's grade from his draft boards: overall on draft day and the peak he climbs to.
   // The owner's friends keep their own start, hidden ceiling and breakout (data/friends.ts).
   const grade = audited && !friend ? OWNER_GRADES[`${save.year}|${s.f}|${s.l}`] : undefined;
   if (grade) {
