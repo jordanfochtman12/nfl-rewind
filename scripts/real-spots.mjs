@@ -16,7 +16,7 @@ const H = historyData();
 // A move stays inside a unit: a lineman's side, the line's two jobs, the linebackers, the
 // secondary, and the edge (an end stood up as a 3-4 outside linebacker). A back listed as a
 // fullback in a split backfield was a runner, so backs aren't moved, nor anyone across units.
-const UNIT = { LT: "OL", LG: "OL", C: "OL", RG: "OL", RT: "OL", DE: "DL", DT: "DL", OLB: "LB", MLB: "LB", CB: "DB", S: "DB" };
+const UNIT = { LT: "OL", LG: "OL", C: "OL", RG: "OL", RT: "OL", DE: "DL", DT: "DL", OLB: "LB", MLB: "LB", CB: "DB", S: "DB", K: "SPEC", P: "SPEC" };
 const sameUnit = (a, b) => (UNIT[a] && UNIT[a] === UNIT[b]) || (a === "DE" && b === "OLB") || (a === "OLB" && b === "DE");
 // Most of his starts at one spot, over at least a season and a half of them.
 const SHARE = 0.6;
@@ -31,7 +31,28 @@ for (let y = 1966; y <= 2026; y++) {
     m[r.spot] = (m[r.spot] ?? 0) + r.starts / weeks;
   }
 }
+// Kickers and punters: what he did, field goals and extra points against punts.
+const kicking = new Map();
+for (let y = 1966; y <= 2026; y++) {
+  for (const { person, line } of H.stats(y)) {
+    const k = Math.max(0, line.fgAtt ?? 0) + Math.max(0, line.xpAtt ?? 0) / 3;
+    const pu = Math.max(0, line.punts ?? 0);
+    if (!k && !pu) continue;
+    const t = kicking.get(person) ?? kicking.set(person, { k: 0, p: 0 }).get(person);
+    t.k += k;
+    t.p += pu;
+  }
+}
+const specialist = (person) => {
+  const t = kicking.get(person);
+  if (!t) return undefined;
+  if (t.k >= 20 && t.k > 2 * t.p) return "K";
+  if (t.p >= 30 && t.p > 2 * t.k) return "P";
+  return undefined;
+};
 const spotOf = (person) => {
+  const listed = H.people[person]?.pos;
+  if (listed === "K" || listed === "P") return specialist(person);
   const m = starts.get(person);
   if (!m) return undefined;
   const total = Object.values(m).reduce((a, b) => a + b, 0);
@@ -41,7 +62,7 @@ const spotOf = (person) => {
 
 // By person, against the record's career position (era starts place men without a spot that season).
 const career = {};
-for (const person of starts.keys()) {
+for (const person of new Set([...starts.keys(), ...kicking.keys()])) {
   const spot = spotOf(person);
   const listed = H.people[person]?.pos;
   if (spot && listed && spot !== listed && sameUnit(listed, spot)) career[person.toString(36)] = spot;
@@ -56,10 +77,16 @@ H.people.forEach((p, i) => {
 });
 const draft = {};
 for (let y = 1966; y <= 2026; y++) {
-  const picks = new Map(H.drafts(y).map((d) => [norm(H.people[d.person].first + H.people[d.person].last), d.person]));
+  const drafted = H.drafts(y);
+  const picks = new Map(drafted.map((d) => [norm(H.people[d.person].first + H.people[d.person].last), d.person]));
   for (const s of draftSeedsFor(y)) {
     const k = norm(s.f + s.l);
     let person = picks.get(k);
+    if (person === undefined && s.r) {
+      // A nickname ("Ike" Taylor is Ivan in the record): the one pick that round with his last name.
+      const c = drafted.filter((d) => d.round === s.r && norm(H.people[d.person].last) === norm(s.l));
+      if (c.length === 1) person = c[0].person;
+    }
     if (person === undefined) {
       // Undrafted: the one person of that name whose career starts that year or the next.
       const c = (byName.get(k) ?? []).filter((i) => {

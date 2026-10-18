@@ -432,8 +432,12 @@ export function generatePlayer(
 ): Player {
   const teammates =
     teamId !== "fa" && teamId !== "retired" && teamId !== "hof" ? rosterOf(save, teamId) : [];
+  // Nobody else in the league carries his name (a made-up kicker sharing a real back's).
+  const taken = new Set<string>();
+  for (const x of Object.values(save.players)) if (x.teamId !== "retired" && x.teamId !== "hof") taken.add(`${x.firstName}|${x.lastName}`);
+  const clash = (n: { first: string; last: string }) => taken.has(`${n.first}|${n.last}`) || teammates.some((t) => namesTooClose(t, n));
   let name = eraName(save);
-  for (let tries = 0; tries < 8 && teammates.some((t) => namesTooClose(t, name)); tries++) {
+  for (let tries = 0; tries < 8 && clash(name); tries++) {
     name = eraName(save);
   }
   const used = teamId !== "fa" && teamId !== "retired" && teamId !== "hof" ? usedJerseys(save, teamId) : new Set<number>();
@@ -537,6 +541,11 @@ export function cpuCanAdd(save: DynastySave, teamId: TeamId, p: Player, starOk =
   const cap = save.salaryCap ?? salaryCapFor(save.year);
   if (cap != null && teamPayroll(save, teamId) + salaryFor(save.year, p.ovr, p.age, p.pos) > cap) return false;
   if (p.ovr >= 85 && !starOk) return false;
+  // One kicker and one punter: another only as a clear upgrade, or while his is hurt.
+  if (p.pos === "K" || p.pos === "P") {
+    const his = rosterOf(save, teamId).filter((x) => x.pos === p.pos && x.injuredWeeks <= 2 && !x.onIR);
+    if (his.some((x) => x.ovr >= p.ovr - 6)) return false;
+  }
   return true;
 }
 

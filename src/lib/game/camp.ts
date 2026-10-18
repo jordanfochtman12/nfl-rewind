@@ -9,14 +9,31 @@ import { addNews } from "./news.ts";
 
 const CAMP_BUGS = ["ankle", "hamstring", "shoulder", "groin", "knee", "wrist", "foot", "ribs"];
 
-function cpuTrim(save: DynastySave, teamId: TeamId, cap = rosterCap(save)): { playerId: string; teamId: TeamId }[] {
+function cpuTrim(save: DynastySave, teamId: TeamId, cap = rosterCap(save), specialists = true): { playerId: string; teamId: TeamId }[] {
   // The men who really made the club that year go first in line to stay.
   const rank = (p: Player) => p.ovr + (madeRealRoster(save, p) ? 12 : 0);
+  const cuts: { playerId: string; teamId: TeamId }[] = [];
+  // A club carries one kicker and one punter: a second only while the first is hurt.
+  if (specialists) {
+    for (const pos of ["K", "P"] as const) {
+      const have = rosterOf(save, teamId)
+        .filter((p) => p.pos === pos && !(save.realPool && p.onIR))
+        .sort((a, b) => Number(a.injuredWeeks > 2) - Number(b.injuredWeeks > 2) || rank(b) - rank(a));
+      const keep = have[0] && have[0].injuredWeeks > 2 ? 2 : 1;
+      for (const p of have.slice(keep)) {
+        movePlayer(save, p.id, "fa");
+        cuts.push({ playerId: p.id, teamId });
+      }
+    }
+  }
   // Injured reserve doesn't take an active spot in an era league.
   const roster = rosterOf(save, teamId)
     .filter((p) => !(save.realPool && p.onIR))
     .sort((a, b) => rank(b) - rank(a));
-  if (roster.length <= cap) return [];
+  if (roster.length <= cap) {
+    if (cuts.length) syncDepth(save, teamId);
+    return cuts;
+  }
   const keep = new Set<string>();
   for (const [pos, need] of DEPTH_CHART) {
     for (const p of roster.filter((x) => x.pos === pos).slice(0, need)) keep.add(p.id);
@@ -25,7 +42,6 @@ function cpuTrim(save: DynastySave, teamId: TeamId, cap = rosterCap(save)): { pl
     if (keep.size >= cap) break;
     keep.add(p.id);
   }
-  const cuts: { playerId: string; teamId: TeamId }[] = [];
   for (const p of roster) {
     if (keep.has(p.id)) continue;
     movePlayer(save, p.id, "fa");
@@ -118,7 +134,7 @@ export function resolveCamp(save: DynastySave): CampReport {
       // season: anything past it goes, lowest grades first, depth-chart starters protected.
       const limit = Math.max(ROSTER_TARGET + 8, rosterCap(save));
       staffFill(save, id);
-      const mine = cpuTrim(save, id, limit);
+      const mine = cpuTrim(save, id, limit, false);
       if (mine.length) {
         cuts.push(...mine);
         addNews(save, {

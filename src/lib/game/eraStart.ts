@@ -793,7 +793,11 @@ export function createEraGame(o: EraOpts): DynastySave {
     if (chart?.role) p.role = chart.role;
     // A season with no spot for him (a backup, a year off the chart): where he mostly started.
     const career = CAREER_SPOT[person.toString(36)];
-    const spot = charted ?? spotOf.get(person) ?? seasonPos.get(person) ?? career;
+    let spot = charted ?? spotOf.get(person) ?? seasonPos.get(person) ?? career;
+    // A season's listing can file a punter who kicked off as a kicker (Jason Baker, 2005):
+    // kickers and punters stay what their careers were.
+    const specialist = (x?: Pos) => x === "K" || x === "P";
+    if (specialist(spot) && specialist(p.pos)) spot = career ?? p.pos;
     if (charted || seasonPos.has(person) || (career && !spotOf.has(person))) placedAt.add(p.id);
     if (spot && spot !== p.pos) {
       const level = p.ovr;
