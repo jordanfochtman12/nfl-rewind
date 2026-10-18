@@ -1,5 +1,6 @@
 // Builds src/lib/game/data/ownerGrades.ts from the owner's draft boards: the QB board
-// (scripts/qb-grades.json) and the board for every other position (scripts/board-grades.json).
+// (scripts/qb-grades.json) and the board for every position (scripts/board-grades.json); the
+// board is the later one, so a quarterback graded on both takes the board's.
 // Each player's overall on draft day and the peak his career climbs to.
 import { readFileSync, writeFileSync } from "node:fs";
 
