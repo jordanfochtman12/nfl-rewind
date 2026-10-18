@@ -5,8 +5,8 @@
  * on a line that can't be read.
  */
 import { create } from "zustand";
-import { settingsNow } from "@/lib/settings-store";
-import { PHONE_VOICE } from "@/lib/voiceCast";
+import { settingsNow } from "../settings-store.ts";
+import { PHONE_VOICE } from "../voiceCast.ts";
 
 /** Who is reading a line, so a desk can cast each person a device voice of their own. */
 export interface Speaker {
