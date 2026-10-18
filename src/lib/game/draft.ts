@@ -17,6 +17,8 @@ import { schemeFitPos } from "./staff.ts";
 import { arcTarget, gradeTo, honorsFloor, lookupArc, moveToward, projectedOnly } from "./careerArc.ts";
 import { deriveOvr } from "./ratings.ts";
 import { OWNER_GRADES } from "./data/ownerGrades.ts";
+import { DRAFT_SPOT } from "./data/realSpots.ts";
+import { ARCH_POOL } from "./profiles.ts";
 import { historicalNameKey, normalizedName } from "./identity.ts";
 import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
 import { friendBreaksOut, friendCeiling, friendOf } from "./data/friends.ts";
@@ -260,6 +262,10 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
   const fix = audited
     ? (RATING_FIX[`${save.year}|${s.f}|${s.l}`] as { rt?: Partial<Ratings>; arch?: Arch; fy?: number; ht?: number; wt?: number; peak?: number; age?: number; pos?: Pos } | undefined)
     : undefined;
+  // Where he really lined up, when his class lists him at another spot in his unit (an end who
+  // played tackle, a "middle" linebacker who started outside). The owner's own call wins.
+  const real = fix?.pos || role?.p ? undefined : DRAFT_SPOT[`${save.year}|${s.f}|${s.l}`];
+  const moved = fix?.pos && fix.pos !== s.p;
   const draftAge = randInt(save, 21, 23);
   const p = makePlayer(save, {
     fix,
@@ -267,7 +273,7 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     lastName: s.l,
     // The owner's calls from the ratings audit (scripts/audit-decisions.json): his real position,
     // his peak, his age at the draft.
-    pos: fix?.pos ?? s.p,
+    pos: fix?.pos ?? real ?? s.p,
     teamId: "fa",
     ovr: fix?.peak ?? s.o,
     age: fix?.age ?? draftAge,
@@ -277,12 +283,13 @@ function seedToPlayer(save: DynastySave, seed: DraftSeed, round: number, audited
     draftYear: save.year,
     draftRound: s.r ?? round,
     // Moved to his real position, he's built for it: the old position's kit and label don't follow.
-    arch: fix?.pos && fix.pos !== s.p ? undefined : s.arch,
+    // A move inside his unit keeps the style where it fits the new spot.
+    arch: moved ? undefined : real && s.arch && !ARCH_POOL[real].includes(s.arch) ? undefined : s.arch,
     // His real measurements where the record has them (the combine, the league's bios).
     heightIn: fix?.ht ?? s.ht,
     weight: fix?.wt ?? s.wt,
     forty: fix?.fy ?? s.fy,
-    rt: fix?.pos && fix.pos !== s.p ? undefined : s.rt,
+    rt: moved ? undefined : s.rt,
   });
   if (s.r) p.realRound = s.r;
   const friend = friendOf(s.f, s.l);

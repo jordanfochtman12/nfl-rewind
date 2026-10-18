@@ -98,7 +98,7 @@ export const ARCH_DELTA: Record<Arch, Partial<Ratings>> = {
   ice: { kickAcc: 14, kickPow: 2, awareness: 6 },
 };
 
-const ARCH_POOL: Record<Pos, Arch[]> = {
+export const ARCH_POOL: Record<Pos, Arch[]> = {
   QB: ["deadeye", "cannon", "scrambler", "manager", "dual"],
   RB: ["elusive", "power-back", "home-run", "receiving-back"],
   FB: ["power-back", "receiving-back"],

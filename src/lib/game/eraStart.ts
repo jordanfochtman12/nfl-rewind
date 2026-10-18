@@ -13,6 +13,7 @@
  * while the record has them, then the game makes its own.
  */
 import { ageBodyBetween } from "./body.ts";
+import { CAREER_SPOT } from "./data/realSpots.ts";
 import { advanceHistory, coachFor, createHistoryGame, hasHistoryData, ROSTERS_LAST, historyData, playerFor, seatCoaches } from "./historyMode.ts";
 import { normalizedName } from "./identity.ts";
 import { buildDraftBoard, ensureSeasonPicks, realDraftee } from "./draft.ts";
@@ -790,8 +791,10 @@ export function createEraGame(o: EraOpts): DynastySave {
     const chart = historyData().starters(year).get(person);
     const charted = chart?.spot;
     if (chart?.role) p.role = chart.role;
-    const spot = charted ?? spotOf.get(person) ?? seasonPos.get(person);
-    if (charted || seasonPos.has(person)) placedAt.add(p.id);
+    // A season with no spot for him (a backup, a year off the chart): where he mostly started.
+    const career = CAREER_SPOT[person.toString(36)];
+    const spot = charted ?? spotOf.get(person) ?? seasonPos.get(person) ?? career;
+    if (charted || seasonPos.has(person) || (career && !spotOf.has(person))) placedAt.add(p.id);
     if (spot && spot !== p.pos) {
       const level = p.ovr;
       p.pos = spot;
