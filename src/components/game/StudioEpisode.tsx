@@ -6,7 +6,7 @@ import { useGameStore } from "@/lib/game-store";
 import { LowerThird, ShowGraphicView, ShowOpen, ShowTicker } from "./ShowKit";
 import { Logo } from "./chrome";
 import { stadiumAudio } from "./stadiumAudio";
-import { castVoices } from "@/lib/voiceCast";
+import { castVoices, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 import { crewFor, crewGender } from "@/lib/game/previewVoice";
 import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/speech";
 
@@ -236,9 +236,9 @@ export function StudioEpisode({
               onChange={(e) => setVoice(e.target.value)}
             >
               <option value="">Best available English voice</option>
-              {voices.map((v) => (
-                <option key={v.name} value={v.name}>
-                  {v.name}
+              {voiceChoices(voices).map((v) => (
+                <option key={voiceKey(v)} value={voiceKey(v)}>
+                  {voiceLabel(v)}
                 </option>
               ))}
             </select>

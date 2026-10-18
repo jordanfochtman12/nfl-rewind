@@ -1,4 +1,4 @@
-import { castVoices } from "@/lib/voiceCast";
+import { castVoices, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 import { commissionerFor, draftAnalystFor, pickReaderFor } from "@/lib/game/broadcastCrew";
 import {
   useCallback,
@@ -451,9 +451,9 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
                 onChange={(e) => setVoice(e.target.value)}
               >
                 <option value="">Best available English voice</option>
-                {voices.map((v) => (
-                  <option key={v.voiceURI} value={v.name}>
-                    {v.name}
+                {voiceChoices(voices).map((v) => (
+                  <option key={voiceKey(v)} value={voiceKey(v)}>
+                    {voiceLabel(v)}
                   </option>
                 ))}
               </select>

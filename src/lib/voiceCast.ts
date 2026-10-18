@@ -12,6 +12,8 @@ export interface VoiceLike {
   name: string;
   lang: string;
   localService?: boolean;
+  /** iOS gives Premium/Enhanced voices the same name as the compact one; only this tells them apart. */
+  voiceURI?: string;
 }
 
 export interface Persona {
@@ -49,9 +51,45 @@ export function voiceGender(v: VoiceLike): Gender | undefined {
   return undefined;
 }
 
+/** 2 = Premium, 1 = Enhanced/Natural/Neural, 0 = the standard compact voice. */
+export function voiceTier(v: VoiceLike): number {
+  const id = `${v.name} ${v.voiceURI ?? ""}`;
+  if (/premium/i.test(id)) return 2;
+  if (/enhanced|natural|neural|online/i.test(id)) return 1;
+  return 0;
+}
+
+/** The key a chosen voice is saved under: the voiceURI where the browser gives one. */
+export const voiceKey = (v: VoiceLike) => v.voiceURI || v.name;
+
+const REGION: Record<string, string> = { US: "US", GB: "UK", AU: "Australia", IE: "Ireland", IN: "India", ZA: "South Africa", CA: "Canada", NZ: "New Zealand" };
+
+/** What the voice menu shows, e.g. "Nathan · Enhanced · US". */
+export function voiceLabel(v: VoiceLike): string {
+  const tier = voiceTier(v);
+  const name = v.name.replace(/\s*\((premium|enhanced)\)\s*/i, " ").trim();
+  const region = REGION[(v.lang.split(/[-_]/)[1] ?? "").toUpperCase()];
+  return [name, tier === 2 ? "Premium" : tier === 1 && !/natural|neural|online/i.test(v.name) ? "Enhanced" : "", region].filter(Boolean).join(" · ");
+}
+
+/** English voices fit for a broadcast, best first, one entry per voice, no novelty voices. */
+export function voiceChoices<V extends VoiceLike>(all: V[]): V[] {
+  const seen = new Set<string>();
+  return all
+    .filter((v) => /^en([-_]|$)/i.test(v.lang) && !NOVELTY.test(v.name))
+    .filter((v) => (seen.has(voiceKey(v)) ? false : (seen.add(voiceKey(v)), true)))
+    .sort((a, b) => voiceTier(b) - voiceTier(a) || voiceLabel(a).localeCompare(voiceLabel(b)));
+}
+
+/** A saved choice (voiceURI, or a name from older saves) back to the voice, best tier first. */
+export function findVoice<V extends VoiceLike>(all: V[], chosen: string | undefined): V | undefined {
+  if (!chosen) return undefined;
+  return all.find((v) => v.voiceURI === chosen) ?? all.filter((v) => v.name === chosen).sort((a, b) => voiceTier(b) - voiceTier(a))[0];
+}
+
 function quality(v: VoiceLike): number {
   let q = 0;
-  if (/natural|neural|premium|enhanced|online/i.test(v.name)) q += 6;
+  q += voiceTier(v) * 4;
   if (/google/i.test(v.name)) q += 3;
   if (/^en[-_]US/i.test(v.lang)) q += 4;
   else if (/^en[-_](CA)/i.test(v.lang)) q += 2;
@@ -70,18 +108,18 @@ export function castVoices<V extends VoiceLike>(all: V[], personas: Persona[], p
   const out = new Map<string, Casting<V>>();
   personas.forEach((p, i) => {
     let voice: V | undefined;
-    if (i === 0 && preferred) voice = english.find((v) => v.name === preferred);
+    if (i === 0 && preferred) voice = findVoice(english, preferred);
     const matches = ranked.filter((v) => voiceGender(v) === p.gender);
     const unknown = ranked.filter((v) => voiceGender(v) === undefined);
     voice ??=
-      matches.find((v) => !used.has(v.name)) ??
-      unknown.find((v) => !used.has(v.name)) ??
+      matches.find((v) => !used.has(voiceKey(v))) ??
+      unknown.find((v) => !used.has(voiceKey(v))) ??
       matches[0] ??
       unknown[0] ??
       ranked.find((v) => voiceGender(v) !== (p.gender === "m" ? "f" : "m")) ??
       ranked[0];
-    const reuse = voice ? used.get(voice.name) ?? 0 : 0;
-    if (voice) used.set(voice.name, reuse + 1);
+    const reuse = voice ? used.get(voiceKey(voice)) ?? 0 : 0;
+    if (voice) used.set(voiceKey(voice), reuse + 1);
     const g = voice ? voiceGender(voice) : undefined;
     // A shared or ungendered voice gets pushed toward the person: lower for men, higher for
     // women, and a step apart for every extra person on the same voice.

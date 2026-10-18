@@ -10,6 +10,7 @@ import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-st
 import { Btn } from "./chrome";
 import { useOfflineStatus } from "../offline-status";
 import { cancelSpeech, hasPremiumDeviceVoice, isPhone, speakLine } from "@/lib/voice/speech";
+import { findVoice, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint?: string; on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -91,7 +92,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
     if (!("speechSynthesis" in window)) return;
     cancelSpeech();
     const u = new SpeechSynthesisUtterance("Welcome to the broadcast. Here's how I'll sound.");
-    const v = voices.find((x) => x.name === st.voiceName);
+    const v = findVoice(voices, st.voiceName);
     if (v) u.voice = v;
     speakLine(u);
   };
@@ -120,9 +121,9 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
               <div className="flex gap-2">
                 <select aria-label="Lead voice" className="min-h-10 max-w-[13rem] rounded-md border border-line bg-surface-2 px-2 text-sm text-fg" value={st.voiceName} onChange={(e) => st.set({ voiceName: e.target.value })}>
                   <option value="">Best available</option>
-                  {voices.map((v) => (
-                    <option key={v.name} value={v.name}>
-                      {v.name}
+                  {voiceChoices(voices).map((v) => (
+                    <option key={voiceKey(v)} value={voiceKey(v)}>
+                      {voiceLabel(v)}
                     </option>
                   ))}
                 </select>

@@ -2,7 +2,7 @@ import { footballSpeech } from "@/lib/game/footballSpeech";
 import { settingsNow } from "@/lib/settings-store";
 import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
-import { castVoices } from "@/lib/voiceCast";
+import { castVoices, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 import { boothFor } from "@/lib/game/broadcastCrew";
 import type { BoothLine } from "@/lib/game/commentary";
 import { cancelSpeech, isSpeaking, speakLine, speechGeneration, useTalking } from "@/lib/voice/speech";
@@ -236,11 +236,9 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
               }}
             >
               <option value="">Best available English voice</option>
-              {voices
-                .filter((v) => /^en(-|_)/i.test(v.lang))
-                .map((v) => (
-                  <option key={v.voiceURI} value={v.name}>
-                    {v.name}
+              {voiceChoices(voices).map((v) => (
+                  <option key={voiceKey(v)} value={voiceKey(v)}>
+                    {voiceLabel(v)}
                   </option>
                 ))}
             </select>
