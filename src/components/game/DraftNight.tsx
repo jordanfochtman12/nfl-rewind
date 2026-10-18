@@ -43,6 +43,7 @@ import { PlayerLink } from "./PlayerProfile";
 import { NightShow } from "./ShowKit";
 import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
 import { DraftOpening } from "./DraftOpening";
+import { DraftPreviewShow } from "./DraftPreview";
 import { DraftRecapView } from "./DraftRecap";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
@@ -205,12 +206,16 @@ export function DraftNight() {
         {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{posLabel(p)} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
       </section>}
       {showOpening && (
-        <DraftOpening
-          onStart={() => {
-            setOpening(false);
-            setPaused(false);
-          }}
-        />
+        <>
+          <DraftOpening
+            onStart={() => {
+              setOpening(false);
+              setPaused(false);
+            }}
+          />
+          {/* The preview show comes with the opening: the mock, the board and the needs before the first pick. */}
+          <DraftPreviewShow embedded />
+        </>
       )}
       <section className={`relative overflow-hidden rounded-xl border border-brass/30 bg-studio ${showOpening ? "hidden" : ""}`}>
         <FilmStill still="draft" veil="full" />

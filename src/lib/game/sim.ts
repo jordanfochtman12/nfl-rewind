@@ -783,7 +783,8 @@ function callPlay(
   // Red-zone offense moved to the air over the decades: by the 2010s most TDs inside the 20 were passes.
   if (spot >= 80) passW += year >= 2010 ? 0.1 : year >= 2000 ? 0.05 : year >= 1990 ? 0.03 : 0;
   if (spot >= 90 && plan.redZone === "spread") passW += 0.05;
-  if (trail >= 8) passW += 0.12;
+  // Behind, the 70s still ran it more than later eras did.
+  if (trail >= 8) passW += 0.12 * (year <= 1977 ? 0.6 : 1);
   if (trail <= -10 && !desperate) passW -= 0.1;
   // Three scores up after the half: hand it off and let the clock run.
   if (trail <= -21 && q >= 3) passW -= 0.15;
@@ -2080,7 +2081,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       trail,
       q,
       clock,
-      eraPassW + (garbage ? 0.12 : 0),
+      // The trailing side's own lean (behind by 8, desperate late) already carries most of it.
+      eraPassW + (garbage ? 0.05 : 0),
       plan,
       off.k,
       wx,
@@ -2476,6 +2478,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (wx === "rain" || wx === "snow") cmpP -= 0.05;
       if (wx === "wind" && call === "deep") cmpP -= 0.06;
       if (year < 1978) cmpP -= Math.max(0, cov - 74) / 400;
+      // The early 70s were the low point for completions (51% in 1970), below even the late 60s.
+      if (year >= 1970 && year <= 1972) cmpP -= 0.03;
       if (was3rd && togo >= 7) cmpP -= 0.07;
       // Tight windows near the goal line separate the passers: the great ones still find a man.
       // The squeeze on completions stays small (the field shrinks either way); how much a trip

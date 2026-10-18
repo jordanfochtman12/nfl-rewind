@@ -500,7 +500,10 @@ export function buildDraftBoard(save: DynastySave): void {
       // Ceilings: everyone has one, the top of the class has the highest, and one in twenty
       // late picks turns out to be the steal of the draft.
       const sleeper = roundGuess >= 3 && rand(save) < 0.05;
-      const lift = randInt(save, 3, 12) + (roundGuess <= 1 ? randInt(save, 2, 6) : 0) + (sleeper ? randInt(save, 8, 14) : 0);
+      // The top ten carry the real blue-chip ceilings: three or four 90s a class, the way the
+      // league renews its stars (with less, the league after the record ran out of them).
+      const blueChip = board.length < 10 ? randInt(save, 3, 8) : 0;
+      const lift = randInt(save, 3, 12) + (roundGuess <= 1 ? randInt(save, 2, 6) : 0) + blueChip + (sleeper ? randInt(save, 8, 14) : 0);
       p.potential = Math.min(97, p.ovr + lift);
       if (sleeper) p.gem = true;
       p.classOf = true;
@@ -678,5 +681,6 @@ export function sessionLabel(save: DynastySave): string {
   const s = sessionOf(save);
   if (s === "nfl") return "NFL Draft";
   if (s === "afl") return "AFL Draft";
-  return "Common Draft";
+  // One draft for both leagues: the "common draft" of 1967-69, and after the merger the NFL's.
+  return save.year <= 1969 ? "Common Draft" : "NFL Draft";
 }

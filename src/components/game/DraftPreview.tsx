@@ -51,8 +51,12 @@ function Segment({ n, title, children, id }: { n: number; title: string; childre
   );
 }
 
-/** Draft week on the network: the mock, the big board, position rankings and the war room. */
-export function DraftPreviewShow() {
+/**
+ * Draft week on the network: the mock, the big board, position rankings and the war room.
+ * `embedded` is the same preview under draft night's opening card (no show open, no ticker,
+ * no button to the room the owner is already in).
+ */
+export function DraftPreviewShow({ embedded = false }: { embedded?: boolean } = {}) {
   const save = useGameStore((s) => s.save)!;
   const setTab = useGameStore((s) => s.setTab);
   const [group, setGroup] = useState<PosGroup>("QB");
@@ -331,8 +335,7 @@ export function DraftPreviewShow() {
     const p = pid ? save.players[pid] : undefined;
     return `NO. ${m.overall} ${teamAbbr(m.teamId)}: ${p ? `${playerName(p).toUpperCase()}, ${posLabel(p)}` : "ON THE CLOCK"}`;
   });
-  return (
-    <NightShow id={`draft-preview-${save.year}`} show="DRAFT PREVIEW SPECIAL" title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
+  const body = (
     <article className="relative overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_30px_80px_-30px_#000]">
       <FilmStill still="draft" veil="bottom" className="h-[440px]" />
       <div className="relative">
@@ -356,11 +359,13 @@ export function DraftPreviewShow() {
               </li>
             ))}
           </ul>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Btn kind="primary" onClick={() => setTab("draft")}>
-              To the draft room <span aria-hidden>▸</span>
-            </Btn>
-          </div>
+          {!embedded && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Btn kind="primary" onClick={() => setTab("draft")}>
+                To the draft room <span aria-hidden>▸</span>
+              </Btn>
+            </div>
+          )}
         </header>
         <nav aria-label="Show rundown" className="flex flex-wrap gap-2 px-5 py-3">
           {segs.map((s) => (
@@ -376,6 +381,11 @@ export function DraftPreviewShow() {
         ))}
       </div>
     </article>
+  );
+  if (embedded) return body;
+  return (
+    <NightShow id={`draft-preview-${save.year}`} show="DRAFT PREVIEW SPECIAL" title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
+      {body}
     </NightShow>
   );
 }

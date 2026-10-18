@@ -44,8 +44,8 @@ export function eraProfile(year: number): EraProfile {
   if (year <= 1977) {
     return {
       name: "dead-ball",
-      cmpPct: 0.66,
-      passAtt: 29.5,
+      cmpPct: 0.635,
+      passAtt: 26.5,
       ypa: 6.6,
       intRate: 0.056,
       sackRate: 0.031,
@@ -199,9 +199,11 @@ export function twoPointOk(year: number, teamId: TeamId): boolean {
 export function fgEraMod(year: number): number {
   // Kicks before 1974 were ten yards shorter from the same spot (posts on the goal line).
   if (year <= 1969) return 0.78;
-  if (year <= 1973) return 0.75;
-  if (year <= 1977) return 0.79;
+  // Measured against the record (2026): about 59% in 1970, 64% in 1975, 64% in 1980.
+  if (year <= 1973) return 0.84;
+  if (year <= 1977) return 0.95;
   // From the 80s on, real kickers try (and make) the longer ones the range gives them.
+  if (year <= 1981) return 0.86;
   if (year <= 1985) return 0.94;
   if (year <= 1993) return 0.98;
   if (year <= 1999) return 1.03;

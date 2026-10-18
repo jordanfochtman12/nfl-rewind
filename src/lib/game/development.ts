@@ -1,6 +1,5 @@
 import type { DynastySave, Player, Pos } from "./types.ts";
 import { rand, randInt } from "./rng.ts";
-import { applyAgeDelta } from "./profiles.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { arcRetiresNow, arcTarget, gradeTo, moveToward } from "./careerArc.ts";
@@ -127,7 +126,11 @@ export function agePlayer(save: DynastySave, p: Player): void {
   if (climbing && rand(save) < 0.85 + devBump) {
     // Practice develops a prospect too: benched behind veterans, the first scouts-built classes
     // took five years to make a star and the league went through a lean stretch after 2026.
-    const pace = (starter ? 0.38 : gp >= 3 ? 0.35 : 0.31) * (0.6 + rand(save) * 0.8);
+    // A blue-chip ceiling gets reached: at a third of the gap a year a 92 prospect topped out
+    // near 88 by the time he peaked, and once the record ran out the league had four 90s.
+    // Everyone else climbs at the usual pace (all of them faster crowded the league with 80s).
+    const chip = pot >= 88 ? 1.3 : 1;
+    const pace = (starter ? 0.38 : gp >= 3 ? 0.35 : 0.31) * chip * (0.6 + rand(save) * 0.8);
     delta = Math.max(1, Math.round(room * pace));
   } else if (p.age < peak - 1 && p.ovr < pot && starter && rand(save) < 0.55 + devBump) delta = randInt(save, 1, 2);
   else if (p.age < peak - 1 && p.ovr < 92 && rand(save) < 0.45 + devBump * 0.5) delta = randInt(save, 1, 2);
@@ -145,7 +148,10 @@ export function agePlayer(save: DynastySave, p: Player): void {
   // skills' share, so aging isn't counted twice.
   delta -= bodyMove;
 
-  if (delta !== 0) applyAgeDelta(p, delta);
+  // The year's change lands in full: skills carry it now that the body ages on its own (a
+  // single skill step moved a speed position's overall about half as far, and the scouts'
+  // 90-plus prospects stalled in the mid-80s).
+  if (delta !== 0) moveToward(p, p.ovr + delta);
   }
   p.peakOvr = Math.max(p.peakOvr, p.ovr);
   const lead = hc ? ((hc.leadership ?? 70) - 70) / 20 + coachKitBoost(hc, "clutch") * 0.15 : 0;
