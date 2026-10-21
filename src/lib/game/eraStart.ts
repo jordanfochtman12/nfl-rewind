@@ -22,6 +22,7 @@ import { FRIENDS } from "./data/friends.ts";
 import { arcTarget, calibrateVetPeak, gradeTo, honorsFloor, lookupArc, moveToward } from "./careerArc.ts";
 import { DEPTH_CHART, emptyStats, generatePlayer, normalizeJerseys, playerName, retiredFor, rosterOf, signFriends, signRealFa, syncDepth } from "./players.ts";
 import { jerseyFor } from "./names.ts";
+import { cpuHandles } from "./teamControl.ts";
 import { randInt } from "./rng.ts";
 import { deriveOvr } from "./ratings.ts";
 import { refreshContracts } from "./salary.ts";
@@ -570,6 +571,7 @@ export function openingFill(save: DynastySave): void {
   const before = new Set(Object.keys(save.players));
   const market = Object.values(save.players).filter((p) => p.teamId === "fa" && p.historical);
   for (const id of activeTeamIds(save.year)) {
+    if (!cpuHandles(save, id, "roster")) continue;
     for (const [pos, need] of DEPTH_CHART) {
       for (let have = rosterOf(save, id).filter((p) => p.pos === pos).length; have < need; have++) {
         if (!signRealFa(save, id, pos, market)) generatePlayer(save, pos, id, 58, randInt(save, 23, 29));
@@ -646,6 +648,7 @@ export interface EraOpts {
   userTeamId: TeamId;
   startingYear: number;
   sandbox?: boolean;
+  leagueSandbox?: boolean;
   seed?: number;
 }
 
@@ -670,6 +673,8 @@ export function createEraGame(o: EraOpts): DynastySave {
   s.historyCalls = undefined;
   s.sandbox = o.sandbox ? true : undefined;
   s.cpuOnly = !!o.sandbox;
+  s.leagueSandbox = o.leagueSandbox ? true : undefined;
+  s.leagueControl = o.leagueSandbox ? {} : undefined;
   s.userTeamId = o.userTeamId;
   s.startingYear = year;
   s.realPool = true;
@@ -885,7 +890,7 @@ export function realBlackMonday(save: DynastySave): void {
   const search = save.coachSearch;
   const inPlayoffs = new Set(save.playoffGames.filter((g) => g.year === save.year).flatMap((g) => [g.homeId, g.awayId]));
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "staff")) continue;
     const t = save.teams[id];
     const hc = t?.coachId ? save.coaches[t.coachId] : undefined;
     const year = now.get(id) ?? [];
@@ -941,8 +946,8 @@ export function seatRealCoordinators(save: DynastySave, year: number, onPath: bo
     const t = save.teams[id];
     const names = rec.get(id);
     if (!t || !names) continue;
+    if (!cpuHandles(save, id, "staff")) continue;
     if (onPath) {
-      if (id === save.userTeamId && !save.cpuOnly) continue;
       const hc = t.coachId ? save.coaches[t.coachId] : undefined;
       const real = heads.get(id)?.[0]?.name;
       if (!hc || !real || hc.name.toLowerCase() !== real.toLowerCase()) continue;

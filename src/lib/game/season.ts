@@ -23,6 +23,7 @@ import { resolveCamp } from "./camp.ts";
 import { openingFill, realBlackMonday, realIntake, restoreRecordLines, seatRealCoordinators, syncRealNumbers } from "./eraStart.ts";
 import { announceRuleChanges } from "./rulebook.ts";
 import { honorTradeRequests, tradeDemands, weeklyMoments } from "./careerMoments.ts";
+import { cpuHandles } from "./teamControl.ts";
 import { updateMorale } from "./morale.ts";
 import { ownerDeskBeforeWeek, ownerDeskWeek } from "./ownerDesk.ts";
 import { updateArcs } from "./arcs.ts";
@@ -67,6 +68,7 @@ import { touchGrade } from "./grade.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
 import { advanceHistory } from "./historyMode.ts";
 import { clearCombine, runCombine } from "./scouting.ts";
+import { developCareerWeek, snapshotCareerWeek } from "./careerDevelopment.ts";
 
 export function setLabel(save: DynastySave): void {
   const y = save.year;
@@ -148,7 +150,7 @@ function fillCpuRosters(save: DynastySave): void {
   // One look at the market for every club (each signing takes its man off it).
   const market = realFreeAgents(save);
   for (const id of marketOrder(save)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "roster")) continue;
     if (!save.teams[id]) continue;
     fillRoster(save, id, market);
     swapInReal(save, id, 10, market);
@@ -165,7 +167,7 @@ function capAndRefill(save: DynastySave): void {
   enforceCapCompliance(save);
   // The second trip under the cap cut clubs below a full roster; fill back up within it.
   for (const id of marketOrder(save)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "roster")) continue;
     if (!save.teams[id]) continue;
     fillUnderCap(save, id, save.salaryCap);
     save.teams[id].payroll = teamPayroll(save, id);
@@ -296,7 +298,9 @@ function simThisWeek(save: DynastySave): void {
   cpuQbBenchings(save);
   const games = gamesInWeek(save, save.week);
   pickFeaturedGame(save, games);
+  const careerBefore = snapshotCareerWeek(save);
   for (const g of games) simGame(save, g);
+  developCareerWeek(save, careerBefore, "regular");
   weeklyMoments(save, games);
   updateMorale(save);
   ownerDeskWeek(save);
@@ -350,7 +354,7 @@ function openDraft(save: DynastySave): void {
   pruneUndraftedProspects(save);
   // Computer front offices draft the way the real ones did that era; the owner keeps his own.
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "draft")) continue;
     if (save.teams[id]) save.teams[id].draftStyle = draftStyleOf(id, save.year);
   }
   save.draftSession = save.year === 1966 ? "nfl" : "common";
@@ -388,7 +392,7 @@ function finishOffseason(save: DynastySave): void {
     save.week = 0;
     for (const m of moves) {
       // Your own club leaving town is your signature on the lease, not a headline you read.
-      if (m.teamId === save.userTeamId && !save.cpuOnly && isCityMove(m)) {
+      if (m.teamId === save.userTeamId && !save.cpuOnly && !save.leagueSandbox && isCityMove(m)) {
         ownerOf(save).historic = { year: m.year, from: m.from, to: m.to };
         continue;
       }
@@ -486,9 +490,10 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.faOpened = true;
         break;
       }
-      if (team === s.userTeamId && !s.cpuOnly && opts.userPickPlayerId) {
+      const userPick = !cpuHandles(s, team, "draft");
+      if (userPick && opts.userPickPlayerId) {
         makeDraftPick(s, opts.userPickPlayerId);
-      } else if (team === s.userTeamId && !s.cpuOnly && !opts.userPickPlayerId) {
+      } else if (userPick && !opts.userPickPlayerId) {
         setLabel(s);
         return s;
       } else {

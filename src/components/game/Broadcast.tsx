@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { clubInk, locationOf, nicknameOf, teamAbbr, type DynastySave, type GameResult, type TeamId } from "@/lib/game";
 import { Logo } from "./chrome";
 import { useGameStore } from "@/lib/game-store";
@@ -90,25 +90,29 @@ export function TabStrip<T extends string>({
   active: T;
   onPick: (id: T) => void;
 }) {
+  const sectionOf = (id: string) => ["office", "primetime"].includes(id) ? "GAME DAY" : ["roster", "depth", "staff", "market", "moves"].includes(id) ? "FRONT OFFICE" : ["standings", "league", "schedule", "stats"].includes(id) ? "LEAGUE" : "HISTORY";
+  let previousSection = "";
+  const activeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  }, [active]);
   return (
       <nav className="next-navigation relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
         <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Section</span><select aria-label="Section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
-        <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex">
+        <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex" tabIndex={0}>
         {tabs.map((t) => {
           const on = t.id === active;
+          const section = sectionOf(t.id);
+          const newSection = section !== previousSection;
+          previousSection = section;
           return (
-            <button
-              key={t.id}
-              type="button"
-              aria-current={on ? "page" : undefined}
-              onClick={() => onPick(t.id)}
-              className={`bx-btn relative min-h-9 shrink-0 px-3.5 text-[14px] sm:px-4 ${
-                on ? "bx-primary" : "border border-transparent text-muted hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              <span className="bx-in">{t.label}</span>
-              {on && <span className="absolute inset-x-1 -bottom-1.5 h-[3px] bg-brass shadow-[0_0_10px_#ffc629]" aria-hidden />}
-            </button>
+            <div className="flex shrink-0 items-center" key={t.id}>
+              {newSection && <span className="mx-1.5 h-6 border-l border-white/15" aria-hidden />}
+              <button type="button" ref={on ? activeRef : undefined} aria-current={on ? "page" : undefined} onClick={() => onPick(t.id)} title={section} className={`bx-btn relative min-h-9 shrink-0 px-3.5 text-[14px] sm:px-4 ${on ? "bx-primary" : "border border-transparent text-muted hover:bg-white/5 hover:text-white"}`}>
+                <span className="bx-in">{t.label}</span>
+                {on && <span className="absolute inset-x-1 -bottom-1.5 h-[3px] bg-brass shadow-[0_0_10px_#ffc629]" aria-hidden />}
+              </button>
+            </div>
           );
         })}
       </div>

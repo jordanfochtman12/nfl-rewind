@@ -9,7 +9,7 @@
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   advanceHistory,
   createHistoryGame,
@@ -211,7 +211,7 @@ test("History mode stays out of the regular game", () => {
         "--no-warnings",
         "--input-type=module",
         "-e",
-        `const G = await import(${JSON.stringify(index)});
+        `const G = await import(${JSON.stringify(pathToFileURL(index).href)});
          if (${load}) G.setHistoryData(await G.loadHistoryData());
          const s0 = G.createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 4242 });
          s0.cpuOnly = true;

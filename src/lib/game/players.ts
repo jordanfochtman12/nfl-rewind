@@ -17,6 +17,7 @@ import { historicalNameKey } from "./identity.ts";
 import { draftSeedsFor } from "./data/draftClasses.ts";
 import { isFriend } from "./data/friends.ts";
 import { addTx } from "./news.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 export const DEPTH_CHART: [Pos, number][] = [
   ["QB", 3],
@@ -374,7 +375,7 @@ export function syncDepth(save: DynastySave, teamId: TeamId): void {
   // The owner's own depth chart is theirs to set; new arrivals just join the bottom. CPU
   // staffs re-rank on merit every time, with a small nod to the incumbent - otherwise a raw
   // rookie slotted behind a journeyman stays there for good after he's become the better player.
-  const cpu = teamId !== save.userTeamId || save.cpuOnly;
+  const cpu = cpuHandles(save, teamId, "depthChart");
   for (const [pos] of DEPTH_CHART) {
     const prevOrder = team.depth[pos] ?? [];
     const score = (p: Player) =>
@@ -537,7 +538,7 @@ export function realFreeAgents(save: DynastySave): Player[] {
  * Richard Seymour, Nnamdi Asomugha).
  */
 export function cpuCanAdd(save: DynastySave, teamId: TeamId, p: Player, starOk = false): boolean {
-  if (teamId === save.userTeamId && !save.cpuOnly) return true;
+  if (!cpuHandles(save, teamId, "roster")) return true;
   const cap = save.salaryCap ?? salaryCapFor(save.year);
   if (cap != null && teamPayroll(save, teamId) + salaryFor(save.year, p.ovr, p.age, p.pos) > cap) return false;
   if (p.ovr >= 85 && !starOk) return false;
@@ -730,7 +731,7 @@ export function signFriends(save: DynastySave, clubs: TeamId[]): void {
     if (p.teamId !== "fa" || !isFriend(p) || p.age > 31 || p.injuredWeeks > 0) continue;
     let best: { id: TeamId; rank: number } | undefined;
     for (const id of clubs) {
-      if (!save.teams[id] || (id === save.userTeamId && !save.cpuOnly)) continue;
+      if (!save.teams[id] || !cpuHandles(save, id, "roster")) continue;
       const rank = rosterOf(save, id).filter((x) => x.pos === p.pos && x.ovr >= p.ovr).length;
       if (!best || rank < best.rank || (rank === best.rank && randInt(save, 0, 1) === 0)) best = { id, rank };
     }

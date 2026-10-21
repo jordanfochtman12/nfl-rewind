@@ -27,6 +27,7 @@ import { visibleOvr } from "./scout.ts";
 import { winPct } from "./standings.ts";
 import { clubWindow, evaluateTrade, needFor, type ClubWindow } from "./tradeAi.ts";
 import { extendCoach } from "./coachContracts.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 const LAST_POS: Pos[] = ["QB", "K", "P"];
 
@@ -105,7 +106,7 @@ export function enforceCapCompliance(save: DynastySave): void {
   if (cap == null) return;
   const lastYearIds = new Set(activeTeamIds(save.year - 1));
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "contracts")) continue;
     if (!save.teams[id]) continue;
     // A team new to the league this year (expansion, or a franchise returning
     // from a relocation gap) gets real roster protection, same as it would in
@@ -222,7 +223,7 @@ export function signPlayer(save: DynastySave, teamId: TeamId, playerId: string, 
     return fail("He is on waivers — claim him instead.");
   }
   if (activeRosterOf(save, teamId).length >= ROSTER_TARGET + 8) return fail("Roster is full.");
-  const cpu = teamId !== save.userTeamId || save.cpuOnly;
+  const cpu = cpuHandles(save, teamId, "roster");
   // A computer club doesn't sign back a man it released this same year.
   if (cpu && p.releasedBy?.year === save.year && p.releasedBy.teamId === teamId) {
     return fail("They just released him.");
@@ -299,7 +300,7 @@ export function processWaivers(save: DynastySave): void {
       const best = need.sort((a, b) => b.ovr - a.ovr)[0];
       const want = !best || best.ovr < p.ovr - 2 || need.length < 2;
       if (!want) continue;
-      if (id === save.userTeamId && !save.cpuOnly) continue;
+      if (!cpuHandles(save, id, "roster")) continue;
       if (claimWaiver(save, id, p.id).ok) {
         claimed = true;
         break;
@@ -591,7 +592,7 @@ function dealerTrade(save: DynastySave, ids: TeamId[]): boolean {
  */
 export function cpuOffseasonDeals(save: DynastySave): void {
   if (!tradeWindowOpen(save)) return;
-  const ids = activeTeamIds(save.year).filter((id) => save.teams[id]?.active && (id !== save.userTeamId || save.cpuOnly));
+  const ids = activeTeamIds(save.year).filter((id) => save.teams[id]?.active && cpuHandles(save, id, "trades"));
   const by = (w: ClubWindow) => ids.filter((id) => clubWindow(save, id) === w);
   const sellers = by("rebuild");
   const buyers = by("contend");
@@ -621,7 +622,7 @@ export function cpuOffseasonDeals(save: DynastySave): void {
 }
 
 export function cpuTrades(save: DynastySave): void {
-  const teams = Object.values(save.teams).filter((t) => t.active && t.id !== save.userTeamId);
+  const teams = Object.values(save.teams).filter((t) => t.active && cpuHandles(save, t.id, "trades"));
   if (teams.length < 2) return;
   if (rand(save) < 0.6 && dealerTrade(save, teams.map((t) => t.id))) return;
   const a = teams[randInt(save, 0, teams.length - 1)]!;
@@ -643,7 +644,7 @@ export function cpuTrades(save: DynastySave): void {
 }
 
 export function cpuManageRoster(save: DynastySave, teamId: TeamId): void {
-  if (teamId === save.userTeamId && !save.cpuOnly) return;
+  if (!cpuHandles(save, teamId, "roster")) return;
   const t = save.teams[teamId];
   if (!t?.active) return;
   // Injured reserve doesn't take an active spot in an era league.
@@ -680,7 +681,7 @@ const GAME_DAY: Partial<Record<Pos, number>> = {
  */
 export function cpuCoverInjuries(save: DynastySave): void {
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "roster")) continue;
     if (!save.teams[id]?.active) continue;
     // From 2012 a man can come back from IR: a healed one rejoins the active roster.
     if (canReturnFromIR(save.year)) for (const p of rosterOf(save, id)) if (p.onIR && p.injuredWeeks <= 0) p.onIR = false;
@@ -748,7 +749,7 @@ function windowLean(win: ClubWindow, p: Player): number {
 export function cpuSignNeeds(save: DynastySave): void {
   const pool = freeAgents(save).slice().sort((a, b) => b.ovr - a.ovr);
   for (const id of marketOrder(save)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "roster")) continue;
     const t = save.teams[id];
     const n = rosterOf(save, id).length;
     // A full 45-man roster still turns over real players every year (post-1994
@@ -785,7 +786,7 @@ export function cpuSignNeeds(save: DynastySave): void {
  * spare go. Nobody good sits unsigned while a club that needs him has the room.
  */
 export function cpuMarket(save: DynastySave): number {
-  const clubs = activeTeamIds(save.year).filter((id) => save.teams[id] && (id !== save.userTeamId || save.cpuOnly));
+  const clubs = activeTeamIds(save.year).filter((id) => save.teams[id] && cpuHandles(save, id, "roster"));
   const wire = new Set(save.waivers.map((w) => w.playerId));
   const pool = Object.values(save.players)
     .filter((p) => p.teamId === "fa" && leaguePlayer(p) && p.ovr >= 70 && p.injuredWeeks <= 0 && !wire.has(p.id))
@@ -845,7 +846,7 @@ function passerRating(s: { passAtt: number; passCmp: number; passYds: number; pa
 export function cpuQbBenchings(save: DynastySave): void {
   if (save.phase !== "regular" || save.week < 5) return;
   for (const id of activeTeamIds(save.year)) {
-    if (id === save.userTeamId && !save.cpuOnly) continue;
+    if (!cpuHandles(save, id, "roster")) continue;
     const [qb, backup] = starters(save, id, "QB", 2);
     if (!qb || !backup || qb.benchedYear === save.year) continue;
     const st = qb.stats[save.year];

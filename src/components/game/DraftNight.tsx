@@ -116,6 +116,8 @@ export function DraftNight() {
   const [posFilter, setPosFilter] = useState<Pos | "ALL">("ALL");
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState(40);
+  const [shortlist, setShortlist] = useState<string[]>([]);
+  const [shortlistedOnly, setShortlistedOnly] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const compared = compareIds.map(id => save.players[id]).filter((p): p is Player => !!p);
 
@@ -138,9 +140,9 @@ export function DraftNight() {
       if (!p) return false;
       if (posFilter !== "ALL" && p.pos !== posFilter) return false;
       if (q && !playerName(p).toLowerCase().includes(q) && !(p.college ?? "").toLowerCase().includes(q)) return false;
-      return true;
+      return !shortlistedOnly || shortlist.includes(p.id);
     });
-  }, [openAll, posFilter, query, save.players]);
+  }, [openAll, posFilter, query, save.players, shortlist, shortlistedOnly]);
 
   const scout = scoutId
     ? save.players[scoutId]
@@ -298,12 +300,17 @@ export function DraftNight() {
 
       {!save.sandbox && (isUser || myPicksLeft) && <DraftDeals onClock={isUser} paused={() => setPaused(true)} />}
 
+      <section className="rounded-xl border border-line bg-surface p-3" aria-label="Draft board filters">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs uppercase tracking-widest text-muted"><strong className="text-fg">{board.length}</strong> prospects shown · {openAll.length} available</p>
+        <button type="button" aria-pressed={shortlistedOnly} onClick={() => { setShortlistedOnly(v => !v); setShown(40); }} className={`min-h-10 rounded-md border px-3 text-xs ${shortlistedOnly ? "bx-chip bx-chip-on" : "bx-chip"}`}>★ Shortlist {shortlist.length}{shortlistedOnly ? " · On" : ""}</button>
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         {POS_FILTERS.map((pos) => (
           <button
             key={pos}
             type="button"
-            onClick={() => setPosFilter(pos)}
+            onClick={() => { setPosFilter(pos); setShown(40); }}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
               posFilter === pos ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
@@ -313,11 +320,12 @@ export function DraftNight() {
         ))}
         <input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => { setQuery(e.target.value); setShown(40); }}
           placeholder="Search name or school"
           className="min-h-11 min-w-[12rem] flex-1 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-subtle"
         />
       </div>
+      </section>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ol className="space-y-2 lg:col-span-2">
@@ -354,6 +362,7 @@ export function DraftNight() {
                   </div>
                 </button>
                 <div className="flex shrink-0 flex-col gap-2">
+                  <Btn kind={shortlist.includes(p.id) ? "primary" : "ghost"} aria-pressed={shortlist.includes(p.id)} onClick={() => setShortlist(ids => ids.includes(p.id) ? ids.filter(id => id !== p.id) : [...ids, p.id])}>{shortlist.includes(p.id) ? "★ Saved" : "☆ Shortlist"}</Btn>
                   <Btn disabled={!compareIds.includes(p.id) && compareIds.length >= 3} onClick={() => setCompareIds(ids => ids.includes(p.id) ? ids.filter(id => id !== p.id) : [...ids, p.id])}>{compareIds.includes(p.id) ? 'Remove' : 'Compare'}</Btn>
                   <Btn onClick={() => openProfile(p.id)}>Profile</Btn>
                   {isUser && (

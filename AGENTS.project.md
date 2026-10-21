@@ -99,6 +99,8 @@ Seed 1966 veterans from real 1966 rosters (Starr, Unitas, Namath, Sayers, Butkus
 
 Draft catalogs: real 1966–2026 classes ingested from Wikipedia (1966–1979) and nflverse/PFR (1980–2026). Rebuild with `python3 scripts/ingest-draft-classes.py`. Hand-tuned stars in `draftClasses.ts` / `starProfiles.ts` win on overall and locked attributes. Fill leftover slots with generated prospects that still have full attribute kits.
 
+Career arcs are historical priors, not scripts: they inform entry talent and initial potential, but never impose a real-life final season or fixed rating path in the dynasty or Watch simulation. Progression and regression resolve after each simulated regular-season and playoff week from age, position, workload, opportunity, coaching and that week's production relative to peers in the same season. Sustained breakouts can revise a player's ceiling; age changes the odds and rate of decline, while exceptional active players may keep playing past ordinary position-age thresholds. Real History mode remains an exact record and never runs the development model.
+
 **No player photographs.**
 
 ## Expansions (must work, not labels)

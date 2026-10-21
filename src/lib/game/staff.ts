@@ -22,6 +22,7 @@ import { playbookFor } from "./data/coachPlans.ts";
 import { EXPANSION_SPECS } from "./data/expansions.ts";
 import { mentorOf } from "./coachingTree.ts";
 import { ensureContracts, finalYear, renew, tearUp, tickContracts } from "./coachContracts.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 const OFF_SCHEMES: OffScheme[] = ["smashmouth", "vertical", "westcoast", "multiple"];
 const DEF_SCHEMES: DefScheme[] = ["4-3", "3-4", "wide-9", "cover-2"];
@@ -606,7 +607,7 @@ export function retireCoach(save: DynastySave, c: Coach): void {
 }
 
 function isUserClub(save: DynastySave, id: TeamId): boolean {
-  return id === save.userTeamId && !save.cpuOnly;
+  return !cpuHandles(save, id, "staff");
 }
 
 function noteCarousel(save: DynastySave, teamId: TeamId, role: CoachRole, fired: string | undefined, hired: string, extra?: string): void {

@@ -1,6 +1,7 @@
 import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { startTalks } from "./contracts.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
 export function starScale(year: number): number {
@@ -179,7 +180,7 @@ export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): 
       p.contractYears = (p.contractYears ?? 1) - 1;
       // The owner's own players come to the table; everyone else expires the usual way.
       // (the back of the roster is left to the staff, so the table holds players who matter).
-      if (p.contractYears <= 0 && p.teamId === save.userTeamId && !save.cpuOnly && p.ovr >= 66) startTalks(save, p);
+      if (p.contractYears <= 0 && p.ovr >= 66 && !cpuHandles(save, p.teamId as TeamId, "contracts")) startTalks(save, p);
       else if (p.contractYears <= 0) expireContract(save, p);
     }
   }

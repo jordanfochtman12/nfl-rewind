@@ -1046,6 +1046,10 @@ export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
     { f: "Peter", l: "Woods", p: "DT", c: "Clemson", o: 84, r: 1, arch: "finisher", rt: { prs: 88, str: 92, tak: 86, inj: 82 } },
     { f: "Kadyn", l: "Proctor", p: "LT", c: "Alabama", o: 84, r: 1, arch: "anchor", rt: { str: 92, passBlk: 84, runBlk: 88, inj: 82 } },
   ],
+  2029: [
+    // Projected class year based on Heintschel's current eligibility; not a declared NFL entry.
+    { f: "Mason", l: "Heintschel", p: "QB", c: "Pittsburgh", o: 82 },
+  ],
 };
 
 /** The catalogs as written, before the player audit (scripts/player-audit.mjs) corrects them. */

@@ -1280,7 +1280,7 @@ export const OWNER_GRADES: Record<string, { d: number; p: number }> = {
   "2010|Sean|Lee": { d: 75, p: 85 },
   "2010|Tim|Tebow": { d: 65, p: 73 },
   "2010|Toby|Gerhart": { d: 69, p: 77 },
-  "2010|Tyler|Palko": { d: 63, p: 70 },
+  "2007|Tyler|Palko": { d: 63, p: 70 },
   "2011|Aldon|Smith": { d: 73, p: 85 },
   "2011|Andrew|Hawkins": { d: 56, p: 74 },
   "2011|Andy|Dalton": { d: 77, p: 85 },

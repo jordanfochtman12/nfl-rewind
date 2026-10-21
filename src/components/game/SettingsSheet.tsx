@@ -3,7 +3,7 @@
  * and how much room the dynasty takes on this device. Preferences stay on this device.
  */
 import { useEffect, useState } from "react";
-import { formatBytes, saveByteLength } from "@/lib/game";
+import { activeTeamIds, cpuHandles, displayName, formatBytes, saveByteLength, TEAM_MANAGEMENT_JOBS, type TeamId, type TeamManagementJob } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { dynastyStorage } from "@/lib/save-idb";
 import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
@@ -48,9 +48,25 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+function JobAssignment({ job, cpu, onChange }: { job: { id: TeamManagementJob; label: string; hint: string }; cpu: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex flex-col gap-2 border-b border-line py-3 last:border-0 sm:flex-row sm:items-center sm:justify-between">
+      <span className="min-w-0">
+        <span className="block text-sm text-paper">{job.label}</span>
+        <span className="block text-xs text-muted">{job.hint}</span>
+      </span>
+      <div className="flex shrink-0 gap-1.5" role="group" aria-label={`Who handles ${job.label}`}>
+        <button type="button" aria-pressed={!cpu} className={`bx-chip min-h-9 min-w-16 px-3 text-xs ${!cpu ? "bx-chip-on" : ""}`} onClick={() => onChange(false)}>You</button>
+        <button type="button" aria-pressed={cpu} className={`bx-chip min-h-9 min-w-16 px-3 text-xs ${cpu ? "bx-chip-on" : ""}`} onClick={() => onChange(true)}>CPU</button>
+      </div>
+    </div>
+  );
+}
+
 export function SettingsSheet({ onClose }: { onClose: () => void }) {
   const st = useSettings();
   const save = useGameStore((s) => s.save);
+  const setControlTeam = useGameStore((s) => s.setControlTeam);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [usage, setUsage] = useState<{ used?: number; quota?: number }>({});
   const [note, setNote] = useState("");
@@ -105,6 +121,31 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           <Btn onClick={onClose}>Done</Btn>
         </div>
         <div className="space-y-4">
+          {save?.leagueSandbox && (
+            <Section title="LEAGUE ARCHITECT · FRONT-OFFICE ASSIGNMENTS">
+              <p className="py-2 text-sm text-muted">Choose a club to open its existing management screens. Assign each responsibility to you or its CPU staff; the CPU only runs the jobs marked CPU.</p>
+              <label className="flex min-h-12 flex-wrap items-center justify-between gap-2 border-b border-line py-2">
+                <span className="text-sm text-paper">Active club</span>
+                <select aria-label="Active club" className="min-h-10 max-w-full rounded-md border border-line bg-surface-2 px-3 text-sm text-fg" value={save.userTeamId} onChange={(e) => setControlTeam(e.target.value as TeamId)}>
+                  {activeTeamIds(save.year).map((id) => <option key={id} value={id}>{displayName(save.year, id)}</option>)}
+                </select>
+              </label>
+              {TEAM_MANAGEMENT_JOBS.map((job) => (
+                <JobAssignment
+                  key={job.id}
+                  job={job}
+                  cpu={cpuHandles(save, save.userTeamId, job.id)}
+                  onChange={(cpu) => {
+                    useGameStore.getState().desk((s) => {
+                      const team = s.leagueControl?.[s.userTeamId] ?? {};
+                      s.leagueControl = { ...s.leagueControl, [s.userTeamId]: { ...team, [job.id]: cpu } };
+                      return `${displayName(s.year, s.userTeamId)}: ${cpu ? "CPU handles" : "You handle"} ${job.label.toLowerCase()}.`;
+                    });
+                  }}
+                />
+              ))}
+            </Section>
+          )}
           <Section title="SOUND AND VOICES">
             <Toggle label="Narration" hint="Studio shows, the whip-around and the TV host read aloud." on={st.narration} onChange={(v) => st.set({ narration: v })} />
             {isPhone() && (

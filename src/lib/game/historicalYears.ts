@@ -5,6 +5,7 @@ import { normalizedName } from "./identity.ts";
 import { AUDIT_ARCS, AUDIT_VET_ARCS } from "./data/auditPlayers.ts";
 
 const years = new Map<string, Set<number>>();
+const ENTRY_YEAR_OVERRIDES = new Map([[normalizedName("Tyler Palko"), 2007]]);
 function add(name: string, year: number): void {
   const key = normalizedName(name);
   const found = years.get(key) ?? new Set<number>();
@@ -29,6 +30,8 @@ for (const [year, ...names] of HISTORICAL_ALIASES) {
 /** A unique career-source class overrides misfiled fill rows (Lammons: 1967 ->
  * 1966). Known namesakes with multiple classes always retain their own year. */
 export function historicalYear(first: string, last: string, fallback?: number): number | undefined {
+  const entryYear = ENTRY_YEAR_OVERRIDES.get(normalizedName(first, last));
+  if (entryYear !== undefined) return entryYear;
   const found = years.get(normalizedName(first, last));
   return found?.size === 1 ? [...found][0] : fallback;
 }

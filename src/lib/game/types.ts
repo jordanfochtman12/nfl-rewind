@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 18;
+export const SAVE_VERSION = 20;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -280,11 +280,21 @@ export interface Player {
   /** Parked off the 53-man count by a desk decision; frees a roster spot while hurt. */
   onIR: boolean;
   /**
-   * Real career shape for a real draftee: draft year, last NFL season (0 = never played),
-   * seasons as a starter, games, Pro Bowls, first-team All-Pros, age at draft. Drives
-   * development and retirement so his ratings follow the arc he actually had.
+   * Historical career evidence used as the initial talent/development prior. Dynasty and Watch
+   * simulations may diverge; this does not force a rating path or retirement.
    */
   arc?: { dy: number; to: number; st: number; g: number; pb: number; ap: number; age: number };
+  /** Dynasty-only, persistent evidence about this player's simulated development path. */
+  careerDevelopment?: {
+    growth: number;
+    regression: number;
+    breakoutEvidence: number;
+    breakoutWeeks: number;
+    workload: number;
+    weeks: number;
+    keyCursor: number;
+    lastTick?: string;
+  };
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
   /** The round history actually took him in (real draftees), for draft retrospectives. */
@@ -293,7 +303,7 @@ export interface Player {
   arcGap?: number;
   /** The club that drafted him in this dynasty. */
   draftTeam?: TeamId;
-  /** Announced final season (a real player's farewell tour). */
+  /** History mode's recorded final season; dynasty retirement is not forced by this date. */
   finalSeason?: number;
   /** Holding out for a new contract; misses games until the owner pays him. */
   holdout?: boolean;
@@ -1011,6 +1021,10 @@ export interface DynastySave {
   phase: Phase;
   weekLabel: string;
   userTeamId: TeamId;
+  /** League Architect: select a club at a time while controlling any front office in the league. */
+  leagueSandbox?: boolean;
+  /** Per-club CPU assignments. True means the computer handles that responsibility. */
+  leagueControl?: Partial<Record<TeamId, Partial<Record<TeamManagementJob, boolean>>>>;
   seed: number;
   rng: number;
   cpuOnly: boolean;
@@ -1430,7 +1444,11 @@ export interface CreateGameOpts {
   cpuOnly?: boolean;
   /** Watch mode: implies cpuOnly, keeps the broadcast and steps one moment at a time. */
   sandbox?: boolean;
+  /** League Architect: a playable league with per-team CPU delegation. */
+  leagueSandbox?: boolean;
 }
+
+export type TeamManagementJob = "roster" | "contracts" | "trades" | "staff" | "depthChart" | "gameplan" | "draft";
 
 export interface AdvanceOpts {
   auto?: boolean;

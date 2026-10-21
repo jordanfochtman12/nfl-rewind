@@ -65,6 +65,7 @@ import { gameWatches, leagueMarks, liveMarkCall, pregameMemory, WATCH_STATS, typ
 import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, staffPlan } from "./gameplans.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -100,7 +101,7 @@ export { defaultPlan };
 /** The call sheet a club takes into a game: its staff's plan, plus the owner's own changes for his club. */
 export function planFor(save: DynastySave, teamId: TeamId): Gameplan {
   const base = staffPlan(save, teamId);
-  const edits = teamId === save.userTeamId ? save.teams[teamId]?.planEdits : undefined;
+  const edits = !cpuHandles(save, teamId, "gameplan") ? save.teams[teamId]?.planEdits : undefined;
   return edits ? { ...base, ...edits } : base;
 }
 
@@ -1023,10 +1024,9 @@ function maybeOverturn(save: DynastySave, year: number): boolean {
 }
 
 /**
- * Real availability. A healthy sim plays its stars every week, but real stars missed time -
- * Montana and Unitas each played under 12 games a season. A real starter whose career games fall
- * short of the schedule gets an extra weekly injury risk sized so he misses about the share of
- * games he really missed (beyond what the sim's ordinary injuries already take).
+ * Availability prior. Historical missed time helps estimate durability when a simulated career
+ * begins; that extra risk fades as this league supplies its own evidence. Current ratings,
+ * position and recent workload drive ongoing injury risk.
  */
 const missCache = new WeakMap<object, number>();
 function arcHazard(p: Player): number {
@@ -1051,7 +1051,10 @@ function arcHazard(p: Player): number {
     h = extra <= 0 ? 0 : Math.min(0.14, extra / (3.2 * (1 - extra)));
     missCache.set(arc, h);
   }
-  return h;
+  // Real missed-time history is a starting durability prior. As the simulated career builds its
+  // own evidence, it steadily replaces that real-life outcome instead of trapping the player in it.
+  const simulatedSeasons = (p.careerDevelopment?.weeks ?? 0) / 17;
+  return h * clamp(1 - simulatedSeasons * 0.1, 0.35, 1);
 }
 
 function rollInjuries(save: DynastySave, teamId: TeamId): void {
@@ -1059,7 +1062,9 @@ function rollInjuries(save: DynastySave, teamId: TeamId): void {
   for (const p of rosterOf(save, teamId)) {
     if (p.injuredWeeks > 0) continue;
     const injMult = kitInjMult(p);
-    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult * posInjuryRisk(p, save.year) + arcHazard(p);
+    const recentWorkload = p.careerDevelopment?.workload ?? 0;
+    const workloadRisk = clamp(1 + Math.max(0, recentWorkload - 4) * 0.025, 0.9, 1.18);
+    const chance = eraHit * ((100 - p.ratings.inj) / 55) * injMult * posInjuryRisk(p, save.year) * workloadRisk + arcHazard(p);
     if (rand(save) > chance) continue;
     const durable = p.ratings.inj >= 88 || injMult <= 0.8;
     const weeks = durable ? randInt(save, 1, 2) : p.ratings.inj >= 70 ? randInt(save, 1, 5) : randInt(save, 2, 8);

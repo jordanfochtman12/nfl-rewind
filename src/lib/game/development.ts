@@ -2,7 +2,7 @@ import type { DynastySave, Player, Pos } from "./types.ts";
 import { rand, randInt } from "./rng.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
-import { arcRetiresNow, arcTarget, gradeTo, moveToward } from "./careerArc.ts";
+import { arcRetiresNow, moveToward } from "./careerArc.ts";
 import { ageBody } from "./body.ts";
 import { deriveOvr } from "./ratings.ts";
 
@@ -106,17 +106,8 @@ export function agePlayer(save: DynastySave, p: Player): void {
   const team = p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? save.teams[p.teamId] : undefined;
   const hc = team?.coachId ? save.coaches[team.coachId] : undefined;
   const devBump = hc ? coachKitBoost(hc, "dev") + ((hc.development ?? 70) - 70) / 180 : 0;
-  if (p.arc) {
-    // Real draftee: follow the career he actually had, with a little week-to-week noise
-    // and a small nudge from a good developmental staff - never past his real peak.
-    let target = arcTarget(p, save.year - p.arc.dy);
-    if (rand(save) < 0.3) target += randInt(save, -1, 1);
-    if (devBump > 0 && rand(save) < devBump) target += 1;
-    const want = Math.min(target, pot + 1);
-    moveToward(p, want);
-    // An owner-graded peak can sit past where the usual shifts top out (a slow passer at 96).
-    if (p.arcGap !== undefined && p.ovr < want) gradeTo(p, want);
-  } else {
+  if (!p.arc) {
+  // Players without a historical trajectory use the offseason age/potential development path.
   let delta = 0;
   // A young player grows by how far he still has to go, the way a real draftee climbs his arc:
   // a raw first-rounder with a big ceiling makes most of the jump in his first three or four
@@ -174,13 +165,15 @@ export function shouldRetire(save: DynastySave, p: Player): boolean {
     return false;
   }
   if (p.pos === "QB") {
-    if (p.age >= 44) return true;
-    if (p.age >= 39 && p.ovr < 78 && rand(save) < 0.35) return true;
+    if (p.age >= 48) return true;
+    if (p.age >= 44 && p.ovr < 85 && rand(save) < 0.45) return true;
+    if (p.age >= 41 && p.ovr < 78 && rand(save) < 0.35) return true;
     if (p.age >= 37 && p.ovr < 72 && rand(save) < 0.4) return true;
     return false;
   }
-  if (p.age >= 39) return true;
-  // Past his position's cliff only a star hangs on: real careers rarely run to 34.
+  if (p.age >= 44) return true;
+  // Aging changes the odds; sustained high-level play can keep a veteran in the league longer.
+  if (p.age >= 41 && p.ovr < 88 && rand(save) < 0.5) return true;
   if (p.age >= CLIFF[p.pos] + 1 && p.ovr < 84 && rand(save) < 0.45) return true;
   if (p.pos === "RB" && p.age >= 32 && p.ovr < 76 && rand(save) < 0.45) return true;
   if (p.age >= 34 && p.ovr < 70 && rand(save) < 0.4) return true;

@@ -334,7 +334,7 @@ export function decide(save: DynastySave, decisionId: string, optionId: string):
 
 /** Before the week is played: a call still on the desk takes its quiet option. */
 export function ownerDeskBeforeWeek(save: DynastySave): void {
-  if (save.cpuOnly || save.sandbox || save.realHistory) return;
+  if (save.cpuOnly || save.sandbox || save.realHistory || save.leagueSandbox) return;
   for (const d of save.decisions ?? []) {
     if (d.status === "open" && (d.year !== save.year || d.week < save.week)) resolve(save, d, d.options.at(-1)!.id, true);
   }
@@ -345,7 +345,7 @@ export function ownerDeskBeforeWeek(save: DynastySave): void {
  * a new call lands on the desk. Owner seasons only.
  */
 export function ownerDeskWeek(save: DynastySave): void {
-  if (save.cpuOnly || save.sandbox || save.realHistory || save.phase !== "regular") return;
+  if (save.cpuOnly || save.sandbox || save.realHistory || save.leagueSandbox || save.phase !== "regular") return;
   const id = save.userTeamId;
   const list = (save.decisions ??= []);
   for (const d of list) {

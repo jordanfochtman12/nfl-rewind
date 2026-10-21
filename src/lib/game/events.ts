@@ -13,6 +13,7 @@ import { touchGrade } from "./grade.ts";
 import { retireCoach, shouldRetireCoach } from "./staff.ts";
 import { honorInductees, honorRetirees } from "./legacy.ts";
 import { ownPlayer } from "./players.ts";
+import { cpuHandles } from "./teamControl.ts";
 import {
   coachHofBlurb,
   coachHofEligible,
@@ -589,7 +590,7 @@ export function weekPrimetime(save: DynastySave): void {
 
 export function cpuInSeasonMoves(save: DynastySave): void {
   if (rand(save) > 0.18) return;
-  const teams = activeTeamIds(save.year).filter((t) => t !== save.userTeamId);
+  const teams = activeTeamIds(save.year).filter((t) => cpuHandles(save, t, "roster"));
   if (!teams.length) return;
   const teamId = teams[randInt(save, 0, teams.length - 1)]!;
   const roster = rosterOf(save, teamId).sort((a, b) => a.ovr - b.ovr);

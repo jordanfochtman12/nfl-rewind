@@ -84,7 +84,7 @@ test("version 16 saves hydrate new coaching defaults and keep legacy film readab
   delete s.teams.gnb.plan.protection;
   delete s.teams.gnb.plan.defensiveFocus;
   const loaded = importDynasty(JSON.stringify(s));
-  assert.equal(loaded.version, 18);
+  assert.equal(loaded.version, 20);
   assert.equal(planFor(loaded, "gnb").protection, "balanced");
   assert.equal(planFor(loaded, "gnb").defensiveFocus, "balanced");
 });

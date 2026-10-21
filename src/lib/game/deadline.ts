@@ -8,6 +8,7 @@ import { allPicks } from "./draft.ts";
 import { randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
 import { posLabel } from "./posLabel.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 export function deadlineWeek(year: number): number {
   const n = gamesInSeason(year);
@@ -109,9 +110,9 @@ export function openDeadline(save: DynastySave): DeadlineSession {
     .filter((t) => t.kind === "trade")
     .map((t) => t.detail);
   const offers: TradeOffer[] = [];
-  const clubs = activeTeamIds(save.year).filter((id) => id !== save.userTeamId);
+  const clubs = activeTeamIds(save.year).filter((id) => id !== save.userTeamId && cpuHandles(save, id, "trades"));
   const shuffled = shuffle(save, clubs);
-  for (const id of save.cpuOnly ? [] : shuffled) {
+  for (const id of save.cpuOnly || !cpuHandles(save, save.userTeamId, "trades") ? [] : shuffled) {
     if (offers.length >= 3) break;
     const o = tryOffer(save, id, save.userTeamId);
     if (!o) continue;
@@ -148,6 +149,7 @@ export function openDeadline(save: DynastySave): DeadlineSession {
 
 export function acceptDeadlineOffer(save: DynastySave, offerId: string) {
   const session = save.deadline;
+  if (cpuHandles(save, save.userTeamId, "trades")) return { ok: false, reason: "The CPU front office is handling this club's trades." };
   if (!session || session.resolved) return { ok: false, reason: "The window is closed." };
   const o = session.offers.find((x) => x.id === offerId);
   if (!o || o.status !== "open") return { ok: false, reason: "That offer is gone." };

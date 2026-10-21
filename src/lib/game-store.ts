@@ -72,6 +72,10 @@ interface GameStore {
   closeTeam: () => void;
   /** A new dynasty in the chosen start year (later years build the league from the record first). */
   newGame: (teamId: TeamId) => Promise<void>;
+  /** League Architect: start a playable all-team league with per-job CPU delegation. */
+  newLeagueSandbox: () => Promise<void>;
+  /** Choose which club's existing front-office screens are active in League Architect. */
+  setControlTeam: (id: TeamId) => void;
   /** Watch mode: the computer runs every club and the owner just watches history unfold. */
   newSandbox: () => Promise<void>;
   /** The season a new dynasty or Watch history league starts in (see ERA_STARTS). */
@@ -330,6 +334,32 @@ export const useGameStore = create<GameStore>()(
         } finally {
           set({ eraBuilding: false });
         }
+      },
+      newLeagueSandbox: async () => {
+        const year = get().startYear;
+        if (year === 1966) {
+          freshSlot();
+          const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, leagueSandbox: true, seed: Date.now() % 2147483647 });
+          set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+          return;
+        }
+        set({ eraBuilding: true });
+        try {
+          setHistoryData(await loadHistoryData());
+          await new Promise((r) => setTimeout(r, 30));
+          const save = createEraGame({ userTeamId: "gnb", startingYear: year, leagueSandbox: true, seed: Date.now() % 2147483647 });
+          freshSlot();
+          set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
+        } finally {
+          set({ eraBuilding: false });
+        }
+      },
+      setControlTeam: (id) => {
+        const current = get().save;
+        if (!current?.leagueSandbox || current.userTeamId === id) return;
+        const save = cloneSave(current);
+        save.userTeamId = id;
+        set({ save });
       },
       historyLoading: false,
       newHistory: async () => {

@@ -36,6 +36,10 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   const save = blankState(o.userTeamId, startingYear, seed);
   save.cpuOnly = o.cpuOnly ?? !!o.sandbox;
   if (o.sandbox) save.sandbox = true;
+  if (o.leagueSandbox) {
+    save.leagueSandbox = true;
+    save.leagueControl = {};
+  }
   for (const id of ACTIVE_1966) {
     save.teams[id].active = startingYear >= 1966;
   }
@@ -58,6 +62,14 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
         kind: "headline",
         headline: `The ${startingYear} season is about to begin`,
         body: `Two leagues, ${ACTIVE_1966.length} clubs, and a draft board with Tommy Nobis at the top. Starr, Unitas, Namath, Sayers, Butkus. Sit back and watch it unfold.`,
+        teamIds: [],
+        playerIds: [],
+      }
+    : o.leagueSandbox
+    ? {
+        kind: "headline",
+        headline: `The league is yours to run`,
+        body: `League Architect is open. Pick a club, take its front office, and decide which jobs each computer staff should handle.` ,
         teamIds: [],
         playerIds: [],
       }

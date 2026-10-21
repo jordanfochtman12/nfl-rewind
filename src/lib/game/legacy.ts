@@ -3,6 +3,7 @@
  * honoree built wearing its colors - the line, the hardware, the best moments.
  */
 import type { DynastySave, Player, RetiredNumber, RingOfHonorEntry, SeasonStats, TeamId } from "./types.ts";
+import { cpuHandles } from "./teamControl.ts";
 import { addNews } from "./news.ts";
 import { carryJersey, playerName, rosterOf } from "./players.ts";
 import { displayName, roman } from "./teams.ts";
@@ -263,7 +264,7 @@ export function honorInductees(save: DynastySave, playerIds: string[]): void {
     const p = save.players[id];
     if (!p) continue;
     const club = signatureClub(p);
-    if (!club || (club.teamId === save.userTeamId && !save.cpuOnly) || !save.teams[club.teamId]) continue;
+    if (!club || !cpuHandles(save, club.teamId, "staff") || !save.teams[club.teamId]) continue;
     if (club.seasons >= 4) inductRing(save, id, club.teamId, true);
     if (club.seasons >= 6) retireNumber(save, id, club.teamId, true);
   }
@@ -278,7 +279,7 @@ export function honorRetirees(save: DynastySave, playerIds: string[]): void {
     const p = save.players[id];
     if (!p) continue;
     const club = signatureClub(p);
-    if (!club || (club.teamId === save.userTeamId && !save.cpuOnly) || !save.teams[club.teamId] || club.seasons < 8) continue;
+    if (!club || !cpuHandles(save, club.teamId, "staff") || !save.teams[club.teamId] || club.seasons < 8) continue;
     const c = legacyCase(save, p, club.teamId);
     if (!c) continue;
     const pb = (p.honors?.proBowl ?? []).filter((y) => clubSeasons(p, club.teamId).some((s) => s.year === y)).length;

@@ -13,7 +13,6 @@ import { sortedDivision, winPct } from "./standings.ts";
 import { projectWins, strengthRank } from "./primetime.ts";
 import { careerRecordBook } from "./records.ts";
 import { salaryFor } from "./salary.ts";
-import { ARC_DATA_LAST } from "./careerArc.ts";
 import { ownerOf } from "./owner.ts";
 
 const clubOf = (p: Player): TeamId | undefined =>
@@ -198,18 +197,23 @@ export function checkAchievements(save: DynastySave): void {
 
 /* ---------------- player arcs ---------------- */
 
-/** Season kickoff: farewell tours and holdouts. */
+/** Season kickoff: emergent veteran watch and contract pressure. */
 export function seasonArcs(save: DynastySave, rng: () => number): void {
   const year = save.year;
-  const farewell = Object.values(save.players)
-    .filter((p) => clubOf(p) && p.arc && p.arc.to === year && p.arc.to < ARC_DATA_LAST && (p.ovr >= 80 || p.arc.pb >= 3))
-    .sort((a, b) => b.ovr - a.ovr);
-  for (const p of farewell) p.finalSeason = year;
-  for (const p of farewell.filter((p, i) => i < 3 || p.teamId === save.userTeamId).slice(0, 5)) {
+  // Older saves may contain a farewell date created by the old scripted arc system.
+  for (const p of Object.values(save.players)) p.finalSeason = undefined;
+  const veteranWatch = Object.values(save.players)
+    .filter((p) => {
+      if (!clubOf(p) || p.ovr < 76) return false;
+      const ageGate = p.pos === "QB" ? 38 : p.pos === "K" || p.pos === "P" ? 42 : 35;
+      return p.age >= ageGate;
+    })
+    .sort((a, b) => b.ovr - a.ovr || b.age - a.age);
+  for (const p of veteranWatch.slice(0, 2)) {
     addNews(save, {
       kind: "headline",
-      headline: `Farewell tour: ${playerName(p)} says ${year} is his last`,
-      body: `${p.yearsPro} seasons in. The ${displayName(year, p.teamId as TeamId)} ${p.pos} will hang it up when this one is over.`,
+      headline: `Career watch: ${playerName(p)} begins another season at ${p.age}`,
+      body: `After ${p.yearsPro} seasons, his play will determine whether he earns another year. No retirement date is set.`,
       teamIds: [p.teamId as TeamId],
       playerIds: [p.id],
     });
@@ -299,9 +303,10 @@ export function weeklyStorylines(save: DynastySave): (PrimetimeStory & { score: 
   const year = save.year;
   const week = save.week;
   if (week === 1) {
-    for (const p of Object.values(save.players).filter((x) => x.finalSeason === year && clubOf(x)).sort((a, b) => b.ovr - a.ovr).slice(0, 2)) {
-      out.push({ tag: "Farewell tour", headline: `${playerName(p)}'s final season is underway`, body: `Every stadium on the schedule gets one last look.`, teamIds: [clubOf(p)!], playerIds: [p.id], score: 47 });
-    }
+    const veteran = Object.values(save.players)
+      .filter((p) => clubOf(p) && p.age >= (p.pos === "QB" ? 38 : p.pos === "K" || p.pos === "P" ? 42 : 35) && p.ovr >= 76)
+      .sort((a, b) => b.ovr - a.ovr || b.age - a.age)[0];
+    if (veteran) out.push({ tag: "Career watch", headline: `${playerName(veteran)} returns at age ${veteran.age}`, body: `His form, health and roster value will shape how much longer this career lasts.`, teamIds: [clubOf(veteran)!], playerIds: [veteran.id], score: 47 });
     const splash = save.transactions
       .filter((t) => t.year === year && t.kind === "sign")
       .map((t) => ({ t, p: save.players[t.playerId] }))

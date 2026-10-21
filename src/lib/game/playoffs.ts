@@ -6,6 +6,7 @@ import { simGame } from "./sim.ts";
 import { compareTeams, conferenceTeams, divisionWinner, playoffField } from "./standings.ts";
 import { addNews } from "./news.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
+import { developCareerWeek, snapshotCareerWeek } from "./careerDevelopment.ts";
 
 function gid(save: DynastySave, round: string, a: string, b: string): string {
   return `${save.year}-${round}-${a}-${b}`;
@@ -210,7 +211,9 @@ export function simPlayoffWeek(save: DynastySave): void {
   }
   const w = Math.min(...un.map((g) => g.week));
   pickFeaturedGame(save, un.filter((g) => g.week === w));
+  const careerBefore = snapshotCareerWeek(save, true);
   for (const g of un.filter((g) => g.week === w)) simGame(save, g);
+  developCareerWeek(save, careerBefore, "playoffs");
   maybeAdvanceBracket(save);
 }
 

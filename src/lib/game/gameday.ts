@@ -223,15 +223,31 @@ function phi(z: number): number {
   return z > 0 ? 1 - p : p;
 }
 
-/** Win probability for `us` after a play: score, time left, and who has the ball where. */
+/** Win probability for `us` after a play, using the score, clock, field, down, distance and timeouts. */
 export function winProb(l: PlayLog, us: TeamId, home: TeamId, final: boolean): number {
   const ours = us === home ? l.hs : l.as;
   const theirs = us === home ? l.as : l.hs;
   const lead = ours - theirs;
   if (final) return lead > 0 ? 1 : lead < 0 ? 0 : 0.5;
   const left = l.q <= 4 ? ((4 - l.q) * 900 + l.clock) / 3600 : Math.max(0.01, l.clock / 3600);
-  const field = ((l.spot - 25) / 15) * (l.poss === us ? 1 : -1);
-  return Math.min(0.995, Math.max(0.005, phi((lead + field) / (13.4 * Math.sqrt(Math.max(0.004, left)) + 0.6))));
+  const offense = l.poss === us;
+  const field = ((Math.min(100, Math.max(0, l.spot)) - 25) / 17) * (offense ? 1 : -1);
+  // A possession's value depends on whether the offense is near a new set of downs or facing
+  // a long conversion. This is intentionally a small adjustment: score and clock still lead.
+  const distance = Math.min(20, Math.max(1, l.togo || 10));
+  const downValue = l.down === 1 ? 0.45 : l.down === 2 ? 0.1 : l.down === 3 ? -0.35 : -0.9;
+  const conversion = (downValue + (8 - distance) * 0.075) * (offense ? 1 : -1);
+  // Late timeouts extend the trailing club's chance to get the ball back. Treat a stoppage as
+  // roughly 35 seconds of useful clock; each extra timeout matters less than a score point.
+  const oursTimeouts = us === home ? (l.homeTimeouts ?? 0) : (l.awayTimeouts ?? 0);
+  const theirsTimeouts = us === home ? (l.awayTimeouts ?? 0) : (l.homeTimeouts ?? 0);
+  const late = left < 0.12 ? (0.12 - left) / 0.12 : 0;
+  const timeoutEdge = (oursTimeouts - theirsTimeouts) * 0.22 * late * (offense ? 1 : -1);
+  const effectiveLead = lead + field + conversion + timeoutEdge;
+  // Fewer expected scoring chances as the clock runs down; widen the curve in close late games
+  // to reflect one-score outcomes, while retaining the historic approximation's calibration.
+  const spread = 13.4 * Math.sqrt(Math.max(0.004, left)) + 0.6;
+  return Math.min(0.995, Math.max(0.005, phi(effectiveLead / spread)));
 }
 
 /**

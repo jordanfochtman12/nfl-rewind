@@ -16,19 +16,20 @@
  */
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const G = join(ROOT, "src/lib/game");
-const { PEOPLE } = await import(join(G, "data/history/people.ts"));
-const { DRAFTS } = await import(join(G, "data/history/drafts.ts"));
-const { ROSTERS } = await import(join(G, "data/history/rosters.ts"));
-const { STATS, STAT_FIELDS } = await import(join(G, "data/history/stats.ts"));
-const { draftSeedsBase } = await import(join(G, "data/draftClasses.ts"));
-const { VETERANS_1966 } = await import(join(G, "data/veterans1966.ts"));
-const { UNDRAFTED_ARCS } = await import(join(G, "data/undrafted.ts"));
-const { CAREER_ARCS, VET_ARCS } = await import(join(G, "data/careerArcs.ts"));
-const { normalizedName } = await import(join(G, "identity.ts"));
+const gameModule = (path) => import(pathToFileURL(path).href);
+const { PEOPLE } = await gameModule(join(G, "data/history/people.ts"));
+const { DRAFTS } = await gameModule(join(G, "data/history/drafts.ts"));
+const { ROSTERS } = await gameModule(join(G, "data/history/rosters.ts"));
+const { STATS, STAT_FIELDS } = await gameModule(join(G, "data/history/stats.ts"));
+const { draftSeedsBase } = await gameModule(join(G, "data/draftClasses.ts"));
+const { VETERANS_1966 } = await gameModule(join(G, "data/veterans1966.ts"));
+const { UNDRAFTED_ARCS } = await gameModule(join(G, "data/undrafted.ts"));
+const { CAREER_ARCS, VET_ARCS } = await gameModule(join(G, "data/careerArcs.ts"));
+const { normalizedName } = await gameModule(join(G, "identity.ts"));
 
 const FIRST = 1966;
 const LAST = 2025;
@@ -304,6 +305,18 @@ const collegesMatch = (a, b) => {
   return as.some((x) => bs.some((y) => sameSchool(x, y)));
 };
 const GROUP = { QB: "QB", RB: "RB", FB: "RB", WR: "WR", TE: "TE", LT: "OL", LG: "OL", C: "OL", RG: "OL", RT: "OL", DE: "DL", DT: "DL", OLB: "LB", MLB: "LB", CB: "DB", S: "DB", K: "K", P: "P" };
+// Tyler Palko signed with New Orleans as an undrafted rookie in 2007; his first NFL game was 2010.
+const UNDRAFTED_ENTRY_YEARS = new Map([[nameKey("Tyler", "Palko"), 2007]]);
+// Verified Pitt UDFAs and draft-eligible players not represented in the NFL stats archive.
+const MANUAL_UNDRAFTED = [
+  { year: 2001, f: "John", l: "Turman", p: "QB", c: "Pittsburgh", o: 57 },
+  { year: 2004, f: "Rod", l: "Rutherford", p: "QB", c: "Pittsburgh", o: 62 },
+  { year: 2010, f: "Bill", l: "Stull", p: "QB", c: "Pittsburgh", o: 58 },
+  { year: 2013, f: "Marco", l: "Pecora", p: "S", c: "Pittsburgh", o: 55 },
+  { year: 2013, f: "Tino", l: "Sunseri", p: "QB", c: "Pittsburgh", o: 61 },
+  // Maryland WR and NFL practice-squad player before his CFL Hall of Fame career.
+  { year: 1997, f: "Geroy", l: "Simon", p: "WR", c: "Maryland", o: 58 },
+];
 
 /* ---------------- overalls on the game's own scale ---------------- */
 
@@ -493,12 +506,18 @@ for (const p of people) {
   if (c.games < 16 && c.starters < 1 && !everyFrom(c.college)) continue;
   if (on66.has(p.id)) continue; // on a real 1966 roster: seeded as a veteran below
   if (everyFrom(c.college) ? sameSchoolmate(c.first, p) : knownAs(c.first, p.last, c.college)) continue;
-  const year = c.first;
+  const year = UNDRAFTED_ENTRY_YEARS.get(nameKey(p.first, p.last)) ?? c.first;
   (addUndrafted[year] ??= []).push({ f: p.first, l: p.last, p: c.pos, c: finalSchool(c.college), o: draftOvr(c.starters, c.games), r: 0, ht: c.ht, wt: c.wt });
   numberOf(year, p.first, p.last, c);
   arcs[arcKey(p.first, p.last)] = { dy: year, row: [c.last ?? 0, c.starters, c.games, 0, 0, c.ageIn ?? 23] };
   report.addedUndrafted += 1;
   sample("undrafted", `${year} ${name} (${c.pos}, ${c.college}) — ${c.games} games, ${c.starters} as a starter`);
+}
+
+for (const { year, ...seed } of MANUAL_UNDRAFTED) {
+  const rows = (addUndrafted[year] ??= []);
+  if (rows.some((s) => nameKey(s.f, s.l) === nameKey(seed.f, seed.l))) continue;
+  rows.push({ ...seed, r: 0 });
 }
 
 // Their draftees who never played a down: the loop above only walks real careers.
@@ -630,6 +649,10 @@ for (const r of real66) {
 }
 
 /* ---------------- write ---------------- */
+
+// Same-unit historical listings can still need the player's actual position for gameplay.
+for (const [key, pos] of [["2007|hbblades", "MLB"], ["2011|gregromeus", "DE"]])
+  fix[key] = { ...(fix[key] ?? {}), p: pos };
 
 const sortObj = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : 1)));
 const json = (v) => JSON.stringify(v).replace(/"(\w+)":/g, "$1:");

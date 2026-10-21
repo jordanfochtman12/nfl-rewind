@@ -24,6 +24,7 @@ import { AUDIT_NUMBERS } from "./data/auditPlayers.ts";
 import { friendBreaksOut, friendCeiling, friendOf } from "./data/friends.ts";
 import { FUTURE_PROSPECTS } from "./data/futureProspects.ts";
 import { historicalYear } from "./historicalYears.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 /** Real NFL draft lengths: 20 rounds through 1966, 17 in 1967-76, 12 in 1977-92, 8 in 1993, 7 since. */
 function roundsFor(year: number): number {
@@ -676,7 +677,7 @@ export function simUntilUserPick(save: DynastySave): void {
       if (maybeStartAflDraft(save)) continue;
       return;
     }
-    if (team === save.userTeamId) return;
+    if (!cpuHandles(save, team, "draft")) return;
     if (!makeDraftPick(save)) {
       if (maybeStartAflDraft(save)) continue;
       return;

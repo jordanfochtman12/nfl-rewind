@@ -8,6 +8,7 @@ import type { BoxPlayer, DynastySave, GameResult, Player, SeasonStats, TeamId } 
 import { addNews } from "./news.ts";
 import { leagueMarks, STAT_WORDS, WATCH_STATS } from "./boothMemory.ts";
 import { careerTotals } from "./leaders.ts";
+import { cpuHandles } from "./teamControl.ts";
 import { livingPlayers, playerName } from "./players.ts";
 import { displayName, gamesInSeason } from "./teams.ts";
 import { winPct } from "./standings.ts";
@@ -196,10 +197,10 @@ export function honorTradeRequests(save: DynastySave): void {
   for (const p of livingPlayers(save)) {
     const from = clubOf(p);
     if (!from || p.tradeRequest !== year) continue;
-    if (!save.cpuOnly && from === save.userTeamId) continue;
+    if (!cpuHandles(save, from, "trades")) continue;
     if (rand(save) > 0.3) continue;
     const buyers = Object.values(save.teams)
-      .filter((t) => t.active && t.id !== from && (save.cpuOnly || t.id !== save.userTeamId) && t.wins + t.losses + t.ties > 0)
+      .filter((t) => t.active && t.id !== from && cpuHandles(save, t.id, "trades") && t.wins + t.losses + t.ties > 0)
       .sort((a, b) => winPct(b) - winPct(a))
       .slice(0, 6);
     for (const b of buyers) {

@@ -12,7 +12,17 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame, simGame } from "../src/lib/game/index.ts";
 import { fgSnapYards, kickoffRules, missedFgSpot, otRules } from "../src/lib/game/era.ts";
-import { keyMatchups, practiceFor, rulesInPlay, scoutingReport, swingPlays, wpSeries } from "../src/lib/game/gameday.ts";
+import { keyMatchups, practiceFor, rulesInPlay, scoutingReport, swingPlays, winProb, wpSeries } from "../src/lib/game/gameday.ts";
+
+test("win probability responds to field position, down and distance, and late timeouts", () => {
+  const situation = { q: 4, clock: 90, poss: "pit", down: 1, togo: 5, spot: 60, hs: 20, as: 20, homeTimeouts: 3, awayTimeouts: 0 };
+  const base = winProb(situation, "pit", "pit", false);
+  assert.ok(base > 0.5);
+  assert.ok(winProb({ ...situation, spot: 25 }, "pit", "pit", false) < base, "deep field position should help the offense");
+  assert.ok(winProb({ ...situation, down: 4, togo: 12 }, "pit", "pit", false) < base, "fourth-and-long should reduce the offense's chance");
+  assert.ok(winProb({ ...situation, homeTimeouts: 0 }, "pit", "pit", false) < base, "late timeouts should affect clock-management leverage");
+  assert.equal(winProb({ ...situation, hs: 21 }, "pit", "pit", true), 1);
+});
 
 test("overtime format follows the real rule dates", () => {
   assert.equal(otRules(1973, "regular").kind, "none");

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090c12">
+  <title>Roster Edit Desk · NFL Rewind</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090c12;--panel:#111722;--panel2:#151e2b;--line:#273243;--muted:#9eacbd;--text:#f3f6fa;--gold:#f5c451;--red:#d5444e;--green:#74d6ad;--blue:#95b9ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#23304a 0,transparent 56%),var(--bg);color:var(--text);min-height:100vh;padding-bottom:calc(24px + env(safe-area-inset-bottom))}button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:20px 16px 40px}.mast{display:flex;align-items:center;gap:13px}.mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid #715d30;background:linear-gradient(145deg,#312810,#131720);color:var(--gold);font-weight:900;font-style:italic;transform:skew(-8deg);letter-spacing:-2px}.eyebrow{font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:800}.mast h1{font-size:clamp(23px,5vw,34px);line-height:1;margin:4px 0 0;letter-spacing:-.04em}.private{margin:20px 0 16px;padding:12px 14px;border:1px solid #574b2d;border-radius:12px;background:#19170f;color:#ddcfaa;font-size:13px;line-height:1.45}.private strong{color:#ffe098}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 10px}.mode{display:flex;gap:7px;padding:4px;border-radius:12px;background:#0c1119;border:1px solid var(--line)}.mode button,.quiet,.primary,.danger,.small{border:1px solid transparent;border-radius:9px;min-height:42px;padding:0 13px;background:transparent;color:var(--muted);font-weight:700}.mode button[aria-pressed=true]{background:var(--panel2);border-color:#3b4658;color:white;box-shadow:0 3px 12px #0005}.primary{background:linear-gradient(135deg,#f8d77b,#d5a83d);color:#17130b;border-color:#ffe49a}.quiet{border-color:var(--line);background:#121822;color:#e5eaf1}.danger{border-color:#61333a;background:#29171b;color:#ffb4bb}.small{min-height:34px;padding:0 9px;border-color:var(--line);background:#111722;font-size:12px}.import{display:flex;gap:8px;align-items:center}.file{display:none}.status{font-size:12px;color:var(--muted);margin:8px 1px 15px}.status.good{color:var(--green)}.filters{border:1px solid var(--line);border-radius:14px;background:#0e141d;padding:13px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:14px}.field{min-width:0}.field label{display:block;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin:0 0 6px 2px}.field input,.field select,.edit-input,.add-form input,.add-form select{height:44px;width:100%;border:1px solid #344154;border-radius:9px;background:#080d14;color:var(--text);padding:0 11px;outline:none}.field input:focus,.field select:focus,.edit-input:focus,.add-form input:focus,.add-form select:focus{border-color:var(--gold);box-shadow:0 0 0 3px #f5c45125}.search{grid-column:span 2}.rowbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 2px}.count{font-size:12px;color:var(--muted)}.count b{color:white}.sortbox{display:flex;gap:7px;align-items:center}.sortbox label{font-size:11px;color:var(--muted)}.sortbox select{height:38px;border:1px solid var(--line);background:#111722;color:white;border-radius:8px;padding:0 9px}.sortbox button{height:38px;width:40px;border:1px solid var(--line);background:#111722;color:white;border-radius:8px}.cards{display:grid;gap:9px}.card{border:1px solid var(--line);border-radius:13px;padding:12px;background:linear-gradient(155deg,#141c28,#0f151e);display:grid;grid-template-columns:minmax(0,1.5fr) minmax(110px,.9fr) minmax(110px,.9fr);gap:12px;align-items:center}.card.changed{border-color:#a8873e;box-shadow:inset 3px 0 var(--gold)}.person{min-width:0}.name{font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}.tag{display:inline-block;border:1px solid #37455a;border-radius:5px;padding:2px 5px;margin-right:5px;color:#dbe5f2;font-size:10px;font-weight:800}.label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#b3c0cf;margin-bottom:5px}.edit-input{height:42px;padding:0 10px;font-size:16px;font-variant-numeric:tabular-nums}.edit-input::placeholder{color:#627084}.peak-note{font-size:10px;color:#7f8da0;margin-top:4px;min-height:12px}.card-tools{grid-column:1/-1;display:flex;justify-content:flex-end;gap:7px;margin-top:-3px}.edited-pill{font-size:10px;color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-right:auto;align-self:center}.empty{border:1px dashed #38465a;border-radius:14px;padding:28px 18px;text-align:center;color:var(--muted);line-height:1.55}.empty b{color:white}.bottom{position:sticky;bottom:0;z-index:3;margin:14px -16px -40px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#090c12ed;backdrop-filter:blur(14px);border-top:1px solid #354052;display:flex;align-items:center;gap:8px}.bottom .sum{margin-right:auto;font-size:12px;color:var(--muted)}.bottom .sum strong{color:var(--gold)}.add-form{display:none;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:12px 0;padding:12px;border:1px solid #39465a;border-radius:13px;background:#101722}.add-form.show{display:grid}.notice{font-size:11px;color:var(--muted);line-height:1.5;margin:10px 2px}.more-row{text-align:center;padding:12px}.more-row[hidden]{display:none}.desktop-head{display:none}@media(min-width:740px){.wrap{padding:26px 24px 48px}.filters{grid-template-columns:repeat(8,minmax(0,1fr));padding:15px}.search{grid-column:span 3}.cards{gap:0;border:1px solid var(--line);border-radius:13px;overflow:hidden}.desktop-head{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(110px,.9fr) minmax(110px,.9fr);gap:12px;padding:10px 14px;background:#1a2432;color:#b4c0ce;text-transform:uppercase;font-size:10px;letter-spacing:.12em;font-weight:800}.card{border:0;border-radius:0;border-top:1px solid #273243;box-shadow:none;padding:11px 14px}.card-tools{position:absolute;right:28px;width:140px;margin-top:0}.card{position:relative;padding-right:166px}.bottom{margin-left:-24px;margin-right:-24px;padding-left:24px;padding-right:24px}.private{font-size:14px}}@media(max-width:520px){.wrap{padding:15px 12px 32px}.topline{align-items:stretch;flex-direction:column}.mode button{flex:1}.import{justify-content:space-between}.filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px}.search{grid-column:span 2}.card{grid-template-columns:1fr 1fr;gap:10px;padding:11px}.person{grid-column:1/-1}.card-tools{grid-column:1/-1}.bottom{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}.bottom .sum{font-size:11px}.bottom button{padding:0 9px;min-height:40px}.add-form.show{grid-template-columns:1fr 1fr}.add-form .wide{grid-column:1/-1}.rowbar{align-items:flex-start;flex-direction:column}.sortbox{width:100%}.sortbox select{flex:1}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="mast"><div class="mark" aria-hidden="true">RW</div><div><div class="eyebrow">Local developer tool · 1966–2040</div><h1>Roster Edit Desk</h1></div></header>
+    <div class="private"><strong>Private developer change planner · refreshed October 21, 2026.</strong> Edit base historical rosters and draft classes, then export a change request for implementation in source data. This does not change player careers or franchise saves. Career paths can now evolve week to week in simulated modes; this desk changes the starting overall and peak potential.</div>
+    <div class="topline"><div class="mode" role="group" aria-label="Choose player list"><button id="rosterMode" aria-pressed="true">Roster</button><button id="draftMode" aria-pressed="false">Draft class</button></div><div class="status">Base roster and draft catalog · 1966–2040</div></div>
+    <div class="status" id="loadStatus" aria-live="polite">Loading the historical draft catalog…</div>
+    <section class="filters" aria-label="Filter and sort players">
+      <div class="field"><label for="year">Season / draft year</label><select id="year"></select></div>
+      <div class="field"><label for="team">Team</label><select id="team"><option value="all">All teams</option></select></div>
+      <div class="field"><label for="position">Position</label><select id="position"><option value="all">All positions</option></select></div>
+      <div class="field search"><label for="query">Find a player</label><input id="query" type="search" placeholder="Name, school or team…" autocomplete="off"></div>
+      <div class="field"><label for="sort">Sort players by</label><select id="sort"><option value="name">Name</option><option value="pos">Position</option><option value="team">Team</option><option value="overall">Overall</option><option value="potential">Peak potential</option></select></div>
+      <div class="field"><label for="order">Sort order</label><select id="order"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div>
+    </section>
+    <div class="rowbar"><div class="count" id="count" aria-live="polite"></div><div class="import"><label class="quiet" for="reviewFile">Import rating decisions</label><input class="file" id="reviewFile" type="file" accept="application/json,.json"><button id="addToggle" class="quiet" hidden>＋ Add prospect</button></div></div>
+    <form id="addForm" class="add-form">
+      <div class="field"><label for="newFirst">First name</label><input id="newFirst" required maxlength="36"></div><div class="field"><label for="newLast">Last name</label><input id="newLast" required maxlength="48"></div><div class="field"><label for="newPos">Position</label><select id="newPos" required></select></div><button class="primary wide" type="submit">Add to change list</button>
+    </form>
+    <div class="desktop-head"><span>Player / school</span><span>Overall rating</span><span>Peak potential</span></div>
+    <section id="cards" class="cards" aria-label="Player edit list"></section>
+    <div class="more-row"><button id="moreRows" class="quiet">Show 100 more</button></div>
+    <p class="notice">Ratings entered here become a developer change request. Historical roster ratings are calculated by game systems; an empty field leaves that source behavior unchanged.</p>
+    <footer class="bottom"><div class="sum" id="editSummary"><strong>0</strong> proposed changes</div><button id="clearButton" class="quiet">Clear direct edits</button><button id="downloadButton" class="primary">Download change file</button></footer>
+  </div>
+  <script>
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const POS = ["QB","RB","FB","WR","TE","LT","LG","C","RG","RT","DE","DT","OLB","MLB","CB","S","K","P"];
+    const TEAM_NAMES = {atl:"Atlanta",ram:"Los Angeles Rams",pit:"Pittsburgh",phi:"Philadelphia",dal:"Dallas",was:"Washington",min:"Minnesota",crd:"Arizona",gnb:"Green Bay",nyg:"New York Giants",sfo:"San Francisco",chi:"Chicago",cle:"Cleveland",clt:"Indianapolis",det:"Detroit",mia:"Miami",den:"Denver",oti:"Tennessee",nwe:"New England",buf:"Buffalo",nyj:"New York Jets",rai:"Las Vegas",sdg:"Los Angeles Chargers",kan:"Kansas City",nor:"New Orleans",cin:"Cincinnati",tam:"Tampa Bay",sea:"Seattle",car:"Carolina",jax:"Jacksonville",rav:"Baltimore",htx:"Houston"};
+    let catalog = {};
+    let mode = "roster";
+    let rosterRows = [];
+    let draftRows = [];
+    let customRows = [];
+    let overrides = {};
+    let reviewOverrides = {};
+    let descending = false;
+    let displayLimit = 100;
+    const STORE_KEY = "nfl-rewind-developer-roster-editor-v2";
+    const REVIEW_IMPORT_KEY = `${STORE_KEY}-review-import`;
+    try { overrides = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch { overrides = {}; }
+    try { reviewOverrides = JSON.parse(localStorage.getItem(REVIEW_IMPORT_KEY) || "{}"); } catch { reviewOverrides = {}; }
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const nkey = (s) => String(s ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
+    const yearSelect = $("year");
+    for (let y=1966;y<=2040;y++) yearSelect.add(new Option(String(y),String(y)));
+    yearSelect.value = "2026";
+    for (const p of POS) { $("position").add(new Option(p,p)); $("newPos").add(new Option(p,p)); }
+    const teamOpts = Object.entries(TEAM_NAMES).sort((a,b)=>a[1].localeCompare(b[1]));
+    for (const [id,name] of teamOpts) $("team").add(new Option(name,id));
+    const baseKey = (scope,year,first,last,pos,id="") => scope === "roster" ? `roster|${year}|${id || `${nkey(first+last)}|${pos}`}` : `draft|${year}|${nkey(first+last)}|${pos}`;
+    function reviewKeyFor(decision){
+      const year=Number(decision.year),first=decision.firstName??decision.first,last=decision.lastName??decision.last,pos=decision.position??decision.pos;
+      if(!Number.isInteger(year)||!first||!last||!pos)return null;
+      return decision.scope==="draft"?baseKey("draft",year,first,last,pos):baseKey("roster",year,first,last,pos,decision.playerId??decision.id??"");
+    }
+    function mergeReviewDecisions(decisions){
+      if(!Array.isArray(decisions))throw new Error("The decision file has no decisions list.");
+      const next={};
+      for(const d of decisions){const key=reviewKeyFor(d),value=Number(d.decision);if(!key||!Number.isInteger(value)||value<1||value>99)continue;next[key]={potential:value};rowMeta[key]={scope:d.scope,year:Number(d.year),id:d.playerId||"",firstName:d.firstName??d.first,lastName:d.lastName??d.last,pos:d.position??d.pos,team:d.team||"",college:d.college||"",round:d.draftRound||null};}
+      reviewOverrides=next;try{localStorage.setItem(REVIEW_IMPORT_KEY,JSON.stringify(reviewOverrides))}catch{}
+      persist();
+      return Object.keys(next).length;
+    }
+    function syncSavedReviewChoices(){
+      let state={};try{state=JSON.parse(localStorage.getItem("nfl-rewind-rating-review-v1")||"{}")}catch{}
+      if(!state||typeof state!=="object")return 0;
+      let count=0;
+      for(const [id,choice] of Object.entries(state)){
+        if(!choice||choice.choice==="keep")continue;
+        const value=Number(choice.value);if(!Number.isInteger(value)||value<1||value>99)continue;
+        if(id.startsWith("draft|")){const [,year,first,last,pos]=id.split("|");const key=baseKey("draft",Number(year),first,last,pos);if(!Object.hasOwn(reviewOverrides,key)){reviewOverrides[key]={potential:value};count++;}rowMeta[key]={scope:"draft",year:Number(year),firstName:first,lastName:last,pos};}
+        else if(id.startsWith("r-"))for(const [year,data] of Object.entries(catalog))for(const row of data.roster||[])if(row[0]===id){const key=baseKey("roster",Number(year),row[1],row[2],row[3],id);if(!Object.hasOwn(reviewOverrides,key)){reviewOverrides[key]={potential:value};count++;}rowMeta[key]={scope:"roster",year:Number(year),id,firstName:row[1],lastName:row[2],pos:row[3],team:row[4],college:row[5]};}
+      }
+      if(count){try{localStorage.setItem(REVIEW_IMPORT_KEY,JSON.stringify(reviewOverrides))}catch{}persist()}
+      return count;
+    }
+    function effectiveEdit(key){return {...(reviewOverrides[key]||{}),...(overrides[key]||{})};}
+    function rebuildRoster() {
+      const year=Number(yearSelect.value);
+      rosterRows=(catalog[year]?.roster||[]).map(([id,firstName,lastName,pos,team,college,overall,potential,ratingYear])=>({key:baseKey("roster",year,firstName,lastName,pos,id),scope:"roster",year,id,firstName,lastName,pos,team,college,overall,potential,ratingYear,round:null,source:ratingYear===year?`Game rating · ${ratingYear} stats and honors`:`Closest game rating · ${ratingYear} (season ${year} roster)`}));
+    }
+    function rebuildDraft() {
+      const year=Number(yearSelect.value), seeds=catalog[year]?.draft||[];
+      const roster=catalog[year]?.roster||[];
+      draftRows=seeds.map(([firstName,lastName,pos,college,overall,potential,round])=>{const match=round===0?roster.find(row=>nkey(`${row[1]} ${row[2]}`)===nkey(`${firstName} ${lastName}`)):undefined;const rosterTeam=match?(TEAM_NAMES[match[4]]||match[4].toUpperCase()):"";return {scope:"draft",year,id:"",firstName,lastName,pos,college,overall,potential,round,team:"",source:round===0?`Undrafted rookie free agent${rosterTeam?` · also on ${year} ${rosterTeam} roster`:""}`:"Base draft class",key:baseKey("draft",year,firstName,lastName,pos)}});
+      draftRows.push(...customRows.filter(p=>p.year===year));
+    }
+    function rowsForMode(){return mode==="draft"?draftRows:rosterRows;}
+    function valueFor(row,field){const edit=effectiveEdit(row.key);return Object.hasOwn(edit,field)?edit[field]:row[field];}
+    function edited(row){const edit=effectiveEdit(row.key);return Object.keys(edit).some(k=>edit[k]!==row[k]);}
+    function fillFilters(rows){
+      const posSel=$("position"),oldPos=posSel.value;posSel.innerHTML='<option value="all">All positions</option>';
+      for(const p of [...new Set(rows.map(r=>r.pos).filter(p=>POS.includes(p)))].sort())posSel.add(new Option(p,p));
+      if([...posSel.options].some(o=>o.value===oldPos))posSel.value=oldPos;
+      const teamSel=$("team"),oldTeam=teamSel.value;teamSel.innerHTML='<option value="all">All teams</option>';
+      const used=[...new Set(rows.map(r=>r.team).filter(t=>t&&t!=="fa"&&t!=="retired"&&t!=="hof"))].sort((a,b)=>(TEAM_NAMES[a]||a).localeCompare(TEAM_NAMES[b]||b));
+      for(const t of used)teamSel.add(new Option(TEAM_NAMES[t]||t.toUpperCase(),t));
+      if(rows.some(r=>r.team==="fa"||r.team==="retired"||r.team==="hof"))teamSel.add(new Option("Free agents / retired","other"));
+      if([...teamSel.options].some(o=>o.value===oldTeam))teamSel.value=oldTeam;
+    }
+    function filteredRows(){
+      let rows=rowsForMode().filter(r=>$("position").value==="all"||r.pos===$("position").value);
+      const team=$("team").value;if(team==="other")rows=rows.filter(r=>["fa","retired","hof"].includes(r.team));else if(team!=="all")rows=rows.filter(r=>r.team===team);
+      const q=nkey($("query").value);if(q)rows=rows.filter(r=>nkey(`${r.firstName} ${r.lastName} ${r.college} ${TEAM_NAMES[r.team]||r.team}`).includes(q));
+      const key=$("sort").value;rows.sort((a,b)=>{let x,y;if(key==="overall"||key==="potential"){x=Number(valueFor(a,key)||0);y=Number(valueFor(b,key)||0)}else{x=String(key==="name"?`${a.lastName} ${a.firstName}`:key==="team"?(TEAM_NAMES[a.team]||a.team):a.pos).toLowerCase();y=String(key==="name"?`${b.lastName} ${b.firstName}`:key==="team"?(TEAM_NAMES[b.team]||b.team):b.pos).toLowerCase()}return (x<y?-1:x>y?1:0)*(descending?-1:1)});return rows;
+    }
+    const META_KEY = `${STORE_KEY}-meta`;
+    const CUSTOM_KEY = `${STORE_KEY}-custom`;
+    let rowMeta = {};
+    try { rowMeta = JSON.parse(localStorage.getItem(META_KEY) || "{}"); } catch { rowMeta = {}; }
+    try { customRows = JSON.parse(localStorage.getItem(CUSTOM_KEY) || "[]"); } catch { customRows = []; }
+    function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(overrides));localStorage.setItem(META_KEY,JSON.stringify(rowMeta))}catch{}}
+    function render(){
+      if(mode==="roster")rebuildRoster();else rebuildDraft();
+      const rows=rowsForMode();fillFilters(rows);const visible=filteredRows();
+      $("count").innerHTML=`<b>${visible.length}</b> matching | <b>${Math.min(visible.length,displayLimit)}</b> shown | ${rows.length} in ${mode==="draft"?"this class":"this season roster"}`;
+      $("addToggle").hidden=mode!=="draft";$("team").disabled=mode==="draft"&&rows.every(r=>!r.team);
+      const cardHost=$("cards");
+      if(!visible.length){
+        cardHost.innerHTML=`<div class="empty">${mode==="roster"?`No historical base roster data is available for ${yearSelect.value}.`:`No draft prospects in the base data for ${yearSelect.value}. Add a prospect above, or change the filters.`}</div>`;
+      }else cardHost.innerHTML=visible.slice(0,displayLimit).map(r=>{
+        const o=valueFor(r,"overall"),p=valueFor(r,"potential"),team=TEAM_NAMES[r.team]||r.team||(mode==="roster"?"Team history unavailable":r.round===0?"Undrafted":"Not drafted");
+        return `<article class="card ${edited(r)?"changed":""}" data-key="${esc(r.key)}">
+          <div class="person"><div class="name">${esc(r.firstName)} ${esc(r.lastName)}</div><div class="meta"><span class="tag">${esc(r.pos)}</span>${esc(team)}${r.college?` · ${esc(r.college)}`:""}${r.round===0?` · UDFA`:r.round?` · Round ${esc(r.round)}`:""}<br>${esc(r.source||"")}</div></div>
+          <div><div class="label">${mode==="draft"?"Draft overall":"Game overall"}</div><input class="edit-input" type="number" min="1" max="99" inputmode="numeric" aria-label="${esc(r.firstName)} ${esc(r.lastName)} overall rating" data-field="overall" data-key="${esc(r.key)}" value="${o??""}" placeholder="${o==null?"Set rating":""}"></div>
+          <div><div class="label">Peak potential</div><input class="edit-input" type="number" min="1" max="99" inputmode="numeric" aria-label="${esc(r.firstName)} ${esc(r.lastName)} peak potential" data-field="potential" data-key="${esc(r.key)}" value="${p??""}" placeholder="${p==null?"No ceiling set":""}"><div class="peak-note">${r.peakOvr?`Career peak: ${esc(r.peakOvr)}`:""}</div></div>
+          <div class="card-tools">${edited(r)?'<span class="edited-pill">Edited</span>':""}<button class="small undo" data-key="${esc(r.key)}" ${edited(r)?"":"disabled"}>Reset</button></div>
+        </article>`;
+      }).join("");
+      $("moreRows").hidden=visible.length<=displayLimit;
+      const changed=new Set([...Object.keys(reviewOverrides),...Object.keys(overrides)]).size;$("editSummary").innerHTML=`<strong>${changed}</strong> proposed change${changed===1?"":"s"}`;
+      $("clearButton").disabled=!Object.keys(overrides).length;$("downloadButton").disabled=!changed;
+      const baseStatus=mode==="draft"?(Number(yearSelect.value)>2026?"Future classes are empty until the base class is authored.":"Base draft class loaded with draft and peak grades."):Number(yearSelect.value)<=2026?"Historical base roster loaded with game ratings calculated from stats and honors.":"No historical roster exists for this future year.";
+      const reviewCount=Object.keys(reviewOverrides).length;$("loadStatus").textContent=reviewCount?baseStatus+" · "+reviewCount+" rating decisions from review":baseStatus;
+      $("loadStatus").className=`status ${mode==="draft"||Number(yearSelect.value)<=2026?"good":""}`;
+    }
+    $("cards").addEventListener("input",e=>{
+      const input=e.target.closest("input[data-field]");if(!input)return;
+      const row=rowsForMode().find(r=>r.key===input.dataset.key);if(!row)return;
+      const field=input.dataset.field;const raw=input.value.trim();const edit={...(overrides[row.key]||{})};
+      if(raw===""){delete edit[field]}else{const n=Number(raw);if(!Number.isInteger(n)||n<1||n>99){input.setCustomValidity("Enter a whole number from 1 to 99.");input.reportValidity();return}input.setCustomValidity("");edit[field]=n}
+      if(Object.keys(edit).length){overrides[row.key]=edit;rowMeta[row.key]={scope:row.scope,year:row.year,id:row.id||"",firstName:row.firstName,lastName:row.lastName,pos:row.pos,team:row.team||"",college:row.college||"",round:row.round||null}}else{delete overrides[row.key];delete rowMeta[row.key]}persist();
+      const card=input.closest(".card");card.classList.toggle("changed",edited(row));card.querySelector(".edited-pill")?.remove();
+      if(edited(row)){const badge=document.createElement("span");badge.className="edited-pill";badge.textContent="Edited";card.querySelector(".card-tools").prepend(badge)}
+      card.querySelector(".undo").disabled=!edited(row);const changed=new Set([...Object.keys(reviewOverrides),...Object.keys(overrides)]).size;$("editSummary").innerHTML=`<strong>${changed}</strong> proposed change${changed===1?"":"s"}`;$("clearButton").disabled=!Object.keys(overrides).length;$("downloadButton").disabled=!changed;
+    });
+    $("cards").addEventListener("click",e=>{const b=e.target.closest(".undo");if(!b)return;delete overrides[b.dataset.key];delete rowMeta[b.dataset.key];persist();render()});
+    for(const id of ["year","team","position","query","sort"])$(id).addEventListener(id==="query"?"input":"change",()=>{displayLimit=100;render()});
+    $("moreRows").addEventListener("click",()=>{displayLimit+=100;render()});
+    $("order").addEventListener("change",()=>{descending=$("order").value==="desc";render()});
+    $("rosterMode").addEventListener("click",()=>{displayLimit=100;mode="roster";$("rosterMode").setAttribute("aria-pressed","true");$("draftMode").setAttribute("aria-pressed","false");render()});
+    $("draftMode").addEventListener("click",()=>{displayLimit=100;mode="draft";$("rosterMode").setAttribute("aria-pressed","false");$("draftMode").setAttribute("aria-pressed","true");render()});
+    $("addToggle").addEventListener("click",()=>{$("addForm").classList.toggle("show");if($("addForm").classList.contains("show"))$("newFirst").focus()});
+    $("addForm").addEventListener("submit",e=>{e.preventDefault();const year=Number(yearSelect.value),firstName=$("newFirst").value.trim(),lastName=$("newLast").value.trim(),pos=$("newPos").value;if(!firstName||!lastName)return;if([...draftRows,...customRows].some(r=>r.year===year&&nkey(r.firstName+r.lastName)===nkey(firstName+lastName)&&r.pos===pos)){alert("That player already appears at this position in the selected class.");return}const row={scope:"draft",year,firstName,lastName,pos,college:"",overall:null,potential:null,round:null,team:"",source:"Added manually"};row.key=`draft|${year}|${nkey(firstName+lastName)}|${pos}|manual`;customRows.push(row);try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(customRows))}catch{}$("addForm").reset();$("addForm").classList.remove("show");render()});
+    $("reviewFile").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{const payload=JSON.parse(await file.text());if(payload.format!=="nfl-rewind-rating-decisions")throw new Error("Choose the JSON file downloaded from the Rating Review Desk.");const count=mergeReviewDecisions(payload.decisions);alert(`Loaded ${count} reviewed rating decision${count===1?"":"s"} into the editor. They are proposed changes until you export the editor change file.`);render()}catch(error){alert(error.message||"Could not read that rating decision file.")}finally{e.target.value=""}});
+    $("clearButton").addEventListener("click",()=>{if(!confirm("Clear every proposed change saved in this browser?"))return;overrides={};rowMeta={};persist();render()});
+    $("downloadButton").addEventListener("click",()=>{
+      const rows=new Map(Object.entries(rowMeta));for(const row of [...rosterRows,...draftRows])rows.set(row.key,row);const edits=[];for(const [key,row] of rows){const change=effectiveEdit(key);if(!Object.keys(change).length)continue;edits.push({scope:row.scope,year:row.year,playerId:row.id||undefined,firstName:row.firstName,lastName:row.lastName,position:row.pos,team:row.team||undefined,college:row.college||undefined,draftRound:row.round||undefined,overall:Object.hasOwn(change,"overall")?change.overall:undefined,peakPotential:Object.hasOwn(change,"potential")?change.potential:undefined})}
+      const payload={format:"nfl-rewind-base-data-edit-request",version:2,createdAt:new Date().toISOString(),count:edits.length,edits};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`nfl-rewind-player-edits-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    });
+    fetch("catalog.json").then(r=>{if(!r.ok)throw new Error("The catalog file could not be loaded.");return r.json()}).then(data=>{catalog=data;const linked=syncSavedReviewChoices();$("loadStatus").textContent=linked?"Base data ready · linked "+linked+" saved rating decision"+(linked===1?"":"s"):Object.keys(reviewOverrides).length?"Base data ready · "+Object.keys(reviewOverrides).length+" imported rating decisions":"Base roster and draft data ready · 1966–2040";render()}).catch(()=>{$("loadStatus").textContent="Catalog failed to load. Rebuild the local developer catalog with the repository script.";render()});
+  })();
+  </script>
+</body>
+</html>

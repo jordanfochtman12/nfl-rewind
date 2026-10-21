@@ -1,9 +1,7 @@
 /**
- * Real career trajectories. A real draftee's seed rating is his career PEAK (derived from
- * actual production); on its own that made every future star a finished product at 22 and
- * let everyone drift upward forever. With his real arc (last season, seasons as a starter,
- * age at draft) he now arrives raw, climbs to that peak on a realistic ramp, holds it for
- * the stretch he actually held it, fades at the end, and retires the year he really did.
+ * Historical career evidence seeds draft readiness, talent ceilings and veteran calibration.
+ * It guides the initial projection; simulated careers can diverge through weekly performance,
+ * opportunity, development, aging and retirement.
  */
 import type { Player, Pos, RatingKey } from "./types.ts";
 import { CAREER_ARCS, VET_ARCS, type CareerArcRow, type VetArcRow } from "./data/careerArcs.ts";
@@ -288,19 +286,9 @@ export function moveToward(p: Player, target: number): void {
   }
 }
 
-/** Real careers end the season they really ended; still-going careers age out normally. */
+/** Historical last seasons are descriptive only; simulation retirement follows the played career. */
 export function arcRetiresNow(p: Player, seasonJustPlayed: number): boolean | undefined {
-  const arc = p.arc;
-  if (!arc) return undefined;
-  if (neverPlayed(arc)) return seasonJustPlayed >= arc.dy;
-  if (isOpen(arc)) {
-    // Still going when the record stops: done once he's had a typical career for his position
-    // and slipped, or two years past it unless he's still a star. Left to the generic age rules,
-    // 2017-19 draftees were still on rosters at 36 as 70s, a tenth of the 2030s league past 33.
-    const past = seasonJustPlayed - arc.dy + 1 - careerLength(p, arc);
-    if (past >= 2 && p.ovr < 85) return true;
-    if (past >= 0 && p.ovr < 78) return true;
-    return undefined;
-  }
-  return seasonJustPlayed >= arc.to;
+  void p;
+  void seasonJustPlayed;
+  return undefined;
 }

@@ -12,6 +12,7 @@ import { rand, randInt } from "./rng.ts";
 import { addNews } from "./news.ts";
 import { salaryFor, teamPayroll } from "./salary.ts";
 import { ROSTER_TARGET } from "./types.ts";
+import { cpuHandles } from "./teamControl.ts";
 
 const name = (save: DynastySave, id: TeamId) => displayName(save.year, id);
 const recOf = (save: DynastySave, id: TeamId) => {
@@ -52,7 +53,7 @@ function pitchFor(save: DynastySave, c: TradeCall): string {
  * a fresh one. Quiet once the deadline has passed.
  */
 export function phoneRings(save: DynastySave): void {
-  if (save.cpuOnly || save.phase !== "regular") return;
+  if (save.cpuOnly || save.phase !== "regular" || cpuHandles(save, save.userTeamId, "trades")) return;
   save.calls = (save.calls ?? []).filter((c) => c.year === save.year && c.status === "open" && c.week >= save.week);
   if (!tradeWindowOpen(save)) {
     save.calls = [];
@@ -61,7 +62,7 @@ export function phoneRings(save: DynastySave): void {
   const dw = deadlineWeek(save.year);
   if (save.week < 2 || save.week >= dw) return;
   if (save.calls.length >= 2 || rand(save) > 0.4) return;
-  const clubs = activeTeamIds(save.year).filter((id) => id !== save.userTeamId && !save.calls!.some((c) => c.from === id));
+  const clubs = activeTeamIds(save.year).filter((id) => id !== save.userTeamId && cpuHandles(save, id, "trades") && !save.calls!.some((c) => c.from === id));
   for (let tries = 0; tries < 4 && clubs.length; tries++) {
     const from = clubs.splice(randInt(save, 0, clubs.length - 1), 1)[0]!;
     const o = tryOffer(save, from, save.userTeamId);
@@ -84,6 +85,7 @@ export function phoneRings(save: DynastySave): void {
 
 export function acceptCall(save: DynastySave, callId: string): { ok: boolean; reason?: string } {
   const c = (save.calls ?? []).find((x) => x.id === callId);
+  if (cpuHandles(save, save.userTeamId, "trades")) return { ok: false, reason: "The CPU front office is handling this club's trades." };
   if (!c || c.status !== "open") return { ok: false, reason: "That call went cold." };
   const r = executeTrade(save, c.from, save.userTeamId, c.give, c.get, { force: true });
   if (!r.ok) return r;
@@ -110,7 +112,7 @@ export const BID_TIERS = [
 
 /** A name on the street big enough that other clubs will fight for him. */
 export function bidEligible(save: DynastySave, p: Player): boolean {
-  return !save.cpuOnly && save.phase === "freeAgency" && p.teamId === "fa" && p.ovr >= 76;
+  return !save.cpuOnly && save.phase === "freeAgency" && !cpuHandles(save, save.userTeamId, "roster") && p.teamId === "fa" && p.ovr >= 76;
 }
 
 export function askingPrice(save: DynastySave, p: Player): number {
@@ -141,7 +143,7 @@ function score(save: DynastySave, teamId: TeamId, tier: number, p: Player): numb
 function pickRivals(save: DynastySave, p: Player): FaBid["rivals"] {
   const ask = askingPrice(save, p);
   const interested = activeTeamIds(save.year)
-    .filter((id) => id !== save.userTeamId && save.teams[id])
+    .filter((id) => id !== save.userTeamId && cpuHandles(save, id, "roster") && save.teams[id])
     .filter((id) => bestAt(save, id, p.pos) < p.ovr - 1 && canAfford(save, id, ask))
     .filter((id) => activeRosterOf(save, id).length < ROSTER_TARGET + 8)
     .map((id) => ({ id, s: contendScore(save, id) * 10 + (p.ovr - bestAt(save, id, p.pos)) * 0.4 + rand(save) * 6 }))
