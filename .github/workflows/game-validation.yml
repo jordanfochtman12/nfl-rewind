@@ -23,6 +23,7 @@ jobs:
       - run: node --experimental-strip-types --test scripts/primetime-studio.test.mjs
       - run: node --experimental-strip-types --test scripts/fatigue.test.mjs
       - run: node --experimental-strip-types --test scripts/stat-ledger.test.mjs
+      - run: node --experimental-strip-types --test scripts/individual-scoring.test.mjs
       - run: node --experimental-strip-types --test scripts/net-yards.test.mjs
       - run: node --experimental-strip-types --test scripts/tackle-attribution.test.mjs
       - run: node --test scripts/offline-manifest.test.mjs

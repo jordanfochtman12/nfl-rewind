@@ -134,6 +134,7 @@ export { posLabel, safetyRole, safetyPair } from "./posLabel.ts";
 export { venueOf, pickWeather, bowlVenue, crowdNoise } from "./venues.ts";
 export { fieldLook, type FieldLook, type EndZoneLook, type Surface } from "./fieldLook.ts";
 export { seasonLeaders, careerTotals, playoffTotals } from "./leaders.ts";
+export { individualScoringPoints } from "./statRules.ts";
 export { honorLines, AWARD_LABEL } from "./honors.ts";
 export {
   seasonRecordBook,

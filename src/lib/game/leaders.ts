@@ -1,6 +1,7 @@
 import type { DynastySave, Player, SeasonStats } from "./types.ts";
 import { playerName } from "./players.ts";
 import { displayName } from "./teams.ts";
+import { individualScoringPoints } from "./statRules.ts";
 
 export interface LeaderRow {
   playerId: string;
@@ -51,7 +52,7 @@ export function seasonLeaders(save: DynastySave) {
     ints: r((s) => s.ints, "INT"),
     tfl: r((s) => s.tfl ?? 0, "TFL"),
     pd: r((s) => s.pd ?? 0, "PD"),
-    scoring: r((s) => s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade, "Pts"),
+    scoring: r(individualScoringPoints, "Pts"),
   };
 }
 

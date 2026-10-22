@@ -1,6 +1,7 @@
 import type { Player, Pos, SeasonStats, TeamId } from "./types.ts";
 import { careerTotals } from "./leaders.ts";
 import { teamAbbr } from "./teams.ts";
+import { individualScoringPoints } from "./statRules.ts";
 
 export type StatCol = { key: string; label: string; of?: (s: SeasonStats) => string | number };
 export type StatFamily = "pass" | "rush" | "rec" | "ol" | "def" | "k" | "p" | "ret";
@@ -27,7 +28,7 @@ export function passerRating(s: SeasonStats): string {
 }
 
 export function scoring(s: SeasonStats): number {
-  return s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade;
+  return individualScoringPoints(s);
 }
 
 function num(n: number): string | number {
