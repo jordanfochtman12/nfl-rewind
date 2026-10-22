@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame, playerHofScore } from "../src/lib/game/index.ts";
+import { coachHofEligible } from "../src/lib/game/hof.ts";
 
 test("Hall of Fame scoring recognizes Pro Bowls and major position awards with diminishing returns", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 94 });
@@ -22,4 +23,22 @@ test("Hall of Fame scoring recognizes Pro Bowls and major position awards with d
   player.honors.proBowl = Array.from({ length: 30 }, (_, i) => 1936 + i);
   const capDifference = playerHofScore(save, player) - playerHofScore(save, { ...player, honors: { ...player.honors, proBowl: [1966] } });
   assert.ok(Math.abs(capDifference - (16 - 1.35)) < 1e-9, "Pro Bowl credit is capped");
+});
+
+test("a retired coach becomes Hall-eligible after one complete season out of football", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 95 });
+  const coach = Object.values(save.coaches)[0];
+  assert.ok(coach);
+  Object.assign(coach, {
+    retiredYear: 1967,
+    careerWins: 100,
+    careerLosses: 20,
+    careerTitles: 1,
+    yearsCoaching: 20,
+    peakOffense: 95,
+  });
+
+  assert.equal(coachHofEligible(save, coach), false, "not eligible during his retirement-year ballot");
+  save.year = 1967;
+  assert.equal(coachHofEligible(save, coach), true, "eligible after that season is complete");
 });
