@@ -15,11 +15,13 @@
  */
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { createNewGame, simUntil } from "../src/lib/game/index.ts";
+import { createNewGame, simUntil, careerRecordBook, gameRecordBook } from "../src/lib/game/index.ts";
+import { activeTeamIds, gamesInSeason } from "../src/lib/game/teams.ts";
+import { loadHistoryData } from "../src/lib/game/historyData.ts";
 
 const LAST = 2020;
 const WINDOWS = [
-  // Real league: points per team-game, completion %, interceptions per attempt, sacks per team-game.
+  // Real league: points per team-game, completion %, interceptions per attempt, and sacks per team-game.
   { from: 1973, to: 1977, ppg: 19.4, cmp: 0.525, int: 0.048, sacks: null, passYdsFloor: 2400 },
   { from: 1994, to: 1998, ppg: 20.3, cmp: 0.577, int: 0.031, sacks: 2.5, passYdsFloor: 3500 },
   { from: 2016, to: 2020, ppg: 22.6, cmp: 0.628, int: 0.025, sacks: 2.4, passYdsFloor: 4100 },
@@ -41,6 +43,7 @@ function seasonLine(save, year) {
     cmp: sum("passCmp") / sum("passAtt"),
     int: sum("passInt") / sum("passAtt"),
     sacks: sum("sacks") / teamGames,
+    rushAtt: sum("rushAtt") / teamGames,
     leaders: Object.fromEntries(Object.keys(CEILING).map((k) => [k, top(k)])),
   };
 }
@@ -48,6 +51,8 @@ function seasonLine(save, year) {
 const lines = [];
 const ballots = [];
 const doubleJobs = [];
+let rushingTails;
+let history;
 
 /** Coaches holding more than one post (head coach or coordinator, any club) right now. */
 function doubledUp(save) {
@@ -59,7 +64,8 @@ function doubledUp(save) {
   return [...seen.entries()].filter(([, posts]) => posts.length > 1).map(([c, posts]) => `${save.coaches[c]?.name ?? c}: ${posts.join(", ")}`);
 }
 
-before(() => {
+before(async () => {
+  history = await loadHistoryData();
   let s = createNewGame({ userTeamId: "pit", startingYear: 1966, cpuOnly: true, seed: 4242 });
   for (let y = 1966; y <= LAST; y++) {
     s = simUntil(s, (x) => (x.year === y && x.phase === "playoffs") || x.year > y || x.phase === "complete");
@@ -74,6 +80,40 @@ before(() => {
     s = simUntil(s, (x) => x.year > y || x.phase === "complete");
     for (const d of doubledUp(s)) doubleJobs.push(`${y}: ${d}`);
   }
+  const careerRush = careerRecordBook(s, 1).find((category) => category.id === "rushYds").rows[0];
+  const gameRush = gameRecordBook(s).find((category) => category.id === "rushYds").rows[0];
+  const careerPlayer = careerRush && s.players[careerRush.playerId];
+  rushingTails = {
+    careerRush,
+    gameRush,
+    careerAge: careerPlayer?.age,
+    careerYearsPro: careerPlayer?.yearsPro,
+    careerSeasons: careerPlayer
+      ? Object.values(careerPlayer.stats).filter((line) => line.rushAtt > 0).length
+      : 0,
+  };
+  for (const w of WINDOWS) {
+    w.actualRushAtt = [];
+    for (let y = w.from; y <= w.to; y++) {
+      const attempts = history.stats(y).reduce((n, row) => n + Math.max(0, row.line.rushAtt ?? 0), 0);
+      const teamGames = activeTeamIds(y).length * gamesInSeason(y);
+      w.actualRushAtt.push(attempts / teamGames);
+    }
+  }
+});
+
+test("rushing career and single-game tails stay close to the historical record", () => {
+  // Historical marks: Emmitt Smith 18,355 career yards and Adrian Peterson 296 in one game.
+  // A modest allowance lets a dynasty make new history while catching runaway workload or
+  // record aggregation errors. Sources: Pro Football Hall of Fame and NFL.com.
+  const { careerRush, gameRush, careerAge, careerYearsPro, careerSeasons } = rushingTails;
+  assert.ok(careerRush?.value > 0, "the simulation produced career rushing leaders");
+  assert.ok(
+    careerRush.value <= 22500,
+    `career rushing leader ${careerRush.name}: ${careerRush.value} yards, age ${careerAge}, ${careerYearsPro} seasons pro, ${careerSeasons} seasons with carries`,
+  );
+  assert.ok(gameRush?.value > 0, "the simulation produced single-game rushing leaders");
+  assert.ok(gameRush.value <= 350, `single-game rushing leader ${gameRush.name}: ${gameRush.value} yards`);
 });
 
 for (const w of WINDOWS) {
@@ -87,6 +127,8 @@ for (const w of WINDOWS) {
     assert.ok(Math.abs(avg("cmp") - w.cmp) <= 0.035, `completion ${avg("cmp").toFixed(3)} vs real ${w.cmp}\n${report}`);
     assert.ok(Math.abs(avg("int") - w.int) <= 0.01, `interception rate ${avg("int").toFixed(3)} vs real ${w.int}\n${report}`);
     if (w.sacks) assert.ok(Math.abs(avg("sacks") - w.sacks) <= 0.7, `sacks per game ${avg("sacks").toFixed(2)} vs real ${w.sacks}\n${report}`);
+    const actualRushAtt = w.actualRushAtt.reduce((n, value) => n + value, 0) / w.actualRushAtt.length;
+    assert.ok(Math.abs(avg("rushAtt") - actualRushAtt) <= 1.5, `rushing attempts per team-game ${avg("rushAtt").toFixed(2)} vs real ${actualRushAtt.toFixed(2)}\n${report}`);
 
     for (const l of ls) {
       for (const [k, max] of Object.entries(CEILING)) assert.ok(l.leaders[k] <= max, `${l.y} ${k} leader ${l.leaders[k]} is past anything real (${max})\n${report}`);

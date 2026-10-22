@@ -43,6 +43,30 @@ test("a standout veteran is not retired by the old generic age cliff", () => {
   assert.equal(shouldRetire(save, p), false, "an elite active quarterback can continue beyond the historical path");
 });
 
+test("elite running backs retain career agency while age and workload raise retirement risk", () => {
+  const estimate = (carries) => {
+    const { save, p } = palkoLikeSave();
+    p.pos = "RB";
+    p.age = 34;
+    p.ovr = 90;
+    p.teamId = "pit";
+    p.stats[2009] = { ...p.stats[2010], rushAtt: carries };
+    let retired = 0;
+    const samples = 1000;
+    for (let seed = 1; seed <= samples; seed++) {
+      save.rng = seed;
+      if (shouldRetire(save, p)) retired += 1;
+    }
+    return retired / samples;
+  };
+
+  const lightWorkload = estimate(100);
+  const heavyWorkload = estimate(400);
+  assert.ok(lightWorkload > 0.4 && lightWorkload < 0.7, `light-workload retirement rate ${lightWorkload}`);
+  assert.ok(heavyWorkload > lightWorkload + 0.06, `${heavyWorkload} should exceed ${lightWorkload}`);
+  assert.ok(heavyWorkload < 0.8, `even an elite back can continue: ${heavyWorkload}`);
+});
+
 test("Real History never receives simulated ratings or career-state updates", () => {
   const { save, p } = palkoLikeSave();
   save.realHistory = true;

@@ -1,5 +1,5 @@
 import type { DynastySave, Player, Pos } from "./types.ts";
-import { rand, randInt } from "./rng.ts";
+import { clamp, rand, randInt } from "./rng.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { arcRetiresNow, moveToward } from "./careerArc.ts";
@@ -171,11 +171,23 @@ export function shouldRetire(save: DynastySave, p: Player): boolean {
     if (p.age >= 37 && p.ovr < 72 && rand(save) < 0.4) return true;
     return false;
   }
+  if (p.pos === "RB" && p.age >= 31) {
+    // A productive back can outlast his real career, but age and accumulated carry load still
+    // matter. The old rule only exposed low-rated backs to retirement risk, allowing an elite
+    // runner to stay productive into his 40s and build runaway career totals. Exceptional
+    // overall creates a modest grace period rather than immunity from the age curve.
+    const lastCarries = p.stats[save.year - 1]?.rushAtt ?? 0;
+    const careerCarries = Object.values(p.stats).reduce((total, season) => total + (season.rushAtt ?? 0), 0);
+    const ageRisk = Math.min(0.9, 0.18 + (p.age - 31) * 0.16);
+    const workloadWear = clamp((lastCarries - 200) / 2000, 0, 0.1);
+    const careerWear = clamp((careerCarries - 3000) / 8000, 0, 0.18);
+    const performanceGrace = p.ovr >= 90 ? 0.1 : p.ovr >= 82 ? 0.05 : 0;
+    if (rand(save) < clamp(ageRisk + workloadWear + careerWear - performanceGrace, 0.03, 0.95)) return true;
+  }
   if (p.age >= 44) return true;
   // Aging changes the odds; sustained high-level play can keep a veteran in the league longer.
   if (p.age >= 41 && p.ovr < 88 && rand(save) < 0.5) return true;
   if (p.age >= CLIFF[p.pos] + 1 && p.ovr < 84 && rand(save) < 0.45) return true;
-  if (p.pos === "RB" && p.age >= 32 && p.ovr < 76 && rand(save) < 0.45) return true;
   if (p.age >= 34 && p.ovr < 70 && rand(save) < 0.4) return true;
   if (p.age >= 31 && p.ovr < 64 && rand(save) < 0.22) return true;
   if ((p.morale ?? 70) < 28 && p.age >= 30 && rand(save) < 0.2) return true;
