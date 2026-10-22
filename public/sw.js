@@ -4,13 +4,15 @@
  *
  * - The page itself: network first (a new deploy shows up as soon as you're online), the
  *   cached copy when offline.
- * - Build files (/assets/*, hashed names): cached at install from /offline-manifest.json.
+ * - App-shell files: cached at install from /offline-manifest.json.
+ * - Lazy game screens and catalogs: cached after the shell opens, in the background.
  * - Art, audio and logos: cached the first time they're used.
  * - Anything server-side (sign-in, APIs, server functions) is never cached.
  */
 const SHELL = "rewind-shell";
 const MEDIA = "rewind-media";
 const ASSETS = "rewind-assets-";
+let optionalCacheWork;
 
 const serverSide = (path) =>
   path.startsWith("/api/") || path.startsWith("/auth/") || path.startsWith("/_serverFn") || path.startsWith("/__app-env") || path === "/sw.js" || path === "/offline-manifest.json";
@@ -23,7 +25,7 @@ self.addEventListener("install", (event) => {
         if (res.ok) {
           const m = await res.json();
           const cache = await caches.open(ASSETS + m.version);
-          await cache.addAll(m.files);
+          await cache.addAll(m.precache ?? m.files);
         }
         const page = await fetch("/", { cache: "no-store" });
         if (page.ok) await (await caches.open(SHELL)).put("/", page);
@@ -33,6 +35,45 @@ self.addEventListener("install", (event) => {
       await self.skipWaiting();
     })(),
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type !== "PRECACHE_OPTIONAL") return;
+  if (optionalCacheWork) {
+    event.waitUntil(optionalCacheWork);
+    return;
+  }
+  optionalCacheWork = (async () => {
+    try {
+      const res = await fetch("/offline-manifest.json", { cache: "no-store" });
+      if (!res.ok) return;
+      const manifest = await res.json();
+      const cache = await caches.open(ASSETS + manifest.version);
+      const required = new Set(manifest.precache ?? manifest.files);
+      const optional = manifest.files.filter((path) => !required.has(path));
+      for (let i = 0; i < optional.length; i += 4) {
+        await Promise.all(optional.slice(i, i + 4).map(async (path) => {
+          if (await cache.match(path)) return;
+          try {
+            const response = await fetch(path);
+            if (response.ok) await cache.put(path, response);
+          } catch {
+            // A single unavailable lazy asset should not block caching the rest.
+          }
+        }));
+      }
+      const complete = await Promise.all(manifest.files.map((path) => cache.match(path)));
+      if (complete.every(Boolean)) {
+        await cache.put("/__offline_complete__", new Response("ready", { headers: { "content-type": "text/plain" } }));
+        event.source?.postMessage({ type: "OFFLINE_CACHE_READY" });
+      }
+    } catch {
+      // A later page visit or online event retries the background cache fill.
+    } finally {
+      optionalCacheWork = undefined;
+    }
+  })();
+  event.waitUntil(optionalCacheWork);
 });
 
 self.addEventListener("activate", (event) => {

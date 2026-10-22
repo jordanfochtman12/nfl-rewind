@@ -10,6 +10,7 @@ import { nitro } from "nitro/vite";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
+import { offlineManifest } from "./scripts/offline-manifest.mjs";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -21,9 +22,8 @@ function hasGlobbedMigrations(root: string): boolean {
 }
 
 /**
- * Lists the client build's own files (scripts, styles, fonts) as /offline-manifest.json, which
- * public/sw.js caches at install so the game opens with no connection. The version changes
- * whenever a file name does, so each deploy replaces the last one's cache.
+ * Lists client files as /offline-manifest.json. Static app-shell dependencies are installed
+ * first; lazy screens and catalogs are cached in the background so they do not delay startup.
  */
 function offlineManifestPlugin(): Plugin {
   return {
@@ -31,15 +31,12 @@ function offlineManifestPlugin(): Plugin {
     apply: "build",
     generateBundle(_opts, bundle) {
       if (this.environment?.name !== "client") return;
-      // History mode's box scores (one chunk per season, ~40MB in all) cache the first time
-      // a season is opened, not at install.
-      const files = Object.keys(bundle)
-        .filter((f) => /\.(js|css|woff2)$/.test(f) && !/(^|\/)(19|20)\d\d-[\w-]+\.js$/.test(f))
-        .sort()
-        .map((f) => `/${f}`);
+      const manifest = offlineManifest(bundle);
+      const files = manifest.files.map((f) => `/${f}`);
+      const precache = manifest.precache.map((f) => `/${f}`);
       let h = 0;
       for (const ch of files.join("|")) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
-      this.emitFile({ type: "asset", fileName: "offline-manifest.json", source: JSON.stringify({ version: (h >>> 0).toString(36), files }) });
+      this.emitFile({ type: "asset", fileName: "offline-manifest.json", source: JSON.stringify({ version: (h >>> 0).toString(36), files, precache }) });
     },
   };
 }

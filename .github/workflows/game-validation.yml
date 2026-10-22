@@ -25,6 +25,8 @@ jobs:
       - run: node --experimental-strip-types --test scripts/stat-ledger.test.mjs
       - run: node --experimental-strip-types --test scripts/net-yards.test.mjs
       - run: node --experimental-strip-types --test scripts/tackle-attribution.test.mjs
+      - run: node --test scripts/offline-manifest.test.mjs
+      - run: node --test scripts/offline-service-worker.test.mjs
       - run: node --experimental-strip-types --test scripts/realism.test.mjs
       - run: node --experimental-strip-types --test scripts/history.test.mjs
       - run: node --experimental-strip-types --test scripts/front-office.test.mjs
