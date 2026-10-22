@@ -142,9 +142,24 @@ export interface TeamUnits {
   };
 }
 
+/** Apply quarter-long fatigue using only the players assigned to that side of the ball. */
+export function unitFatigueMultiplier(
+  u: TeamUnits,
+  side: "offense" | "defense",
+  late: boolean,
+  altitudePenalty = false,
+): number {
+  const active = side === "offense"
+    ? [u.qb, u.rb, u.rb3, u.fb, ...u.wr, u.te, ...u.ol]
+    : [...u.dl, ...u.lb, ...u.db];
+  const stamina = avg(active.filter((p): p is Player => !!p).map((p) => p.ratings.stamina));
+  const multiplier = 1 - ((100 - stamina) / 420) * (late ? 1.5 : 0.35);
+  return multiplier * (altitudePenalty ? 0.93 : 1);
+}
+
 /** Share of a team's running-back carries that moves to its healthy RB3 as RB1/RB2 wear down. */
 export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean): number {
-  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 24) * 0.0125, 0, 0.18) : 0;
+  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 22) * 0.015, 0, 0.22) : 0;
 }
 
 /**
@@ -1550,12 +1565,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (converted) away3rd += 1;
     }
   };
-  const fatigue = (u: TeamUnits, qq: number, ck: number, id: TeamId) => {
+  const fatigue = (u: TeamUnits, side: "offense" | "defense", qq: number, ck: number, id: TeamId) => {
     const late = qq >= 4 || (qq === 3 && ck < 240);
-    const stam = avg([u.qb, u.rb, u.rb3, ...u.ol, ...u.dl].filter((x): x is Player => !!x).map((p) => p.ratings.stamina));
-    let m = 1 - ((100 - stam) / 420) * (late ? 1.5 : 0.35);
-    if (venue.altitude >= 4000 && id === awayId) m *= 0.93;
-    return m;
+    return unitFatigueMultiplier(u, side, late, venue.altitude >= 4000 && id === awayId);
   };
 
   let poss = rand(save) < 0.5 ? homeId : awayId;
@@ -2063,8 +2075,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const trail = trailOf(poss);
     const plan = planNow(poss, trail, q, clock);
     const defensivePlan = planNow(defId, -trail, q, clock);
-    const fat = fatigue(off, q, clock, poss);
-    const dfat = fatigue(def, q, clock, defId);
+    const fat = fatigue(off, "offense", q, clock, poss);
+    const dfat = fatigue(def, "defense", q, clock, defId);
     const clutch = (q >= 4 && (trail > 0 || clock < 180) ? off.kit.clutch : 0) * 0.35;
     const was3rd = down === 3;
     if (spot >= 80 && !driveRz) {

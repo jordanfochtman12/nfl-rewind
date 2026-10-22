@@ -21,6 +21,7 @@ jobs:
       - run: node --experimental-strip-types --test scripts/franchise-briefing.test.mjs
       - run: node --experimental-strip-types --test scripts/sunday-broadcast.test.mjs
       - run: node --experimental-strip-types --test scripts/primetime-studio.test.mjs
+      - run: node --experimental-strip-types --test scripts/fatigue.test.mjs
       - run: node --experimental-strip-types --test scripts/realism.test.mjs
       - run: node --experimental-strip-types --test scripts/history.test.mjs
       - run: node --experimental-strip-types --test scripts/front-office.test.mjs
