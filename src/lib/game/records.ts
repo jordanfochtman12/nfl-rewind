@@ -109,11 +109,14 @@ type Ranked = { p: Player; c?: { totals: SeasonStats; lastYear: number }; value:
  * list only changes when someone retires or goes into the Hall; until then each week merges
  * the ~2k active players into it instead of re-sorting all ~20k careers per category.
  */
-const settledBooks = new Map<string, Map<string, Ranked[]>>();
+const settledBooks = new Map<string, { players: Player[]; leaders: Map<string, Ranked[]> }>();
 function settledLeaders(save: DynastySave, topN: number, settledPlayers: Player[], hofCount: number): Map<string, Ranked[]> {
   const key = `${save.seed}|${save.year}|${settledPlayers.length}|${hofCount}|${topN}`;
   const hit = settledBooks.get(key);
-  if (hit) return hit;
+  // Separate saves can share a seed/year and roster size while having different retired
+  // careers (for example, two branches replayed from the same checkpoint). Reuse the
+  // expensive leaderboard only when the frozen player objects are the same snapshot.
+  if (hit && hit.players.length === settledPlayers.length && hit.players.every((p, i) => p === settledPlayers[i])) return hit.leaders;
   const rows = settledPlayers.map((p) => ({ p, c: careerOf(p) }));
   const out = new Map<string, Ranked[]>();
   for (const cat of CATS)
@@ -126,7 +129,7 @@ function settledLeaders(save: DynastySave, topN: number, settledPlayers: Player[
         .slice(0, topN),
     );
   if (settledBooks.size > 8) settledBooks.clear();
-  settledBooks.set(key, out);
+  settledBooks.set(key, { players: settledPlayers.slice(), leaders: out });
   return out;
 }
 

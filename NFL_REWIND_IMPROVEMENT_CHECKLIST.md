@@ -56,5 +56,6 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Hall ballot scoring now credits Pro Bowl seasons and major player awards, with capped/diminishing returns and protection from duplicate/future honor entries; selection logic and Canton presentation still need a full review.
 - QB/era rushing model: `scripts/rushing-realism.test.mjs` passes after the RB3 extension.
 - The Record now uses a separate factual Primetime builder and TV rundown; see `src/lib/game/historyPrimetime.ts` and `src/components/game/WatchTV.tsx`. Record mode remains an exact replay, not a second simulation.
+- Career record rankings now verify the frozen retired-player snapshot before reusing a cache entry, preventing same-seed divergent saves from borrowing each other's career leaders; `scripts/record-book-cache.test.mjs` covers the regression.
 - Development bundle builds and typecheck passes. Build output still warns about oversized stats/routes chunks; performance work remains open.
 - Full `build:dev` completed after the current UI and Hall changes; focused broadcast, substitution, Pro Bowl, Hall, jersey, and rushing tests pass. Build still reports a 3.0 MB stats chunk and 7.9 MB client / 13.1 MB SSR routes chunks, so performance is a concrete remaining target.
