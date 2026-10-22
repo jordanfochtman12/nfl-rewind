@@ -52,6 +52,7 @@ export function seasonLeaders(save: DynastySave) {
     ints: r((s) => s.ints, "INT"),
     tfl: r((s) => s.tfl ?? 0, "TFL"),
     pd: r((s) => s.pd ?? 0, "PD"),
+    defTd: r((s) => s.unknown?.includes("defTd") ? 0 : s.defTd ?? 0, "Def TD"),
     scoring: r((s) => hasCompleteScoringPoints(s) ? individualScoringPoints(s) : 0, "Pts"),
   };
 }

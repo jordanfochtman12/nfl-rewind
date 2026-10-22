@@ -50,7 +50,7 @@ export function tvCrawl(save: DynastySave, opts: { onAir?: GameResult[] } = {}):
       out.push(`${r.conf.toUpperCase()} ${r.div.toUpperCase()} LEAD: ${NICK(year, t.id)} ${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}`);
     }
     const L = seasonLeaders(save);
-    for (const row of [L.passYds[0], L.rushYds[0], L.recYds[0], L.sacks[0], L.ints[0]]) {
+    for (const row of [L.passYds[0], L.rushYds[0], L.recYds[0], L.sacks[0], L.ints[0], L.defTd[0]]) {
       if (row) out.push(`${row.label.toUpperCase()} LEADER: ${row.name.toUpperCase()} (${row.team.toUpperCase()}) ${row.value.toLocaleString("en-US")}`);
     }
   }

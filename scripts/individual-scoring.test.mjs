@@ -19,6 +19,13 @@ test("individual points count touchdowns scored and kicking points, not passing 
   assert.equal(scoring(kicker.stats[2024]), 15);
 });
 
+test("defensive touchdown leaderboard excludes historical source gaps", () => {
+  const scorer = { id: "def", firstName: "Pick", lastName: "Six", pos: "CB", teamId: "pit", stats: { 2024: { ...emptyStats(2024, "pit"), defTd: 2 } } };
+  const unknown = { id: "unknown", firstName: "Old", lastName: "Record", pos: "S", teamId: "gb", stats: { 2024: { ...emptyStats(2024, "gb"), defTd: 0, unknown: ["defTd"] } } };
+  const leaders = seasonLeaders({ year: 2024, players: { def: scorer, unknown } });
+  assert.deepEqual(leaders.defTd.map(({ playerId, value }) => [playerId, value]), [["def", 2]]);
+});
+
 test("a simulated fumble-return touchdown reaches the credited defender's career line", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 10 });
   const game = { id: "defensive-score-regression", year: save.year, week: 4, phase: "regular", homeId: "pit", awayId: "cle", homeScore: 0, awayScore: 0, played: false };

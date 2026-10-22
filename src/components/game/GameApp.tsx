@@ -1802,6 +1802,7 @@ function History() {
     ["Interceptions", leaders.ints],
     ["Tackles for loss", leaders.tfl],
     ["Passes defensed", leaders.pd],
+    ["Defensive touchdowns", leaders.defTd],
   ] as const;
   return (
     <div className="space-y-8">
