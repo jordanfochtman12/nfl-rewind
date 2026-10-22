@@ -492,6 +492,8 @@ export interface BoxPlayer {
   punts?: number;
   puntYds?: number;
   sacksThrown?: number;
+  /** Yards lost on sacks; used to calculate net passing yards for the team. */
+  sackYdsLost?: number;
   ff?: number;
   krYds?: number;
   prYds?: number;

@@ -159,7 +159,7 @@ export function unitFatigueMultiplier(
 
 /** Share of a team's running-back carries that moves to its healthy RB3 as RB1/RB2 wear down. */
 export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean): number {
-  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 22) * 0.015, 0, 0.22) : 0;
+  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 16) * 0.02, 0, 0.34) : 0;
 }
 
 /**
@@ -1045,14 +1045,16 @@ function deadBall(year: number, score: number, trail = 0, q = 1): number {
   return m;
 }
 
-function homeTotYards(box: BoxPlayer[]): number {
+export function teamNetYards(box: BoxPlayer[]): number {
   let pass = 0;
   let rush = 0;
+  let sackLoss = 0;
   for (const b of box) {
     pass += b.passYds ?? 0;
     rush += b.rushYds ?? 0;
+    sackLoss += b.sackYdsLost ?? 0;
   }
-  return pass + rush;
+  return pass + rush - sackLoss;
 }
 
 function halfDist(spot: number, yds: number, againstOff: boolean): number {
@@ -2430,7 +2432,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         }
         const loss = sampleYds(save, 6.3, 2, 3, 14);
         if (cur) cur.sackYards = -loss;
-        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1 });
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { sacksThrown: 1, sackYdsLost: loss });
         const rusher = pickRusherDef(save, def, defClub?.defScheme);
         // Since 1982 two men who get there together split it: half a sack each.
         const helper = year >= 1982 && rusher && rand(save) < 0.14 ? pickRusherDef(save, def, defClub?.defScheme) : undefined;
@@ -2895,7 +2897,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   }
 
   if (homeScore === awayScore && (game.phase === "playoffs" || game.phase === "superBowl")) {
-    addPts(homeTotYards(homeBox) >= homeTotYards(awayBox) ? homeId : awayId, 3);
+    addPts(teamNetYards(homeBox) >= teamNetYards(awayBox) ? homeId : awayId, 3);
     ot = true;
   }
 
@@ -2948,8 +2950,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
   game.awayPoss = awayPoss;
   game.homeFd = homeFd;
   game.awayFd = awayFd;
-  game.homeTot = homeTotYards(homeBox);
-  game.awayTot = homeTotYards(awayBox);
+  game.homeTot = teamNetYards(homeBox);
+  game.awayTot = teamNetYards(awayBox);
   game.ot = ot;
   stampDrives();
   flushPlay();
