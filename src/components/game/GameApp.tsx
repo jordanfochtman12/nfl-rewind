@@ -1381,7 +1381,7 @@ function Schedule() {
 
 function Stats() {
   const save = useGameStore((s) => s.save)!;
-  const [sortBy, setSortBy] = useState<Record<string, { key: string; direction: "asc" | "desc" }>>({});
+  const sortBy = useSettings((s) => s.statBoardSort);
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
   const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
@@ -1609,13 +1609,15 @@ function Stats() {
                           type="button"
                           className="min-h-9 rounded px-1.5 text-left hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brass"
                           aria-label={`Sort ${board.title} by ${c.label} ${sortBy[board.title]?.key === c.key && sortBy[board.title]?.direction === "desc" ? "ascending" : "descending"}`}
-                          onClick={() => setSortBy((current) => {
-                            const old = current[board.title];
+                          onClick={() => useSettings.setState((current) => {
+                            const old = current.statBoardSort[board.title];
                             return {
-                              ...current,
-                              [board.title]: {
-                                key: c.key,
-                                direction: old?.key === c.key && old.direction === "desc" ? "asc" : "desc",
+                              statBoardSort: {
+                                ...current.statBoardSort,
+                                [board.title]: {
+                                  key: c.key,
+                                  direction: old?.key === c.key && old.direction === "desc" ? "asc" : "desc",
+                                },
                               },
                             };
                           })}
