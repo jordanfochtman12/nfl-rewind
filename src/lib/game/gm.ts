@@ -264,6 +264,7 @@ export function claimWaiver(save: DynastySave, teamId: TeamId, playerId: string)
   if (idx < 0) return fail("He is not on the wire.");
   const p = save.players[playerId];
   if (!p || p.teamId !== "fa") return fail("Waiver expired.");
+  if (activeRosterOf(save, teamId).length >= rosterCap(save)) return fail("Roster is full. Cut a player before claiming him.");
   const salary = salaryFor(save.year, p.ovr, p.age, p.pos);
   if (!canAfford(save, teamId, salary)) return fail("Over the cap.");
   const wire = save.waivers[idx]!;

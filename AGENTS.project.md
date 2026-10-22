@@ -14,7 +14,7 @@ Single-player historical NFL dynasty GM simulator (Front Office Football + histo
 
 ## Season loop
 
-preseason (camp) → regular season weeks → **trade deadline week** → playoffs → Super Bowl event → awards night → Pro Bowl night → retirement ceremony → Hall of Fame → **coaching carousel** → **relocation (if that year)** → **expansion (if that year)** → draft → free agency night → next season.
+preseason (camp) → regular season weeks (waiver review when claims are available) → **trade deadline week** → playoffs → Super Bowl event → awards night → Pro Bowl night → retirement ceremony → Hall of Fame → **coaching carousel** → **relocation (if that year)** → **expansion (if that year)** → draft → free agency night → next season.
 
 Expansion runs **before** the college draft so new clubs exist for that year’s board (Saints 1967 allocation, then 1967 draft).
 
@@ -154,6 +154,7 @@ Coaches have attributes (offense, defense, leadership, development, evaluation),
 - History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
 - History is the franchise book: year-by-year W-L, result, coach, draft class, honors — plus the letter grade.
 - Free agency is a week with holes and a street list, not only a spreadsheet.
+- Waiver claims get a short front-office review after the completed Sunday and before the next week. In auto/CPU-only play, process them without an interactive stop; Record mode must remain an exact replay.
 - Injured reserve is a desk decision: placing a hurt player on IR opens his roster spot so you can sign/claim a replacement. Activating him back mid-season only works **2012+** (`canReturnFromIR`) — before that, real NFL IR was season-ending, so he's out for the year once placed.
 - Dynasty JSON lives in IndexedDB (`nfl-rewind`) with a localStorage fallback. `compactSave` strips prior-year film and trims the wire so a 1966–2027 file still loads.
 - Play through `END_YEAR` (2027). `gradeDynasty` writes a letter (A+–F) from rings, titles, career W-L, HOF, Team of Honor, drafted stars. History shows it live; it locks on phase `complete`.

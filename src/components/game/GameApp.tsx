@@ -123,6 +123,7 @@ const HallOfFame = lazy(() => import("./HallOfFame").then((m) => ({ default: m.H
 const LeagueDirectory = lazy(() => import("./LeagueDirectory").then((m) => ({ default: m.LeagueDirectory })));
 const Transactions = lazy(() => import("./Transactions").then((m) => ({ default: m.Transactions })));
 const GameNight = lazy(() => import("./GameNight").then((m) => ({ default: m.GameNight })));
+const WaiverNight = lazy(() => import("./WaiverNight").then((m) => ({ default: m.WaiverNight })));
 const SuperBowlNight = lazy(() => import("./SuperBowlNight").then((m) => ({ default: m.SuperBowlNight })));
 const SuperBowlHistory = lazy(() => import("./SuperBowlHistory").then((m) => ({ default: m.SuperBowlHistory })));
 import { gradeTone } from "./tone";
@@ -395,6 +396,7 @@ function PhaseAction() {
     expansion: save.expansion?.done ? "Open the college draft" : "Complete expansion",
     preseason: "Kick off the regular season",
     regular: save.weekFilm || (save.phase === "regular" && weekIsInTheBooks(save)) ? "Next week" : "Sim this Sunday",
+    waivers: "Run the waiver wire",
     deadline: "Close the window",
     playoffs: "Sim playoff games",
     superBowl: save.superBowl?.played ? "Continue to awards" : "Play Super Bowl",
@@ -2014,6 +2016,7 @@ function AllDecadeTeams() {
 
 function EventPane() {
   const save = useGameStore((s) => s.save)!;
+  if (save.phase === "waivers") return <WaiverNight />;
   if (save.phase === "superBowl" && save.superBowl) return <SuperBowlNight />;
   if (save.phase === "awards" && save.awards) return <AwardsNight />;
   if (save.phase === "proBowl" && save.proBowl) return <ProBowlNight />;
@@ -2109,7 +2112,7 @@ function PlayShell() {
   const event = useMemo(() => {
     if (!save) return false;
     return (
-      ["superBowl", "proBowl", "awards", "retirement", "hof", "expansion", "carousel", "relocation", "preseason"].includes(
+      ["superBowl", "proBowl", "awards", "retirement", "hof", "expansion", "carousel", "relocation", "preseason", "waivers"].includes(
         save.phase,
       ) || weekIsInTheBooks(save)
     );

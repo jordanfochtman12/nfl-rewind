@@ -222,6 +222,11 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
       const g = save.proBowl;
       return card("probowl", "The Pro Bowl", "ALL-STAR WEEK", "", g?.played ? [`${String(g.awayId).toUpperCase()} ${g.awayScore}, ${String(g.homeId).toUpperCase()} ${g.homeScore}`] : phaseNews(save, ["proBowl", "awards"], 5), {}, 8);
     }
+    case "waivers":
+      return card("waivers", "The waiver wire", "FRONT OFFICE WINDOW", `${save.waivers.length} player${save.waivers.length === 1 ? " is" : "s are"} available to claim before the next Sunday.`, save.waivers.slice(0, 8).map((w) => {
+        const p = save.players[w.playerId];
+        return p ? `${playerName(p)} · ${p.pos} · waived by ${displayName(y, w.from)}` : "An unlisted player is on waivers.";
+      }), {}, 8);
     case "retirement":
       return card("retire", "Farewells", "RETIREMENTS", "Some familiar names are hanging it up.", phaseNews(save, ["retirement", "proBowl"]), {}, 10);
     case "hof":

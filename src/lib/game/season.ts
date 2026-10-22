@@ -89,6 +89,9 @@ export function setLabel(save: DynastySave): void {
     case "regular":
       save.weekLabel = `Week ${save.week}`;
       break;
+    case "waivers":
+      save.weekLabel = `${y} Waiver Wire`;
+      break;
     case "deadline":
       save.weekLabel = save.year < 1994 ? `${y} Trading week` : `${y} Trade deadline`;
       break;
@@ -558,9 +561,23 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         else if (!crunchGate(s, userGameId(s, games), simThisWeek)) break;
         if (!auto) break;
       }
+      // Put a user-controlled waiver claim window between Sunday's film and the next week.
+      // Record mode is an exact replay, and CPU-only modes keep advancing without a UI stop.
+      if (!unplayed && s.waivers.length && !s.cpuOnly && !s.realHistory) {
+        if (auto) processWaivers(s);
+        else {
+          s.phase = "waivers";
+          break;
+        }
+      }
       leaveRegularWeek(s);
       break;
     }
+    case "waivers":
+      processWaivers(s);
+      s.phase = "regular";
+      leaveRegularWeek(s);
+      break;
     case "deadline":
       closeDeadline(s);
       break;

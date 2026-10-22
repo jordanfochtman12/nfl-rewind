@@ -77,6 +77,7 @@ export type Phase =
   | "expansion"
   | "preseason"
   | "regular"
+  | "waivers"
   | "deadline"
   | "playoffs"
   | "superBowl"
