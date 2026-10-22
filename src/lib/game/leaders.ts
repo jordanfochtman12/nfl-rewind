@@ -21,7 +21,7 @@ function rows(
   return pool
     .map((p) => {
       const s = p.stats[save.year];
-      return { p, v: s ? pick(s, p) : 0 };
+      return { p, s, v: s ? pick(s, p) : 0 };
     })
     .filter((x) => x.v > 0)
     .sort((a, b) => b.v - a.v)
@@ -29,7 +29,7 @@ function rows(
     .map((x) => ({
       playerId: x.p.id,
       name: playerName(x.p),
-      team: x.p.teamId === "fa" || x.p.teamId === "retired" || x.p.teamId === "hof" ? "—" : displayName(save.year, x.p.teamId),
+      team: !x.s ? "—" : x.s.teamId === "two" ? "2 teams" : displayName(x.s.year, x.s.teamId),
       pos: x.p.pos,
       value: x.v,
       label,

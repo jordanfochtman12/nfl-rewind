@@ -54,7 +54,7 @@ import {
 import { clamp, rand, randInt } from "./rng.ts";
 import { ARC_DATA_LAST } from "./careerArc.ts";
 import { activeTeamIds, conferenceOf, divisionKey, gamesInSeason, nicknameOf, originalLeague } from "./teams.ts";
-import { emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
+import { creditSeasonTeam, emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { maybeReveal } from "./scout.ts";
@@ -353,6 +353,7 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     } else {
       s = yearStats(p, year, teamId);
     }
+    creditSeasonTeam(s, teamId);
     s.gp += 1;
     maybeReveal(p, 1);
     p.snaps = (p.snaps ?? 0) + 1;

@@ -799,6 +799,11 @@ export function yearStats(p: Player, year: number, teamId: TeamId): SeasonStats 
   return s;
 }
 
+/** Preserve multi-club attribution when a player's line is updated after a trade. */
+export function creditSeasonTeam(line: SeasonStats, teamId: TeamId): void {
+  if (line.teamId !== teamId) line.teamId = "two";
+}
+
 export function allPlayers(save: DynastySave): Player[] {
   return Object.values(save.players);
 }
