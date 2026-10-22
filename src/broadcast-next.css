@@ -763,7 +763,7 @@
 }
 @media (min-width: 2560px) {
   html {
-    font-size: clamp(16px, 0.7vw, 48px);
+    font-size: clamp(16px, calc(0.7vw * var(--user-ui-scale, 1)), 48px);
   }
   .next-title-layout {
     padding-block: 4rem;

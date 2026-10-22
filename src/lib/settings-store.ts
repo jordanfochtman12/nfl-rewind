@@ -6,6 +6,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export type AutoSpeed = "slow" | "normal" | "fast";
+export type UiScale = 100 | 110 | 125 | 150 | 175 | 200;
 
 export interface Settings {
   /** Studio shows, the whip-around and TV host read aloud. */
@@ -28,6 +29,10 @@ export interface Settings {
   whipSpeed: 0 | 1 | 2;
   /** Score bugs and graphics styled to the decade on screen. */
   eraStyle: boolean;
+  /** Interface text and rem-based controls, independent of a saved dynasty. */
+  uiScale: UiScale;
+  /** Higher-contrast panel borders and supporting text. */
+  highContrast: boolean;
   /** Tours already shown, by id. */
   toursSeen: string[];
 }
@@ -43,6 +48,8 @@ export const DEFAULT_SETTINGS: Settings = {
   tvBulletins: true,
   whipSpeed: 0,
   eraStyle: true,
+  uiScale: 100,
+  highContrast: false,
   toursSeen: [],
 };
 
@@ -96,11 +103,15 @@ export const useSettings = create<SettingsStore>()(
       // v2: every voice and sound on (narration, the booth, music and stadium sound, the TV
       // studio), once, for devices that saved older choices.
       // v3: the studio voices are gone (every voice is the device's own): their settings go too.
-      version: 3,
+      version: 4,
       migrate: (old, from) => {
         const { hdVoices: _hd, phoneVoice: _phone, hdCast: _cast, ...s } = (old ?? {}) as Partial<Settings> & { hdVoices?: unknown; phoneVoice?: unknown; hdCast?: unknown };
-        if (from < 2) return { ...s, narration: true, boothVoices: true, music: true, tvStudio: true } as SettingsStore;
-        return s as SettingsStore;
+        return {
+          ...s,
+          ...(from < 2 ? { narration: true, boothVoices: true, music: true, tvStudio: true } : {}),
+          uiScale: s.uiScale ?? 100,
+          highContrast: s.highContrast ?? false,
+        } as SettingsStore;
       },
       partialize: (s) => {
         const { set: _set, reset: _reset, markTour: _markTour, resetTours: _resetTours, ...rest } = s;

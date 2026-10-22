@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { activeTeamIds, cpuHandles, displayName, formatBytes, saveByteLength, TEAM_MANAGEMENT_JOBS, type TeamId, type TeamManagementJob } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { dynastyStorage } from "@/lib/save-idb";
-import { DEFAULT_SETTINGS, useSettings, type AutoSpeed } from "@/lib/settings-store";
+import { DEFAULT_SETTINGS, useSettings, type AutoSpeed, type UiScale } from "@/lib/settings-store";
 import { Btn } from "./chrome";
 import { useOfflineStatus } from "../offline-status";
 import { cancelSpeech, hasPremiumDeviceVoice, isPhone, speakLine } from "@/lib/voice/speech";
@@ -28,9 +28,9 @@ function Choice<T extends string | number>({ label, value, options, onChange }: 
   return (
     <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 border-b border-line py-2 last:border-0">
       <span className="text-sm text-paper">{label}</span>
-      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={label}>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
         {options.map((o) => (
-          <button key={String(o.v)} type="button" role="radio" aria-checked={value === o.v} className={`bx-chip min-h-9 px-3 text-xs ${value === o.v ? "bx-chip-on" : ""}`} onClick={() => onChange(o.v)}>
+          <button key={String(o.v)} type="button" aria-pressed={value === o.v} className={`bx-chip min-h-9 px-3 text-xs ${value === o.v ? "bx-chip-on" : ""}`} onClick={() => onChange(o.v)}>
             {o.label}
           </button>
         ))}
@@ -186,6 +186,8 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
           </Section>
           <Section title="LOOK">
             <Toggle label="Era broadcast style" hint="Score bugs and graphics that change with the decade." on={st.eraStyle} onChange={(v) => st.set({ eraStyle: v })} />
+            <Choice<UiScale> label="Interface size" value={st.uiScale} options={[{ v: 100, label: "100%" }, { v: 110, label: "110%" }, { v: 125, label: "125%" }, { v: 150, label: "150%" }, { v: 175, label: "175%" }, { v: 200, label: "200%" }]} onChange={(v) => st.set({ uiScale: v })} />
+            <Toggle label="High contrast panels" hint="Strengthens text, borders and active states across the game." on={st.highContrast} onChange={(v) => st.set({ highContrast: v })} />
           </Section>
           <Section title="STORAGE ON THIS DEVICE">
             <p className="py-2 text-sm text-paper">
