@@ -114,7 +114,10 @@ test("a stat the record doesn't keep is unknown, not zero", () => {
   const blount = one("Mel", "Blount", 1975).stats[1975];
   assert.ok(blount.unknown?.includes("tackles"));
   assert.ok(blount.unknown?.includes("ff"));
-  assert.equal(one("Ray", "Lewis", 2003).stats[2003].unknown, undefined);
+  const lewis = one("Ray", "Lewis", 2003).stats[2003];
+  assert.ok(lewis.unknown?.includes("pts"), "the historical source does not retain every scoring method");
+  assert.ok(lewis.unknown?.includes("defTd"));
+  assert.ok(!lewis.unknown?.includes("tackles"), "tackle totals are recorded in this era");
 });
 
 test("pre-1999 lines from the team-season archive: 1966-69 offense, defense, kicking, returns", () => {

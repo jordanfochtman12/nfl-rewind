@@ -74,6 +74,7 @@ export function emptyStats(year: number, teamId: TeamId | "two"): SeasonStats {
     pd: 0,
     qbHits: 0,
     fr: 0,
+    defTd: 0,
     krTd: 0,
     prTd: 0,
   };

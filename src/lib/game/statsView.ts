@@ -1,7 +1,7 @@
 import type { Player, Pos, SeasonStats, TeamId } from "./types.ts";
 import { careerTotals } from "./leaders.ts";
 import { teamAbbr } from "./teams.ts";
-import { individualScoringPoints } from "./statRules.ts";
+import { hasCompleteScoringPoints, individualScoringPoints } from "./statRules.ts";
 
 export type StatCol = { key: string; label: string; of?: (s: SeasonStats) => string | number };
 export type StatFamily = "pass" | "rush" | "rec" | "ol" | "def" | "k" | "p" | "ret";
@@ -37,6 +37,7 @@ function num(n: number): string | number {
 
 /** A stat the record didn't keep that season (History mode) reads —, not 0. */
 const kept = (s: SeasonStats, k: keyof SeasonStats, v: string | number): string | number => (s.unknown?.includes(k) ? "—" : v);
+const scoringDisplay = (s: SeasonStats): string | number => hasCompleteScoringPoints(s) ? scoring(s) || "—" : "—";
 
 const PASS_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
@@ -51,6 +52,7 @@ const PASS_COLS: StatCol[] = [
   { key: "rushAtt", label: "Ru att", of: (s) => num(s.rushAtt) },
   { key: "rushYds", label: "Ru yds", of: (s) => num(s.rushYds) },
   { key: "rushTd", label: "Ru TD", of: (s) => num(s.rushTd) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const RUSH_COLS: StatCol[] = [
@@ -64,7 +66,7 @@ const RUSH_COLS: StatCol[] = [
   { key: "recTd", label: "Rec TD", of: (s) => num(s.recTd) },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
-  { key: "pts", label: "Pts", of: (s) => scoring(s) || "—" },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const REC_COLS: StatCol[] = [
@@ -79,6 +81,7 @@ const REC_COLS: StatCol[] = [
   { key: "rushTd", label: "Ru TD", of: (s) => num(s.rushTd) },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const DEF_COLS: StatCol[] = [
@@ -90,6 +93,8 @@ const DEF_COLS: StatCol[] = [
   { key: "pd", label: "PD", of: (s) => kept(s, "pd", num(s.pd ?? 0)) },
   { key: "ff", label: "FF", of: (s) => kept(s, "ff", s.ff) },
   { key: "fr", label: "FR", of: (s) => num(s.fr ?? 0) },
+  { key: "defTd", label: "Def TD", of: (s) => kept(s, "defTd", num(s.defTd ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
 ];
@@ -105,7 +110,7 @@ const K_COLS: StatCol[] = [
   { key: "fgpct", label: "FG%", of: (s) => pct(s.fgMade, s.fgAtt) },
   { key: "xp", label: "XP", of: (s) => (s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—") },
   { key: "xppct", label: "XP%", of: (s) => pct(s.xpMade, s.xpAtt) },
-  { key: "pts", label: "Pts", of: (s) => (s.fgMade || s.xpMade ? s.fgMade * 3 + s.xpMade : "—") },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const P_COLS: StatCol[] = [
@@ -120,6 +125,7 @@ const RET_COLS: StatCol[] = [
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
   { key: "ret", label: "Ret yds", of: (s) => (s.krYds || s.prYds ? s.krYds + s.prYds : "—") },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 export const FAMILY_LABEL: Record<StatFamily, string> = {
@@ -254,16 +260,16 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   const yrs = { label: "Seasons", value: seasons ? String(seasons) : "—" };
   const f = familyOfPos(p.pos);
   if (f === "pass") {
-    return [games, { label: "Pass yds", value: comma(s.passYds) }, { label: "TD / INT", value: `${s.passTd} / ${s.passInt}` }, { label: "Rate", value: passerRating(s) }];
+    return [games, { label: "Pass yds", value: comma(s.passYds) }, { label: "TD / INT", value: `${s.passTd} / ${s.passInt}` }, { label: "Rate", value: passerRating(s) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "rush") {
-    return [games, { label: "Rush yds", value: comma(s.rushYds) }, { label: "Avg", value: avg(s.rushYds, s.rushAtt) }, { label: "TD", value: String(s.rushTd + s.recTd) }];
+    return [games, { label: "Rush yds", value: comma(s.rushYds) }, { label: "Avg", value: avg(s.rushYds, s.rushAtt) }, { label: "TD", value: String(s.rushTd + s.recTd) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "rec") {
-    return [games, { label: "Rec", value: comma(s.rec) }, { label: "Yds", value: comma(s.recYds) }, { label: "TD", value: String(s.recTd) }];
+    return [games, { label: "Rec", value: comma(s.rec) }, { label: "Yds", value: comma(s.recYds) }, { label: "TD", value: String(s.recTd) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "k") {
-    return [games, { label: "FG", value: s.fgAtt ? `${s.fgMade}/${s.fgAtt}` : "—" }, { label: "XP", value: s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—" }, { label: "Pts", value: comma(s.fgMade * 3 + s.xpMade) }];
+    return [games, { label: "FG", value: s.fgAtt ? `${s.fgMade}/${s.fgAtt}` : "—" }, { label: "XP", value: s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—" }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "p") {
     return [games, { label: "Punts", value: comma(s.punts) }, { label: "Yds", value: comma(s.puntYds) }, { label: "Avg", value: avg(s.puntYds, s.punts) }];
@@ -271,5 +277,5 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   if (f === "ol") {
     return [games, yrs, { label: "Age", value: String(p.age) }, { label: "Exp", value: `${p.yearsPro} yr` }];
   }
-  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }];
+  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }, { label: "Def TD", value: String(kept(s, "defTd", comma(s.defTd ?? 0))) }, { label: "Pts", value: String(scoringDisplay(s)) }];
 }

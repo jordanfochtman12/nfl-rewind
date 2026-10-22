@@ -36,6 +36,7 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
     pd: 0,
     qbHits: 0,
     fr: 0,
+    defTd: 0,
     krTd: 0,
     prTd: 0,
   };
@@ -72,6 +73,7 @@ const ROW_KEYS: (keyof Omit<SeasonStats, "year" | "teamId">)[] = [
   "pd",
   "qbHits",
   "fr",
+  "defTd",
   "krTd",
   "prTd",
 ];
@@ -111,6 +113,7 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.fr = 0;
   s.krTd = 0;
   s.prTd = 0;
+  s.unknown = [...new Set([...(s.unknown ?? []), "defTd", "krTd", "prTd", "pts"])];
   return s;
 }
 

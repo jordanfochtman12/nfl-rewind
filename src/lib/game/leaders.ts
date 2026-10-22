@@ -1,7 +1,7 @@
 import type { DynastySave, Player, SeasonStats } from "./types.ts";
 import { playerName } from "./players.ts";
 import { displayName } from "./teams.ts";
-import { individualScoringPoints } from "./statRules.ts";
+import { hasCompleteScoringPoints, individualScoringPoints } from "./statRules.ts";
 
 export interface LeaderRow {
   playerId: string;
@@ -52,7 +52,7 @@ export function seasonLeaders(save: DynastySave) {
     ints: r((s) => s.ints, "INT"),
     tfl: r((s) => s.tfl ?? 0, "TFL"),
     pd: r((s) => s.pd ?? 0, "PD"),
-    scoring: r(individualScoringPoints, "Pts"),
+    scoring: r((s) => hasCompleteScoringPoints(s) ? individualScoringPoints(s) : 0, "Pts"),
   };
 }
 
@@ -99,6 +99,7 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
     pd: 0,
     qbHits: 0,
     fr: 0,
+    defTd: 0,
     krTd: 0,
     prTd: 0,
   } as SeasonStats;
@@ -137,6 +138,7 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
     acc.pd += s.pd ?? 0;
     acc.qbHits += s.qbHits ?? 0;
     acc.fr += s.fr ?? 0;
+    acc.defTd += s.defTd ?? 0;
     acc.krTd += s.krTd ?? 0;
     acc.prTd += s.prTd ?? 0;
 

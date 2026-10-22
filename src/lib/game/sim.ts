@@ -386,6 +386,7 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.pd += b.pd ?? 0;
     s.qbHits += b.qbHits ?? 0;
     s.fr += b.fr ?? 0;
+    s.defTd += b.defTd ?? 0;
     s.krTd += b.krTd ?? 0;
     s.prTd += b.prTd ?? 0;
   }
@@ -2470,6 +2471,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
             if (rusher) bumpBox(boxOf(defId), rusher.id, { fr: 1 });
             markTo(poss);
             if (rand(save) < 0.06 * big) {
+              if (rusher) bumpBox(boxOf(defId), rusher.id, { defTd: 1 });
               addPts(defId, 6);
               note("Strip-sack, house.");
               extraPoint(defId);
@@ -2650,6 +2652,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           cue("matchup");
         }
         if (pickSix && thief) {
+          bumpBox(boxOf(defId), thief.id, { defTd: 1 });
           addPts(defId, 6);
           note(`${playerName(thief)} the other way. Pick-six.`);
           closeDrive("int");
@@ -2863,6 +2866,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         if (t) bumpBox(boxOf(defId), t.id, { fr: 1 });
         markTo(poss);
         if (rand(save) < 0.05 * big) {
+          if (t) bumpBox(boxOf(defId), t.id, { defTd: 1 });
           addPts(defId, 6);
           note("Fumble, the other way, six.");
           extraPoint(defId);
@@ -2929,7 +2933,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     (b.recTd ?? 0) * 40 +
     (b.ints ?? 0) * 35 +
     (b.krTd ?? 0) * 50 +
-    (b.prTd ?? 0) * 50;
+    (b.prTd ?? 0) * 50 +
+    (b.defTd ?? 0) * 50;
   const homeMvp = homeBox.slice().sort((a, b) => mvpSort(b) - mvpSort(a))[0];
   const awayMvp = awayBox.slice().sort((a, b) => mvpSort(b) - mvpSort(a))[0];
   const mvp = homeScore >= awayScore ? homeMvp : awayMvp;

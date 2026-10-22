@@ -202,6 +202,8 @@ export interface SeasonStats {
   pd: number;
   qbHits: number;
   fr: number;
+  /** Defensive touchdowns credited on a returned interception or fumble. */
+  defTd: number;
   krTd: number;
   prTd: number;
 }
@@ -504,6 +506,7 @@ export interface BoxPlayer {
   pd?: number;
   qbHits?: number;
   fr?: number;
+  defTd?: number;
   krTd?: number;
   prTd?: number;
 }

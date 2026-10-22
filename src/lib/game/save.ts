@@ -60,6 +60,7 @@ function fillStatFields(s: SeasonStats): void {
   s.pd = s.pd ?? 0;
   s.qbHits = s.qbHits ?? 0;
   s.fr = s.fr ?? 0;
+  s.defTd = s.defTd ?? 0;
   s.krTd = s.krTd ?? 0;
   s.prTd = s.prTd ?? 0;
 }
@@ -257,6 +258,9 @@ export function hydrateSave(raw: unknown): DynastySave {
     pl.scoutOvr = pl.scoutOvr ?? pl.ovr;
     if (pl.stats) {
       for (const s of Object.values(pl.stats)) fillStatFields(s);
+    }
+    if (pl.playoffStats) {
+      for (const s of Object.values(pl.playoffStats)) fillStatFields(s);
     }
     if (pl.career) {
       for (const s of pl.career) fillStatFields(s);

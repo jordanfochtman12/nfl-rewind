@@ -536,9 +536,14 @@ function closeRegularSeason(save: DynastySave): void {
   for (const { person, team, line } of data().stats(y)) {
     const p = playerFor(save, person, y, (team || "fa") as Player["teamId"]);
     const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
-    // Tackles, forced fumbles, tackles for loss and passes defensed weren't kept before 1999,
-    // and sacks (unofficial until 1982) aren't in the record before 1970.
-    if (y < 1999) st.unknown = y < 1970 ? ["tackles", "ff", "tfl", "pd", "sacks"] : ["tackles", "ff", "tfl", "pd"];
+    // The source does not retain defensive return TDs; tackles, FF, TFL and PD are also
+    // absent before 1999, and sacks are not official in the record before 1970.
+    st.unknown = [...new Set([
+      ...(st.unknown ?? []),
+      "defTd", "krTd", "prTd", "pts",
+      ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
+      ...(y < 1970 ? ["sacks"] : []),
+    ])];
     p.stats[y] = st;
   }
   save.phase = "playoffs";
@@ -737,7 +742,7 @@ export function applyLiveLines(save: DynastySave): void {
   const y = save.year;
   if (save.phase !== "regular" || !boxSeason(y)) return;
   clearLiveLines(save);
-  const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
+  const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", "defTd", "krTd", "prTd", "pts", ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
   const lineFor = (id: string | undefined, team: TeamId): SeasonStats | undefined => {
     const p = id ? save.players[id] : undefined;
     if (!p || (p.stats[y] && !p.stats[y]!.live)) return undefined;
