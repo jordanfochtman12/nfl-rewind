@@ -494,6 +494,8 @@ export interface BoxPlayer {
   sacksThrown?: number;
   /** Yards lost on sacks; used to calculate net passing yards for the team. */
   sackYdsLost?: number;
+  /** Game-box detail: kneels count as rush attempts but do not credit a defensive tackle. */
+  kneels?: number;
   ff?: number;
   krYds?: number;
   prYds?: number;

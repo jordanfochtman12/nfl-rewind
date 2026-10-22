@@ -2195,7 +2195,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       tickClock(poss, used);
       drivePlays += 1;
       down += 1;
-      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: -1 });
+      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: -1, kneels: 1 });
       lastRun = true;
       // A kneel before the half just runs out the second quarter; the loop takes it to halftime.
       if (q < 4) continue;
@@ -2438,7 +2438,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const helper = year >= 1982 && rusher && rand(save) < 0.14 ? pickRusherDef(save, def, defClub?.defScheme) : undefined;
         if (rusher && helper && helper.id !== rusher.id) {
           bumpBox(boxOf(defId), rusher.id, { sacks: 0.5, tackles: 1, tfl: 1, qbHits: 1 });
-          bumpBox(boxOf(defId), helper.id, { sacks: 0.5, qbHits: 1 });
+          bumpBox(boxOf(defId), helper.id, { sacks: 0.5, tackles: 1, qbHits: 1 });
         } else if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
         const edgeM = matchupOf("lt-edge", poss);
         if (logOn && rusher && edgeM && rusher.id === edgeM.defId) {
@@ -2634,7 +2634,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         }
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passInt: 1 });
         const thief = pickThief(save, def);
-        if (thief) bumpBox(boxOf(defId), thief.id, { ints: 1, tackles: 1 });
+        if (thief) bumpBox(boxOf(defId), thief.id, { ints: 1 });
         const used = snapClock(save, plan, year, q, clock, trail, false, true, false, false);
         tickClock(poss, used.used);
         drivePlays += 1;
@@ -2901,14 +2901,15 @@ export function simGame(save: DynastySave, game: GameResult): void {
     ot = true;
   }
 
-  // Assisted stops: the linebackers and safeties who arrive second.
-  const padTackles = (box: BoxPlayer[], u: TeamUnits) => {
-    for (const p of [...u.lb.filter((l) => !(l.pos === "OLB" && l.arch === "edge")), ...u.db.filter((d) => d.pos === "S").slice(0, 1)].slice(0, 5)) {
-      bumpBox(box, p.id, { tackles: randInt(save, 0, 3) });
-    }
+  // These legacy draws used to add unearned tackles to a fixed group of linebackers and
+  // safeties. Consume them without awarding stats so a stats-only correction does not shift
+  // the saved deterministic simulation stream for subsequent games.
+  const preserveTackleRolls = (u: TeamUnits) => {
+    const candidates = [...u.lb.filter((l) => !(l.pos === "OLB" && l.arch === "edge")), ...u.db.filter((d) => d.pos === "S").slice(0, 1)].slice(0, 5);
+    for (const _ of candidates) randInt(save, 0, 3);
   };
-  padTackles(homeBox, homeU);
-  padTackles(awayBox, awayU);
+  preserveTackleRolls(homeU);
+  preserveTackleRolls(awayU);
 
   // Season and career lines are regular season only, like the real record book. Playoff and
   // Super Bowl production goes on a separate postseason line; the Pro Bowl counts for neither.
