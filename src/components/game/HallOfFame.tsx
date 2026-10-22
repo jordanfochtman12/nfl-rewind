@@ -262,8 +262,18 @@ export function HallOfFame() {
         <p className="mt-1 max-w-2xl text-sm text-paper">
           {total
             ? `${total} enshrined in this dynasty. Every player's jersey hangs in the colors he wore for the club he's most remembered with; coaches hang under that club's banner. Tap any of them for the plaque.`
-            : "Nobody has been enshrined yet. Players become eligible five years after they retire; coaches after three."}
+            : "Nobody has been enshrined yet. As your league's history grows, classes will be selected from eligible players and coaches."}
         </p>
+        <div className="mt-4 grid gap-2 text-xs sm:grid-cols-2">
+          <div className="rounded-md border border-brass/30 bg-black/35 px-3 py-2">
+            <p className="font-display font-bold uppercase italic tracking-[0.2em] text-brass">Player eligibility</p>
+            <p className="mt-1 text-paper">Five pro seasons · five seasons retired · at least one recognized postseason honor</p>
+          </div>
+          <div className="rounded-md border border-brass/30 bg-black/35 px-3 py-2">
+            <p className="font-display font-bold uppercase italic tracking-[0.2em] text-brass">Coach eligibility</p>
+            <p className="mt-1 text-paper">One full season out of professional football</p>
+          </div>
+        </div>
       </section>
 
       {total > 0 && (
