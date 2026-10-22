@@ -29,7 +29,9 @@ export function eraProfile(year: number): EraProfile {
       ypa: 6.7,
       intRate: 0.055,
       sackRate: 0.075,
-      rushAtt: 32,
+      // Calibrated against 1966's 10,157 league attempts (22.7 per team-game): situational
+      // calls and scrambles add to this selection baseline, so the input must sit below the record.
+      rushAtt: 24,
       ypc: 3.85,
       pointsMu: 21.4,
       teRecCap: 50,
@@ -329,6 +331,31 @@ export function eraRb1Share(year: number): number {
   if (year <= 1999) return 0.62;
   if (year <= 2014) return 0.6;
   return 0.54;
+}
+
+/** Raw fullback selection weight calibrated to historical positional carry shares. */
+export function eraFullbackCarryShare(year: number): number {
+  if (year <= 1966) return 0.45;
+  if (year === 1967) return 0.28;
+  if (year === 1968) return 0.11;
+  if (year <= 1989) return 0.01;
+  if (year <= 1999) return 0.045;
+  if (year <= 2019) return 0.02;
+  return 0.003;
+}
+
+/** Raw quarterback run tendency, calibrated to historical positional carries by season. */
+export function eraQbCarryShare(year: number): number {
+  if (year <= 1966) return 0.18;
+  if (year === 1967) return 0.15;
+  if (year === 1968) return 0.13;
+  if (year === 1969) return 0.107;
+  if (year <= 1977) return 0.095;
+  if (year <= 1989) return 0.137;
+  if (year <= 2009) return 0.163;
+  if (year <= 2014) return 0.208;
+  if (year <= 2019) return 0.267;
+  return 0.287;
 }
 
 export function penaltyRates(year: number): {

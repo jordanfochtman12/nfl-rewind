@@ -114,6 +114,7 @@ export function PrimetimeTeaser() {
 
 export function PrimetimeShow() {
   const save = useGameStore((s) => s.save)!;
+  if (save.realHistory) return <WeeklyShow />;
   if (save.phase === "draft" && save.draftBoard.some((p) => !p.taken)) return <DraftPreviewShow />;
   if (save.phase === "preseason") return <SeasonPreviewShow />;
   return <WeeklyShow />;
@@ -122,8 +123,13 @@ export function PrimetimeShow() {
 function WeeklyShow() {
   const save = useGameStore((s) => s.save)!;
   const [selected, setSelected] = useState("");
-  const episodes = [...(save.primetimeArchive ?? []), ...(save.primetime ? [save.primetime] : [])];
-  const show = (episodes.find((s) => s.episode?.id === selected) ?? save.primetime) as
+  const allEpisodes = [...(save.primetimeArchive ?? []), ...(save.primetime ? [save.primetime] : [])];
+  // Older Record saves may contain the former dynasty studio package; it used generated
+  // projections and power rankings, which don't belong in the exact historical replay.
+  const episodes = save.realHistory
+    ? allEpisodes.filter((s) => !s.predictions && !s.power && !s.outlook)
+    : allEpisodes;
+  const show = (episodes.find((s) => s.episode?.id === selected) ?? episodes.at(-1)) as
     Show | undefined;
   if (!show || show.v !== 2) {
     return (
@@ -135,8 +141,9 @@ function WeeklyShow() {
           </p>
           <h2 className="mt-2 font-display text-4xl tracking-[0.14em] text-brass">PRIMETIME</h2>
           <p className="mt-3 max-w-xl text-muted">
-            Sim a Sunday and the show goes on the air: the stories, every score, players of the
-            week, the injury report, power rankings, the playoff picture and next week&apos;s lines.
+            {save.realHistory
+              ? "The historical Primetime episode appears here after each real Sunday. It uses the recorded finals, official box scores and actual season honors; projections are not part of The Record."
+              : "Sim a Sunday and the show goes on the air: the stories, every score, players of the week, the injury report, power rankings, the playoff picture and next week&apos;s lines."}
           </p>
         </div>
       </section>

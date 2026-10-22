@@ -78,6 +78,131 @@ export interface Interview {
 
 const sumBox = (box: BoxPlayer[] | undefined, k: keyof BoxPlayer) => (box ?? []).reduce((n, b) => n + ((b[k] as number | undefined) ?? 0), 0);
 
+/** A Super Bowl podium should reflect the title game that just happened, not a generic win line. */
+function superBowlCoachQuote(
+  save: DynastySave,
+  game: GameResult,
+  teamId: TeamId,
+  won: boolean,
+  margin: number,
+  teamBox: BoxPlayer[],
+  opponentBox: BoxPlayer[],
+  teamTurnovers: number,
+  opponentTurnovers: number,
+): string {
+  const teamQ = teamId === game.homeId ? game.homeQ : game.awayQ;
+  const oppQ = teamId === game.homeId ? game.awayQ : game.homeQ;
+  const halfMargin = (teamQ?.[0] ?? 0) + (teamQ?.[1] ?? 0) - (oppQ?.[0] ?? 0) - (oppQ?.[1] ?? 0);
+  const teamRush = sumBox(teamBox, "rushYds");
+  const opponentRush = sumBox(opponentBox, "rushYds");
+  const teamSacks = sumBox(teamBox, "sacks");
+  const qbName = savePlayerNameForCoachLine(save, teamBox, game);
+  const key = `${game.id}-${teamId}-${won ? "champion" : "runner-up"}`;
+  if (game.ot) {
+    return won
+      ? pick(`${key}-ot`, [
+          "Both teams earned this. We had to answer every punch, and our guys kept believing until the last snap.",
+          "There was nothing easy about that one. The whole locker room stayed composed when the season was on the line.",
+          "That's a championship drive in the biggest moment. Everybody did their job when we had to have it.",
+        ])
+      : pick(`${key}-ot`, [
+          "It takes a full team to get this far, and a play or two to lose it. That ending is going to stay with us.",
+          "We had our chances and didn't finish the last drive. Credit to them, but this one will hurt for a while.",
+          "Nobody in that room quit. We came up one snap short, and I'll remember how hard they fought.",
+        ]);
+  }
+  if (won && halfMargin < 0) {
+    return pick(`${key}-comeback`, [
+      "We were behind at the half and nobody panicked. The players made the adjustments and trusted each other all the way back.",
+      "That locker room believed before the comeback showed up on the scoreboard. They earned every bit of this.",
+      "We talked about playing the next snap, not the deficit. The way they responded is what this team is.",
+    ]);
+  }
+  if (!won && halfMargin > 0) {
+    return pick(`${key}-lead-lost`, [
+      "We had control at the half and let it slip. I have to own the adjustments, and our players will own the response.",
+      "They made the plays after halftime and we didn't. A lead at the break doesn't mean anything if you don't finish.",
+      "We put ourselves in position, then failed to close. That's on all of us, starting with me.",
+    ]);
+  }
+  if (won && margin >= 21) {
+    return pick(`${key}-dominant`, [
+      `Our defense set the tone and ${qbName} kept the offense on schedule. That's a complete team showing on the biggest stage.`,
+      "We didn't chase the moment. We played our game, stayed disciplined, and let the work show up.",
+      `The front controlled the line of scrimmage, and our offense finished drives. That's how you win a championship.`,
+    ]);
+  }
+  if (!won && margin >= 21) {
+    return pick(`${key}-routed`, [
+      "They were the better team today. I have to own that, and I won't let the work these players did all year get reduced to one result.",
+      "We didn't meet the moment and there's no excuse for it. Our players deserved a better plan from me.",
+      "They controlled the game from the start. We'll learn from the film, but that doesn't make tonight easier.",
+    ]);
+  }
+  if (won && opponentTurnovers - teamTurnovers >= 2) {
+    return pick(`${key}-takeaways`, [
+      `We were ready when the ball came loose. Those ${opponentTurnovers - teamTurnovers} extra possessions changed the game.`,
+      "Our defense kept attacking the ball, and the offense made those chances count. That's a team win.",
+      "Championships turn on details. We protected the football and took theirs away when it mattered.",
+    ]);
+  }
+  if (won && teamRush >= 150 && teamRush - opponentRush >= 50) {
+    return pick(`${key}-ground-game`, [
+      `We ran for ${teamRush} yards and controlled the clock. That was the identity we wanted to bring to this game.`,
+      "The line and backs set the terms tonight. When we can stay on schedule like that, our whole playbook is open.",
+      "We wanted a physical game and our guys delivered it for four quarters. They wore us in, and that's championship football.",
+    ]);
+  }
+  if (!won && teamTurnovers >= 3) {
+    return pick(`${key}-giveaways`, [
+      `You can't give away the ball ${teamTurnovers} times and expect to win this game. That's the first thing I'll answer for.`,
+      "We handed them too many chances. The players are hurting, and I have to get us better prepared to protect the football.",
+      "The turnovers put us behind the game. We can't ask the defense to keep answering that many short fields.",
+    ]);
+  }
+  if (won && margin <= 3) {
+    return pick(`${key}-close`, [
+      "That came down to the last few possessions. Our players stayed steady when the whole season was on one play.",
+      "You could feel how thin the margin was. Somebody had to make a championship play, and our guys did.",
+      "That's why you finish every rep in practice. In a game like this, one detail can decide everything.",
+    ]);
+  }
+  if (!won && margin <= 3) {
+    return pick(`${key}-close-loss`, [
+      "We had a chance to win it late and didn't make the play. That's the truth, and we'll carry it with us.",
+      "One or two snaps separated us. Their players made theirs and we didn't make ours.",
+      "There's no comfort in a close loss tonight. We have to be honest about the missed chances and keep moving.",
+    ]);
+  }
+  if (won && teamSacks >= 4) {
+    return pick(`${key}-defense`, [
+      `Our rush got home ${teamSacks} times and changed their whole afternoon. The defense gave us the championship standard.`,
+      "The defense kept winning its downs and made the quarterback hold the ball. That gave us the game we needed.",
+      "We played complementary football. The rush set the edge, the coverage finished, and the offense took care of the rest.",
+    ]);
+  }
+  return won
+    ? pick(`${key}-title`, [
+        "This group never needed a speech about the moment. They trusted the work, trusted each other, and finished the season together.",
+        "Every player in that room had a hand in this. The starters get the pictures, but the whole club earned the ring.",
+        "We talked all year about being at our best when it mattered most. Tonight the players made that real.",
+      ])
+    : pick(`${key}-loss`, [
+        "I'm proud of the season, but proud isn't the same as satisfied. We came here to win and didn't get it done.",
+        "This team earned the right to play tonight. We didn't finish the job, and that responsibility starts with me.",
+        "The season is over and this one hurts. I'll remember how much this group put into getting here.",
+      ]);
+}
+
+/** Read the passer from the box score without inventing a name when a club attempted no passes. */
+function savePlayerNameForCoachLine(save: DynastySave, box: BoxPlayer[], game: GameResult): string {
+  const qb = box
+    .filter((b) => (b.passAtt ?? 0) > 0)
+    .sort((a, b) => (b.passYds ?? 0) - (a.passYds ?? 0))[0];
+  const player = qb ? save.players[qb.playerId] : undefined;
+  return player ? playerName(player) : (game.phase === "superBowl" ? "our quarterback" : "the quarterback");
+}
+
 /** The postgame podium: the winning coach, the player of the game, the losing coach. */
 export function postgameInterviews(save: DynastySave, game: GameResult): Interview[] {
   if (!game.played || !game.boxHome || !game.boxAway) return [];
@@ -118,7 +243,12 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
     who: coachOf(winner),
     role: tie ? `${nicknameOf(game.year, winner)} head coach` : `Winning coach, ${nicknameOf(game.year, winner)}`,
     teamId: winner,
-    quote: tie ? `Nobody plays for a tie. ${why[0]}` : why.slice(0, 2).join(" "),
+    quote:
+      game.phase === "superBowl"
+        ? superBowlCoachQuote(save, game, winner, true, margin, boxOf(winner), boxOf(loser), giveaways, takeaways)
+        : tie
+          ? `Nobody plays for a tie. ${why[0]}`
+          : why.slice(0, 2).join(" "),
   });
 
   // The player of the game quotes his own day.
@@ -152,7 +282,15 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
     if (margin <= 3) lose.push(`It came down to a play or two, and they made one more than we did.`);
     if (margin >= 21) lose.push(`That's on me. We weren't ready, and it showed from the start.`);
     if (!lose.length) lose.push(`They outplayed us. We'll look at the film and get better.`);
-    out.push({ who: coachOf(loser), role: `Losing coach, ${nicknameOf(game.year, loser)}`, teamId: loser, quote: lose.slice(0, 2).join(" ") });
+    out.push({
+      who: coachOf(loser),
+      role: `Losing coach, ${nicknameOf(game.year, loser)}`,
+      teamId: loser,
+      quote:
+        game.phase === "superBowl"
+          ? superBowlCoachQuote(save, game, loser, false, margin, boxOf(loser), boxOf(winner), takeaways, giveaways)
+          : lose.slice(0, 2).join(" "),
+    });
   }
   return out;
 }

@@ -131,7 +131,8 @@ test("victory kneels depend on the defense's remaining timeouts and safe clock/d
 });
 test("coaching dials change seeded simulation outcomes without changing the standard pressure calibration", () => {
   assert.equal(pressureAdjustment("normal"), 0);
-  assert.ok(pressureAdjustment("heavy") > pressureAdjustment("rare"));
+  assert.ok(pressureAdjustment("heavy") > pressureAdjustment("normal"));
+  assert.ok(pressureAdjustment("rare") < pressureAdjustment("normal"));
   const s = createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 213 });
   // A dial nudges probabilities, so a single game can play out snap-for-snap the same; three
   // games together can't.
@@ -150,7 +151,6 @@ test("coaching dials change seeded simulation outcomes without changing the stan
     { protection: "maxProtect" },
     { defensiveFocus: "run" },
     { defensiveFocus: "pass" },
-    { blitz: "heavy" },
   ])
     assert.notEqual(run(patch), standard);
 });

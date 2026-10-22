@@ -35,6 +35,38 @@ test("the podium script introduces each guest, then lets him answer in his own w
   });
 });
 
+test("Super Bowl coaches speak to the title game's story instead of repeating the regular postgame line", () => {
+  const base = films[0];
+  const scenario = (id, homeScore, awayScore, homeQ, awayQ, homeTo = 0, awayTo = 0) => {
+    const g = structuredClone(base);
+    Object.assign(g, {
+      id,
+      phase: "superBowl",
+      homeScore,
+      awayScore,
+      homeQ,
+      awayQ,
+      homeTo,
+      awayTo,
+      ot: false,
+    });
+    return g;
+  };
+  const games = [
+    scenario("sb-close", 27, 24, [7, 7, 7, 6], [3, 10, 7, 4]),
+    scenario("sb-comeback", 27, 24, [0, 7, 13, 7], [10, 7, 7, 0]),
+    scenario("sb-dominant", 41, 13, [10, 14, 10, 7], [3, 3, 0, 7]),
+    scenario("sb-takeaways", 27, 17, [7, 10, 3, 7], [7, 3, 0, 7], 0, 3),
+  ];
+  const winnerQuotes = games.map((g) => postgameInterviews(save, g)[0].quote);
+  const runnerUpQuotes = games.map((g) => postgameInterviews(save, g).at(-1).quote);
+  assert.equal(new Set(winnerQuotes).size, games.length, winnerQuotes.join("\n"));
+  assert.equal(new Set(runnerUpQuotes).size, games.length, runnerUpQuotes.join("\n"));
+  assert.equal(postgameInterviews(save, games[0])[0].quote, winnerQuotes[0], "the same saved game keeps a stable quote");
+  assert.match(winnerQuotes[0], /game|clock|yards|championship|play|possession/i);
+  assert.match(runnerUpQuotes[1], /behind|deficit|lead|half|adjustments/i);
+});
+
 test("after every score the booth gives the scoreboard, and it is right", () => {
   let calls = 0;
   for (const g of films) {

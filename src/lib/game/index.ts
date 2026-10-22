@@ -74,7 +74,7 @@ export { cpuHandles, TEAM_MANAGEMENT_JOBS } from "./teamControl.ts";
 export type { TeamManagementJob } from "./types.ts";
 export { advance, simUntil, simToSuperBowl, fastForwardToYear, setLabel, weekIsInTheBooks } from "./season.ts";
 export { byeNote, rebuildSchedule, gamesForTeam, gameDateLabel, realResultFor, realSchedule, maxWeek, gamesInWeek, isRivalry, RIVALRIES } from "./schedule.ts";
-export { simGame, teamUnits, clampSeasonStats, formatClock, planFor, defaultPlan } from "./sim.ts";
+export { simGame, teamUnits, clampSeasonStats, formatClock, planFor, defaultPlan, thirdBackRotationShare } from "./sim.ts";
 export { standingRows, winPct, compareTeams, conferenceTeams, divisionWinner } from "./standings.ts";
 export {
   seedPlayoffs,
@@ -122,6 +122,7 @@ export { abilitiesFrom, abilityLine, assignKit, kitBoost, kitDef, kitImpactLine,
 export { lookupProfile, ratingsFromProfile, SCOUT_KEYS, RATING_GROUPS, ARCH_LABEL, inferArch } from "./profiles.ts";
 export type { Arch } from "./profiles.ts";
 export { buildPrimetime, depthChart, previewGame, projectWins } from "./primetime.ts";
+export { buildHistoryPrimetime } from "./historyPrimetime.ts";
 export { goalProgress, endHoldout, holdoutAsk, milestoneChases, type Chase } from "./storylines.ts";
 export { seriesNote } from "./h2h.ts";
 export { draftStyleOf, availableCoaches, hireCoach, fireCoach, setTeamScheme, fillCoachFields, staffOf, hotNamesBoard } from "./staff.ts";
@@ -260,7 +261,7 @@ export { rivalryHeat, risingRivalries, RIVALRY_HOT } from "./h2h.ts";
 export { championsList, leagueHistoryHtml, titleCounts } from "./leagueExport.ts";
 export { coachingTrees, mentorOf, treeLine, type TreeNode } from "./coachingTree.ts";
 export { careerValue, draftClassReport, gradableClasses, type ClassPick, type ClassReport } from "./draftGrades.ts";
-export { advanceHistory, applyLiveLines, coverageNote, createHistoryGame, hasHistoryData, historyCursor, historyLabel, historyRecords, replayHistory, setHistoryData, upcomingHistoryGames, HISTORY_FIRST, HISTORY_LAST, ROSTERS_LAST, type HistoryCursor } from "./historyMode.ts";
+export { advanceHistory, applyLiveLines, coverageNote, createHistoryGame, hasHistoryData, historyData, historyCursor, historyLabel, historyRecords, replayHistory, setHistoryData, upcomingHistoryGames, HISTORY_FIRST, HISTORY_LAST, ROSTERS_LAST, type HistoryCursor } from "./historyMode.ts";
 export {
   boxFor,
   boxPlayerId,
@@ -276,6 +277,7 @@ export {
   recordBookNow,
   seriesBetween,
   seriesOf,
+  setBoxSeason,
   toggleFollow,
   RECORD_LABEL,
   type BoxGame,

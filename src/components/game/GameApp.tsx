@@ -1372,6 +1372,7 @@ function Schedule() {
 
 function Stats() {
   const save = useGameStore((s) => s.save)!;
+  const [sortBy, setSortBy] = useState<Record<string, { key: string; direction: "asc" | "desc" }>>({});
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
   const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
@@ -1410,7 +1411,29 @@ function Stats() {
     })
     .map((p) => ({ p, s: lineOf(p)! }));
 
-  const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>) => {
+  const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>, board: string, pos: Pos) => {
+    const selected = sortBy[board];
+    if (selected) {
+      const value = (s: SeasonStats) => {
+        const column = statCols(pos).find((c) => c.key === selected.key);
+        const raw = column?.of?.(s);
+        if (typeof raw === "number") return raw;
+        if (raw === undefined || raw === "—") return Number.NEGATIVE_INFINITY;
+        const parsed = Number.parseFloat(String(raw).replaceAll(",", ""));
+        return Number.isFinite(parsed) ? parsed : Number.NEGATIVE_INFINITY;
+      };
+      const sign = selected.direction === "asc" ? 1 : -1;
+      return rows.slice().sort((a, b) => {
+        const av = value(a.s);
+        const bv = value(b.s);
+        const aMissing = av === Number.NEGATIVE_INFINITY;
+        const bMissing = bv === Number.NEGATIVE_INFINITY;
+        if (aMissing !== bMissing) return aMissing ? 1 : -1;
+        const byValue = aMissing ? 0 : sign * (av - bv);
+        return byValue || playerName(a.p).localeCompare(playerName(b.p));
+      })
+        .slice(0, 40);
+    }
     const score = (s: (typeof rows)[number]["s"]) =>
       group === "pass"
         ? s.passYds
@@ -1460,12 +1483,12 @@ function Stats() {
             ["Kicking", "K" as const, allRows.filter((r) => r.p.pos === "K")],
             ["Punting", "P" as const, allRows.filter((r) => r.p.pos === "P")],
           ] as const
-        ).map(([title, pos, rows]) => ({ title, pos, rows: sortRows([...rows], statGroup(pos)) }))
+        ).map(([title, pos, rows]) => ({ title, pos, rows: sortRows([...rows], statGroup(pos), title, pos) }))
       : [
           {
             title: String(posFilter),
             pos: allRows[0]?.p.pos ?? samplePos(posFilter),
-            rows: sortRows(allRows, statGroup(allRows[0]?.p.pos ?? samplePos(posFilter))),
+            rows: sortRows(allRows, statGroup(allRows[0]?.p.pos ?? samplePos(posFilter)), String(posFilter), allRows[0]?.p.pos ?? samplePos(posFilter)),
           },
         ];
 
@@ -1552,6 +1575,7 @@ function Stats() {
           </button>
         ))}
       </div>
+      <p className="text-xs text-muted">Tap or click any stat heading to sort that board. Select it again to reverse the order; each category keeps its own sort.</p>
       {boards.map((board) => {
         const cols = statCols(board.pos);
         return (
@@ -1561,13 +1585,34 @@ function Stats() {
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="text-xs text-muted">
                   <tr>
-                    <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
-                    <th className="bg-surface-2 px-3 py-2 font-medium">Pos</th>
-                    <th className="bg-surface-2 px-3 py-2 font-medium">Team</th>
-                    <th className="bg-surface-2 px-3 py-2 font-medium">College</th>
+                    <th scope="col" className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
+                    <th scope="col" className="bg-surface-2 px-3 py-2 font-medium">Pos</th>
+                    <th scope="col" className="bg-surface-2 px-3 py-2 font-medium">Team</th>
+                    <th scope="col" className="bg-surface-2 px-3 py-2 font-medium">College</th>
                     {cols.map((c) => (
-                      <th key={c.key} className="bg-surface-2 px-3 py-2 font-medium">
-                        {c.label}
+                      <th
+                        key={c.key}
+                        scope="col"
+                        aria-sort={sortBy[board.title]?.key === c.key ? (sortBy[board.title]!.direction === "asc" ? "ascending" : "descending") : undefined}
+                        className="bg-surface-2 px-2 py-1 font-medium"
+                      >
+                        <button
+                          type="button"
+                          className="min-h-9 rounded px-1.5 text-left hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brass"
+                          aria-label={`Sort ${board.title} by ${c.label} ${sortBy[board.title]?.key === c.key && sortBy[board.title]?.direction === "desc" ? "ascending" : "descending"}`}
+                          onClick={() => setSortBy((current) => {
+                            const old = current[board.title];
+                            return {
+                              ...current,
+                              [board.title]: {
+                                key: c.key,
+                                direction: old?.key === c.key && old.direction === "desc" ? "asc" : "desc",
+                              },
+                            };
+                          })}
+                        >
+                          {c.label}{sortBy[board.title]?.key === c.key ? (sortBy[board.title]!.direction === "asc" ? " ↑" : " ↓") : " ↕"}
+                        </button>
                       </th>
                     ))}
                   </tr>

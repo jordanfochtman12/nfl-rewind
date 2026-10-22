@@ -290,11 +290,16 @@ export function ProBowlNight() {
     <section className="rounded-lg border border-line bg-black/55 p-4">
       <p className="text-xs tracking-[0.3em] text-brass">{title}</p>
       <p className="tabular font-display text-5xl">{score}</p>
-      <ol className="mt-3 space-y-1 text-sm">
-        {rows.slice(0, 14).map((p) => (
-          <li key={p.id} className={!save.sandbox && p.teamId === save.userTeamId ? "text-brass" : ""}>
-            <PlayerLink player={p} className="inline min-h-0" />{" "}
-            <span className="text-muted">{posLabel(p)}</span>
+      <p className="mt-2 text-[10px] tracking-[0.2em] text-muted">{rows.length} ALL-STAR SELECTIONS · ORIGINAL TEAM · JERSEY</p>
+      <ol className="mt-3 grid max-h-[52vh] gap-2 overflow-y-auto overscroll-contain pr-1 sm:grid-cols-2">
+        {rows.map((p) => (
+          <li key={p.id} className={`flex min-w-0 items-center gap-3 rounded-lg border px-3 py-2 ${!save.sandbox && p.teamId === save.userTeamId ? "border-brass/50 bg-brass/10" : "border-line bg-surface/50"}`}>
+            <PlayerPortrait p={p} year={save.year} size="sm" club={p.teamId as TeamId} />
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-display text-lg leading-tight"><PlayerLink player={p} className="inline min-h-0" /></p>
+              <p className="truncate text-xs text-muted">{posLabel(p)} · {displayName(save.year, p.teamId as TeamId)}</p>
+            </div>
+            <span className="shrink-0 rounded border border-line px-2 py-1 font-display text-lg tabular">#{p.jersey}</span>
           </li>
         ))}
       </ol>

@@ -368,6 +368,8 @@ export const useGameStore = create<GameStore>()(
           setHistoryData(await loadHistoryData());
           freshSlot();
           const save = createHistoryGame();
+          await loadBoxSeason(save.year);
+          applyLiveLines(save);
           set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null, tv: false });
         } finally {
           set({ historyLoading: false });

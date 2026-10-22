@@ -67,6 +67,7 @@ import { winPct } from "./standings.ts";
 import { touchGrade } from "./grade.ts";
 import { pickFeaturedGame } from "./sandbox.ts";
 import { advanceHistory } from "./historyMode.ts";
+import { buildHistoryPrimetime } from "./historyPrimetime.ts";
 import { clearCombine, runCombine } from "./scouting.ts";
 import { developCareerWeek, snapshotCareerWeek } from "./careerDevelopment.ts";
 
@@ -443,15 +444,25 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         s.phase = "regular";
         s.week = week;
         try {
-          buildPrimetime(s, "regular");
+          if (s.realHistory) buildHistoryPrimetime(s, "regular");
+          else buildPrimetime(s, "regular");
         } finally {
           s.phase = phase;
           s.week = now;
         }
       }
-      else if (from === "playoffs" && s.phase === "playoffs") buildPrimetime(s, "playoffs");
-      else if (s.phase === "superBowl" && from !== "superBowl") buildPrimetime(s, "superBowl");
-      else if (s.phase === "awards" && from !== "awards") buildPrimetime(s, "awards");
+      else if (from === "playoffs" && s.phase === "playoffs") {
+        if (s.realHistory) buildHistoryPrimetime(s, "playoffs");
+        else buildPrimetime(s, "playoffs");
+      }
+      else if (s.phase === "superBowl" && from !== "superBowl") {
+        if (s.realHistory) buildHistoryPrimetime(s, "superBowl");
+        else buildPrimetime(s, "superBowl");
+      }
+      else if (s.phase === "awards" && from !== "awards") {
+        if (s.realHistory) buildHistoryPrimetime(s, "awards");
+        else buildPrimetime(s, "awards");
+      }
     } catch {
       // A show is a bonus; the record stepping forward is what matters.
     }

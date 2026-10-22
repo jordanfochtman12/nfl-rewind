@@ -14,9 +14,11 @@ import {
   tvCrawl,
   buildSeasonPreview,
   displayName,
+  activeTeamIds,
+  gamesInSeason,
+  historyData,
   draftQueue,
   featuredScore,
-  gamesInSeason,
   gamesInWeek,
   playerName,
   rulesTakingEffect,
@@ -96,6 +98,77 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
     // Unique per calendar state, so each card gets its own countdown.
     k: "card", key: `${key}-${y}-${save.phase}-${save.week}-${save.draftPickIndex}`, title, kicker, say, items, opts, seconds,
   });
+  if (save.realHistory) {
+    // History episodes are made from the official record and must air before the next slate.
+    const historicalEpisode = ep && save.primetime?.year === y && !save.primetime?.predictions && !save.primetime?.power && !save.primetime?.outlook;
+    if (historicalEpisode && !seen.has(ep.id)) return { k: "studio", key: ep.id, episode: ep };
+    const markCard = (key: string, title: string, kicker: string, say: string, items: string[], seconds = 18): Stage =>
+      ({ ...(card(key, title, kicker, say, items, {}, seconds) as Extract<Stage, { k: "card" }>), mark: `${key}-${y}` });
+    if (save.phase === "draft") {
+      const key = `record-draft-${y}`;
+      if (!seen.has(`${key}-${y}`)) {
+        const people = historyData().people;
+        const picks = historyData().drafts(y).slice().sort((a, b) => a.round - b.round || a.pick - b.pick);
+        const firstByLeague = y === 1966 ? ["nfl", "afl"].map((league) => picks.find((p) => p.league === league)) : [picks[0]];
+        const items = firstByLeague.filter((p): p is NonNullable<typeof p> => !!p).map((p) => {
+          const person = people[p.person];
+          return `${p.league ? `${p.league.toUpperCase()} · ` : ""}Pick ${p.pick}, Round ${p.round}: ${person ? `${person.first} ${person.last}` : "name not in the source table"} to the ${displayName(y, p.team)}${person?.pos ? ` (${person.pos})` : ""}.`;
+        });
+        items.push(`${picks.length} recorded selections across ${new Set(picks.map((p) => p.round)).size} rounds${y === 1966 ? "; the NFL and AFL held separate drafts" : ""}.`);
+        return markCard("record-draft", `The ${y} draft`, "THE REAL DRAFT BOARD", "Before the season begins, the original draft class enters the record. These are the selections as recorded, not a re-simulated draft.", items);
+      }
+      return card("record-open-season", `Open the ${y} season`, "NEXT IN THE RECORD", `Continue into the real ${y} season. The league will be rebuilt from that year's historical rosters and schedule.`, [], {}, 5);
+    }
+    if (save.phase === "preseason") {
+      const key = `record-season-${y}`;
+      if (!seen.has(`${key}-${y}`)) {
+        const previous = save.history.superBowls.at(-1);
+        const rules = rulesTakingEffect(y);
+        const items = [
+          `${activeTeamIds(y).length} active clubs · ${gamesInSeason(y)} regular-season games per club.`,
+          previous ? `The previous recorded champion: ${displayName(previous.year, (previous.homeScore > previous.awayScore ? previous.homeId : previous.awayId) as TeamId)} in ${previous.year}.` : "The record opens before Super Bowl I; the first championship story is still ahead.",
+          ...rules.map((r) => `Rulebook, ${y}: ${r.title} — ${r.effect}`),
+        ];
+        const era = y < 1970 ? "AFL and NFL" : "AFC and NFC";
+        return markCard("record-season", `${y}: the season ahead`, "A YEAR IN REAL FOOTBALL HISTORY", `The ${y} record is ready. ${activeTeamIds(y).length} clubs across the ${era}, with the actual rosters and results waiting week by week.`, items);
+      }
+      return card("record-kickoff", `The ${y} season opens`, "NEXT · WEEK ONE", "The historical schedule is about to begin. Each Sunday will be followed by its own real-results Primetime report.", [], {}, 5);
+    }
+    if (save.phase === "regular") {
+      const slate = nextSlate(save);
+      const items = slate.slice(0, 9).map((g) => `${displayName(y, g.awayId as TeamId)} (${save.teams[g.awayId as TeamId] ? `${save.teams[g.awayId as TeamId]!.wins}-${save.teams[g.awayId as TeamId]!.losses}` : "—"}) at ${displayName(y, g.homeId as TeamId)} (${save.teams[g.homeId as TeamId] ? `${save.teams[g.homeId as TeamId]!.wins}-${save.teams[g.homeId as TeamId]!.losses}` : "—"}).`);
+      if (slate.length > 9) items.push(`${slate.length - 9} more games on this week's real schedule.`);
+      const key = `record-week-${y}-${save.week}`;
+      if (!seen.has(`${key}-${y}`)) return markCard(key, `Week ${save.week}: the real schedule`, `${y} · BEFORE KICKOFF`, `Here is the actual Week ${save.week} slate. Records shown are from the replay at this point in the season; no result has been projected.`, items, 16);
+      return card("record-advance-week", `Week ${save.week} is next`, `${y} · THE HISTORICAL CALENDAR`, "Continue to place this week's actual results in the record. Primetime will return with the full Sunday recap before the next week begins.", [], {}, 5);
+    }
+    if (save.phase === "playoffs") {
+      const slate = nextSlate(save);
+      const key = `record-playoff-${y}-${slate[0]?.round ?? save.week}`;
+      if (!seen.has(`${key}-${y}`)) {
+        const items = slate.slice(0, 8).map((g) => `${g.round ?? "Playoffs"}: ${displayName(y, g.awayId as TeamId)} at ${displayName(y, g.homeId as TeamId)}.`);
+        if (!items.length) items.push("The next postseason round is taken directly from the historical bracket.");
+        return markCard(key, slate[0]?.round ?? "The playoffs", `${y} · THE ROAD TO THE TITLE`, "The postseason bracket and matchups follow the historical record exactly.", items, 16);
+      }
+      return card("record-advance-playoffs", `${slate[0]?.round ?? "The next round"} is next`, `${y} · ELIMINATION FOOTBALL`, "Continue to the actual postseason results. The studio recap will cover the round before the bracket moves on.", [], {}, 5);
+    }
+    if (save.phase === "superBowl") {
+      const g = save.superBowl;
+      const winner = g?.played ? (g.homeScore > g.awayScore ? g.homeId : g.awayId) : undefined;
+      const mvp = g?.mvpPlayerId ? save.players[g.mvpPlayerId] : undefined;
+      const items = g?.played ? [`${displayName(y, g.awayId as TeamId)} ${g.awayScore}, ${displayName(y, g.homeId as TeamId)} ${g.homeScore}.`, ...(winner ? [`${displayName(y, winner as TeamId)} are the recorded champions.`] : []), ...(mvp ? [`Super Bowl Most Valuable Player: ${playerName(mvp)}.`] : [])] : [];
+      return card("record-sb-transition", `The ${y} championship is in the record`, `SUPER BOWL ${y}`, "The result and award are preserved from the historical game. Next, the season's real awards are presented.", items, {}, 10);
+    }
+    if (save.phase === "awards") return card("record-awards-transition", `${y} honors are recorded`, "NEXT · CANTON", "Continue to the Hall of Fame class that was actually inducted after this season.", [], {}, 6);
+    if (save.phase === "hof") {
+      const classYear = y + 1;
+      const members = save.history.hof.filter((m) => m.year === classYear);
+      const items = members.map((m) => `${m.name ?? (m.playerId && save.players[m.playerId] ? playerName(save.players[m.playerId]!) : m.coachId ? save.coaches[m.coachId]?.name : "Recorded inductee")}${m.teamId ? ` · ${displayName(classYear, m.teamId)}` : ""}${m.kind ? ` · ${m.kind}` : ""}.`);
+      return card("record-hof", `The Hall of Fame · Class of ${classYear}`, "CANTON · THE REAL CLASS", members.length ? `${members.length} recorded inductee${members.length === 1 ? "" : "s"} entered the Hall in ${classYear}.` : `The record has no listed inductees for the Class of ${classYear}.`, items, {}, 14);
+    }
+    if (save.phase === "complete") return { k: "end", key: "end" };
+    return card(`record-${save.phase}`, save.weekLabel, `${y} · THE RECORD`, `Continue through the historical calendar: ${save.weekLabel}.`, [], {}, 5);
+  }
   switch (save.phase) {
     case "preseason": {
       if (save.camp?.year !== y)

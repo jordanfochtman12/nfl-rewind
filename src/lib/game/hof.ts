@@ -45,6 +45,20 @@ export function playerHofScore(save: DynastySave, p: Player): number {
   }
   n += allPro * 5.5;
   n += mvp * 8;
+  // A Hall ballot should remember durable excellence, not only box-score volume and All-Pros.
+  // Diminishing returns keep a long Pro Bowl list meaningful without letting it swamp a peak.
+  const honors = p.honors;
+  const proBowls = new Set((honors?.proBowl ?? []).filter((year) => year <= save.year));
+  n += Math.min(16, proBowls.size * 1.35);
+  const awardPoints = { OPOY: 4, DPOY: 5, OROY: 2.5, DROY: 2.5, CPOY: 1.5 } as const;
+  const countedAwards = new Set<string>();
+  for (const item of honors?.awards ?? []) {
+    if (item.year > save.year || !Object.hasOwn(awardPoints, item.award)) continue;
+    const key = `${item.year}:${item.award}`;
+    if (countedAwards.has(key)) continue;
+    countedAwards.add(key);
+    n += awardPoints[item.award as keyof typeof awardPoints];
+  }
   let bowls = 0;
   for (const b of save.history.superBowls ?? []) {
     const w = b.homeScore >= b.awayScore ? b.homeId : b.awayId;

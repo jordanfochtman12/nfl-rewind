@@ -56,7 +56,7 @@ export function tvCrawl(save: DynastySave, opts: { onAir?: GameResult[] } = {}):
   }
 
   // Who's hurt: the stars out, as of the last slate the viewer saw.
-  if (!live.length) {
+  if (!live.length && !save.realHistory) {
     const hurt = activeTeamIds(year)
       .flatMap((id) => Object.values(save.players).filter((p) => p.teamId === id && (p.onIR || p.injuredWeeks > 0) && p.injuryName !== "holdout" && p.ovr >= 82))
       .sort((a, b) => b.ovr - a.ovr)

@@ -21,6 +21,8 @@ import {
   eraBigPlay,
   eraProfile,
   eraRb1Share,
+  eraFullbackCarryShare,
+  eraQbCarryShare,
   eraTargetWeights,
   fairCatchKickoff,
   fgEraMod,
@@ -110,6 +112,8 @@ export interface TeamUnits {
   qb2?: Player;
   rb?: Player;
   rb2?: Player;
+  /** Third back becomes a situational workload sub after the top two carry the load. */
+  rb3?: Player;
   fb?: Player;
   wr: Player[];
   te?: Player;
@@ -136,6 +140,11 @@ export interface TeamUnits {
     inj: number;
     pen: number;
   };
+}
+
+/** Share of a team's running-back carries that moves to its healthy RB3 as RB1/RB2 wear down. */
+export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean): number {
+  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 24) * 0.0125, 0, 0.18) : 0;
 }
 
 /**
@@ -206,6 +215,7 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   const rbs = starters(save, teamId, "RB", 2);
   const rb = rbs[0];
   const rb2 = rbs[1];
+  const rb3 = starters(save, teamId, "RB", 3)[2];
   const fb = starters(save, teamId, "FB", 1)[0];
   const wr = starters(save, teamId, "WR", 3);
   const te = starters(save, teamId, "TE", 1)[0];
@@ -275,16 +285,16 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   if (scheme === "westcoast") offPass += clamp(2 + (recSkill - 75) * 0.12, 0.5, 3.5);
   if (team?.defScheme === "cover-2") defPass += clamp(2.5 + (cov - 75) * 0.12, 1, 4);
   if (team?.defScheme === "3-4") defRun += clamp(2 + (avg(lb.map((x) => x.ratings.tak)) - 75) * 0.12, 0.5, 3.5);
-  const skill = [qb, qb2, rb, rb2, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
+  const skill = [qb, qb2, rb, rb2, rb3, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
   offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
-  offRun += kitBoost(rb, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
+  offRun += kitBoost(rb, "offRun") + kitBoost(rb3, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
   defPass += db.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + dl.reduce((n, p) => n + kitBoost(p, "defPass"), 0);
   defRun += dl.reduce((n, p) => n + kitBoost(p, "defRun"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defRun"), 0);
   offPass += coachKitBoost(coach, "offPass") + coachKitBoost(oc, "offPass") + (coach?.offense ?? 70) * 0.02;
   offRun += coachKitBoost(coach, "offRun") + coachKitBoost(oc, "offRun");
   defPass += coachKitBoost(coach, "defPass") + coachKitBoost(dc, "defPass") + (coach?.defense ?? 70) * 0.02;
   defRun += coachKitBoost(coach, "defRun") + coachKitBoost(dc, "defRun");
-  const cands = [...wr, rb, rb2, fb, ...db].filter((x): x is Player => !!x);
+  const cands = [...wr, rb, rb2, rb3, fb, ...db].filter((x): x is Player => !!x);
   const returner = cands.slice().sort((a, b) => {
     const as = a.ratings.speed + (a.traits?.includes("Return man") ? 12 : 0);
     const bs = b.ratings.speed + (b.traits?.includes("Return man") ? 12 : 0);
@@ -294,8 +304,8 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
     cmp: kitBoost(qb, "cmp") + wr.reduce((n, p) => n + kitBoost(p, "cmp"), 0),
     sack: kitBoost(qb, "sack") + ol.reduce((n, p) => n + kitBoost(p, "sack"), 0) + dl.reduce((n, p) => n + kitBoost(p, "sack"), 0),
     int: kitBoost(qb, "int") + db.reduce((n, p) => n + kitBoost(p, "int"), 0),
-    fum: kitBoost(rb, "fum") + kitBoost(qb, "fum") + wr.reduce((n, p) => n + kitBoost(p, "fum"), 0),
-    td: kitBoost(qb, "td") + kitBoost(rb, "td") + wr.reduce((n, p) => n + kitBoost(p, "td"), 0),
+    fum: kitBoost(rb, "fum") + kitBoost(rb3, "fum") + kitBoost(qb, "fum") + wr.reduce((n, p) => n + kitBoost(p, "fum"), 0),
+    td: kitBoost(qb, "td") + kitBoost(rb, "td") + kitBoost(rb3, "td") + wr.reduce((n, p) => n + kitBoost(p, "td"), 0),
     fg: kitBoost(k, "fg"),
     scramble: kitBoost(qb, "scramble"),
     clutch: skill.reduce((n, p) => n + kitBoost(p, "clutch"), 0) + coachKitBoost(coach, "clutch") + coachKitBoost(oc, "clutch") + coachKitBoost(dc, "clutch"),
@@ -304,7 +314,7 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   };
   // A tight locker room plays a little better; a fractured one a little worse.
   const chem = chemistryEdge(save, teamId);
-  return { qb, qb2, rb, rb2, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass: offPass + chem, offRun: offRun + chem, defPass: defPass + chem, defRun: defRun + chem, kit };
+  return { qb, qb2, rb, rb2, rb3, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass: offPass + chem, offRun: offRun + chem, defPass: defPass + chem, defRun: defRun + chem, kit };
 }
 
 function dist(save: DynastySave, weights: number[]): number {
@@ -533,6 +543,7 @@ function pickRusher(
   off: TeamUnits,
   passingDown: boolean,
   year: number,
+  call: Call,
   goal: boolean,
   carriesSoFar?: (id: string) => number,
 ): Player | undefined {
@@ -545,28 +556,64 @@ function pickRusher(
     const n = carriesSoFar(id);
     return n <= 18 ? 1 : Math.max(0.3, 1 - (n - 18) * 0.06);
   };
+  const backCarries = (off.rb ? carriesSoFar?.(off.rb.id) ?? 0 : 0) + (off.rb2 ? carriesSoFar?.(off.rb2.id) ?? 0 : 0);
+  // Once the top two backs have absorbed a real workload, a healthy third back starts getting
+  // meaningful series. Keep the total RB share steady while redistributing it; passing downs
+  // remain with the backs trusted to protect the quarterback.
+  const thirdBackShare = thirdBackRotationShare(backCarries, !!off.rb3 && !!carriesSoFar);
+  const topBackScale = 1 - thirdBackShare * (passingDown ? 0.3 : 1);
   const pool: { p: Player; w: number }[] = [];
   if (off.rb)
     pool.push({
       p: off.rb,
       w:
         (passingDown ? rb1 * 0.7 : rb1) *
+        topBackScale *
         kitShare(off.rb, "rushShare") *
         (off.rb.ratings.stamina / 80) *
         workloadDamp(off.rb.id) *
         taperOf(off.rb, "rushYds", year, leaderPace(year).rush),
     });
-  if (off.rb2) pool.push({ p: off.rb2, w: (passingDown ? 0.32 : 1 - rb1) * kitShare(off.rb2, "rushShare") });
+  if (off.rb2)
+    pool.push({
+      p: off.rb2,
+      w: (passingDown ? 0.32 : 1 - rb1) * topBackScale * kitShare(off.rb2, "rushShare") * workloadDamp(off.rb2.id),
+    });
   // No healthy second back: the fullback takes the backup's carries, or a receiver some of them.
   // Without anyone in that share the lead back got every run (Stephen Davis, 593 carries for
   // 3,187 yards behind an injured depth chart; the real record is 416 carries).
   else if (off.rb) {
     const spell = (passingDown ? 0.32 : 1 - rb1) * 0.8;
-    if (off.fb) pool.push({ p: off.fb, w: spell });
+    if (off.fb) pool.push({ p: off.fb, w: spell * workloadDamp(off.fb.id) });
     else if (off.wr[0]) pool.push({ p: off.wr[0], w: spell * 0.4 });
   }
-  if (off.fb && (goal || !passingDown)) pool.push({ p: off.fb, w: goal ? (year <= 1995 ? 0.22 : 0.08) : year <= 1995 ? 0.12 : 0.05 });
-  if (off.qb && (off.kit.scramble > 6 || goal)) pool.push({ p: off.qb, w: goal ? 0.08 + off.kit.scramble / 180 : 0.03 + off.kit.scramble / 220 });
+  if (off.rb3 && thirdBackShare > 0) {
+    pool.push({
+      p: off.rb3,
+      w:
+        thirdBackShare *
+        (passingDown ? 0.3 : 1) *
+        kitShare(off.rb3, "rushShare") *
+        (off.rb3.ratings.stamina / 80) *
+        workloadDamp(off.rb3.id),
+    });
+  }
+  if (off.fb && (goal || !passingDown)) {
+    const fbShare = eraFullbackCarryShare(year) * kitShare(off.fb, "rushShare") * workloadDamp(off.fb.id);
+    pool.push({ p: off.fb, w: goal ? Math.max(fbShare * 1.5, year <= 1968 ? 0.08 : 0.04) : fbShare });
+  }
+  if (off.qb && (goal || call === "draw")) {
+    // Keep the league's era-specific quarterback share, then let the player's style shape
+    // which quarterbacks take those carries. A pocket statue still sneaks; a scrambler gets
+    // more designed runs, but neither trait can dominate the team carry pool on its own.
+    const mobility = clamp(1 + (off.qb.ratings.speed - 65) / 500 + (off.qb.ratings.agi - 65) / 500, 0.8, 1.2);
+    const style = off.qb.abilities.includes("Scrambler") ? 1.1 : off.qb.traits.includes("Pocket statue") ? 0.8 : 1;
+    const qbShare = eraQbCarryShare(year) * mobility * style * workloadDamp(off.qb.id);
+    pool.push({
+      p: off.qb,
+      w: goal ? Math.max(qbShare * 1.5, 0.08 + Math.max(0, off.kit.scramble) / 180) : qbShare,
+    });
+  }
   if (!pool.length) return off.qb;
   return pool[dist(save, pool.map((x) => x.w))]!.p;
 }
@@ -1457,7 +1504,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (!m) return false;
     const o = live(m.teamId);
     const d = live(m.teamId === homeId ? awayId : homeId);
-    const ids = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db].map((x) => x?.id);
+    const ids = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db].map((x) => x?.id);
     return ids(o).includes(m.offId) && ids(d).includes(m.defId);
   };
   const edgeVsTackle = (offense: TeamId) => {
@@ -1505,7 +1552,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   };
   const fatigue = (u: TeamUnits, qq: number, ck: number, id: TeamId) => {
     const late = qq >= 4 || (qq === 3 && ck < 240);
-    const stam = avg([u.qb, u.rb, ...u.ol, ...u.dl].filter((x): x is Player => !!x).map((p) => p.ratings.stamina));
+    const stam = avg([u.qb, u.rb, u.rb3, ...u.ol, ...u.dl].filter((x): x is Player => !!x).map((p) => p.ratings.stamina));
     let m = 1 - ((100 - stam) / 420) * (late ? 1.5 : 0.35);
     if (venue.altitude >= 4000 && id === awayId) m *= 0.93;
     return m;
@@ -1605,7 +1652,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           ? `${playerName(p)} is down. He's being checked for a concussion.`
           : `${playerName(p)} is down with a ${hurt === "ribs" ? "rib" : hurt} injury.`,
     );
-    const onField = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db, u.k, u.p].filter((x): x is Player => !!x);
+    const onField = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db, u.k, u.p].filter((x): x is Player => !!x);
     const was = new Set(onField(live(id)).map((x) => x.id));
     rebuild(id);
     const u = live(id);
@@ -2307,6 +2354,36 @@ export function simGame(save: DynastySave, game: GameResult): void {
     const defP = (pass ? def.defPass : def.defRun) * dfat * (1 - gassed) + (pass ? 3.2 : 0) + (prevent && pass ? -2.4 : 0) + focusEdge;
     const edge = offP - defP;
 
+    const resolveScramble = (yds: number): boolean => {
+      if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: yds });
+      const t = pickTackler(save, def, false);
+      if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
+      const used = snapClock(save, plan, year, q, clock, trail, true, rand(save) < 0.25, yds >= togo, false);
+      tickClock(poss, used.used);
+      drivePlays += 1;
+      driveYds += yds;
+      spot = clamp(spot + yds, 0, 100);
+      lastRun = true;
+      if (was3rd) mark3rd(poss, yds >= togo || spot >= 100);
+      if (spot >= 100) {
+        if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushTd: 1 });
+        scoreTd(poss, `${playerName(off.qb!)} keeps it and goes.`);
+        return ot && otRule.kind === "sudden";
+      }
+      if (yds >= togo) {
+        addFd(poss);
+        newSet();
+      } else {
+        down += 1;
+        togo -= yds;
+        if (down > 4) {
+          closeDrive("downs");
+          flipPoss(100 - spot);
+        }
+      }
+      return false;
+    };
+
     if (pass) {
       const sackP = clamp(
         era.sackRate + pressure - (plan.protection === "maxProtect" ? 0.025 : 0) +
@@ -2324,37 +2401,18 @@ export function simGame(save: DynastySave, game: GameResult): void {
         0.018,
         0.16,
       );
-      if (rand(save) < sackP) {
-        const scram = (off.qb?.ratings.agi ?? 50) / 400 + off.kit.scramble / 140;
-        if (off.kit.scramble > 6 && rand(save) < scram) {
-          const yds = sampleYds(save, 7 + (off.qb?.ratings.speed ?? 50) / 20, 4, 1, 28);
-          if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushAtt: 1, rushYds: yds });
-          const t = pickTackler(save, def, false);
-          if (t) bumpBox(boxOf(defId), t.id, { tackles: 1 });
-          const used = snapClock(save, plan, year, q, clock, trail, true, rand(save) < 0.25, yds >= togo, false);
-          tickClock(poss, used.used);
-          drivePlays += 1;
-          driveYds += yds;
-          spot = clamp(spot + yds, 0, 100);
-          lastRun = true;
-          if (was3rd) mark3rd(poss, yds >= togo || spot >= 100);
-          if (spot >= 100) {
-            if (off.qb) bumpBox(boxOf(poss), off.qb.id, { rushTd: 1 });
-            scoreTd(poss, `${playerName(off.qb!)} keeps it and goes.`);
-            if (ot && otRule.kind === "sudden") break;
-            continue;
-          }
-          if (yds >= togo) {
-            addFd(poss);
-            newSet();
-          } else {
-            down += 1;
-            togo -= yds;
-            if (down > 4) {
-              closeDrive("downs");
-              flipPoss(100 - spot);
-            }
-          }
+      const sacked = rand(save) < sackP;
+      if (sacked) {
+        const sackEscapeP = clamp(0.08 + (off.qb?.ratings.agi ?? 50) / 500 + off.kit.scramble / 180, 0.08, 0.65);
+        const qb = off.qb;
+        const mobileQb =
+          qb &&
+          (qb.abilities.includes("Scrambler") ||
+            qb.arch === "scrambler" ||
+            (qb.ratings.speed >= 74 && qb.ratings.agi >= 70));
+        if (qb && mobileQb && rand(save) < sackEscapeP) {
+          const yds = sampleYds(save, 7 + qb.ratings.speed / 20, 4, 1, 28);
+          if (resolveScramble(yds)) break;
           continue;
         }
         const loss = sampleYds(save, 6.3, 2, 3, 14);
@@ -2425,6 +2483,28 @@ export function simGame(save: DynastySave, game: GameResult): void {
           flipPoss(100 - spot);
         }
         continue;
+      }
+
+      // A mobile passer can turn a non-sack dropback into a scramble. This is separate from RB
+      // handoffs and scales with real quarterback mobility and the era's observed run tendency.
+      if (off.qb) {
+        const mobility =
+          eraQbCarryShare(year) * 0.35 +
+          Math.max(0, off.qb.ratings.speed - 60) * 0.001 +
+          Math.max(0, off.qb.ratings.agi - 60) * 0.0013 +
+          Math.max(0, off.kit.scramble) / 500 -
+          (off.qb.traits.includes("Pocket statue") ? 0.06 : 0);
+        if (rand(save) < clamp(mobility, 0.008, 0.18)) {
+          const yds = sampleYds(
+            save,
+            era.ypc + 1 + (off.qb.ratings.speed - 60) / 20 + (off.qb.ratings.agi - 60) / 40,
+            4.5,
+            -3,
+            32,
+          );
+          if (resolveScramble(yds)) break;
+          continue;
+        }
       }
 
       if (rand(save) < pens.pi && (call === "deep" || call === "med")) {
@@ -2673,10 +2753,17 @@ export function simGame(save: DynastySave, game: GameResult): void {
       continue;
     }
 
-    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, spot >= 95 || call === "sneak", (id) =>
+    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, call, spot >= 95 || call === "sneak", (id) =>
       boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
     );
     let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80 - vanilla * 0.9 + soft * 0.5;
+    if (rusher?.pos === "QB" && call !== "sneak") {
+      // QB speed and agility were invisible to the old generic runner formula, making even a
+      // true scrambler run like a slow halfback. Keep pocket passers' gains lower by the same
+      // measure while rewarding real mobility.
+      mu += (rusher.ratings.speed - 55) * 0.035 + (rusher.ratings.agi - 55) * 0.025;
+    }
+    if (rusher?.pos === "FB") mu += 0.45;
     const lane = matchupOf("rb-lb", poss);
     if (rusher && pairOn(lane) && rusher.id === lane.offId) mu += (lane.offGrade - lane.defGrade) / 90;
     // A back's legs go after twenty carries; the drop is steeper for one without stamina.
@@ -2699,7 +2786,9 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (was3rd && togo >= 5) mu -= year <= 1977 ? 0.3 : 0.7;
     // A run is mostly a few yards, with a real share of 10-to-15-yard pops (about one carry in
     // nine goes for 10+); the mean comes down a touch so yards per carry holds.
-    let yds = sampleYds(save, call === "sneak" ? mu : mu - 0.35, call === "sneak" ? 1.2 : 3.6, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 17);
+    // The rating and matchup terms lift the realized mean above the historical era baseline.
+    // Hold the typical carry near league history; explosive runs below remain skill-weighted.
+    let yds = sampleYds(save, call === "sneak" ? mu : mu - 0.55, call === "sneak" ? 1.2 : 3.6, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 17);
     // The era big-play curve is a passing-game story; long runs didn't get longer or more
     // common the way deep balls did, so ground breakaways stop scaling at the late-70s level.
     const runBig = Math.min(big, 0.72);
