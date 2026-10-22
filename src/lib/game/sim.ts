@@ -150,7 +150,7 @@ export function unitFatigueMultiplier(
   altitudePenalty = false,
 ): number {
   const active = side === "offense"
-    ? [u.qb, u.rb, u.rb3, u.fb, ...u.wr, u.te, ...u.ol]
+    ? [u.qb, u.rb, u.rb2, u.rb3, u.fb, ...u.wr, u.te, ...u.ol]
     : [...u.dl, ...u.lb, ...u.db];
   const stamina = avg(active.filter((p): p is Player => !!p).map((p) => p.ratings.stamina));
   const multiplier = 1 - ((100 - stamina) / 420) * (late ? 1.5 : 0.35);

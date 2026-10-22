@@ -7,7 +7,7 @@ import { unitFatigueMultiplier } from "../src/lib/game/sim.ts";
 test("offensive and defensive stamina affect only their own late-game unit", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 1917 });
   const units = teamUnits(save, "pit");
-  const offensive = [units.qb, units.rb, units.rb3, units.fb, ...units.wr, units.te, ...units.ol]
+  const offensive = [units.qb, units.rb, units.rb2, units.rb3, units.fb, ...units.wr, units.te, ...units.ol]
     .filter((p) => p !== undefined);
   const defensive = [...units.dl, ...units.lb, ...units.db];
   for (const p of [...offensive, ...defensive]) p.ratings.stamina = 80;
@@ -32,7 +32,7 @@ test("offensive and defensive stamina affect only their own late-game unit", () 
 test("fatigue deepens late, and the altitude penalty applies to the affected visitor", () => {
   const save = createNewGame({ userTeamId: "den", startingYear: 2024, cpuOnly: true, seed: 733 });
   const units = teamUnits(save, "den");
-  const players = [units.qb, units.rb, units.rb3, units.fb, ...units.wr, units.te, ...units.ol,
+  const players = [units.qb, units.rb, units.rb2, units.rb3, units.fb, ...units.wr, units.te, ...units.ol,
     ...units.dl, ...units.lb, ...units.db].filter((p) => p !== undefined);
   for (const p of players) p.ratings.stamina = 70;
 
@@ -40,4 +40,17 @@ test("fatigue deepens late, and the altitude penalty applies to the affected vis
   const late = unitFatigueMultiplier(units, "offense", true);
   assert.ok(late < early, "fourth-quarter fatigue is stronger than early-game fatigue");
   assert.equal(unitFatigueMultiplier(units, "offense", true, true), late * 0.93);
+});
+
+test("a rotating RB2 contributes to offensive fatigue", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 241 });
+  const units = teamUnits(save, "pit");
+  assert.ok(units.rb2, "the roster has a second back to rotate in");
+  for (const p of [units.qb, units.rb, units.rb2, units.rb3, units.fb, ...units.wr, units.te, ...units.ol]) {
+    if (p) p.ratings.stamina = 80;
+  }
+  const rested = unitFatigueMultiplier(units, "offense", true);
+  units.rb2.ratings.stamina = 40;
+  assert.ok(unitFatigueMultiplier(units, "offense", true) < rested,
+    "a lower-stamina RB2 lowers the offensive unit's late-game performance");
 });
