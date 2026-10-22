@@ -31,7 +31,7 @@ export function scoring(s: SeasonStats): number {
 }
 
 function num(n: number): string | number {
-  return n || "—";
+  return n;
 }
 
 /** A stat the record didn't keep that season (History mode) reads —, not 0. */
