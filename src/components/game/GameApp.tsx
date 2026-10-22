@@ -1,5 +1,5 @@
 import { DraftAnnouncerProvider } from "./DraftAnnouncer";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   activateFromIR,
@@ -68,13 +68,10 @@ import {
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
-import { TeamHistory } from "./TeamHistory";
 import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
 import { DraftReportCard } from "./DraftReportCard";
-import { HallOfFame } from "./HallOfFame";
 import { HISTORY_LAST, leagueHistoryHtml, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
-import { PrimetimeShow, PrimetimeTeaser } from "./PrimetimeShow";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
 import { BottomLine, ClubPlate, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
@@ -83,42 +80,51 @@ import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
 import { PhoneLine } from "./MarketLife";
 import { byeNote, clubInk, endHoldout, holdoutAsk } from "@/lib/game";
-import { DraftNight } from "./DraftNight";
-import { SuperBowlNight } from "./SuperBowlNight";
-import { GameNight } from "./GameNight";
 import { GameWeekPrep, TonightsStorylines } from "./Gameday";
 import { LockerRoom, MoodCell } from "./LockerRoom";
 import { DepthField } from "./DepthField";
 import { FilmStill } from "./Art";
 import { KitChips, CoachChips } from "./KitChips";
-import { HistoryBoxModal } from "./HistoryLive";
-import { PlayerLink, PlayerProfile } from "./PlayerProfile";
-import { TeamRosterModal } from "./TeamRoster";
-import { LeagueDirectory } from "./LeagueDirectory";
-import { Transactions } from "./Transactions";
 import { ExpansionNight } from "./ExpansionNight";
 import { GradeCard } from "./GradeCard";
 import { FranchiseBook } from "./FranchiseBook";
 import { FreeAgencyNight } from "./FreeAgencyNight";
 import { FreeAgencyRecap } from "./FreeAgencyRecap";
 import { clearOldVoiceModel } from "@/lib/voice/speech";
-import { SuperBowlHistory } from "./SuperBowlHistory";
 import { CampNight } from "./CampNight";
 import { DeadlineNight } from "./DeadlineNight";
 import { SundayNight } from "./SundayNight";
 import { OwnerCall } from "./OwnerCall";
 import { HistoryCheck, WatchBar, WatchDesk, WatchMoves } from "./Sandbox";
-import { HistoryDesk, HistoryDraft } from "./HistoryMode";
 import { SaveSlots } from "./SaveSlots";
 import { saveHealth } from "@/lib/save-idb";
 import { emptySlot } from "@/lib/save-slots";
-import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
 import { useSettings } from "@/lib/settings-store";
 import { Tour } from "./Tour";
 import { WATCH_TOUR } from "./tours";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
+
+// Presentation screens are split from the initial game shell and fetched when first opened.
+// This keeps the desktop/mobile startup path lean without changing their saved state.
+const DraftNight = lazy(() => import("./DraftNight").then((m) => ({ default: m.DraftNight })));
+const PrimetimeShow = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeShow })));
+const PrimetimeTeaser = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeTeaser })));
+const WatchTV = lazy(() => import("./WatchTV").then((m) => ({ default: m.WatchTV })));
+const HistoryBoxModal = lazy(() => import("./HistoryLive").then((m) => ({ default: m.HistoryBoxModal })));
+const PlayerLink = lazy(() => import("./PlayerProfile").then((m) => ({ default: m.PlayerLink })));
+const PlayerProfile = lazy(() => import("./PlayerProfile").then((m) => ({ default: m.PlayerProfile })));
+const TeamRosterModal = lazy(() => import("./TeamRoster").then((m) => ({ default: m.TeamRosterModal })));
+const HistoryDesk = lazy(() => import("./HistoryMode").then((m) => ({ default: m.HistoryDesk })));
+const HistoryDraft = lazy(() => import("./HistoryMode").then((m) => ({ default: m.HistoryDraft })));
+const TeamHistory = lazy(() => import("./TeamHistory").then((m) => ({ default: m.TeamHistory })));
+const HallOfFame = lazy(() => import("./HallOfFame").then((m) => ({ default: m.HallOfFame })));
+const LeagueDirectory = lazy(() => import("./LeagueDirectory").then((m) => ({ default: m.LeagueDirectory })));
+const Transactions = lazy(() => import("./Transactions").then((m) => ({ default: m.Transactions })));
+const GameNight = lazy(() => import("./GameNight").then((m) => ({ default: m.GameNight })));
+const SuperBowlNight = lazy(() => import("./SuperBowlNight").then((m) => ({ default: m.SuperBowlNight })));
+const SuperBowlHistory = lazy(() => import("./SuperBowlHistory").then((m) => ({ default: m.SuperBowlHistory })));
 import { gradeTone } from "./tone";
 import {
   AwardsNight,
@@ -2126,6 +2132,7 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <DraftAnnouncerProvider>
+    <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-12 text-center text-sm text-muted" role="status" aria-live="polite">Loading game presentation…</div>}>
     {watch && tv && !real ? (
       <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
         <WatchTV />
@@ -2218,6 +2225,7 @@ function PlayShell() {
       {tab !== "primetime" && <BottomLine save={save} />}
     </ClubDesk>
     )}
+    </Suspense>
     </DraftAnnouncerProvider>
   );
 }

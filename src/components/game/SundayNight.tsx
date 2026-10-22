@@ -1,8 +1,9 @@
 import { byeNote, deadlineWeek, realLine, displayName, gamesInWeek, type GameResult, type TeamId } from "@/lib/game";
+import { lazy } from "react";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, ClubHash, Logo } from "./chrome";
 import { FilmStill } from "./Art";
-import { GameNight } from "./GameNight";
+const GameNight = lazy(() => import("./GameNight").then((m) => ({ default: m.GameNight })));
 import {LiveBroadcast } from "./LiveBroadcast";
 import { wasWatched } from "./liveWatch";
 import { useState } from "react";
