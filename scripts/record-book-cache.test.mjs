@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { careerRecordBook } from "../src/lib/game/records.ts";
+import { careerRecordBook, seasonRecordBook } from "../src/lib/game/records.ts";
 import { emptyStats } from "../src/lib/game/players.ts";
 
 function saveWithRetiredRusher(id, name, yards) {
@@ -47,5 +47,18 @@ test("franchise career records display the franchise that owns the record", () =
     .rows[0];
 
   assert.equal(leader.value, 9000);
+  assert.equal(leader.team, "Pittsburgh Steelers");
+});
+
+test("season record rows use the club on the season stat line", () => {
+  const save = saveWithRetiredRusher("season-mover", "Season", 2100);
+  const player = save.players["season-mover"];
+  player.teamId = "chi";
+  player.stats = { 2000: { ...player.career[0] } };
+
+  const leader = seasonRecordBook(save, 1).find((category) => category.id === "rushYds").rows[0];
+
+  assert.equal(leader.value, 2100);
+  assert.equal(leader.year, 2000);
   assert.equal(leader.team, "Pittsburgh Steelers");
 });

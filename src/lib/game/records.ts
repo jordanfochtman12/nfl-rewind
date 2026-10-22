@@ -65,7 +65,14 @@ export function seasonRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): 
         if (teamId && s.teamId !== teamId) continue;
         const v = cat.of(s);
         if (v <= 0) continue;
-        rows.push({ playerId: p.id, name: playerName(p), team: teamLabel(save, p), pos: p.pos, value: v, year: Number(yearStr) });
+        rows.push({
+          playerId: p.id,
+          name: playerName(p),
+          team: s.teamId === "two" ? "Multiple teams" : displayName(Number(yearStr), s.teamId),
+          pos: p.pos,
+          value: v,
+          year: Number(yearStr),
+        });
       }
     }
     rows.sort((a, b) => b.value - a.value);
