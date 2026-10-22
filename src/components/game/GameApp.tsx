@@ -115,6 +115,7 @@ import { emptySlot } from "@/lib/save-slots";
 import { WatchTV } from "./WatchTV";
 import { Rulebook } from "./WatchStories";
 import { SettingsSheet } from "./SettingsSheet";
+import { useSettings } from "@/lib/settings-store";
 import { Tour } from "./Tour";
 import { WATCH_TOUR } from "./tours";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
@@ -316,7 +317,7 @@ function TeamSelect() {
   const Group = ({ title, ids }: { title: string; ids: readonly TeamId[] }) => (
     <section className="space-y-3">
       <h2 className="text-lg tracking-[0.2em] text-muted">{title}</h2>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="pc-club-grid grid grid-cols-1 gap-2 sm:grid-cols-2">
         {ids.map((id) => (
           <button
             key={id}
@@ -346,7 +347,7 @@ function TeamSelect() {
   return (
     <main className="relative isolate min-h-dvh overflow-hidden">
       <FilmStill still="office" veil="full" />
-      <div className="relative mx-auto max-w-4xl space-y-8 px-5 py-10">
+      <div className="pc-select-layout relative mx-auto space-y-8 px-5 py-10">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="font-display text-xs tracking-[0.35em] text-brass">{year} media guide</p>
@@ -2093,7 +2094,7 @@ function PlayShell() {
       <SaveHealthBanner />
       <header className="broadcast-header sticky top-0 z-20 bg-[#04050acc] backdrop-blur-md">
         <ClubRibbon />
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
+        <div className="pc-header-inner mx-auto flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
             <NetworkBug className="max-md:hidden" />
             {watch ? <WatchPlate save={save} /> : <ClubPlate save={save} />}
@@ -2113,17 +2114,24 @@ function PlayShell() {
             </Btn>
           </div>
         </div>
-        <div data-tour="tabs">
-          <TabStrip tabs={tabs} active={tab} onPick={setTab} />
-        </div>
       </header>
-      {watch && (
-        <div className="mx-auto max-w-6xl px-3 pt-4 sm:px-4">
-          <WatchBar slim={tab !== "office"} />
-        </div>
-      )}
-      <div key={`wipe-${tab}`} className="wipe" aria-hidden />
-      <main id="franchise-content" tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content rise-in mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-4">
+      <div className="pc-game-layout">
+        <aside className="pc-game-sidebar" data-tour="tabs">
+          <TabStrip tabs={tabs} active={tab} onPick={setTab} />
+          <div className="pc-sidebar-identity">
+            <span>{watch ? "LEAGUE DESK" : "FRANCHISE DESK"}</span>
+            <strong>{save.year} <i>SEASON</i></strong>
+            <small>{save.weekLabel}</small>
+          </div>
+        </aside>
+        <section className="pc-game-stage">
+          {watch && (
+            <div className="pc-watchbar">
+              <WatchBar slim={tab !== "office"} />
+            </div>
+          )}
+          <div key={`wipe-${tab}`} className="wipe" aria-hidden />
+          <main id="franchise-content" data-tab={tab} data-phase={save.phase} tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content pc-broadcast-content rise-in">
         <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={tabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
         {real && event && tab === "office" && save.phase !== "preseason" ? <EventPane /> : null}
         {real && tab === "office" ? <HistoryDesk /> : null}
@@ -2157,7 +2165,9 @@ function PlayShell() {
         <TeamRosterModal />
         {save.realHistory && <HistoryBoxModal />}
         <CrunchCall />
-      </main>
+          </main>
+        </section>
+      </div>
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {watch && !real && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
@@ -2169,8 +2179,19 @@ function PlayShell() {
 
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
+  const uiScale = useSettings((s) => s.uiScale);
+  const highContrast = useSettings((s) => s.highContrast);
   // The voices are the device's own now: the old studio-voice download is cleared off the device.
   useEffect(() => clearOldVoiceModel(), []);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--user-ui-scale", String(uiScale / 100));
+    root.dataset.contrast = highContrast ? "high" : "standard";
+    return () => {
+      root.style.removeProperty("--user-ui-scale");
+      delete root.dataset.contrast;
+    };
+  }, [highContrast, uiScale]);
   if (screen === "title") return <TitleScreen />;
   if (screen === "select") return <TeamSelect />;
   return <PlayShell />;

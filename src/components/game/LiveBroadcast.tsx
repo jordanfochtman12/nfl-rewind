@@ -241,7 +241,7 @@ export function LiveBroadcast({
   );
 
   return (
-    <section className={`overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000] ${eraCls}`} aria-label="Live broadcast">
+    <section className={`pc-live-broadcast overflow-hidden rounded-xl border border-white/10 bg-studio shadow-[0_24px_60px_-28px_#000] ${eraCls}`} aria-label="Live broadcast">
       {compact && !atEnd && <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs text-muted"><span>Replay to your decision</span><button type="button" className="bx-chip min-h-9 px-3" onClick={() => setI(log.length - 1)}>Jump to decision</button></div>}
       {eraCls && !compact && (
         <p className="k5-era-plate" aria-hidden>

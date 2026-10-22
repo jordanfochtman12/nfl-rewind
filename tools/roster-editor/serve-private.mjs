@@ -102,5 +102,5 @@ const server = createServer((req, res) => {
 server.listen(port, host, () => {
   console.log(`Private editor: https://<tunnel-host>/`);
   console.log(configuredPassword ? "Password: supplied via environment" : `Password: ${password}`);
-  console.log("The password opens a 12-hour read-only editor session. Press Ctrl+C to stop.");
+  console.log("The private session expires after 12 hours. Edits stay in browser storage; export them to implement. Press Ctrl+C to stop.");
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { clubInk, locationOf, nicknameOf, teamAbbr, type DynastySave, type GameResult, type TeamId } from "@/lib/game";
 import { Logo } from "./chrome";
 import { useGameStore } from "@/lib/game-store";
@@ -90,32 +90,46 @@ export function TabStrip<T extends string>({
   active: T;
   onPick: (id: T) => void;
 }) {
-  const sectionOf = (id: string) => ["office", "primetime"].includes(id) ? "GAME DAY" : ["roster", "depth", "staff", "market", "moves"].includes(id) ? "FRONT OFFICE" : ["standings", "league", "schedule", "stats"].includes(id) ? "LEAGUE" : "HISTORY";
-  let previousSection = "";
-  const activeRef = useRef<HTMLButtonElement>(null);
+  const save = useGameStore((s) => s.save);
+  const sections = [
+    { label: "Game day", ids: ["office", "primetime"] },
+    { label: "Front office", ids: ["roster", "depth", "staff", "market", "moves"] },
+    { label: "League", ids: ["standings", "league", "schedule", "stats"] },
+    { label: "History", ids: ["draft", "history", "superbowl", "team", "hof"] },
+  ].map((section) => ({ ...section, tabs: tabs.filter((tab) => section.ids.includes(tab.id)) })).filter((section) => section.tabs.length);
   useEffect(() => {
-    activeRef.current?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
-  }, [active]);
+    const onKey = (event: KeyboardEvent) => {
+      if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || !/^[1-9]$/.test(event.key)) return;
+      const target = event.target;
+      if (target instanceof HTMLElement && (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))) return;
+      const next = tabs[Number(event.key) - 1];
+      if (!next) return;
+      event.preventDefault();
+      onPick(next.id);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onPick, tabs]);
   return (
-      <nav className="next-navigation relative border-y border-white/10 bg-gradient-to-b from-[#161b26] to-[#07090e]" aria-label="Sections">
-        <label className="flex items-center gap-3 px-3 py-2 sm:hidden"><span className="text-xs text-muted">Section</span><select aria-label="Section" value={active} onChange={e => onPick(e.target.value as T)} className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-3 text-sm text-white">{tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}</select></label>
-        <div className="mx-auto hidden max-w-6xl gap-0.5 overflow-x-auto px-3 py-1.5 sm:flex" tabIndex={0}>
-        {tabs.map((t) => {
-          const on = t.id === active;
-          const section = sectionOf(t.id);
-          const newSection = section !== previousSection;
-          previousSection = section;
-          return (
-            <div className="flex shrink-0 items-center" key={t.id}>
-              {newSection && <span className="mx-1.5 h-6 border-l border-white/15" aria-hidden />}
-              <button type="button" ref={on ? activeRef : undefined} aria-current={on ? "page" : undefined} onClick={() => onPick(t.id)} title={section} className={`bx-btn relative min-h-9 shrink-0 px-3.5 text-[14px] sm:px-4 ${on ? "bx-primary" : "border border-transparent text-muted hover:bg-white/5 hover:text-white"}`}>
-                <span className="bx-in">{t.label}</span>
-                {on && <span className="absolute inset-x-1 -bottom-1.5 h-[3px] bg-brass shadow-[0_0_10px_#ffc629]" aria-hidden />}
-              </button>
-            </div>
-          );
-        })}
-      </div>
+      <nav className="pc-nav" aria-label="Game sections">
+        <label className="pc-nav-select"><span>Open section</span><select aria-label="Section" value={active} onChange={(e) => onPick(e.target.value as T)}>{tabs.map((tab) => <option key={tab.id} value={tab.id}>{tab.label}</option>)}</select></label>
+        <div className="pc-nav-groups">
+          {sections.map((section) => (
+            <section className="pc-nav-group" key={section.label} aria-label={section.label}>
+              <p>{section.label}</p>
+              {section.tabs.map((tab) => {
+                const index = tabs.findIndex((item) => item.id === tab.id) + 1;
+                return <button key={tab.id} type="button" aria-current={tab.id === active ? "page" : undefined} aria-keyshortcuts={`Alt+${index}`} onClick={() => onPick(tab.id)} className={`pc-nav-item ${tab.id === active ? "is-active" : ""}`}>
+                  <span className="pc-nav-indicator" aria-hidden />
+                  <span>{tab.label}</span>
+                  <kbd aria-hidden>{index}</kbd>
+                </button>;
+              })}
+            </section>
+          ))}
+          {save && <div className="pc-nav-season"><span>ON THE AIR</span><strong>{save.year} Season</strong><small>{save.weekLabel}</small></div>}
+          <p className="pc-nav-shortcut">Jump to a section with <kbd>Alt</kbd> + <kbd>1–9</kbd></p>
+        </div>
     </nav>
   );
 }
