@@ -43,7 +43,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 
 ## Validation and release
 
-- [ ] Run the appropriate focused tests for each change and the full regression suite after the final integration pass.
+- [x] Run the appropriate focused tests for each change and the full regression suite after the final integration pass. `npm test` passed 293 tests (291 passed, 2 skipped because the optional `.grok/skills/og` checkout is absent), including the full 1966–2020 realism simulation; `npm run typecheck`, ESLint, `git diff --check`, and `npm run build:dev` also passed.
 - [ ] Inspect the finished game in the running PC and mobile interfaces; report deployment status separately from local implementation.
 
 ### Current pass
@@ -64,3 +64,4 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Large broadcast and reference screens now load on demand, with an accessible Suspense status instead of shipping all screen code on first load. The production-shaped build emits separate chunks for WatchTV (34 KB), Primetime (53 KB), Draft Night (34 KB), Hall (22 KB), and game film (14 KB). The shared client chunks are still oversized (7.16 MB and 3.04 MB), so the performance audit stays open.
 - Development bundle builds and typecheck passes. Build output still warns about oversized stats/routes chunks; performance work remains open.
 - Full `build:dev` completed after the current UI and Hall changes; focused broadcast, substitution, Pro Bowl, Hall, jersey, and rushing tests pass. Build still reports a 3.0 MB stats chunk and 7.9 MB client / 13.1 MB SSR routes chunks, so performance is a concrete remaining target.
+- The game store now requests the simulation module when the player enters mode selection, waits for it before creating or restoring a dynasty, and exposes loading state while it is fetched. Draft report-card UI is also split out. Desktop Chrome smoke check reached the 1966 franchise selector and Pittsburgh draft board without page errors. This is an incremental loading-path refactor, not a measured bundle-size win: the build still has oversized shared chunks, so the PC performance audit remains open.

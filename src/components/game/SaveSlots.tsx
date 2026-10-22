@@ -210,7 +210,7 @@ export function SaveSlots() {
             try {
               const text = await f.text();
               await switchSlot(n);
-              importJson(text);
+              await importJson(text);
               setNote(`Restored into slot ${n}.`);
             } catch {
               setNote("That file couldn't be restored. Choose an NFL Rewind save file.");

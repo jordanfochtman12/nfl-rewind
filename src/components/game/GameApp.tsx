@@ -70,7 +70,6 @@ import { useGameStore, type Tab } from "@/lib/game-store";
 import { MarketDesk } from "./MarketDesk";
 import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
-import { DraftReportCard } from "./DraftReportCard";
 import { HISTORY_LAST, leagueHistoryHtml, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
@@ -109,6 +108,7 @@ import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
 // Presentation screens are split from the initial game shell and fetched when first opened.
 // This keeps the desktop/mobile startup path lean without changing their saved state.
 const DraftNight = lazy(() => import("./DraftNight").then((m) => ({ default: m.DraftNight })));
+const DraftReportCard = lazy(() => import("./DraftReportCard").then((m) => ({ default: m.DraftReportCard })));
 const PrimetimeShow = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeShow })));
 const PrimetimeTeaser = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeTeaser })));
 const WatchTV = lazy(() => import("./WatchTV").then((m) => ({ default: m.WatchTV })));
@@ -136,7 +136,7 @@ import {
 } from "./WinterNights";
 
 function TitleScreen() {
-  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox, newHistory, newLeagueSandbox, historyLoading, startYear, eraBuilding } = useGameStore();
+  const { save, setScreen, continueGame, exportJson, importJson, hasHydrated, newSandbox, newHistory, newLeagueSandbox, historyLoading, startYear, eraBuilding, engineLoading } = useGameStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [watchReady, setWatchReady] = useState(false);
   const [historyReady, setHistoryReady] = useState(false);
@@ -179,9 +179,9 @@ function TitleScreen() {
             }
             void newSandbox();
           }}
-          disabled={eraBuilding}
+          disabled={eraBuilding || engineLoading}
         >
-          {eraBuilding ? `Building the ${startYear} league…` : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`} <span aria-hidden>▸</span>
+          {eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`} <span aria-hidden>▸</span>
         </Btn>
         <Btn
           disabled={historyLoading}
@@ -204,9 +204,9 @@ function TitleScreen() {
             }
             void newLeagueSandbox();
           }}
-          disabled={eraBuilding}
+          disabled={eraBuilding || engineLoading}
         >
-          {eraBuilding ? `Building the ${startYear} league…` : save && leagueReady ? "Replace save and open League Architect" : "League Architect"} <span aria-hidden>◇</span>
+          {eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && leagueReady ? "Replace save and open League Architect" : "League Architect"} <span aria-hidden>◇</span>
         </Btn>
         <Btn onClick={continueGame} disabled={!save}>
           Continue
@@ -308,7 +308,9 @@ function StartYearPicker() {
 function TeamSelect() {
   const { newGame, setScreen, save } = useGameStore();
   const year = useGameStore((s) => s.startYear);
-  const building = useGameStore((s) => s.eraBuilding);
+  const eraBuilding = useGameStore((s) => s.eraBuilding);
+  const engineLoading = useGameStore((s) => s.engineLoading);
+  const building = eraBuilding || engineLoading;
   const [selectedTeam, setSelectedTeam] = useState<TeamId | null>(null);
   const [replaceReady, setReplaceReady] = useState(false);
   const [buildError, setBuildError] = useState("");
@@ -366,7 +368,8 @@ function TeamSelect() {
       <Group title={merged ? "National Football Conference" : "American Football League"} ids={afl} />
       {selectedTeam && <section className="sticky bottom-3 z-10 rounded-xl border border-brass/50 bg-[#0d1524f5] p-4 shadow-2xl backdrop-blur-md" aria-label="Selected franchise">
         <div className="flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><Logo id={selectedTeam} year={year} size={46}/><div><p className="text-xs text-brass">YOUR FRANCHISE · {year}</p><h2 className="mt-1 text-2xl">{displayName(year, selectedTeam)}</h2><p className="mt-1 text-xs text-muted">{venueOf(year, selectedTeam).stadium} · {merged ? conferenceOf(year, selectedTeam) : originalLeague(selectedTeam)}</p></div></div><Btn kind="primary" disabled={building} onClick={() => { if (save && !emptySlot() && !replaceReady) { setReplaceReady(true); return; } begin(selectedTeam); }}>{building ? `Building the ${year} league…` : save && replaceReady ? 'Replace dynasty and begin' : 'Begin your dynasty'}</Btn></div>
-        {building && <p role="status" className="mt-3 text-sm text-muted">Loading every real roster, stat line and champion up to {year}. This takes a few seconds.</p>}
+        {engineLoading && <p role="status" className="mt-3 text-sm text-muted">Loading the football simulation and draft board…</p>}
+        {eraBuilding && <p role="status" className="mt-3 text-sm text-muted">Loading every real roster, stat line and champion up to {year}. This takes a few seconds.</p>}
         {buildError && <p role="alert" className="mt-3 text-sm text-brick">{buildError}</p>}
         {save && replaceReady && <p role="alert" className="mt-3 text-sm text-brass">All five save slots are full, so starting replaces the {displayName(save.year, save.userTeamId)} dynasty in this one. Go back to the title and clear a slot to keep it.</p>}
       </section>}

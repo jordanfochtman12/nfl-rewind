@@ -1,37 +1,29 @@
 import { create } from "zustand";
 import { persist, type PersistStorage, type StorageValue } from "zustand/middleware";
-import {
-  advance,
-  cloneSave,
-  compactSave,
-  createNewGame,
-  createEraGame,
-  restoreRecordLines,
-  hydrateSave,
-  createHistoryGame,
-  historyCursor,
-  loadHistoryData,
-  hasHistoryData,
-  ROSTERS_LAST,
-  replayHistory,
-  setHistoryData,
-  applyLiveLines,
-  boxSeason,
-  loadBoxSeason,
-  toggleFollow as toggleFollowIn,
-  type HistoryCursor,
-  openCalls,
-  ownerGameJustPlayed,
-  simUntil,
-  withOrder,
-  type LiveOrder,
-  type AdvanceOpts,
-  type DynastySave,
-  type TeamId,
-} from "@/lib/game/index.ts";
+import type { AdvanceOpts, DynastySave, LiveOrder, TeamId } from "@/lib/game/types.ts";
+import type { HistoryCursor } from "@/lib/game/historyMode.ts";
 import { dynastyStorage } from "@/lib/save-idb.ts";
 import { activeSlot, emptySlot, recordSlot, setActiveSlot, slotIndex, slotKey } from "@/lib/save-slots.ts";
-import { importDynasty } from '@/lib/game/importSave';
+
+type GameEngine = typeof import("@/lib/game/index.ts");
+let loadedGameEngine: GameEngine | undefined;
+let gameEnginePromise: Promise<GameEngine> | undefined;
+
+/** Keep the simulation and its historical catalogs out of the title screen's startup path. */
+function loadGameEngine(): Promise<GameEngine> {
+  gameEnginePromise ??= import("@/lib/game/index.ts")
+    .then((engine) => (loadedGameEngine = engine))
+    .catch((error: unknown) => {
+      gameEnginePromise = undefined;
+      throw error;
+    });
+  return gameEnginePromise;
+}
+
+function gameEngine(): GameEngine {
+  if (!loadedGameEngine) throw new Error("The game engine is still loading. Open a mode before advancing the league.");
+  return loadedGameEngine;
+}
 
 export type Screen = "title" | "select" | "play";
 export type Tab =
@@ -83,6 +75,8 @@ interface GameStore {
   setStartYear: (y: number) => void;
   /** True while a later start year's league is being built from the record. */
   eraBuilding: boolean;
+  /** True while the on-demand game engine code is being fetched. */
+  engineLoading: boolean;
   /** History mode: the real league, step by step from the 1966 draft. Loads its tables first. */
   newHistory: () => Promise<void>;
   /** True while History mode's tables load (and a saved History game replays to where it was). */
@@ -108,7 +102,7 @@ interface GameStore {
   tv: boolean;
   setTv: (on: boolean) => void;
   exportJson: () => string;
-  importJson: (raw: string) => void;
+  importJson: (raw: string) => Promise<void>;
   resign: () => void;
   /** The save slot in use (1..SLOT_COUNT). */
   slot: number;
@@ -145,7 +139,7 @@ function stepTo(
   next: DynastySave,
   opts?: AdvanceOpts,
 ): void {
-  const gameId = ownerGameJustPlayed(prev, next);
+  const gameId = gameEngine().ownerGameJustPlayed(prev, next);
   if (gameId) set({ save: next, rewind: { gameId, pre: prev, opts } });
   else set({ save: next, rewind: null });
   if (next.realHistory) ensureHistoryBox();
@@ -180,7 +174,8 @@ function persistStorage(): PersistStorage<Persisted> {
     writing = writing.then(async () => {
       const save = job.value.state.save;
       // A History mode save is only its place in the record; the league is rebuilt on load.
-      const disk = save ? (save.realHistory ? historyCursor(save) : compactSave(save)) : null;
+      const engine = save ? gameEngine() : undefined;
+      const disk = save ? (save.realHistory ? engine!.historyCursor(save) : engine!.compactSave(save)) : null;
       const payload = JSON.stringify({ ...job.value, state: { save: disk } });
       await dynastyStorage.setItem(PACKED(slotKey(job.name, job.slot)), payload);
       recordSlot(job.slot, save);
@@ -250,11 +245,12 @@ function historyStub(raw: unknown): HistoryCursor | undefined {
 async function restoreHistory(cursor: HistoryCursor): Promise<void> {
   useGameStore.setState({ historyLoading: true });
   try {
-    setHistoryData(await loadHistoryData());
-    const save = replayHistory(cursor.historyStep, cursor);
+    const engine = await loadGameEngine();
+    engine.setHistoryData(await engine.loadHistoryData());
+    const save = engine.replayHistory(cursor.historyStep, cursor);
     // This season's running stat lines come from its box scores.
-    await loadBoxSeason(save.year);
-    applyLiveLines(save);
+    await engine.loadBoxSeason(save.year);
+    engine.applyLiveLines(save);
     useGameStore.setState({ save, rewind: null });
   } finally {
     useGameStore.setState({ historyLoading: false });
@@ -264,12 +260,16 @@ async function restoreHistory(cursor: HistoryCursor): Promise<void> {
 /** History mode: make sure the season on screen has its box scores, then fill its running lines. */
 function ensureHistoryBox(): void {
   const s = useGameStore.getState().save;
-  if (!s?.realHistory || boxSeason(s.year)) return;
+  if (!s?.realHistory) return;
   const year = s.year;
-  void loadBoxSeason(year).then((games) => {
+  void loadGameEngine().then((engine) => {
+    if (engine.boxSeason(year)) return undefined;
+    return engine.loadBoxSeason(year);
+  }).then((games) => {
+    if (!games) return;
     const cur = useGameStore.getState().save;
     if (!games || !cur?.realHistory || cur.year !== year) return;
-    applyLiveLines(cur);
+    gameEngine().applyLiveLines(cur);
     useGameStore.setState({ save: { ...cur } });
   });
 }
@@ -306,7 +306,17 @@ export const useGameStore = create<GameStore>()(
       setLiveGame: (liveGameId) => set({ liveGameId }),
       tv: false,
       setTv: (tv) => set({ tv }),
-      setScreen: (screen) => set({ screen }),
+      setScreen: (screen) => {
+        if (screen === "select") {
+          set({ screen, engineLoading: !loadedGameEngine });
+          void loadGameEngine().then(
+            () => set({ engineLoading: false }),
+            () => set({ engineLoading: false }),
+          );
+          return;
+        }
+        set({ screen });
+      },
       setTab: (tab) => set({ tab }),
       openProfile: (profileId) => set({ profileId }),
       closeProfile: () => set({ profileId: null }),
@@ -315,20 +325,23 @@ export const useGameStore = create<GameStore>()(
       startYear: 1966,
       setStartYear: (startYear) => set({ startYear }),
       eraBuilding: false,
+      engineLoading: false,
       newGame: async (teamId) => {
         const year = get().startYear;
+        set({ engineLoading: true });
+        const engine = await loadGameEngine().finally(() => set({ engineLoading: false }));
         if (year === 1966) {
           freshSlot();
-          const save = createNewGame({ userTeamId: teamId, startingYear: 1966 });
+          const save = engine.createNewGame({ userTeamId: teamId, startingYear: 1966 });
           set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
           return;
         }
         set({ eraBuilding: true });
         try {
-          setHistoryData(await loadHistoryData());
+          engine.setHistoryData(await engine.loadHistoryData());
           // Let "Building the league" paint before the replay takes the main thread.
           await new Promise((r) => setTimeout(r, 30));
-          const save = createEraGame({ userTeamId: teamId, startingYear: year });
+          const save = engine.createEraGame({ userTeamId: teamId, startingYear: year });
           freshSlot();
           set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
         } finally {
@@ -337,17 +350,19 @@ export const useGameStore = create<GameStore>()(
       },
       newLeagueSandbox: async () => {
         const year = get().startYear;
+        set({ engineLoading: true });
+        const engine = await loadGameEngine().finally(() => set({ engineLoading: false }));
         if (year === 1966) {
           freshSlot();
-          const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, leagueSandbox: true, seed: Date.now() % 2147483647 });
+          const save = engine.createNewGame({ userTeamId: "gnb", startingYear: 1966, leagueSandbox: true, seed: Date.now() % 2147483647 });
           set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
           return;
         }
         set({ eraBuilding: true });
         try {
-          setHistoryData(await loadHistoryData());
+          engine.setHistoryData(await engine.loadHistoryData());
           await new Promise((r) => setTimeout(r, 30));
-          const save = createEraGame({ userTeamId: "gnb", startingYear: year, leagueSandbox: true, seed: Date.now() % 2147483647 });
+          const save = engine.createEraGame({ userTeamId: "gnb", startingYear: year, leagueSandbox: true, seed: Date.now() % 2147483647 });
           freshSlot();
           set({ save, screen: "play", tab: "draft", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
         } finally {
@@ -357,7 +372,7 @@ export const useGameStore = create<GameStore>()(
       setControlTeam: (id) => {
         const current = get().save;
         if (!current?.leagueSandbox || current.userTeamId === id) return;
-        const save = cloneSave(current);
+        const save = gameEngine().cloneSave(current);
         save.userTeamId = id;
         set({ save });
       },
@@ -365,11 +380,12 @@ export const useGameStore = create<GameStore>()(
       newHistory: async () => {
         set({ historyLoading: true });
         try {
-          setHistoryData(await loadHistoryData());
+          const engine = await loadGameEngine();
+          engine.setHistoryData(await engine.loadHistoryData());
           freshSlot();
-          const save = createHistoryGame();
-          await loadBoxSeason(save.year);
-          applyLiveLines(save);
+          const save = engine.createHistoryGame();
+          await engine.loadBoxSeason(save.year);
+          engine.applyLiveLines(save);
           set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null, tv: false });
         } finally {
           set({ historyLoading: false });
@@ -378,17 +394,19 @@ export const useGameStore = create<GameStore>()(
       newSandbox: async () => {
         // The engine wants a club id for the owner's seat; in a sandbox nothing treats it as anyone's.
         const year = get().startYear;
+        set({ engineLoading: true });
+        const engine = await loadGameEngine().finally(() => set({ engineLoading: false }));
         if (year === 1966) {
           freshSlot();
-          const save = createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
+          const save = engine.createNewGame({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: Date.now() % 2147483647 });
           set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
           return;
         }
         set({ eraBuilding: true });
         try {
-          setHistoryData(await loadHistoryData());
+          engine.setHistoryData(await engine.loadHistoryData());
           await new Promise((r) => setTimeout(r, 30));
-          const save = createEraGame({ userTeamId: "gnb", startingYear: year, sandbox: true, seed: Date.now() % 2147483647 });
+          const save = engine.createEraGame({ userTeamId: "gnb", startingYear: year, sandbox: true, seed: Date.now() % 2147483647 });
           freshSlot();
           set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, lastDeskNote: null, rewind: null });
         } finally {
@@ -396,6 +414,7 @@ export const useGameStore = create<GameStore>()(
         }
       },
       watchSim: (target) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save || save.phase === "complete") return;
         const year = save.year;
@@ -407,83 +426,93 @@ export const useGameStore = create<GameStore>()(
                 s.year > year || s.phase === "superBowl" || s.phase === "awards"
               : s.year > year && s.phase === "draft";
         // The live call belongs to the week it aired; a jump ahead leaves it in the archive.
-        set({ save: simUntil(save, done), rewind: null });
+        set({ save: engine.simUntil(save, done), rewind: null });
       },
       continueGame: () => {
         const { save } = get();
         if (save) set({ screen: "play" });
       },
       step: (opts) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save) return;
-        stepTo(set, save, advance(save, opts), opts);
+        stepTo(set, save, engine.advance(save, opts), opts);
       },
       simWeek: () => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save) return;
-        if (save.phase === "freeAgency") set({ save: advance(save, { closeFa: true }) });
+        if (save.phase === "freeAgency") set({ save: engine.advance(save, { closeFa: true }) });
         else if (save.phase === "complete") return;
         else {
           const opts = { auto: save.phase === "draft" };
-          stepTo(set, save, advance(save, opts), opts);
+          stepTo(set, save, engine.advance(save, opts), opts);
         }
       },
       simTo: (target) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save || (save.phase !== "regular" && save.phase !== "deadline")) return "";
-        const seen = new Set(openCalls(save).map((c) => c.id));
+        const seen = new Set(engine.openCalls(save).map((c) => c.id));
         let why = "";
         const done = (s: DynastySave) => {
-          if (openCalls(s).some((c) => !seen.has(c.id))) return (why = "call"), true;
+          if (engine.openCalls(s).some((c) => !seen.has(c.id))) return (why = "call"), true;
           if (target === "deadline" && (s.phase === "deadline" || (s.deadline?.year === s.year && s.deadline.resolved)))
             return (why = "deadline"), true;
           if (s.phase !== "regular" && s.phase !== "deadline") return (why = "playoffs"), true;
           return false;
         };
-        set({ save: simUntil(save, done), rewind: null });
+        set({ save: engine.simUntil(save, done), rewind: null });
         return why;
       },
       crunchChoose: (optionId) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save?.crunch?.situation) return;
-        const s = cloneSave(save);
+        const s = engine.cloneSave(save);
         const sit = s.crunch!.situation!;
         // The broadcast picks up where the owner watched it to when he made the call.
         s.liveResume = { gameId: sit.gameId, index: Math.max(0, (sit.log?.length ?? 1) - 1) };
         s.crunch!.choices.push(optionId);
         s.crunch!.at = [...(s.crunch!.at ?? []), sit.log?.length ?? 0];
         s.crunch!.situation = undefined;
-        stepTo(set, s, advance(s));
+        stepTo(set, s, engine.advance(s));
       },
       rewind: null,
       liveOrder: (o) => {
+        const engine = gameEngine();
         const r = get().rewind;
         if (!r) return;
-        const base = withOrder(r.pre, { ...o, gameId: r.gameId });
-        const next = advance(base, r.opts);
+        const base = engine.withOrder(r.pre, { ...o, gameId: r.gameId });
+        const next = engine.advance(base, r.opts);
         next.liveResume = { gameId: r.gameId, index: Math.max(0, o.at - 1) };
         // The rewind point stays the same pre-game save, now carrying the orders so far.
         set({ save: next, rewind: { ...r, pre: base } });
       },
       desk: (fn) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save) return;
-        const s = cloneSave(save);
+        const s = engine.cloneSave(save);
         const note = fn(s);
         // A replay from before the game would undo this change, so live calls end here.
         set({ save: s, lastDeskNote: note ?? null, rewind: null });
       },
       exportJson: () => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save) return "null";
-        return JSON.stringify(save.realHistory ? historyCursor(save) : compactSave(save), null, 2);
+        return JSON.stringify(save.realHistory ? engine.historyCursor(save) : engine.compactSave(save), null, 2);
       },
-      importJson: (raw) => {
+      importJson: async (raw) => {
         const cursor = historyStub(JSON.parse(raw));
         if (cursor !== undefined) {
-          void restoreHistory(cursor).then(() => set({ screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null }));
+          await restoreHistory(cursor);
+          set({ screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
           return;
         }
+        await loadGameEngine();
+        const { importDynasty } = await import("@/lib/game/importSave.ts");
         const save = importDynasty(raw);
         set({ save, screen: "play", tab: "office", profileId: null, viewTeamId: null, liveGameId: null, rewind: null });
       },
@@ -501,10 +530,11 @@ export const useGameStore = create<GameStore>()(
       openBox: (g) => set({ boxView: { year: g.year, homeId: g.homeId as TeamId, awayId: g.awayId as TeamId, date: g.date, round: g.round, week: g.week } }),
       closeBox: () => set({ boxView: null }),
       toggleFollow: (what) => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save?.realHistory) return;
         const next = { ...save };
-        toggleFollowIn(next, what);
+        engine.toggleFollow(next, what);
         set({ save: next });
       },
       makeCall: (id, pick) => {
@@ -516,6 +546,7 @@ export const useGameStore = create<GameStore>()(
         set({ save: { ...save, historyCalls: calls } });
       },
       historyUntilFollowed: () => {
+        const engine = gameEngine();
         const { save } = get();
         if (!save?.realHistory || save.phase === "complete") return "";
         const f = save.historyFollow ?? { teams: [], players: [] };
@@ -526,7 +557,7 @@ export const useGameStore = create<GameStore>()(
         let first = true;
         let why = "";
         // One clone for the whole run (simUntil), checking after every step.
-        const s = simUntil(
+        const s = engine.simUntil(
           save,
           (x) => {
             if (first) return (first = false);
@@ -569,16 +600,30 @@ export const useGameStore = create<GameStore>()(
       storage: persistStorage(),
       partialize: (s) => ({ save: s.save }),
       onRehydrateStorage: () => (state) => {
+        if (!state) return;
         const cursor = historyStub(state?.save);
-        if (state && cursor !== undefined) {
+        if (cursor !== undefined) {
           state.save = null;
-          void restoreHistory(cursor);
-        } else if (state?.save) {
-          state.save = hydrateSave(state.save);
-          // A dynasty saved before slots existed is slot 1; put it on the slot list.
-          if (!slotIndex()[activeSlot()]) recordSlot(activeSlot(), state.save);
+          state.hasHydrated = false;
+          void restoreHistory(cursor).finally(() => useGameStore.setState({ hasHydrated: true }));
+          return;
         }
-        if (state) state.hasHydrated = true;
+        const saved = state.save;
+        if (saved) {
+          state.save = null;
+          state.hasHydrated = false;
+          void loadGameEngine().then((engine) => {
+            const hydrated = engine.hydrateSave(saved);
+            // A dynasty saved before slots existed is slot 1; put it on the slot list.
+            if (!slotIndex()[activeSlot()]) recordSlot(activeSlot(), hydrated);
+            useGameStore.setState({ save: hydrated, hasHydrated: true });
+          }).catch((error: unknown) => {
+            console.error("Could not load the saved dynasty engine:", error);
+            useGameStore.setState({ hasHydrated: true });
+          });
+          return;
+        }
+        state.hasHydrated = true;
         queueMicrotask(() => useGameStore.setState({ hasHydrated: true }));
       },
     },
@@ -592,10 +637,15 @@ useGameStore.subscribe((st) => {
   if (!s?.realPool) return;
   // A disk save leaves its players' real past seasons to the record: put them back on load.
   if (s.recordLinesBefore) {
-    void loadHistoryData().then((d) => {
-      if (!hasHistoryData()) setHistoryData(d);
+    void loadGameEngine().then(async (engine) => {
+      const d = await engine.loadHistoryData();
+      if (!engine.hasHistoryData()) engine.setHistoryData(d);
       const cur = useGameStore.getState().save;
-      if (cur?.recordLinesBefore && restoreRecordLines(cur)) useGameStore.setState({ save: { ...cur } });
+      if (cur?.recordLinesBefore && engine.restoreRecordLines(cur)) useGameStore.setState({ save: { ...cur } });
     });
-  } else if (s.year <= ROSTERS_LAST && !hasHistoryData()) void loadHistoryData().then(setHistoryData);
+  } else {
+    void loadGameEngine().then((engine) => {
+      if (s.year <= engine.ROSTERS_LAST && !engine.hasHistoryData()) return engine.loadHistoryData().then(engine.setHistoryData);
+    });
+  }
 });
