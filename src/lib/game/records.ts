@@ -153,7 +153,7 @@ export function careerRecordBook(save: DynastySave, topN = 5, teamId?: TeamId): 
     const rows = ranked.map(({ p, c, value }) => ({
       playerId: p.id,
       name: playerName(p),
-      team: teamLabel(save, p),
+      team: teamId ? displayName(save.year, teamId) : teamLabel(save, p),
       pos: p.pos,
       value,
       year: (c ?? careerOf(p)).lastYear,

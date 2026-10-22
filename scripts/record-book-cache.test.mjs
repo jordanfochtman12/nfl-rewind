@@ -37,3 +37,15 @@ test("career record cache does not leak retired leaders between divergent saves"
   assert.equal(branchLeader.name, "Second Runner");
   assert.equal(branchLeader.value, 12000);
 });
+
+test("franchise career records display the franchise that owns the record", () => {
+  const save = saveWithRetiredRusher("moved-rusher", "Moved", 9000);
+  const player = save.players["moved-rusher"];
+  player.teamId = "chi";
+
+  const leader = careerRecordBook(save, 1, "pit").find((category) => category.id === "rushYds")
+    .rows[0];
+
+  assert.equal(leader.value, 9000);
+  assert.equal(leader.team, "Pittsburgh Steelers");
+});
