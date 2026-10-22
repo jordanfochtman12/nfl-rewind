@@ -3,6 +3,8 @@ import { weekIsInTheBooks, type DynastySave } from "@/lib/game";
 /** What the next press does, said the way a viewer would. */
 export function watchLabel(save: DynastySave): string {
   switch (save.phase) {
+    case "preDraft":
+      return "Open the draft room";
     case "draft":
       return "Next pick";
     case "freeAgency":

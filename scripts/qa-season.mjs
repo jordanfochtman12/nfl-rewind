@@ -291,8 +291,7 @@ const glass = rostered.find((p) => (p.traits ?? []).includes("Glass"));
 assert(!glass || g.kitInjMult(glass) > 1, "Glass misses more time");
 
 let camp = g.createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 9 });
-camp = g.advance(camp, { auto: true });
-camp = g.advance(camp, { auto: true });
+for (let i = 0; i < 4 && camp.phase !== "preseason"; i++) camp = g.advance(camp, { auto: true });
 assert(camp.phase === "preseason", `camp lands on preseason (got ${camp.phase})`);
 assert(camp.camp && camp.camp.year === 1966, "training camp report exists");
 assert(Array.isArray(camp.camp.cuts), "camp recorded CPU cuts");

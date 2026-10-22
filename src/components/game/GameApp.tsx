@@ -108,6 +108,7 @@ import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
 // Presentation screens are split from the initial game shell and fetched when first opened.
 // This keeps the desktop/mobile startup path lean without changing their saved state.
 const DraftNight = lazy(() => import("./DraftNight").then((m) => ({ default: m.DraftNight })));
+const DraftPreview = lazy(() => import("./DraftPreview").then((m) => ({ default: m.DraftPreviewShow })));
 const DraftReportCard = lazy(() => import("./DraftReportCard").then((m) => ({ default: m.DraftReportCard })));
 const PrimetimeShow = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeShow })));
 const PrimetimeTeaser = lazy(() => import("./PrimetimeShow").then((m) => ({ default: m.PrimetimeTeaser })));
@@ -392,6 +393,7 @@ function PhaseAction() {
   if (!save) return null;
   const label: Record<string, string> = {
     draft: "Stay on the clock / auto rest",
+    preDraft: "Open the draft room",
     freeAgency: "Close free agency",
     expansion: save.expansion?.done ? "Open the college draft" : "Complete expansion",
     preseason: "Kick off the regular season",
@@ -2016,6 +2018,7 @@ function AllDecadeTeams() {
 
 function EventPane() {
   const save = useGameStore((s) => s.save)!;
+  if (save.phase === "preDraft") return <DraftPreview preDraft />;
   if (save.phase === "waivers") return <WaiverNight />;
   if (save.phase === "superBowl" && save.superBowl) return <SuperBowlNight />;
   if (save.phase === "awards" && save.awards) return <AwardsNight />;
@@ -2112,7 +2115,7 @@ function PlayShell() {
   const event = useMemo(() => {
     if (!save) return false;
     return (
-      ["superBowl", "proBowl", "awards", "retirement", "hof", "expansion", "carousel", "relocation", "preseason", "waivers"].includes(
+      ["superBowl", "proBowl", "awards", "retirement", "hof", "expansion", "carousel", "relocation", "preseason", "waivers", "preDraft"].includes(
         save.phase,
       ) || weekIsInTheBooks(save)
     );
@@ -2212,7 +2215,8 @@ function PlayShell() {
         {tab === "schedule" && <Schedule />}
         {tab === "stats" && <Stats />}
         {tab === "draft" && real && <HistoryDraft />}
-        {tab === "draft" && !showDraft && !real && <DraftNight />}
+        {tab === "draft" && save.phase === "preDraft" && !real && <DraftPreview preDraft />}
+        {tab === "draft" && !showDraft && !real && save.phase !== "preDraft" && <DraftNight />}
         {tab === "draft" && (!showDraft || real) && <DraftReportCard />}
         {tab === "history" && <History />}
         {tab === "superbowl" && <SuperBowlHistory />}

@@ -115,7 +115,7 @@ export function PrimetimeTeaser() {
 export function PrimetimeShow() {
   const save = useGameStore((s) => s.save)!;
   if (save.realHistory) return <WeeklyShow />;
-  if (save.phase === "draft" && save.draftBoard.some((p) => !p.taken)) return <DraftPreviewShow />;
+  if ((save.phase === "preDraft" || save.phase === "draft") && save.draftBoard.some((p) => !p.taken)) return <DraftPreviewShow preDraft={save.phase === "preDraft"} />;
   if (save.phase === "preseason") return <SeasonPreviewShow />;
   return <WeeklyShow />;
 }

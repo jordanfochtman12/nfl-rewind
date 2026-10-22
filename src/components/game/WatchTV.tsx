@@ -222,6 +222,13 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
       const g = save.proBowl;
       return card("probowl", "The Pro Bowl", "ALL-STAR WEEK", "", g?.played ? [`${String(g.awayId).toUpperCase()} ${g.awayScore}, ${String(g.homeId).toUpperCase()} ${g.homeScore}`] : phaseNews(save, ["proBowl", "awards"], 5), {}, 8);
     }
+    case "preDraft": {
+      const names = save.draftBoard.slice(0, 6).map((slot, i) => {
+        const p = save.players[slot.playerId];
+        return p ? `${i + 1}. ${playerName(p)}, ${p.pos} · ${p.college ?? "college"}` : `${i + 1}. Draft board update`;
+      });
+      return card("pre-draft", `The ${y} Draft Preview`, "PRE-DRAFT SPECIAL", "The board is set. Here are the names, needs, and debates to know before the first pick.", names, {}, 12);
+    }
     case "waivers":
       return card("waivers", "The waiver wire", "FRONT OFFICE WINDOW", `${save.waivers.length} player${save.waivers.length === 1 ? " is" : "s are"} available to claim before the next Sunday.`, save.waivers.slice(0, 8).map((w) => {
         const p = save.players[w.playerId];

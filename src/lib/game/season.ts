@@ -74,6 +74,9 @@ import { developCareerWeek, snapshotCareerWeek } from "./careerDevelopment.ts";
 export function setLabel(save: DynastySave): void {
   const y = save.year;
   switch (save.phase) {
+    case "preDraft":
+      save.weekLabel = `${y} Pre-Draft Special`;
+      break;
     case "draft":
       save.weekLabel = `${y} ${sessionLabel(save)}`;
       break;
@@ -365,7 +368,7 @@ function openDraft(save: DynastySave): void {
   ensureSeasonPicks(save);
   buildDraftBoard(save);
   runCombine(save);
-  save.phase = "draft";
+  save.phase = "preDraft";
   save.week = 0;
   save.draftPickIndex = 0;
   save.faOpened = false;
@@ -544,6 +547,9 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     case "expansion":
       closeExpansion(s);
       openDraft(s);
+      break;
+    case "preDraft":
+      s.phase = "draft";
       break;
     case "preseason":
       if (!s.camp || s.camp.year !== s.year) {

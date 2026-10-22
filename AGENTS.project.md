@@ -14,7 +14,7 @@ Single-player historical NFL dynasty GM simulator (Front Office Football + histo
 
 ## Season loop
 
-preseason (camp) → regular season weeks (waiver review when claims are available) → **trade deadline week** → playoffs → Super Bowl event → awards night → Pro Bowl night → retirement ceremony → Hall of Fame → **coaching carousel** → **relocation (if that year)** → **expansion (if that year)** → draft → free agency night → next season.
+preseason (camp) → regular season weeks (waiver review when claims are available) → **trade deadline week** → playoffs → Super Bowl event → awards night → Pro Bowl night → retirement ceremony → Hall of Fame → **coaching carousel** → **relocation (if that year)** → **expansion (if that year)** → pre-draft special → draft → free agency night → next season.
 
 Expansion runs **before** the college draft so new clubs exist for that year’s board (Saints 1967 allocation, then 1967 draft).
 

@@ -73,6 +73,7 @@ export const ACTIVE_1966: readonly TeamId[] = [
 
 export type Phase =
   | "draft"
+  | "preDraft"
   | "freeAgency"
   | "expansion"
   | "preseason"

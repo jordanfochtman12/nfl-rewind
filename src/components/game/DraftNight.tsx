@@ -43,7 +43,6 @@ import { PlayerLink } from "./PlayerProfile";
 import { NightShow } from "./ShowKit";
 import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
 import { DraftOpening } from "./DraftOpening";
-import { DraftPreviewShow } from "./DraftPreview";
 import { DraftRecapView } from "./DraftRecap";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
@@ -215,8 +214,6 @@ export function DraftNight() {
               setPaused(false);
             }}
           />
-          {/* The preview show comes with the opening: the mock, the board and the needs before the first pick. */}
-          <DraftPreviewShow embedded />
         </>
       )}
       <section className={`relative overflow-hidden rounded-xl border border-brass/30 bg-studio ${showOpening ? "hidden" : ""}`}>

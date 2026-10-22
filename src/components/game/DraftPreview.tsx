@@ -56,9 +56,10 @@ function Segment({ n, title, children, id }: { n: number; title: string; childre
  * `embedded` is the same preview under draft night's opening card (no show open, no ticker,
  * no button to the room the owner is already in).
  */
-export function DraftPreviewShow({ embedded = false }: { embedded?: boolean } = {}) {
+export function DraftPreviewShow({ embedded = false, preDraft = false }: { embedded?: boolean; preDraft?: boolean } = {}) {
   const save = useGameStore((s) => s.save)!;
   const setTab = useGameStore((s) => s.setTab);
+  const step = useGameStore((s) => s.step);
   const [group, setGroup] = useState<PosGroup>("QB");
   const d = useMemo(() => draftPreview(save), [save]);
   const P = (id: string) => save.players[id];
@@ -340,7 +341,7 @@ export function DraftPreviewShow({ embedded = false }: { embedded?: boolean } = 
       <FilmStill still="draft" veil="bottom" className="h-[440px]" />
       <div className="relative">
         <header className="sheen border-b border-white/10 px-5 pb-6 pt-8 sm:px-8 sm:pt-12">
-          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">Draft week · live from the war room</p>
+          <p className="font-display text-xs font-bold uppercase italic tracking-[0.3em] text-brass">{preDraft ? "Pre-draft special · live from the war room" : "Draft week · live from the war room"}</p>
           <div className="mt-2 flex flex-wrap items-end gap-x-4 gap-y-2">
             <h2 className="bg-gradient-to-b from-white via-[#e9edf3] to-[#9aa4b4] bg-clip-text pr-2 text-5xl font-black leading-[0.85] text-transparent sm:text-7xl">
               Draft Preview
@@ -361,8 +362,8 @@ export function DraftPreviewShow({ embedded = false }: { embedded?: boolean } = 
           </ul>
           {!embedded && (
             <div className="mt-5 flex flex-wrap gap-2">
-              <Btn kind="primary" onClick={() => setTab("draft")}>
-                To the draft room <span aria-hidden>▸</span>
+              <Btn kind="primary" onClick={() => preDraft ? step({}) : setTab("draft")}>
+                {preDraft ? "Open the draft room" : "To the draft room"} <span aria-hidden>▸</span>
               </Btn>
             </div>
           )}
@@ -379,12 +380,20 @@ export function DraftPreviewShow({ embedded = false }: { embedded?: boolean } = 
             {s.node}
           </Segment>
         ))}
+        {preDraft && (
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-5 sm:px-8">
+            <p className="text-sm text-muted">The class is introduced. Your board and draft slot are ready.</p>
+            <Btn kind="primary" className="min-h-12 px-7 text-lg" onClick={() => step({})}>
+              Open the draft room <span aria-hidden>▸</span>
+            </Btn>
+          </div>
+        )}
       </div>
     </article>
   );
   if (embedded) return body;
   return (
-    <NightShow id={`draft-preview-${save.year}`} show="DRAFT PREVIEW SPECIAL" title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
+    <NightShow id={`draft-preview-${save.year}`} show={preDraft ? "PRE-DRAFT SPECIAL" : "DRAFT PREVIEW SPECIAL"} title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
       {body}
     </NightShow>
   );

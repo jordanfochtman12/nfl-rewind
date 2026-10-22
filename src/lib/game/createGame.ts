@@ -54,7 +54,7 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
   ensureSeasonPicks(save);
   buildDraftBoard(save);
   rebuildSchedule(save);
-  save.phase = "draft";
+  save.phase = "preDraft";
   save.week = 0;
   setLabel(save);
   addNews(save, o.sandbox
@@ -76,7 +76,7 @@ export function createNewGame(opts: CreateGameOpts | TeamId, year?: number): Dyn
     : {
         kind: "headline",
         headline: `A new dynasty in ${displayName(startingYear, o.userTeamId)}`,
-        body: `The ${startingYear} draft is open. Starr, Unitas, Namath, Sayers, Butkus — and a board with Tommy Nobis at the top. Rewrite football history.`,
+        body: `Draft week is here in ${startingYear}. Starr, Unitas, Namath, Sayers, Butkus — and Tommy Nobis at the top of the board. Meet the class before the first pick.`,
         teamIds: [o.userTeamId],
         playerIds: [],
       });
