@@ -1,7 +1,7 @@
 /** Depth-chart backs receive a realistic workload split as the game wears on. */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createNewGame, teamUnits, thirdBackRotationShare } from "../src/lib/game/index.ts";
+import { createNewGame, simGame, teamUnits, thirdBackRotationShare } from "../src/lib/game/index.ts";
 
 test("a healthy third back joins the rotation only after the top two carry a heavy load", () => {
   let save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
@@ -18,4 +18,27 @@ test("a healthy third back joins the rotation only after the top two carry a hea
 
   team.depth.RB = [team.depth.RB[1], team.depth.RB[2], team.depth.RB[0], ...team.depth.RB.slice(3)];
   assert.equal(teamUnits(save, "pit").rb3?.id, team.depth.RB[2], "RB3 selection updates with owner depth-chart edits");
+});
+
+test("offensive scheme selects the intended receiver personnel and uses both tight ends", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 624 });
+  const team = save.teams.pit;
+
+  team.offScheme = "vertical";
+  const vertical = teamUnits(save, "pit");
+  assert.equal(vertical.wr.length, 3, "vertical personnel use three wide receivers");
+  assert.equal(vertical.te2, undefined, "vertical personnel use one tight end");
+  assert.equal(vertical.fb, undefined, "vertical personnel remove the fullback");
+
+  team.offScheme = "smashmouth";
+  const smashmouth = teamUnits(save, "pit");
+  assert.equal(smashmouth.wr.length, 1, "smashmouth personnel use one wide receiver");
+  assert.ok(smashmouth.te && smashmouth.te2, "smashmouth personnel can include two tight ends");
+  assert.ok(smashmouth.fb, "smashmouth keeps its fullback available");
+
+  const secondTightEnd = smashmouth.te2.id;
+  const game = { id: "smashmouth-te-rotation", year: save.year, week: 2, phase: "regular", homeId: "pit", awayId: "cle", homeScore: 0, awayScore: 0, played: false };
+  simGame(save, game);
+  const box = [...(game.boxHome ?? []), ...(game.boxAway ?? [])].find((row) => row.playerId === secondTightEnd);
+  assert.ok(box?.targets > 0, "the second tight end participates in the passing game");
 });

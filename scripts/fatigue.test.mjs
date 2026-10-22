@@ -54,3 +54,22 @@ test("a rotating RB2 contributes to offensive fatigue", () => {
   assert.ok(unitFatigueMultiplier(units, "offense", true) < rested,
     "a lower-stamina RB2 lowers the offensive unit's late-game performance");
 });
+
+test("rotating backs count as one active fatigue role, not three simultaneous players", () => {
+  const player = (stamina) => ({ ratings: { stamina } });
+  const units = {
+    qb: player(50),
+    rb: player(100),
+    rb2: player(100),
+    rb3: player(100),
+    wr: [],
+    ol: [],
+    dl: [],
+    lb: [],
+    db: [],
+  };
+  const expectedStamina = (50 + 100) / 2;
+  const expectedLateMultiplier = 1 - ((100 - expectedStamina) / 420) * 1.5;
+  assert.equal(unitFatigueMultiplier(units, "offense", true), expectedLateMultiplier,
+    "a three-back depth chart contributes one active running-back slot to the unit average");
+});

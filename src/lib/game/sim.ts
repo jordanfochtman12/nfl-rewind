@@ -54,7 +54,7 @@ import {
 import { clamp, rand, randInt } from "./rng.ts";
 import { ARC_DATA_LAST } from "./careerArc.ts";
 import { activeTeamIds, conferenceOf, divisionKey, gamesInSeason, nicknameOf, originalLeague } from "./teams.ts";
-import { creditSeasonTeam, emptyStats, playerName, rosterOf, starters, yearStats } from "./players.ts";
+import { creditSeasonTeam, emptyStats, playerName, rosterOf, starterCount, starters, yearStats } from "./players.ts";
 import { kitBoost, kitShare, kitInjMult } from "./abilities.ts";
 import { coachKitBoost } from "./coachKit.ts";
 import { maybeReveal } from "./scout.ts";
@@ -117,6 +117,7 @@ export interface TeamUnits {
   fb?: Player;
   wr: Player[];
   te?: Player;
+  te2?: Player;
   ol: Player[];
   dl: Player[];
   lb: Player[];
@@ -150,9 +151,17 @@ export function unitFatigueMultiplier(
   altitudePenalty = false,
 ): number {
   const active = side === "offense"
-    ? [u.qb, u.rb, u.rb2, u.rb3, u.fb, ...u.wr, u.te, ...u.ol]
+    ? [u.qb, u.fb, ...u.wr, u.te, u.te2, ...u.ol]
     : [...u.dl, ...u.lb, ...u.db];
-  const stamina = avg(active.filter((p): p is Player => !!p).map((p) => p.ratings.stamina));
+  const staminaValues = active.filter((p): p is Player => !!p).map((p) => p.ratings.stamina);
+  if (side === "offense") {
+    // RB1/RB2/RB3 are alternatives in a rotation, not three players on the field together.
+    // Treat their average stamina as one backfield slot so a deep depth chart cannot inflate
+    // or suppress whole-unit fatigue merely by having more healthy backs available.
+    const backs = [u.rb, u.rb2, u.rb3].filter((p): p is Player => !!p);
+    if (backs.length) staminaValues.push(avg(backs.map((p) => p.ratings.stamina)));
+  }
+  const stamina = avg(staminaValues);
   const multiplier = 1 - ((100 - stamina) / 420) * (late ? 1.5 : 0.35);
   return multiplier * (altitudePenalty ? 0.93 : 1);
 }
@@ -227,13 +236,16 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   if (qbs[1] && pickHappy(qbs[0], save.year) && qbs[1].ovr >= (qbs[0]?.ovr ?? 0) - 15 && !pickHappy(qbs[1], save.year)) qbs.reverse();
   const qb = qbs[0];
   const qb2 = qbs[1];
+  const team = save.teams[teamId];
   const rbs = starters(save, teamId, "RB", 2);
   const rb = rbs[0];
   const rb2 = rbs[1];
   const rb3 = starters(save, teamId, "RB", 3)[2];
-  const fb = starters(save, teamId, "FB", 1)[0];
-  const wr = starters(save, teamId, "WR", 3);
-  const te = starters(save, teamId, "TE", 1)[0];
+  const fb = starters(save, teamId, "FB", starterCount("FB", team?.offScheme, team?.defScheme))[0];
+  const wr = starters(save, teamId, "WR", starterCount("WR", team?.offScheme, team?.defScheme));
+  const tes = starters(save, teamId, "TE", starterCount("TE", team?.offScheme, team?.defScheme));
+  const te = tes[0];
+  const te2 = tes[1];
   const ol = [
     ...starters(save, teamId, "LT", 1),
     ...starters(save, teamId, "LG", 1),
@@ -246,7 +258,6 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   const db = [...starters(save, teamId, "CB", 3), ...starters(save, teamId, "S", 2)];
   const k = starters(save, teamId, "K", 1)[0];
   const p = starters(save, teamId, "P", 1)[0];
-  const team = save.teams[teamId];
   const coach = team?.coachId ? save.coaches[team.coachId] : undefined;
   const oc = team?.ocId ? save.coaches[team.ocId] : undefined;
   const dc = team?.dcId ? save.coaches[team.dcId] : undefined;
@@ -260,7 +271,7 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
     [...ol, ...(fb ? [fb] : [])].map((x) => x.ratings.runBlk * 0.75 + x.ratings.str * 0.25),
   );
   const recSkill = avg(
-    [...wr, te].filter((x): x is Player => !!x).map((x) =>
+    [...wr, ...tes].map((x) =>
       // rel (release off press) only means something for a true WR - a TE never
       // ran that weight into his overall, so don't drag his score on it here.
       x.pos === "WR"
@@ -300,8 +311,8 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   if (scheme === "westcoast") offPass += clamp(2 + (recSkill - 75) * 0.12, 0.5, 3.5);
   if (team?.defScheme === "cover-2") defPass += clamp(2.5 + (cov - 75) * 0.12, 1, 4);
   if (team?.defScheme === "3-4") defRun += clamp(2 + (avg(lb.map((x) => x.ratings.tak)) - 75) * 0.12, 0.5, 3.5);
-  const skill = [qb, qb2, rb, rb2, rb3, fb, te, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
-  offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
+  const skill = [qb, qb2, rb, rb2, rb3, fb, ...tes, k, p, ...wr, ...ol, ...dl, ...lb, ...db];
+  offPass += kitBoost(qb, "offPass") + wr.reduce((n, p) => n + kitBoost(p, "offPass"), 0) + kitBoost(te, "offPass") + kitBoost(te2, "offPass") + ol.reduce((n, p) => n + kitBoost(p, "offPass"), 0);
   offRun += kitBoost(rb, "offRun") + kitBoost(rb3, "offRun") + kitBoost(fb, "offRun") + ol.reduce((n, p) => n + kitBoost(p, "offRun"), 0) + kitBoost(qb, "offRun");
   defPass += db.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defPass"), 0) + dl.reduce((n, p) => n + kitBoost(p, "defPass"), 0);
   defRun += dl.reduce((n, p) => n + kitBoost(p, "defRun"), 0) + lb.reduce((n, p) => n + kitBoost(p, "defRun"), 0);
@@ -329,7 +340,7 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   };
   // A tight locker room plays a little better; a fractured one a little worse.
   const chem = chemistryEdge(save, teamId);
-  return { qb, qb2, rb, rb2, rb3, fb, wr, te, ol, dl, lb, db, k, p, returner, offPass: offPass + chem, offRun: offRun + chem, defPass: defPass + chem, defRun: defRun + chem, kit };
+  return { qb, qb2, rb, rb2, rb3, fb, wr, te, te2, ol, dl, lb, db, k, p, returner, offPass: offPass + chem, offRun: offRun + chem, defPass: defPass + chem, defRun: defRun + chem, kit };
 }
 
 function dist(save: DynastySave, weights: number[]): number {
@@ -531,7 +542,8 @@ function pickRec(save: DynastySave, off: TeamUnits, deep: boolean, year: number,
     { p: off.wr[0], wt: w.wr1 * (deep ? 1.1 : 1) * (redZone ? 1.6 : 1) },
     { p: off.wr[1], wt: w.wr2 },
     { p: off.wr[2], wt: w.wr3 * (deep ? 0.65 : 1.15) },
-    { p: off.te, wt: w.te * (deep ? 0.55 : 1.15) * (redZone ? 1.45 : 1) },
+    { p: off.te, wt: w.te * (off.te2 ? 0.65 : 1) * (deep ? 0.55 : 1.15) * (redZone ? 1.45 : 1) },
+    { p: off.te2, wt: w.te * 0.35 * (deep ? 0.4 : 1.05) * (redZone ? 1.25 : 1) },
     { p: off.rb, wt: w.rb * (deep ? 0.3 : 1.25) * (redZone ? 0.7 : 1) },
   ];
   const pool = slots.filter((s): s is { p: Player; wt: number } => !!s.p);
@@ -1523,7 +1535,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (!m) return false;
     const o = live(m.teamId);
     const d = live(m.teamId === homeId ? awayId : homeId);
-    const ids = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db].map((x) => x?.id);
+    const ids = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, u.te2, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db].map((x) => x?.id);
     return ids(o).includes(m.offId) && ids(d).includes(m.defId);
   };
   const edgeVsTackle = (offense: TeamId) => {
@@ -1668,7 +1680,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
           ? `${playerName(p)} is down. He's being checked for a concussion.`
           : `${playerName(p)} is down with a ${hurt === "ribs" ? "rib" : hurt} injury.`,
     );
-    const onField = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db, u.k, u.p].filter((x): x is Player => !!x);
+    const onField = (u: TeamUnits) => [u.qb, u.rb, u.rb2, u.rb3, u.fb, u.te, u.te2, ...u.wr, ...u.ol, ...u.dl, ...u.lb, ...u.db, u.k, u.p].filter((x): x is Player => !!x);
     const was = new Set(onField(live(id)).map((x) => x.id));
     rebuild(id);
     const u = live(id);
