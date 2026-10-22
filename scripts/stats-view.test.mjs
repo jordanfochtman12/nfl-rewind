@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { careerHeadlines, colsForFamily } from "../src/lib/game/statsView.ts";
+import { careerHeadlines, colsForFamily, familiesOf, hasSeasonWork } from "../src/lib/game/statsView.ts";
 import { emptyStats } from "../src/lib/game/players.ts";
 import { scoring } from "../src/lib/game/statsView.ts";
 
@@ -46,4 +46,17 @@ test("career summary exposes defensive touchdowns and hides incomplete historica
   const historical = { ...line, unknown: ["defTd", "pts"] };
   assert.equal(headline({ ...player, stats: { 2024: historical } }, "Def TD"), "—");
   assert.equal(headline({ ...player, stats: { 2024: historical } }, "Pts"), "—");
+});
+
+test("secondary defense and return-only seasons remain discoverable", () => {
+  const line = emptyStats(2024, "pit");
+  line.fr = 1;
+  line.krTd = 1;
+  assert.equal(hasSeasonWork(line), true, "a recorded fumble recovery/return score is a real season line");
+  assert.ok(familiesOf("QB", line).includes("def"), "the defense tab appears when a player has only a recovery stat");
+  assert.equal(value("ret", "krTd", line), 1, "kick-return scores have their own sortable stat column");
+
+  const tackleForLoss = { ...emptyStats(2024, "pit"), tfl: 1 };
+  assert.equal(hasSeasonWork(tackleForLoss), true);
+  assert.ok(familiesOf("QB", tackleForLoss).includes("def"));
 });
