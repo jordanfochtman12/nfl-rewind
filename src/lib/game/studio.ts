@@ -5,7 +5,7 @@
  * reporter brings the standings and the streaks, and now and then they disagree. Every line
  * is drawn from a pool keyed to the episode, and no phrasing is used twice in one show.
  */
-import type { BoxPlayer, DynastySave, GameResult, PrimetimeShow, TeamId } from "./types.ts";
+import type { BoxPlayer, DynastySave, GameResult, PrimetimeShow, PrimetimeStory, TeamId } from "./types.ts";
 import { activeTeamIds, conferenceOf, displayName, divisionKey, nicknameOf, roman, superBowlNumber, teamAbbr } from "./teams.ts";
 import { depthAt, playerName } from "./players.ts";
 import { superBowlSite } from "./data/bowlSites.ts";
@@ -96,6 +96,12 @@ const plural = (n: number, w: string, pl = `${w}s`) => `${num(n)} ${n === 1 ? w 
 
 function gcd(a: number, b: number): number {
   return b ? gcd(b, a % b) : a;
+}
+
+function storyFocusId(story: PrimetimeStory): string {
+  const teams = [...story.teamIds].sort().join(",");
+  const players = [...story.playerIds].sort().join(",");
+  return `topic:${story.tag}:${teams}:${players}`;
 }
 
 /** "1,530 rush yds · 12 TD · 52 rec" said out loud: "1,530 rushing yards, 12 touchdowns and 52 catches". */
@@ -458,7 +464,10 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
 
   /* ---------- the weekly notebook ---------- */
   if (edition === "weekly") {
-    const candidates = (show.stories ?? []).filter((s) => !previous?.episode?.focusIds.includes(s.headline));
+    const previousFocus = new Set(previous?.episode?.focusIds ?? []);
+    const candidates = (show.stories ?? []).filter(
+      (s) => !previousFocus.has(s.headline) && !previousFocus.has(storyFocusId(s)),
+    );
     for (const [k, s] of candidates.slice(0, 2).entries())
       add(`story-${chapters.length}`, s.tag, s.headline, s.teamIds, [
         host(
@@ -786,6 +795,8 @@ export function produceEpisode(save: DynastySave, show: PrimetimeShow, games: Ga
     headline,
     subtitle,
     chapters,
-    focusIds: (show.stories ?? []).map((s) => s.headline),
+    // Keep headline entries for old-save compatibility and add stable subjects so
+    // changing a record or streak headline does not replay the same story next week.
+    focusIds: (show.stories ?? []).flatMap((s) => [s.headline, storyFocusId(s)]),
   };
 }

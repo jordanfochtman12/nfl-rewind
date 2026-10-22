@@ -111,6 +111,41 @@ test("pick accountability uses the actual winner and never fabricates a comeback
   assert.match(script, /gave it away three times|Three turnovers|turnover battle by three/);
 });
 
+test("weekly editorial avoids repeating the same subject when its headline changes", () => {
+  const s = createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 13 });
+  const firstStory = {
+    tag: "Hot",
+    headline: "Green Bay has won five straight",
+    body: "The Packers are surging.",
+    teamIds: ["gnb"],
+    playerIds: [],
+  };
+  const first = produceEpisode(
+    s,
+    { year: 1966, week: 5, kind: "regular", title: "Week 5", recaps: [], stories: [firstStory] },
+    [],
+    [],
+    false,
+  );
+  s.primetime = { year: 1966, week: 5, episode: first, stories: [firstStory], recaps: [], previews: [] };
+
+  const second = produceEpisode(
+    s,
+    {
+      year: 1966,
+      week: 6,
+      kind: "regular",
+      title: "Week 6",
+      recaps: [],
+      stories: [{ ...firstStory, headline: "Green Bay's streak reaches six" }],
+    },
+    [],
+    [],
+    false,
+  );
+  assert.ok(!second.chapters.some((chapter) => chapter.title === "Green Bay's streak reaches six"));
+});
+
 test("episode archive is bounded, deduplicated on rebuild, and migrates version 17", () => {
   const s = createNewGame({ userTeamId: "gnb", startingYear: 1966, seed: 3 });
   s.phase = "regular";
