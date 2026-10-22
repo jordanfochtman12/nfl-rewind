@@ -15,7 +15,7 @@ import { resetSeasonRecord } from "./save.ts";
 import { rebuildSchedule, gamesInWeek, maxWeek } from "./schedule.ts";
 import { creditStandings } from "./sim.ts";
 import { resolveSuperBowl } from "./events.ts";
-import { recordAward } from "./honors.ts";
+import { recordAllPro, recordAward, recordProBowl } from "./honors.ts";
 import { writeSeasonChapter } from "./almanac.ts";
 import { addNews, addTx } from "./news.ts";
 import { rulesTakingEffect } from "./rulebook.ts";
@@ -606,6 +606,13 @@ function giveAwards(save: DynastySave): void {
   const y = save.year;
   const real = data().awards(y);
   const a: AwardsResult = { year: y, allPro: [] };
+  for (const [person, honor] of data().honors(y)) {
+    const p = playerFor(save, person, y, "fa");
+    if (honor === "1") {
+      a.allPro.push(p.id);
+      recordAllPro(p, y);
+    } else if (honor === "p") recordProBowl(p, y);
+  }
   const co: Record<string, string[]> = {};
   for (const [k, field] of Object.entries(AWARD_FIELD)) {
     const ids = (real[k] ?? []).filter((x): x is number => typeof x === "number").map((person) => playerFor(save, person, y, "fa"));

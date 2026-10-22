@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame, playerHofScore } from "../src/lib/game/index.ts";
-import { coachHofEligible } from "../src/lib/game/hof.ts";
+import { coachHofEligible, playerHofEligible } from "../src/lib/game/hof.ts";
 
 test("Hall of Fame scoring recognizes Pro Bowls and major position awards with diminishing returns", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 94 });
@@ -41,4 +41,19 @@ test("a retired coach becomes Hall-eligible after one complete season out of foo
   assert.equal(coachHofEligible(save, coach), false, "not eligible during his retirement-year ballot");
   save.year = 1967;
   assert.equal(coachHofEligible(save, coach), true, "eligible after that season is complete");
+});
+
+test("players need five seasons and a recognized postseason honor before Canton eligibility", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 96 });
+  const player = Object.values(save.players).find((p) => p.pos === "RB");
+  assert.ok(player);
+  Object.assign(player, { historical: true, retiredYear: 1967, yearsPro: 4, peakOvr: 96, ovr: 96 });
+  save.year = 1971;
+  player.honors = { proBowl: [1972], allPro: [], awards: [], rings: [] };
+  assert.equal(playerHofEligible(save, player), false, "four seasons and future honors are not enough");
+
+  player.yearsPro = 5;
+  assert.equal(playerHofEligible(save, player), false, "a five-year career still needs a recognized honor");
+  player.honors.proBowl = [1966];
+  assert.equal(playerHofEligible(save, player), true, "a past Pro Bowl completes the requirements");
 });

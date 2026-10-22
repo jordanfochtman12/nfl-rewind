@@ -92,8 +92,22 @@ export function playerHofEligible(save: DynastySave, p: Player): boolean {
   if (p.hofYear || p.twinOf) return false;
   if (!p.retiredYear) return false;
   if (save.year + 1 < p.retiredYear + HOF_WAIT_YEARS) return false;
+  if ((p.yearsPro ?? 0) < 5 || !hasPostseasonHonor(save, p)) return false;
   const score = playerHofScore(save, p);
   return score >= 64 || (p.historical && (p.peakOvr ?? p.ovr) >= 92 && score >= 58);
+}
+
+function hasPostseasonHonor(save: DynastySave, p: Player): boolean {
+  const current = p.honors;
+  if (current?.proBowl.some((year) => year <= save.year)) return true;
+  if (current?.allPro.some((year) => year <= save.year)) return true;
+  if (current?.awards.some((item) => item.year <= save.year)) return true;
+  return (save.history.awards ?? []).some((a) => {
+    if (a.year > save.year) return false;
+    if (a.allPro.includes(p.id)) return true;
+    if ([a.mvp, a.offPoy, a.defPoy, a.oroy, a.droy, a.cpoty].includes(p.id)) return true;
+    return Object.values(a.co ?? {}).some((ids) => ids.includes(p.id));
+  });
 }
 
 export function coachHofEligible(save: DynastySave, c: Coach): boolean {
