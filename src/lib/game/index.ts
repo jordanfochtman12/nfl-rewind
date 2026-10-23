@@ -74,7 +74,7 @@ export { cpuHandles, TEAM_MANAGEMENT_JOBS } from "./teamControl.ts";
 export type { TeamManagementJob } from "./types.ts";
 export { advance, simUntil, simToSuperBowl, fastForwardToYear, setLabel, weekIsInTheBooks } from "./season.ts";
 export { byeNote, rebuildSchedule, gamesForTeam, gameDateLabel, realResultFor, realSchedule, maxWeek, gamesInWeek, isRivalry, RIVALRIES } from "./schedule.ts";
-export { simGame, teamUnits, clampSeasonStats, formatClock, planFor, defaultPlan, thirdBackRotationShare } from "./sim.ts";
+export { simGame, teamUnits, clampSeasonStats, formatClock, planFor, defaultPlan, thirdBackRotationShare, defensiveLineReliefPosition } from "./sim.ts";
 export { standingRows, winPct, compareTeams, conferenceTeams, divisionWinner } from "./standings.ts";
 export {
   seedPlayoffs,

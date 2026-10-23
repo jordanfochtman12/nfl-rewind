@@ -171,6 +171,12 @@ export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: bool
   return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 16) * 0.02, 0, 0.34) : 0;
 }
 
+/** Rotate a fresh defensive lineman into the front on every fourth snap, alternating units. */
+export function defensiveLineReliefPosition(defensiveSnap: number): "DE" | "DT" | undefined {
+  if (defensiveSnap <= 0 || defensiveSnap % 4 !== 0) return undefined;
+  return defensiveSnap % 8 === 4 ? "DE" : "DT";
+}
+
 /**
  * A passer on a pace past the era's typical leader sees the coverage roll his way: fewer
  * chunk gains. It starts at the leader's pace and firms up quickly above it, so ordinary
@@ -1375,6 +1381,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
   let orderAt = 0;
   let ownerPlan: Partial<Gameplan> = {};
   const benched = new Set<string>();
+  const defensiveSnaps: Record<string, number> = { [homeId]: 0, [awayId]: 0 };
+  const lineRelief = new Map<TeamId, string>();
   /** Clubs whose starter came out of a blowout. */
   const pulled = new Set<TeamId>();
   const planNow = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
@@ -1646,8 +1654,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
     togo = Math.min(10, Math.max(1, 100 - spot));
   };
 
-  const rebuild = (id: TeamId) => {
-    const next = teamUnits(save, id, benched);
+  const rebuild = (id: TeamId, restingId = lineRelief.get(id)) => {
+    const unavailable = new Set(benched);
+    if (restingId) unavailable.add(restingId);
+    const next = teamUnits(save, id, unavailable);
     if (id === homeId && !neutral) {
       next.offPass += homeField;
       next.offRun += 1.6;
@@ -2087,12 +2097,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
     const off = live(poss);
     const defId = poss === homeId ? awayId : homeId;
-    const def = live(defId);
     const trail = trailOf(poss);
     const plan = planNow(poss, trail, q, clock);
     const defensivePlan = planNow(defId, -trail, q, clock);
     const fat = fatigue(off, "offense", q, clock, poss);
-    const dfat = fatigue(def, "defense", q, clock, defId);
     const clutch = (q >= 4 && (trail > 0 || clock < 180) ? off.kit.clutch : 0) * 0.35;
     const was3rd = down === 3;
     if (spot >= 80 && !driveRz) {
@@ -2151,6 +2159,21 @@ export function simGame(save: DynastySave, game: GameResult): void {
       clock = Math.max(0, clock - 3);
       continue;
     }
+
+    // Defensive linemen rotate in on a sustained series. Give a DE or DT one relief snap
+    // every fourth defensive snap, alternating groups; a missing backup keeps the starter in.
+    defensiveSnaps[defId] = (defensiveSnaps[defId] ?? 0) + 1;
+    const reliefPosition = defensiveLineReliefPosition(defensiveSnaps[defId]!);
+    const reliefStarter = reliefPosition ? starters(save, defId, reliefPosition, 1, benched)[0] : undefined;
+    const reliefDepth = reliefPosition ? starters(save, defId, reliefPosition, 3, benched) : [];
+    const restingId = reliefDepth.length >= 3 ? reliefStarter?.id : undefined;
+    if (lineRelief.get(defId) !== restingId) {
+      if (restingId) lineRelief.set(defId, restingId);
+      else lineRelief.delete(defId);
+      rebuild(defId);
+    }
+    const def = live(defId);
+    const dfat = fatigue(def, "defense", q, clock, defId);
 
     let call = callPlay(
       save,

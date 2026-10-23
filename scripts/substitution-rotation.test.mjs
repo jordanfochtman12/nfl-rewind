@@ -1,7 +1,17 @@
 /** Depth-chart backs receive a realistic workload split as the game wears on. */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createNewGame, simGame, teamUnits, thirdBackRotationShare } from "../src/lib/game/index.ts";
+import { createNewGame, simGame, teamUnits, thirdBackRotationShare, defensiveLineReliefPosition } from "../src/lib/game/index.ts";
+
+test("defensive-line relief alternates between edge and interior on actual snap intervals", () => {
+  assert.equal(defensiveLineReliefPosition(0), undefined);
+  assert.equal(defensiveLineReliefPosition(1), undefined);
+  assert.equal(defensiveLineReliefPosition(3), undefined);
+  assert.equal(defensiveLineReliefPosition(4), "DE");
+  assert.equal(defensiveLineReliefPosition(5), undefined, "relief lasts one snap");
+  assert.equal(defensiveLineReliefPosition(8), "DT");
+  assert.equal(defensiveLineReliefPosition(12), "DE");
+});
 
 test("a healthy third back joins the rotation only after the top two carry a heavy load", () => {
   let save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
