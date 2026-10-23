@@ -1394,13 +1394,13 @@ function Stats() {
   const careerScope = scope === "career" || scope === "dynastyCareer" || scope === "poCareer";
   const teams = activeTeamIds(save.year);
   // Most recent postseason on the books (this January's, or last season's during the offseason).
-  const poYear = Object.values(save.players).reduce(
-    (m, p) => Math.max(m, ...Object.keys(p.playoffStats ?? {}).map(Number).filter((y) => y <= save.year)),
-    0,
+  const poYear = useMemo(
+    () => Object.values(save.players).reduce(
+      (m, p) => Math.max(m, ...Object.keys(p.playoffStats ?? {}).map(Number).filter((y) => y <= save.year)),
+      0,
+    ),
+    [save.players, save.year],
   );
-  const lineOf = (p: Player): SeasonStats | undefined =>
-    scope === "regular" ? p.stats[save.year] : scope === "career" ? careerTotals(p, { throughYear: save.year }) : scope === "dynastyCareer" ? careerTotals(p, { fromYear: save.startingYear ?? 1966, throughYear: save.year }) : scope === "playoffs" ? p.playoffStats?.[poYear] : p.playoffStats ? playoffTotals(p) : undefined;
-
   const inPos = (p: Player) => {
     if (posFilter === "ALL") return true;
     if (posFilter === "OL") return ["LT", "LG", "C", "RG", "RT"].includes(p.pos);
@@ -1411,27 +1411,42 @@ function Stats() {
   };
 
   const playerQuery = search.trim().toLowerCase();
-  const allRows = Object.values(save.players)
-    .filter((p) => {
-      // Apply inexpensive identity/roster filters before careerTotals/playoffTotals: late
-      // dynasties have thousands of players and each career line folds many seasons.
-      if (playerQuery && !playerName(p).toLowerCase().includes(playerQuery)) return false;
-      const retired = p.teamId === "retired" || p.teamId === "hof";
-      if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
-      if (!inPos(p)) return false;
-      if (teamFilter === "mine") return p.teamId === save.userTeamId;
-      if (teamFilter !== "ALL") return p.teamId === teamFilter;
-      return true;
-    })
-    .map((p) => ({ p, s: lineOf(p) }))
-    .filter(({ s }) => hasSeasonWork(s))
-    .map(({ p, s }) => ({ p, s: s! }));
+  // Career totals fold every season line for a player. Cache those costly lines separately
+  // from the interactive filters so typing, sorting, or switching team/position doesn't fold
+  // the entire historical league again. cloneSave supplies a fresh player map when stats change.
+  const scopedRows = useMemo(() => {
+    const rows: { p: Player; s: SeasonStats }[] = [];
+    for (const p of Object.values(save.players)) {
+      const s = scope === "regular"
+        ? p.stats[save.year]
+        : scope === "career"
+          ? careerTotals(p, { throughYear: save.year })
+          : scope === "dynastyCareer"
+            ? careerTotals(p, { fromYear: save.startingYear ?? 1966, throughYear: save.year })
+            : scope === "playoffs"
+              ? p.playoffStats?.[poYear]
+              : p.playoffStats
+                ? playoffTotals(p)
+                : undefined;
+      if (hasSeasonWork(s)) rows.push({ p, s: s! });
+    }
+    return rows;
+  }, [save.players, save.year, save.startingYear, poYear, scope]);
+  const allRows = scopedRows.filter(({ p }) => {
+    if (playerQuery && !playerName(p).toLowerCase().includes(playerQuery)) return false;
+    const retired = p.teamId === "retired" || p.teamId === "hof";
+    if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
+    if (!inPos(p)) return false;
+    if (teamFilter === "mine") return p.teamId === save.userTeamId;
+    if (teamFilter !== "ALL") return p.teamId === teamFilter;
+    return true;
+  });
 
   const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>, board: string, pos: Pos) => {
     const selected = sortBy[board];
     if (selected) {
+      const column = statCols(pos).find((c) => c.key === selected.key);
       const value = (s: SeasonStats) => {
-        const column = statCols(pos).find((c) => c.key === selected.key);
         const raw = column?.of?.(s);
         if (typeof raw === "number") return raw;
         if (raw === undefined || raw === "—") return Number.NEGATIVE_INFINITY;
