@@ -4,7 +4,8 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 
 ## Gameplay and authenticity
 
-- [x] Make quarterback rushing and scrambling depend on player mobility, style, and historical era; keep ordinary handoffs assigned to backs. Validated against historical positional rushing shares and the league's 2016–2020 realism window.
+- [x] Make modern quarterback rushing and scrambling depend on mobility, style, and historical era; keep ordinary handoffs assigned to backs. `scripts/qb-rushing-calibration.test.mjs` checks 2016 simulated QB carry volume and efficiency against the archived league after a modern-only scramble adjustment.
+- [ ] Reconcile early-era positional rushing shares: the existing 1966–69 calibration currently fails its RB-attempt-share band even with the original scramble factor, so the dynasty's broader early backfield balance needs a separate correction.
 - [x] Rotate a healthy RB3 into the run game after RB1/RB2 carry a substantial workload, honoring the depth chart and keeping passing-down work with trusted protectors. Typecheck, depth/workload tests, and full historical season calibration pass after this change.
 - [x] Calibrate fatigue by unit group and review career rushing totals plus single-game/career rushing tails against historical records. Validated by side-isolation/late-game unit tests, 1966 season QA, and full fixed-seed 1966–2020 realism windows and tail bounds.
 - [ ] Audit team and player statistics end to end: definitions, aggregation, era rules, season/career/playoff totals, leaders, and records.
@@ -54,7 +55,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Pro Bowl cards now show every selection with a portrait, number, position, and current club; the existing full roster is scrollable on mobile and desktop.
 - Jersey integrity audit passes across eight league-wide historical and future checkpoints, including duplicate detection and pre-1973 grandfathering.
 - Hall ballot scoring now credits Pro Bowl seasons and major player awards, with capped/diminishing returns and protection from duplicate/future honor entries; selection logic and Canton presentation still need a full review.
-- QB/era rushing model: `scripts/rushing-realism.test.mjs` passes after the RB3 extension.
+- Modern QB scramble calibration: `scripts/qb-rushing-calibration.test.mjs` passes against 2016 historical totals. The 1966–69 positional-share test currently exposes a separate pre-existing RB share drift and remains open.
 - The Record now uses a separate factual Primetime builder and TV rundown; see `src/lib/game/historyPrimetime.ts` and `src/components/game/WatchTV.tsx`. Record mode remains an exact replay, not a second simulation.
 - Career record rankings now verify the frozen retired-player snapshot before reusing a cache entry; franchise and single-season records identify the club attached to the recorded line after a player changes teams. `scripts/record-book-cache.test.mjs` covers these regressions.
 - Stats tables now show a recorded zero as `0` and keep `—` for intentionally unrecorded historical categories; `scripts/stats-view.test.mjs` covers both cases. The full statistics audit remains open.

@@ -2518,7 +2518,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
       // handoffs and scales with real quarterback mobility and the era's observed run tendency.
       if (off.qb) {
         const mobility =
-          eraQbCarryShare(year) * 0.35 +
+          // The positional era share is the quarterback's target share of all carries, not a
+          // chance to scramble on every dropback. Modern QBs were reaching 4.3 carries per
+          // team-game in 2016 vs 3.0 in the archived line, while early-era QB carry shares are
+          // already calibrated. Reduce only the modern base; preserve the 1960s-2000s model.
+          eraQbCarryShare(year) * (year >= 2010 ? 0.22 : 0.35) +
           Math.max(0, off.qb.ratings.speed - 60) * 0.001 +
           Math.max(0, off.qb.ratings.agi - 60) * 0.0013 +
           Math.max(0, off.kit.scramble) / 500 -

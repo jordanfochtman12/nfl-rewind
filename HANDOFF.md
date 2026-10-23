@@ -266,6 +266,10 @@ Gemini / ChatGPT / phone chatbots **cannot see `/workspace`**. The copy-paste fi
 
 SAVE_VERSION 14. Coaches now have age, leadership / development / evaluation, abilities and traits that feed the sim, progression, regression, retirement, firing, and a Canton ballot. CPU clubs fire coordinators, hire historical names when they come available, draft to scheme, and cut/sign to fit. Players retire with era-true age cliffs (kickers and quarterbacks last; street veterans can walk away). Hall of Fame is a production ballot, not peak-ovr-only. CPU will not fire or hire the user’s HC.
 
+### 2026-10-22: modern quarterback rushing calibration
+
+2016 historical QB rush volume was being overshot by roughly 44% in the fixed-seed league sim. The scramble base in `sim.ts` now uses a lower factor for 2010+ while preserving the earlier-era factor. `scripts/qb-rushing-calibration.test.mjs` compares simulated 2016 QB carries and yards per carry with archived historical totals. The existing `scripts/rushing-realism.test.mjs` still has failing 1966–69 RB attempt-share assertions; these reproduce with the original scramble factor and are a separate open backfield-calibration issue. Do not report that early-era suite as passing.
+
 QA: `qa-season` asserts Lombardi kit + age, Halas is old, every 1966 club has HC/OC/DC with abilities, user HC is not auto-fired through Super Bowl I.
 
 ## Update (The Record documentary broadcast)
