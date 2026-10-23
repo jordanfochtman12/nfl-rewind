@@ -19,12 +19,18 @@ test("2024 quarterback rushing volume and efficiency track the historical league
 
   for (const seed of seeds) {
     let save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed });
-    save = simUntil(save, (state) => state.year > year || state.phase === "complete");
-    for (const player of Object.values(save.players)) {
-      if (player.pos !== "QB") continue;
-      const line = player.stats[year];
-      simulated.attempts += line?.rushAtt ?? 0;
-      simulated.yards += line?.rushYds ?? 0;
+    // Stop at the regular-season boundary. Including playoffs here compares a longer simulated
+    // sample to the historical regular-season line and can hide underproduction per game.
+    save = simUntil(save, (state) => state.year === year && state.phase === "playoffs");
+    for (const game of save.schedule) {
+      if (game.year !== year || game.phase !== "regular") continue;
+      for (const box of [game.boxHome ?? [], game.boxAway ?? []]) {
+        for (const row of box) {
+          if (save.players[row.playerId]?.pos !== "QB") continue;
+          simulated.attempts += row.rushAtt ?? 0;
+          simulated.yards += row.rushYds ?? 0;
+        }
+      }
     }
   }
 
