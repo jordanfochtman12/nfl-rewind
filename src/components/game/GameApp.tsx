@@ -1523,8 +1523,36 @@ function Stats() {
           },
         ];
 
+  const scopeLabel = scope === "regular"
+    ? `${save.year} regular season`
+    : scope === "career"
+      ? "Career totals"
+      : scope === "dynastyCareer"
+        ? "Dynasty totals"
+        : scope === "playoffs"
+          ? `${poYear || save.year} playoffs`
+          : "Playoff careers";
+  const teamScopeLabel = teamFilter === "ALL"
+    ? "League-wide"
+    : teamFilter === "mine"
+      ? "My club"
+      : displayName(save.year, teamFilter);
+
   return (
     <div className="space-y-6">
+      <section className="stat-center-hero" aria-label="Statistics center overview">
+        <div className="stat-center-grid" aria-hidden="true" />
+        <div className="stat-center-copy">
+          <p className="stat-center-eyebrow"><span /> LEAGUE STATCAST <span className="stat-center-divider">/</span> {save.realHistory ? "THE RECORD" : "FRONT OFFICE NETWORK"}</p>
+          <h2>STAT CENTER</h2>
+          <p className="stat-center-subtitle">Every season. Every era. The numbers behind the game.</p>
+        </div>
+        <div className="stat-center-readout">
+          <div><span>VIEWING</span><strong>{scopeLabel}</strong></div>
+          <div><span>PLAYER LINES</span><strong>{allRows.length.toLocaleString("en-US")}</strong></div>
+          <div><span>FILTER</span><strong>{teamScopeLabel}</strong></div>
+        </div>
+      </section>
       <div role="tablist" aria-label="Stat scope" className="flex flex-wrap gap-2">
         {(
           [
@@ -1607,13 +1635,25 @@ function Stats() {
         ))}
       </div>
       <p className="text-xs text-muted">Tap or click any stat heading to sort that board. Select it again to reverse the order; each category keeps its own sort.</p>
-      {boards.map((board) => {
+      {boards.map((board, boardIndex) => {
         const cols = statCols(board.pos);
+        const leader = board.rows[0];
+        const sortSelection = sortBy[board.title];
+        const leaderColumn = cols.find((column) => column.key === sortSelection?.key) ?? cols[0];
         return (
-          <section key={board.title}>
-            {posFilter === "ALL" && <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">{board.title}</h3>}
+          <section key={board.title} className="stat-board-section">
+            <div className="stat-board-heading">
+              <div className="stat-board-title">
+                <span className="stat-board-index">{String(boardIndex + 1).padStart(2, "0")}</span>
+                <div><p>LEAGUE LEADERS</p><h3>{board.title}</h3></div>
+              </div>
+              {leader && leaderColumn && <div className="stat-board-spotlight">
+                <div className="stat-board-spotlight-player"><span>TOP LINE</span><PlayerLink player={leader.p} /></div>
+                <div className="stat-board-spotlight-value"><span>{leaderColumn.label}</span><strong>{leaderColumn.of?.(leader.s) ?? "—"}</strong></div>
+              </div>}
+            </div>
             <div className="overflow-x-auto rounded-xl border border-line">
-              <table className="w-full min-w-[760px] text-left text-sm">
+              <table className="stat-center-table w-full min-w-[760px] text-left text-sm">
                 <thead className="text-xs text-muted">
                   <tr>
                     <th scope="col" className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
@@ -1650,20 +1690,24 @@ function Stats() {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="[&>tr:nth-child(even)]:bg-white/[0.018]">
                   {board.rows.map(({ p, s }, i) => {
                     const rowCols = statCols(p.pos);
+                    const playerClub = teams.find((id) => id === p.teamId);
                     return (
-                      <tr key={p.id} className={`border-t border-line ${i === 0 ? "lead-row" : ""}`}>
+                      <tr key={p.id} className={`stat-center-row border-t border-line ${i === 0 ? "lead-row" : ""}`}>
                         <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                           <PlayerLink player={p} />
-                          {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">LEADS</span> : null}
+                          {i < 3 ? <span className={`stat-rank stat-rank-${i + 1}`} aria-label={`Rank ${i + 1}`}>{i + 1}</span> : null}
                         </td>
                         <td className="px-3 py-2">
                           {posLabel(p)}
                           {isStarter(save, p) ? <span className="ml-1 text-[10px] tracking-widest text-brass">•ST</span> : null}
                         </td>
-                        <td className="px-3 py-2 uppercase">{String(p.teamId)}</td>
+                        <td className="px-3 py-2 uppercase">{playerClub
+                          ? <span className="stat-team-cell"><Logo id={playerClub} year={save.year} size={20} /><span className="stat-team-tag">{playerClub}</span></span>
+                          : <span className="stat-team-tag">{p.teamId === "hof" ? "HOF" : String(p.teamId)}</span>}
+                        </td>
                         <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                         {cols.map((c, ci) => {
                           const match = rowCols.find((x) => x.key === c.key) ?? cols.find((x) => x.key === c.key);
