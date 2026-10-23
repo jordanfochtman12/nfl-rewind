@@ -167,7 +167,7 @@ export function arcsThisWeek(save: DynastySave, week = save.week): StoryArc[] {
   // turn (its second beat, a new MVP leader, a close) always gets on.
   return seasonArcList(save)
     .filter((a) => a.beats.at(-1)?.week === week && a.beats.length >= 2)
-    .filter((a) => a.closed || a.beats.length === 2 || a.kind === "mvp" || a.aired === undefined || week - a.aired >= 3)
+    .filter((a) => a.closed || a.beats.length === 2 || a.kind === "mvp" || a.beats.at(-1)?.text.startsWith("The story is back in play.") || a.aired === undefined || week - a.aired >= 3)
     .sort((a, b) => (a.aired ?? 0) - (b.aired ?? 0) || b.beats.length - a.beats.length);
 }
 

@@ -10,7 +10,7 @@ import { createNewGame, simUntil, simGame } from "../src/lib/game/index.ts";
 import { chemistryEdge, chemistryOf, moraleLabel, moraleTarget, updateMorale } from "../src/lib/game/morale.ts";
 import { gameWatches, leagueMarks, liveMarkCall, pregameMemory } from "../src/lib/game/boothMemory.ts";
 import { teamStyle } from "../src/lib/game/teamStyle.ts";
-import { seasonArcList, updateArcs } from "../src/lib/game/arcs.ts";
+import { arcsThisWeek, seasonArcList, updateArcs } from "../src/lib/game/arcs.ts";
 import { divisionKey } from "../src/lib/game/teams.ts";
 import { careerRanks, comparePlayers } from "../src/lib/game/careerBook.ts";
 import { counterOffer, crowdVerdicts, gradeRange, positionalNeeds, schemeFit } from "../src/lib/game/draftFit.ts";
@@ -103,6 +103,7 @@ test("a division-race storyline reopens when the standings tighten again", () =>
     kind: "race",
     title: "A race that appeared settled",
     opened: 6,
+    aired: 9,
     closed: true,
     beats: [
       { week: 8, text: "The division fight is close.", short: "it was close", metric: 1 },
@@ -118,6 +119,7 @@ test("a division-race storyline reopens when the standings tighten again", () =>
   assert.match(race.beats[1].text, /Story over/);
   assert.match(race.beats[2].text, /story is back in play/i);
   assert.match(race.beats[2].text, /After Week 10/);
+  assert.ok(arcsThisWeek(s).some((arc) => arc.id === raceId), "a revived race bypasses the normal three-show cooldown");
 });
 
 test("careers rank and compare, regular season and playoffs apart", () => {
