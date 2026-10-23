@@ -282,6 +282,12 @@ The regular-game simulation now builds receiver/fullback personnel from `starter
 
 Validation: focused substitution/fatigue tests, `npm run typecheck`, `npm run qa:season`, `npm run qa:expansions`, all six `scripts/realism.test.mjs` tests, and production `npm run build` pass. The build still reports oversized JavaScript chunks elsewhere in the app.
 
+## Update (hurry-up substitutions and 1966 run balance)
+
+Defensive-line relief now respects a hurry-up offense: scheduled DE/DT relief is held until the offense gives the defense a substitution window, and an already-rotated lineman stays in during the no-huddle stretch. The 1966 base run/pass call mix also leans one percentage point toward passes; fixed-seed calibration had the league about 4.6% high in rushing attempts. These changes apply only to simulated games; Record mode remains an exact replay.
+
+Validation: `scripts/substitution-rotation.test.mjs` (4 tests), `scripts/rushing-realism.test.mjs` plus `scripts/qb-rushing-calibration.test.mjs` (3 tests), TypeScript, targeted ESLint, and production build pass. Build continues to report the existing large-chunk warning; local database migration skips without `DATABASE_URL`.
+
 ## Update (weekly waiver review)
 
 When user-controlled regular-season games have finished and the waiver wire has eligible players, the calendar now pauses on a Waiver Wire review before the next week. The new screen shows player, position, grade, age, and waived-from club, and allows direct claims; continuing then runs CPU claims and advances the calendar. Auto-simulation and CPU-only seasons process waivers without an interactive stop, while Record mode keeps exact-history advancement untouched. `scripts/waiver-phase.test.mjs` covers the user pause and CPU-only no-pause paths.

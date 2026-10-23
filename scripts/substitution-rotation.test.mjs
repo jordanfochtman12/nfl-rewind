@@ -8,6 +8,7 @@ test("defensive-line relief alternates between edge and interior on actual snap 
   assert.equal(defensiveLineReliefPosition(1), undefined);
   assert.equal(defensiveLineReliefPosition(3), undefined);
   assert.equal(defensiveLineReliefPosition(4), "DE");
+  assert.equal(defensiveLineReliefPosition(4, false), undefined, "hurry-up keeps the defense from rotating at a scheduled relief snap");
   assert.equal(defensiveLineReliefPosition(5), undefined, "relief lasts one snap");
   assert.equal(defensiveLineReliefPosition(8), "DT");
   assert.equal(defensiveLineReliefPosition(12), "DE");
