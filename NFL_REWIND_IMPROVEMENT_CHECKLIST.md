@@ -52,6 +52,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Super Bowl podium uniqueness: implemented in `src/lib/game/presentation.ts`; `scripts/broadcast-desk.test.mjs` passes.
 - RB3 workload rotation: implemented in `src/lib/game/sim.ts`; `scripts/substitution-rotation.test.mjs` and the historical rushing calibration pass.
 - Stats-board headers now sort every column, reverse on a second tap, announce sort state accessibly, and keep independent order per category; needs PC/mobile interaction review.
+- Stats search, roster-status, position, and club filters now run before cumulative season totals are aggregated, avoiding career/postseason summations for players excluded from the visible rows. This improves the late-dynasty filter path; interactive performance measurement remains part of the PC/mobile UI audit.
 - Pro Bowl cards now show every selection with a portrait, number, position, and current club; the existing full roster is scrollable on mobile and desktop.
 - Jersey integrity audit passes across eight league-wide historical and future checkpoints, including duplicate detection and pre-1973 grandfathering.
 - Hall ballot scoring now credits Pro Bowl seasons and major player awards, with capped/diminishing returns and protection from duplicate/future honor entries; selection logic and Canton presentation still need a full review.

@@ -1410,11 +1410,12 @@ function Stats() {
     return p.pos === posFilter;
   };
 
+  const playerQuery = search.trim().toLowerCase();
   const allRows = Object.values(save.players)
     .filter((p) => {
-      const s = lineOf(p);
-      if (!hasSeasonWork(s)) return false;
-      if (search.trim() && !playerName(p).toLowerCase().includes(search.trim().toLowerCase())) return false;
+      // Apply inexpensive identity/roster filters before careerTotals/playoffTotals: late
+      // dynasties have thousands of players and each career line folds many seasons.
+      if (playerQuery && !playerName(p).toLowerCase().includes(playerQuery)) return false;
       const retired = p.teamId === "retired" || p.teamId === "hof";
       if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
       if (!inPos(p)) return false;
@@ -1422,7 +1423,9 @@ function Stats() {
       if (teamFilter !== "ALL") return p.teamId === teamFilter;
       return true;
     })
-    .map((p) => ({ p, s: lineOf(p)! }));
+    .map((p) => ({ p, s: lineOf(p) }))
+    .filter(({ s }) => hasSeasonWork(s))
+    .map(({ p, s }) => ({ p, s: s! }));
 
   const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>, board: string, pos: Pos) => {
     const selected = sortBy[board];
