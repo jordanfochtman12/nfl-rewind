@@ -165,7 +165,7 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Tune RFA offer-sheet frequencies and reconstruct year-specific historical tender schedules; historical/imported careers still lack active/pay-status ledgers.
+1. Reconstruct year-specific historical RFA tender schedules; imported careers still lack active/pay-status ledgers.
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
 
@@ -178,6 +178,11 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 ## Update (weekly accrued and credited service)
 
 - Dynasty and Watch simulations now log regular-season weeks in which a player is on a club's roster and in full-pay status. The ledger is separate from games played: injured reserve still accrues service, a holdout week does not, and a bye does not count as a game. Week keys prevent duplicate accrual on retry; Record mode is excluded.
+
+## Update (RFA offer-sheet frequency)
+
+- CPU clubs now challenge a restricted free agent only when the player is a meaningful roster upgrade, with higher compensation rounds reducing interest. Each tender gets one roll for its best-fit suitor; previously each eligible rival rolled independently, compounding low individual odds into near-certain offers when many teams had a need.
+- Validation: the RFA tests include a 120-seed first-round offer-sheet frequency check, focused RFA/service tests, typecheck, targeted ESLint, 1966 season QA, and 1966–2002 expansion QA.
 - RFA/ERFA classification now prefers the weekly service ledger (six full-pay games for an accrued season; three for credited service). Older saves seed the current season from recorded appearances when available; imported/prior seasons still fall back to `stats`/`career` totals. Save schema is `SAVE_VERSION 24`.
 - Validation: service-ledger tests cover idempotency, injury/IR, holdout, bye, midseason migration, compact round-trip, and Record-mode isolation. TypeScript, targeted lint, and full season/expansion QA plus production build are required before merge.
 

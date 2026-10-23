@@ -140,7 +140,7 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     ensureSeasonPicks(save);
     save.phase = "freeAgency";
     let seed = 0;
-    while (nextRng(seed).value >= 0.5) seed++;
+    while (nextRng(seed).value >= 0.13) seed++;
     save.rng = seed;
 
     const offers = openRfaOfferSheets(save);
@@ -171,7 +171,7 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     ensureSeasonPicks(save);
     save.phase = "freeAgency";
     let seed = 0;
-    while (nextRng(seed).value >= 0.5) seed++;
+    while (nextRng(seed).value >= 0.13) seed++;
     save.rng = seed;
 
     const offers = openRfaOfferSheets(save);
@@ -180,6 +180,39 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     assert.equal(offers[0].status, "matched", "CPU original club resolves its own offer during market opening");
     assert.equal(player.teamId, "pit");
     assert.equal(pendingRfaOfferSheets(save).length, 0);
+  });
+
+  test("outside offer sheets stay uncommon and reflect the cost of a first-round tender", () => {
+    const base = createNewGame({ userTeamId: "gnb", startingYear: 2025 });
+    const player = Object.values(base.players).find((p) => p.teamId === "gnb");
+    assert.ok(player);
+    player.pos = "QB";
+    player.ovr = 99;
+    player.potential = 99;
+    player.age = 25;
+    player.salary = 1_000_000;
+    player.stats = Object.fromEntries([2022, 2023, 2024].map((year) => [year, { year, gp: 16 }]));
+    player.career = [];
+    player.contractYears = 0;
+    base.salaryCap = 1_000_000_000;
+    base.talks = [{ playerId: player.id, year: base.year, ask: 1_000_000, askYears: 2, pitch: "", patience: 3, status: "open", rounds: [], floor: 1_000_000 }];
+    assert.match(tenderRfa(base, player.id, "first"), /qualifying offer/i);
+    for (const team of Object.values(base.teams)) {
+      if (team.id === base.userTeamId) continue;
+      for (const id of team.roster) if (base.players[id]?.pos === "QB") base.players[id].ovr = 40;
+    }
+    ensureSeasonPicks(base);
+    base.phase = "freeAgency";
+
+    let offers = 0;
+    const trials = 120;
+    for (let seed = 1; seed <= trials; seed++) {
+      const save = structuredClone(base);
+      save.rng = seed;
+      if (openRfaOfferSheets(save).length) offers++;
+    }
+    const rate = offers / trials;
+    assert.ok(rate >= 0.05 && rate <= 0.23, `first-round offer-sheet rate was ${(rate * 100).toFixed(1)}% (${offers}/${trials})`);
   });
 
   test("ERFA status uses accrued service while tender pay uses credited service minimums", () => {
