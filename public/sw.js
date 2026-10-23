@@ -5,7 +5,7 @@
  * - The page itself: network first (a new deploy shows up as soon as you're online), the
  *   cached copy when offline.
  * - App-shell files: cached at install from /offline-manifest.json.
- * - Lazy game screens and catalogs: cached after the shell opens, in the background.
+ * - Lazy game screens and catalogs: cached when used; the full offline library is user-triggered.
  * - Art, audio and logos: cached the first time they're used.
  * - Anything server-side (sign-in, APIs, server functions) is never cached.
  */
@@ -13,6 +13,13 @@ const SHELL = "rewind-shell";
 const MEDIA = "rewind-media";
 const ASSETS = "rewind-assets-";
 let optionalCacheWork;
+
+async function notifyOfflineProgress(clients, cache, progress) {
+  await cache.put("/__offline_progress__", new Response(JSON.stringify(progress), {
+    headers: { "content-type": "application/json" },
+  }));
+  for (const client of clients) client.postMessage({ type: "OFFLINE_CACHE_PROGRESS", ...progress });
+}
 
 const serverSide = (path) =>
   path.startsWith("/api/") || path.startsWith("/auth/") || path.startsWith("/_serverFn") || path.startsWith("/__app-env") || path === "/sw.js" || path === "/offline-manifest.json";
@@ -38,7 +45,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  if (event.data?.type !== "PRECACHE_OPTIONAL") return;
+  if (event.data?.type !== "PREPARE_FULL_OFFLINE") return;
   if (optionalCacheWork) {
     event.waitUntil(optionalCacheWork);
     return;
@@ -46,29 +53,63 @@ self.addEventListener("message", (event) => {
   optionalCacheWork = (async () => {
     try {
       const res = await fetch("/offline-manifest.json", { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok) throw new Error("Offline asset manifest unavailable");
       const manifest = await res.json();
       const cache = await caches.open(ASSETS + manifest.version);
-      const required = new Set(manifest.precache ?? manifest.files);
-      const optional = manifest.files.filter((path) => !required.has(path));
+      const clients = await self.clients.matchAll({ includeUncontrolled: true, type: "window" });
+      const sizes = manifest.sizes ?? {};
+      const totalBytes = manifest.totalBytes ?? 0;
+      let completedBytes = 0;
+      let completedFiles = 0;
+      const cached = await Promise.all(manifest.files.map((path) => cache.match(path)));
+      for (let i = 0; i < manifest.files.length; i += 1) {
+        if (cached[i]) {
+          completedFiles += 1;
+          completedBytes += sizes[manifest.files[i]] ?? 0;
+        }
+      }
+      const optional = manifest.files.filter((_, i) => !cached[i]);
+      const progress = (status) => ({
+        status,
+        completedFiles,
+        totalFiles: manifest.files.length,
+        completedBytes,
+        totalBytes,
+      });
+      await notifyOfflineProgress(clients, cache, progress("preparing"));
       for (let i = 0; i < optional.length; i += 4) {
-        await Promise.all(optional.slice(i, i + 4).map(async (path) => {
-          if (await cache.match(path)) return;
+        const batch = optional.slice(i, i + 4);
+        await Promise.all(batch.map(async (path) => {
+          if (await cache.match(path)) {
+            completedFiles += 1;
+            completedBytes += sizes[path] ?? 0;
+            return;
+          }
           try {
             const response = await fetch(path);
-            if (response.ok) await cache.put(path, response);
+            if (response.ok) {
+              await cache.put(path, response);
+              completedFiles += 1;
+              completedBytes += sizes[path] ?? 0;
+            }
           } catch {
             // A single unavailable lazy asset should not block caching the rest.
           }
         }));
+        await notifyOfflineProgress(clients, cache, progress("preparing"));
       }
       const complete = await Promise.all(manifest.files.map((path) => cache.match(path)));
       if (complete.every(Boolean)) {
         await cache.put("/__offline_complete__", new Response("ready", { headers: { "content-type": "text/plain" } }));
-        event.source?.postMessage({ type: "OFFLINE_CACHE_READY" });
+        await cache.delete("/__offline_progress__");
+        for (const client of clients) client.postMessage({ type: "OFFLINE_CACHE_READY" });
+      } else {
+        await notifyOfflineProgress(clients, cache, progress("incomplete"));
       }
     } catch {
-      // A later page visit or online event retries the background cache fill.
+      const clients = await self.clients.matchAll({ includeUncontrolled: true, type: "window" }).catch(() => []);
+      for (const client of clients) client.postMessage({ type: "OFFLINE_CACHE_INCOMPLETE" });
+      // The user can retry the full offline download from Settings.
     } finally {
       optionalCacheWork = undefined;
     }

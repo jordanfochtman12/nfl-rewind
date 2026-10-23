@@ -1,6 +1,6 @@
 /**
- * Registers the offline service worker (public/sw.js) in production builds, and reports whether
- * this device can open the game without a connection.
+ * Registers the offline service worker (public/sw.js) in production builds. The compact app
+ * shell is cached at install; the full offline library is an explicit choice in Settings.
  */
 import { useEffect } from "react";
 
@@ -9,15 +9,8 @@ export function OfflineSupport() {
     if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
     const register = async () => {
       try {
-        const registration = await navigator.serviceWorker.register("/sw.js");
-        const fillCache = () => {
-          if (!navigator.onLine) return;
-          (navigator.serviceWorker.controller ?? registration.active)?.postMessage({ type: "PRECACHE_OPTIONAL" });
-        };
+        await navigator.serviceWorker.register("/sw.js");
         await navigator.serviceWorker.ready;
-        fillCache();
-        navigator.serviceWorker.addEventListener("controllerchange", fillCache);
-        window.addEventListener("online", fillCache);
       } catch {
         // The game remains usable online when service-worker registration is unavailable.
       }

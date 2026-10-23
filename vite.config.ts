@@ -34,9 +34,21 @@ function offlineManifestPlugin(): Plugin {
       const manifest = offlineManifest(bundle);
       const files = manifest.files.map((f) => `/${f}`);
       const precache = manifest.precache.map((f) => `/${f}`);
+      const sizes = Object.fromEntries(Object.entries(manifest.sizes).map(([file, bytes]) => [`/${file}`, bytes]));
       let h = 0;
       for (const ch of files.join("|")) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
-      this.emitFile({ type: "asset", fileName: "offline-manifest.json", source: JSON.stringify({ version: (h >>> 0).toString(36), files, precache }) });
+      this.emitFile({
+        type: "asset",
+        fileName: "offline-manifest.json",
+        source: JSON.stringify({
+          version: (h >>> 0).toString(36),
+          files,
+          precache,
+          sizes,
+          totalBytes: manifest.totalBytes,
+          precacheBytes: manifest.precacheBytes,
+        }),
+      });
     },
   };
 }

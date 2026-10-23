@@ -32,5 +32,20 @@ export function offlineManifest(bundle) {
     for (const dependency of asset?.viteMetadata?.importedAssets ?? []) precache.add(dependency);
   }
 
-  return { files, precache: [...precache].filter((file) => files.includes(file)).sort() };
+  const required = [...precache].filter((file) => files.includes(file)).sort();
+  const sizes = Object.fromEntries(files.map((file) => {
+    const output = bundle[file];
+    const content = output?.type === "chunk" ? output.code : output?.source;
+    const bytes = typeof content === "string"
+      ? Buffer.byteLength(content)
+      : content?.byteLength ?? 0;
+    return [file, bytes];
+  }));
+  return {
+    files,
+    precache: required,
+    sizes,
+    totalBytes: files.reduce((sum, file) => sum + sizes[file], 0),
+    precacheBytes: required.reduce((sum, file) => sum + sizes[file], 0),
+  };
 }

@@ -212,14 +212,28 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
               )}
             </div>
             <p className="pb-3 text-xs text-muted">
-              {offline === "ready"
-                ? "Offline play is ready: the game opens on this device with no connection. Add it to your home screen to launch it like an app."
-                : offline === "preparing"
-                  ? "Getting offline play ready. Keep the page open a moment while online."
-                  : offline === "dev"
-                    ? "Offline play turns on in the published app."
-                    : "This browser can't keep the game for offline play."}
+              {offline.status === "ready"
+                ? "Full offline play is ready. Every game screen and historical catalog is saved on this device. Add it to your home screen to launch it like an app."
+                : offline.status === "preparing"
+                  ? `Preparing offline play: ${offline.completedFiles} of ${offline.totalFiles} files${offline.totalBytes ? ` · ${formatBytes(offline.completedBytes)} of ${formatBytes(offline.totalBytes)}` : ""}. Keep this page open while online.`
+                  : offline.status === "available"
+                    ? `Screens cache as you use them. Download the full library${offline.totalBytes ? ` (${formatBytes(offline.totalBytes)})` : ""} for every mode to work without a connection. Only downloads when you tap; Wi-Fi is recommended.${offline.completedBytes ? ` ${formatBytes(offline.completedBytes)} already cached.` : ""}`
+                    : offline.status === "dev"
+                      ? "Offline play turns on in the published app."
+                      : offline.status === "checking"
+                        ? "Checking this device's offline storage…"
+                        : "This browser can't keep the game for offline play."}
             </p>
+            {offline.status !== "ready" && offline.status !== "dev" && offline.status !== "unsupported" && (
+              <Btn
+                kind="gold"
+                className="min-h-10 px-3 text-xs"
+                disabled={offline.status === "preparing" || (typeof navigator !== "undefined" && !navigator.onLine)}
+                onClick={() => void offline.prepare()}
+              >
+                {offline.status === "preparing" ? "Preparing offline library…" : offline.completedBytes ? "Resume full offline download" : "Download full offline library"}
+              </Btn>
+            )}
             {note && <p className="pb-3 text-xs text-brass">{note}</p>}
           </Section>
           <Section title="HELP">
