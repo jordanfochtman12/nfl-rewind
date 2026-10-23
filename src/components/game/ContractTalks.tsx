@@ -8,11 +8,14 @@ import {
   letWalk,
   makeOffer,
   isRestrictedFreeAgent,
+  rfaCompensationRound,
   rfaTenderPrice,
   tagPrice,
   tenderRfa,
   talksSummary,
   type Negotiation,
+  type Player,
+  type RfaTenderLevel,
   posLabel,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
@@ -31,6 +34,33 @@ const STATUS: Record<Negotiation["status"], { label: string; tone: string }> = {
 };
 
 const OFFERS = [0.85, 0.92, 0.97, 1, 1.06] as const;
+const RFA_LEVELS: { level: RfaTenderLevel; label: string }[] = [
+  { level: "first", label: "First-round compensation" },
+  { level: "second", label: "Second-round compensation" },
+  { level: "original", label: "Original-round compensation" },
+  { level: "rofr", label: "Right of first refusal only" },
+];
+
+function RfaTenderOptions({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  return (
+    <div className="w-full rounded-lg border border-brass/25 bg-black/25 p-3">
+      <p className="mb-2 text-xs text-muted">Tender level sets the one-year salary and what your club receives if it declines an offer sheet. Compensation is from next year’s draft in this game’s offseason order.</p>
+      <div className="flex flex-wrap gap-2">
+        {RFA_LEVELS.map(({ level, label }) => {
+          const round = rfaCompensationRound(level, p);
+          return (
+            <Btn key={level} kind="gold" className="min-h-10 px-3 text-xs" onClick={() => desk((s) => tenderRfa(s, p.id, level))}>
+              {label} · {formatMoney(rfaTenderPrice(save.year, level, p), save.year)}
+              {round ? ` · ${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"} pick` : " · no pick"}
+            </Btn>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function Talk({ t }: { t: Negotiation }) {
   const save = useGameStore((s) => s.save)!;
@@ -135,12 +165,8 @@ function Talk({ t }: { t: Negotiation }) {
             <Btn className="min-h-10 px-4 text-sm" onClick={() => desk((s) => letWalk(s, t.playerId))}>
               Let him walk
             </Btn>
-            {rfa && (
-              <Btn kind="gold" className="min-h-10 px-4 text-sm" onClick={() => desk((s) => tenderRfa(s, t.playerId))}>
-                One-year RFA tender · {formatMoney(rfaTenderPrice(y), y)}
-              </Btn>
-            )}
           </div>
+          {rfa && <RfaTenderOptions p={p} />}
         </div>
       ) : walked && (canTag(save) || rfa) ? (
         <div className="mt-2 flex flex-wrap gap-2 px-4 pb-3">
@@ -149,11 +175,7 @@ function Talk({ t }: { t: Negotiation }) {
               Keep him with the franchise tag · {formatMoney(tagPrice(save, p), y)}
             </Btn>
           )}
-          {rfa && (
-            <Btn kind="gold" className="min-h-10 px-4 text-sm" onClick={() => desk((s) => tenderRfa(s, t.playerId))}>
-              One-year RFA tender · {formatMoney(rfaTenderPrice(y), y)}
-            </Btn>
-          )}
+          {rfa && <RfaTenderOptions p={p} />}
         </div>
       ) : (
         <div className="pb-3" />

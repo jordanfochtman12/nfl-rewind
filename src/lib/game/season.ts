@@ -56,7 +56,7 @@ import { buildPrimetime } from "./primetime.ts";
 import { recordTimeline } from "./timeline.ts";
 import { phoneRings, resolveAllBids } from "./market.ts";
 import { freezePreviewPicks } from "./seasonPreview.ts";
-import { closeTalks } from "./contracts.ts";
+import { autoResolveRfaOfferSheets, closeTalks, openRfaOfferSheets, pendingRfaOfferSheets } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
@@ -142,7 +142,7 @@ function ageAndRegen(save: DynastySave): void {
   };
 }
 
-function runCpuFreeAgency(save: DynastySave): void {
+function runCpuFreeAgency(save: DynastySave, openingMarket = false, auto = false): void {
   // Free agency opening is the deadline for the owner's contract talks.
   closeTalks(save, (p) => expireContract(save, p));
   openingFill(save);
@@ -151,6 +151,7 @@ function runCpuFreeAgency(save: DynastySave): void {
   cpuSignNeeds(save);
   cpuMarket(save);
   signFriends(save, activeTeamIds(save.year));
+  if (openingMarket) openRfaOfferSheets(save, auto);
 }
 
 function fillCpuRosters(save: DynastySave): void {
@@ -483,7 +484,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         autoDraftRest(s);
         s.phase = "freeAgency";
         clearCombine(s);
-        runCpuFreeAgency(s);
+        runCpuFreeAgency(s, true, auto);
         s.faOpened = true;
         break;
       }
@@ -493,7 +494,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
           if (maybeStartAflDraft(s)) break;
           s.phase = "freeAgency";
         clearCombine(s);
-          runCpuFreeAgency(s);
+          runCpuFreeAgency(s, true, auto);
           s.faOpened = true;
         }
         break;
@@ -503,7 +504,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         if (maybeStartAflDraft(s)) break;
         s.phase = "freeAgency";
         clearCombine(s);
-        runCpuFreeAgency(s);
+        runCpuFreeAgency(s, true, auto);
         s.faOpened = true;
         break;
       }
@@ -520,17 +521,22 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         if (maybeStartAflDraft(s)) break;
         s.phase = "freeAgency";
         clearCombine(s);
-        runCpuFreeAgency(s);
+        runCpuFreeAgency(s, true, auto);
         s.faOpened = true;
       }
       break;
     }
     case "freeAgency":
       if (!s.faOpened) {
-        runCpuFreeAgency(s);
+        runCpuFreeAgency(s, true, auto);
         s.faOpened = true;
       }
       if (auto || opts.closeFa) {
+        if (auto) autoResolveRfaOfferSheets(s);
+        if (pendingRfaOfferSheets(s).length) {
+          setLabel(s);
+          return s;
+        }
         resolveAllBids(s);
         runFreeAgency(s);
         // The draft class and the market's signings came after the winter's cap sweep; under

@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 21;
+export const SAVE_VERSION = 22;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -892,6 +892,31 @@ export interface TradeOffer {
 
 export type RfaTenderLevel = "first" | "second" | "original" | "rofr";
 
+/** A qualifying offer and the draft compensation it secures if the club declines to match. */
+export interface RfaTender {
+  year: number;
+  playerId: string;
+  teamId: TeamId;
+  level: RfaTenderLevel;
+  salary: number;
+  compensationRound?: number;
+}
+
+/** A signed outside offer sheet awaiting the original club's right-of-first-refusal decision. */
+export interface RfaOfferSheet {
+  id: string;
+  year: number;
+  playerId: string;
+  originalTeam: TeamId;
+  offerTeam: TeamId;
+  salary: number;
+  years: number;
+  compensationRound?: number;
+  compensationPickId?: string;
+  status: "pending" | "matched" | "signed";
+  result?: string;
+}
+
 /** Talks with one of the owner's expiring players, open until free agency starts. */
 export interface Negotiation {
   playerId: string;
@@ -906,7 +931,7 @@ export interface Negotiation {
   status: "open" | "signed" | "walked" | "tagged" | "tendered" | "option" | "staff" | "gone";
   /** Cap-era RFA eligibility at the league-year deadline. */
   accruedSeasons?: number;
-  /** One-year qualifying offer accepted by the player. */
+  /** One-year qualifying offer placed by the original club. */
   rfaTender?: { level: RfaTenderLevel; salary: number };
   rounds: { salary: number; years: number; reply: string; tone: "yes" | "counter" | "no" | "insult" }[];
   counter?: { salary: number; years: number };
@@ -1019,6 +1044,9 @@ export interface DynastySave {
   decisions?: OwnerDecision[];
   /** Free-agent bidding wars this offseason. */
   faBids?: FaBid[];
+  /** Restricted free-agent tenders and signed outside offers awaiting the original club's call. */
+  rfaTenders?: RfaTender[];
+  rfaOfferSheets?: RfaOfferSheet[];
   version: number;
   startingYear: number;
   /** A league begun from the record (eraStart.ts): each winter it signs that season's real free agents from it. */
