@@ -4,8 +4,9 @@ import assert from "node:assert/strict";
 if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
   test("RFA tender tests require Node type stripping", { skip: true }, () => {});
 } else {
-  const { accruedSeasonsFor, advance, compactSave, createNewGame, creditedSeasonsFor, erfaMinimumSalary, hydrateSave, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, openRfaOfferSheets, pendingRfaOfferSheets, rfaCompensationRound, rfaTenderPrice, resolveRfaOfferSheet, tenderErfa, tenderRfa } = await import("../src/lib/game/index.ts");
+  const { accruedSeasonsFor, advance, compactSave, createNewGame, creditedSeasonsFor, erfaMinimumSalary, hydrateSave, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, openRfaOfferSheets, pendingRfaOfferSheets, recordServiceGameWeek, rfaCompensationRound, rfaTenderPrice, resolveRfaOfferSheet, tenderErfa, tenderRfa } = await import("../src/lib/game/index.ts");
   const { cpuTenderErfa, cpuTenderRfa } = await import("../src/lib/game/contracts.ts");
+  const { emptyStats } = await import("../src/lib/game/players.ts");
   const { allPicks, ensureSeasonPicks } = await import("../src/lib/game/draft.ts");
   const { nextRng } = await import("../src/lib/game/rng.ts");
 
@@ -111,7 +112,7 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     const roundTrip = hydrateSave(JSON.parse(JSON.stringify(compactSave(save))));
     assert.deepEqual(roundTrip.rfaTenders, save.rfaTenders);
     assert.deepEqual(roundTrip.rfaOfferSheets, save.rfaOfferSheets);
-    const legacy = hydrateSave({ ...save, version: 22, rfaTenders: undefined, rfaOfferSheets: undefined, erfaTenders: undefined });
+    const legacy = hydrateSave({ ...save, version: 23, rfaTenders: undefined, rfaOfferSheets: undefined, erfaTenders: undefined });
     assert.deepEqual(legacy.rfaTenders, []);
     assert.deepEqual(legacy.rfaOfferSheets, []);
     assert.deepEqual(legacy.erfaTenders, []);
@@ -214,5 +215,60 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     cpu.contractYears = 0;
     assert.equal(cpuTenderErfa(save, cpu), true);
     assert.equal(save.erfaTenders.some((tender) => tender.playerId === cpu.id && tender.teamId === "pit"), true);
+  });
+
+  test("weekly full-pay service counts roster weeks, not appearances, and is idempotent", () => {
+    const save = createNewGame({ userTeamId: "gnb", startingYear: 2025 });
+    const player = Object.values(save.players).find((p) => p.teamId === "gnb");
+    assert.ok(player);
+    player.stats = { 2025: { year: 2025, gp: 17 } };
+    player.career = [];
+    player.serviceByYear = undefined;
+    save.phase = "regular";
+
+    for (let week = 1; week <= 5; week++) {
+      save.week = week;
+      if (week === 2) {
+        player.injuredWeeks = 3;
+        player.onIR = true;
+      }
+      recordServiceGameWeek(save, ["gnb"]);
+      if (week === 1) recordServiceGameWeek(save, ["gnb"]);
+    }
+    assert.equal(player.serviceByYear[2025].fullPayGames, 5);
+    assert.equal(creditedSeasonsFor(player), 1);
+    assert.equal(accruedSeasonsFor(player), 0, "the exact weekly ledger overrides season appearance totals");
+
+    save.week = 6;
+    recordServiceGameWeek(save, ["gnb"]);
+    assert.equal(accruedSeasonsFor(player), 1);
+    save.week = 7;
+    player.holdout = true;
+    recordServiceGameWeek(save, ["gnb"]);
+    assert.equal(player.serviceByYear[2025].fullPayGames, 6, "a holdout week is not full-pay service");
+    save.week = 8;
+    player.holdout = false;
+    recordServiceGameWeek(save, []);
+    assert.equal(player.serviceByYear[2025].fullPayGames, 6, "a bye week has no scheduled game to accrue");
+
+    save.realHistory = true;
+    save.week = 9;
+    recordServiceGameWeek(save, ["gnb"]);
+    assert.equal(player.serviceByYear[2025].fullPayGames, 6, "Record mode never receives simulated service history");
+
+    const legacy = createNewGame({ userTeamId: "gnb", startingYear: 2025 });
+    const legacyPlayer = Object.values(legacy.players).find((p) => p.teamId === "gnb");
+    assert.ok(legacyPlayer);
+    legacyPlayer.stats = { 2025: { ...emptyStats(2025, "gnb"), gp: 4 } };
+    legacy.phase = "regular";
+    legacy.week = 5;
+    legacy.version = 23;
+    const migrated = hydrateSave(JSON.parse(JSON.stringify(legacy)));
+    assert.equal(migrated.players[legacyPlayer.id].serviceByYear[2025].fullPayGames, 4, "old midseason saves seed a lower-bound service baseline from appearances");
+    recordServiceGameWeek(migrated, ["gnb"]);
+    assert.equal(migrated.players[legacyPlayer.id].serviceByYear[2025].fullPayGames, 5);
+
+    const roundTrip = hydrateSave(JSON.parse(JSON.stringify(compactSave(save))));
+    assert.deepEqual(roundTrip.players[player.id].serviceByYear, player.serviceByYear, "weekly service history survives compact save round-trip");
   });
 }

@@ -6,6 +6,7 @@ export type {
   RfaOfferSheet,
   RfaTender,
   RfaTenderLevel,
+  PlayerServiceYear,
   SeasonPreview,
   PreviewTeam,
   PreviewPicks,
@@ -232,7 +233,7 @@ export {
   type Leaning,
 } from "./market.ts";
 export { buildSeasonPreview, freezePreviewPicks, oddsOf, PREVIEW_CAST } from "./seasonPreview.ts";
-export { openTalks, talksFor, makeOffer, acceptCounter, letWalk, franchiseTag, tagPrice, canTag, talksSummary, accruedSeasonsFor, creditedSeasonsFor, isRestrictedFreeAgent, isExclusiveRightsFreeAgent, erfaMinimumSalary, tenderErfa, rfaTenderPrice, rfaCompensationRound, tenderRfa, pendingRfaOfferSheets, openRfaOfferSheets, resolveRfaOfferSheet, autoResolveRfaOfferSheets } from "./contracts.ts";
+export { openTalks, talksFor, makeOffer, acceptCounter, letWalk, franchiseTag, tagPrice, canTag, talksSummary, accruedSeasonsFor, creditedSeasonsFor, recordServiceGameWeek, isRestrictedFreeAgent, isExclusiveRightsFreeAgent, erfaMinimumSalary, tenderErfa, rfaTenderPrice, rfaCompensationRound, tenderRfa, pendingRfaOfferSheets, openRfaOfferSheets, resolveRfaOfferSheet, autoResolveRfaOfferSheets } from "./contracts.ts";
 export { findGame, ownerGameJustPlayed, ordersUpTo, withOrder } from "./liveCalls.ts";
 export { deadlineWeek, openDeadline, closeDeadline, acceptDeadlineOffer, declineDeadlineOffer, offerLine } from "./deadline.ts";
 export {

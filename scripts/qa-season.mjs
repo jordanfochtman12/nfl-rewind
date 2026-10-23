@@ -240,7 +240,7 @@ assert(sayersCareer.rushYds >= 800, `Sayers 1965 rush yds on the card (got ${say
 const namathCareer = g.careerTotals(namath);
 assert(namathCareer.passYds >= 2500, `Namath 1965 pass yds on the card (got ${namathCareer.passYds})`);
 
-assert(g.SAVE_VERSION === 23, `SAVE_VERSION 23 (got ${g.SAVE_VERSION})`);
+assert(g.SAVE_VERSION === 24, `SAVE_VERSION 24 (got ${g.SAVE_VERSION})`);
 const lombardi = save.coaches.lombardi;
 assert(lombardi, "Vince Lombardi is on the 1966 staff");
 assert(lombardi.teamId === "gnb", "Lombardi coaches the Packers");
@@ -334,6 +334,9 @@ console.log(
 
 const played = after.schedule.filter((x) => x.played);
 assert(played.length >= 160, `full 1966 slate played (got ${played.length})`);
+const serviceRows1966 = Object.values(after.players).map((p) => p.serviceByYear?.[1966]).filter(Boolean);
+assert(serviceRows1966.length > 0, "regular-season sim records full-pay service weeks");
+assert(serviceRows1966.every((row) => row.fullPayGames <= 14 && row.weeks.length === row.fullPayGames), "service ledger is bounded to actual 1966 game weeks and counts each week once");
 const wxSet = played.filter((x) => x.weather).length;
 assert(wxSet === played.length, "every Sunday has weather");
 const withVenue = played.filter((x) => x.stadium).length;

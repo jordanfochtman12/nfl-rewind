@@ -1,4 +1,4 @@
-import type { AdvanceOpts, DynastySave } from "./types.ts";
+import type { AdvanceOpts, DynastySave, TeamId } from "./types.ts";
 import { fileFaRecap } from "./faRecap.ts";
 import { END_YEAR } from "./types.ts";
 import { activeTeamIds, roman, superBowlNumber } from "./teams.ts";
@@ -56,7 +56,7 @@ import { buildPrimetime } from "./primetime.ts";
 import { recordTimeline } from "./timeline.ts";
 import { phoneRings, resolveAllBids } from "./market.ts";
 import { freezePreviewPicks } from "./seasonPreview.ts";
-import { autoResolveRfaOfferSheets, closeTalks, openRfaOfferSheets, pendingRfaOfferSheets } from "./contracts.ts";
+import { autoResolveRfaOfferSheets, closeTalks, openRfaOfferSheets, pendingRfaOfferSheets, recordServiceGameWeek } from "./contracts.ts";
 import { buildSeasonPlan, checkAchievements, draftRetrospective, gradeSeasonPlan, holdoutReported, seasonArcs } from "./storylines.ts";
 import { regradeClasses } from "./draftGrades.ts";
 import { ensureStaff, runCoachingCarousel, ageStaff, blackMonday, draftStyleOf, hotSeatWeek, interviewWeek } from "./staff.ts";
@@ -305,6 +305,7 @@ function simThisWeek(save: DynastySave): void {
   cpuCoverInjuries(save);
   cpuQbBenchings(save);
   const games = gamesInWeek(save, save.week);
+  recordServiceGameWeek(save, games.flatMap((game) => [game.homeId as TeamId, game.awayId as TeamId]));
   pickFeaturedGame(save, games);
   const careerBefore = snapshotCareerWeek(save);
   for (const g of games) simGame(save, g);
