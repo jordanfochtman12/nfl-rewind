@@ -259,12 +259,24 @@ export function openRfaOfferSheets(save: DynastySave, auto = false): RfaOfferShe
         const canPay = cap == null || teamPayroll(save, id) + reservedSalary + offerSalary <= cap;
         const hasRoom = activeRosterOf(save, id).length + reserved.length < ROSTER_TARGET + 8;
         const hasUnreservedPick = !tender.compensationRound || (!!pick && !reservedPicks.has(pick.id));
-        const interest = Math.max(0.08, Math.min(0.55, 0.12 + gap * 0.035 + (p.ovr >= 84 ? 0.12 : 0)));
+        // Outside clubs should need a clear starter-level upgrade before spending a pick and
+        // cap room on a restricted free agent. A high-grade player can still draw interest at
+        // a smaller gap, while the required compensation makes first-round challenges rarer.
+        const compensationCost = tender.compensationRound === 1 ? 0.035
+          : tender.compensationRound === 2 ? 0.02
+            : tender.compensationRound ? 0.012 : 0;
+        const playerPremium = p.ovr >= 90 ? 0.03 : p.ovr >= 84 ? 0.015 : 0;
+        const gapInterest = Math.min(20, Math.max(0, gap - 2)) * 0.006;
+        const interest = Math.max(0, Math.min(0.16, 0.015 + gapInterest + playerPremium - compensationCost));
         return { id, gap, offerSalary, pick, hasCompensation: hasCompensation && hasUnreservedPick, canPay, hasRoom, interest, score: gap + team.wins * 0.1 };
       })
-      .filter((item) => item.gap >= 3 && item.hasCompensation && item.canPay && item.hasRoom)
+      .filter((item) => (item.gap >= 5 || (p.ovr >= 88 && item.gap >= 3)) && item.interest > 0 && item.hasCompensation && item.canPay && item.hasRoom)
       .sort((a, b) => b.score - a.score);
-    const rival = need.find((item) => rand(save) < item.interest);
+    // Make one league-wide challenge decision for the best fit. Rolling separately for every
+    // eligible rival compounds individually rare offers into an almost-certain offer when a
+    // player has many possible suitors.
+    const bestFit = need[0];
+    const rival = bestFit && rand(save) < bestFit.interest ? bestFit : undefined;
     if (!rival) continue;
     const offer: RfaOfferSheet = {
       id: `rfa-${save.year}-${p.id}-${rival.id}`,
