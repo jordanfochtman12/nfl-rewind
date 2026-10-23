@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 20;
+export const SAVE_VERSION = 21;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -890,6 +890,8 @@ export interface TradeOffer {
   status: "open" | "accepted" | "declined";
 }
 
+export type RfaTenderLevel = "first" | "second" | "original" | "rofr";
+
 /** Talks with one of the owner's expiring players, open until free agency starts. */
 export interface Negotiation {
   playerId: string;
@@ -901,7 +903,11 @@ export interface Negotiation {
   pitch: string;
   /** Rounds of talks left before he decides to test the market. */
   patience: number;
-  status: "open" | "signed" | "walked" | "tagged" | "option" | "staff" | "gone";
+  status: "open" | "signed" | "walked" | "tagged" | "tendered" | "option" | "staff" | "gone";
+  /** Cap-era RFA eligibility at the league-year deadline. */
+  accruedSeasons?: number;
+  /** One-year qualifying offer accepted by the player. */
+  rfaTender?: { level: RfaTenderLevel; salary: number };
   rounds: { salary: number; years: number; reply: string; tone: "yes" | "counter" | "no" | "insult" }[];
   counter?: { salary: number; years: number };
   /** Private: the least he'll take, before years are weighed in. */

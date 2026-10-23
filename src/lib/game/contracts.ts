@@ -26,6 +26,79 @@ const roundPay = (year: number, n: number) => {
   return Math.max(step, Math.round(n / step) * step);
 };
 
+/**
+ * Accrued NFL seasons are service years, not starts or games played. The simulator does not
+ * retain weekly active-list history, so use distinct player-seasons with six or more games when
+ * available and yearsPro only for players whose career ledger is still empty.
+ */
+export function accruedSeasonsFor(p: Player): number {
+  const seasons = new Map<number, number>();
+  for (const line of [...Object.values(p.stats ?? {}), ...(p.career ?? [])]) {
+    seasons.set(line.year, Math.max(seasons.get(line.year) ?? 0, line.gp ?? 0));
+  }
+  return seasons.size ? [...seasons.values()].filter((gp) => gp >= 6).length : Math.max(0, p.yearsPro ?? 0);
+}
+
+/** In capped league years, three accrued seasons make an RFA; 2010's uncapped CBA year is 3–5. */
+export function isRestrictedFreeAgent(save: Pick<DynastySave, "year">, p: Player): boolean {
+  if (save.year < 1994) return false;
+  const accrued = accruedSeasonsFor(p);
+  return save.year === 2010 ? accrued >= 3 && accrued <= 5 : accrued === 3;
+}
+
+/**
+ * The right-of-first-refusal tender, scaled from the current CBA amount to the game's annual cap.
+ * It is a one-year qualifying offer; historical cap years get the era's dollar scale.
+ */
+export function rfaTenderPrice(year: number): number {
+  const cap = salaryCapFor(year);
+  const currentCap = salaryCapFor(2026);
+  if (year < 1994 || cap == null || currentCap == null) return 0;
+  return roundPay(year, (3_547_000 * cap) / currentCap);
+}
+
+function applyRfaTender(save: DynastySave, p: Player, salary: number, talk?: Negotiation): void {
+  p.salary = salary;
+  p.contractYears = 1;
+  const team = save.teams[p.teamId as TeamId];
+  if (team) team.payroll = teamPayroll(save, team.id);
+  if (talk) {
+    talk.status = "tendered";
+    talk.rfaTender = { level: "rofr", salary };
+    talk.result = `One year at ${formatMoney(salary, save.year)} under the restricted free-agent tender.`;
+  }
+  addNews(save, {
+    kind: "transaction",
+    headline: `${displayName(save.year, p.teamId as TeamId)} tenders ${playerName(p)}`,
+    body: `One-year right-of-first-refusal offer: ${formatMoney(salary, save.year)}.`,
+    teamIds: [p.teamId as TeamId],
+    playerIds: [p.id],
+  });
+}
+
+/** Owner decision: make the cap-era qualifying tender instead of a multi-year deal or release. */
+export function tenderRfa(save: DynastySave, playerId: string): string {
+  const talk = talksFor(save, playerId);
+  const p = save.players[playerId];
+  if (!talk || !p || !isRestrictedFreeAgent(save, p)) return "He does not qualify for a restricted free-agent tender.";
+  if (talk.status !== "open" && talk.status !== "walked") return "Those contract talks are over.";
+  if (p.teamId !== save.userTeamId) return "He is no longer on your roster.";
+  const price = rfaTenderPrice(save.year);
+  if (!price) return "Restricted tenders are not available before the cap era.";
+  if (!fitsCap(save, p, price)) return "The tender does not fit under the cap.";
+  applyRfaTender(save, p, price, talk);
+  return talk.result!;
+}
+
+/** CPU clubs use the qualifying offer when they decide a three-year veteran is worth retaining. */
+export function cpuTenderRfa(save: DynastySave, p: Player): boolean {
+  if (!isRestrictedFreeAgent(save, p)) return false;
+  const price = rfaTenderPrice(save.year);
+  if (!price) return false;
+  applyRfaTender(save, p, price);
+  return true;
+}
+
 export function openTalks(save: DynastySave): Negotiation[] {
   return (save.talks ?? []).filter((t) => t.year === save.year && t.status === "open");
 }
@@ -120,6 +193,7 @@ export function startTalks(save: DynastySave, p: Player): void {
     status: "open",
     rounds: [],
     floor: a.floor,
+    accruedSeasons: accruedSeasonsFor(p),
   });
 }
 

@@ -1,12 +1,16 @@
 import { useState } from "react";
 import {
   acceptCounter,
+  accruedSeasonsFor,
   canTag,
   formatMoney,
   franchiseTag,
   letWalk,
   makeOffer,
+  isRestrictedFreeAgent,
+  rfaTenderPrice,
   tagPrice,
+  tenderRfa,
   talksSummary,
   type Negotiation,
   posLabel,
@@ -19,6 +23,7 @@ const STATUS: Record<Negotiation["status"], { label: string; tone: string }> = {
   open: { label: "At the table", tone: "bg-brass text-[#140f00]" },
   signed: { label: "Signed", tone: "bg-good text-black" },
   tagged: { label: "Franchise tag", tone: "bg-white text-black" },
+  tendered: { label: "RFA tender placed", tone: "bg-good text-black" },
   walked: { label: "Talks broke down", tone: "bg-red text-white" },
   option: { label: "Playing out option", tone: "bg-chrome-2 text-white" },
   staff: { label: "Handled by staff", tone: "bg-chrome-2 text-white" },
@@ -36,6 +41,8 @@ function Talk({ t }: { t: Negotiation }) {
   if (!p) return null;
   const y = save.year;
   const open = t.status === "open";
+  const walked = t.status === "walked";
+  const rfa = isRestrictedFreeAgent(save, p);
   const offer = Math.round((t.ask * mult) / 10) * 10;
   const last = p.stats[y - 1];
   const line = last
@@ -59,7 +66,7 @@ function Talk({ t }: { t: Negotiation }) {
           <p className="flex flex-wrap items-center gap-2">
             <PlayerLink player={p} className="inline min-h-0 font-display text-lg font-bold uppercase italic" />
             <span className="text-sm text-muted">
-              {posLabel(p)} · {p.age} · {p.ovr} ovr
+              {posLabel(p)} · {p.age} · {p.ovr} ovr{rfa ? ` · RFA · ${accruedSeasonsFor(p)} accrued seasons` : ""}
             </span>
             <span className={`px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase italic tracking-wider ${st.tone}`}>{st.label}</span>
           </p>
@@ -128,13 +135,25 @@ function Talk({ t }: { t: Negotiation }) {
             <Btn className="min-h-10 px-4 text-sm" onClick={() => desk((s) => letWalk(s, t.playerId))}>
               Let him walk
             </Btn>
+            {rfa && (
+              <Btn kind="gold" className="min-h-10 px-4 text-sm" onClick={() => desk((s) => tenderRfa(s, t.playerId))}>
+                One-year RFA tender · {formatMoney(rfaTenderPrice(y), y)}
+              </Btn>
+            )}
           </div>
         </div>
-      ) : t.status === "walked" && canTag(save) ? (
-        <div className="mt-2 px-4 pb-3">
-          <Btn className="min-h-10 px-4 text-sm" onClick={() => desk((s) => franchiseTag(s, t.playerId))}>
-            Keep him with the franchise tag · {formatMoney(tagPrice(save, p), y)}
-          </Btn>
+      ) : walked && (canTag(save) || rfa) ? (
+        <div className="mt-2 flex flex-wrap gap-2 px-4 pb-3">
+          {canTag(save) && (
+            <Btn className="min-h-10 px-4 text-sm" onClick={() => desk((s) => franchiseTag(s, t.playerId))}>
+              Keep him with the franchise tag · {formatMoney(tagPrice(save, p), y)}
+            </Btn>
+          )}
+          {rfa && (
+            <Btn kind="gold" className="min-h-10 px-4 text-sm" onClick={() => desk((s) => tenderRfa(s, t.playerId))}>
+              One-year RFA tender · {formatMoney(rfaTenderPrice(y), y)}
+            </Btn>
+          )}
         </div>
       ) : (
         <div className="pb-3" />

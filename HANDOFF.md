@@ -28,8 +28,9 @@ Product contract: [`AGENTS.project.md`](AGENTS.project.md). Sandbox/platform con
 | Camp / Sunday / deadline | **Done.** Preseason is camp. Regular week stays until Continue. Mid-season `deadline` phase with incoming offers. |
 | Franchise book | **Done.** `history.seasons` year-by-year W-L, result, coach, draft class, honors. |
 | Dynasty grade | **Done.** `grade.ts` letter A+–F. Career W-L on regular-season only. Locks at `END_YEAR` 2027 (`phase: complete`). |
-| Staff / careers | **SAVE_VERSION 14.** Coaches have attributes, abilities, age, progression, retirement, firing, HOF. CPU staff + scheme draft + roster management. Player HOF is a production ballot. |
-| Saves | **SAVE_VERSION 14.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
+| Staff / careers | Coaches have attributes, abilities, age, progression, retirement, firing, and HOF. CPU staff + scheme draft + roster management. Player HOF is a production ballot. |
+| Contracts | Cap-era contracts, player talks, and franchise tags are live. Three-accrued-season RFAs now receive a one-year right-of-first-refusal tender decision; 2010 uses its 3–5-year RFA window. Eligibility approximates accrued service from distinct seasons with 6+ games because weekly active/inactive roster history is not stored. Historical tender amounts scale the current ROFR tender to the game's annual cap. Offer-sheet matching, alternate tender tiers, and draft compensation remain unmodeled. |
+| Saves | **SAVE_VERSION 21.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
 | QA scripts | **Green as of this handoff:** `qa-season` and `qa-expansions` exit 0. `tsc --noEmit` exit 0. |
 | UI (title, AFL/NFL team select, office desk, roster, standings, schedule, stats, draft, history, expansion night, grade card) | **Playable** in `src/components/game/` |
 | Team SVG logos `public/logos/{id}.svg` | **Emblems evolve by year.** `src/lib/game/data/logos.ts` `LOGO_ERAS` — last matching `from` year, including returns (Chargers powder, Jets football). Desk chrome follows `clubInk` / `teamColors(id, year)` (header ribbon, tabs, nameplate). Stadiums year-correct in `venues.ts`. |
@@ -80,7 +81,7 @@ HANDOFF.md                this file
 docs/ERA.md               season length, divisions, playoff formats, stat caps, SB sites
 docs/EXPANSIONS.md        how each expansion MUST mutate rosters
 src/lib/game/             ENGINE (no React). Imports use `.ts` extensions for Node QA.
-  types.ts                SAVE_VERSION=14, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
+  types.ts                SAVE_VERSION=21, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
   coachKit.ts             coach abilities / traits that feed the sim
   hof.ts                  player + coach Hall of Fame ballot
   staff.ts                seed / fire / hire / carousel / progression / retirement / CPU staff
@@ -164,7 +165,7 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Add restricted-free-agent tenders and contract-year decisions for the 1994+ cap era. The waiver-claim phase is already implemented in `season.ts` / `WaiverNight.tsx` and covered by `scripts/waiver-phase.test.mjs`.
+1. Complete RFA offer-sheet matching and draft-pick compensation, then add exclusive-rights tenders. One-year RFA qualifying tenders are implemented; the waiver-claim phase is already in `season.ts` / `WaiverNight.tsx` and covered by `scripts/waiver-phase.test.mjs`.
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
 

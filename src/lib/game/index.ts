@@ -3,6 +3,7 @@ export type {
   AdvanceOpts,
   TradeCall,
   Negotiation,
+  RfaTenderLevel,
   SeasonPreview,
   PreviewTeam,
   PreviewPicks,
@@ -229,7 +230,7 @@ export {
   type Leaning,
 } from "./market.ts";
 export { buildSeasonPreview, freezePreviewPicks, oddsOf, PREVIEW_CAST } from "./seasonPreview.ts";
-export { openTalks, talksFor, makeOffer, acceptCounter, letWalk, franchiseTag, tagPrice, canTag, talksSummary } from "./contracts.ts";
+export { openTalks, talksFor, makeOffer, acceptCounter, letWalk, franchiseTag, tagPrice, canTag, talksSummary, accruedSeasonsFor, isRestrictedFreeAgent, rfaTenderPrice, tenderRfa } from "./contracts.ts";
 export { findGame, ownerGameJustPlayed, ordersUpTo, withOrder } from "./liveCalls.ts";
 export { deadlineWeek, openDeadline, closeDeadline, acceptDeadlineOffer, declineDeadlineOffer, offerLine } from "./deadline.ts";
 export {
