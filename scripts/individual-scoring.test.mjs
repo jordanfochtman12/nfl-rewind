@@ -28,6 +28,18 @@ test("defensive touchdown leaderboard excludes historical source gaps", () => {
 
 test("a simulated fumble-return touchdown reaches the credited defender's career line", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 10 });
+  // Pin the game RNG and lower ball-carrier break-tackle ratings for these two clubs so this
+  // regression always exercises the rare fumble-return scoring path instead of relying on an
+  // incidental turnover from an ordinary seed.
+  save.rng = 39;
+  for (const player of Object.values(save.players)) {
+    if (["pit", "cle"].includes(player.teamId) && ["QB", "RB", "FB", "WR", "TE"].includes(player.pos)) {
+      player.ratings.btk = 0;
+    }
+  }
+  const defensiveTouchdownsBefore = new Map(
+    Object.values(save.players).map((player) => [player.id, careerTotals(player).defTd]),
+  );
   const game = { id: "defensive-score-regression", year: save.year, week: 4, phase: "regular", homeId: "pit", awayId: "cle", homeScore: 0, awayScore: 0, played: false };
   simGame(save, game);
   const returners = [...(game.boxHome ?? []), ...(game.boxAway ?? [])].filter((line) => line.defTd);
@@ -38,7 +50,11 @@ test("a simulated fumble-return touchdown reaches the credited defender's career
   assert.equal(returners[0].fr, 1);
   assert.equal(defender.stats[save.year].defTd, 1);
   assert.equal(individualScoringPoints(defender.stats[save.year]), 6);
-  assert.equal(careerTotals(defender).defTd, 1, "the defensive score carries into career totals");
+  assert.equal(
+    careerTotals(defender).defTd,
+    (defensiveTouchdownsBefore.get(defender.id) ?? 0) + 1,
+    "the defensive score adds to the player's accumulated career total",
+  );
 });
 
 test("older save stat lines default the new defensive-TD field without losing other totals", () => {

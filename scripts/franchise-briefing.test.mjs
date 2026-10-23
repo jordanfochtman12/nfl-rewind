@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createNewGame } from '../src/lib/game/createGame.ts';
 import { unitReport, seasonForm, nextMatchup } from '../src/lib/game/briefing.ts';
 import { importDynasty } from '../src/lib/game/importSave.ts';
+import { compactSave } from '../src/lib/game/compact.ts';
 import { weekPrimetime } from '../src/lib/game/events.ts';
 import { finalPossessionCall } from '../src/lib/game/sim.ts';
 
@@ -60,10 +61,10 @@ test('form excludes unplayed games, old seasons and live spoilers', () => {
 test('import rejects unrelated, malformed and future save files', () => {
   for (const raw of ['{}', 'null', '[]', '{broken']) assert.throws(() => importDynasty(raw));
   const save = create(); save.version = 999;
-  assert.throws(() => importDynasty(JSON.stringify(save)), /newer version/);
+  assert.throws(() => importDynasty(JSON.stringify(compactSave(save))), /newer version/);
 });
 test('valid dynasty roundtrip preserves identity, roster and schedule', () => {
-  const save = create(); const restored = importDynasty(JSON.stringify(save));
+  const save = create(); const restored = importDynasty(JSON.stringify(compactSave(save)));
   assert.equal(restored.userTeamId, save.userTeamId);
   assert.equal(restored.year, save.year);
   assert.deepEqual(restored.teams.gnb.roster, save.teams.gnb.roster);
