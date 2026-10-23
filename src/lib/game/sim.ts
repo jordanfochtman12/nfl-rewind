@@ -68,6 +68,7 @@ import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, playCallers, staffPlan } from "./gameplans.ts";
 import { cpuHandles } from "./teamControl.ts";
+import { isScramblePassCall, scrambleSituationMultiplier, scrambleSituationVolumeNormalizer } from "./qbRushing.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -2816,7 +2817,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
 
       // A mobile passer can turn a non-sack dropback into a scramble. This is separate from RB
       // handoffs and scales with real quarterback mobility and the era's observed run tendency.
-      if (off.qb) {
+      if (off.qb && isScramblePassCall(call)) {
         const mobility =
           // The positional era share is the quarterback's target share of all carries, not a
           // chance to scramble on every dropback. Modern QBs were reaching 4.3 carries per
@@ -2827,7 +2828,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
           Math.max(0, off.qb.ratings.agi - 60) * 0.0013 +
           Math.max(0, off.kit.scramble) / 500 -
           (off.qb.traits.includes("Pocket statue") ? 0.06 : 0);
-        if (rand(save) < clamp(mobility, 0.008, 0.18)) {
+        const scrambleChance = clamp(
+          mobility *
+            scrambleSituationVolumeNormalizer(year) *
+            scrambleSituationMultiplier(call, down, togo, sackP, era.sackRate, year),
+          0.008,
+          0.18,
+        );
+        if (rand(save) < scrambleChance) {
           const yds = sampleYds(
             save,
             // An open-field scramble rewards mobility, but should still look like a

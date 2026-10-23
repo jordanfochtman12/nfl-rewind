@@ -416,6 +416,12 @@ Next calibration step: increased the 2020+ RB1 selection weight from 0.65 to 0.7
 
 Follow-up tested a 2020+ RB3 share scaled by the RB3-to-RB2 running-skill gap, intending to concentrate third-back work on teams with a capable reserve. It was discarded: in the same four-seed 2024 audit, RB3 share moved farther from history (6.8% vs 9.7%), YPC rose to 4.45 vs 4.37, and the 50+ carry frequency improved only from 0.75 to 0.69 teams per team-season (historical 0.25). The experiment did not touch history data or save fields. Retain the validated 0.71 RB1 weight and existing three-back rotation until a stronger model explains the large rank-level concentration gap.
 
+## Update (situational quarterback scrambles)
+
+In 2020+ simulated games, a quarterback's non-sack scramble chance now responds to pass concept depth, third-down distance, and estimated sack pressure. Screens and quick concepts reduce the chance; deeper concepts and third-and-long raise it. The player's mobility still sets the base rate, and pressure's situational multiplier stays bounded. A 1.10 volume normalizer preserves the 2024 league calibration. Pre-2020 chance and volume multipliers return 1.0 because the current data only supports the modern situational calibration. No save schema, historical source data, or Record-mode behavior changed.
+
+Validation: the four-seed 2024 QB audit passes at 9,452 carries and 44,163 yards per season (1.00x actual for both), with 4.67 YPC vs 4.68. The 2016 QB control, 1967–69 rushing-share transition, situational helper tests, `npm run typecheck`, targeted ESLint, `npm run qa:season`, `npm run qa:expansions`, and `npm run build` pass. The 1966 volume test reports 10,585 attempts vs 10,157 (4.2% high, just outside its 4% bound) on this branch and returns the exact same result on clean `origin/main`; this pre-existing control failure is not caused by the modern-only multiplier. Full modern player-by-player scramble rates and other 2020+ seasons remain uncalibrated.
+
 A simpler 1.3× multiplier on the existing 2020+ third-back workload share was also tested and discarded. It produced 62.5%/27.8%/7.6%/1.9% ranked carry shares and 4.43 YPC: it shifted volume away from RB2 but raised RB1 share further and barely changed RB3 share. The simulation's full-season feedback does not follow the isolated selection-weight arithmetic, so do not extrapolate from raw pick weights; re-run the four-seed season calibration for future candidates.
 
 ## Update (modern fourth-back relief substitution)
