@@ -4,11 +4,15 @@
  * the opening of free agency. Before 1994 a player without a deal plays out his option; from
  * 1994 he hits the open market, and the franchise tag keeps one of them for a year.
  */
-import type { DynastySave, Negotiation, Player, TeamId } from "./types.ts";
+import type { DynastySave, Negotiation, Player, RfaOfferSheet, RfaTender, RfaTenderLevel, TeamId } from "./types.ts";
 import { salaryCapFor, salaryFor, teamPayroll, formatMoney } from "./salary.ts";
-import { playerName, syncDepth } from "./players.ts";
-import { addNews } from "./news.ts";
-import { displayName } from "./teams.ts";
+import { activeRosterOf, carryJersey, movePlayer, playerName, syncDepth } from "./players.ts";
+import { addNews, addTx } from "./news.ts";
+import { activeTeamIds, displayName } from "./teams.ts";
+import { allPicks, transferPick } from "./draft.ts";
+import { rand } from "./rng.ts";
+import { cpuHandles } from "./teamControl.ts";
+import { ROSTER_TARGET } from "./types.ts";
 
 function hash(s: string): number {
   let h = 2166136261;
@@ -50,53 +54,216 @@ export function isRestrictedFreeAgent(save: Pick<DynastySave, "year">, p: Player
  * The right-of-first-refusal tender, scaled from the current CBA amount to the game's annual cap.
  * It is a one-year qualifying offer; historical cap years get the era's dollar scale.
  */
-export function rfaTenderPrice(year: number): number {
+/** 2026 NFL Operations tender schedule; past modeled years scale by their salary-cap ratio.
+ * Source: https://operations.nfl.com/calendar-events/nfl-free-agency/types-of-free-agents
+ */
+const RFA_2026_TENDERS: Record<RfaTenderLevel, number> = {
+  first: 8_107_000,
+  second: 5_811_000,
+  original: 3_674_000,
+  rofr: 3_547_000,
+};
+
+export function rfaCompensationRound(level: RfaTenderLevel, p: Pick<Player, "draftRound">): number | undefined {
+  if (level === "first") return 1;
+  if (level === "second") return 2;
+  if (level === "original" && p.draftRound && p.draftRound >= 1 && p.draftRound <= 7) return p.draftRound;
+  return undefined;
+}
+
+export function rfaTenderPrice(year: number, level: RfaTenderLevel = "rofr", p?: Player): number {
   const cap = salaryCapFor(year);
   const currentCap = salaryCapFor(2026);
   if (year < 1994 || cap == null || currentCap == null) return 0;
-  return roundPay(year, (3_547_000 * cap) / currentCap);
+  const scaled = (RFA_2026_TENDERS[level] * cap) / currentCap;
+  const priorSalaryFloor = level === "rofr" ? 0 : (p?.salary ?? 0) * 1.1;
+  return Math.max(1_000, Math.round(Math.max(scaled, priorSalaryFloor) / 1_000) * 1_000);
 }
 
-function applyRfaTender(save: DynastySave, p: Player, salary: number, talk?: Negotiation): void {
+function applyRfaTender(save: DynastySave, p: Player, level: RfaTenderLevel, salary: number, talk?: Negotiation): void {
   p.salary = salary;
   p.contractYears = 1;
+  const tender: RfaTender = {
+    year: save.year,
+    playerId: p.id,
+    teamId: p.teamId as TeamId,
+    level,
+    salary,
+    compensationRound: rfaCompensationRound(level, p),
+  };
+  save.rfaTenders = (save.rfaTenders ?? []).filter((x) => x.year !== save.year || x.playerId !== p.id).concat(tender);
   const team = save.teams[p.teamId as TeamId];
   if (team) team.payroll = teamPayroll(save, team.id);
   if (talk) {
     talk.status = "tendered";
-    talk.rfaTender = { level: "rofr", salary };
-    talk.result = `One year at ${formatMoney(salary, save.year)} under the restricted free-agent tender.`;
+    talk.rfaTender = { level, salary };
+    const comp = tender.compensationRound ? ` and a ${tender.compensationRound}${tender.compensationRound === 1 ? "st" : tender.compensationRound === 2 ? "nd" : tender.compensationRound === 3 ? "rd" : "th"}-round pick` : " with no draft compensation";
+    talk.result = `One-year qualifying offer at ${formatMoney(salary, save.year)}; right of first refusal${comp}.`;
   }
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, p.teamId as TeamId)} tenders ${playerName(p)}`,
-    body: `One-year right-of-first-refusal offer: ${formatMoney(salary, save.year)}.`,
+    body: `One-year ${level === "rofr" ? "right-of-first-refusal" : `${level}-round qualifying`} tender: ${formatMoney(salary, save.year)}${tender.compensationRound ? ` with round ${tender.compensationRound} compensation` : " with no draft compensation"}.`,
     teamIds: [p.teamId as TeamId],
     playerIds: [p.id],
   });
 }
 
 /** Owner decision: make the cap-era qualifying tender instead of a multi-year deal or release. */
-export function tenderRfa(save: DynastySave, playerId: string): string {
+export function tenderRfa(save: DynastySave, playerId: string, level: RfaTenderLevel = "rofr"): string {
   const talk = talksFor(save, playerId);
   const p = save.players[playerId];
   if (!talk || !p || !isRestrictedFreeAgent(save, p)) return "He does not qualify for a restricted free-agent tender.";
   if (talk.status !== "open" && talk.status !== "walked") return "Those contract talks are over.";
   if (p.teamId !== save.userTeamId) return "He is no longer on your roster.";
-  const price = rfaTenderPrice(save.year);
+  const price = rfaTenderPrice(save.year, level, p);
   if (!price) return "Restricted tenders are not available before the cap era.";
   if (!fitsCap(save, p, price)) return "The tender does not fit under the cap.";
-  applyRfaTender(save, p, price, talk);
+  applyRfaTender(save, p, level, price, talk);
   return talk.result!;
 }
 
 /** CPU clubs use the qualifying offer when they decide a three-year veteran is worth retaining. */
 export function cpuTenderRfa(save: DynastySave, p: Player): boolean {
   if (!isRestrictedFreeAgent(save, p)) return false;
-  const price = rfaTenderPrice(save.year);
+  const level: RfaTenderLevel = p.ovr >= 84 ? "first" : p.ovr >= 77 ? "second" : p.draftRound ? "original" : "rofr";
+  const price = rfaTenderPrice(save.year, level, p);
   if (!price) return false;
-  applyRfaTender(save, p, price);
+  applyRfaTender(save, p, level, price);
   return true;
+}
+
+export function pendingRfaOfferSheets(save: DynastySave): RfaOfferSheet[] {
+  return (save.rfaOfferSheets ?? []).filter((offer) => offer.year === save.year && offer.status === "pending");
+}
+
+/** Generate outside challenges for tendered players across CPU-controlled clubs. */
+export function openRfaOfferSheets(save: DynastySave, auto = false): RfaOfferSheet[] {
+  if (save.realHistory || save.phase !== "freeAgency") return [];
+  save.rfaTenders = (save.rfaTenders ?? []).filter((tender) => tender.year === save.year);
+  save.rfaOfferSheets = (save.rfaOfferSheets ?? []).filter((offer) => offer.year >= save.year - 2);
+  const opened: RfaOfferSheet[] = [];
+  for (const tender of save.rfaTenders) {
+    const p = save.players[tender.playerId];
+    if (!p || p.teamId !== tender.teamId || pendingRfaOfferSheets(save).some((offer) => offer.playerId === p.id)) continue;
+    const need = activeTeamIds(save.year)
+      .filter((id) => id !== tender.teamId && cpuHandles(save, id, "roster"))
+      .map((id) => {
+        const team = save.teams[id]!;
+        const best = Math.max(0, ...rosterOfTeam(save, id).filter((player) => player.pos === p.pos).map((player) => player.ovr));
+        const gap = p.ovr - best;
+        const offerSalary = Math.max(roundPay(save.year, tender.salary * 1.12), roundPay(save.year, salaryFor(save.year, p.ovr, p.age, p.pos) * 1.1));
+        const cap = save.salaryCap ?? salaryCapFor(save.year);
+        const pick = tender.compensationRound
+          ? allPicks(save).find((asset) => asset.owner === id && asset.year === save.year + 1 && asset.round === tender.compensationRound && !asset.used)
+          : undefined;
+        const hasCompensation = !tender.compensationRound || !!pick;
+        const reserved = pendingRfaOfferSheets(save).filter((offer) => offer.offerTeam === id);
+        const reservedSalary = reserved.reduce((total, offer) => total + offer.salary, 0);
+        const reservedPicks = new Set(reserved.map((offer) => offer.compensationPickId).filter(Boolean));
+        const canPay = cap == null || teamPayroll(save, id) + reservedSalary + offerSalary <= cap;
+        const hasRoom = activeRosterOf(save, id).length + reserved.length < ROSTER_TARGET + 8;
+        const hasUnreservedPick = !tender.compensationRound || (!!pick && !reservedPicks.has(pick.id));
+        const interest = Math.max(0.08, Math.min(0.55, 0.12 + gap * 0.035 + (p.ovr >= 84 ? 0.12 : 0)));
+        return { id, gap, offerSalary, pick, hasCompensation: hasCompensation && hasUnreservedPick, canPay, hasRoom, interest, score: gap + team.wins * 0.1 };
+      })
+      .filter((item) => item.gap >= 3 && item.hasCompensation && item.canPay && item.hasRoom)
+      .sort((a, b) => b.score - a.score);
+    const rival = need.find((item) => rand(save) < item.interest);
+    if (!rival) continue;
+    const offer: RfaOfferSheet = {
+      id: `rfa-${save.year}-${p.id}-${rival.id}`,
+      year: save.year,
+      playerId: p.id,
+      originalTeam: tender.teamId,
+      offerTeam: rival.id,
+      salary: rival.offerSalary,
+      years: p.age <= 28 ? 3 : 2,
+      compensationRound: tender.compensationRound,
+      compensationPickId: rival.pick?.id,
+      status: "pending",
+    };
+    save.rfaOfferSheets.push(offer);
+    opened.push(offer);
+    addNews(save, {
+      kind: "transaction",
+      headline: `${displayName(save.year, rival.id)} sign ${playerName(p)} to an offer sheet`,
+      body: `A ${offer.years}-year offer worth ${formatMoney(offer.salary, save.year)} per season puts the ${displayName(save.year, tender.teamId)}'s right of first refusal to the test.`,
+      teamIds: [tender.teamId, rival.id],
+      playerIds: [p.id],
+    });
+  }
+  // In interactive play, CPU-run front offices resolve their own players; only
+  // the user's club pauses the market for a decision.
+  autoResolveRfaOfferSheets(save, auto ? undefined : (offer) => offer.originalTeam !== save.userTeamId || cpuHandles(save, save.userTeamId, "contracts"));
+  return opened;
+}
+
+function rosterOfTeam(save: DynastySave, teamId: TeamId): Player[] {
+  return (save.teams[teamId]?.roster ?? []).map((id) => save.players[id]).filter((player): player is Player => !!player);
+}
+
+/** Match the offer sheet or decline it and take the tender's associated next-draft pick. */
+export function resolveRfaOfferSheet(save: DynastySave, offerId: string, match: boolean, automated = false): string {
+  const offer = (save.rfaOfferSheets ?? []).find((item) => item.id === offerId && item.year === save.year && item.status === "pending");
+  if (!offer) return "That offer sheet is no longer open.";
+  if (!automated && (offer.originalTeam !== save.userTeamId || cpuHandles(save, save.userTeamId, "contracts"))) return "The CPU front office controls this tender decision.";
+  const p = save.players[offer.playerId];
+  if (!p || p.teamId !== offer.originalTeam) return "The player is no longer on your roster.";
+  const t = talksFor(save, p.id);
+  if (match) {
+    if (!fitsCap(save, p, offer.salary, offer.originalTeam)) return "That match does not fit under the cap.";
+    p.salary = offer.salary;
+    p.contractYears = offer.years;
+    save.teams[offer.originalTeam].payroll = teamPayroll(save, offer.originalTeam);
+    if (t) {
+      t.status = "signed";
+      t.result = `Matched ${displayName(save.year, offer.offerTeam)}'s ${offer.years}-year offer sheet.`;
+    }
+    offer.status = "matched";
+    offer.result = `${displayName(save.year, offer.originalTeam)} matched and retained ${playerName(p)}.`;
+    addNews(save, { kind: "transaction", headline: `${displayName(save.year, offer.originalTeam)} match the ${displayName(save.year, offer.offerTeam)} offer sheet`, body: `${playerName(p)} stays on a ${offer.years}-year deal at ${formatMoney(offer.salary, save.year)} per season.`, teamIds: [offer.originalTeam, offer.offerTeam], playerIds: [p.id] });
+    return offer.result;
+  }
+  if (activeRosterOf(save, offer.offerTeam).length >= ROSTER_TARGET + 8) return "The signing club's roster is full; the offer cannot be completed.";
+  const cap = save.salaryCap ?? salaryCapFor(save.year);
+  if (cap != null && teamPayroll(save, offer.offerTeam) + offer.salary > cap) return "The signing club no longer has cap room for the offer sheet.";
+  let compLabel = "no draft-pick compensation";
+  if (offer.compensationRound) {
+    const pick = allPicks(save).find((asset) => asset.id === offer.compensationPickId && asset.owner === offer.offerTeam && !asset.used);
+    if (!pick || pick.year !== save.year + 1 || pick.round !== offer.compensationRound) return "The signing club no longer has the required compensation pick.";
+    if (!transferPick(save, pick.id, offer.originalTeam)) return "The compensation pick could not be transferred.";
+    compLabel = `the signing club's ${offer.compensationRound}${offer.compensationRound === 1 ? "st" : offer.compensationRound === 2 ? "nd" : offer.compensationRound === 3 ? "rd" : "th"}-round pick in the ${pick.year} draft`;
+  }
+  const from = offer.originalTeam;
+  p.salary = offer.salary;
+  p.contractYears = offer.years;
+  p.jersey = carryJersey(save, p, offer.offerTeam);
+  movePlayer(save, p.id, offer.offerTeam);
+  save.teams[from].payroll = teamPayroll(save, from);
+  save.teams[offer.offerTeam].payroll = teamPayroll(save, offer.offerTeam);
+  syncDepth(save, from);
+  syncDepth(save, offer.offerTeam);
+  if (t) {
+    t.status = "gone";
+    t.result = `${playerName(p)} signed with ${displayName(save.year, offer.offerTeam)}; your club receives ${compLabel}.`;
+  }
+  offer.status = "signed";
+  offer.result = `${playerName(p)} joins ${displayName(save.year, offer.offerTeam)}; ${displayName(save.year, from)} receives ${compLabel}.`;
+  addTx(save, "sign", p.id, from, offer.offerTeam, `Signed RFA offer sheet · ${offer.years} yr · ${formatMoney(offer.salary, save.year)}/yr`);
+  addNews(save, { kind: "transaction", headline: `${displayName(save.year, offer.offerTeam)} sign ${playerName(p)}`, body: `${offer.result}`, teamIds: [from, offer.offerTeam], playerIds: [p.id] });
+  return offer.result;
+}
+
+/** Simulated decisions keep bulk and CPU-only seasons moving without bypassing the offer-sheet rules. */
+export function autoResolveRfaOfferSheets(save: DynastySave, shouldResolve?: (offer: RfaOfferSheet) => boolean): void {
+  for (const offer of pendingRfaOfferSheets(save)) {
+    if (shouldResolve && !shouldResolve(offer)) continue;
+    const p = save.players[offer.playerId];
+    const hasRoom = p && fitsCap(save, p, offer.salary, offer.originalTeam);
+    const match = !!p && hasRoom && (p.ovr >= 78 || p.potential >= 88);
+    resolveRfaOfferSheet(save, offer.id, match, true);
+  }
 }
 
 export function openTalks(save: DynastySave): Negotiation[] {
@@ -197,10 +364,10 @@ export function startTalks(save: DynastySave, p: Player): void {
   });
 }
 
-function fitsCap(save: DynastySave, p: Player, salary: number): boolean {
+function fitsCap(save: DynastySave, p: Player, salary: number, teamId: TeamId = save.userTeamId): boolean {
   const cap = save.salaryCap ?? salaryCapFor(save.year);
   if (cap == null) return true;
-  return teamPayroll(save, save.userTeamId) - (p.salary ?? 0) + salary <= cap;
+  return teamPayroll(save, teamId) - (p.teamId === teamId ? p.salary ?? 0 : 0) + salary <= cap;
 }
 
 function sign(save: DynastySave, t: Negotiation, p: Player, salary: number, years: number, how: string): void {

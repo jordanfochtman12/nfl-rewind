@@ -22,6 +22,8 @@ import {
   type TeamId,
   type TradePiece,
   posLabel,
+  pendingRfaOfferSheets,
+  resolveRfaOfferSheet,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
@@ -48,6 +50,8 @@ export function MarketDesk() {
   const [give, setGive] = useState<string[]>([]);
   const [get, setGet] = useState<string[]>([]);
   const [askNote, setAskNote] = useState<string>("");
+  const rfaOffers = (save.rfaOfferSheets ?? []).filter((offer) => offer.year === save.year && offer.originalTeam === save.userTeamId);
+  const pendingRfaOffers = pendingRfaOfferSheets(save).filter((offer) => offer.originalTeam === save.userTeamId);
   const mine = rosterOf(save, save.userTeamId);
   const fa = useMemo(
     () =>
@@ -87,17 +91,60 @@ export function MarketDesk() {
           <div>
             <p className="text-xs tracking-[0.25em] text-brass">OPEN MARKET</p>
             <p className="text-sm text-muted">
-              {save.year < 1994
+              {pendingRfaOffers.length
+                ? `${pendingRfaOffers.length} restricted free-agent offer sheet${pendingRfaOffers.length === 1 ? "" : "s"} need a match-or-decline decision before the market closes.`
+                : save.year < 1994
                 ? "Rozelle-rule era. Stars rarely move. Sign camp help, then close the market."
-                : "Unrestricted free agency. Watch the cap."}
+                : "The open market is running. Unrestricted and tendered restricted free agents follow their contract rights; watch the cap."}
             </p>
           </div>
-          <Btn kind="primary" onClick={() => step({ closeFa: true })}>
+          <Btn kind="primary" disabled={pendingRfaOffers.length > 0} onClick={() => step({ closeFa: true })}>
             Close free agency
           </Btn>
         </div>
       )}
       {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
+
+      {save.phase === "freeAgency" && rfaOffers.length > 0 && (
+        <section className="space-y-3 rounded-xl border border-brass/40 bg-surface p-4">
+          <div>
+            <p className="font-display text-xs font-bold uppercase italic tracking-[0.25em] text-brass">Restricted free-agent offer sheets</p>
+            <h3 className="text-xl text-white">Right of first refusal</h3>
+            <p className="text-sm text-muted">Match the principal contract terms to retain the player. If you decline, the signing club gets him and your team receives the pick required by his tender.</p>
+          </div>
+          <ul className="space-y-2">
+            {rfaOffers.map((offer) => {
+              const p = save.players[offer.playerId];
+              if (!p) return null;
+              const compensation = offer.compensationRound
+                ? `Their ${offer.compensationRound}${offer.compensationRound === 1 ? "st" : offer.compensationRound === 2 ? "nd" : offer.compensationRound === 3 ? "rd" : "th"}-round pick in ${save.year + 1}`
+                : "No draft compensation";
+              return (
+                <li key={offer.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-black/30 p-3">
+                  <div className="min-w-0">
+                    <p className="font-display text-lg font-bold uppercase italic text-white">
+                      <PlayerLink player={p} className="inline min-h-0" />
+                      <span className="ml-2 text-xs font-normal not-italic text-muted">{displayName(save.year, offer.offerTeam)}</span>
+                    </p>
+                    <p className="text-sm text-paper">
+                      {offer.years} years · {formatMoney(offer.salary, save.year)} per year · {compensation}
+                    </p>
+                    {offer.result && <p className="mt-1 text-xs text-brass">{offer.result}</p>}
+                  </div>
+                  {offer.status === "pending" ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Btn kind="primary" onClick={() => desk((s) => resolveRfaOfferSheet(s, offer.id, true))}>Match offer</Btn>
+                      <Btn onClick={() => desk((s) => resolveRfaOfferSheet(s, offer.id, false))}>Decline · take pick</Btn>
+                    </div>
+                  ) : (
+                    <span className="font-display text-xs font-bold uppercase tracking-wider text-muted">{offer.status === "matched" ? "Matched" : "Signed elsewhere"}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Waivers</h3>
