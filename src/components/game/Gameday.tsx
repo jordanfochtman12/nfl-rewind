@@ -331,13 +331,16 @@ export function GameFlow({ game }: { game: GameResult }) {
             {results.map((r) => {
               const defTeam = (r.m.teamId === home ? away : home) as TeamId;
               const won = r.winner === "offense" ? r.m.teamId : r.winner === "defense" ? defTeam : null;
+              const verdict = r.winner === "unavailable" ? "NOT TRACKED"
+                : r.winner === "inconclusive" ? "NOT ENOUGH REPS"
+                  : won ? `${teamAbbr(won)} WON IT` : "A DRAW";
               return (
                 <li key={`${r.m.kind}-${r.m.teamId}`} className="rounded-md border border-line bg-surface-2 px-3 py-2 text-sm">
                   <p className="flex items-center justify-between gap-2 text-[11px] tracking-widest text-muted">
                     <span>
                       {MATCHUP_LABEL[r.m.kind]} · {teamAbbr(r.m.teamId)} ball
                     </span>
-                    <span className={won ? "text-brass" : ""}>{won ? `${teamAbbr(won)} WON IT` : "A DRAW"}</span>
+                    <span className={won ? "text-brass" : ""}>{verdict}</span>
                   </p>
                   <p className="mt-1 text-paper">{r.line}</p>
                 </li>

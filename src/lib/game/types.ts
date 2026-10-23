@@ -621,7 +621,28 @@ export interface GameResult {
   realHome?: number;
   realAway?: number;
   /** The owner's game: the one-on-ones the broadcast followed (see gameday.ts). */
-  matchups?: { kind: "wr-cb" | "lt-edge" | "rb-lb"; teamId: TeamId; offId: string; defId: string; offGrade: number; defGrade: number }[];
+  matchups?: {
+    kind: "wr-cb" | "lt-edge" | "rb-lb";
+    teamId: TeamId;
+    offId: string;
+    defId: string;
+    offGrade: number;
+    defGrade: number;
+    /** Actual sim events involving this featured pair; absent on older saves. */
+    result?: {
+      targets?: number;
+      receptions?: number;
+      receivingYards?: number;
+      receivingTds?: number;
+      interceptions?: number;
+      dropbacks?: number;
+      pressures?: number;
+      sacks?: number;
+      carries?: number;
+      rushingYards?: number;
+      stops?: number;
+    };
+  }[];
   /** The owner's practice focus that week, when he set one. */
   practice?: "runD" | "passPro" | "ballSecurity" | "redZone";
 }
