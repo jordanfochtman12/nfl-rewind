@@ -703,6 +703,16 @@ input[type="range"] { min-height: 32px; }
 .pc-broadcast-content > .k5-open { margin-bottom: 22px; }
 .pc-broadcast-content > * + * { margin-top: 22px; }
 .pc-sidebar-identity { display: none; }
+.app-recovery { min-height: 100dvh; display: grid; place-items: center; padding: 24px; color: #f2f5fa; background: radial-gradient(ellipse at 50% 100%, #102634 0, #080c14 48%, #04050a 100%); }
+.app-recovery-card { width: min(100%, 520px); padding: clamp(24px, 5vw, 46px); border: 1px solid #9eb5ce2b; border-top: 2px solid #ff5a1f; background: linear-gradient(145deg, #111a27ed, #080c13f5 78%); box-shadow: inset 0 1px #ffffff10, 0 28px 80px #0009; }
+.app-recovery-mark { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #ff5a1f99; color: #ffc93c; background: #ff5a1f16; font: 900 15px var(--font-display); font-style: italic; }
+.app-recovery-kicker { margin: 26px 0 8px; color: #ff9b60; font: 800 10px var(--font-display); letter-spacing: .2em; }
+.app-recovery-card h1 { margin: 0; color: #fff; font: 900 clamp(30px, 6vw, 42px)/1 var(--font-display); font-style: italic; text-transform: uppercase; }
+.app-recovery-copy { max-width: 390px; margin: 16px 0 22px; color: #b6c2d2; font-size: 15px; line-height: 1.65; }
+.app-recovery-button { min-height: 48px; display: inline-flex; align-items: center; gap: 12px; padding: 0 18px; border: 1px solid #ffb547; color: #10131a; background: linear-gradient(180deg, #ffd451, #ff9f1c); box-shadow: inset 0 1px #fff8, 0 8px 24px #ff9f1c25; font: 900 14px var(--font-display); font-style: italic; text-transform: uppercase; cursor: pointer; }
+.app-recovery-button:hover { filter: brightness(1.08); }
+.app-recovery-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.app-recovery-footnote { margin: 20px 0 0; color: #7f8da1; font-size: 11px; line-height: 1.5; }
 .hq-section-heading { padding: 0 2px 16px; border-bottom: 1px solid color-mix(in srgb, var(--color-club) 40%, #ffffff16); }
 .hq-section-heading h2 { font-size: clamp(30px, 2.7vw, 44px); letter-spacing: -.02em; }
 .hq-metrics { border-radius: 3px; background: linear-gradient(110deg, #121d2c, #0a0e15); }

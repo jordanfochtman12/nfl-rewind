@@ -2,6 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { OfflineSupport } from "@/components/offline";
+import { AppErrorBoundary } from "@/components/AppErrorBoundary";
 import appCss from "../styles.css?url";
 import broadcastCss from "../broadcast-next.css?url";
 import nfl2k5Css from "../nfl2k5.css?url";
@@ -44,7 +45,9 @@ export const Route = createRootRoute({
         <PreviewHostBridge />
         <OfflineSupport />
         <AuthProvider>
-          <Outlet />
+          <AppErrorBoundary>
+            <Outlet />
+          </AppErrorBoundary>
         </AuthProvider>
         <Scripts />
       </body>
