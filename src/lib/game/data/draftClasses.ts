@@ -37,6 +37,41 @@ export interface DraftSeed {
   src?: "career";
 }
 
+/** Compact positional row used by the generated historical draft catalog. */
+export type DraftIngestRow = readonly [
+  f: string,
+  l: string,
+  p: Pos,
+  c: string,
+  o: number,
+  r: number,
+  arch: Arch | null,
+  ht: number | null,
+  wt: number | null,
+  fy: number | null,
+  src: "career" | null,
+  rt: Partial<Ratings> | null,
+];
+
+const ingestByYear = new Map<number, DraftSeed[]>();
+
+function ingestSeedsFor(year: number): DraftSeed[] {
+  let seeds = ingestByYear.get(year);
+  if (!seeds) {
+    seeds = (DRAFT_INGEST[year] ?? []).map(([f, l, p, c, o, r, arch, ht, wt, fy, src, rt]) => ({
+      f, l, p, c, o, r,
+      ...(arch ? { arch } : {}),
+      ...(ht === null ? {} : { ht }),
+      ...(wt === null ? {} : { wt }),
+      ...(fy === null ? {} : { fy }),
+      ...(src ? { src } : {}),
+      ...(rt ? { rt } : {}),
+    }));
+    ingestByYear.set(year, seeds);
+  }
+  return seeds;
+}
+
 /** Real named classes. Incomplete rounds filled at runtime. */
 export const DRAFT_CLASSES: Record<number, DraftSeed[]> = {
   1966: [
@@ -1064,7 +1099,7 @@ export function draftSeedsBase(year: number): DraftSeed[] {
     ...(DRAFT_MODERN_LATE[year] ?? []),
     ...(DRAFT_2000S[year] ?? []),
     ...(DRAFT_2010S[year] ?? []),
-    ...(DRAFT_INGEST[year] ?? []),
+    ...ingestSeedsFor(year),
     ...(UNDRAFTED[year] ?? []),
   ];
   const by = new Map<string, DraftSeed>();

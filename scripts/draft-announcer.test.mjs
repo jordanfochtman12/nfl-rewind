@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame } from "../src/lib/game/createGame.ts";
+import { advance } from "../src/lib/game/season.ts";
 import { makeDraftPick, draftQueue, transferPick } from "../src/lib/game/draft.ts";
 import {
   draftAudioSnapshot,
@@ -15,7 +16,7 @@ import { footballSpeech, footballPosition } from "../src/lib/game/footballSpeech
 import { draftScoreStep, DRAFT_BPM } from "../src/components/game/draftScore.ts";
 import { SKILL_POSITIONS } from "../src/lib/game/types.ts";
 
-const game = () => createNewGame({ userTeamId: "atl", startingYear: 1966, seed: 79 });
+const game = () => advance(createNewGame({ userTeamId: "atl", startingYear: 1966, seed: 79 }));
 const selection = (id, pick, extra = {}) => ({
   id,
   name: "Test Prospect",
