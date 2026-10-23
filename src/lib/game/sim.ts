@@ -243,27 +243,27 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
   const qb = qbs[0];
   const qb2 = qbs[1];
   const team = save.teams[teamId];
-  const rbs = starters(save, teamId, "RB", 2);
+  const rbs = starters(save, teamId, "RB", 2, benched);
   const rb = rbs[0];
   const rb2 = rbs[1];
-  const rb3 = starters(save, teamId, "RB", 3)[2];
-  const fb = starters(save, teamId, "FB", starterCount("FB", team?.offScheme, team?.defScheme))[0];
-  const wr = starters(save, teamId, "WR", starterCount("WR", team?.offScheme, team?.defScheme));
-  const tes = starters(save, teamId, "TE", starterCount("TE", team?.offScheme, team?.defScheme));
+  const rb3 = starters(save, teamId, "RB", 3, benched)[2];
+  const fb = starters(save, teamId, "FB", starterCount("FB", team?.offScheme, team?.defScheme), benched)[0];
+  const wr = starters(save, teamId, "WR", starterCount("WR", team?.offScheme, team?.defScheme), benched);
+  const tes = starters(save, teamId, "TE", starterCount("TE", team?.offScheme, team?.defScheme), benched);
   const te = tes[0];
   const te2 = tes[1];
   const ol = [
-    ...starters(save, teamId, "LT", 1),
-    ...starters(save, teamId, "LG", 1),
-    ...starters(save, teamId, "C", 1),
-    ...starters(save, teamId, "RG", 1),
-    ...starters(save, teamId, "RT", 1),
+    ...starters(save, teamId, "LT", 1, benched),
+    ...starters(save, teamId, "LG", 1, benched),
+    ...starters(save, teamId, "C", 1, benched),
+    ...starters(save, teamId, "RG", 1, benched),
+    ...starters(save, teamId, "RT", 1, benched),
   ];
-  const dl = [...starters(save, teamId, "DE", 2), ...starters(save, teamId, "DT", 2)];
-  const lb = [...starters(save, teamId, "OLB", 2), ...starters(save, teamId, "MLB", 1)];
-  const db = [...starters(save, teamId, "CB", 3), ...starters(save, teamId, "S", 2)];
-  const k = starters(save, teamId, "K", 1)[0];
-  const p = starters(save, teamId, "P", 1)[0];
+  const dl = [...starters(save, teamId, "DE", 2, benched), ...starters(save, teamId, "DT", 2, benched)];
+  const lb = [...starters(save, teamId, "OLB", 2, benched), ...starters(save, teamId, "MLB", 1, benched)];
+  const db = [...starters(save, teamId, "CB", 3, benched), ...starters(save, teamId, "S", 2, benched)];
+  const k = starters(save, teamId, "K", 1, benched)[0];
+  const p = starters(save, teamId, "P", 1, benched)[0];
   const coach = team?.coachId ? save.coaches[team.coachId] : undefined;
   const oc = team?.ocId ? save.coaches[team.ocId] : undefined;
   const dc = team?.dcId ? save.coaches[team.dcId] : undefined;

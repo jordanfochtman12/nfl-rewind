@@ -13,6 +13,25 @@ test("defensive-line relief alternates between edge and interior on actual snap 
   assert.equal(defensiveLineReliefPosition(12), "DE");
 });
 
+test("a relief snap uses the next healthy depth-chart lineman", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
+  const team = save.teams.pit;
+  const starters = teamUnits(save, "pit").dl;
+  for (const pos of ["DE", "DT"]) {
+    const group = starters.filter((player) => player.pos === pos);
+    assert.equal(group.length, 2, `${pos} has its two configured starters`);
+    const rested = group[0];
+    const depth = team.depth[pos];
+    const next = depth.map((id) => save.players[id]).find((player) =>
+      player && player.pos === pos && player.id !== group[0].id && player.id !== group[1].id && player.injuredWeeks <= 0 && !player.onIR,
+    );
+    assert.ok(next, `${pos} has a healthy relief option`);
+    const reliefUnits = teamUnits(save, "pit", new Set([rested.id]));
+    assert.ok(!reliefUnits.dl.some((player) => player.id === rested.id), `${rested.id} sits for one snap`);
+    assert.ok(reliefUnits.dl.some((player) => player.id === next.id), `${next.id} replaces him from the saved depth chart`);
+  }
+});
+
 test("a healthy third back joins the rotation only after the top two carry a heavy load", () => {
   let save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
   const team = save.teams.pit;
