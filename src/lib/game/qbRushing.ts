@@ -1,9 +1,20 @@
 export type ScramblePassCall = "short" | "screen" | "med" | "deep" | "pa";
 
-// Normalize the situation split against the modern league baseline: the unnormalized factors
-// pulled total QB carries 8.7% below the existing four-seed 2024 regular-season calibration.
+// Year-by-year calibration against regular-season QB rushing records. The 2024 baseline needs
+// 1.10x; 2020–21 overproduced at that setting. Excluding the fictional Friends class brings
+// 2022+ near baseline again, so later unmeasured years retain the 2024 modern setting.
 export function scrambleSituationVolumeNormalizer(year: number): number {
-  return year >= 2020 ? 1.1 : 1;
+  if (year < 2020) return 1;
+  if (year <= 2021) return 1;
+  return 1.1;
+}
+
+/** Season-level correction for non-sack scramble gains, calibrated to recorded QB YPC. */
+export function scrambleYardsAdjustment(year: number): number {
+  if (year === 2020 || year === 2021) return -0.25;
+  if (year === 2022) return -0.4;
+  if (year === 2023) return -0.55;
+  return 0;
 }
 
 export function isScramblePassCall(call: string): call is ScramblePassCall {

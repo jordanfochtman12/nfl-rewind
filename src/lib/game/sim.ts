@@ -68,7 +68,7 @@ import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, playCallers, staffPlan } from "./gameplans.ts";
 import { cpuHandles } from "./teamControl.ts";
-import { isScramblePassCall, scrambleSituationMultiplier, scrambleSituationVolumeNormalizer } from "./qbRushing.ts";
+import { isScramblePassCall, scrambleSituationMultiplier, scrambleSituationVolumeNormalizer, scrambleYardsAdjustment } from "./qbRushing.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -2842,7 +2842,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
             // quarterback run rather than a halfback breakaway on every clean escape.
             // The previous baseline and steep speed bonus pushed the 2024 QB group to
             // 5.05 yards per carry over four season seeds (4.68 historical).
-            era.ypc + 0.7 + (off.qb.ratings.speed - 60) / 25 + (off.qb.ratings.agi - 60) / 50,
+            era.ypc + 0.7 + (off.qb.ratings.speed - 60) / 25 + (off.qb.ratings.agi - 60) / 50 + scrambleYardsAdjustment(year),
             4.5,
             -3,
             32,
