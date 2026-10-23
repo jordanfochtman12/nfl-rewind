@@ -29,8 +29,8 @@ Product contract: [`AGENTS.project.md`](AGENTS.project.md). Sandbox/platform con
 | Franchise book | **Done.** `history.seasons` year-by-year W-L, result, coach, draft class, honors. |
 | Dynasty grade | **Done.** `grade.ts` letter A+–F. Career W-L on regular-season only. Locks at `END_YEAR` 2027 (`phase: complete`). |
 | Staff / careers | Coaches have attributes, abilities, age, progression, retirement, firing, and HOF. CPU staff + scheme draft + roster management. Player HOF is a production ballot. |
-| Contracts | Cap-era contracts, player talks, and franchise tags are live. Three-accrued-season RFAs receive one of four qualifying tenders; signed outside offer sheets can be matched or declined for the corresponding draft pick. 2010 uses its 3–5-year RFA window. Eligibility approximates accrued service from distinct seasons with 6+ games because weekly active/inactive roster history is not stored. Historical tender amounts scale 2026 CBA values to the game's annual cap. ERFA rights and exact historical tender tables remain future work. |
-| Saves | **SAVE_VERSION 22.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
+| Contracts | Cap-era contracts, player talks, and franchise tags are live. ERFAs (<3 accrued seasons) can receive one-year league-minimum tenders with exclusive negotiating rights; RFAs receive one of four qualifying tenders and signed outside offers can be matched or declined for the corresponding draft pick. 2010 uses its 3–5-year RFA window. Service eligibility approximates distinct seasons with 6+ games for accrued years and 3+ games for credited years because weekly active/pay-status history is not stored. Historical tender amounts scale 2026 CBA values to the game's annual cap; exact year-specific tables remain future work. |
+| Saves | **SAVE_VERSION 23.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
 | QA scripts | **Green as of this handoff:** `qa-season` and `qa-expansions` exit 0. `tsc --noEmit` exit 0. |
 | UI (title, AFL/NFL team select, office desk, roster, standings, schedule, stats, draft, history, expansion night, grade card) | **Playable** in `src/components/game/` |
 | Team SVG logos `public/logos/{id}.svg` | **Emblems evolve by year.** `src/lib/game/data/logos.ts` `LOGO_ERAS` — last matching `from` year, including returns (Chargers powder, Jets football). Desk chrome follows `clubInk` / `teamColors(id, year)` (header ribbon, tabs, nameplate). Stadiums year-correct in `venues.ts`. |
@@ -81,7 +81,7 @@ HANDOFF.md                this file
 docs/ERA.md               season length, divisions, playoff formats, stat caps, SB sites
 docs/EXPANSIONS.md        how each expansion MUST mutate rosters
 src/lib/game/             ENGINE (no React). Imports use `.ts` extensions for Node QA.
-  types.ts                SAVE_VERSION=22, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
+  types.ts                SAVE_VERSION=23, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
   coachKit.ts             coach abilities / traits that feed the sim
   hof.ts                  player + coach Hall of Fame ballot
   staff.ts                seed / fire / hire / carousel / progression / retirement / CPU staff
@@ -165,9 +165,15 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Add exclusive-rights tenders and tune the RFA offer-sheet model. Offer sheets now cover user decisions and next-draft pick compensation; weekly accrued-service history and exact historical tender tables are still missing.
+1. Add weekly active/pay-status history so accrued and credited service can be audited exactly; tune RFA offer-sheet frequencies and reconstruct year-specific historical tender schedules.
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
+
+## Update (exclusive-rights free agents)
+
+- Cap-era players with fewer than three accrued seasons now surface in owner contract talks as ERFAs. The club can offer a one-year league-minimum tender; the player is retained and cannot negotiate with other teams. CPU clubs tender eligible young players when their keep decision succeeds. Tender pay uses credited seasons (3+ games) and the 2026 NFL minimum schedule, scaled to the modeled historical salary cap. RFA offer-sheet logic remains limited to RFAs.
+- Save schema is now `SAVE_VERSION 23`; old saves hydrate an empty ERFA tender ledger.
+- Validation: `scripts/rfa-tenders.test.mjs` (8 tests), TypeScript, targeted ESLint, `qa-season`, the 1966–2002 `qa-expansions` sweep, and production build pass. Vercel check runs on the follow-up PR.
 
 ## Update (more real players and attributes)
 

@@ -4,8 +4,8 @@ import assert from "node:assert/strict";
 if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
   test("RFA tender tests require Node type stripping", { skip: true }, () => {});
 } else {
-  const { accruedSeasonsFor, advance, compactSave, createNewGame, hydrateSave, isRestrictedFreeAgent, openRfaOfferSheets, pendingRfaOfferSheets, rfaCompensationRound, rfaTenderPrice, resolveRfaOfferSheet, tenderRfa } = await import("../src/lib/game/index.ts");
-  const { cpuTenderRfa } = await import("../src/lib/game/contracts.ts");
+  const { accruedSeasonsFor, advance, compactSave, createNewGame, creditedSeasonsFor, erfaMinimumSalary, hydrateSave, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, openRfaOfferSheets, pendingRfaOfferSheets, rfaCompensationRound, rfaTenderPrice, resolveRfaOfferSheet, tenderErfa, tenderRfa } = await import("../src/lib/game/index.ts");
+  const { cpuTenderErfa, cpuTenderRfa } = await import("../src/lib/game/contracts.ts");
   const { allPicks, ensureSeasonPicks } = await import("../src/lib/game/draft.ts");
   const { nextRng } = await import("../src/lib/game/rng.ts");
 
@@ -111,9 +111,10 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     const roundTrip = hydrateSave(JSON.parse(JSON.stringify(compactSave(save))));
     assert.deepEqual(roundTrip.rfaTenders, save.rfaTenders);
     assert.deepEqual(roundTrip.rfaOfferSheets, save.rfaOfferSheets);
-    const legacy = hydrateSave({ ...save, version: 21, rfaTenders: undefined, rfaOfferSheets: undefined });
+    const legacy = hydrateSave({ ...save, version: 22, rfaTenders: undefined, rfaOfferSheets: undefined, erfaTenders: undefined });
     assert.deepEqual(legacy.rfaTenders, []);
     assert.deepEqual(legacy.rfaOfferSheets, []);
+    assert.deepEqual(legacy.erfaTenders, []);
   });
 
   test("free-agency opening creates CPU offer sheets only when a rival needs the tendered player", () => {
@@ -178,5 +179,40 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     assert.equal(offers[0].status, "matched", "CPU original club resolves its own offer during market opening");
     assert.equal(player.teamId, "pit");
     assert.equal(pendingRfaOfferSheets(save).length, 0);
+  });
+
+  test("ERFA status uses accrued service while tender pay uses credited service minimums", () => {
+    const young = playerWithYears({ 2023: 3, 2024: 16 });
+    young.career = [];
+    assert.equal(accruedSeasonsFor(young), 1);
+    assert.equal(creditedSeasonsFor(young), 2);
+    assert.equal(isExclusiveRightsFreeAgent({ year: 2025 }, young), true);
+    assert.equal(isRestrictedFreeAgent({ year: 2025 }, young), false);
+    assert.equal(isExclusiveRightsFreeAgent({ year: 1993 }, young), false);
+    assert.equal(erfaMinimumSalary(2026, 0), 885_000);
+    assert.equal(erfaMinimumSalary(2026, 2), 1_075_000);
+    assert.equal(erfaMinimumSalary(2026, 7), 1_300_000);
+
+    const save = createNewGame({ userTeamId: "gnb", startingYear: 2026 });
+    const player = Object.values(save.players).find((p) => p.teamId === "gnb");
+    assert.ok(player);
+    player.stats = { 2024: { year: 2024, gp: 3 }, 2025: { year: 2025, gp: 16 } };
+    player.career = [];
+    player.contractYears = 0;
+    save.salaryCap = 1_000_000_000;
+    save.talks = [{ playerId: player.id, year: save.year, ask: 2_000_000, askYears: 2, pitch: "", patience: 3, status: "open", rounds: [], floor: 1_000_000 }];
+    assert.match(tenderErfa(save, player.id), /exclusive-rights tender/i);
+    assert.equal(player.contractYears, 1);
+    assert.equal(player.salary, 1_075_000);
+    assert.equal(save.talks[0].erfaTender?.creditedSeasons, 2);
+    assert.equal(save.erfaTenders[0].teamId, "gnb");
+
+    const cpu = Object.values(save.players).find((p) => p.teamId === "pit");
+    assert.ok(cpu);
+    cpu.stats = { 2024: { year: 2024, gp: 4 }, 2025: { year: 2025, gp: 16 } };
+    cpu.career = [];
+    cpu.contractYears = 0;
+    assert.equal(cpuTenderErfa(save, cpu), true);
+    assert.equal(save.erfaTenders.some((tender) => tender.playerId === cpu.id && tender.teamId === "pit"), true);
   });
 }

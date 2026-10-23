@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 22;
+export const SAVE_VERSION = 23;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -902,6 +902,15 @@ export interface RfaTender {
   compensationRound?: number;
 }
 
+/** Exclusive-rights minimum-salary offer that retains a player with fewer than three accrued seasons. */
+export interface ErfaTender {
+  year: number;
+  playerId: string;
+  teamId: TeamId;
+  salary: number;
+  creditedSeasons: number;
+}
+
 /** A signed outside offer sheet awaiting the original club's right-of-first-refusal decision. */
 export interface RfaOfferSheet {
   id: string;
@@ -933,6 +942,8 @@ export interface Negotiation {
   accruedSeasons?: number;
   /** One-year qualifying offer placed by the original club. */
   rfaTender?: { level: RfaTenderLevel; salary: number };
+  /** ERFA tender removes the player's ability to negotiate with another club. */
+  erfaTender?: { salary: number; creditedSeasons: number };
   rounds: { salary: number; years: number; reply: string; tone: "yes" | "counter" | "no" | "insult" }[];
   counter?: { salary: number; years: number };
   /** Private: the least he'll take, before years are weighed in. */
@@ -1047,6 +1058,7 @@ export interface DynastySave {
   /** Restricted free-agent tenders and signed outside offers awaiting the original club's call. */
   rfaTenders?: RfaTender[];
   rfaOfferSheets?: RfaOfferSheet[];
+  erfaTenders?: ErfaTender[];
   version: number;
   startingYear: number;
   /** A league begun from the record (eraStart.ts): each winter it signs that season's real free agents from it. */

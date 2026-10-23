@@ -1,6 +1,6 @@
 import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
-import { cpuTenderRfa, isRestrictedFreeAgent, startTalks } from "./contracts.ts";
+import { cpuTenderErfa, cpuTenderRfa, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, startTalks } from "./contracts.ts";
 import { cpuHandles } from "./teamControl.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
@@ -140,6 +140,7 @@ export function expireContract(save: DynastySave, p: Player): void {
       return;
     }
   } else if (rand(save) < keepChance(p)) {
+    if (save.year >= 1994 && (from !== save.userTeamId || cpuHandles(save, from, "contracts")) && cpuTenderErfa(save, p)) return;
     // A cap-era RFA is retained on the one-year qualifying offer, not silently given a
     // multi-year veteran contract. The owner gets an explicit decision in ContractTalks.
     if (save.year >= 1994 && (from !== save.userTeamId || cpuHandles(save, from, "contracts")) && cpuTenderRfa(save, p)) return;
@@ -183,7 +184,7 @@ export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): 
       p.contractYears = (p.contractYears ?? 1) - 1;
       // The owner's own players come to the table; everyone else expires the usual way.
       // (the back of the roster is left to the staff, so the table holds players who matter).
-      if (p.contractYears <= 0 && !cpuHandles(save, p.teamId as TeamId, "contracts") && (p.ovr >= 66 || isRestrictedFreeAgent(save, p))) startTalks(save, p);
+      if (p.contractYears <= 0 && !cpuHandles(save, p.teamId as TeamId, "contracts") && (p.ovr >= 66 || isRestrictedFreeAgent(save, p) || isExclusiveRightsFreeAgent(save, p))) startTalks(save, p);
       else if (p.contractYears <= 0) expireContract(save, p);
     }
   }
