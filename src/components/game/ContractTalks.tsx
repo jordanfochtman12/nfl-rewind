@@ -2,16 +2,20 @@ import { useState } from "react";
 import {
   acceptCounter,
   accruedSeasonsFor,
+  creditedSeasonsFor,
   canTag,
+  erfaMinimumSalary,
   formatMoney,
   franchiseTag,
   letWalk,
   makeOffer,
   isRestrictedFreeAgent,
+  isExclusiveRightsFreeAgent,
   rfaCompensationRound,
   rfaTenderPrice,
   tagPrice,
   tenderRfa,
+  tenderErfa,
   talksSummary,
   type Negotiation,
   type Player,
@@ -62,6 +66,20 @@ function RfaTenderOptions({ p }: { p: Player }) {
   );
 }
 
+function ErfaTenderOption({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const credited = creditedSeasonsFor(p);
+  return (
+    <div className="w-full rounded-lg border border-sky-300/25 bg-black/25 p-3">
+      <p className="mb-2 text-xs text-muted">An exclusive-rights tender is a one-year league-minimum contract. If tendered, the player may negotiate only with this club.</p>
+      <Btn kind="primary" className="min-h-10 px-3 text-xs" onClick={() => desk((s) => tenderErfa(s, p.id))}>
+        ERFA minimum tender · {formatMoney(erfaMinimumSalary(save.year, credited), save.year)} · exclusive rights
+      </Btn>
+    </div>
+  );
+}
+
 function Talk({ t }: { t: Negotiation }) {
   const save = useGameStore((s) => s.save)!;
   const desk = useGameStore((s) => s.desk);
@@ -73,6 +91,7 @@ function Talk({ t }: { t: Negotiation }) {
   const open = t.status === "open";
   const walked = t.status === "walked";
   const rfa = isRestrictedFreeAgent(save, p);
+  const erfa = isExclusiveRightsFreeAgent(save, p);
   const offer = Math.round((t.ask * mult) / 10) * 10;
   const last = p.stats[y - 1];
   const line = last
@@ -88,7 +107,7 @@ function Talk({ t }: { t: Negotiation }) {
               ? `${last.ints} INT`
               : `${last.gp} games`
     : "Didn't play";
-  const st = STATUS[t.status];
+  const st = t.erfaTender ? { ...STATUS.tendered, label: "ERFA tender placed" } : STATUS[t.status];
   return (
     <li className={`border ${open ? "border-brass/50" : "border-white/10"} bg-black/40`}>
       <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3">
@@ -96,7 +115,7 @@ function Talk({ t }: { t: Negotiation }) {
           <p className="flex flex-wrap items-center gap-2">
             <PlayerLink player={p} className="inline min-h-0 font-display text-lg font-bold uppercase italic" />
             <span className="text-sm text-muted">
-              {posLabel(p)} · {p.age} · {p.ovr} ovr{rfa ? ` · RFA · ${accruedSeasonsFor(p)} accrued seasons` : ""}
+              {posLabel(p)} · {p.age} · {p.ovr} ovr{rfa ? ` · RFA · ${accruedSeasonsFor(p)} accrued seasons` : erfa ? ` · ERFA · ${accruedSeasonsFor(p)} accrued seasons` : ""}
             </span>
             <span className={`px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase italic tracking-wider ${st.tone}`}>{st.label}</span>
           </p>
@@ -167,8 +186,9 @@ function Talk({ t }: { t: Negotiation }) {
             </Btn>
           </div>
           {rfa && <RfaTenderOptions p={p} />}
+          {erfa && <ErfaTenderOption p={p} />}
         </div>
-      ) : walked && (canTag(save) || rfa) ? (
+      ) : walked && (canTag(save) || rfa || erfa) ? (
         <div className="mt-2 flex flex-wrap gap-2 px-4 pb-3">
           {canTag(save) && (
             <Btn className="min-h-10 px-4 text-sm" onClick={() => desk((s) => franchiseTag(s, t.playerId))}>
@@ -176,6 +196,7 @@ function Talk({ t }: { t: Negotiation }) {
             </Btn>
           )}
           {rfa && <RfaTenderOptions p={p} />}
+          {erfa && <ErfaTenderOption p={p} />}
         </div>
       ) : (
         <div className="pb-3" />

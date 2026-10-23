@@ -43,6 +43,32 @@ export function accruedSeasonsFor(p: Player): number {
   return seasons.size ? [...seasons.values()].filter((gp) => gp >= 6).length : Math.max(0, p.yearsPro ?? 0);
 }
 
+/** Credited service uses three full-pay games, separately from the six-game accrued-season test. */
+export function creditedSeasonsFor(p: Player): number {
+  const seasons = new Map<number, number>();
+  for (const line of [...Object.values(p.stats ?? {}), ...(p.career ?? [])]) {
+    seasons.set(line.year, Math.max(seasons.get(line.year) ?? 0, line.gp ?? 0));
+  }
+  return seasons.size ? [...seasons.values()].filter((gp) => gp >= 3).length : Math.max(0, p.yearsPro ?? 0);
+}
+
+/** Cap-era ERFA status: fewer than three accrued seasons and an expiring contract. */
+export function isExclusiveRightsFreeAgent(save: Pick<DynastySave, "year">, p: Player): boolean {
+  return save.year >= 1994 && accruedSeasonsFor(p) < 3;
+}
+
+const ERFA_2026_MINIMUMS = [885_000, 1_005_000, 1_075_000, 1_145_000, 1_215_000, 1_215_000, 1_215_000, 1_300_000];
+
+/** League minimum by credited service, scaled to historical cap-era dollars. */
+export function erfaMinimumSalary(year: number, creditedSeasons: number): number {
+  const cap = salaryCapFor(year);
+  const currentCap = salaryCapFor(2026);
+  if (year < 1994 || cap == null || currentCap == null) return 0;
+  const service = Math.max(0, Math.floor(creditedSeasons));
+  const current = ERFA_2026_MINIMUMS[Math.min(service, 7)]!;
+  return Math.max(1_000, Math.round((current * cap / currentCap) / 1_000) * 1_000);
+}
+
 /** In capped league years, three accrued seasons make an RFA; 2010's uncapped CBA year is 3–5. */
 export function isRestrictedFreeAgent(save: Pick<DynastySave, "year">, p: Player): boolean {
   if (save.year < 1994) return false;
@@ -133,6 +159,52 @@ export function cpuTenderRfa(save: DynastySave, p: Player): boolean {
   return true;
 }
 
+function applyErfaTender(save: DynastySave, p: Player, salary: number, talk?: Negotiation): void {
+  const creditedSeasons = creditedSeasonsFor(p);
+  p.salary = salary;
+  p.contractYears = 1;
+  const tender = { year: save.year, playerId: p.id, teamId: p.teamId as TeamId, salary, creditedSeasons };
+  save.erfaTenders = (save.erfaTenders ?? []).filter((item) => item.year !== save.year || item.playerId !== p.id).concat(tender);
+  const team = save.teams[p.teamId as TeamId];
+  if (team) team.payroll = teamPayroll(save, team.id);
+  if (talk) {
+    talk.status = "tendered";
+    talk.erfaTender = { salary, creditedSeasons };
+    talk.result = `One-year exclusive-rights tender at the ${formatMoney(salary, save.year)} league minimum; only your club may negotiate.`;
+  }
+  addNews(save, {
+    kind: "transaction",
+    headline: `${displayName(save.year, p.teamId as TeamId)} tender ${playerName(p)} as an exclusive-rights free agent`,
+    body: `One-year contract at the ${formatMoney(salary, save.year)} minimum. Because he has fewer than three accrued seasons, he cannot negotiate with another club.`,
+    teamIds: [p.teamId as TeamId],
+    playerIds: [p.id],
+  });
+}
+
+export function tenderErfa(save: DynastySave, playerId: string): string {
+  const talk = talksFor(save, playerId);
+  const p = save.players[playerId];
+  if (!talk || !p || !isExclusiveRightsFreeAgent(save, p)) return "He does not qualify for an exclusive-rights tender.";
+  if (talk.status !== "open" && talk.status !== "walked") return "Those contract talks are over.";
+  if (p.teamId !== save.userTeamId) return "He is no longer on your roster.";
+  const salary = erfaMinimumSalary(save.year, creditedSeasonsFor(p));
+  if (!salary) return "Exclusive-rights tenders are not available before the cap era.";
+  if (!fitsCap(save, p, salary)) return "The tender does not fit under the cap.";
+  applyErfaTender(save, p, salary, talk);
+  return talk.result!;
+}
+
+export function cpuTenderErfa(save: DynastySave, p: Player): boolean {
+  if (!isExclusiveRightsFreeAgent(save, p)) return false;
+  const salary = erfaMinimumSalary(save.year, creditedSeasonsFor(p));
+  if (!salary) return false;
+  const teamId = p.teamId as TeamId;
+  const cap = save.salaryCap ?? salaryCapFor(save.year);
+  if (cap != null && teamPayroll(save, teamId) - (p.salary ?? 0) + salary > cap) return false;
+  applyErfaTender(save, p, salary);
+  return true;
+}
+
 export function pendingRfaOfferSheets(save: DynastySave): RfaOfferSheet[] {
   return (save.rfaOfferSheets ?? []).filter((offer) => offer.year === save.year && offer.status === "pending");
 }
@@ -141,6 +213,7 @@ export function pendingRfaOfferSheets(save: DynastySave): RfaOfferSheet[] {
 export function openRfaOfferSheets(save: DynastySave, auto = false): RfaOfferSheet[] {
   if (save.realHistory || save.phase !== "freeAgency") return [];
   save.rfaTenders = (save.rfaTenders ?? []).filter((tender) => tender.year === save.year);
+  save.erfaTenders = (save.erfaTenders ?? []).filter((tender) => tender.year === save.year);
   save.rfaOfferSheets = (save.rfaOfferSheets ?? []).filter((offer) => offer.year >= save.year - 2);
   const opened: RfaOfferSheet[] = [];
   for (const tender of save.rfaTenders) {
