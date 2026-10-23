@@ -12,7 +12,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame, simGame } from "../src/lib/game/index.ts";
 import { fgSnapYards, kickoffRules, missedFgSpot, otRules } from "../src/lib/game/era.ts";
-import { keyMatchups, practiceFor, rulesInPlay, scoutingReport, swingPlays, winProb, wpSeries } from "../src/lib/game/gameday.ts";
+import { keyMatchups, matchupReport, practiceFor, rulesInPlay, scoutingReport, swingPlays, winProb, wpSeries } from "../src/lib/game/gameday.ts";
 
 test("win probability responds to field position, down and distance, and late timeouts", () => {
   const situation = { q: 4, clock: 90, poss: "pit", down: 1, togo: 5, spot: 60, hs: 20, as: 20, homeTimeouts: 3, awayTimeouts: 0 };
@@ -112,6 +112,28 @@ test("game week: matchups, the scout's report, and a practice focus only the own
   assert.equal(practiceFor({ ...save, realHistory: true }, game), undefined);
 });
 
+test("postgame matchup grades use pair-specific events and old saved games disclose missing tracking", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 2024, seed: 33 });
+  const matchup = keyMatchups(save, "pit", "cle").find((m) => m.kind === "wr-cb" && m.teamId === "pit");
+  assert.ok(matchup);
+  const game = {
+    id: "matchup-report-test", year: 2024, week: 1, phase: "regular", homeId: "pit", awayId: "cle", homeScore: 0, awayScore: 0, played: true,
+    boxHome: [{ playerId: matchup.offId, rec: 8, recYds: 140, recTd: 2 }],
+    boxAway: [{ playerId: matchup.defId, ints: 0, pd: 0 }],
+    matchups: [{ ...matchup, result: { targets: 5, receptions: 1, receivingYards: 8, receivingTds: 0, interceptions: 0 } }],
+  };
+  const report = matchupReport(save, game)[0];
+  assert.equal(report.winner, "defense", "the targeted one-on-one was poor despite the receiver's unrelated full-game totals");
+  assert.match(report.line, /1 catches on 5 matchup targets for 8 yards/);
+
+  const smallSample = matchupReport(save, { ...game, matchups: [{ ...game.matchups[0], result: { targets: 1 } }] })[0];
+  assert.equal(smallSample.winner, "inconclusive", "one target is not enough to call the matchup a draw or winner");
+
+  const legacy = matchupReport(save, { ...game, matchups: [matchup] })[0];
+  assert.equal(legacy.winner, "unavailable");
+  assert.match(legacy.line, /no play-by-play matchup tracking/);
+});
+
 test("the owner's game keeps its matchups, cues and momentum, and its swing plays read after the snap", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 5 });
   const game = { id: "own-1", year: 1966, week: 1, phase: "regular", homeId: "pit", awayId: "cle", homeScore: 0, awayScore: 0, played: false, night: true };
@@ -119,6 +141,8 @@ test("the owner's game keeps its matchups, cues and momentum, and its swing play
   simGame(save, game);
   assert.equal(game.practice, "ballSecurity");
   assert.equal(game.matchups?.length, 6);
+  assert.ok(game.matchups.some((m) => (m.result?.dropbacks ?? 0) > 0), "the featured tackle-edge pair records pass-play opportunities");
+  assert.ok(game.matchups.some((m) => (m.result?.carries ?? 0) > 0), "the featured back-linebacker pair records matched carries");
   assert.ok(game.log.length > 80);
   assert.ok(game.log.some((l) => l.cue === "crowd"), "a prime-time game opens with the crowd");
   assert.ok(game.log.some((l) => typeof l.mo === "number"));

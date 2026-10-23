@@ -1360,7 +1360,22 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const focusFit = focus ? (focusMatchesReport(save, homeId === save.userTeamId ? awayId : homeId, focus) ? 1.5 : 1) : 0;
   const focusOf = (id: TeamId, f: PracticeFocus) => (id === save.userTeamId && focus === f ? focusFit : 0);
   const matchups = keyMatchups(save, homeId, awayId);
+  if (userIn) {
+    for (const matchup of matchups) matchup.result = {};
+  }
   const matchupOf = (kind: KeyMatchup["kind"], offense: TeamId) => matchups.find((m) => m.kind === kind && m.teamId === offense);
+  const recordMatchup = (
+    kind: KeyMatchup["kind"],
+    offense: TeamId,
+    stat: keyof NonNullable<KeyMatchup["result"]>,
+    amount = 1,
+  ) => {
+    if (!userIn) return;
+    const matchup = matchupOf(kind, offense);
+    if (!matchup) return;
+    matchup.result ??= {};
+    matchup.result[stat] = (matchup.result[stat] ?? 0) + amount;
+  };
   const bigStage = playoff || !!game.night || !!game.rivalry || !!game.slot;
   // Momentum, from the home side: turnovers, stops and scores push it, every snap lets it fade.
   let mo = 0;
@@ -2443,6 +2458,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
     };
 
     if (pass) {
+      const edgeMatchup = matchupOf("lt-edge", poss);
+      if (pairOn(edgeMatchup)) recordMatchup("lt-edge", poss, "dropbacks");
       const sackP = clamp(
         era.sackRate + pressure - (plan.protection === "maxProtect" ? 0.025 : 0) +
           (defP - off.offPass * fat) / 220 +
@@ -2479,6 +2496,13 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const rusher = pickRusherDef(save, def, defClub?.defScheme);
         // Since 1982 two men who get there together split it: half a sack each.
         const helper = year >= 1982 && rusher && rand(save) < 0.14 ? pickRusherDef(save, def, defClub?.defScheme) : undefined;
+        const splitSacks = !!helper && helper.id !== rusher?.id;
+        const matchedRusherSacks = (rusher?.id === edgeMatchup?.defId ? (splitSacks ? 0.5 : 1) : 0) +
+          (splitSacks && helper?.id === edgeMatchup?.defId ? 0.5 : 0);
+        if (edgeMatchup && matchedRusherSacks > 0) {
+          recordMatchup("lt-edge", poss, "pressures");
+          recordMatchup("lt-edge", poss, "sacks", matchedRusherSacks);
+        }
         if (rusher && helper && helper.id !== rusher.id) {
           bumpBox(boxOf(defId), rusher.id, { sacks: 0.5, tackles: 1, tfl: 1, qbHits: 1 });
           bumpBox(boxOf(defId), helper.id, { sacks: 0.5, tackles: 1, qbHits: 1 });
@@ -2611,6 +2635,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (hurried) {
         const hitter = pickRusherDef(save, def, defClub?.defScheme);
         if (hitter) bumpBox(boxOf(defId), hitter.id, { qbHits: 1 });
+        if (hitter?.id === edgeMatchup?.defId) recordMatchup("lt-edge", poss, "pressures");
       }
       let cmpP =
         era.cmpPct + pressure - (plan.protection === "maxProtect" ? 0.025 : 0) +
@@ -2638,6 +2663,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const shadow = matchupOf("wr-cb", poss);
       const shadowed = !!rec && pairOn(shadow) && rec.id === shadow.offId;
       const cover = shadowed ? def.db.find((p) => p.id === shadow!.defId) ?? def.db[0] : def.db[0];
+      if (shadowed && cover) recordMatchup("wr-cb", poss, "targets");
       if (rec && cover) {
         const mismatch = (rec.ratings.speed + rec.ratings.rrt) / 2 - (cover.ratings.cov + cover.ratings.speed) / 2;
         cmpP += mismatch / (shadowed ? 340 : 420);
@@ -2683,6 +2709,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passInt: 1 });
         const thief = pickThief(save, def);
         if (thief) bumpBox(boxOf(defId), thief.id, { ints: 1 });
+        if (shadowed) recordMatchup("wr-cb", poss, "interceptions");
         const used = snapClock(save, plan, year, q, clock, trail, false, true, false, false);
         tickClock(poss, used.used);
         drivePlays += 1;
@@ -2756,6 +2783,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
       yds = pinAtGoal(save, spot, yds, year, brake, true);
       if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passAtt: 1, passCmp: 1, passYds: yds });
       if (rec) bumpBox(boxOf(poss), rec.id, { rec: 1, recYds: yds });
+      if (shadowed) {
+        recordMatchup("wr-cb", poss, "receptions");
+        recordMatchup("wr-cb", poss, "receivingYards", yds);
+      }
       if (logOn && shadowed && rec && cover && yds >= 18) {
         const n = (matchupSaid[rec.id] = (matchupSaid[rec.id] ?? 0) + 1);
         note(n === 1 ? `${playerName(rec)} gets behind ${playerName(cover)}. That's the matchup they circled.` : `${playerName(rec)} beats ${playerName(cover)} again.`);
@@ -2775,6 +2806,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (spot >= 100) {
         if (off.qb) bumpBox(boxOf(poss), off.qb.id, { passTd: 1 });
         if (rec) bumpBox(boxOf(poss), rec.id, { recTd: 1 });
+        if (shadowed) recordMatchup("wr-cb", poss, "receivingTds");
         const line = rec
           ? rec.ratings.speed >= 88
             ? `${playerName(rec)} takes it the distance.`
@@ -2829,7 +2861,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
     if (rusher?.pos === "FB") mu += 0.45;
     const lane = matchupOf("rb-lb", poss);
-    if (rusher && pairOn(lane) && rusher.id === lane.offId) mu += (lane.offGrade - lane.defGrade) / 90;
+    const matchedRunner = !!rusher && pairOn(lane) && rusher.id === lane.offId;
+    if (matchedRunner) {
+      mu += (lane!.offGrade - lane!.defGrade) / 90;
+      recordMatchup("rb-lb", poss, "carries");
+    }
     // A back's legs go after twenty carries; the drop is steeper for one without stamina.
     const carries = rusher ? boxOf(poss).find((b) => b.playerId === rusher.id)?.rushAtt ?? 0 : 0;
     if (rusher?.pos === "RB" && carries > 20) mu -= (carries - 20) * 0.035 * (80 / Math.max(50, rusher.ratings.stamina));
@@ -2863,6 +2899,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (rand(save) < 0.18) yds += randInt(save, 12, 55);
     }
     yds = pinAtGoal(save, spot, yds, year, brake);
+    if (matchedRunner) recordMatchup("rb-lb", poss, "rushingYards", yds);
     if (rusher) {
       bumpBox(boxOf(poss), rusher.id, { rushAtt: 1, rushYds: yds });
       if (poss === homeId) homeRushYds += Math.max(0, yds);
@@ -2870,6 +2907,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
     const t = pickTackler(save, def, false);
     if (t) bumpBox(boxOf(defId), t.id, { tackles: 1, ...(yds < 0 ? { tfl: 1 } : {}) });
+    if (matchedRunner && t?.id === lane?.defId) recordMatchup("rb-lb", poss, "stops");
     const oob = rand(save) < 0.1;
     const used = snapClock(save, plan, year, q, clock, trail, true, oob, yds >= togo, false);
     tickClock(poss, used.used);

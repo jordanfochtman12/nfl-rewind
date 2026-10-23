@@ -36,6 +36,20 @@ export interface KeyMatchup {
   defId: string;
   offGrade: number;
   defGrade: number;
+  /** Actual events involving this pair, populated by the game simulation. */
+  result?: {
+    targets?: number;
+    receptions?: number;
+    receivingYards?: number;
+    receivingTds?: number;
+    interceptions?: number;
+    dropbacks?: number;
+    pressures?: number;
+    sacks?: number;
+    carries?: number;
+    rushingYards?: number;
+    stops?: number;
+  };
 }
 
 export const MATCHUP_LABEL: Record<MatchupKind, string> = {
@@ -87,36 +101,55 @@ export function matchupEdge(m: KeyMatchup): "offense" | "defense" | "even" {
 export interface MatchupResult {
   m: KeyMatchup;
   line: string;
-  winner: "offense" | "defense" | "even";
+  winner: "offense" | "defense" | "even" | "inconclusive" | "unavailable";
 }
 
-/** How each key matchup actually went, from the box score. */
+/** How each featured pair performed on events the simulator attributed to that matchup. */
 export function matchupReport(save: DynastySave, game: GameResult): MatchupResult[] {
-  const boxFor = (id: TeamId) => (id === game.homeId ? game.boxHome : game.boxAway) ?? [];
-  const row = (box: BoxPlayer[], id: string) => box.find((b) => b.playerId === id);
   const name = (id: string) => (save.players[id] ? playerName(save.players[id]!) : "—");
   return (game.matchups ?? []).map((m) => {
-    const defTeam = (m.teamId === game.homeId ? game.awayId : game.homeId) as TeamId;
-    const o = row(boxFor(m.teamId), m.offId);
-    const d = row(boxFor(defTeam), m.defId);
+    const tracked = m.result;
+    if (!tracked) {
+      return {
+        m,
+        winner: "unavailable" as const,
+        line: "This saved game has full player totals, but no play-by-play matchup tracking.",
+      };
+    }
     if (m.kind === "wr-cb") {
-      const yds = o?.recYds ?? 0;
-      const td = o?.recTd ?? 0;
-      const picks = d?.ints ?? 0;
-      const winner = picks > 0 || (yds < 45 && !td) ? "defense" : yds >= 85 || td >= 1 ? "offense" : "even";
-      return { m, winner, line: `${name(m.offId)}: ${o?.rec ?? 0} catches, ${yds} yards${td ? `, ${td} TD` : ""}. ${name(m.defId)}: ${picks ? `${picks} INT` : `${d?.pd ?? 0} ${(d?.pd ?? 0) === 1 ? "pass" : "passes"} defended`}.` };
+      const targets = tracked.targets ?? 0;
+      const catches = tracked.receptions ?? 0;
+      const yards = tracked.receivingYards ?? 0;
+      const tds = tracked.receivingTds ?? 0;
+      const picks = tracked.interceptions ?? 0;
+      const catchRate = targets ? catches / targets : 0;
+      const yardsPerTarget = targets ? yards / targets : 0;
+      const winner = targets < 3
+        ? "inconclusive"
+        : picks > 0 || (catchRate <= 0.4 && yardsPerTarget < 7) ? "defense"
+          : (catchRate >= 0.65 && yardsPerTarget >= 10) || tds > 0 ? "offense" : "even";
+      return {
+        m,
+        winner,
+        line: `${name(m.offId)}: ${catches} catches on ${targets} matchup targets for ${yards} yards${tds ? `, ${tds} TD` : ""}. ${name(m.defId)}: ${picks} interceptions on those targets.`,
+      };
     }
     if (m.kind === "lt-edge") {
-      const sacks = d?.sacks ?? 0;
-      const hits = d?.qbHits ?? 0;
-      const winner = sacks >= 1 || hits >= 3 ? "defense" : hits === 0 ? "offense" : "even";
-      return { m, winner, line: `${name(m.defId)}: ${sacks} ${sacks === 1 ? "sack" : "sacks"}, ${hits} QB ${hits === 1 ? "hit" : "hits"} against ${name(m.offId)}.` };
+      const dropbacks = tracked.dropbacks ?? 0;
+      const pressures = tracked.pressures ?? 0;
+      const sacks = tracked.sacks ?? 0;
+      const winner = pressures >= 3 || sacks >= 1 ? "defense" : dropbacks < 8 ? "inconclusive" : pressures === 0 ? "offense" : "even";
+      return {
+        m,
+        winner,
+        line: `${name(m.defId)}: ${pressures} credited pressures, ${sacks} ${sacks === 1 ? "sack" : "sacks"} across ${dropbacks} pass plays against ${name(m.offId)}.`,
+      };
     }
-    const yds = o?.rushYds ?? 0;
-    const att = o?.rushAtt ?? 0;
+    const yds = tracked.rushingYards ?? 0;
+    const att = tracked.carries ?? 0;
     const ypc = att ? yds / att : 0;
-    const winner = att >= 8 && ypc >= 4.6 ? "offense" : att >= 8 && ypc < 3.3 ? "defense" : "even";
-    return { m, winner, line: `${name(m.offId)}: ${att} carries, ${yds} yards. ${name(m.defId)}: ${d?.tackles ?? 0} tackles.` };
+    const winner = att < 5 ? "inconclusive" : ypc >= 4.6 ? "offense" : ypc < 3.3 ? "defense" : "even";
+    return { m, winner, line: `${name(m.offId)}: ${att} carries for ${yds} yards in this matchup. ${name(m.defId)} made ${tracked.stops ?? 0} credited stops.` };
   });
 }
 

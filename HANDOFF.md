@@ -183,6 +183,12 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 - CPU clubs now challenge a restricted free agent only when the player is a meaningful roster upgrade, with higher compensation rounds reducing interest. Each tender gets one roll for its best-fit suitor; previously each eligible rival rolled independently, compounding low individual odds into near-certain offers when many teams had a need.
 - Validation: the RFA tests include a 120-seed first-round offer-sheet frequency check, focused RFA/service tests, typecheck, targeted ESLint, 1966 season QA, and 1966–2002 expansion QA.
+
+## Update (postgame matchup tracking)
+
+- Postgame one-on-one grades now use events recorded for the featured pair: receiver targets/results, matched-back carries/yards and linebacker stops, and edge pressures/sacks against the left tackle. Small samples are marked inconclusive; older saves without event tracking say tracking is unavailable instead of awarding a result from unrelated full-game totals.
+- The tracking is optional data on each game's matchup record, so existing save files hydrate without a schema migration.
+- Validation: focused game-day tests, TypeScript, targeted ESLint, 1966 season QA, and production build.
 - RFA/ERFA classification now prefers the weekly service ledger (six full-pay games for an accrued season; three for credited service). Older saves seed the current season from recorded appearances when available; imported/prior seasons still fall back to `stats`/`career` totals. Save schema is `SAVE_VERSION 24`.
 - Validation: service-ledger tests cover idempotency, injury/IR, holdout, bye, midseason migration, compact round-trip, and Record-mode isolation. TypeScript, targeted lint, and full season/expansion QA plus production build are required before merge.
 
