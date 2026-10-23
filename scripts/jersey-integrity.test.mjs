@@ -5,7 +5,9 @@ import { activeTeamIds, createNewGame, rosterOf } from "../src/lib/game/index.ts
 import { jerseyLegal } from "../src/lib/game/names.ts";
 
 test("league rosters have no duplicate numbers and respect each era's position bands", () => {
-  for (const year of [1966, 1972, 1973, 1984, 2004, 2021, 2023, 2040]) {
+  // Check every supported season so narrow rule transitions (especially the 2015
+  // linebacker change and 2023 number zero) cannot hide between sampled eras.
+  for (let year = 1966; year <= 2040; year += 1) {
     const save = createNewGame({ userTeamId: "pit", startingYear: year, cpuOnly: true, seed: year + 20 });
     for (const teamId of activeTeamIds(year)) {
       const seen = new Map();
