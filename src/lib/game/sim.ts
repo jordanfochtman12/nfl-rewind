@@ -188,6 +188,20 @@ export function fourthBackRotationShare(topTwoCarries: number, hasFourthBack: bo
   return clamp((Math.max(0, topTwoCarries) - 12) * 0.012, 0, 0.16);
 }
 
+/** Split the backfield carry pool into mutually exclusive depth-chart shares. */
+export function backfieldRotationShares(leadBackShare: number, thirdBackShare: number, fourthBackShare: number) {
+  const third = clamp(thirdBackShare, 0, 1);
+  const fourth = clamp(fourthBackShare, 0, 1 - third);
+  const topTwo = 1 - third - fourth;
+  const lead = clamp(leadBackShare, 0, 1);
+  return {
+    rb1: topTwo * lead,
+    rb2: topTwo * (1 - lead),
+    rb3: third,
+    rb4: fourth,
+  };
+}
+
 /** A healthy fourth wideout earns a small share after the top three have handled a full game's work. */
 export function fourthReceiverRotationShare(targetsByTopThree: number, hasFourthReceiver: boolean, year: number): number {
   if (!hasFourthReceiver || year < 1978) return 0;
@@ -739,14 +753,14 @@ function pickRusher(
   // remain with the backs trusted to protect the quarterback.
   const thirdBackShare = thirdBackRotationShare(backCarries, !!off.rb3 && !!carriesSoFar, year);
   const fourthBackShare = passingDown ? 0 : fourthBackRotationShare(backCarries, !!off.rb4 && !!carriesSoFar, year);
-  const topBackScale = 1 - thirdBackShare * (passingDown ? 0.3 : 1);
+  const rotation = backfieldRotationShares(rb1, thirdBackShare, fourthBackShare);
+  const passingBackScale = 1 - thirdBackShare * 0.3;
   const pool: { p: Player; w: number }[] = [];
   if (off.rb)
     pool.push({
       p: off.rb,
       w:
-        (passingDown ? rb1 * 0.7 : rb1) *
-        topBackScale *
+        (passingDown ? rb1 * 0.7 * passingBackScale : rotation.rb1) *
         kitShare(off.rb, "rushShare") *
         staminaWorkloadFactor(off.rb.ratings.stamina) *
         workloadDamp(off.rb.id) *
@@ -755,8 +769,7 @@ function pickRusher(
   if (off.rb2)
     pool.push({
       p: off.rb2,
-      w: (passingDown ? 0.32 : 1 - rb1 - fourthBackShare) *
-        topBackScale *
+      w: (passingDown ? 0.32 * passingBackScale : rotation.rb2) *
         kitShare(off.rb2, "rushShare") *
         staminaWorkloadFactor(off.rb2.ratings.stamina) *
         workloadDamp(off.rb2.id) *
@@ -774,8 +787,7 @@ function pickRusher(
     pool.push({
       p: off.rb3,
       w:
-        thirdBackShare *
-        (passingDown ? 0.3 : 1) *
+        (passingDown ? thirdBackShare * 0.3 : rotation.rb3) *
         kitShare(off.rb3, "rushShare") *
         staminaWorkloadFactor(off.rb3.ratings.stamina) *
         workloadDamp(off.rb3.id) *
@@ -785,7 +797,7 @@ function pickRusher(
   if (off.rb4 && fourthBackShare > 0) {
     pool.push({
       p: off.rb4,
-      w: fourthBackShare *
+      w: rotation.rb4 *
         kitShare(off.rb4, "rushShare") *
         staminaWorkloadFactor(off.rb4.ratings.stamina) *
         workloadDamp(off.rb4.id) *

@@ -7,6 +7,7 @@ import {
   teamUnits,
   thirdBackRotationShare,
   fourthBackRotationShare,
+  backfieldRotationShares,
   fourthReceiverRotationShare,
   backupBackTargetShare,
   staminaWorkloadFactor,
@@ -131,6 +132,24 @@ test("a fourth back enters only as modern late-game relief from the saved depth 
   const team = save.teams.pit;
   assert.ok(team.depth.RB.length >= 4, "the test roster has a fourth back");
   assert.equal(teamUnits(save, "pit").rb4?.id, team.depth.RB[3], "RB4 follows the saved depth chart");
+});
+
+test("third- and fourth-back substitutions divide one conserved carry pool", () => {
+  const rotation = backfieldRotationShares(0.71, 0.2, 0.1);
+  for (const [role, expected] of Object.entries({ rb1: 0.497, rb2: 0.203, rb3: 0.2, rb4: 0.1 })) {
+    assert.ok(Math.abs(rotation[role] - expected) < 1e-12, `${role} receives its mutually exclusive share`);
+  }
+  assert.ok(Math.abs(Object.values(rotation).reduce((sum, share) => sum + share, 0) - 1) < 1e-12, "all four depth roles share one carry pool");
+
+  const withoutFourthBack = backfieldRotationShares(0.6, 0.2, 0);
+  for (const [role, expected] of Object.entries({ rb1: 0.48, rb2: 0.32, rb3: 0.2, rb4: 0 })) {
+    assert.ok(Math.abs(withoutFourthBack[role] - expected) < 1e-12, `without RB4, ${role} keeps the former share`);
+  }
+
+  const bounded = backfieldRotationShares(0.7, 0.8, 0.8);
+  assert.equal(bounded.rb3, 0.8);
+  assert.ok(Math.abs(bounded.rb4 - 0.2) < 1e-12, "fourth-back share cannot double-count the remaining carry pool");
+  assert.equal(Object.values(bounded).reduce((sum, share) => sum + share, 0), 1);
 });
 
 test("a healthy WR4 joins a modern three-wide target rotation after the starters absorb volume", () => {
