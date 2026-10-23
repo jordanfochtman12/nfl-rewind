@@ -164,7 +164,7 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Waiver morning as a phase. Contract year / tenders once the cap exists (1994+).
+1. Add restricted-free-agent tenders and contract-year decisions for the 1994+ cap era. The waiver-claim phase is already implemented in `season.ts` / `WaiverNight.tsx` and covered by `scripts/waiver-phase.test.mjs`.
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
 

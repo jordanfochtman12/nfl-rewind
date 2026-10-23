@@ -636,7 +636,12 @@ export function restoreRecordLines(save: DynastySave): boolean {
       const p = save.players[`r-${person.toString(36)}`];
       if (!p || p.stats[y]) continue;
       const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
-      if (y < 1999) st.unknown = y < 1970 ? ["tackles", "ff", "tfl", "pd", "sacks"] : ["tackles", "ff", "tfl", "pd"];
+      st.unknown = [...new Set([
+        ...(st.unknown ?? []),
+        "defTd", "krTd", "prTd", "pts",
+        ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
+        ...(y < 1970 ? ["sacks"] : []),
+      ])];
       p.stats[y] = st;
     }
   }
