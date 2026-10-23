@@ -1,5 +1,4 @@
 const PRECACHE_EXTENSIONS = /\.(?:js|css|woff2)$/;
-const HISTORICAL_BOX_CHUNK = /(^|\/)(?:19|20)\d\d-[\w-]+\.js$/;
 
 function addStaticDependencies(fileName, bundle, files, visited) {
   if (visited.has(fileName)) return;
@@ -16,7 +15,7 @@ function addStaticDependencies(fileName, bundle, files, visited) {
 /** Build the service-worker manifest, separating required app-shell assets from lazy assets. */
 export function offlineManifest(bundle) {
   const files = Object.keys(bundle)
-    .filter((file) => PRECACHE_EXTENSIONS.test(file) && !HISTORICAL_BOX_CHUNK.test(file))
+    .filter((file) => PRECACHE_EXTENSIONS.test(file))
     .sort();
   const precache = new Set();
   const visited = new Set();

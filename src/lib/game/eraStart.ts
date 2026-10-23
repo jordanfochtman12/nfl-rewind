@@ -705,7 +705,8 @@ export function createEraGame(o: EraOpts): DynastySave {
   // everyone it had at some point that season (December signings, the practice squad).
   const opening = historyData().opening(year);
   const jerseyOf = new Map<string, number>();
-  for (const [teamId, list] of rosters) for (const { person, jersey } of list) if (jersey) jerseyOf.set(`${teamId}|${person}`, jersey);
+  for (const [teamId, list] of rosters)
+    for (const { person, jersey } of list) if (jersey !== undefined) jerseyOf.set(`${teamId}|${person}`, jersey);
   const seasonPos = historyData().seasonPos(year);
   const spotOf = new Map<number, Pos>();
   let placed = rosters;
@@ -739,7 +740,7 @@ export function createEraGame(o: EraOpts): DynastySave {
       if (on.has(p.id)) continue;
       on.add(p.id);
       p.teamId = teamId;
-      if (jersey) p.jersey = jersey;
+      if (jersey !== undefined) p.jersey = jersey;
       const born = historyData().people[person]?.birth;
       if (born) p.age = year - Number(born.slice(0, 4));
       p.yearsPro = Math.max(0, year - (historyData().firstSeason(person) ?? year));

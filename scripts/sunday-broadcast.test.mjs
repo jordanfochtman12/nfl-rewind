@@ -84,7 +84,7 @@ test("version 16 saves hydrate new coaching defaults and keep legacy film readab
   delete s.teams.gnb.plan.protection;
   delete s.teams.gnb.plan.defensiveFocus;
   const loaded = importDynasty(JSON.stringify(s));
-  assert.equal(loaded.version, 20);
+  assert.equal(loaded.version, 24);
   assert.equal(planFor(loaded, "gnb").protection, "balanced");
   assert.equal(planFor(loaded, "gnb").defensiveFocus, "balanced");
 });
@@ -210,6 +210,8 @@ test("watch history: every club is the computer's, picks come one at a time, and
   let s = make({ userTeamId: "gnb", startingYear: 1966, sandbox: true, seed: 7 });
   assert.equal(s.sandbox, true);
   assert.equal(s.cpuOnly, true);
+  s = step(s, {});
+  if (s.phase === "preDraft") s = step(s, { auto: true });
   const before = s.draftPickIndex;
   s = step(s, {});
   assert.equal(s.phase, "draft");

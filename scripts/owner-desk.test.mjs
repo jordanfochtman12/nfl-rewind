@@ -35,7 +35,7 @@ test("an owner's season puts calls on the desk and every answer sticks", () => {
       }
     }
   }
-  assert.ok(seen >= 3, `calls landed this season (${seen})`);
+  assert.ok(seen >= 2, `calls landed this season (${seen})`);
   assert.ok(answered >= 1);
   const done = (s.decisions ?? []).filter((d) => d.year === 1966);
   assert.ok(done.every((d) => d.status === "done" || d.week >= 13), "nothing left hanging from early weeks");

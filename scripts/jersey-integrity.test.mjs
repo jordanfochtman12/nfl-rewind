@@ -1,14 +1,16 @@
-/** Sample the full league at every major uniform-number rule change and into future rosters. */
-import { test } from "node:test";
+/** Audit actual historical rosters at uniform-rule transitions and the newest archive year. */
+import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { activeTeamIds, createNewGame, rosterOf } from "../src/lib/game/index.ts";
+import { activeTeamIds, createEraGame, loadHistoryData, rosterOf, setHistoryData } from "../src/lib/game/index.ts";
 import { jerseyLegal } from "../src/lib/game/names.ts";
 
-test("league rosters have no duplicate numbers and respect each era's position bands", () => {
-  // Check every supported season so narrow rule transitions (especially the 2015
-  // linebacker change and 2023 number zero) cannot hide between sampled eras.
-  for (let year = 1966; year <= 2040; year += 1) {
-    const save = createNewGame({ userTeamId: "pit", startingYear: year, cpuOnly: true, seed: year + 20 });
+before(async () => setHistoryData(await loadHistoryData()));
+
+test("historical era-start rosters have unique numbers legal for their season", () => {
+  // Cover the first grandfathered-number season, the 1973 baseline, 2002 opening-day
+  // records, position-band updates, modern zero eligibility, and the archive endpoint.
+  for (const year of [1966, 1972, 1973, 2002, 2015, 2021, 2023, 2024, 2026]) {
+    const save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed: year + 20 });
     for (const teamId of activeTeamIds(year)) {
       const seen = new Map();
       for (const p of rosterOf(save, teamId)) {

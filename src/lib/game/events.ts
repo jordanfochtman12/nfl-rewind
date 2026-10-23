@@ -147,7 +147,7 @@ export function awardBallots(save: DynastySave, opts: { live?: boolean; top?: nu
   const group = (pos: Pos) => (pos === "DE" || pos === "OLB" ? "edge" : pos === "DT" ? "inside" : pos === "MLB" ? "backer" : "db");
   // Refit after tackles moved to the linebackers and secondary and sacks to the true pass
   // rushers (where real ones are): 114 simulated seasons, fit to the real award's split.
-  const DEF_SCALE = { edge: 1, inside: 1.1, backer: 1.46, db: 1.66 } as const;
+  const DEF_SCALE = { edge: 1.12, inside: 1.1, backer: 1.46, db: 1.66 } as const;
   const edgeTop = def.filter((p) => group(p.pos) === "edge").map((p) => defPerf(p, year)).sort((a, b) => b - a).slice(0, 3);
   const edgeBar = Math.max(1, edgeTop.reduce((a, b) => a + b, 0) / Math.max(1, edgeTop.length));
   const rel = (p: Player) =>

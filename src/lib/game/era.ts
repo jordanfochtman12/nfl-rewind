@@ -206,7 +206,7 @@ export function fgEraMod(year: number): number {
   if (year <= 1977) return 0.95;
   // From the 80s on, real kickers try (and make) the longer ones the range gives them.
   if (year <= 1981) return 0.86;
-  if (year <= 1985) return 0.94;
+  if (year <= 1985) return 1.08;
   if (year <= 1993) return 0.98;
   if (year <= 1999) return 1.03;
   if (year <= 2009) return 1.08;
@@ -315,10 +315,10 @@ export function eraBigPlay(year: number): number {
 export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3: number; te: number; rb: number } {
   if (year <= 1969) return { wr1: 0.3, wr2: 0.28, wr3: 0.08, te: 0.15, rb: 0.19 };
   if (year <= 1977) return { wr1: 0.28, wr2: 0.26, wr3: 0.1, te: 0.17, rb: 0.19 };
-  if (year <= 1989) return { wr1: 0.27, wr2: 0.22, wr3: 0.12, te: 0.2, rb: 0.19 };
-  if (year <= 1999) return { wr1: 0.28, wr2: 0.22, wr3: 0.13, te: 0.19, rb: 0.18 };
+  if (year <= 1989) return { wr1: 0.27, wr2: 0.22, wr3: 0.12, te: 0.18, rb: 0.19 };
+  if (year <= 1999) return { wr1: 0.28, wr2: 0.22, wr3: 0.13, te: 0.095, rb: 0.18 };
   if (year <= 2009) return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.21, rb: 0.16 };
-  if (year <= 2019) return { wr1: 0.28, wr2: 0.2, wr3: 0.16, te: 0.21, rb: 0.15 };
+  if (year <= 2019) return { wr1: 0.28, wr2: 0.2, wr3: 0.16, te: 0.18, rb: 0.15 };
   return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.22, rb: 0.15 };
 }
 
@@ -330,6 +330,9 @@ export function eraRb1Share(year: number): number {
   if (year <= 1989) return 0.57;
   if (year <= 1999) return 0.62;
   if (year <= 2014) return 0.6;
+  // The 2024 record's lead back carries 61% of a team's RB attempts on average.
+  // Calibrate the selection weight against that lead share and the recorded top-two workload.
+  if (year >= 2020) return 0.71;
   return 0.54;
 }
 

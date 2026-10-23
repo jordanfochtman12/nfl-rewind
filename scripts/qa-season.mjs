@@ -305,7 +305,11 @@ assert(
 );
 assert(g.weekIsInTheBooks(camp), "film night is up");
 camp = g.advance(camp, { auto: false });
-assert(camp.week === 2, `second click is next week (got ${camp.week})`);
+if (camp.phase === "waivers") {
+  assert(camp.week === 1, `waiver review follows the completed week (got week ${camp.week})`);
+  camp = g.advance(camp, { auto: false });
+}
+assert(camp.week === 2, `week advances after any waiver review (got ${camp.week})`);
 const dlWeek = g.deadlineWeek(1966);
 camp = g.simUntil(camp, (s) => s.phase === "deadline");
 assert(camp.phase === "deadline", "trading week is a phase");
@@ -334,9 +338,20 @@ console.log(
 
 const played = after.schedule.filter((x) => x.played);
 assert(played.length >= 160, `full 1966 slate played (got ${played.length})`);
+const max1966Week = g.maxWeek(after);
 const serviceRows1966 = Object.values(after.players).map((p) => p.serviceByYear?.[1966]).filter(Boolean);
 assert(serviceRows1966.length > 0, "regular-season sim records full-pay service weeks");
-assert(serviceRows1966.every((row) => row.fullPayGames <= 14 && row.weeks.length === row.fullPayGames), "service ledger is bounded to actual 1966 game weeks and counts each week once");
+const invalidServiceRows1966 = Object.values(after.players)
+  .filter((player) => {
+    const row = player.serviceByYear?.[1966];
+    return row && (
+      row.weeks.length !== row.fullPayGames ||
+      row.fullPayGames > max1966Week ||
+      row.weeks.some((week) => week < 1 || week > max1966Week)
+    );
+  })
+  .map((player) => `${player.firstName} ${player.lastName}: ${player.serviceByYear[1966].fullPayGames} games, weeks ${player.serviceByYear[1966].weeks.join(",")}`);
+assert(invalidServiceRows1966.length === 0, `service ledger is bounded to the ${max1966Week}-week 1966 calendar and counts each week once${invalidServiceRows1966.length ? ` (${invalidServiceRows1966.join("; ")})` : ""}`);
 const wxSet = played.filter((x) => x.weather).length;
 assert(wxSet === played.length, "every Sunday has weather");
 const withVenue = played.filter((x) => x.stadium).length;

@@ -80,6 +80,16 @@ Every rating must change play results. Do not hug overall.
 
 The game engine is a **situational drive sim**, not a box-score blender. Play calling, clock, penalties, turnovers, special teams, and venues must look like the year on the calendar:
 
+- Passing targets honor depth-chart substitutions. A healthy WR4 can enter a three-wide offense's target mix after the top three accumulate work; RB2 shares the existing era-specific running-back target allocation, with a smaller role in early eras. These affect simulated games only; Record mode remains the real box-score replay.
+- In 1990+ simulated games, obvious pass situations can use nickel personnel when a healthy CB4 is on the depth chart: the fourth corner replaces one linebacker, chosen from the two best coverage linebackers. Personnel follows down, distance, and offensive tendency before the play call is known. Historical Record mode remains exact.
+- The season rushing-pace taper applies across RB1, RB2, RB3, fullback, quarterback, and emergency receiver carries. Do not let a depth role bypass the same season-long usage feedback; keep early-era QB/FB rushing calibration and career-tail realism covered when changing it.
+- For standalone audits after 1966, use `createEraGame()` and `setHistoryData()` to load that season's real roster; `createNewGame({ startingYear })` still starts with the 1966 veteran pool. Modern QB run changes need full-season attempt, total-yards, and yards-per-carry comparisons against actual-year rosters, with an earlier-era control.
+- Player stamina scales sustainable rushing workload across those roles, including RB2. Keep depth-chart stamina meaningful and covered by a same-seed simulated carry-share test.
+- Defensive tackle stats include a second defender on a calibrated share of completed runs/catches. Keep tackle attribution position-weighted, test against historical defensive totals, and use its own deterministic stream so stat bookkeeping does not shift gameplay RNG.
+- Field-goal decision range is era-calibrated separately from kicker accuracy; compare attempts and make rates using actual-year rosters from the historical season archive across early, middle, and modern rule eras.
+- Era target weights must track historical position volume. When adjusting a position's share, compare complete season receiving totals across affected eras and retain nearby unaffected eras as controls.
+- Accumulated career rushing workload gradually shifts carries toward the depth chart after sustained high volume; preserve player agency (no forced retirement or hard career-stat ceiling) and test the long-run rushing tail.
+
 - 1966 is run-first, ~51% completions, ~5.5% INT, wide hashes, bump-and-run, almost never 4th-and-2.
 - Clock stops on first downs through 1973; 1978 chuck rule; 1994 two-point (AFL had it); 2015 extra point from 15 yards.
 - Fumbles are recovered ~50/50. Kick-return TDs are rare. Holding and DPI extend or kill drives. Half-distance to the goal. DPI is a spot foul from 1974.

@@ -18,7 +18,10 @@ test("simulated tackles reconcile to contact events, split sacks, and no postgam
   for (const { defense, offense } of sides) {
     const expected = total(offense, "rushAtt") - total(offense, "kneels") + total(offense, "passCmp")
       + total(offense, "sacksThrown") + halfSacks(defense) / 2;
-    assert.equal(total(defense, "tackles"), expected,
-      "one primary stop is credited per run, completion, or sack, with each split-sack partner credited too");
+    const credited = total(defense, "tackles");
+    assert.ok(credited >= expected,
+      "every run, completion, and sack has a primary stop, with each split-sack partner credited too");
+    assert.ok(credited <= Math.ceil(expected * 1.3),
+      "assists add a realistic minority of extra tackles without inflating the box score");
   }
 });

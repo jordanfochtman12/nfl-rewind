@@ -15,7 +15,8 @@ test("offline manifest precaches static shell imports and defers dynamic chunks"
 
   const manifest = offlineManifest(bundle);
   assert.deepEqual(manifest.precache, ["font.woff2", "index.js", "router.js", "shared.js", "shell.css"]);
-  assert.deepEqual(manifest.files, ["font.woff2", "history.js", "index.js", "router.js", "shared.js", "shell.css"]);
+  assert.deepEqual(manifest.files, ["2036-abc.js", "font.woff2", "history.js", "index.js", "router.js", "shared.js", "shell.css"]);
+  assert.ok(!manifest.precache.includes("2036-abc.js"), "historical season chunks remain optional and do not delay first load");
   assert.equal(manifest.totalBytes, 11);
   assert.equal(manifest.precacheBytes, 10);
   assert.equal(manifest.sizes["font.woff2"], 1);
