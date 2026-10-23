@@ -10,7 +10,8 @@ import { createNewGame, simUntil, simGame } from "../src/lib/game/index.ts";
 import { chemistryEdge, chemistryOf, moraleLabel, moraleTarget, updateMorale } from "../src/lib/game/morale.ts";
 import { gameWatches, leagueMarks, liveMarkCall, pregameMemory } from "../src/lib/game/boothMemory.ts";
 import { teamStyle } from "../src/lib/game/teamStyle.ts";
-import { seasonArcList } from "../src/lib/game/arcs.ts";
+import { seasonArcList, updateArcs } from "../src/lib/game/arcs.ts";
+import { divisionKey } from "../src/lib/game/teams.ts";
 import { careerRanks, comparePlayers } from "../src/lib/game/careerBook.ts";
 import { counterOffer, crowdVerdicts, gradeRange, positionalNeeds, schemeFit } from "../src/lib/game/draftFit.ts";
 import { halftimeReport, postgameInterviews } from "../src/lib/game/presentation.ts";
@@ -80,6 +81,43 @@ test("the studio follows season-long storylines and they carry their history", (
     assert.ok(a.beats.length >= 1 && a.opened >= 3);
     for (const b of a.beats) assert.ok(b.text && b.short);
   }
+});
+
+test("a division-race storyline reopens when the standings tighten again", () => {
+  const s = fresh();
+  s.phase = "regular";
+  s.week = 10;
+  for (const team of Object.values(s.teams)) {
+    team.wins = 0;
+    team.losses = 0;
+    team.ties = 0;
+  }
+  s.teams.pit.wins = 5;
+  s.teams.pit.losses = 4;
+  s.teams.cle.wins = 5;
+  s.teams.cle.losses = 4;
+  const raceId = `race-${divisionKey(s.year, "pit")}`;
+  s.arcs = [{
+    id: raceId,
+    year: s.year,
+    kind: "race",
+    title: "A race that appeared settled",
+    opened: 6,
+    closed: true,
+    beats: [
+      { week: 8, text: "The division fight is close.", short: "it was close", metric: 1 },
+      { week: 9, text: "The leader has pulled three games clear. Story over.", short: "the leader pulled away", metric: 3 },
+    ],
+  }];
+
+  updateArcs(s);
+
+  const race = s.arcs.find((arc) => arc.id === raceId);
+  assert.equal(race.closed, false);
+  assert.equal(race.beats.length, 3);
+  assert.match(race.beats[1].text, /Story over/);
+  assert.match(race.beats[2].text, /story is back in play/i);
+  assert.match(race.beats[2].text, /After Week 10/);
 });
 
 test("careers rank and compare, regular season and playoffs apart", () => {

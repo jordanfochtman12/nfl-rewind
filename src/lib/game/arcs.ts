@@ -43,9 +43,19 @@ function upsert(save: DynastySave, arc: Omit<StoryArc, "beats" | "opened" | "yea
     a = { ...arc, year: save.year, opened: save.week, beats: [] };
     save.arcs.push(a);
   }
-  if (a.closed) return;
   const last = a.beats.at(-1);
   if (last && last.week === save.week) return;
+  if (a.closed) {
+    // A season story can turn again after the desk has called it over: a division
+    // leader can be caught, or a preseason favorite can fall back into trouble.
+    // Keep the old closing beat as part of the history, then give the revived arc
+    // a clear new beat so Primetime can tell viewers why it is back.
+    a.closed = false;
+    a.title = arc.title;
+    a.beats.push({ ...beat, week: save.week, text: `The story is back in play. ${beat.text}` });
+    if (a.beats.length > 12) a.beats.splice(1, 1);
+    return;
+  }
   // A beat only when the story moved.
   if (last && Math.abs(last.metric - beat.metric) < 0.01) return;
   a.title = arc.title;
