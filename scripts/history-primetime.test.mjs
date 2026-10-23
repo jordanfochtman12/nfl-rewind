@@ -55,3 +55,25 @@ test("Record Primetime reports ties as ties and makes a distinct episode for the
   assert.ok(save.primetimeArchive?.some((s) => s.episode?.id.includes("tie-game")));
   assert.match(save.primetime.episode.headline, /Week 2/);
 });
+
+test("Record standings identify the best win percentage, even with uneven games played", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 8 });
+  save.realHistory = true;
+  save.week = 3;
+  for (const team of Object.values(save.teams)) {
+    team.wins = 0;
+    team.losses = 0;
+    team.ties = 0;
+  }
+  save.teams.pit.wins = 1;
+  save.teams.gnb.wins = 2;
+  save.teams.gnb.losses = 1;
+  save.schedule = [{ ...game("week-three-final", "pit", "gnb", 14, 10), week: 3 }];
+
+  buildHistoryPrimetime(save, "regular");
+
+  const standings = save.primetime.episode.chapters.find((c) => c.id === "week-context");
+  assert.ok(standings);
+  assert.ok(standings.lines.some((line) => /Pittsburgh.*1-0 after Week 3/.test(line.text)));
+  assert.ok(!standings.lines.some((line) => /Green Bay.*set the pace/.test(line.text)));
+});

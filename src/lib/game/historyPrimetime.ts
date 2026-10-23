@@ -3,6 +3,7 @@ import type { DynastySave, GameResult, Player, PrimetimeShow, TeamId } from "./t
 import { boxFor, boxPlayerId, type BoxGame, type BoxLine } from "./historyExtras.ts";
 import { displayName, nicknameOf, activeTeamIds } from "./teams.ts";
 import { playerName } from "./players.ts";
+import { winPct } from "./standings.ts";
 
 type Kind = NonNullable<PrimetimeShow["kind"]>;
 type Episode = NonNullable<PrimetimeShow["episode"]>;
@@ -68,9 +69,10 @@ function weeklyStories(save: DynastySave, games: GameResult[]): NonNullable<Prim
   if (big.id !== close.id && big.id !== broad.id && marginOf(big) >= 17 && winnerOf(big)) add("The statement", `${teamName(year, winnerOf(big)!)} create separation`, `${finalLine(year, big)}. The final margin was ${marginOf(big)} points.`, [big.awayId as TeamId, big.homeId as TeamId]);
 
   const standings = activeTeamIds(year).map((id) => ({ id, team: save.teams[id] })).filter((x): x is { id: TeamId; team: NonNullable<typeof x.team> } => !!x.team)
-    .sort((a, b) => b.team.wins - a.team.wins || a.team.losses - b.team.losses || a.id.localeCompare(b.id));
+    .sort((a, b) => winPct(b.team) - winPct(a.team) || b.team.wins - a.team.wins || a.team.losses - b.team.losses || a.id.localeCompare(b.id));
   const leader = standings[0];
-  const tied = leader ? standings.filter((x) => x.team.wins === leader.team.wins && x.team.losses === leader.team.losses && x.team.ties === leader.team.ties) : [];
+  const leaderPct = leader ? winPct(leader.team) : undefined;
+  const tied = leaderPct === undefined ? [] : standings.filter((x) => Math.abs(winPct(x.team) - leaderPct) < 0.0001);
   if (leader) add("The standings", tied.length > 1 ? `${tied.length} clubs share the league's best record` : `${teamName(year, leader.id)} set the pace`, `${tied.map((x) => teamName(year, x.id)).join(" and ")} ${tied.length > 1 ? "are" : "is"} ${record(leader.team)} after Week ${save.week}.`, tied.map((x) => x.id));
   return out;
 }
