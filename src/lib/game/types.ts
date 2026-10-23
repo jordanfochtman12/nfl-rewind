@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 23;
+export const SAVE_VERSION = 24;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -301,6 +301,8 @@ export interface Player {
   };
   stats: Record<number, SeasonStats>;
   career: SeasonStats[];
+  /** Exact dynasty/Watch full-pay service by season; absent on older and real-history saves. */
+  serviceByYear?: Record<number, PlayerServiceYear>;
   /** The round history actually took him in (real draftees), for draft retrospectives. */
   realRound?: number;
   /** The owner graded him (scripts/qb-grades.json): how far below his peak he arrives on draft day. */
@@ -333,6 +335,13 @@ export interface PlayerHonors {
   awards: { year: number; award: AwardKey }[];
   /** Super Bowl wins. */
   rings: number[];
+}
+
+/** Regular-season full-pay game weeks with a club; stored separately from games played. */
+export interface PlayerServiceYear {
+  fullPayGames: number;
+  /** Week numbers make weekly season advancement idempotent across reload/retry paths. */
+  weeks: number[];
 }
 
 export type AttackDial = "run" | "balanced" | "pass";

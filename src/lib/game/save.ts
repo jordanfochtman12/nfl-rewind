@@ -363,6 +363,17 @@ export function hydrateSave(raw: unknown): DynastySave {
   for (const r of out.history.retirements) {
     r.kind = r.kind ?? (r.coachId ? "coach" : "player");
   }
+  // Preserve usable midseason service when upgrading a save that predates weekly ledgers.
+  // Appearance totals are only a lower-bound proxy, but avoid replacing that evidence with
+  // zero when the first post-upgrade roster week is recorded.
+  if ((r.version ?? 0) < 24 && !out.realHistory) {
+    for (const p of Object.values(out.players)) {
+      const appearances = p.stats?.[out.year]?.gp ?? 0;
+      if (appearances <= 0 || p.serviceByYear?.[out.year]) continue;
+      p.serviceByYear ??= {};
+      p.serviceByYear[out.year] = { fullPayGames: appearances, weeks: [] };
+    }
+  }
   setHomeOverride(out.owner?.home);
   retireDraftTwins(out);
   backfillHonors(out);

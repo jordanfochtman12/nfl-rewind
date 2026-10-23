@@ -36,20 +36,42 @@ const roundPay = (year: number, n: number) => {
  * available and yearsPro only for players whose career ledger is still empty.
  */
 export function accruedSeasonsFor(p: Player): number {
-  const seasons = new Map<number, number>();
-  for (const line of [...Object.values(p.stats ?? {}), ...(p.career ?? [])]) {
-    seasons.set(line.year, Math.max(seasons.get(line.year) ?? 0, line.gp ?? 0));
-  }
-  return seasons.size ? [...seasons.values()].filter((gp) => gp >= 6).length : Math.max(0, p.yearsPro ?? 0);
+  return serviceGamesByYear(p).filter((games) => games >= 6).length;
 }
 
 /** Credited service uses three full-pay games, separately from the six-game accrued-season test. */
 export function creditedSeasonsFor(p: Player): number {
+  return serviceGamesByYear(p).filter((games) => games >= 3).length;
+}
+
+function serviceGamesByYear(p: Player): number[] {
   const seasons = new Map<number, number>();
   for (const line of [...Object.values(p.stats ?? {}), ...(p.career ?? [])]) {
     seasons.set(line.year, Math.max(seasons.get(line.year) ?? 0, line.gp ?? 0));
   }
-  return seasons.size ? [...seasons.values()].filter((gp) => gp >= 3).length : Math.max(0, p.yearsPro ?? 0);
+  for (const [year, service] of Object.entries(p.serviceByYear ?? {})) {
+    seasons.set(Number(year), Math.max(0, service.fullPayGames ?? 0));
+  }
+  return seasons.size ? [...seasons.values()] : Array(Math.max(0, p.yearsPro ?? 0)).fill(6);
+}
+
+/** Count full-pay game weeks on the active club roster, not just games the player appeared in. */
+export function recordServiceGameWeek(save: DynastySave, teamIds: readonly TeamId[]): void {
+  if (save.realHistory || save.phase !== "regular") return;
+  for (const teamId of new Set(teamIds)) {
+    const team = save.teams[teamId];
+    if (!team) continue;
+    for (const playerId of team.roster) {
+      const p = save.players[playerId];
+      if (!p || p.teamId !== teamId || p.holdout) continue;
+      // Injured-reserve players remain on a club's books and in full-pay status in this model.
+      const years = (p.serviceByYear ??= {});
+      const entry = (years[save.year] ??= { fullPayGames: 0, weeks: [] });
+      if (entry.weeks.includes(save.week)) continue;
+      entry.weeks.push(save.week);
+      entry.fullPayGames += 1;
+    }
+  }
 }
 
 /** Cap-era ERFA status: fewer than three accrued seasons and an expiring contract. */
