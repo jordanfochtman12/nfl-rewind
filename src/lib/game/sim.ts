@@ -171,14 +171,20 @@ export function unitFatigueMultiplier(
 }
 
 /** Share of a team's running-back carries that moves to its healthy RB3 as RB1/RB2 wear down. */
-export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean): number {
-  return hasThirdBack ? clamp((Math.max(0, topTwoCarries) - 16) * 0.02, 0, 0.34) : 0;
+export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean, year = 2027): number {
+  if (!hasThirdBack) return 0;
+  const workload = Math.max(0, topTwoCarries);
+  // Modern teams spread the backfield farther down the chart. Keep older seasons on their
+  // established workload curve; the 2024 season audit showed RB3 usage lagging real splits.
+  return year >= 2020
+    ? clamp((workload - 10) * 0.02, 0, 0.34)
+    : clamp((workload - 16) * 0.02, 0, 0.34);
 }
 
 /** A fourth halfback earns a small late-game relief role in modern backfields. */
 export function fourthBackRotationShare(topTwoCarries: number, hasFourthBack: boolean, year: number): number {
   if (!hasFourthBack || year < 2020) return 0;
-  return clamp((Math.max(0, topTwoCarries) - 22) * 0.004, 0, 0.06);
+  return clamp((Math.max(0, topTwoCarries) - 12) * 0.012, 0, 0.16);
 }
 
 /** A healthy fourth wideout earns a small share after the top three have handled a full game's work. */
@@ -730,7 +736,7 @@ function pickRusher(
   // Once the top two backs have absorbed a real workload, a healthy third back starts getting
   // meaningful series. Keep the total RB share steady while redistributing it; passing downs
   // remain with the backs trusted to protect the quarterback.
-  const thirdBackShare = thirdBackRotationShare(backCarries, !!off.rb3 && !!carriesSoFar);
+  const thirdBackShare = thirdBackRotationShare(backCarries, !!off.rb3 && !!carriesSoFar, year);
   const fourthBackShare = passingDown ? 0 : fourthBackRotationShare(backCarries, !!off.rb4 && !!carriesSoFar, year);
   const topBackScale = 1 - thirdBackShare * (passingDown ? 0.3 : 1);
   const pool: { p: Player; w: number }[] = [];
@@ -2665,6 +2671,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       else awayRushYds += Math.max(0, yds);
       const t = pickTackler(save, def, false);
       recordTackle(defId, def, false, t);
+      injure(poss, off.qb);
+      injure(defId, t);
       const used = snapClock(save, plan, year, q, clock, trail, true, rand(save) < 0.25, yds >= togo, false);
       tickClock(poss, used.used);
       drivePlays += 1;
@@ -2741,6 +2749,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
           bumpBox(boxOf(defId), rusher.id, { sacks: 0.5, tackles: 1, tfl: 1, qbHits: 1 });
           bumpBox(boxOf(defId), helper.id, { sacks: 0.5, tackles: 1, qbHits: 1 });
         } else if (rusher) bumpBox(boxOf(defId), rusher.id, { sacks: 1, tackles: 1, tfl: 1, qbHits: 1 });
+        // A sack is contact for both players. Carry injuries on the defender and quarterback
+        // through the same next-man-up path used by tackled skill players.
+        injure(defId, rusher);
+        injure(poss, off.qb);
         const edgeM = matchupOf("lt-edge", poss);
         if (logOn && rusher && edgeM && rusher.id === edgeM.defId) {
           const lt = save.players[edgeM.offId];
@@ -3088,6 +3100,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         }
       }
       injure(poss, rec);
+      injure(defId, t);
       continue;
     }
 
@@ -3240,6 +3253,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     }
     injure(poss, rusher);
     if (off.qb && rusher?.id !== off.qb.id) injure(poss, off.qb);
+    injure(defId, t);
   }
 
   if (homeScore === awayScore && (game.phase === "playoffs" || game.phase === "superBowl")) {

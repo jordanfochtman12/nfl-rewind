@@ -100,9 +100,12 @@ test("a healthy third back joins the rotation only after the top two carry a hea
   assert.equal(teamUnits(save, "pit").rb3?.id, expectedThird, "RB3 follows the saved depth chart");
 
   assert.equal(thirdBackRotationShare(0, true), 0);
-  assert.equal(thirdBackRotationShare(16, true), 0, "the top two keep the opening workload");
-  assert.equal(thirdBackRotationShare(26, true), 0.2, "the third back joins before one runner absorbs a full game's workload");
-  assert.equal(thirdBackRotationShare(100, true), 0.34, "the lead back stays the main runner at the rotation cap");
+  assert.equal(thirdBackRotationShare(10, true), 0, "the top two keep the opening workload");
+  assert.equal(thirdBackRotationShare(16, true), 0.12, "modern RB3 can spell the starters before late-game overuse");
+  assert.equal(thirdBackRotationShare(26, true), 0.32, "modern RB3 earns more of the workload as the top two backs tire");
+  assert.equal(thirdBackRotationShare(100, true), 0.34, "modern third-back share remains capped");
+  assert.equal(thirdBackRotationShare(16, true, 2019), 0, "pre-2020 rotation waits for the established workload threshold");
+  assert.equal(thirdBackRotationShare(26, true, 2019), 0.2, "pre-2020 backfield rotation stays on the historical curve");
   assert.equal(thirdBackRotationShare(100, false), 0, "an empty depth chart never invents a substitute");
 
   team.depth.RB = [team.depth.RB[1], team.depth.RB[2], team.depth.RB[0], ...team.depth.RB.slice(3)];
@@ -120,9 +123,9 @@ test("defensive coordinator rating governs recognition of repeated run/pass tend
 test("a fourth back enters only as modern late-game relief from the saved depth chart", () => {
   assert.equal(fourthBackRotationShare(30, true, 2019), 0, "historical backfields keep their existing rotation");
   assert.equal(fourthBackRotationShare(30, false, 2024), 0, "no healthy fourth back means no invented relief");
-  assert.equal(fourthBackRotationShare(22, true, 2024), 0, "the top two keep early-game work");
-  assert.equal(fourthBackRotationShare(30, true, 2024), 0.032, "a fourth back earns limited relief after a heavy workload");
-  assert.equal(fourthBackRotationShare(50, true, 2024), 0.06, "the fourth-back share stays capped");
+  assert.equal(fourthBackRotationShare(11, true, 2024), 0, "the top two keep opening work");
+  assert.equal(fourthBackRotationShare(30, true, 2024), 0.16, "a fourth back earns a meaningful modern relief share");
+  assert.equal(fourthBackRotationShare(50, true, 2024), 0.16, "the fourth-back share stays capped");
 
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
   const team = save.teams.pit;

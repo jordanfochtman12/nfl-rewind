@@ -520,6 +520,118 @@ input[list] {
 .next-title-actions .bx-btn:disabled {
   opacity: 0.55;
 }
+
+/* Broadcast mode slate: clear on-air choices with the existing machined NFL 2K frame. */
+.next-title-scene { z-index: 0; }
+.next-title-header,
+.next-title-layout,
+.next-title-bottom { position: relative; z-index: 1; }
+.next-title-actions {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem !important;
+  counter-reset: none;
+}
+.next-title-actions .bx-btn {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 5.1rem;
+  padding: 0.85rem 1rem;
+  justify-content: stretch;
+  text-align: left;
+  font-size: 1rem !important;
+  border: 1px solid #bdd9f838 !important;
+  background: linear-gradient(130deg, #172438f0, #080e18f2) !important;
+  box-shadow: inset 0 1px #ffffff12, 0 12px 24px #0003 !important;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+.next-title-actions .bx-btn .bx-in::before { content: none; display: none; }
+.next-title-actions .bx-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  width: 100%;
+  gap: 0.15rem 0.75rem;
+  justify-content: stretch;
+}
+.next-title-actions .next-mode-title {
+  grid-column: 1;
+  grid-row: 1;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: #f3f7ff;
+  font: 700 0.92rem/1.1 var(--font-display);
+  letter-spacing: 0.045em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.next-title-actions .next-mode-detail {
+  grid-column: 1;
+  grid-row: 2;
+  display: block;
+  color: #a6b8d0;
+  font: 500 0.63rem/1.35 var(--font-body);
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+.next-title-actions .next-mode-arrow {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 1px solid #bddef13a;
+  color: #62e8ff;
+  font: 600 0.95rem var(--font-body);
+  transition: transform 180ms ease, background 180ms ease;
+}
+.next-title-actions .next-mode-franchise {
+  grid-column: 1 / -1;
+  min-height: 5.4rem;
+  border-color: #ff8c9a9c !important;
+  background: linear-gradient(112deg, #f12240, #a60922 76%, #610a1b) !important;
+}
+.next-title-actions .next-mode-franchise .next-mode-title { font-size: 1.05rem; color: #fff; }
+.next-title-actions .next-mode-franchise .next-mode-detail { color: #ffe4e8; }
+.next-title-actions .next-mode-franchise .next-mode-arrow { color: #fff; border-color: #ffffff63; }
+.next-title-actions .bx-btn:not(:disabled):hover,
+.next-title-actions .bx-btn:focus-visible {
+  transform: translateY(-2px);
+  border-color: #77e9ffb0 !important;
+  background: linear-gradient(130deg, #1e344b, #0a1220) !important;
+  box-shadow: 0 0 0 1px #62e8ff20, 0 14px 32px #0006 !important;
+}
+.next-title-actions .bx-btn:not(:disabled):hover .next-mode-arrow { transform: translateX(2px); background: #62e8ff12; }
+.next-title-actions .next-mode-franchise:not(:disabled):hover,
+.next-title-actions .next-mode-franchise:focus-visible {
+  background: linear-gradient(112deg, #ff405a, #c00a28 76%, #760c22) !important;
+  border-left-color: #fff !important;
+}
+.next-title-actions .next-mode-continue { border-style: dashed !important; background: #0a101bd9 !important; }
+.next-mode-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1.55rem 0 0.65rem;
+  color: #91a7c0;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.next-mode-heading span:first-child { color: #e5edf8; }
+.next-mode-heading i { width: 1.4rem; height: 1px; background: #ff2448; box-shadow: 0 0 10px #ff2448; }
+@media (max-width: 700px) {
+  .next-title-actions { grid-template-columns: 1fr; }
+  .next-title-actions .next-mode-franchise { grid-column: auto; }
+  .next-title-actions .bx-btn { min-height: 4.6rem; padding-inline: 0.9rem; }
+  .next-title-actions .next-mode-title { font-size: 0.96rem; }
+  .next-mode-heading { flex-wrap: wrap; gap: 0.45rem; font-size: 0.46rem; margin-top: 1.2rem; }
+  .next-title-scene::before { opacity: 0.13; }
+}
 .broadcast-header .bug-num,
 .next-network-bug .bug-num {
   background: none;

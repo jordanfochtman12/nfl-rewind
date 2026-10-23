@@ -41,9 +41,12 @@ test("2024 regular-season RB carry volume and efficiency track historical league
           if (save.players[row.playerId]?.pos !== "RB") continue;
           simulated.attempts += row.rushAtt ?? 0;
           simulated.yards += row.rushYds ?? 0;
-          const backs = simulatedByTeam.get(teamId) ?? new Map();
+          // Each seed is a separate season sample. Combining four seasons under one team before
+          // counting 50-carry backs made those counts incomparable to the single real season.
+          const teamSample = `${seed}:${teamId}`;
+          const backs = simulatedByTeam.get(teamSample) ?? new Map();
           backs.set(row.playerId, (backs.get(row.playerId) ?? 0) + (row.rushAtt ?? 0));
-          simulatedByTeam.set(teamId, backs);
+          simulatedByTeam.set(teamSample, backs);
         }
       }
     }
