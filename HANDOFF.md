@@ -268,7 +268,7 @@ SAVE_VERSION 14. Coaches now have age, leadership / development / evaluation, ab
 
 ### 2026-10-22: modern quarterback rushing calibration
 
-2016 historical QB rush volume was being overshot by roughly 44% in the fixed-seed league sim. The scramble base in `sim.ts` now uses a lower factor for 2010+ while preserving the earlier-era factor. `scripts/qb-rushing-calibration.test.mjs` compares simulated 2016 QB carries and yards per carry with archived historical totals. The existing `scripts/rushing-realism.test.mjs` still has failing 1966–69 RB attempt-share assertions; these reproduce with the original scramble factor and are a separate open backfield-calibration issue. Do not report that early-era suite as passing.
+2016 historical QB rush volume was being overshot by roughly 44% in the fixed-seed league sim. The scramble base in `sim.ts` now uses a lower factor for 2010+; `scripts/qb-rushing-calibration.test.mjs` compares simulated 2016 QB carries and yards per carry with archived historical totals. A follow-up calibrated 1966–68 fullback and QB run-selection weights against historical positional shares; `scripts/rushing-realism.test.mjs` now passes both its 1966 volume/efficiency window and 1967–69 positional-share transitions. Preserve year-specific values and rerun both calibrations when changing this model.
 
 QA: `qa-season` asserts Lombardi kit + age, Halas is old, every 1966 club has HC/OC/DC with abilities, user HC is not auto-fired through Super Bowl I.
 

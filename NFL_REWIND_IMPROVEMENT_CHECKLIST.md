@@ -5,7 +5,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 ## Gameplay and authenticity
 
 - [x] Make modern quarterback rushing and scrambling depend on mobility, style, and historical era; keep ordinary handoffs assigned to backs. `scripts/qb-rushing-calibration.test.mjs` checks 2016 simulated QB carry volume and efficiency against the archived league after a modern-only scramble adjustment.
-- [ ] Reconcile early-era positional rushing shares: the existing 1966–69 calibration currently fails its RB-attempt-share band even with the original scramble factor, so the dynasty's broader early backfield balance needs a separate correction.
+- [x] Reconcile early-era positional rushing shares: tune 1966–68 fullback and quarterback run-selection weights to archived league distributions while preserving team carry volume and efficiency. `scripts/rushing-realism.test.mjs` passes the 1966 volume/efficiency window and 1967–69 positional-share transition checks.
 - [x] Rotate a healthy RB3 into the run game after RB1/RB2 carry a substantial workload, honoring the depth chart and keeping passing-down work with trusted protectors. Typecheck, depth/workload tests, and full historical season calibration pass after this change.
 - [x] Calibrate fatigue by unit group and review career rushing totals plus single-game/career rushing tails against historical records. Validated by side-isolation/late-game unit tests, 1966 season QA, and full fixed-seed 1966–2020 realism windows and tail bounds.
 - [ ] Audit team and player statistics end to end: definitions, aggregation, era rules, season/career/playoff totals, leaders, and records.

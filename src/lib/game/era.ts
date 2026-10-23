@@ -335,9 +335,12 @@ export function eraRb1Share(year: number): number {
 
 /** Raw fullback selection weight calibrated to historical positional carry shares. */
 export function eraFullbackCarryShare(year: number): number {
-  if (year <= 1966) return 0.45;
-  if (year === 1967) return 0.28;
-  if (year === 1968) return 0.11;
+  // Early dynasty sims were under-producing fullback carries despite matching total carries.
+  // Scale these raw selection weights against archived positional shares (1966: 22.7%,
+  // 1967: 24.9%) rather than letting the RB pool absorb those attempts.
+  if (year <= 1966) return 0.63;
+  if (year === 1967) return 0.39;
+  if (year === 1968) return 0.16;
   if (year <= 1989) return 0.01;
   if (year <= 1999) return 0.045;
   if (year <= 2019) return 0.02;
@@ -346,9 +349,11 @@ export function eraFullbackCarryShare(year: number): number {
 
 /** Raw quarterback run tendency, calibrated to historical positional carries by season. */
 export function eraQbCarryShare(year: number): number {
-  if (year <= 1966) return 0.18;
-  if (year === 1967) return 0.15;
-  if (year === 1968) return 0.13;
+  // QB-designed runs and scrambles both use this era tendency; these two early seasons need
+  // a higher raw weight to reproduce the archived quarterback share of all carries.
+  if (year <= 1966) return 0.28;
+  if (year === 1967) return 0.23;
+  if (year === 1968) return 0.19;
   if (year === 1969) return 0.107;
   if (year <= 1977) return 0.095;
   if (year <= 1989) return 0.137;
