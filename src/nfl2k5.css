@@ -2961,6 +2961,128 @@ table tbody tr:hover {
   }
 }
 
+/* ---------- broadcast title presentation pass ---------- */
+.next-title-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background:
+    linear-gradient(90deg, transparent 49.92%, #8adfff16 50%, transparent 50.08%),
+    repeating-linear-gradient(0deg, transparent 0 11.8rem, #b8ddff0a 11.9rem 12rem),
+    linear-gradient(90deg, #050912 0%, transparent 32%, transparent 76%, #050912b3 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #0008 45%, transparent 88%);
+}
+.next-title-header {
+  border-bottom-color: #a8d9ff36;
+  box-shadow: 0 1.1rem 2.8rem -2.6rem #62e8ff;
+}
+.next-edition {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #c6e6ff2b;
+  background: linear-gradient(110deg, #0a1422d9, #060a12a6);
+  box-shadow: inset 0 1px #ffffff12, 0 0.5rem 1.5rem #0003;
+  backdrop-filter: blur(10px);
+}
+.next-title-copy {
+  position: relative;
+  padding-left: clamp(0rem, 2vw, 1.5rem);
+  border-left: 1px solid #8ddfff38;
+}
+.next-kicker {
+  text-shadow: 0 0 1.2rem #62e8ff4d;
+}
+.next-wordmark > strong {
+  filter: drop-shadow(0 0.8rem 1.2rem #000c) drop-shadow(0 0 2rem #89cfff20);
+}
+.next-mode-heading {
+  margin-top: 1.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #d5e6ff2b;
+}
+.next-title-actions .bx-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-top: 2px solid #7fdfff80 !important;
+  box-shadow: inset 0 1px #ffffff18, inset 0 -1.6rem 2rem #0207116b, 0 0.8rem 1.7rem #0006 !important;
+  background:
+    linear-gradient(110deg, #a9dbff08, transparent 55%),
+    linear-gradient(130deg, #19283beF, #080e18f5) !important;
+}
+.next-title-actions .bx-btn::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.46;
+  background: linear-gradient(112deg, transparent 15%, #6be7ff10 47%, transparent 72%);
+  transform: translateX(-24%);
+  transition: transform 350ms ease, opacity 350ms ease;
+}
+.next-title-actions .bx-btn:not(:disabled):hover::before,
+.next-title-actions .bx-btn:focus-visible::before {
+  opacity: 1;
+  transform: translateX(12%);
+}
+.next-title-actions .next-mode-franchise {
+  border-top-color: #ffe8ac !important;
+  box-shadow: inset 0 1px #ffffff30, inset 0 -1.6rem 2rem #3b001066, 0 0.8rem 2rem #ed12384d !important;
+}
+.next-title-actions .next-mode-timeline { border-top-color: #62e8ff !important; }
+.next-title-actions .next-mode-record { border-top-color: #ffd06b !important; }
+.next-title-actions .next-mode-record .next-mode-arrow { color: #ffd06b; }
+.next-title-actions .next-mode-architect { border-top-color: #a890ff !important; }
+.next-title-actions .next-mode-architect .next-mode-arrow { color: #c2b4ff; }
+.next-title-actions .next-mode-continue { border-top-color: #93a6c0 !important; }
+.next-dynasty-card {
+  border-top: 2px solid #62e8ff9c;
+  background:
+    linear-gradient(145deg, #14253bd9, #060b14f2 76%),
+    #080d16;
+  box-shadow: inset 0 1px #ffffff16, 0 1.5rem 4rem #0009, 0 0 3rem -2rem #62e8ff70;
+}
+.next-card-label {
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #d4e4ff20;
+}
+.next-title .title-pillars > div {
+  padding-block: 0.75rem 0.5rem;
+  background: linear-gradient(90deg, #8cdcff0c, transparent 90%);
+}
+.next-title-footnote {
+  padding-top: 0.8rem;
+  border-top: 1px solid #d5e6ff1e;
+}
+@media (max-width: 700px) {
+  .next-title-scene::before {
+    opacity: 0.16;
+    mask-image: linear-gradient(180deg, #000, transparent 60%);
+  }
+  .next-title-copy {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .next-edition {
+    padding: 0.45rem 0.6rem;
+  }
+  .next-mode-heading {
+    margin-top: 1.45rem;
+  }
+  .next-title-actions .bx-btn {
+    min-height: 4.7rem;
+  }
+  .next-title .title-pillars > div {
+    padding-block: 0.55rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .next-title-actions .bx-btn::before { transition: none; }
+}
+
 /* ---------- start year picker ---------- */
 .k5-years {
   margin: 0.4rem 0 0.8rem;
