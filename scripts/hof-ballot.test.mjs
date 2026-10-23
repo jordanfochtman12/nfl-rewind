@@ -3,6 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createNewGame, playerHofScore } from "../src/lib/game/index.ts";
 import { coachHofEligible, playerHofEligible } from "../src/lib/game/hof.ts";
+import { gatherHof } from "../src/lib/game/events.ts";
 
 test("Hall of Fame scoring recognizes Pro Bowls and major position awards with diminishing returns", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 94 });
@@ -56,4 +57,51 @@ test("players need five seasons and a recognized postseason honor before Canton 
   assert.equal(playerHofEligible(save, player), false, "a five-year career still needs a recognized honor");
   player.honors.proBowl = [1966];
   assert.equal(playerHofEligible(save, player), true, "a past Pro Bowl completes the requirements");
+});
+
+test("an existing Hall ledger entry cannot consume a player or coach ballot slot", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 97 });
+  save.year = 1975;
+  const players = Object.values(save.players).slice(0, 6);
+  for (const [index, player] of players.entries()) {
+    Object.assign(player, {
+      historical: true,
+      retiredYear: 1969,
+      yearsPro: 20,
+      peakOvr: 99 - index,
+      ovr: 99 - index,
+      hofYear: undefined,
+      honors: { proBowl: [1970], allPro: [], awards: [], rings: [] },
+    });
+  }
+
+  const coaches = Object.values(save.coaches).slice(0, 3);
+  for (const [index, coach] of coaches.entries()) {
+    Object.assign(coach, {
+      retiredYear: 1969,
+      hofYear: undefined,
+      careerWins: 300 - index * 10,
+      careerLosses: 100,
+      careerTitles: 2,
+      careerBowls: 3,
+      yearsCoaching: 20,
+      peakOffense: 95,
+      peakDefense: 95,
+    });
+  }
+
+  const duplicatePlayer = players[0];
+  const duplicateCoach = coaches[0];
+  save.history.hof.push(
+    { playerId: duplicatePlayer.id, year: 1974, teamId: "pit", blurb: "Already in the ledger.", kind: "player" },
+    { coachId: duplicateCoach.id, year: 1974, teamId: "pit", blurb: "Already in the ledger.", kind: "coach" },
+  );
+
+  gatherHof(save);
+  assert.equal(save.pendingHof.length, 5, "all five open player slots go to eligible players");
+  assert.ok(!save.pendingHof.includes(duplicatePlayer.id), "a stale player copy cannot block a new inductee");
+  assert.ok(players.slice(1).every((player) => save.pendingHof.includes(player.id)));
+  assert.equal(save.pendingCoachHof.length, 2, "both open coach slots go to eligible coaches");
+  assert.ok(!save.pendingCoachHof.includes(duplicateCoach.id), "a stale coach copy cannot block a new inductee");
+  assert.ok(coaches.slice(1).every((coach) => save.pendingCoachHof.includes(coach.id)));
 });

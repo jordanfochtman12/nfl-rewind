@@ -399,10 +399,12 @@ export function resolveRetirement(save: DynastySave): void {
 }
 
 export function gatherHof(save: DynastySave): string[] {
-  const eligible = Object.values(save.players).filter((p) => playerHofEligible(save, p));
+  const enshrinedPlayers = new Set(save.history.hof.flatMap((member) => member.playerId ? [member.playerId] : []));
+  const eligible = Object.values(save.players).filter((p) => !enshrinedPlayers.has(p.id) && playerHofEligible(save, p));
   eligible.sort((a, b) => playerHofScore(save, b) - playerHofScore(save, a));
   save.pendingHof = eligible.slice(0, 5).map((p) => p.id);
-  const coaches = Object.values(save.coaches).filter((c) => coachHofEligible(save, c));
+  const enshrinedCoaches = new Set(save.history.hof.flatMap((member) => member.coachId ? [member.coachId] : []));
+  const coaches = Object.values(save.coaches).filter((c) => !enshrinedCoaches.has(c.id) && coachHofEligible(save, c));
   coaches.sort((a, b) => coachHofScore(b) - coachHofScore(a));
   save.pendingCoachHof = coaches.slice(0, 2).map((c) => c.id);
   return save.pendingHof;
