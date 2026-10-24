@@ -3430,6 +3430,157 @@ table tbody tr:hover {
   .k5-open-logo { padding: .35rem; }
   .k5-open-logo img { width: 48px; height: 48px; }
 }
+
+/* ---------- franchise command center: a live matchup, readable signals ----------
+   Upgrade the weekly front-office landing page with a field-side matchup plate and
+   tactile, club-lit data tiles. Keep the data and navigation unchanged. */
+.hq-section-heading {
+  position: relative;
+  border-bottom-color: color-mix(in srgb, var(--color-club) 52%, #ffffff1c);
+}
+.hq-section-heading::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  width: clamp(5rem, 14vw, 14rem);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--k5-cyan), #ffffff, var(--k5-cyan));
+  filter: drop-shadow(0 0 5px var(--k5-cyan));
+}
+.hq-season-tag {
+  padding: .42rem .65rem;
+  border: 1px solid #d7eaff24;
+  border-left: 2px solid var(--color-club-2);
+  background: linear-gradient(105deg, #172336d9, #080d16eF);
+  color: #dce7f5;
+  font: 800 .7rem/1.2 var(--font-display);
+  font-style: italic;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px #ffffff12, 0 8px 24px #0005;
+}
+.hq-metrics {
+  position: relative;
+  isolation: isolate;
+  border-color: #d7eaff2a;
+  box-shadow: inset 0 1px #ffffff1c, 0 18px 44px -30px #000;
+}
+.hq-metric {
+  min-width: 0;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.hq-metric::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(ellipse at 12% 0%, color-mix(in srgb, var(--color-club) 24%, transparent), transparent 64%);
+  transition: opacity .18s ease;
+  pointer-events: none;
+}
+.hq-metric::after {
+  height: 2px;
+  opacity: .7;
+  background: linear-gradient(90deg, var(--color-club), color-mix(in srgb, var(--color-club-2) 76%, transparent) 55%, transparent);
+}
+.hq-metric > svg {
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+  border: 1px solid #d7eaff23;
+  background: linear-gradient(145deg, #d8eaff15, #08101c99);
+  color: var(--color-club-2);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-club) 45%, transparent));
+}
+.hq-metric:hover,
+.hq-metric:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--color-club) 19%, #1b2637), #101722);
+  box-shadow: inset 0 1px #ffffff20, 0 10px 28px -20px var(--color-club);
+}
+.hq-metric:hover::before,
+.hq-metric:focus-visible::before { opacity: 1; }
+.hq-metric strong { letter-spacing: -.015em; text-shadow: 0 0 20px #d5edff18; }
+.hq-matchup {
+  position: relative;
+  isolation: isolate;
+  border-color: #d7eaff35;
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--color-club) 35%, transparent), transparent 56%),
+    linear-gradient(180deg, #050a12bd, #050810f2),
+    url("/art/stadium-arrival.webp") center 43% / cover no-repeat;
+  box-shadow: inset 0 1px #ffffff28, 0 24px 58px -34px #000, 0 0 34px -26px var(--color-club);
+}
+.hq-matchup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(105deg, transparent 30%, #ffffff0c 48%, transparent 66%),
+    radial-gradient(ellipse at 5% 50%, color-mix(in srgb, var(--color-club) 24%, transparent), transparent 56%);
+}
+.hq-matchup-club { text-shadow: 0 2px 12px #000; }
+.hq-matchup-club > div > img,
+.hq-matchup-club > div > span {
+  filter: drop-shadow(0 8px 18px #000c) drop-shadow(0 0 16px color-mix(in srgb, var(--color-club) 40%, transparent));
+}
+.hq-matchup-notes { background: linear-gradient(110deg, #0a1019a8, #05080ecf); }
+.hq-matchup-notes > div { position: relative; padding-left: 12px; }
+.hq-matchup-notes > div::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--color-club-2), transparent);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--color-club-2) 55%, transparent);
+}
+.hq-matchup-notes strong b { text-shadow: 0 0 12px #ffc62966; }
+.hq-bar { height: 6px; border: 1px solid #d7eaff12; background: linear-gradient(180deg, #26364b, #101824); }
+.hq-bar i { background: linear-gradient(90deg, color-mix(in srgb, var(--color-club) 84%, #ff5366), var(--color-club-2)); box-shadow: 0 0 12px color-mix(in srgb, var(--color-club) 48%, transparent); }
+.hq-form button {
+  position: relative;
+  min-height: 124px;
+  border: 1px solid #d7eaff14;
+  border-top-color: #d7eaff38;
+  background: linear-gradient(155deg, #1a2739, #0a1019 78%);
+  box-shadow: inset 0 1px #ffffff10, 0 9px 22px -20px #000;
+  transition: transform .16s ease, border-color .16s ease, background .16s ease;
+}
+.hq-form button:hover,
+.hq-form button:focus-visible {
+  transform: translateY(-2px);
+  border-color: #62e8ff70;
+  background: linear-gradient(155deg, #20344b, #0b121d 78%);
+}
+.hq-form button b.text-good { color: #54f3a0; text-shadow: 0 0 12px #22e27d55; }
+.hq-form button b.text-brick { color: #ff687c; text-shadow: 0 0 12px #e8102e55; }
+@media (max-width: 700px) {
+  .hq-season-tag { align-self: flex-start; }
+  .hq-matchup { background-position: 40% center; }
+  .hq-matchup-club { background: linear-gradient(90deg, #060a11d9, #060a1190); }
+  .hq-matchup-notes { background: #070b12e8; }
+  .hq-metric { min-height: 128px; }
+  .hq-metric:hover,
+  .hq-metric:focus-visible,
+  .hq-form button:hover,
+  .hq-form button:focus-visible { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hq-metric,
+  .hq-metric::before,
+  .hq-form button { transition: none !important; }
+  .hq-metric:hover,
+  .hq-form button:hover { transform: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .pc-nav-item { transition: none; }
 }
