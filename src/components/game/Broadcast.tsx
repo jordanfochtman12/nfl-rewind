@@ -159,8 +159,7 @@ export function MobileGameDock<T extends string>({
       }}
     >
       {quickTabs.map((tab) => (
-        <button key={tab.id} type="button" aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
-          <span aria-hidden>{tab.id === "primetime" ? "◉" : tab.id === "stats" ? "▤" : tab.id === "draft" ? "◆" : "⌂"}</span>
+        <button key={tab.id} type="button" aria-label={tab.id === "draft" && tab.label === "Draft Preview" ? "Open the draft preview" : `Open ${tab.label}`} aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
           {tab.label}
         </button>
       ))}
@@ -171,7 +170,7 @@ export function MobileGameDock<T extends string>({
         aria-controls="mobile-game-section-menu"
         onClick={() => setMoreOpen((open) => !open)}
       >
-        <span aria-hidden>☷</span> More
+        More
       </button>
       {moreOpen && (
         <div className="mobile-game-dock-menu" id="mobile-game-section-menu" aria-label="All game sections">
@@ -246,7 +245,7 @@ export function BottomLine({ save }: { save: DynastySave }) {
       </span>
     ));
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 flex h-9 items-stretch border-t border-white/15 bg-gradient-to-b from-[#1a1f2b] to-[#05070b] shadow-[0_-8px_24px_#000a]">
+    <div className="mobile-broadcast-ticker fixed inset-x-0 bottom-0 z-30 flex h-9 items-stretch border-t border-white/15 bg-gradient-to-b from-[#1a1f2b] to-[#05070b] shadow-[0_-8px_24px_#000a]">
       <div className="bx-primary relative z-10 flex shrink-0 items-center px-3 font-display text-[13px] font-extrabold italic tracking-wider">
         {label || "WIRE"}
       </div>

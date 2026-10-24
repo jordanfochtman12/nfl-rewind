@@ -105,7 +105,6 @@ import { useSettings } from "@/lib/settings-store";
 import { Tour } from "./Tour";
 import { WATCH_TOUR } from "./tours";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
-import { ModeMark } from "./ModeMark";
 
 // Presentation screens are split from the initial game shell and fetched when first opened.
 // This keeps the desktop/mobile startup path lean without changing their saved state.
@@ -174,7 +173,7 @@ function TitleScreen() {
       <div className="next-mode-heading"><span>CHOOSE YOUR BROADCAST</span><i /> <span>FOUR GAME MODES · RESUME YOUR SEASON</span></div>
       <div className="next-title-actions">
         <Btn kind="primary" className="next-mode-franchise" onClick={() => setScreen("select")}>
-          <span className="next-mode-title">Franchise Dynasty</span><span className="next-mode-detail">Run one club. Rewrite history.</span><ModeMark kind="franchise" />
+          <span className="next-mode-title">Franchise Dynasty</span><span className="next-mode-detail">Run one club. Rewrite history.</span>
         </Btn>
         <Btn
           className="next-mode-timeline"
@@ -187,7 +186,7 @@ function TitleScreen() {
           }}
           disabled={eraBuilding || engineLoading}
         >
-          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`}</span><span className="next-mode-detail">Let the league write a new history.</span><ModeMark kind="timeline" />
+          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`}</span><span className="next-mode-detail">Let the league write a new history.</span>
         </Btn>
         <Btn
           className="next-mode-record"
@@ -201,7 +200,7 @@ function TitleScreen() {
             newHistory().catch(() => setHistoryError("History mode's record couldn't be loaded. Check your connection and try again."));
           }}
         >
-          <span className="next-mode-title">{historyLoading ? "Loading the record…" : save && historyReady ? "Replace save and open The Record" : "The Record"}</span><span className="next-mode-detail">Relive the NFL, season by season.</span><ModeMark kind="record" />
+          <span className="next-mode-title">{historyLoading ? "Loading the record…" : save && historyReady ? "Replace save and open The Record" : "The Record"}</span><span className="next-mode-detail">Relive the NFL, season by season.</span>
         </Btn>
         <Btn
           className="next-mode-architect"
@@ -214,10 +213,10 @@ function TitleScreen() {
           }}
           disabled={eraBuilding || engineLoading}
         >
-          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && leagueReady ? "Replace save and open League Architect" : "League Architect"}</span><span className="next-mode-detail">Run every team. Shape every decision.</span><ModeMark kind="architect" />
+          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && leagueReady ? "Replace save and open League Architect" : "League Architect"}</span><span className="next-mode-detail">Run every team. Shape every decision.</span>
         </Btn>
         <Btn className="next-mode-continue" onClick={continueGame} disabled={!save}>
-          <span className="next-mode-title">Continue Franchise</span><span className="next-mode-detail">Pick up where your season left off.</span><ModeMark kind="continue" />
+          <span className="next-mode-title">Continue Franchise</span><span className="next-mode-detail">Pick up where your season left off.</span>
         </Btn>
       </div>
       {watchReady && save && (

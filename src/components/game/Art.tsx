@@ -8,7 +8,7 @@ const STILL_IMAGE: Record<Still, string> = {
   helmet: "/art/rewind-stadium-night.webp",
   primetime: "/art/primetime-studio.webp",
   office: "/art/primetime-studio.webp",
-  draft: "/art/draft-theater.webp",
+  draft: "/art/draft-preview-stage.png",
 };
 
 /** Photo-real broadcast stills replace the former block-and-grid vector backdrops. */

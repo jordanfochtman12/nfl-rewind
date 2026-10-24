@@ -76,9 +76,13 @@ export function DraftOpening({ onStart, onPreview }: { onStart: () => void; onPr
             </div>
           )}
         </div>
-        <button type="button" className="dn-open-preview" onClick={onPreview}>
-          <span><strong>Draft Preview Show</strong><small>See the full class, mock draft, board and storylines before the first pick.</small></span>
-          <span className="dn-open-preview-arrow" aria-hidden="true">↗</span>
+        <button type="button" className="dn-open-preview" onClick={onPreview} aria-label={`Watch the ${save.year} draft preview show`}>
+          <span className="dn-open-preview-copy">
+            <small className="dn-open-preview-kicker">LIVE SPECIAL · BEFORE PICK ONE</small>
+            <strong>Watch the Draft Preview</strong>
+            <span>Meet the class. Hear the debates. See the full mock draft and team needs.</span>
+          </span>
+          <span className="dn-open-preview-action"><span>ENTER THE SHOW</span><b aria-hidden="true">↗</b></span>
         </button>
     </NightOpening>
   );

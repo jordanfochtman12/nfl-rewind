@@ -9,7 +9,6 @@ import { emptySlot } from "@/lib/save-slots";
 import { NetworkBug } from "./Broadcast";
 import { SaveSlots } from "./SaveSlots";
 import { Btn, Logo } from "./chrome";
-import { ModeMark } from "./ModeMark";
 
 const START_YEARS = Array.from({ length: ROSTERS_LAST - 1966 + 1 }, (_, index) => 1966 + index);
 export function TitleScreen() {
@@ -86,7 +85,6 @@ export function TitleScreen() {
             <Btn kind="primary" className="next-mode-franchise" onClick={() => setScreen("select")}>
               <span className="next-mode-title">Franchise Dynasty</span>
               <span className="next-mode-detail">Run one club. Rewrite history.</span>
-              <ModeMark kind="franchise" />
             </Btn>
             <Btn
               className="next-mode-timeline"
@@ -111,7 +109,6 @@ export function TitleScreen() {
                         : `Alternate Timeline · ${startYear}`}
               </span>
               <span className="next-mode-detail">Let the league write a new history.</span>
-              <ModeMark kind="timeline" />
             </Btn>
             <Btn
               className="next-mode-record"
@@ -137,7 +134,6 @@ export function TitleScreen() {
                     : "The Record"}
               </span>
               <span className="next-mode-detail">Relive the NFL, season by season.</span>
-              <ModeMark kind="record" />
             </Btn>
             <Btn
               className="next-mode-architect"
@@ -160,12 +156,10 @@ export function TitleScreen() {
                       : "League Architect"}
               </span>
               <span className="next-mode-detail">Run every team. Shape every decision.</span>
-              <ModeMark kind="architect" />
             </Btn>
             <Btn className="next-mode-continue" onClick={continueGame} disabled={!save}>
               <span className="next-mode-title">Continue Franchise</span>
               <span className="next-mode-detail">Pick up where your season left off.</span>
-              <ModeMark kind="continue" />
             </Btn>
           </div>
           {watchReady && save && (

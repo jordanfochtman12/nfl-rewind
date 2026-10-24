@@ -69,6 +69,10 @@ export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn 
     return [p.heightIn ? formatHt(p.heightIn) : "", p.weight ? `${p.weight}` : "", p.forty != null ? p.forty.toFixed(2) : ""].filter(Boolean).join(" · ");
   };
   const started = save.draftPickIndex > 0;
+  const openDraftRoom = () => {
+    if (preDraft) step({});
+    setTab("draft");
+  };
 
   const segs: { id: string; title: string; node: ReactNode }[] = [];
 
@@ -365,7 +369,7 @@ export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn 
               {onReturn ? (
                 <Btn kind="primary" onClick={onReturn}>Return to draft room <span aria-hidden>▸</span></Btn>
               ) : (
-                <Btn kind="primary" onClick={() => preDraft ? step({}) : setTab("draft")}>
+                <Btn kind="primary" onClick={openDraftRoom}>
                   {preDraft ? "Open the draft room" : "To the draft room"} <span aria-hidden>▸</span>
                 </Btn>
               )}
@@ -387,7 +391,7 @@ export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn 
         {preDraft && (
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-5 sm:px-8">
             <p className="text-sm text-muted">The class is introduced. Your board and draft slot are ready.</p>
-            <Btn kind="primary" className="min-h-12 px-7 text-lg" onClick={() => step({})}>
+            <Btn kind="primary" className="min-h-12 px-7 text-lg" onClick={openDraftRoom}>
               Open the draft room <span aria-hidden>▸</span>
             </Btn>
           </div>

@@ -205,9 +205,9 @@ export function DraftNight() {
       tickerLabel="THE PICKS"
     >
     <div className="space-y-4">
-      {!showOpening && <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brass/30 bg-gradient-to-r from-[#17130c] to-[#0b0d12] px-4 py-3">
-        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Before the next pick</p><p className="mt-1 text-xs text-muted">Revisit the class, mock board and prospect storylines.</p></div>
-        <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch draft preview</Btn>
+      {!showOpening && <div className="dn-live-preview-rail">
+        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Draft preview · on demand</p><p className="mt-1 text-xs text-paper">Revisit the class, mock board and prospect storylines between picks.</p></div>
+        <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch Draft Preview</Btn>
       </div>}
       <TalksReminder />
       {announcer.controls}

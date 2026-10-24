@@ -1740,23 +1740,46 @@
 .dn-open-top b { display: block; font: 800 italic 18px/1.1 "Barlow Condensed", sans-serif; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dn-open-top small { font-size: 12px; color: #9fb3d6; }
 .dn-open-preview {
+  position: relative;
+  isolation: isolate;
   width: 100%;
-  display: flex;
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-top: 12px;
-  border: 1px solid #75dfff66;
-  padding: 12px 16px;
+  overflow: hidden;
+  border: 1px solid #acdfff77;
+  border-radius: 10px;
+  padding: 18px 22px;
   color: #f4f8ff;
-  background: linear-gradient(105deg, #10233acc, #09111de8);
+  background: linear-gradient(90deg, #06101bf5 0%, #071321dc 48%, #09132166 100%), url("/art/draft-preview-stage.png") center 42% / cover;
   text-align: left;
-  box-shadow: inset 0 1px #ffffff18, 0 8px 24px #0005;
+  box-shadow: inset 0 1px #ffffff28, 0 16px 38px #0008, 0 0 34px -20px #62dfff;
+  transition: border-color .2s ease, filter .2s ease, transform .2s ease, box-shadow .2s ease;
 }
-.dn-open-preview:hover, .dn-open-preview:focus-visible { border-color: #ffd06b; background: linear-gradient(105deg, #18314bcc, #111a28f2); outline: 2px solid #62e8ff; outline-offset: 2px; }
-.dn-open-preview strong { display: block; color: #ffd06b; font: 900 italic 18px/1.1 "Barlow Condensed", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
-.dn-open-preview small { display: block; margin-top: 4px; color: #c3d2e5; font-size: 12px; }
-.dn-open-preview-arrow { color: #62e8ff; font-size: 26px; }
+.dn-open-preview:hover, .dn-open-preview:focus-visible { border-color: #ffe08b; filter: brightness(1.13); transform: translateY(-2px); outline: 2px solid #62e8ff; outline-offset: 3px; box-shadow: inset 0 1px #ffffff35, 0 20px 48px #000a, 0 0 40px -14px #ffd06b; }
+.dn-open-preview-copy { display: grid; gap: 4px; min-width: 0; }
+.dn-open-preview-kicker { color: #80e4ff; font: 800 italic 11px/1 "Barlow Condensed", sans-serif; letter-spacing: .22em; }
+.dn-open-preview strong { display: block; color: #fff; font: 900 italic clamp(22px, 4vw, 34px)/1.05 "Barlow Condensed", sans-serif; letter-spacing: .035em; text-transform: uppercase; text-shadow: 0 3px 16px #000; }
+.dn-open-preview-copy > span { color: #d5e3f2; font-size: 13px; text-shadow: 0 2px 8px #000; }
+.dn-open-preview-action { display: flex; align-items: center; gap: 10px; color: #ffe29a; font: 900 italic 12px/1 "Barlow Condensed", sans-serif; letter-spacing: .15em; white-space: nowrap; text-shadow: 0 2px 8px #000; }
+.dn-open-preview-action b { font: 700 26px/1 "Barlow Condensed", sans-serif; }
+.dn-live-preview-rail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid #acdfff55;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #060b12fa 0%, #081321ec 55%, #08132166 100%), url("/art/draft-preview-stage.png") center 40% / cover;
+  box-shadow: inset 0 1px #ffffff18, 0 12px 28px #0007;
+}
+.dn-live-preview-rail > div { min-width: 0; }
+.dn-live-preview-rail .bx-btn { flex: none; }
 .dn-open-start {
   margin-top: 20px;
   width: 100%;
@@ -1787,6 +1810,10 @@
   .dn-open-veil { background: linear-gradient(180deg, #03060f00 0, #03060f00 180px, #03060f 300px); }
   .dn-open-grid, .dn-open-pair { grid-template-columns: minmax(0, 1fr); }
   .dn-open-wall { font-size: 44px; }
+  .dn-open-preview { grid-template-columns: minmax(0, 1fr); min-height: 124px; padding: 15px 16px; background-position: 62% 42%; }
+  .dn-open-preview-action { justify-self: start; padding-top: 8px; border-top: 1px solid #ffffff38; }
+  .dn-live-preview-rail { align-items: stretch; flex-direction: column; padding: 14px; }
+  .dn-live-preview-rail .bx-btn { width: 100%; min-height: 48px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dn-open-beams { animation: none; }
