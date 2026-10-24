@@ -17,7 +17,7 @@ export function scrambleSituationVolumeNormalizer(year: number): number {
 export function scrambleYardsAdjustment(year: number): number {
   if (year === 2017) return 0.55;
   if (year === 2018) return 0.45;
-  if (year === 2019) return 0.25;
+  if (year === 2019) return 0.15;
   if (year === 2020) return -0.05;
   if (year === 2021) return -0.25;
   if (year === 2022) return -0.4;
@@ -29,7 +29,7 @@ export function scrambleYardsAdjustment(year: number): number {
 export function designedQbRunYardsAdjustment(year: number): number {
   if (year === 2017) return 0.55;
   if (year === 2018) return 0.45;
-  if (year === 2019) return 0.25;
+  if (year === 2019) return 0.15;
   return 0;
 }
 

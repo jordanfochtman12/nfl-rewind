@@ -290,6 +290,18 @@ export const PLAYBOOKS: Record<string, Playbook> = {
   "glenn-aaron": { offense: "Pro set", defense: "Man-pressure 4-3", off: "multiple", def: "4-3", plan: even({ blitz: "heavy" }) },
   "coen": { offense: "Outside zone", defense: "4-3", off: "westcoast", def: "4-3", plan: pass() },
   "kellen-moore": { offense: "Shotgun spread", defense: "4-3", off: "vertical", def: "4-3", plan: pass() },
+
+  // Additional historical head-coach profiles.
+  "joe-schmidt-det": { offense: "Pro-set balance", defense: "Detroit 4-3", off: "multiple", def: "4-3", plan: even({ defensiveFocus: "run", blitz: "normal" }) },
+  "abe-gibron": { offense: "Power pro set", defense: "4-3", off: "smashmouth", def: "4-3", plan: run({ tempo: "chew", fourth: "conservative", redZone: "power" }) },
+  "john-ralston": { offense: "I-formation play-action", defense: "4-3", off: "smashmouth", def: "4-3", plan: run({ redZone: "power", fourth: "conservative" }) },
+  "nick-saban": { offense: "Pro-style control", defense: "Multiple 3-4 pressure", off: "multiple", def: "3-4", plan: even({ blitz: "heavy", defensiveFocus: "balanced" }) },
+  "joe-bugel": { offense: "Hogs power run / counter trey", defense: "Multiple front", off: "smashmouth", def: "3-4", plan: run({ tempo: "chew", redZone: "power" }) },
+  "chan-gailey": { offense: "Multiple spread and option", defense: "4-3", off: "multiple", def: "4-3", plan: even({ fourth: "aggressive", tempo: "hurry" }) },
+  "mike-munchak-hc": { offense: "Power and zone run / play-action", defense: "4-3", off: "smashmouth", def: "4-3", plan: run({ redZone: "power", fourth: "conservative" }) },
+  "dan-quinn": { offense: "Outside-zone play-action", defense: "4-3 Cover 3", off: "multiple", def: "4-3", plan: even({ defensiveFocus: "pass", blitz: "normal" }) },
+  "vic-fangio": { offense: "Multiple pro set", defense: "3-4 two-high zone disguise", off: "multiple", def: "3-4", plan: even({ blitz: "normal", defensiveFocus: "pass" }) },
+  "matt-eberflus": { offense: "Multiple pro set", defense: "Tampa 2 / 4-3", off: "multiple", def: "cover-2", plan: even({ blitz: "rare", defensiveFocus: "pass" }) },
 };
 
 /** The playbook a coach runs in a given season, with any later chapter applied. */

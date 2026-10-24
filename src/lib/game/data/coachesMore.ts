@@ -173,4 +173,19 @@ export const MORE_COACHES: CoachSeed[] = [
   { id: "glenn-aaron", name: "Aaron Glenn", teamId: null, yearAvail: 2025, offense: 66, defense: 86, born: 1972, leadership: 84, development: 80, evaluation: 76 },
   { id: "coen", name: "Liam Coen", teamId: null, yearAvail: 2025, offense: 86, defense: 70, born: 1985, leadership: 78, development: 80, evaluation: 76 },
   { id: "kellen-moore", name: "Kellen Moore", teamId: null, yearAvail: 2025, offense: 86, defense: 68, born: 1988, leadership: 76, development: 80, evaluation: 76 },
+
+  // ---- additional historically documented head coaches ----
+  // Ratings are game-simulation estimates, calibrated to each coach's NFL role/results;
+  // schemes and tendencies reflect the systems most associated with their HC tenures.
+  // Their simulated HC records start at first availability; do not leak eventual real-life W-L totals.
+  { id: "joe-schmidt-det", name: "Joe Schmidt", teamId: null, yearAvail: 1967, offense: 76, defense: 84, born: 1929, leadership: 82, development: 80, evaluation: 78 },
+  { id: "abe-gibron", name: "Abe Gibron", teamId: null, yearAvail: 1972, offense: 70, defense: 72, born: 1925, leadership: 72, development: 70, evaluation: 68 },
+  { id: "john-ralston", name: "John Ralston", teamId: null, yearAvail: 1972, offense: 76, defense: 78, born: 1927, leadership: 80, development: 78, evaluation: 76 },
+  { id: "nick-saban", name: "Nick Saban", teamId: null, yearAvail: 2005, offense: 76, defense: 86, born: 1951, leadership: 88, development: 88, evaluation: 88 },
+  { id: "joe-bugel", name: "Joe Bugel", teamId: null, yearAvail: 1990, offense: 82, defense: 74, born: 1940, leadership: 84, development: 90, evaluation: 80 },
+  { id: "chan-gailey", name: "Chan Gailey", teamId: null, yearAvail: 1998, offense: 82, defense: 72, born: 1952, leadership: 78, development: 80, evaluation: 78 },
+  { id: "mike-munchak-hc", name: "Mike Munchak", teamId: null, yearAvail: 2011, offense: 78, defense: 72, born: 1960, leadership: 82, development: 88, evaluation: 80 },
+  { id: "dan-quinn", name: "Dan Quinn", teamId: null, yearAvail: 2015, offense: 72, defense: 86, born: 1970, leadership: 86, development: 84, evaluation: 80 },
+  { id: "vic-fangio", name: "Vic Fangio", teamId: null, yearAvail: 2019, offense: 68, defense: 90, born: 1958, leadership: 78, development: 86, evaluation: 90 },
+  { id: "matt-eberflus", name: "Matt Eberflus", teamId: null, yearAvail: 2022, offense: 68, defense: 82, born: 1970, leadership: 76, development: 80, evaluation: 78 },
 ];

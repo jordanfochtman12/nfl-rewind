@@ -50,7 +50,7 @@ import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
 import { cancelSpeech, isSpeaking, speakLine, useTalking } from "@/lib/voice/speech";
-import { shouldHoldForNarration } from "@/lib/game/tvCountdown.ts";
+import { createTVAdvance, shouldHoldForNarration, tvMarkKey } from "@/lib/game/tvCountdown.ts";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -106,10 +106,10 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
     const historicalEpisode = ep && save.primetime?.year === y && !save.primetime?.predictions && !save.primetime?.power && !save.primetime?.outlook;
     if (historicalEpisode && !seen.has(ep.id)) return { k: "studio", key: ep.id, episode: ep };
     const markCard = (key: string, title: string, kicker: string, say: string, items: string[], seconds = 18): Stage =>
-      ({ ...(card(key, title, kicker, say, items, {}, seconds) as Extract<Stage, { k: "card" }>), mark: `${key}-${y}` });
+      ({ ...(card(key, title, kicker, say, items, {}, seconds) as Extract<Stage, { k: "card" }>), mark: tvMarkKey(key, y) });
     if (save.phase === "draft") {
-      const key = `record-draft-${y}`;
-      if (!seen.has(`${key}-${y}`)) {
+      const key = "record-draft";
+      if (!seen.has(tvMarkKey(key, y))) {
         const people = historyData().people;
         const picks = historyData().drafts(y).slice().sort((a, b) => a.round - b.round || a.pick - b.pick);
         const firstByLeague = y === 1966 ? ["nfl", "afl"].map((league) => picks.find((p) => p.league === league)) : [picks[0]];
@@ -132,8 +132,8 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
       return card("record-open-season", `Open the ${y} season`, "NEXT IN THE RECORD", `Continue into the real ${y} season. The league will be rebuilt from that year's historical rosters and schedule.`, [], {}, 5);
     }
     if (save.phase === "preseason") {
-      const key = `record-season-${y}`;
-      if (!seen.has(`${key}-${y}`)) {
+      const key = "record-season";
+      if (!seen.has(tvMarkKey(key, y))) {
         const previous = save.history.superBowls.at(-1);
         const rules = rulesTakingEffect(y);
         const items = [
@@ -498,7 +498,20 @@ function useCountdown(seconds: number, paused: boolean, onGo: () => void) {
   const [left, setLeft] = useState(seconds);
   const go = useRef(onGo);
   go.current = onGo;
-  const fired = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Manual Continue and the zero-second auto-advance must share one gate. Otherwise a tap
+  // that lands as the timer fires can advance twice (or leave a stale transition on screen).
+  const goNowRef = useRef<(() => void) | null>(null);
+  if (!goNowRef.current) {
+    goNowRef.current = createTVAdvance(
+      () => go.current(),
+      () => {
+        if (timer.current) clearTimeout(timer.current);
+        timer.current = null;
+      },
+    );
+  }
+  const goNow = goNowRef.current!;
   useEffect(() => {
     if (paused) return;
     if (left <= 0) {
@@ -506,25 +519,29 @@ function useCountdown(seconds: number, paused: boolean, onGo: () => void) {
       // used to cut him off mid-sentence. (A tap on the button still moves on at once.)
       let waited = 0;
       const fire = () => {
-        if (fired.current) return;
         if (isSpeaking() && shouldHoldForNarration(waited)) {
           waited += 300;
-          t = setTimeout(fire, 300);
+          timer.current = setTimeout(fire, 300);
           return;
         }
         // Speech synthesis can fail to deliver onend on mobile Safari. Never let a voice
         // session hold the whole historical broadcast after its card countdown has finished.
         if (isSpeaking()) cancelSpeech();
-        fired.current = true;
-        go.current();
+        goNow();
       };
-      let t = setTimeout(fire, 0);
-      return () => clearTimeout(t);
+      timer.current = setTimeout(fire, 0);
+      return () => {
+        if (timer.current) clearTimeout(timer.current);
+        timer.current = null;
+      };
     }
-    const t = setTimeout(() => setLeft((n) => n - 1), 1000);
-    return () => clearTimeout(t);
-  }, [left, paused]);
-  return left;
+    timer.current = setTimeout(() => setLeft((n) => n - 1), 1000);
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = null;
+    };
+  }, [left, paused, goNow]);
+  return { left, goNow };
 }
 
 function Countdown({ left, label, onGo }: { left: number; label: string; onGo: () => void }) {
@@ -553,7 +570,7 @@ function slateTitle(slate: GameResult[], fallback: string): string {
 }
 
 function Pregame({ save, slate, say, paused, onGo }: { save: DynastySave; slate: GameResult[]; say: (t: string) => void; paused: boolean; onGo: () => void }) {
-  const left = useCountdown(save.phase === "superBowl" ? 15 : 14, paused, onGo);
+  const { left, goNow } = useCountdown(save.phase === "superBowl" ? 15 : 14, paused, onGo);
   const played = Math.max(0, ...Object.values(save.teams).map((t) => t.wins + t.losses + t.ties));
   const featured = useMemo(
     () => slate.slice().sort((a, b) => featuredScore(save, b) - featuredScore(save, a) || a.id.localeCompare(b.id))[0],
@@ -578,7 +595,7 @@ function Pregame({ save, slate, say, paused, onGo }: { save: DynastySave; slate:
         <div className="relative space-y-3 px-5 py-6">
           <p className="font-display text-xs tracking-[0.4em] text-brass">PREGAME · {save.year}</p>
           <h2 className="font-display text-4xl sm:text-5xl">{title}</h2>
-          <Countdown left={left} label={save.phase === "superBowl" ? "Kick it off" : "Go to the whip-around"} onGo={onGo} />
+          <Countdown left={left} label={save.phase === "superBowl" ? "Kick it off" : "Go to the whip-around"} onGo={goNow} />
         </div>
       </section>
       <section className="rounded-xl border border-line bg-surface p-4">
@@ -602,7 +619,7 @@ function Pregame({ save, slate, say, paused, onGo }: { save: DynastySave; slate:
 }
 
 function Card({ stage, save, say, paused, onGo }: { stage: Extract<Stage, { k: "card" }>; save: DynastySave; say: (t: string) => void; paused: boolean; onGo: () => void }) {
-  const left = useCountdown(stage.seconds, paused, onGo);
+  const { left, goNow } = useCountdown(stage.seconds, paused, onGo);
   useEffect(() => {
     if (stage.say) say(stage.say);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -623,7 +640,7 @@ function Card({ stage, save, say, paused, onGo }: { stage: Extract<Stage, { k: "
             ))}
           </ul>
         )}
-        <Countdown left={left} label={stage.mark ? "Continue" : watchLabel(save)} onGo={onGo} />
+        <Countdown left={left} label={stage.mark ? "Continue" : watchLabel(save)} onGo={goNow} />
       </div>
     </section>
   );
@@ -635,7 +652,7 @@ const BULLETIN_BAR = { BREAKING: "BREAKING NEWS", REPORT: "REPORT · SOURCES", U
 function Bulletin({ item, save, say, paused, onDone }: { item: NewsItem; save: DynastySave; say: (t: string) => void; paused: boolean; onDone: () => void }) {
   const tag = newsTag(item);
   // Long enough to read the story; the host's read holds it past the countdown if it runs long.
-  const left = useCountdown(Math.max(9, Math.min(20, Math.round((item.headline.length + item.body.length) / 18))), paused, onDone);
+  const { left, goNow } = useCountdown(Math.max(9, Math.min(20, Math.round((item.headline.length + item.body.length) / 18))), paused, onDone);
   useEffect(() => {
     say(`${BULLETIN_LEAD[tag]} ${item.headline}. ${item.body}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -655,7 +672,7 @@ function Bulletin({ item, save, say, paused, onDone }: { item: NewsItem; save: D
         <div>
           <h2 className="font-display text-3xl sm:text-4xl">{item.headline}</h2>
           {item.body && <p className="mt-2 max-w-2xl text-paper">{item.body}</p>}
-          <Btn className="mt-4" onClick={onDone}>
+          <Btn className="mt-4" onClick={goNow}>
             Back to the broadcast
           </Btn>
         </div>
