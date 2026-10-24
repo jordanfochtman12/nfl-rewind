@@ -33,8 +33,16 @@ export function playerHofScore(save: DynastySave, p: Player): number {
   } else if (["LT", "LG", "C", "RG", "RT"].includes(p.pos)) {
     n += Math.min(16, (p.yearsPro ?? 0) * 0.7);
     if (peak >= 90) n += 8;
-  } else if (p.pos === "K" || p.pos === "P") {
+  } else if (p.pos === "K") {
     n += (c.fgMade ?? 0) * 0.04;
+    if (peak >= 88) n += 4;
+  } else if (p.pos === "P") {
+    // Punters were previously graded like kickers, so their field goals were always zero and
+    // the ballot ignored their actual career. Credit sustained workload and gross average with
+    // caps: volume matters, while a long career of merely average punts cannot dominate honors.
+    n += Math.min(14, (c.punts ?? 0) * 0.012);
+    const average = c.punts > 0 ? c.puntYds / c.punts : 0;
+    n += Math.min(6, Math.max(0, (average - 40) * 1.2));
     if (peak >= 88) n += 4;
   }
   let allPro = 0;

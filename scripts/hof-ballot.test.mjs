@@ -26,6 +26,20 @@ test("Hall of Fame scoring recognizes Pro Bowls and major position awards with d
   assert.ok(Math.abs(capDifference - (16 - 1.35)) < 1e-9, "Pro Bowl credit is capped");
 });
 
+test("Hall of Fame ballot evaluates punters on career workload and punt average", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 941 });
+  const punter = Object.values(save.players).find((p) => p.pos === "P");
+  assert.ok(punter, "the historical opening roster includes a punter");
+  const line = (punts, puntYds) => ({ year: 1965, gp: 16, passAtt: 0, passCmp: 0, passYds: 0, passTd: 0, passInt: 0, sacksThrown: 0, rushAtt: 0, rushYds: 0, rushTd: 0, rec: 0, recYds: 0, recTd: 0, tackles: 0, sacks: 0, ints: 0, ff: 0, fgAtt: 0, fgMade: 0, xpAtt: 0, xpMade: 0, twoPtMade: 0, safeties: 0, punts, puntYds, krYds: 0, prYds: 0 });
+  const candidate = { ...punter, historical: false, peakOvr: 84, ovr: 84, yearsPro: 12, career: [line(600, 24_000)], stats: {}, honors: { proBowl: [], allPro: [], awards: [], rings: [] } };
+  const baseline = playerHofScore(save, { ...candidate, career: [] });
+  const volume = playerHofScore(save, candidate);
+  const quality = playerHofScore(save, { ...candidate, career: [line(600, 27_000)] });
+
+  assert.ok(Math.abs(volume - baseline - 600 * 0.012) < 1e-9, "punt volume receives capped career production credit");
+  assert.equal(quality - volume, 6, "a 45-yard gross average receives the capped quality bonus");
+});
+
 test("a retired coach becomes Hall-eligible after one complete season out of football", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 95 });
   const coach = Object.values(save.coaches)[0];
