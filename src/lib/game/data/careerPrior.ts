@@ -1,11 +1,13 @@
 import type { Player, Pos, SeasonStats, TeamId } from "../types.ts";
 import { nameKey, nameSalt } from "../profiles.ts";
 import { CAREER_SEASONS, type CareerSeasonRow } from "./careerSeasons.ts";
+import { twoPointOk } from "../era.ts";
 
 function blank(year: number, teamId: TeamId | "two"): SeasonStats {
   return {
     year,
     teamId,
+    ...((twoPointOk(year, teamId as TeamId) || (year <= 1969 && teamId === "two")) ? { unknown: ["twoPtMade"] } : {}),
     gp: 0,
     passAtt: 0,
     passCmp: 0,
@@ -115,7 +117,11 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.krTd = 0;
   s.prTd = 0;
   s.twoPtMade = 0;
-  s.unknown = [...new Set([...(s.unknown ?? []), "defTd", "krTd", "prTd", "pts", "twoPtMade"])];
+  s.unknown = [...new Set([
+    ...(s.unknown ?? []),
+    "defTd", "krTd", "prTd", "pts",
+    ...(twoPointOk(row.y, row.t as TeamId) || (row.y <= 1969 && row.t === "two") ? ["twoPtMade"] : []),
+  ])];
   return s;
 }
 
