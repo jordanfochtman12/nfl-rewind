@@ -8,7 +8,7 @@
  */
 import type { DynastySave, Player, Pos, TeamId, TradePiece } from "./types.ts";
 import { allPicks } from "./draft.ts";
-import { playerName, rosterOf } from "./players.ts";
+import { playerName, rosterOf, starterCount } from "./players.ts";
 import { visibleOvr } from "./scout.ts";
 import { salaryCapFor, teamPayroll } from "./salary.ts";
 import { winPct } from "./standings.ts";
@@ -39,15 +39,14 @@ export function clubWindow(save: DynastySave, teamId: TeamId): ClubWindow {
   return s >= 0.6 ? "contend" : s <= 0.4 ? "rebuild" : "middle";
 }
 
-/** Starters a club plays at each spot, for judging whether a player fills a hole. */
-const STARTERS: Partial<Record<Pos, number>> = {
-  QB: 1, RB: 1, FB: 1, WR: 3, TE: 1, LT: 1, LG: 1, C: 1, RG: 1, RT: 1,
-  DE: 2, DT: 2, OLB: 2, MLB: 1, CB: 2, S: 2, K: 1, P: 1,
-};
-
 /** 0.6 (wouldn't play) to 1.5 (fills a real hole at a starting spot). */
 export function needFor(save: DynastySave, teamId: TeamId, p: Player): number {
-  const n = STARTERS[p.pos] ?? 1;
+  const team = save.teams[teamId];
+  // Value a player against the personnel this club's actual schemes put on the field.
+  // A smashmouth club runs one WR/two TEs/a fullback; a vertical club runs three WRs
+  // without a fullback. Static league-wide starter counts mispriced these positions.
+  const n = team ? starterCount(p.pos, team.offScheme, team.defScheme) : 1;
+  if (n === 0) return 0.6;
   const mine = rosterOf(save, teamId)
     .filter((x) => x.pos === p.pos && x.id !== p.id && !x.onIR)
     .map((x) => visibleOvr(x))
