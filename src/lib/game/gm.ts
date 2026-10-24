@@ -799,7 +799,10 @@ export function cpuMarket(save: DynastySave): number {
     const bids: { id: TeamId; score: number }[] = [];
     for (const id of clubs) {
       const t = save.teams[id]!;
-      const n = Math.max(1, starterCount(p.pos, t.offScheme, t.defScheme));
+      const n = starterCount(p.pos, t.offScheme, t.defScheme);
+      // A vertical offense has no fullback role. Do not turn the generic empty-position
+      // fallback into a starter need and spend cap/roster space on a player it won't use.
+      if (n === 0) continue;
       const at = activeRosterOf(save, id).filter((x) => x.pos === p.pos).sort((a, b) => b.ovr - a.ovr);
       const gain = p.ovr - (at[n - 1]?.ovr ?? 40);
       if (gain < 3 || !canAfford(save, id, salary)) continue;
