@@ -315,8 +315,8 @@ const opened = showOpened;
  * A night of television around any screen: the show open the first time it airs this session,
  * the crawl along the bottom. The content stays the screen's own.
  */
-export function NightShow({ id, show, title, sub, year, teamIds, ticker, tickerLabel, children }: { id: string; show: string; title: string; sub?: string; year: number; teamIds?: TeamId[]; ticker?: string[]; tickerLabel?: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(() => !opened.has(id));
+export function NightShow({ id, show, title, sub, year, teamIds, ticker, tickerLabel, children, showOpen = true }: { id: string; show: string; title: string; sub?: string; year: number; teamIds?: TeamId[]; ticker?: string[]; tickerLabel?: string; children: React.ReactNode; showOpen?: boolean }) {
+  const [open, setOpen] = useState(() => showOpen && !opened.has(id));
   const done = useCallback(() => {
     opened.add(id);
     setOpen(false);

@@ -315,10 +315,12 @@ export function WatchTV({
   tabs,
   active,
   onPick,
+  onDraftPreview,
 }: {
   tabs: { id: Tab; label: string }[];
   active: Tab;
   onPick: (id: Tab) => void;
+  onDraftPreview?: () => void;
 }) {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
@@ -483,7 +485,7 @@ export function WatchTV({
       )}
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {!settingsOpen && <Tour id="tv" steps={TV_TOUR} />}
-      <MobileGameDock className="mobile-game-dock-tv" tabs={tabs} active={active} onPick={onPick} />
+      <MobileGameDock className="mobile-game-dock-tv" tabs={tabs} active={active} onPick={onPick} onDraftPreview={onDraftPreview} />
     </div>
   );
 }

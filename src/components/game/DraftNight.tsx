@@ -99,7 +99,7 @@ function measLine(p: Player): string {
   return [ht, wt, fy].filter(Boolean).join(" · ");
 }
 
-export function DraftNight() {
+export function DraftNight({ forcePreview = false, onPreviewClose }: { forcePreview?: boolean; onPreviewClose?: () => void } = {}) {
   const announcer = useDraftAnnouncer();
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
@@ -179,8 +179,8 @@ export function DraftNight() {
   // After the last pick the room becomes the morning-after review, until next year's board.
   const hasRecap = save.draftBoard.some((pr) => pr.taken && save.players[pr.playerId]?.draftYear === save.year);
 
-  if (showingPreview) {
-    return <DraftPreviewShow onReturn={() => setShowingPreview(false)} />;
+  if (showingPreview || forcePreview) {
+    return <DraftPreviewShow onReturn={() => { setShowingPreview(false); onPreviewClose?.(); }} />;
   }
 
   if (save.phase !== "draft" && hasRecap) return <DraftRecapView />;
@@ -203,28 +203,26 @@ export function DraftNight() {
       year={save.year}
       ticker={ticker}
       tickerLabel="THE PICKS"
+      showOpen={false}
     >
     <div className="space-y-4">
       <div className="dn-live-preview-rail">
         <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Before the first pick · draft preview show</p><p className="mt-1 text-xs text-paper">Full mock draft, prospect profiles, position rankings and your war room.</p></div>
         <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch Draft Preview</Btn>
       </div>
+      {showOpening ? <DraftOpening
+        onStart={() => {
+          setOpening(false);
+          setPaused(false);
+        }}
+      /> : <>
       <TalksReminder />
       {announcer.controls}
       {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
         <ScoutDesk /><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades are your scouts' read, not the truth.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
         {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{posLabel(p)} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
       </section>}
-      {showOpening && (
-        <>
-          <DraftOpening
-            onStart={() => {
-              setOpening(false);
-              setPaused(false);
-            }}
-          />
-        </>
-      )}
+      </>}
       <section className={`relative overflow-hidden rounded-xl border border-brass/30 bg-studio ${showOpening ? "hidden" : ""}`}>
         <FilmStill still="draft" veil="full" />
         <div className="relative space-y-4 px-5 py-5">

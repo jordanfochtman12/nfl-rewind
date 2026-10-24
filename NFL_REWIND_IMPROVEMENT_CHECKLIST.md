@@ -40,6 +40,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - [ ] Audit every major screen and page for clear navigation, hierarchy, consistency, and useful information density.
 - [ ] Redesign the statistics screen for readable categories, persistent sorting, filters, and easy comparison on desktop and mobile.
 - [ ] Remove ticker/overlay collisions, clipping, sticky-control conflicts, and other scroll/focus problems across screen sizes.
+- [x] Restore mobile draft-room access to the draft preview and section navigation; remove the timed show-open layer that obscured draft controls. Focused draft tests pass; a hands-on post-change phone-browser check remains open.
 - [ ] Review front-end and back-end architecture for maintainability, save compatibility, responsive performance, and accessible interactions.
 
 ## Validation and release
@@ -54,6 +55,13 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Stats-board headers now sort every column, reverse on a second tap, announce sort state accessibly, and keep independent order per category; needs PC/mobile interaction review.
 - Stats search, roster-status, position, and club filters now run before cumulative season totals are aggregated, avoiding career/postseason summations for players excluded from the visible rows. This improves the late-dynasty filter path; interactive performance measurement remains part of the PC/mobile UI audit.
 - Pro Bowl cards now show every selection with a portrait, number, position, and current club; the existing full roster is scrollable on mobile and desktop.
+- Draft night now suppresses the generic timed show-open overlay that dimmed and blocked its controls. The full-screen draft opener remains in the room, the pre-draft show is explicitly reachable from the phone dock after the draft starts, and the phone dock retains a route to the other game sections. The general screen-by-screen overlay audit remains open.
+
+## Update (mobile draft access and draft-room legibility)
+
+Draft night no longer mounts the generic timed overlay over the active draft controls. The existing photographic draft opener stays inside the room, while a persistent phone-dock action returns to the draft preview after the draft begins; the same dock keeps the other sections accessible. The title-screen hero now uses a photographic stadium still rather than the earlier geometric artwork. The general visual pass is still open: inspect other screens, overlay collisions, and phone/desktop layouts in a running build.
+
+Validation: the focused draft-night, draft-announcer, pre-draft, and 1966-draft suites pass (19 tests); TypeScript and ESLint report no diagnostics; `git diff --check` passes. At a 390px viewport in an isolated local 2025 franchise, the draft opening remained visible, the timed overlay was absent, the dock preview button opened the Draft Preview show, Stats navigation worked, every section appeared in the Sections menu, and the page had no horizontal overflow or browser errors. The full Vercel build passed after adding the optional `NFL_REWIND_BUILD_OUTPUT` developer override and writing output to D:; the normal Vercel output path is unchanged. Build output on D: is local test data only. No deploy or GitHub push was performed.
 - Jersey integrity audit passes across eight league-wide historical and future checkpoints, including duplicate detection and pre-1973 grandfathering.
 - Hall ballot scoring now credits Pro Bowl seasons and major player awards, with capped/diminishing returns and protection from duplicate/future honor entries; selection logic and Canton presentation still need a full review.
 - Quarterback/backfield rushing calibration: `scripts/qb-rushing-calibration.test.mjs` passes against archived 2016 totals, and `scripts/rushing-realism.test.mjs` now passes the 1966 volume/efficiency and 1967–69 positional-share windows after year-specific early-era FB/QB tuning.

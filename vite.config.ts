@@ -200,7 +200,12 @@ export default defineConfig(({ command, isPreview }) => ({
     tanstackStart(),
     ...(command === "build" || isPreview
       ? [
-          nitro({ preset: "vercel" }),
+          nitro({
+            preset: "vercel",
+            config: process.env.NFL_REWIND_BUILD_OUTPUT
+              ? { output: { dir: process.env.NFL_REWIND_BUILD_OUTPUT } }
+              : undefined,
+          }),
         ]
       : []),
     viteReact(),

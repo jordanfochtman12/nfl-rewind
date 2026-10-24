@@ -141,15 +141,17 @@ export function MobileGameDock<T extends string>({
   tabs,
   active,
   onPick,
+  onDraftPreview,
   className = "",
 }: {
   tabs: { id: T; label: string }[];
   active: T;
   onPick: (id: T) => void;
+  onDraftPreview?: () => void;
   className?: string;
 }) {
   const [moreOpen, setMoreOpen] = useState(false);
-  const quickIds = ["primetime", "stats", "draft", "office"];
+  const quickIds = onDraftPreview ? ["primetime", "stats", "draft"] : ["primetime", "stats", "draft", "office"];
   const quickIcons = { primetime: TvMinimalPlay, stats: ChartNoAxesCombined, draft: ClipboardList, office: Building2 } as const;
   const sectionGroups = [
     { label: "Game day", ids: ["office", "primetime"] },
@@ -173,6 +175,9 @@ export function MobileGameDock<T extends string>({
           <Icon aria-hidden="true" /><span>{label}</span>
         </button>;
       })}
+      {onDraftPreview && <button key="draft-preview" type="button" aria-label="Open draft preview show" title="Draft preview show" onClick={onDraftPreview} className="mobile-game-dock-button mobile-game-dock-preview">
+        <TvMinimalPlay aria-hidden="true" /><span>Preview</span>
+      </button>}
       <button
         className={`mobile-game-dock-more ${moreOpen ? "is-open" : ""}`}
         type="button"

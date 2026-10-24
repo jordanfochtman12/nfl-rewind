@@ -2182,6 +2182,7 @@ function PlayShell() {
   const { save, tab, setTab, setTv, resign, exportJson } = useGameStore();
   const tv = useGameStore((s) => s.tv);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [draftPreviewOpen, setDraftPreviewOpen] = useState(false);
   const event = useMemo(() => {
     if (!save) return false;
     return (
@@ -2207,6 +2208,7 @@ function PlayShell() {
   const watch = !!save.sandbox && !save.leagueSandbox;
   const real = !!save.realHistory;
   const navigateToSection = (id: Tab) => {
+    setDraftPreviewOpen(false);
     setTab(id);
     setTv(false);
     // Reset after the section commit and again after native mobile selectors finish closing;
@@ -2218,6 +2220,11 @@ function PlayShell() {
     };
     window.requestAnimationFrame(resetScroll);
     window.setTimeout(resetScroll, 0);
+  };
+  const openDraftPreview = () => {
+    setTab("draft");
+    setTv(false);
+    setDraftPreviewOpen(true);
   };
   const tabs = real ? HISTORY_TABS : watch ? WATCH_TABS : TABS;
   const displayTabs = save.phase === "preDraft"
@@ -2245,6 +2252,7 @@ function PlayShell() {
             tabs={displayTabs}
             active={tab}
             onPick={navigateToSection}
+            onDraftPreview={save.phase === "draft" ? openDraftPreview : undefined}
           />
           <PlayerProfile />
           <TeamRosterModal />
@@ -2304,7 +2312,7 @@ function PlayShell() {
         {!watch && (event || showDraft || showFa) && tab === "office" && save.phase !== "relocation" ? <RelocationOffer standalone /> : null}
         {!watch && event && tab === "office" ? <EventPane /> : null}
         {tab === "primetime" && <PrimetimeShow />}
-        {showDraft && !real && (tab === "draft" || (!watch && tab === "office")) ? <DraftNight /> : null}
+        {showDraft && !real && (tab === "draft" || (!watch && tab === "office")) ? <DraftNight forcePreview={draftPreviewOpen} onPreviewClose={() => setDraftPreviewOpen(false)} /> : null}
         {!watch && showFa && tab === "office" ? <FreeAgencyNight /> : null}
         {!watch && showDeadline && tab === "office" ? <DeadlineNight /> : null}
         {!watch && !event && !showDraft && !showFa && !showDeadline && tab === "office" && <Office />}
@@ -2317,7 +2325,7 @@ function PlayShell() {
         {tab === "stats" && <Stats />}
         {tab === "draft" && real && <HistoryDraft />}
         {tab === "draft" && save.phase === "preDraft" && !real && <DraftPreview preDraft />}
-        {tab === "draft" && !showDraft && !real && save.phase !== "preDraft" && <DraftNight />}
+        {tab === "draft" && !showDraft && !real && save.phase !== "preDraft" && <DraftNight forcePreview={draftPreviewOpen} onPreviewClose={() => setDraftPreviewOpen(false)} />}
         {tab === "draft" && (!showDraft || real) && <DraftReportCard />}
         {tab === "history" && <History />}
         {tab === "superbowl" && <SuperBowlHistory />}
@@ -2338,7 +2346,7 @@ function PlayShell() {
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {watch && !real && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
-      <MobileGameDock tabs={displayTabs} active={tab} onPick={navigateToSection} />
+      <MobileGameDock tabs={displayTabs} active={tab} onPick={navigateToSection} onDraftPreview={save.phase === "draft" ? openDraftPreview : undefined} />
     </ClubDesk>
     )}
     </DraftAnnouncerProvider>

@@ -3505,22 +3505,22 @@ table tbody tr:hover {
   .mobile-section-picker select:focus-visible { outline: 2px solid #62e8ff; outline-offset: 2px; }
   .mobile-game-dock {
     position: fixed;
-    z-index: 60;
+    z-index: 120;
     inset: auto 0 0 0;
     isolation: isolate;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 4px;
-    padding: 7px max(8px, env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+    padding: 9px max(8px, env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
     border-top: 1px solid #c7dcf03b;
     border-bottom: 1px solid #ffffff10;
-    background: linear-gradient(180deg, #111b2aF5, #060a11F8);
-    box-shadow: 0 -10px 32px #000b, inset 0 1px #ffffff12;
+    background: linear-gradient(180deg, #16243afc, #05080efc);
+    box-shadow: 0 -12px 38px #000e, inset 0 1px #ffffff20;
     backdrop-filter: blur(18px);
   }
   .mobile-game-dock-button, .mobile-game-dock-more {
     min-width: 0;
-    min-height: 48px;
+    min-height: 54px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3529,7 +3529,7 @@ table tbody tr:hover {
     border: 1px solid transparent;
     color: #aebbd0;
     background: transparent;
-    font: 800 10px var(--font-display);
+    font: 900 11px var(--font-display);
     letter-spacing: .04em;
     text-transform: uppercase;
   }
@@ -3620,9 +3620,9 @@ table tbody tr:hover {
   .mobile-broadcast-ticker { bottom: calc(62px + env(safe-area-inset-bottom)); }
 }
 @media (max-width: 420px) {
-  .mobile-game-dock { gap: 2px; }
-  .mobile-game-dock-button, .mobile-game-dock-more { font-size: 9px; line-height: 1.05; flex-direction: column; gap: 2px; }
-  .mobile-game-dock-button svg, .mobile-game-dock-more svg { width: 17px; height: 17px; }
+  .mobile-game-dock { gap: 3px; }
+  .mobile-game-dock-button, .mobile-game-dock-more { font-size: 10px; line-height: 1.05; flex-direction: column; gap: 3px; }
+  .mobile-game-dock-button svg, .mobile-game-dock-more svg { width: 19px; height: 19px; }
   .mobile-game-dock-button { white-space: nowrap; }
 }
 @media (max-width: 1099px) {

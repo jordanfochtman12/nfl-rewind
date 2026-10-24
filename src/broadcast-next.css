@@ -45,7 +45,7 @@
   position: absolute;
   z-index: -2;
   inset: 0;
-  background: url("/art/title-stadium-cinematic.webp") 58% center / cover no-repeat;
+  background: url("/art/title-stadium-v2.webp") 58% center / cover no-repeat;
 }
 .next-title-scene::after {
   content: "";

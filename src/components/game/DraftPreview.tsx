@@ -401,7 +401,7 @@ export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn 
   );
   if (embedded) return body;
   return (
-    <NightShow id={`draft-preview-${save.year}`} show={preDraft ? "PRE-DRAFT SPECIAL" : "DRAFT PREVIEW SPECIAL"} title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK">
+    <NightShow id={`draft-preview-${save.year}`} show={preDraft ? "PRE-DRAFT SPECIAL" : "DRAFT PREVIEW SPECIAL"} title={`The ${save.year} Draft`} sub="The board, the needs, the mock" year={save.year} ticker={mockTicker} tickerLabel="THE MOCK" showOpen={false}>
       {body}
     </NightShow>
   );
