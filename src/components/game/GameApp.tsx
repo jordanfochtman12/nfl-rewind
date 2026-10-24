@@ -68,6 +68,7 @@ import {
   posLabel,
 } from "@/lib/game";
 import { useGameStore, type Tab } from "@/lib/game-store";
+import { matchesStatPlayerFilters, type StatPositionFilter } from "@/lib/game/statsView.ts";
 import { MarketDesk } from "./MarketDesk";
 import { CoachingTrees } from "./CoachingTrees";
 import { HotNames } from "./HotNames";
@@ -1391,7 +1392,7 @@ function Schedule() {
 function Stats() {
   const save = useGameStore((s) => s.save)!;
   const sortBy = useSettings((s) => s.statBoardSort);
-  const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
+  const [posFilter, setPosFilter] = useState<StatPositionFilter>("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
   const [boardFilter, setBoardFilter] = useState<"ALL" | "Passing" | "Rushing" | "Receiving" | "Defense" | "Kicking" | "Punting">("ALL");
   const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
@@ -1407,22 +1408,20 @@ function Stats() {
     ),
     [save.players, save.year],
   );
-  const inPos = (p: Player) => {
-    if (posFilter === "ALL") return true;
-    if (posFilter === "OL") return ["LT", "LG", "C", "RG", "RT"].includes(p.pos);
-    if (posFilter === "DL") return p.pos === "DE" || p.pos === "DT";
-    if (posFilter === "LB") return p.pos === "OLB" || p.pos === "MLB";
-    if (posFilter === "DB") return p.pos === "CB" || p.pos === "S";
-    return p.pos === posFilter;
-  };
-
   const playerQuery = search.trim().toLowerCase();
-  // Career totals fold every season line for a player. Cache those costly lines separately
-  // from the interactive filters so typing, sorting, or switching team/position doesn't fold
-  // the entire historical league again. cloneSave supplies a fresh player map when stats change.
+  // Apply inexpensive filters first so a searched or position-filtered career board only folds
+  // the matching players' season lines. cloneSave supplies a fresh player map when stats change.
+  const candidates = useMemo(() => Object.values(save.players).filter((p) => matchesStatPlayerFilters(p, {
+    query: playerQuery,
+    position: posFilter,
+    team: teamFilter,
+    userTeamId: save.userTeamId,
+    careerScope,
+    status,
+  })), [save.players, playerQuery, posFilter, teamFilter, save.userTeamId, careerScope, status]);
   const scopedRows = useMemo(() => {
     const rows: { p: Player; s: SeasonStats }[] = [];
-    for (const p of Object.values(save.players)) {
+    for (const p of candidates) {
       const s = scope === "regular"
         ? p.stats[save.year]
         : scope === "career"
@@ -1437,16 +1436,8 @@ function Stats() {
       if (hasSeasonWork(s)) rows.push({ p, s: s! });
     }
     return rows;
-  }, [save.players, save.year, save.startingYear, poYear, scope]);
-  const allRows = scopedRows.filter(({ p }) => {
-    if (playerQuery && !playerName(p).toLowerCase().includes(playerQuery)) return false;
-    const retired = p.teamId === "retired" || p.teamId === "hof";
-    if (careerScope && ((status === "active" && retired) || (status === "retired" && !retired))) return false;
-    if (!inPos(p)) return false;
-    if (teamFilter === "mine") return p.teamId === save.userTeamId;
-    if (teamFilter !== "ALL") return p.teamId === teamFilter;
-    return true;
-  });
+  }, [candidates, save.year, save.startingYear, poYear, scope]);
+  const allRows = scopedRows;
 
   const sortRows = (rows: typeof allRows, group: ReturnType<typeof statGroup>, board: string, pos: Pos) => {
     const selected = sortBy[board];
@@ -1486,7 +1477,7 @@ function Stats() {
     return rows.slice().sort((a, b) => score(b.s) - score(a.s)).slice(0, 40);
   };
 
-  const filters: (Pos | "ALL" | "OL" | "DL" | "LB" | "DB")[] = [
+  const filters: StatPositionFilter[] = [
     "ALL",
     "QB",
     "RB",
@@ -1500,7 +1491,7 @@ function Stats() {
     "P",
   ];
 
-  const samplePos = (pos: Pos | "ALL" | "OL" | "DL" | "LB" | "DB"): Pos => {
+  const samplePos = (pos: StatPositionFilter): Pos => {
     if (pos === "ALL") return "QB";
     if (pos === "OL") return "C";
     if (pos === "DL") return "DE";

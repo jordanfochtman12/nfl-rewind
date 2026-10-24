@@ -53,7 +53,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Super Bowl podium uniqueness: implemented in `src/lib/game/presentation.ts`; `scripts/broadcast-desk.test.mjs` passes.
 - RB3 workload rotation: implemented in `src/lib/game/sim.ts`; `scripts/substitution-rotation.test.mjs` and the historical rushing calibration pass.
 - Stats-board headers now sort every column, reverse on a second tap, announce sort state accessibly, and keep independent order per category; needs PC/mobile interaction review.
-- Stats search, roster-status, position, and club filters now run before cumulative season totals are aggregated, avoiding career/postseason summations for players excluded from the visible rows. This improves the late-dynasty filter path; interactive performance measurement remains part of the PC/mobile UI audit.
+- Stats search, roster-status, position, and club filters now run before cumulative season totals are aggregated, avoiding career/postseason summations for players excluded from the visible rows. `scripts/stats-view.test.mjs` covers the filter logic; interactive performance measurement remains part of the PC/mobile UI audit.
 - Pro Bowl cards now show every selection with a portrait, number, position, and current club; the existing full roster is scrollable on mobile and desktop.
 - Draft night now suppresses the generic timed show-open overlay that dimmed and blocked its controls. The full-screen draft opener remains in the room, the pre-draft show is explicitly reachable from the phone dock after the draft starts, and the phone dock retains a route to the other game sections. The general screen-by-screen overlay audit remains open.
 

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { careerHeadlines, colsForFamily, familiesOf, hasSeasonWork } from "../src/lib/game/statsView.ts";
+import { careerHeadlines, colsForFamily, familiesOf, hasSeasonWork, matchesStatPlayerFilters } from "../src/lib/game/statsView.ts";
 import { emptyStats } from "../src/lib/game/players.ts";
 import { scoring } from "../src/lib/game/statsView.ts";
 
@@ -13,6 +13,19 @@ test("known zero stats display as zero instead of looking unrecorded", () => {
   assert.equal(value("rush", "rec", line), 0);
   assert.equal(value("rush", "kr", line), 0);
   assert.equal(value("ret", "ret", line), "—", "combined return yards stay blank when there were no returns");
+});
+
+test("stats filters select matching players before career totals are folded", () => {
+  const player = { firstName: "Franco", lastName: "Harris", pos: "RB", teamId: "pit" };
+  const filters = { query: "franco", position: "RB", team: "mine", userTeamId: "pit", careerScope: true, status: "active" };
+  assert.equal(matchesStatPlayerFilters(player, filters), true);
+  assert.equal(matchesStatPlayerFilters(player, { ...filters, query: "bradshaw" }), false);
+  assert.equal(matchesStatPlayerFilters(player, { ...filters, position: "WR" }), false);
+  assert.equal(matchesStatPlayerFilters(player, { ...filters, team: "chi" }), false);
+  assert.equal(matchesStatPlayerFilters({ ...player, teamId: "retired" }, filters), false);
+  assert.equal(matchesStatPlayerFilters({ ...player, teamId: "retired" }, { ...filters, status: "retired" }), false,
+    "the mine-club filter still selects current club membership, even on career totals");
+  assert.equal(matchesStatPlayerFilters({ ...player, teamId: "retired" }, { ...filters, team: "ALL", status: "retired" }), true);
 });
 
 test("historical data gaps remain explicit em dashes", () => {

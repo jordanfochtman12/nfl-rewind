@@ -5,6 +5,32 @@ import { hasCompleteScoringPoints, individualScoringPoints } from "./statRules.t
 
 export type StatCol = { key: string; label: string; of?: (s: SeasonStats) => string | number };
 export type StatFamily = "pass" | "rush" | "rec" | "ol" | "def" | "k" | "p" | "ret";
+export type StatPositionFilter = Pos | "ALL" | "OL" | "DL" | "LB" | "DB";
+
+export interface StatPlayerFilters {
+  query: string;
+  position: StatPositionFilter;
+  team: TeamId | "ALL" | "mine";
+  userTeamId: TeamId;
+  careerScope: boolean;
+  status: "all" | "active" | "retired";
+}
+
+/** Apply cheap identity and roster filters before folding season lines into career totals. */
+export function matchesStatPlayerFilters(p: Player, filters: StatPlayerFilters): boolean {
+  if (filters.query && `${p.firstName} ${p.lastName}`.toLowerCase().indexOf(filters.query) < 0) return false;
+  const retired = p.teamId === "retired" || p.teamId === "hof";
+  if (filters.careerScope && ((filters.status === "active" && retired) || (filters.status === "retired" && !retired))) return false;
+  const position = filters.position;
+  if (position === "OL" && !["LT", "LG", "C", "RG", "RT"].includes(p.pos)) return false;
+  if (position === "DL" && p.pos !== "DE" && p.pos !== "DT") return false;
+  if (position === "LB" && p.pos !== "OLB" && p.pos !== "MLB") return false;
+  if (position === "DB" && p.pos !== "CB" && p.pos !== "S") return false;
+  if (position !== "ALL" && !["OL", "DL", "LB", "DB"].includes(position) && p.pos !== position) return false;
+  if (filters.team === "mine") return p.teamId === filters.userTeamId;
+  if (filters.team !== "ALL") return p.teamId === filters.team;
+  return true;
+}
 
 export function pct(n: number, d: number): string {
   if (!d) return "—";
