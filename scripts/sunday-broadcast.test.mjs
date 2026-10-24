@@ -8,15 +8,17 @@ import { careerTotals, playoffTotals } from "../src/lib/game/leaders.ts";
 import { emptyStats } from "../src/lib/game/players.ts";
 import { boothLine } from "../src/lib/game/commentary.ts";
 
-test("cumulative careers count each season once, include live totals, and retain retired players", () => {
+test("cumulative careers count each season once, prefer current lines and keep their stat completeness", () => {
   const prior={...emptyStats(1965,"gnb"),gp:14,passAtt:100,passCmp:50,passYds:1000,passTd:10};
-  const archived={...emptyStats(1966,"gnb"),gp:1,passAtt:10,passCmp:5,passYds:100,passTd:1};
-  const current={...archived,gp:2,passAtt:30,passCmp:20,passYds:350,passTd:3};
+  const archived={...emptyStats(1966,"gnb"),gp:1,passAtt:10,passCmp:5,passYds:100,passTd:1,twoPtMade:0,unknown:["twoPtMade"]};
+  const current={...archived,gp:2,passAtt:30,passCmp:20,passYds:350,passTd:3,twoPtMade:1,unknown:undefined};
   const future={...emptyStats(1967,"chi"),gp:1,passYds:50};
   const player={teamId:"retired",career:[prior,archived],stats:{1966:current,1967:future},playoffStats:{1966:{...emptyStats(1966,"gnb"),gp:1,passYds:200}}};
   const snapshot=JSON.stringify(player);
   const full=careerTotals(player,{throughYear:1966});
   assert.equal(full.passYds,1350); assert.equal(full.gp,16); assert.equal(full.passTd,13);
+  assert.equal(full.twoPtMade,1);
+  assert.ok(!full.unknown?.includes("twoPtMade"), "a stale archival unknown flag cannot hide a known current-year stat");
   const dynasty=careerTotals(player,{fromYear:1966,throughYear:1966});
   assert.equal(dynasty.passYds,350); assert.equal(dynasty.passCmp,20); assert.equal(dynasty.passAtt,30);
   assert.equal(playoffTotals(player).passYds,200);

@@ -58,7 +58,14 @@ export function seasonLeaders(save: DynastySave) {
 }
 
 export function careerTotals(p: Player, range?: { fromYear?: number; throughYear?: number }): SeasonStats {
-  return sumStats(p, [...Object.values(p.stats), ...(p.career ?? [])].filter(s => s.year >= (range?.fromYear ?? 0) && s.year <= (range?.throughYear ?? Infinity)));
+  // A completed/live dynasty row supersedes its archival career copy for the same year.
+  // Deduplicate before summing so stale `unknown` markers cannot survive from the copy.
+  const byYear = new Map<number, SeasonStats>();
+  for (const line of p.career ?? []) byYear.set(line.year, line);
+  for (const line of Object.values(p.stats)) byYear.set(line.year, line);
+  const from = range?.fromYear ?? 0;
+  const through = range?.throughYear ?? Infinity;
+  return sumStats(p, [...byYear.values()].filter((s) => s.year >= from && s.year <= through));
 }
 
 /** Career postseason totals. */
