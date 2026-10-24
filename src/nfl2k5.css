@@ -3248,3 +3248,188 @@ table tbody tr:hover {
   object-position: center 15%;
   filter: none !important;
 }
+
+/* ---------- broadcast slate + game-day command rail ----------
+   Give every franchise page a readable, club-aware on-air slate. Keep the treatment
+   lightweight so the historical broadcast footage and event cards remain the focus. */
+.pc-game-layout {
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: clamp(22px, 2vw, 42px);
+  width: min(96vw, 2600px);
+  padding-top: clamp(18px, 2vw, 34px);
+}
+.pc-game-sidebar {
+  top: 94px;
+  max-height: calc(100dvh - 112px);
+  scrollbar-color: #52657e transparent;
+}
+.pc-nav {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c7dcf028;
+  border-top: 2px solid var(--color-club);
+  background:
+    linear-gradient(145deg, #1a2638e8, #0a0f19f5 40%, #060910fa),
+    #070b12;
+  box-shadow: inset 0 1px #ffffff20, 0 18px 46px #0007, 0 0 34px -26px var(--color-club);
+}
+.pc-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #ecf6ff9c 45%, #62e8ff82 70%, transparent);
+}
+.pc-nav-group { padding: 13px 10px 9px; }
+.pc-nav-group + .pc-nav-group { border-top-color: #b8d8f21c; }
+.pc-nav-group > p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8fa5c0;
+  font-size: 10px;
+  letter-spacing: .2em;
+}
+.pc-nav-group > p::before {
+  content: "";
+  width: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-club), transparent);
+}
+.pc-nav-item {
+  min-height: 39px;
+  border-radius: 2px;
+  font-size: 13px;
+}
+.pc-nav-item.is-active {
+  border-color: color-mix(in srgb, var(--color-club) 38%, #ffffff14);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--color-club) 30%, transparent), transparent 85%),
+    linear-gradient(90deg, #172235, #0e1521);
+  box-shadow: inset 3px 0 var(--color-club-2), inset 0 1px #ffffff13, 0 0 22px -14px var(--color-club);
+}
+.pc-nav-season {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-club) 42%, #ffffff16);
+  border-top: 2px solid var(--color-club-2);
+  background:
+    linear-gradient(115deg, color-mix(in srgb, var(--color-club) 22%, transparent), transparent 68%),
+    linear-gradient(145deg, #151f2f, #080d15);
+  box-shadow: inset 0 1px #ffffff18, 0 8px 24px #0004;
+}
+.pc-game-stage {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+.pc-game-stage::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1rem -1.5rem auto;
+  height: 25rem;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 52% 0%, color-mix(in srgb, var(--color-club) 12%, transparent), transparent 68%),
+    linear-gradient(180deg, #8bdcff05, transparent);
+}
+.pc-broadcast-content {
+  padding: 14px 8px 104px;
+}
+.k5-open {
+  min-height: clamp(8.25rem, 13vw, 12rem);
+  padding: clamp(1rem, 2vw, 1.75rem) clamp(1.15rem, 2.4vw, 2.3rem);
+  border-color: #c5ddf03b;
+  box-shadow: inset 0 1px 0 #ffffff24, inset 0 0 38px #6ebfff0a, 0 22px 52px -34px #000;
+}
+.k5-open-bg {
+  background:
+    linear-gradient(90deg, #03050af7 0%, #03050ad9 32%, #03050a80 64%, color-mix(in srgb, var(--club) 62%, transparent) 100%),
+    linear-gradient(0deg, #03050a66, transparent 60%),
+    url("/art/stadium-arrival.webp") center 42% / cover no-repeat;
+}
+.k5-open-copy { display: grid; gap: .5rem; }
+.k5-open-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .42rem;
+  color: #c1cede;
+  font: 800 .66rem/1 var(--font-display);
+  font-style: italic;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.k5-open-meta > span {
+  min-height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .55rem;
+  border: 1px solid #d7eaff26;
+  background: #07101dc9;
+  box-shadow: inset 0 1px #ffffff12;
+}
+.k5-open-meta .k5-open-mode {
+  color: white;
+  border-color: #ff385a66;
+  background: linear-gradient(180deg, #f62a49, #a90720);
+}
+.k5-open-meta .k5-open-week {
+  color: #fff0b8;
+  border-color: #ffc62952;
+}
+.k5-open-week i {
+  width: 5px;
+  height: 5px;
+  margin-right: .45rem;
+  background: #ffc629;
+  box-shadow: 0 0 9px #ffc629a8;
+}
+.k5-open-title {
+  margin-top: 0;
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  letter-spacing: -.015em;
+}
+.k5-open-logo {
+  padding: .55rem;
+  border: 1px solid #e5f3ff36;
+  background: linear-gradient(145deg, #152238c9, #050a12c7);
+  box-shadow: inset 0 1px #ffffff2b, 0 12px 30px #0008, 0 0 28px -18px var(--club);
+  backdrop-filter: blur(8px);
+}
+
+@media (min-width: 3840px) {
+  .pc-game-layout { width: min(94vw, 6200px); }
+  .pc-game-layout { grid-template-columns: minmax(300px, 420px) minmax(0, 1fr); gap: clamp(40px, 1.4vw, 90px); }
+  .pc-game-sidebar { top: 112px; }
+  .pc-nav-item { min-height: 54px; font-size: 19px; }
+  .pc-nav-group > p { font-size: 13px; }
+  .k5-open-meta { font-size: 1rem; }
+}
+@media (max-width: 1099px) {
+  .pc-game-layout { width: 100%; }
+  .pc-nav {
+    border-top-width: 1px;
+    background: linear-gradient(120deg, #111d2d, #070b12 72%);
+  }
+  .pc-nav-select { min-height: 60px; }
+  .pc-nav-select select {
+    border-color: #d2e4f12d;
+    border-left: 3px solid var(--color-club);
+    background: linear-gradient(100deg, #142238, #090e17);
+  }
+  .pc-broadcast-content { padding: 12px 0 96px; }
+}
+@media (max-width: 600px) {
+  .k5-open { min-height: 7rem; gap: .6rem; padding: .85rem .95rem; }
+  .k5-open-meta { gap: .3rem; font-size: .57rem; letter-spacing: .1em; }
+  .k5-open-meta > span { min-height: 1.25rem; padding: .18rem .4rem; }
+  .k5-open-title { font-size: clamp(2rem, 9vw, 3rem); }
+  .k5-open-logo { padding: .35rem; }
+  .k5-open-logo img { width: 48px; height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-nav-item { transition: none; }
+}

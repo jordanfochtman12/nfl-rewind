@@ -2340,9 +2340,11 @@ function ScreenOpen({ kicker, title, year, week, club }: { kicker: string; title
     <header className="k5-open" style={{ "--club": ink.primary } as CSSProperties}>
       <div className="k5-open-bg" aria-hidden />
       <div className="k5-open-copy">
-        <p className="k5-open-kicker">
-          <span>{kicker}</span> {year} SEASON · {week}
-        </p>
+        <div className="k5-open-meta" aria-label={`${kicker}, ${year} season, ${week}`}>
+          <span className="k5-open-mode">{kicker}</span>
+          <span className="k5-open-season">{year} SEASON</span>
+          <span className="k5-open-week"><i aria-hidden="true" />{week}</span>
+        </div>
         <h2 className="k5-open-title">{title}</h2>
       </div>
       <span className="k5-open-logo" aria-hidden>
