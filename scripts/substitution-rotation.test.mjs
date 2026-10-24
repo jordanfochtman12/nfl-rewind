@@ -18,6 +18,7 @@ import {
   canChangeDefensePersonnel,
   adaptiveDefensiveFocus,
   usesNickelPersonnel,
+  hasNickelPersonnel,
 } from "../src/lib/game/index.ts";
 
 test("base and nickel fronts use 11 defenders across 4-3 and 3-4 schemes", () => {
@@ -32,6 +33,8 @@ test("base and nickel fronts use 11 defenders across 4-3 and 3-4 schemes", () =>
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
   const base = teamUnits(save, "pit");
   const nickel = teamUnits(save, "pit", undefined, true);
+  assert.equal(hasNickelPersonnel(base), false, "the two-corner base package does not receive nickel tackle calibration");
+  assert.equal(hasNickelPersonnel(nickel), true, "the three-corner nickel package enables nickel tackle calibration");
   assert.equal(base.db.length, 4);
   assert.equal(base.dl.length + base.lb.length + base.db.length, 11);
   assert.equal(base.lb.length, 3);
@@ -52,6 +55,7 @@ test("base and nickel fronts use 11 defenders across 4-3 and 3-4 schemes", () =>
   assert.equal(nickel34.lb.length, 3);
   assert.equal(nickel34.db.length, 5);
   assert.equal(nickel34.dl.length + nickel34.lb.length + nickel34.db.length, 11);
+  assert.equal(hasNickelPersonnel(nickel34), true, "nickel tackle calibration follows the same package in a 3-4 front");
 });
 
 test("hurry-up snaps trap defensive personnel and pause rotation cadence", () => {

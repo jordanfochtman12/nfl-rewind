@@ -477,3 +477,9 @@ Validation: a regression test builds a ballot with one stale enshrined player an
 Extended startup recovery to recognize Safari's `Importing a module script failed` and common failed dynamic-import messages in addition to Vite's preload event. The app attempts one automatic reload per tab session; if the retry also fails, or session storage is blocked, the existing branded recovery screen is shown instead of repeatedly reloading. The manual retry clears only the recovery marker. No save data or historical data changes.
 
 Validation: `scripts/chunk-recovery.test.mjs` covers browser failure strings, unrelated network errors, the one-reload guard, manual retry reset, and unavailable session storage; `npm run typecheck`, targeted ESLint, `npm run build`, and `git diff --check` pass. Build retains the existing oversized-chunk warning; a forced failure on an iPhone browser was not available for this run.
+
+## Update (nickel tackle-calibration threshold)
+
+After base and nickel packages were corrected to 11 defenders, `pickTackler()` still identified nickel by requiring four corners. The actual nickel package now fields three, so its historical tackle-share adjustments had stopped applying. A shared `hasNickelPersonnel()` check now recognizes the three-corner grouping and is used by tackle attribution; the substitution test asserts the base and nickel packages classify correctly under both 4-3 and 3-4 fronts.
+
+Validation: the pre-fix four-era tackle audit passed, showing this was a missed calibration path rather than an out-of-range total; after the fix, `scripts/substitution-rotation.test.mjs`, `scripts/tackle-realism.test.mjs`, TypeScript, targeted ESLint, `qa-season`, production build, and `git diff --check` pass. No save or historical data changes.

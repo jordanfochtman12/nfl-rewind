@@ -844,6 +844,11 @@ function pickRusher(
 const RUN_STOP: Partial<Record<Pos, number>> = { MLB: 1.25, OLB: 0.95, S: 0.7, CB: 0.55, DE: 0.8, DT: 0.7 };
 const PASS_STOP: Partial<Record<Pos, number>> = { CB: 1.2, S: 0.85, MLB: 0.8, OLB: 0.55, DE: 0.2, DT: 0.14 };
 
+/** Nickel is the first defensive grouping with three corners; base uses two. */
+export function hasNickelPersonnel(def: Pick<TeamUnits, "db">): boolean {
+  return def.db.filter((player) => player.pos === "CB").length >= 3;
+}
+
 function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean, excludedId?: string, random?: () => number): Player | undefined {
   const pool = (pass ? [...def.db, ...def.lb, ...def.dl] : [...def.lb, ...def.dl, ...def.db]).filter((p) => p.id !== excludedId);
   if (!pool.length) return undefined;
@@ -856,7 +861,7 @@ function pickTackler(save: DynastySave, def: TeamUnits, pass: boolean, excludedI
     save.year < 2010 ? 1 : p.pos === "MLB" ? 1.5 : p.pos === "OLB" && p.arch !== "edge" ? 0.65 : 1;
   // Nickel spreads coverage across an additional corner, so each corner has fewer direct
   // stops than the single-corner target on the base package's tackle model.
-  const nickelPackage = def.db.filter((db) => db.pos === "CB").length >= 4;
+  const nickelPackage = hasNickelPersonnel(def);
   const nickelCornerTackleFactor = (p: Player) => nickelPackage && p.pos === "CB" ? 0.75 : 1;
   // Early modern tracking under-credits the two linebackers who remain on the nickel field.
   const earlyNickel = save.year >= 1990 && save.year < 2010 && nickelPackage;
