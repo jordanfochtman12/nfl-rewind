@@ -30710,4 +30710,47 @@ Ty|Simpson|QB|20021221|Alabama
 Gabe|Jacas|OLB|20040527|Illinois
 Seydou|Traore|TE|20020812|Mississippi State
 Brett|Thorson|P|20000106|Georgia
-Daniel|Rickert|OLB|20020312|Virginia`;
+Daniel|Rickert|OLB|20020312|Virginia
+Hal|Lucas|LT||Michigan State
+Elijah|Gibson|RB||Bethune-Cookman
+Dan|Irby|LT||Louisiana Tech
+Hartwell|Menefee|CB||New Mexico State
+Dick|Suffel|CB||Texas State
+Cliff|Kinney|MLB||San Diego State
+Fred|Dawston|CB||South Carolina State
+Danny|Pride|MLB||Tennessee State
+James|Burns|LG||Northwestern
+Bobby|Walton|LT||Auburn
+Willie|Ray Smith|CB||Kansas
+Joe|Labruzzo|RB||Louisiana State
+Dick|Fugere|MLB||Cincinnati
+Dave|Bonds|CB||McMurry
+Wayne|Foster|LT||Washington State
+Fred|Zimmerman|MLB||Toledo
+Al|MacFarlane|RB||Louisville
+Phil|Scoggins|K||Texas A&M
+Charley|Harraway|FB||San Jose State
+Jerry|Oliver|LT||Texas State
+Billy|Laird|QB||Louisiana Tech
+Tommy|Dillard|LT||Austin Peay State
+Steve|Renko|FB||Kansas
+Shelly|Novack|WR||Long Beach State
+Don|Lorenz|DE||Stephen F. Austin State
+Buddy|Owens|LG||Michigan State
+Frank|Rogers|K||Colorado
+Craig|Ritchey|CB||Stanford
+Eddie|Russell|LT||Illinois
+Ted|Holman|CB||Syracuse
+Ron|Ogle|DT||Long Beach State
+Bill|Earhart|DT||Bowling Green State
+Eddie|Buzzell|QB||Ottawa (Kansas)
+Jerry|Mosher|WR||California
+Art|Robinson|WR||Florida A&M
+Greg|Lashutka|WR||Ohio State
+Tom|Coughlin|DE||Miami (Florida)
+Frank|Fuller|DT||Drake
+John|Tooker|CB||Adams State
+Paul|Soule|RB||Bowdoin
+Cliff|Hysell|LT||Montana State
+Dave|Odegaard|C||Bemidji State
+Bill|McDowell|MLB||Florida State`;

@@ -10,6 +10,7 @@ Sources (cached under data/):
   schedules/fivethirtyeight_nfl_games  playoff games 1966-1998 (FiveThirtyEight)
   schedules/nflverse_games.csv         playoff games 1999+ (nflverse)
   drafts/pfr/*.htm                     PFR draft tables 1966-1979 (archive.org)
+  drafts/pfa/1966_afl_draft.html       Pro Football Archives 1966 AFL draft
   drafts/draft_picks.csv               nflverse draft picks 1980+
 
 Writes src/lib/game/data/history/{people,rosters,stats,playoffs,drafts}.ts.
@@ -68,6 +69,7 @@ def norm(s: str) -> str:
 
 POS = {
     "QB": "QB", "RB": "RB", "HB": "RB", "FB": "FB", "WR": "WR", "PR": "WR", "KR": "WR", "TE": "TE",
+    "B": "RB", "FL": "WR", "E": "WR", "E-DB": "CB", "E-K": "K", "HB-K": "RB", "C-LB": "MLB",
     "T": "LT", "OT": "LT", "LT": "LT", "RT": "RT", "G": "LG", "OG": "LG", "LG": "LG", "RG": "RG", "C": "C",
     "OL": "LG", "LS": "C", "DE": "DE", "DL": "DE", "EDGE": "DE", "DT": "DT", "NT": "DT", "OLB": "OLB",
     "LB": "MLB", "ILB": "MLB", "MLB": "MLB", "CB": "CB", "DB": "CB", "S": "S", "FS": "S", "SS": "S",
@@ -583,6 +585,8 @@ def load_coaches() -> None:
     """Head coaches: Pro Football Archives team pages through 1998 (each coach with his record
     when a club changed coaches midseason), the nflverse game file from 1999 (game by game)."""
     folder = DATA / "history" / "pfa_html"
+    if not folder.is_dir() or not any(folder.glob("*.html")):
+        raise FileNotFoundError(f"Required archived PFA team pages are missing: {folder}; refusing to regenerate incomplete history tables")
     for y in range(FIRST, 1999):
         for f in sorted(folder.glob(f"{y}[na]fl?*.html")):
             m = re.match(rf"{y}(nfl|afl)([a-z]+)\.html", f.name)
@@ -725,7 +729,11 @@ def load_drafts() -> None:
         y = int(m.group(1))
         if y >= 1980:
             continue
-        league = "afl" if f.name.startswith(f"{y}_draft") and y == 1966 else (m.group(2) or "nfl")
+        # PFR's 1966 NFL page was historically copied to 1966_draft.htm and
+        # mislabeled as AFL. Only the explicitly named NFL source is valid.
+        if y == 1966 and m.group(2) != "nfl":
+            continue
+        league = m.group(2) or "nfl"
         html = re.sub(r"<!--|-->", "", f.read_text(errors="replace"))
         tm = re.search(r'<table[^>]*id="drafts".*?</table>', html, re.S | re.I)
         if not tm:
@@ -758,6 +766,59 @@ def load_drafts() -> None:
         else:
             i = draftee(r["pfr_player_name"], pos_of(r["position"]), r.get("college") or "", y, t)
         drafts[y].append((int(r["round"]), int(r["pick"]), t, i, ""))
+
+    # PFR's 1966 AFL file is not an AFL board; use the separate archived AFL
+    # source. Load it after other draft classes so its AFL-only prospects are
+    # appended to PEOPLE without renumbering any established history IDs.
+    load_1966_afl_draft()
+
+
+def load_1966_afl_draft() -> None:
+    source = DATA / "drafts" / "pfa" / "1966_afl_draft.html"
+    html = source.read_text(encoding="utf-8", errors="replace")
+    tables = re.findall(r"<table\b.*?</table>", html, re.S | re.I)
+    table = next((x for x in tables if all(h in x.lower() for h in (">round<", ">overall<", ">player<", ">college<"))), None)
+    if table is None:
+        raise ValueError(f"1966 AFL draft source is missing its standard draft table: {source}")
+
+    picks: list[tuple[int, int, str, int, str]] = []
+    seen_overall: set[int] = set()
+    for row in re.findall(r"<tr\b.*?</tr>", table, re.S | re.I):
+        cells = re.findall(r"<td\b[^>]*>(.*?)</td>", row, re.S | re.I)
+        if len(cells) < 6:
+            continue
+
+        def text(cell: str) -> str:
+            return re.sub(r"\s+", " ", htmllib.unescape(re.sub(r"<[^>]+>", " ", cell))).replace("*", "").replace("+", "").strip()
+
+        # The AFL source uses 12C for an extra pick between rounds; its board
+        # still numbers that selection 105 overall and stores it in round 12.
+        round_match = re.match(r"\s*(\d+)", text(cells[0]))
+        overall_text = text(cells[1])
+        if not round_match or not overall_text.isdigit():
+            continue
+        rnd, overall = int(round_match.group(1)), int(overall_text)
+        team_match = re.search(r"href=[\"']/?1966afl([a-z]{2,3})\.html", cells[2], re.I)
+        if not team_match:
+            raise ValueError(f"1966 AFL pick {overall} has an unrecognized team source")
+        team = team_of(team_match.group(1), 1966)
+        name = text(cells[3])
+        if not team or not name:
+            raise ValueError(f"1966 AFL pick {overall} has no team or player")
+        if overall in seen_overall:
+            raise ValueError(f"1966 AFL source repeats overall pick {overall}")
+        seen_overall.add(overall)
+        index = draftee(name, pos_of(text(cells[4])), text(cells[5]), 1966, team)
+        picks.append((rnd, overall, team, index, "afl"))
+
+    if seen_overall != set(range(1, 182)):
+        missing = sorted(set(range(1, 182)) - seen_overall)
+        extra = sorted(seen_overall - set(range(1, 182)))
+        raise ValueError(f"1966 AFL board coverage mismatch; missing={missing}, extra={extra}")
+    first = next((p for p in picks if p[1] == 1), None)
+    if not first or people[first[3]]["f"] + " " + people[first[3]]["l"] != "Jim Grabowski" or first[2] != "mia":
+        raise ValueError("1966 AFL first selection must be Jim Grabowski to Miami")
+    drafts[1966].extend(picks)
 
 
 # ---------- awards and the Hall of Fame (Wikipedia) ----------

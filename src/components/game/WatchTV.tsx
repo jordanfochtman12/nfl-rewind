@@ -114,8 +114,17 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
           const person = people[p.person];
           return `${p.league ? `${p.league.toUpperCase()} · ` : ""}Pick ${p.pick}, Round ${p.round}: ${person ? `${person.first} ${person.last}` : "name not in the source table"} to the ${displayName(y, p.team)}${person?.pos ? ` (${person.pos})` : ""}.`;
         });
-        items.push(`${picks.length} recorded selections across ${new Set(picks.map((p) => p.round)).size} rounds${y === 1966 ? "; the NFL and AFL held separate drafts" : ""}.`);
-        return markCard("record-draft", `The ${y} draft`, "THE REAL DRAFT BOARD", "Before the season begins, the original draft class enters the record. These are the selections as recorded, not a re-simulated draft.", items);
+        if (y === 1966) {
+          const boardSummary = (league: "nfl" | "afl") => {
+            const board = picks.filter((p) => p.league === league);
+            return `${board.length} ${league.toUpperCase()} selections across ${new Set(board.map((p) => p.round)).size} rounds`;
+          };
+          items.push(`${boardSummary("nfl")}; ${boardSummary("afl")} on separate boards.`);
+        } else {
+          items.push(`${picks.length} recorded selections across ${new Set(picks.map((p) => p.round)).size} rounds.`);
+        }
+        const dualDraft = y === 1966;
+        return markCard("record-draft", dualDraft ? `The ${y} NFL and AFL drafts` : `The ${y} draft`, dualDraft ? "TWO LEAGUES · TWO BOARDS" : "THE REAL DRAFT BOARD", "Before the season begins, the original draft class enters the record. These are the selections as recorded, not a re-simulated draft.", items);
       }
       return card("record-open-season", `Open the ${y} season`, "NEXT IN THE RECORD", `Continue into the real ${y} season. The league will be rebuilt from that year's historical rosters and schedule.`, [], {}, 5);
     }
