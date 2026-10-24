@@ -98,19 +98,40 @@ export function isRestrictedFreeAgent(save: Pick<DynastySave, "year">, p: Player
   return save.year === 2010 ? accrued >= 3 && accrued <= 5 : accrued === 3;
 }
 
-/**
- * The right-of-first-refusal tender, scaled from the current CBA amount to the game's annual cap.
- * It is a one-year qualifying offer; historical cap years get the era's dollar scale.
- */
-/** 2026 NFL Operations tender schedule; past modeled years scale by their salary-cap ratio.
- * Source: https://operations.nfl.com/calendar-events/nfl-free-agency/types-of-free-agents
- */
-const RFA_2026_TENDERS: Record<RfaTenderLevel, number> = {
-  first: 8_107_000,
-  second: 5_811_000,
-  original: 3_674_000,
-  rofr: 3_547_000,
+/** 2019 baselines from the 2020 NFL-NFLPA CBA, before its 2020 cap-growth adjustment. */
+const RFA_2019_TENDERS: Record<RfaTenderLevel, number> = {
+  first: 4_407_000,
+  second: 3_095_000,
+  original: 2_025_000,
+  rofr: 2_025_000,
 };
+
+/**
+ * Apply Article 9, Section 2(b) of the 2020 NFL-NFLPA CBA to its stated 2020 tender baselines.
+ * 2021 and 2022 add fixed amounts on top of any cap growth; from 2023 the amounts track cap
+ * growth alone. Values are rounded to the league's published $1,000 tender increments.
+ * Sources: https://nflpaweb.blob.core.windows.net/website/PDFs/CBA/March-15-2020-NFL-NFLPA-Collective-Bargaining-Agreement-Final-Executed-Copy.pdf
+ *          https://www.nfl.com/news/2026-nfl-free-agency-questions-answers
+ */
+function rfaTenderSchedule(year: number): Record<RfaTenderLevel, number> {
+  const schedule = { ...RFA_2019_TENDERS };
+  for (let season = 2020; season <= year; season++) {
+    const previousCap = salaryCapFor(season - 1);
+    const cap = salaryCapFor(season);
+    if (previousCap == null || cap == null) continue;
+    const growth = Math.max(1, cap / previousCap);
+    for (const level of Object.keys(schedule) as RfaTenderLevel[]) {
+      schedule[level] *= growth;
+      if (season === 2021 || season === 2022) {
+        schedule[level] += level === "original" ? 50_000
+          : level === "second" || level === "first" ? 125_000
+            : 0;
+      }
+      schedule[level] = Math.round(schedule[level] / 1_000) * 1_000;
+    }
+  }
+  return schedule;
+}
 
 export function rfaCompensationRound(level: RfaTenderLevel, p: Pick<Player, "draftRound">): number | undefined {
   if (level === "first") return 1;
@@ -121,9 +142,11 @@ export function rfaCompensationRound(level: RfaTenderLevel, p: Pick<Player, "dra
 
 export function rfaTenderPrice(year: number, level: RfaTenderLevel = "rofr", p?: Player): number {
   const cap = salaryCapFor(year);
-  const currentCap = salaryCapFor(2026);
-  if (year < 1994 || cap == null || currentCap == null) return 0;
-  const scaled = (RFA_2026_TENDERS[level] * cap) / currentCap;
+  const baseCap = salaryCapFor(2019);
+  if (year < 1994 || cap == null || baseCap == null) return 0;
+  const scaled = year >= 2020
+    ? rfaTenderSchedule(year)[level]
+    : (RFA_2019_TENDERS[level] * cap) / baseCap;
   const priorSalaryFloor = level === "rofr" ? 0 : (p?.salary ?? 0) * 1.1;
   return Math.max(1_000, Math.round(Math.max(scaled, priorSalaryFloor) / 1_000) * 1_000);
 }

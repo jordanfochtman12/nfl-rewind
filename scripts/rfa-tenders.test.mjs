@@ -7,6 +7,7 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
   const { accruedSeasonsFor, advance, compactSave, createNewGame, creditedSeasonsFor, erfaMinimumSalary, hydrateSave, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, openRfaOfferSheets, pendingRfaOfferSheets, recordServiceGameWeek, rfaCompensationRound, rfaTenderPrice, resolveRfaOfferSheet, tenderErfa, tenderRfa } = await import("../src/lib/game/index.ts");
   const { cpuTenderErfa, cpuTenderRfa } = await import("../src/lib/game/contracts.ts");
   const { emptyStats } = await import("../src/lib/game/players.ts");
+  const { salaryCapFor } = await import("../src/lib/game/salary.ts");
   const { allPicks, ensureSeasonPicks } = await import("../src/lib/game/draft.ts");
   const { nextRng } = await import("../src/lib/game/rng.ts");
 
@@ -35,12 +36,26 @@ if (!process.execArgv.some((arg) => arg.includes("strip-types"))) {
     assert.equal(isRestrictedFreeAgent({ year: 2010 }, six), false);
   });
 
-  test("one-year RFA tender is available only in cap years and scales with the league cap", () => {
+  test("2020-26 RFA tenders follow the CBA schedule and official cap", () => {
     assert.equal(rfaTenderPrice(1993), 0);
-    assert.equal(rfaTenderPrice(2026, "first"), 8_107_000);
-    assert.equal(rfaTenderPrice(2026, "second"), 5_811_000);
-    assert.equal(rfaTenderPrice(2026, "original"), 3_674_000);
-    assert.equal(rfaTenderPrice(2026, "rofr"), 3_547_000);
+    assert.equal(salaryCapFor(2026), 301_200_000);
+    const expected = {
+      2020: [4_641_000, 3_259_000, 2_133_000, 2_133_000],
+      2021: [4_766_000, 3_384_000, 2_183_000, 2_133_000],
+      2022: [5_562_000, 3_986_000, 2_540_000, 2_433_000],
+      2023: [6_005_000, 4_304_000, 2_743_000, 2_627_000],
+      2024: [6_822_000, 4_890_000, 3_116_000, 2_985_000],
+      2025: [7_458_000, 5_346_000, 3_406_000, 3_263_000],
+      2026: [8_046_000, 5_767_000, 3_674_000, 3_520_000],
+    };
+    for (const [yearText, prices] of Object.entries(expected)) {
+      const year = Number(yearText);
+      assert.deepEqual(
+        [rfaTenderPrice(year, "first"), rfaTenderPrice(year, "second"), rfaTenderPrice(year, "original"), rfaTenderPrice(year, "rofr")],
+        prices,
+        `${year} matches the CBA tender schedule`,
+      );
+    }
     assert.ok(rfaTenderPrice(2026, "first") > rfaTenderPrice(1994, "first"));
     assert.equal(rfaCompensationRound("original", { draftRound: 3 }), 3);
     assert.equal(rfaCompensationRound("original", { draftRound: undefined }), undefined);

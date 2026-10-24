@@ -20,7 +20,7 @@ export function starScale(year: number): number {
 /**
  * The league's salary cap, year by year as it was set (1994 on). 2010 was the uncapped year;
  * the game keeps the 2009 figure as a ceiling that season so contracts still have a frame.
- * Past 2025 it grows about 6% a year, close to the recent pace.
+ * Past 2026 it grows about 6% a year, close to the recent pace.
  */
 const CAP_BY_YEAR: Record<number, number> = {
   1994: 34_608_000, 1995: 37_100_000, 1996: 40_753_000, 1997: 41_454_000, 1998: 52_388_000,
@@ -29,7 +29,7 @@ const CAP_BY_YEAR: Record<number, number> = {
   2009: 123_000_000, 2010: 123_000_000, 2011: 120_000_000, 2012: 120_600_000, 2013: 123_000_000,
   2014: 133_000_000, 2015: 143_280_000, 2016: 155_270_000, 2017: 167_000_000, 2018: 177_200_000,
   2019: 188_200_000, 2020: 198_200_000, 2021: 182_500_000, 2022: 208_200_000, 2023: 224_800_000,
-  2024: 255_400_000, 2025: 279_200_000,
+  2024: 255_400_000, 2025: 279_200_000, 2026: 301_200_000,
 };
 
 export function salaryCapFor(year: number): number | null {
