@@ -135,6 +135,36 @@ export function TabStrip<T extends string>({
   );
 }
 
+/** Persistent phone controls keep the key broadcast destinations reachable while scrolling. */
+export function MobileGameDock<T extends string>({
+  tabs,
+  active,
+  onPick,
+}: {
+  tabs: { id: T; label: string }[];
+  active: T;
+  onPick: (id: T) => void;
+}) {
+  const quickIds = ["primetime", "stats", "draft", "office"];
+  const quickTabs = quickIds.map((id) => tabs.find((tab) => tab.id === id)).filter((tab): tab is { id: T; label: string } => !!tab);
+  return (
+    <nav className="mobile-game-dock" aria-label="Quick game navigation">
+      {quickTabs.map((tab) => (
+        <button key={tab.id} type="button" aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
+          <span aria-hidden>{tab.id === "primetime" ? "◉" : tab.id === "stats" ? "▤" : tab.id === "draft" ? "◆" : "⌂"}</span>
+          {tab.label}
+        </button>
+      ))}
+      <label className="mobile-game-dock-more">
+        <span>More</span>
+        <select aria-label="More game sections" value={active} onChange={(event) => onPick(event.target.value as T)}>
+          {tabs.map((tab) => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
+        </select>
+      </label>
+    </nav>
+  );
+}
+
 function scoreLine(g: GameResult): string {
   const a = teamAbbr(g.awayId as TeamId);
   const h = teamAbbr(g.homeId as TeamId);

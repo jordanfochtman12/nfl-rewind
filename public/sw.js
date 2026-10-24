@@ -9,10 +9,11 @@
  * - Art, audio and logos: cached the first time they're used.
  * - Anything server-side (sign-in, APIs, server functions) is never cached.
  */
-const SHELL = "rewind-shell";
+const SHELL = "rewind-shell-";
 const MEDIA = "rewind-media";
 const ASSETS = "rewind-assets-";
 let optionalCacheWork;
+let activeShellCache = "";
 
 async function notifyOfflineProgress(clients, cache, progress) {
   await cache.put("/__offline_progress__", new Response(JSON.stringify(progress), {
@@ -27,18 +28,16 @@ const serverSide = (path) =>
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
-      try {
-        const res = await fetch("/offline-manifest.json", { cache: "no-store" });
-        if (res.ok) {
-          const m = await res.json();
-          const cache = await caches.open(ASSETS + m.version);
-          await cache.addAll(m.precache ?? m.files);
-        }
-        const page = await fetch("/", { cache: "no-store" });
-        if (page.ok) await (await caches.open(SHELL)).put("/", page);
-      } catch {
-        // Offline at install: the next visit online fills the caches.
-      }
+      // Install atomically. If a deploy is only partly reachable, leave the current
+      // worker and its matching app shell active instead of mixing old HTML with new assets.
+      const res = await fetch("/offline-manifest.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Offline manifest unavailable during install");
+      const m = await res.json();
+      const cache = await caches.open(ASSETS + m.version);
+      await cache.addAll(m.precache ?? m.files);
+      const page = await fetch("/", { cache: "no-store" });
+      if (!page.ok) throw new Error("App shell unavailable during install");
+      await (await caches.open(SHELL + m.version)).put("/", page);
       await self.skipWaiting();
     })(),
   );
@@ -120,14 +119,20 @@ self.addEventListener("message", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      let keep = "";
+      let version = "";
       try {
         const res = await fetch("/offline-manifest.json", { cache: "no-store" });
-        if (res.ok) keep = ASSETS + (await res.json()).version;
+        if (res.ok) version = (await res.json()).version;
       } catch {
         // Keep everything when the version can't be checked.
       }
-      if (keep) for (const k of await caches.keys()) if (k.startsWith(ASSETS) && k !== keep) await caches.delete(k);
+      if (version) {
+        const keepAssets = ASSETS + version;
+        activeShellCache = SHELL + version;
+        for (const k of await caches.keys()) {
+          if ((k.startsWith(ASSETS) || k.startsWith(SHELL)) && k !== keepAssets && k !== activeShellCache) await caches.delete(k);
+        }
+      }
       await self.clients.claim();
     })(),
   );
@@ -144,10 +149,10 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const res = await fetch(req);
-          if (res.ok && url.pathname === "/") (await caches.open(SHELL)).put("/", res.clone());
+          if (res.ok && url.pathname === "/" && activeShellCache) (await caches.open(activeShellCache)).put("/", res.clone());
           return res;
         } catch {
-          return (await caches.match("/", { cacheName: SHELL })) ?? Response.error();
+          return (await caches.match("/", { cacheName: activeShellCache || SHELL + "runtime" })) ?? Response.error();
         }
       })(),
     );

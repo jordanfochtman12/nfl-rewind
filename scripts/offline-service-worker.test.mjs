@@ -55,6 +55,8 @@ test("service worker installs the app shell first and downloads the full offline
   handlers.get("install")({ waitUntil(promise) { installWork = promise; } });
   await installWork;
   const cache = await caches.open("rewind-assets-test");
+  const shell = await caches.open("rewind-shell-test");
+  assert.ok(await shell.match("/"), "the offline page shell is saved under the same build version as its scripts");
   assert.ok(await cache.match("/assets/shell.js"));
   assert.equal(await cache.match("/assets/history.js"), undefined, "lazy history waits until the app shell is available");
   assert.equal(await cache.match("/__offline_complete__"), undefined);
@@ -83,4 +85,45 @@ test("service worker installs the app shell first and downloads the full offline
   assert.equal(replies.at(-1).type, "OFFLINE_CACHE_READY");
   assert.ok(replies.some((message) => message.type === "OFFLINE_CACHE_PROGRESS" && message.completedBytes === 30));
   assert.equal(await cache.match("/__offline_progress__"), undefined);
+});
+
+test("a partially available deploy cannot replace a working offline service worker", async () => {
+  const handlers = new Map();
+  const stores = new Map([["rewind-assets-old", new Map([["/assets/old.js", "old build"]])], ["rewind-shell-old", new Map([["/", "old shell"]])]]);
+  let skippedWaiting = false;
+  const caches = {
+    async open(name) {
+      if (!stores.has(name)) stores.set(name, new Map());
+      const values = stores.get(name);
+      return {
+        async addAll(paths) {
+          for (const path of paths) {
+            if (path === "/assets/new.js") throw new Error("temporary network failure");
+            values.set(path, new Response("cached"));
+          }
+        },
+        async put(path, response) { values.set(path, response); },
+      };
+    },
+    async keys() { return [...stores.keys()]; },
+  };
+  const self = {
+    addEventListener(name, handler) { handlers.set(name, handler); },
+    async skipWaiting() { skippedWaiting = true; },
+  };
+  const context = vm.createContext({
+    self,
+    caches,
+    fetch: async (url) => String(url) === "/offline-manifest.json"
+      ? new Response(JSON.stringify({ version: "new", precache: ["/assets/new.js"] }))
+      : new Response("new page"),
+    Response,
+    URL,
+  });
+  vm.runInContext(await readFile(new URL("../public/sw.js", import.meta.url), "utf8"), context);
+  let installWork;
+  handlers.get("install")({ waitUntil(promise) { installWork = promise; } });
+  await assert.rejects(installWork, /temporary network failure/);
+  assert.equal(skippedWaiting, false, "a failed update does not take control from the known-good worker");
+  assert.deepEqual([...stores.keys()], ["rewind-assets-old", "rewind-shell-old", "rewind-assets-new"]);
 });

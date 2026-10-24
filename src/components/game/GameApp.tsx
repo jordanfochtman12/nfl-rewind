@@ -74,7 +74,7 @@ import { HotNames } from "./HotNames";
 import { HISTORY_LAST, leagueHistoryHtml, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
-import { BottomLine, ClubPlate, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
+import { BottomLine, ClubPlate, MobileGameDock, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
@@ -2207,6 +2207,9 @@ function PlayShell() {
   const watch = !!save.sandbox && !save.leagueSandbox;
   const real = !!save.realHistory;
   const tabs = real ? HISTORY_TABS : watch ? WATCH_TABS : TABS;
+  const displayTabs = save.phase === "preDraft"
+    ? tabs.map((item) => item.id === "draft" ? { ...item, label: "Draft Preview" } : item)
+    : tabs;
   const champ = save.history.superBowls.at(-1);
   const deskId = watch && champ ? ((champ.homeScore >= champ.awayScore ? champ.homeId : champ.awayId) as TeamId) : save.userTeamId;
   const showDraft = save.phase === "draft" && !event;
@@ -2251,7 +2254,7 @@ function PlayShell() {
       </header>
       <div className="pc-game-layout">
         <aside className="pc-game-sidebar" data-tour="tabs">
-          <TabStrip tabs={tabs} active={tab} onPick={setTab} />
+          <TabStrip tabs={displayTabs} active={tab} onPick={setTab} />
           <div className="pc-sidebar-identity">
             <span>{watch ? "LEAGUE DESK" : "FRANCHISE DESK"}</span>
             <strong>{save.year} <i>SEASON</i></strong>
@@ -2266,7 +2269,7 @@ function PlayShell() {
           )}
           <div key={`wipe-${tab}`} className="wipe" aria-hidden />
           <main id="franchise-content" data-tab={tab} data-phase={save.phase} tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content pc-broadcast-content rise-in">
-        <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={tabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
+        <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={displayTabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
         {real && event && tab === "office" && save.phase !== "preseason" ? <EventPane /> : null}
         {real && tab === "office" ? <HistoryDesk /> : null}
         {watch && !real && tab === "office" ? <WatchOffice event={event} /> : null}
@@ -2306,6 +2309,7 @@ function PlayShell() {
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {watch && !real && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
+      <MobileGameDock tabs={displayTabs} active={tab} onPick={setTab} />
     </ClubDesk>
     )}
     </Suspense>

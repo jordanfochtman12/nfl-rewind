@@ -612,6 +612,43 @@ input[list] {
   border-left-color: #fff !important;
 }
 .next-title-actions .next-mode-continue { border-style: dashed !important; background: #0a101bd9 !important; }
+.next-title-actions .bx-btn .bx-in { position: relative; z-index: 1; }
+.next-title-actions .bx-btn::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: .82;
+  background-position: center 48%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: opacity .2s ease, transform .35s ease;
+}
+.next-title-actions .next-mode-franchise::after {
+  background-image: linear-gradient(90deg, #090d16fa 0%, #101521df 45%, #090d1670 100%), url("/art/title.jpg");
+}
+.next-title-actions .next-mode-timeline::after {
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/stadium-arrival.webp");
+}
+.next-title-actions .next-mode-record::after {
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/draft.jpg");
+}
+.next-title-actions .next-mode-architect::after {
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/office.jpg");
+}
+.next-title-actions .next-mode-continue::after {
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/helmet.jpg");
+}
+.next-title-actions .bx-btn:not(:disabled):hover::after,
+.next-title-actions .bx-btn:focus-visible::after { opacity: 1; transform: scale(1.035); }
+.next-title-actions .next-mode-arrow {
+  width: auto;
+  height: auto;
+  border: 0;
+  font-size: 1.4rem;
+  filter: drop-shadow(0 0 10px #62e8ff70);
+}
 .next-mode-heading {
   display: flex;
   align-items: center;
@@ -627,7 +664,7 @@ input[list] {
 @media (max-width: 700px) {
   .next-title-actions { grid-template-columns: 1fr; }
   .next-title-actions .next-mode-franchise { grid-column: auto; }
-  .next-title-actions .bx-btn { min-height: 4.6rem; padding-inline: 0.9rem; }
+  .next-title-actions .bx-btn { min-height: 5.1rem; padding-inline: 0.9rem; }
   .next-title-actions .next-mode-title { font-size: 0.96rem; }
   .next-mode-heading { flex-wrap: wrap; gap: 0.45rem; font-size: 0.46rem; margin-top: 1.2rem; }
   .next-title-scene::before { opacity: 0.13; }
@@ -3429,6 +3466,58 @@ table tbody tr:hover {
   .k5-open-title { font-size: clamp(2rem, 9vw, 3rem); }
   .k5-open-logo { padding: .35rem; }
   .k5-open-logo img { width: 48px; height: 48px; }
+}
+
+/* Phone-first section rail: core destinations stay reachable while the page scrolls. */
+.mobile-game-dock { display: none; }
+@media (max-width: 1099px) {
+  .mobile-game-dock {
+    position: fixed;
+    z-index: 40;
+    inset: auto 0 calc(36px + env(safe-area-inset-bottom)) 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(70px, .86fr);
+    gap: 4px;
+    padding: 7px max(8px, env(safe-area-inset-left)) 7px max(8px, env(safe-area-inset-right));
+    border-top: 1px solid #c7dcf03b;
+    border-bottom: 1px solid #ffffff10;
+    background: linear-gradient(180deg, #111b2aF5, #060a11F8);
+    box-shadow: 0 -10px 32px #000b, inset 0 1px #ffffff12;
+    backdrop-filter: blur(18px);
+  }
+  .mobile-game-dock-button, .mobile-game-dock-more {
+    min-width: 0;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px 3px;
+    border: 1px solid transparent;
+    color: #aebbd0;
+    background: transparent;
+    font: 800 10px var(--font-display);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .mobile-game-dock-button > span { color: #90a8c4; font-size: 15px; }
+  .mobile-game-dock-button.is-active {
+    border-color: color-mix(in srgb, var(--color-club) 48%, #ffffff16);
+    color: #fff;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--color-club) 24%, #162338), #09111e);
+    box-shadow: inset 0 2px var(--color-club-2), 0 0 18px -12px var(--color-club-2);
+  }
+  .mobile-game-dock-more { position: relative; flex-direction: column; gap: 1px; border-left-color: #ffffff18; color: #d1dced; }
+  .mobile-game-dock-more::after { content: "⌄"; position: absolute; right: 4px; bottom: 10px; color: var(--color-club-2); pointer-events: none; }
+  .mobile-game-dock-more select { width: 100%; min-height: 24px; padding: 0 14px 0 4px; border: 0; appearance: none; color: #fff; background: transparent; font: 800 10px var(--font-display); text-align: center; text-transform: uppercase; }
+  .mobile-game-dock-more option { color: #fff; background: #101722; }
+  .pc-broadcast-content { padding-bottom: 154px; }
+}
+@media (max-width: 420px) {
+  .mobile-game-dock { gap: 2px; }
+  .mobile-game-dock-button, .mobile-game-dock-more { font-size: 9px; }
+  .mobile-game-dock-button { flex-direction: column; gap: 1px; }
+  .mobile-game-dock-button > span { font-size: 16px; }
 }
 
 /* ---------- franchise command center: a live matchup, readable signals ----------
