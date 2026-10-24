@@ -586,6 +586,32 @@ function tackleStatsRandom(seed: number, gameId: string): () => number {
   };
 }
 
+/** Independent scorer selection for two-point tries; attribution must not shift game RNG. */
+function conversionStatsRandom(seed: number, gameId: string): () => number {
+  let salt = 2166136261 ^ 0x2a71;
+  for (let i = 0; i < gameId.length; i += 1) salt = Math.imul(salt ^ gameId.charCodeAt(i), 16777619);
+  let state = (seed ^ salt) >>> 0;
+  return () => {
+    const next = nextRng(state);
+    state = next.state;
+    return next.value;
+  };
+}
+
+function twoPointScorer(unit: TeamUnits, random: () => number): Player | undefined {
+  const run = random() < 0.52;
+  const pool = run
+    ? [unit.rb, unit.qb, unit.fb, unit.rb2]
+    : [...unit.wr, unit.te, unit.te2, unit.rb, unit.fb];
+  const seen = new Set<string>();
+  const players = pool.filter((p): p is Player => !!p && !seen.has(p.id) && !!seen.add(p.id));
+  if (!players.length) return unit.qb;
+  const weight = (p: Player) => run
+    ? Math.max(0.1, (p.ratings.speed + p.ratings.accel + p.ratings.truck + p.ratings.btk + p.ratings.awareness) / 5)
+    : Math.max(0.1, (p.ratings.speed + p.ratings.catch + p.ratings.cit + p.ratings.rrt) / 4);
+  return players[weightedIndex(players.map(weight), random)];
+}
+
 function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number, postseason = false): void {
   for (const b of box) {
     const p = save.players[b.playerId];
@@ -621,6 +647,7 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.fgAtt += b.fgAtt ?? 0;
     s.xpMade += b.xpMade ?? 0;
     s.xpAtt += b.xpAtt ?? 0;
+    s.twoPtMade += b.twoPtMade ?? 0;
     s.punts += b.punts ?? 0;
     s.puntYds += b.puntYds ?? 0;
     s.krYds += b.krYds ?? 0;
@@ -1571,6 +1598,7 @@ export function creditStandings(save: DynastySave, game: GameResult, coaches = t
 export function simGame(save: DynastySave, game: GameResult): void {
   if (game.played) return;
   const statRandom = tackleStatsRandom(save.rng, game.id);
+  const conversionRandom = conversionStatsRandom(save.rng, game.id);
   const year = save.year;
   const era = eraProfile(year);
   const homeId = game.homeId as TeamId;
@@ -2206,8 +2234,14 @@ export function simGame(save: DynastySave, game: GameResult): void {
       if (year === 1994) ruleOnce("two", "New this season: the NFL's first two-point conversions.");
       else if (afl) ruleOnce("two", "The AFL's two-point try, a rule the NFL won't adopt until 1994.");
       const ok = rand(save) < clamp(twoPointMakeP(year) + (u.offPass - 70) / 220 + u.kit.td, 0.28, 0.58);
-      if (ok) addPts(id, 2);
-      if (logOn) note(ok ? "The two-point try is good." : "The two-point try fails.");
+      if (ok) {
+        addPts(id, 2);
+        const scorer = twoPointScorer(u, conversionRandom);
+        if (scorer) bumpBox(boxOf(id), scorer.id, { twoPtMade: 1 });
+        if (logOn) note(scorer ? `The two-point try is good. ${playerName(scorer)} gets the points.` : "The two-point try is good.");
+      } else if (logOn) {
+        note("The two-point try fails.");
+      }
       return;
     }
     if (u.k) bumpBox(boxOf(id), u.k.id, { xpAtt: 1 });

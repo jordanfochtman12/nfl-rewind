@@ -27,6 +27,7 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
     fgMade: 0,
     xpAtt: 0,
     xpMade: 0,
+    twoPtMade: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,
@@ -113,7 +114,8 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.fr = 0;
   s.krTd = 0;
   s.prTd = 0;
-  s.unknown = [...new Set([...(s.unknown ?? []), "defTd", "krTd", "prTd", "pts"])];
+  s.twoPtMade = 0;
+  s.unknown = [...new Set([...(s.unknown ?? []), "defTd", "krTd", "prTd", "pts", "twoPtMade"])];
   return s;
 }
 

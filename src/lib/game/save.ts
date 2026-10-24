@@ -63,6 +63,7 @@ function fillStatFields(s: SeasonStats): void {
   s.defTd = s.defTd ?? 0;
   s.krTd = s.krTd ?? 0;
   s.prTd = s.prTd ?? 0;
+  s.twoPtMade = s.twoPtMade ?? 0;
 }
 
 export function resetSeasonRecord(t: TeamState): void {

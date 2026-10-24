@@ -91,6 +91,7 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
     fgMade: 0,
     xpAtt: 0,
     xpMade: 0,
+    twoPtMade: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,
@@ -130,6 +131,7 @@ function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
     acc.fgMade += s.fgMade;
     acc.xpAtt += s.xpAtt ?? 0;
     acc.xpMade += s.xpMade;
+    acc.twoPtMade += s.twoPtMade ?? 0;
     acc.punts += s.punts ?? 0;
     acc.puntYds += s.puntYds ?? 0;
     acc.krYds += s.krYds ?? 0;

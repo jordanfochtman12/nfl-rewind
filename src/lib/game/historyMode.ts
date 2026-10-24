@@ -23,6 +23,7 @@ import { addNews, addTx } from "./news.ts";
 import { rulesTakingEffect } from "./rulebook.ts";
 import { boxFor, boxPlayerId, boxSeason, gradeCall, ledgerGame, recordBookNow, recordNews, seedLedgers, type RecordHolder } from "./historyExtras.ts";
 import { posLabel } from "./posLabel.ts";
+import { twoPointOk } from "./era.ts";
 
 
 let DATA: HistoryData | undefined;
@@ -539,6 +540,7 @@ function closeRegularSeason(save: DynastySave): void {
     st.unknown = [...new Set([
       ...(st.unknown ?? []),
       "defTd", "krTd", "prTd", "pts",
+      ...(twoPointOk(y, (team || p.teamId) as TeamId) && typeof line.twoPtMade !== "number" ? ["twoPtMade"] : []),
       ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
       ...(y < 1970 ? ["sacks"] : []),
     ])];
@@ -740,10 +742,10 @@ export function applyLiveLines(save: DynastySave): void {
   const y = save.year;
   if (save.phase !== "regular" || !boxSeason(y)) return;
   clearLiveLines(save);
-  const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", "defTd", "krTd", "prTd", "pts", ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
   const lineFor = (id: string | undefined, team: TeamId): SeasonStats | undefined => {
     const p = id ? save.players[id] : undefined;
     if (!p || (p.stats[y] && !p.stats[y]!.live)) return undefined;
+    const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", "defTd", "krTd", "prTd", "pts", ...(twoPointOk(y, team) ? [] : ["twoPtMade"]), ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
     return (p.stats[y] ??= { ...emptyStats(y, team), live: true, unknown });
   };
   for (const g of save.schedule) {

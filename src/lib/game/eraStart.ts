@@ -29,6 +29,7 @@ import { refreshContracts } from "./salary.ts";
 import { rebuildSchedule } from "./schedule.ts";
 import { activeTeamIds, displayName, gamesInSeason } from "./teams.ts";
 import { addNews } from "./news.ts";
+import { twoPointOk } from "./era.ts";
 import { setLabel } from "./season.ts";
 import { autoHireCoord, fillCoachFields, makeCoachFromSeed, realCoordinator, seedStaff } from "./staff.ts";
 import { COACHES_1966, EXPANSION_COACHES, LATER_COACHES } from "./data/coaches.ts";
@@ -639,6 +640,7 @@ export function restoreRecordLines(save: DynastySave): boolean {
       st.unknown = [...new Set([
         ...(st.unknown ?? []),
         "defTd", "krTd", "prTd", "pts",
+        ...(twoPointOk(y, (team || p.teamId) as TeamId) && typeof line.twoPtMade !== "number" ? ["twoPtMade"] : []),
         ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
         ...(y < 1970 ? ["sacks"] : []),
       ])];

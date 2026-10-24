@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 24;
+export const SAVE_VERSION = 25;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -195,6 +195,8 @@ export interface SeasonStats {
   fgMade: number;
   xpAtt: number;
   xpMade: number;
+  /** Successful two-point conversions scored by this player. */
+  twoPtMade: number;
   punts: number;
   puntYds: number;
   krYds: number;
@@ -502,6 +504,7 @@ export interface BoxPlayer {
   fgAtt?: number;
   xpMade?: number;
   xpAtt?: number;
+  twoPtMade?: number;
   punts?: number;
   puntYds?: number;
   sacksThrown?: number;

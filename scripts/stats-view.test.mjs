@@ -23,8 +23,10 @@ test("historical data gaps remain explicit em dashes", () => {
 });
 
 test("passing touchdowns are not counted as points scored by the passer", () => {
-  const line = { ...emptyStats(2024, "pit"), passTd: 35, recTd: 2, krTd: 1, fgMade: 1, xpMade: 2 };
-  assert.equal(scoring(line), 23, "three player-scored touchdowns, one field goal, and two extra points");
+  const line = { ...emptyStats(2024, "pit"), passTd: 35, recTd: 2, krTd: 1, fgMade: 1, xpMade: 2, twoPtMade: 1 };
+  assert.equal(scoring(line), 25, "three player-scored touchdowns, one field goal, two extra points, and a conversion");
+  assert.equal(value("rush", "twoPtMade", line), 1, "two-point conversion credits are sortable in player stats");
+  assert.equal(value("rush", "twoPtMade", { ...line, unknown: ["twoPtMade"] }), "—");
 });
 
 test("defensive touchdown and points are visible, while unrecorded historical defensive TDs stay unknown", () => {
