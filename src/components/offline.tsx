@@ -3,34 +3,36 @@
  * shell is cached at install; the full offline library is an explicit choice in Settings.
  */
 import { useEffect } from "react";
+import { claimChunkRecovery, isModuleLoadFailure } from "@/lib/chunk-recovery";
 
 export function OfflineSupport() {
   useEffect(() => {
     if (!import.meta.env.PROD) return;
+    let recoveryRequested = false;
     // A tab can stay open across a deployment. Its already-loaded app may then
     // request a lazy chunk from the previous build after the service worker has
     // activated the new build and removed the old cache. Vite reports that as a
     // preload error; reload once so the browser gets a matching HTML/chunk set.
-    const recoverFromStaleChunk = (event: Event) => {
+    const recoverFromModuleFailure = (event: Event) => {
+      if (recoveryRequested) return;
+      recoveryRequested = true;
       event.preventDefault();
-      const key = "rewind:chunk-recovery";
-      let previousAttempt = 0;
-      try {
-        previousAttempt = Number(sessionStorage.getItem(key) ?? 0);
-      } catch {
-        // Storage can be disabled; recovery still gets one immediate attempt.
-      }
-      if (Date.now() - previousAttempt < 15_000) return;
-      try {
-        sessionStorage.setItem(key, String(Date.now()));
-      } catch {
-        // The page reload remains useful when storage is unavailable.
+      if (!claimChunkRecovery()) {
+        window.dispatchEvent(new Event("rewind:chunk-recovery-exhausted"));
+        return;
       }
       window.location.reload();
     };
-    window.addEventListener("vite:preloadError", recoverFromStaleChunk);
+    const recoverFromRejectedModule = (event: PromiseRejectionEvent) => {
+      if (isModuleLoadFailure(event.reason)) recoverFromModuleFailure(event);
+    };
+    window.addEventListener("vite:preloadError", recoverFromModuleFailure);
+    window.addEventListener("unhandledrejection", recoverFromRejectedModule);
     if (!("serviceWorker" in navigator)) {
-      return () => window.removeEventListener("vite:preloadError", recoverFromStaleChunk);
+      return () => {
+        window.removeEventListener("vite:preloadError", recoverFromModuleFailure);
+        window.removeEventListener("unhandledrejection", recoverFromRejectedModule);
+      };
     }
     const register = async () => {
       try {
@@ -43,7 +45,8 @@ export function OfflineSupport() {
     if (document.readyState === "complete") register();
     else window.addEventListener("load", register, { once: true });
     return () => {
-      window.removeEventListener("vite:preloadError", recoverFromStaleChunk);
+      window.removeEventListener("vite:preloadError", recoverFromModuleFailure);
+      window.removeEventListener("unhandledrejection", recoverFromRejectedModule);
     };
   }, []);
   return null;

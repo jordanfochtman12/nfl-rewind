@@ -471,3 +471,9 @@ Validation: the helper tests assert exact conservation, bounded shares, and unch
 `gatherHof()` now checks the Hall history ledger before filling the annual player and coach ballots. A stale or partially migrated player/coach record that lacks its own `hofYear` can no longer consume one of the five player or two coach slots; `resolveHof()` already treated the ledger as authoritative and skipped duplicate induction, but that skip previously happened only after the ballot slot had been lost. This is an old-save integrity guard with no schema change and no effect on History mode's exact induction record.
 
 Validation: a regression test builds a ballot with one stale enshrined player and coach plus enough eligible candidates to fill each class; all open slots go to new candidates. The HOF ballot and archived-honors suites pass (5 tests), as do TypeScript, focused ESLint, `qa-season`, production build, and `git diff --check`. This change corrects duplicate-slot crowding; the underlying score weights and annual class limits remain separate calibration questions.
+
+## Update (mobile module-load recovery)
+
+Extended startup recovery to recognize Safari's `Importing a module script failed` and common failed dynamic-import messages in addition to Vite's preload event. The app attempts one automatic reload per tab session; if the retry also fails, or session storage is blocked, the existing branded recovery screen is shown instead of repeatedly reloading. The manual retry clears only the recovery marker. No save data or historical data changes.
+
+Validation: `scripts/chunk-recovery.test.mjs` covers browser failure strings, unrelated network errors, the one-reload guard, manual retry reset, and unavailable session storage; `npm run typecheck`, targeted ESLint, `npm run build`, and `git diff --check` pass. Build retains the existing oversized-chunk warning; a forced failure on an iPhone browser was not available for this run.

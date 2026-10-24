@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { clearChunkRecovery } from "../lib/chunk-recovery.ts";
 
 type Props = { children: ReactNode };
 type State = { failed: boolean };
@@ -6,6 +7,16 @@ type State = { failed: boolean };
 /** Keep a failed lazy screen from replacing the game with the browser's generic error view. */
 export class AppErrorBoundary extends Component<Props, State> {
   state: State = { failed: false };
+
+  componentDidMount() {
+    window.addEventListener("rewind:chunk-recovery-exhausted", this.showRecovery);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("rewind:chunk-recovery-exhausted", this.showRecovery);
+  }
+
+  private showRecovery = () => this.setState({ failed: true });
 
   static getDerivedStateFromError(): State {
     return { failed: true };
@@ -16,11 +27,7 @@ export class AppErrorBoundary extends Component<Props, State> {
   }
 
   private reload = () => {
-    try {
-      sessionStorage.removeItem("rewind:chunk-recovery");
-    } catch {
-      // Reloading is still available when storage is disabled.
-    }
+    clearChunkRecovery();
     window.location.reload();
   };
 
