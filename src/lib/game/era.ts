@@ -29,9 +29,9 @@ export function eraProfile(year: number): EraProfile {
       ypa: 6.7,
       intRate: 0.055,
       sackRate: 0.075,
-      // Calibrated against 1966's 10,157 league attempts (22.7 per team-game): situational
-      // calls and scrambles add to this selection baseline, so the input must sit below the record.
-      rushAtt: 24,
+      // Calibrated against 1966's 10,157 league attempts (22.7 per team-game): 1966 uses 23
+      // after three-seed sims ran 4.2% high; situational calls and scrambles add to this baseline.
+      rushAtt: year === 1966 ? 23 : 24,
       ypc: 3.85,
       pointsMu: 21.4,
       teRecCap: 50,
