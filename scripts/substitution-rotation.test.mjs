@@ -20,24 +20,38 @@ import {
   usesNickelPersonnel,
 } from "../src/lib/game/index.ts";
 
-test("modern pass snaps substitute a healthy fourth corner for a linebacker", () => {
+test("base and nickel fronts use 11 defenders across 4-3 and 3-4 schemes", () => {
   assert.equal(usesNickelPersonnel(2024, 3, 5, "balanced", true), true);
   assert.equal(usesNickelPersonnel(2024, 2, 7, "balanced", true), true);
   assert.equal(usesNickelPersonnel(2024, 1, 10, "pass", true), true);
   assert.equal(usesNickelPersonnel(2024, 1, 10, "balanced", true), false, "avoid nickel on a balanced early down by default");
   assert.equal(usesNickelPersonnel(2024, 2, 3, "pass", true), false, "stay in base personnel on a short yardage down");
-  assert.equal(usesNickelPersonnel(2024, 3, 5, "balanced", false), false, "no fourth healthy corner means stay in base personnel");
+  assert.equal(usesNickelPersonnel(2024, 3, 5, "balanced", false), false, "no third healthy corner means stay in base personnel");
   assert.equal(usesNickelPersonnel(1985, 3, 5, "balanced", true), false, "keep modern nickel substitutions out of older eras");
 
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
   const base = teamUnits(save, "pit");
   const nickel = teamUnits(save, "pit", undefined, true);
-  assert.equal(base.db.length, 5);
+  assert.equal(base.db.length, 4);
+  assert.equal(base.dl.length + base.lb.length + base.db.length, 11);
   assert.equal(base.lb.length, 3);
-  assert.equal(nickel.db.length, 6, "nickel puts the fourth depth-chart corner on the field with both safeties");
-  assert.equal(nickel.db[3]?.id, save.teams.pit.depth.CB[3], "the saved fourth corner takes the nickel snap");
+  assert.equal(nickel.db.length, 5, "nickel adds a third corner while retaining both safeties");
+  assert.equal(nickel.db[2]?.id, save.teams.pit.depth.CB[2], "the saved third corner takes the nickel snap");
+  assert.equal(nickel.dl.length + nickel.lb.length + nickel.db.length, 11);
   assert.equal(nickel.lb.length, 2, "one linebacker leaves for the extra defensive back");
   assert.ok(nickel.lb.every((player) => base.lb.some((starter) => starter.id === player.id)), "the package keeps two actual base linebackers");
+
+  save.teams.pit.defScheme = "3-4";
+  const base34 = teamUnits(save, "pit");
+  const nickel34 = teamUnits(save, "pit", undefined, true);
+  assert.equal(base34.dl.length, 3);
+  assert.equal(base34.lb.length, 4);
+  assert.equal(base34.db.length, 4);
+  assert.equal(base34.dl.length + base34.lb.length + base34.db.length, 11);
+  assert.equal(nickel34.dl.length, 3);
+  assert.equal(nickel34.lb.length, 3);
+  assert.equal(nickel34.db.length, 5);
+  assert.equal(nickel34.dl.length + nickel34.lb.length + nickel34.db.length, 11);
 });
 
 test("hurry-up snaps trap defensive personnel and pause rotation cadence", () => {

@@ -274,8 +274,8 @@ export function adaptiveDefensiveFocus(
   if (passShare >= recognitionThreshold) return "pass";
   return "balanced";
 }
-export function usesNickelPersonnel(year: number, down: number, togo: number, offensiveAttack: string, hasFourthCorner: boolean): boolean {
-  if (year < 1990 || !hasFourthCorner) return false;
+export function usesNickelPersonnel(year: number, down: number, togo: number, offensiveAttack: string, hasThirdCorner: boolean): boolean {
+  if (year < 1990 || !hasThirdCorner) return false;
   if ((down === 3 || down === 4) && togo >= 4) return true;
   if (down === 2 && togo >= 7) return true;
   return year >= 2000 && down === 1 && offensiveAttack === "pass";
@@ -366,19 +366,26 @@ export function teamUnits(save: DynastySave, teamId: TeamId, benched?: ReadonlyS
     ...starters(save, teamId, "RG", 1, benched),
     ...starters(save, teamId, "RT", 1, benched),
   ];
-  const dl = [...starters(save, teamId, "DE", 2, benched), ...starters(save, teamId, "DT", 2, benched)];
-  const linebackers = [...starters(save, teamId, "OLB", 2, benched), ...starters(save, teamId, "MLB", 1, benched)];
-  const nickelCorners = starters(save, teamId, "CB", 4, benched);
-  const usesNickel = nickel && save.year >= 1990 && nickelCorners.length >= 4;
-  // In nickel, keep the two linebackers best equipped for coverage and put the saved CB4
-  // on the field. Sorting a copy leaves the user's depth-chart order untouched.
+  const dl = [
+    ...starters(save, teamId, "DE", starterCount("DE", team?.offScheme, team?.defScheme), benched),
+    ...starters(save, teamId, "DT", starterCount("DT", team?.offScheme, team?.defScheme), benched),
+  ];
+  const linebackers = [
+    ...starters(save, teamId, "OLB", starterCount("OLB", team?.offScheme, team?.defScheme), benched),
+    ...starters(save, teamId, "MLB", starterCount("MLB", team?.offScheme, team?.defScheme), benched),
+  ];
+  const nickelCorners = starters(save, teamId, "CB", 3, benched);
+  const usesNickel = nickel && save.year >= 1990 && nickelCorners.length >= 3;
+  // Base fronts field 11 defenders: 4-3-4 or 3-4-4. Nickel adds CB3 and
+  // removes one linebacker; retain the best coverage LBs without changing saved depth.
   const lb = usesNickel
     ? linebackers
         .slice()
         .sort((a, b) => b.ratings.cov + b.ratings.agi + b.ratings.awareness - (a.ratings.cov + a.ratings.agi + a.ratings.awareness))
-        .slice(0, 2)
+        .slice(0, Math.max(0, linebackers.length - 1))
     : linebackers;
-  const db = [...(usesNickel ? nickelCorners : nickelCorners.slice(0, 3)), ...starters(save, teamId, "S", 2, benched)];
+  const corners = usesNickel ? nickelCorners : nickelCorners.slice(0, 2);
+  const db = [...corners, ...starters(save, teamId, "S", 2, benched)];
   const k = starters(save, teamId, "K", 1, benched)[0];
   const p = starters(save, teamId, "P", 1, benched)[0];
   const coach = team?.coachId ? save.coaches[team.coachId] : undefined;
@@ -2423,8 +2430,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
       else lineRelief.delete(defId);
       rebuild(defId);
     }
-    const hasFourthCorner = starters(save, defId, "CB", 4, benched).length >= 4;
-    const shouldUseNickel = usesNickelPersonnel(year, down, togo, plan.attack, hasFourthCorner);
+    const hasThirdCorner = starters(save, defId, "CB", 3, benched).length >= 3;
+    const shouldUseNickel = usesNickelPersonnel(year, down, togo, plan.attack, hasThirdCorner);
     const currentlyNickel = nickelDefense.has(defId);
     if (canChangeDefensePersonnel(currentlyNickel, shouldUseNickel, substitutionWindowOpen)) {
       if (shouldUseNickel) nickelDefense.add(defId);
