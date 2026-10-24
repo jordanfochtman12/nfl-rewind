@@ -3471,6 +3471,8 @@ table tbody tr:hover {
 /* Phone-first section rail: core destinations stay reachable while the page scrolls. */
 .mobile-game-dock { display: none; }
 @media (max-width: 1099px) {
+  /* Keep first-run walkthrough controls above the ticker, clear of the fixed game dock. */
+  .tour-card { bottom: calc(36px + 62px + env(safe-area-inset-bottom) + 10px) !important; }
   .mobile-game-dock {
     position: fixed;
     z-index: 40;
