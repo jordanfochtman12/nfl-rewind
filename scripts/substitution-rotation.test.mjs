@@ -282,12 +282,14 @@ test("cumulative career rushing workload gradually shifts carries toward the dep
       2020: { rushYds: 4_000 },
       2021: { rushYds: 8_000 },
       2022: { rushYds: 4_000 },
+      2023: { rushYds: 4_000 },
     },
   };
   assert.equal(careerRushWorkloadFactor(player, 2019), 1, "normal workload does not penalize an emerging runner");
-  assert.equal(careerRushWorkloadFactor(player, 2020), 1, "the taper begins after 10,000 career rushing yards");
-  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2021) - 0.7714285714) < 0.0001, "the taper responds gradually to career use");
-  assert.equal(careerRushWorkloadFactor(player, 2022), 0.68, "heavy career volume reduces usage without removing the player's role");
+  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2020) - 0.9428571429) < 0.0001, "the taper begins after 8,000 career rushing yards");
+  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2021) - 0.7142857143) < 0.0001, "the taper responds gradually to career use");
+  assert.equal(careerRushWorkloadFactor(player, 2022), 0.62, "the taper continues through high career totals");
+  assert.equal(careerRushWorkloadFactor(player, 2023), 0.62, "the minimum still preserves a role for an extreme career workload");
   assert.equal(careerRushWorkloadFactor(undefined, 2024), 1, "missing players do not change workload selection");
 });
 
