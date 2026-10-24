@@ -3,6 +3,7 @@
  * club), and two careers side by side. Regular season and playoffs stay separate. No React.
  */
 import { careerTotals, playoffTotals } from "./leaders.ts";
+import { seasonLog } from "./statsView.ts";
 import { STAT_WORDS, WATCH_STATS, type WatchStat } from "./boothMemory.ts";
 import { playerName } from "./players.ts";
 import type { DynastySave, Player, SeasonStats, TeamId } from "./types.ts";
@@ -102,7 +103,8 @@ export function comparePlayers(save: DynastySave, a: Player, b: Player): { secti
   const tb = totalsOf(b);
   const pa = playoffTotals(a);
   const pb = playoffTotals(b);
-  const seasons = (p: Player) => [...Object.values(p.stats), ...(p.career ?? [])];
+  // Use one authoritative line per year, with the live dynasty line superseding its archive copy.
+  const seasons = (p: Player) => seasonLog(p);
   const best = (p: Player, k: WatchStat) => Math.max(0, ...seasons(p).map((s) => val(s, k)));
   const relevant = WATCH_STATS.filter((k) => val(ta, k) + val(tb, k) > 0);
   const honors = (p: Player) => p.honors ?? { proBowl: [], allPro: [], awards: [], rings: [] };

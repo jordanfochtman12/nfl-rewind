@@ -5,6 +5,7 @@ import { createNewGame } from "../src/lib/game/createGame.ts";
 import { simGame, planFor, canKneelOut } from "../src/lib/game/sim.ts";
 import { importDynasty } from "../src/lib/game/importSave.ts";
 import { careerTotals, playoffTotals } from "../src/lib/game/leaders.ts";
+import { comparePlayers } from "../src/lib/game/careerBook.ts";
 import { emptyStats } from "../src/lib/game/players.ts";
 import { boothLine } from "../src/lib/game/commentary.ts";
 
@@ -24,6 +25,18 @@ test("cumulative careers count each season once, prefer current lines and keep t
   assert.equal(playoffTotals(player).passYds,200);
   assert.equal(careerTotals(player,{fromYear:1966,throughYear:1967}).passYds,400);
   assert.equal(JSON.stringify(player),snapshot);
+});
+
+test("career comparisons use the authoritative line for each best season", () => {
+  const archived = { ...emptyStats(2024, "pit"), gp: 16, passYds: 1500 };
+  const live = { ...archived, gp: 8, passYds: 700 };
+  const prior = { ...emptyStats(2023, "pit"), gp: 16, passYds: 1200 };
+  const a = { id: "a", firstName: "A", lastName: "Quarterback", pos: "QB", teamId: "pit", stats: { 2024: live }, career: [prior, archived], playoffStats: {} };
+  const b = { ...a, id: "b", firstName: "B", stats: { 2023: prior }, career: [] };
+  const compared = comparePlayers({ players: { a, b } }, a, b);
+  const best = compared.sections.find((section) => section.title === "Best single season");
+  assert.equal(best.rows.find((row) => row.label === "Passing yards").a, 1200,
+    "the stale archived copy must not outrank the player's current 700-yard line");
 });
 
 test("natural commentary preserves names, gains and scoring without inventing play details", () => {
