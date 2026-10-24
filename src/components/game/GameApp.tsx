@@ -2206,6 +2206,13 @@ function PlayShell() {
   };
   const watch = !!save.sandbox && !save.leagueSandbox;
   const real = !!save.realHistory;
+  const navigateToSection = (id: Tab) => {
+    setTab(id);
+    setTv(false);
+    // A new section must always begin at its header on phones; otherwise the browser
+    // preserves the previous screen's deep scroll position and makes navigation look broken.
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+  };
   const tabs = real ? HISTORY_TABS : watch ? WATCH_TABS : TABS;
   const displayTabs = save.phase === "preDraft"
     ? tabs.map((item) => item.id === "draft" ? { ...item, label: "Draft Preview" } : item)
@@ -2223,10 +2230,7 @@ function PlayShell() {
         <WatchTV
           tabs={displayTabs}
           active={tab}
-          onPick={(id) => {
-            setTab(id);
-            setTv(false);
-          }}
+          onPick={navigateToSection}
         />
         <PlayerProfile />
         <TeamRosterModal />
@@ -2316,7 +2320,7 @@ function PlayShell() {
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {watch && !real && !settingsOpen && <Tour id="watch" steps={WATCH_TOUR} />}
       {tab !== "primetime" && <BottomLine save={save} />}
-      <MobileGameDock tabs={displayTabs} active={tab} onPick={setTab} />
+      <MobileGameDock tabs={displayTabs} active={tab} onPick={navigateToSection} />
     </ClubDesk>
     )}
     </Suspense>

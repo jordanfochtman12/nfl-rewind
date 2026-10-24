@@ -56,7 +56,7 @@ function Segment({ n, title, children, id }: { n: number; title: string; childre
  * `embedded` is the same preview under draft night's opening card (no show open, no ticker,
  * no button to the room the owner is already in).
  */
-export function DraftPreviewShow({ embedded = false, preDraft = false }: { embedded?: boolean; preDraft?: boolean } = {}) {
+export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn }: { embedded?: boolean; preDraft?: boolean; onReturn?: () => void } = {}) {
   const save = useGameStore((s) => s.save)!;
   const setTab = useGameStore((s) => s.setTab);
   const step = useGameStore((s) => s.step);
@@ -362,9 +362,13 @@ export function DraftPreviewShow({ embedded = false, preDraft = false }: { embed
           </ul>
           {!embedded && (
             <div className="mt-5 flex flex-wrap gap-2">
-              <Btn kind="primary" onClick={() => preDraft ? step({}) : setTab("draft")}>
-                {preDraft ? "Open the draft room" : "To the draft room"} <span aria-hidden>▸</span>
-              </Btn>
+              {onReturn ? (
+                <Btn kind="primary" onClick={onReturn}>Return to draft room <span aria-hidden>▸</span></Btn>
+              ) : (
+                <Btn kind="primary" onClick={() => preDraft ? step({}) : setTab("draft")}>
+                  {preDraft ? "Open the draft room" : "To the draft room"} <span aria-hidden>▸</span>
+                </Btn>
+              )}
             </div>
           )}
         </header>

@@ -44,6 +44,7 @@ import { NightShow } from "./ShowKit";
 import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
 import { DraftOpening } from "./DraftOpening";
 import { DraftRecapView } from "./DraftRecap";
+import { DraftPreviewShow } from "./DraftPreview";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
   "ALL",
@@ -102,13 +103,13 @@ export function DraftNight() {
   const announcer = useDraftAnnouncer();
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
-  const setTab = useGameStore((s) => s.setTab);
   const openProfile = useGameStore((s) => s.openProfile);
   const desk = useGameStore((s) => s.desk);
   // The room opens on hold: the draft starts when the owner says so, not the moment it loads.
   const [paused, setPaused] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
   // Before the first pick the room opens on the welcome; the owner starts the draft from it.
   const [opening, setOpening] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
+  const [showingPreview, setShowingPreview] = useState(false);
   const showOpening = opening && save.phase === "draft" && save.draftPickIndex === 0;
   const [hold, setHold] = useState(8);
   const [scoutId, setScoutId] = useState<string | null>(null);
@@ -157,7 +158,7 @@ export function DraftNight() {
   const myNeeds = useMemo(() => (isUser && onClock ? positionalNeeds(save, onClock, 4).map((n) => n.pos) : undefined), [save, isUser, onClock]);
 
   useEffect(() => {
-    if (!cpuUp || paused || announcer.busy || announcer.hidden) return;
+    if (!cpuUp || paused || showingPreview || announcer.busy || announcer.hidden) return;
     setHold(8);
     const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
     const fire = setTimeout(() => step({}), 1800);
@@ -165,18 +166,22 @@ export function DraftNight() {
       clearInterval(tick);
       clearTimeout(fire);
     };
-  }, [cpuUp, paused, save.draftPickIndex, step, announcer.busy, announcer.hidden]);
+  }, [cpuUp, paused, showingPreview, save.draftPickIndex, step, announcer.busy, announcer.hidden]);
 
   // Your own clock runs too. It is television: the pick is yours whenever you make it.
   useEffect(() => {
-    if (!isUser) return;
+    if (!isUser || showingPreview) return;
     setHold(75);
     const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
     return () => clearInterval(tick);
-  }, [isUser, save.draftPickIndex]);
+  }, [isUser, showingPreview, save.draftPickIndex]);
   const ticker = useMemo(() => draftTicker(save, 20), [save]);
   // After the last pick the room becomes the morning-after review, until next year's board.
   const hasRecap = save.draftBoard.some((pr) => pr.taken && save.players[pr.playerId]?.draftYear === save.year);
+
+  if (showingPreview) {
+    return <DraftPreviewShow onReturn={() => setShowingPreview(false)} />;
+  }
 
   if (save.phase !== "draft" && hasRecap) return <DraftRecapView />;
   if (save.phase !== "draft") {
@@ -200,6 +205,10 @@ export function DraftNight() {
       tickerLabel="THE PICKS"
     >
     <div className="space-y-4">
+      {!showOpening && <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brass/30 bg-gradient-to-r from-[#17130c] to-[#0b0d12] px-4 py-3">
+        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Before the next pick</p><p className="mt-1 text-xs text-muted">Revisit the class, mock board and prospect storylines.</p></div>
+        <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch draft preview</Btn>
+      </div>}
       <TalksReminder />
       {announcer.controls}
       {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
@@ -209,7 +218,7 @@ export function DraftNight() {
       {showOpening && (
         <>
           <DraftOpening
-            onPreview={() => setTab("primetime")}
+            onPreview={() => setShowingPreview(true)}
             onStart={() => {
               setOpening(false);
               setPaused(false);
@@ -270,9 +279,6 @@ export function DraftNight() {
             </p>
           )}
           <div className="flex flex-wrap gap-2">
-            <Btn kind="gold" onClick={() => setTab("primetime")}>
-              Draft preview show
-            </Btn>
             {cpuUp && (
               <>
                 <Btn kind="primary" onClick={() => step({})}>

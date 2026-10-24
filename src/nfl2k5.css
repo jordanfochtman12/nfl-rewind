@@ -3552,10 +3552,11 @@ table tbody tr:hover {
 }
 @media (max-width: 420px) {
   .mobile-game-dock { gap: 2px; }
-  .mobile-game-dock-button, .mobile-game-dock-more { font-size: 9px; }
+  .mobile-game-dock-button, .mobile-game-dock-more { font-size: 10px; line-height: 1.05; }
   .mobile-game-dock-button { flex-direction: column; gap: 1px; }
   .mobile-game-dock-more { flex-direction: column; }
-  .mobile-game-dock-button > span { font-size: 16px; }
+  .mobile-game-dock-button > span { font-size: 18px; }
+  .mobile-game-dock-button { white-space: nowrap; }
 }
 @media (max-width: 1099px) {
   .mobile-game-dock-tv {
