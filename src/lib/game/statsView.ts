@@ -101,6 +101,7 @@ const DEF_COLS: StatCol[] = [
   { key: "ff", label: "FF", of: (s) => kept(s, "ff", s.ff) },
   { key: "fr", label: "FR", of: (s) => num(s.fr ?? 0) },
   { key: "defTd", label: "Def TD", of: (s) => kept(s, "defTd", num(s.defTd ?? 0)) },
+  { key: "safeties", label: "Saf", of: (s) => kept(s, "safeties", num(s.safeties ?? 0)) },
   { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
   { key: "pts", label: "Pts", of: scoringDisplay },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
@@ -184,7 +185,7 @@ function familyHasWork(family: StatFamily, s: SeasonStats): boolean {
   if (family === "pass") return s.passAtt > 0 || (s.twoPtMade ?? 0) > 0;
   if (family === "rush") return s.rushAtt > 0 || s.rushYds > 0 || (s.twoPtMade ?? 0) > 0;
   if (family === "rec") return s.rec > 0 || s.recYds > 0 || (s.twoPtMade ?? 0) > 0;
-  if (family === "def") return s.tackles + s.sacks + s.ints + (s.ff ?? 0) + (s.fr ?? 0) + (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + (s.twoPtMade ?? 0) > 0;
+  if (family === "def") return s.tackles + s.sacks + s.ints + (s.ff ?? 0) + (s.fr ?? 0) + (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + (s.twoPtMade ?? 0) + (s.safeties ?? 0) > 0;
   if (family === "ol") return s.gp > 0;
   if (family === "k") return s.fgAtt + s.xpAtt + s.fgMade + s.xpMade > 0;
   if (family === "p") return s.punts > 0;
@@ -222,7 +223,7 @@ export function hasSeasonWork(s: SeasonStats | undefined): boolean {
     s.gp > 0 ||
     s.passAtt + s.passCmp + s.passYds + s.passTd + s.passInt + s.rushAtt + s.rushYds + s.rushTd +
       s.rec + s.recYds + s.recTd + s.tackles + s.sacks + s.ints + (s.ff ?? 0) + (s.fr ?? 0) +
-      (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + s.fgAtt + s.fgMade +
+      (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + (s.safeties ?? 0) + s.fgAtt + s.fgMade +
       s.xpAtt + s.xpMade + (s.twoPtMade ?? 0) + s.punts + s.puntYds + s.krYds + s.prYds + (s.krTd ?? 0) + (s.prTd ?? 0) > 0
   );
 }
@@ -291,5 +292,5 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   if (f === "ol") {
     return [games, yrs, { label: "Age", value: String(p.age) }, { label: "Exp", value: `${p.yearsPro} yr` }];
   }
-  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }, { label: "Def TD", value: String(kept(s, "defTd", comma(s.defTd ?? 0))) }, { label: "Pts", value: String(scoringDisplay(s)) }];
+  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }, { label: "Def TD", value: String(kept(s, "defTd", comma(s.defTd ?? 0))) }, { label: "Safeties", value: String(kept(s, "safeties", comma(s.safeties ?? 0))) }, { label: "Pts", value: String(scoringDisplay(s)) }];
 }

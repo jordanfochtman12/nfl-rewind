@@ -7,15 +7,15 @@ import { hydrateSave } from "../src/lib/game/save.ts";
 import { individualScoringPoints } from "../src/lib/game/statRules.ts";
 import { scoring } from "../src/lib/game/statsView.ts";
 
-test("individual points count two-point conversions, touchdowns scored and kicking points, not passing touchdowns", () => {
+test("individual points count conversions, safeties, touchdowns scored and kicking points, not passing touchdowns", () => {
   const passer = { id: "qb", firstName: "Pass", lastName: "Leader", pos: "QB", teamId: "pit", stats: { 2024: { ...emptyStats(2024, "pit"), passTd: 40 } } };
-  const scorer = { id: "rb", firstName: "Touchdown", lastName: "Runner", pos: "RB", teamId: "pit", stats: { 2024: { ...emptyStats(2024, "pit"), rushTd: 8, krTd: 1, defTd: 1, twoPtMade: 1 } } };
+  const scorer = { id: "rb", firstName: "Touchdown", lastName: "Runner", pos: "RB", teamId: "pit", stats: { 2024: { ...emptyStats(2024, "pit"), rushTd: 8, krTd: 1, defTd: 1, twoPtMade: 1, safeties: 1 } } };
   const kicker = { id: "k", firstName: "Field", lastName: "Goal", pos: "K", teamId: "pit", stats: { 2024: { ...emptyStats(2024, "pit"), fgMade: 4, xpMade: 3 } } };
   const leaders = seasonLeaders({ year: 2024, players: { qb: passer, rb: scorer, k: kicker } });
 
-  assert.deepEqual(leaders.scoring.map(({ playerId, value }) => [playerId, value]), [["rb", 62], ["k", 15]]);
+  assert.deepEqual(leaders.scoring.map(({ playerId, value }) => [playerId, value]), [["rb", 64], ["k", 15]]);
   assert.equal(scoring(passer.stats[2024]), 0);
-  assert.equal(scoring(scorer.stats[2024]), 62);
+  assert.equal(scoring(scorer.stats[2024]), 64);
   assert.equal(scoring(kicker.stats[2024]), 15);
 });
 
@@ -90,16 +90,20 @@ test("older save stat lines default the new defensive-TD field without losing ot
   regular.rushYds = 41;
   delete regular.defTd;
   delete regular.twoPtMade;
+  delete regular.safeties;
   const postseason = { ...emptyStats(save.year, player.teamId), sacks: 2 };
   delete postseason.defTd;
   delete postseason.twoPtMade;
+  delete postseason.safeties;
   player.playoffStats = { [save.year]: postseason };
 
   const hydrated = hydrateSave(save);
   assert.equal(hydrated.players[player.id].stats[save.year].defTd, 0);
   assert.equal(hydrated.players[player.id].stats[save.year].twoPtMade, 0);
+  assert.equal(hydrated.players[player.id].stats[save.year].safeties, 0);
   assert.equal(hydrated.players[player.id].stats[save.year].rushYds, 41);
   assert.equal(hydrated.players[player.id].playoffStats[save.year].defTd, 0);
   assert.equal(hydrated.players[player.id].playoffStats[save.year].twoPtMade, 0);
+  assert.equal(hydrated.players[player.id].playoffStats[save.year].safeties, 0);
   assert.equal(hydrated.players[player.id].playoffStats[save.year].sacks, 2);
 });

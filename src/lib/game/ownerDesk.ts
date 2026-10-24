@@ -368,7 +368,7 @@ export function ownerDeskWeek(save: DynastySave): void {
   const season = save.decisions.filter((d) => d.year === save.year);
   // A few a season, a couple of weeks apart: the desk is a moment, not a chore.
   if (season.length >= 6 || season.some((d) => d.week >= save.week - 1)) return;
-  if (hash01(`${seed}:land`) > 0.4) return;
+  if (hash01(`${seed}:land`) > 0.55) return;
   const recent = new Set(season.filter((d) => d.week >= save.week - 4).map((d) => d.kind));
   const named = new Set(season.flatMap((d) => d.playerIds));
   const used = (k: OwnerDecisionKind) => save.decisions!.filter((d) => d.year === save.year && d.kind === k).length;

@@ -36,7 +36,7 @@ test("season-calibrated scramble volume and gains preserve earlier-era controls"
   assert.equal(designedQbRunYardsAdjustment(2018), 0.45);
   assert.equal(designedQbRunYardsAdjustment(2019), 0.25);
   assert.equal(designedQbRunYardsAdjustment(2020), 0, "modern designed runs retain their own calibration");
-  assert.equal(scrambleYardsAdjustment(2020), -0.25);
+  assert.equal(scrambleYardsAdjustment(2020), -0.05);
   assert.equal(scrambleYardsAdjustment(2021), -0.25);
   assert.equal(scrambleYardsAdjustment(2022), -0.4);
   assert.equal(scrambleYardsAdjustment(2023), -0.55);

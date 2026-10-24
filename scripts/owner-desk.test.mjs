@@ -14,7 +14,7 @@ test("an owner's season puts calls on the desk and every answer sticks", () => {
   s.crunchOn = false;
   let seen = 0;
   let answered = 0;
-  for (let guard = 0; guard < 60 && (s.phase === "regular" || s.phase === "deadline"); guard++) {
+  for (let guard = 0; guard < 60 && ["regular", "deadline", "waivers"].includes(s.phase); guard++) {
     s = advance(s, {});
     if (s.phase !== "regular" || !s.weekFilm) continue;
     const open = openDecisions(s);

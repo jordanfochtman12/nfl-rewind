@@ -117,6 +117,7 @@ test("a stat the record doesn't keep is unknown, not zero", () => {
   const lewis = one("Ray", "Lewis", 2003).stats[2003];
   assert.ok(lewis.unknown?.includes("pts"), "the historical source does not retain every scoring method");
   assert.ok(lewis.unknown?.includes("defTd"));
+  assert.ok(lewis.unknown?.includes("safeties"), "historical individual safety credits are not present in the source");
   assert.ok(!lewis.unknown?.includes("tackles"), "tackle totals are recorded in this era");
   assert.ok(one("Joe", "Namath", 1967).stats[1967].unknown?.includes("twoPtMade"), "AFL-era conversion scorer is absent from the historical source");
   assert.ok(one("Brett", "Favre", 1995).stats[1995].unknown?.includes("twoPtMade"), "NFL conversion scorer is absent from the historical source");

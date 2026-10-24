@@ -10,4 +10,5 @@ test("pre-1966 career summaries keep two-point credit unknown only where the rul
 
   assert.ok(aflLine?.unknown?.includes("twoPtMade"), "the AFL allowed conversions, but the career source has no scorer credit");
   assert.ok(!nflLine?.unknown?.includes("twoPtMade"), "the NFL did not allow conversions in 1965, so zero is known");
+  assert.ok(aflLine?.unknown?.includes("safeties"), "pre-1966 individual safety credit is not in the career source");
 });

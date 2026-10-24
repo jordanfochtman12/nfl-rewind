@@ -23,10 +23,12 @@ test("historical data gaps remain explicit em dashes", () => {
 });
 
 test("passing touchdowns are not counted as points scored by the passer", () => {
-  const line = { ...emptyStats(2024, "pit"), passTd: 35, recTd: 2, krTd: 1, fgMade: 1, xpMade: 2, twoPtMade: 1 };
-  assert.equal(scoring(line), 25, "three player-scored touchdowns, one field goal, two extra points, and a conversion");
+  const line = { ...emptyStats(2024, "pit"), passTd: 35, recTd: 2, krTd: 1, fgMade: 1, xpMade: 2, twoPtMade: 1, safeties: 1 };
+  assert.equal(scoring(line), 27, "three player-scored touchdowns, one field goal, two extra points, a conversion, and a safety");
   assert.equal(value("rush", "twoPtMade", line), 1, "two-point conversion credits are sortable in player stats");
   assert.equal(value("rush", "twoPtMade", { ...line, unknown: ["twoPtMade"] }), "—");
+  assert.equal(value("def", "safeties", line), 1, "individual safety credits are sortable in defensive stats");
+  assert.equal(value("def", "safeties", { ...line, unknown: ["safeties"] }), "—");
 });
 
 test("defensive touchdown and points are visible, while unrecorded historical defensive TDs stay unknown", () => {
@@ -36,6 +38,7 @@ test("defensive touchdown and points are visible, while unrecorded historical de
   const historical = { ...emptyStats(1980, "pit"), unknown: ["defTd"] };
   assert.equal(value("def", "defTd", historical), "—");
   assert.equal(value("def", "pts", historical), "—");
+  assert.equal(value("def", "safeties", { ...historical, unknown: ["safeties"] }), "—");
 });
 
 test("career summary exposes defensive touchdowns and hides incomplete historical point totals", () => {
@@ -45,6 +48,7 @@ test("career summary exposes defensive touchdowns and hides incomplete historica
 
   assert.equal(headline(player, "Def TD"), "1");
   assert.equal(headline(player, "Pts"), "6");
+  assert.equal(headline(player, "Safeties"), "—");
   const historical = { ...line, unknown: ["defTd", "pts"] };
   assert.equal(headline({ ...player, stats: { 2024: historical } }, "Def TD"), "—");
   assert.equal(headline({ ...player, stats: { 2024: historical } }, "Pts"), "—");

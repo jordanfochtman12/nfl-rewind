@@ -7,7 +7,7 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
   return {
     year,
     teamId,
-    ...((twoPointOk(year, teamId as TeamId) || (year <= 1969 && teamId === "two")) ? { unknown: ["twoPtMade"] } : {}),
+    unknown: ["safeties", ...((twoPointOk(year, teamId as TeamId) || (year <= 1969 && teamId === "two")) ? ["twoPtMade"] : [])],
     gp: 0,
     passAtt: 0,
     passCmp: 0,
@@ -30,6 +30,7 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
     xpAtt: 0,
     xpMade: 0,
     twoPtMade: 0,
+    safeties: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,
@@ -67,6 +68,8 @@ const ROW_KEYS: (keyof Omit<SeasonStats, "year" | "teamId">)[] = [
   "fgMade",
   "xpAtt",
   "xpMade",
+  "twoPtMade",
+  "safeties",
   "punts",
   "puntYds",
   "krYds",
@@ -117,9 +120,10 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.krTd = 0;
   s.prTd = 0;
   s.twoPtMade = 0;
+  s.safeties = 0;
   s.unknown = [...new Set([
     ...(s.unknown ?? []),
-    "defTd", "krTd", "prTd", "pts",
+    "defTd", "krTd", "prTd", "pts", "safeties",
     ...(twoPointOk(row.y, row.t as TeamId) || (row.y <= 1969 && row.t === "two") ? ["twoPtMade"] : []),
   ])];
   return s;

@@ -539,7 +539,7 @@ function closeRegularSeason(save: DynastySave): void {
     // absent before 1999, and sacks are not official in the record before 1970.
     st.unknown = [...new Set([
       ...(st.unknown ?? []),
-      "defTd", "krTd", "prTd", "pts",
+      "defTd", "krTd", "prTd", "pts", "safeties",
       ...(twoPointOk(y, (team || p.teamId) as TeamId) && typeof line.twoPtMade !== "number" ? ["twoPtMade"] : []),
       ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
       ...(y < 1970 ? ["sacks"] : []),
@@ -745,7 +745,7 @@ export function applyLiveLines(save: DynastySave): void {
   const lineFor = (id: string | undefined, team: TeamId): SeasonStats | undefined => {
     const p = id ? save.players[id] : undefined;
     if (!p || (p.stats[y] && !p.stats[y]!.live)) return undefined;
-    const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", "defTd", "krTd", "prTd", "pts", ...(twoPointOk(y, team) ? [] : ["twoPtMade"]), ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
+    const unknown = ["fgAtt", "fgMade", "xpAtt", "xpMade", "defTd", "krTd", "prTd", "pts", "safeties", ...(twoPointOk(y, team) ? [] : ["twoPtMade"]), ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []), ...(y < 1970 ? ["sacks"] : [])];
     return (p.stats[y] ??= { ...emptyStats(y, team), live: true, unknown });
   };
   for (const g of save.schedule) {

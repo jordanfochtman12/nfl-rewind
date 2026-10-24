@@ -296,14 +296,18 @@ test("cumulative career rushing workload gradually shifts carries toward the dep
     },
   };
   assert.equal(careerRushWorkloadFactor(player, 2019), 1, "normal workload does not penalize an emerging runner");
-  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2020) - 0.9428571429) < 0.0001, "the taper begins after 8,000 career rushing yards");
-  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2021) - 0.7142857143) < 0.0001, "the taper responds gradually to career use");
-  assert.equal(careerRushWorkloadFactor(player, 2022), 0.62, "the taper continues through high career totals");
-  assert.equal(careerRushWorkloadFactor(player, 2023), 0.62, "the minimum still preserves a role for an extreme career workload");
+  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2020) - 0.8928571429) < 0.0001, "the taper begins after 7,000 career rushing yards");
+  assert.ok(Math.abs(careerRushWorkloadFactor(player, 2021) - 0.6071428571) < 0.0001, "the taper responds gradually to career use");
+  assert.equal(careerRushWorkloadFactor(player, 2022), 0.57, "the taper continues through high career totals");
+  assert.equal(careerRushWorkloadFactor(player, 2023), 0.57, "the minimum still preserves a role for an extreme career workload");
   assert.equal(careerRushWorkloadFactor(undefined, 2024), 1, "missing players do not change workload selection");
+  assert.ok(
+    Math.abs(careerRushWorkloadFactor({ age: 34, stats: { 2019: { rushYds: 10_000 } } }, 2020) - 0.7678571429) < 0.0001,
+    "age and prior career volume both reduce a veteran back's share gradually",
+  );
 
   assert.ok(
-    Math.abs(careerRushWorkloadFactor({ career: [{ year: 1965, rushYds: 6_000 }, { year: 1965, rushYds: 4_000 }], stats: {} }, 1966) - 0.9428571429) < 0.0001,
+    Math.abs(careerRushWorkloadFactor({ career: [{ year: 1965, rushYds: 6_000 }, { year: 1965, rushYds: 4_000 }], stats: {} }, 1966) - 0.8928571429) < 0.0001,
     "pre-dynasty, multi-team career rows combine to inform a veteran's first simulated season",
   );
 
@@ -313,11 +317,11 @@ test("cumulative career rushing workload gradually shifts carries toward the dep
     playoffStats: { 2019: { rushYds: 2_000 }, 2024: { rushYds: 1_000 }, 2025: { rushYds: 20_000 } },
   };
   assert.ok(
-    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024) - 0.9285714285714286) < 1e-9,
+    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024) - 0.875) < 1e-9,
     "prior postseason carries count, while current and future postseason stats stay unknown",
   );
   assert.ok(
-    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024, true) - 0.9) < 1e-9,
+    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024, true) - 0.8392857142857143) < 1e-9,
     "completed games in the current postseason inform the next playoff game's workload",
   );
 });

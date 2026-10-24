@@ -66,6 +66,7 @@ export function emptyStats(year: number, teamId: TeamId | "two"): SeasonStats {
     xpAtt: 0,
     xpMade: 0,
     twoPtMade: 0,
+    safeties: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,

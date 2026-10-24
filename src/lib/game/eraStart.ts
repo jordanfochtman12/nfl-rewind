@@ -639,7 +639,7 @@ export function restoreRecordLines(save: DynastySave): boolean {
       const st: SeasonStats = { ...emptyStats(y, (team || p.teamId) as TeamId), ...(line as Partial<SeasonStats>) };
       st.unknown = [...new Set([
         ...(st.unknown ?? []),
-        "defTd", "krTd", "prTd", "pts",
+        "defTd", "krTd", "prTd", "pts", "safeties",
         ...(twoPointOk(y, (team || p.teamId) as TeamId) && typeof line.twoPtMade !== "number" ? ["twoPtMade"] : []),
         ...(y < 1999 ? ["tackles", "ff", "tfl", "pd"] : []),
         ...(y < 1970 ? ["sacks"] : []),

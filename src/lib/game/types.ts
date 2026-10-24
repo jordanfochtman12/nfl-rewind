@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 25;
+export const SAVE_VERSION = 26;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -197,6 +197,8 @@ export interface SeasonStats {
   xpMade: number;
   /** Successful two-point conversions scored by this player. */
   twoPtMade: number;
+  /** Individual safeties credited by the official scoring rules. */
+  safeties: number;
   punts: number;
   puntYds: number;
   krYds: number;
@@ -206,7 +208,7 @@ export interface SeasonStats {
   pd: number;
   qbHits: number;
   fr: number;
-  /** Defensive touchdowns credited on a returned interception or fumble. */
+  /** Defensive touchdowns credited on an interception, fumble, or blocked-kick return. */
   defTd: number;
   krTd: number;
   prTd: number;
@@ -505,6 +507,7 @@ export interface BoxPlayer {
   xpMade?: number;
   xpAtt?: number;
   twoPtMade?: number;
+  safeties?: number;
   punts?: number;
   puntYds?: number;
   sacksThrown?: number;

@@ -254,10 +254,14 @@ export function careerRushWorkloadFactor(player: Player | undefined, year: numbe
     0,
   );
   const careerRushYards = [...regularSeasonYards.values()].reduce((total, yards) => total + yards, 0) + priorPostseasonYards;
-  // Start sharing the load before a star back reaches an extreme career total. The old 10,000-yard
-  // onset let the 1966–2020 leader reach 22,954 yards even after lowering the floor; an 8,000-yard
-  // onset keeps the response gradual and gives the depth chart more work without forcing retirement.
-  return clamp(1 - Math.max(0, careerRushYards - 8_000) / 35_000, 0.62, 1);
+  // Start sharing the load before a star back reaches an extreme career total. The 7,000/28,000
+  // curve brought the 1966–2020 leader down from 23,235 to 22,568 yards. Age adds a small workload
+  // decline for veteran backs, while still leaving room for a productive late-career role.
+  const careerUse = clamp(1 - Math.max(0, careerRushYards - 7_000) / 28_000, 0.57, 1);
+  const ageUse = Number.isFinite(player.age)
+    ? clamp(1 - Math.max(0, player.age - 30) * 0.035, 0.75, 1)
+    : 1;
+  return careerUse * ageUse;
 }
 
 /** Calibrated adjustment to modern halfback gain, measured against same-year NFL seasons. */
@@ -612,6 +616,15 @@ function twoPointScorer(unit: TeamUnits, random: () => number): Player | undefin
   return players[weightedIndex(players.map(weight), random)];
 }
 
+/** Attribute a blocked-kick play to one eligible defender without consuming game RNG. */
+function blockedKickDefender(unit: TeamUnits, random: () => number): Player | undefined {
+  const seen = new Set<string>();
+  const players = [...unit.dl, ...unit.lb, ...unit.db].filter((p) => !seen.has(p.id) && !!seen.add(p.id));
+  if (!players.length) return undefined;
+  const weights = players.map((p) => Math.max(0.1, (p.ratings.speed + p.ratings.accel + p.ratings.pur + p.ratings.awareness) / 4));
+  return players[weightedIndex(weights, random)];
+}
+
 function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: number, postseason = false): void {
   for (const b of box) {
     const p = save.players[b.playerId];
@@ -648,6 +661,7 @@ function applyBox(save: DynastySave, teamId: TeamId, box: BoxPlayer[], year: num
     s.xpMade += b.xpMade ?? 0;
     s.xpAtt += b.xpAtt ?? 0;
     s.twoPtMade += b.twoPtMade ?? 0;
+    s.safeties += b.safeties ?? 0;
     s.punts += b.punts ?? 0;
     s.puntYds += b.puntYds ?? 0;
     s.krYds += b.krYds ?? 0;
@@ -1599,6 +1613,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   if (game.played) return;
   const statRandom = tackleStatsRandom(save.rng, game.id);
   const conversionRandom = conversionStatsRandom(save.rng, game.id);
+  const blockedKickRandom = conversionStatsRandom(save.rng ^ 0x51f15e, game.id);
   const year = save.year;
   const era = eraProfile(year);
   const homeId = game.homeId as TeamId;
@@ -1643,10 +1658,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
   }
 
   const ko = kickoffRules(year);
-  // The first season's fixed-seed league runs slightly above its sourced rushing-attempt
-  // volume. Nudge the base call mix toward passes by one point; down, score, and weather
+  // Fixed-seed play-by-play calibration runs slightly above sourced rushing volume in 1966 and
+  // the mid-1990s. Nudge only those base call mixes toward passes; down, score, and weather
   // situations still shape each individual call below.
-  const eraPassW = era.passAtt / (era.passAtt + era.rushAtt) + (year === 1966 ? 0.01 : 0);
+  const eraPassW = era.passAtt / (era.passAtt + era.rushAtt) + (year === 1966 ? 0.01 : year >= 1990 && year <= 1999 ? 0.02 : 0);
   const big = eraBigPlay(year) * playoffBrake(game.phase);
   const pens = penaltyRates(year);
   const homeBox: BoxPlayer[] = [];
@@ -1947,6 +1962,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const markSafety = (scorer: TeamId) => {
     if (scorer === homeId) homeSafeties += 1;
     else awaySafeties += 1;
+  };
+  const creditSafety = (scorer: TeamId, player?: Player) => {
+    addPts(scorer, 2);
+    markSafety(scorer);
+    if (player) bumpBox(boxOf(scorer), player.id, { safeties: 1 });
   };
   const mark3rd = (id: TeamId, converted: boolean) => {
     if (id === homeId) {
@@ -2526,8 +2546,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       clock = Math.max(0, clock - 4);
       if (tenSecondRunoff(year) && (q === 2 || q >= 4) && clock <= 60 && clock > 10) clock = Math.max(0, clock - 10);
       if (spot <= 0) {
-        addPts(defId, 2);
-        markSafety(defId);
+        creditSafety(defId);
         closeDrive("safety");
         kickoffTo(defId, false, "free");
         if (ot) break;
@@ -2682,8 +2701,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const scoop = rand(save) < 0.12;
         closeDrive("miss");
         if (scoop) {
+          const scorer = blockedKickDefender(def, blockedKickRandom);
           addPts(defId, 6);
-          note("Scoop and score off the block.");
+          if (scorer) bumpBox(boxOf(defId), scorer.id, { defTd: 1 });
+          note(scorer ? `${playerName(scorer)} scoops the blocked kick and scores.` : "Scoop and score off the block.");
           extraPoint(defId);
           kickoffTo(poss, false);
         } else {
@@ -2721,8 +2742,8 @@ export function simGame(save: DynastySave, game: GameResult): void {
         note("Blocked punt.");
         closeDrive("punt");
         if (spot <= 8) {
-          addPts(defId, 2);
-          markSafety(defId);
+          const blocker = blockedKickDefender(def, blockedKickRandom);
+          creditSafety(defId, blocker);
           note("Blocked through the end zone. Safety.");
           kickoffTo(defId, false, "free");
           if (ot) break;
@@ -2787,8 +2808,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       clock = Math.max(0, clock - 8);
       lastRun = false;
       if (spot <= 0) {
-        addPts(defId, 2);
-        markSafety(defId);
+        creditSafety(defId);
         closeDrive("safety");
         kickoffTo(defId, false, "free");
         if (ot) break;
@@ -2923,8 +2943,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         lastRun = false;
         if (was3rd) mark3rd(poss, false);
         if (spot <= 0) {
-          addPts(defId, 2);
-          markSafety(defId);
+          creditSafety(defId, rusher);
           note("Safety. The pocket collapsed in the end zone.");
           closeDrive("safety");
           kickoffTo(defId, false, "free");
@@ -3372,8 +3391,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       continue;
     }
     if (spot <= 0) {
-      addPts(defId, 2);
-      markSafety(defId);
+      creditSafety(defId, t);
       closeDrive("safety");
       kickoffTo(defId, false, "free");
       if (ot) break;
