@@ -18,6 +18,8 @@ import {
   canChangeDefensePersonnel,
   adaptiveDefensiveFocus,
   usesNickelPersonnel,
+  usesDimePersonnel,
+  defensivePersonnelForSituation,
   hasNickelPersonnel,
 } from "../src/lib/game/index.ts";
 
@@ -58,6 +60,33 @@ test("base and nickel fronts use 11 defenders across 4-3 and 3-4 schemes", () =>
   assert.equal(hasNickelPersonnel(nickel34), true, "nickel tackle calibration follows the same package in a 3-4 front");
 });
 
+test("dime only enters modern long-yardage situations and keeps 11 defenders", () => {
+  assert.equal(usesDimePersonnel(2024, 3, 10, true), true);
+  assert.equal(usesDimePersonnel(2024, 4, 12, true), true);
+  assert.equal(usesDimePersonnel(2024, 2, 14, true), true);
+  assert.equal(usesDimePersonnel(2024, 3, 9, true), false, "stay in nickel below obvious passing distance");
+  assert.equal(usesDimePersonnel(2024, 2, 13, true), false, "avoid dime before a true second-and-long");
+  assert.equal(usesDimePersonnel(2024, 3, 12, false), false, "do not request dime without a healthy fourth corner");
+  assert.equal(usesDimePersonnel(1999, 3, 12, true), false, "keep the dime package out of pre-2000 simulation");
+  assert.equal(defensivePersonnelForSituation(2024, 3, 10, "balanced", true, true), "dime");
+  assert.equal(defensivePersonnelForSituation(2024, 3, 9, "balanced", true, true), "nickel");
+  assert.equal(defensivePersonnelForSituation(2024, 3, 10, "balanced", true, false), "nickel");
+
+  const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
+  const dime = teamUnits(save, "pit", undefined, "dime");
+  assert.equal(dime.db.filter((player) => player.pos === "CB").length, 4);
+  assert.equal(dime.db.length, 6, "dime has six defensive backs");
+  assert.equal(dime.dl.length + dime.lb.length + dime.db.length, 11);
+  assert.equal(dime.lb.length, 1, "4-3 dime replaces two linebackers with the fifth and sixth defensive backs");
+
+  save.teams.pit.defScheme = "3-4";
+  const dime34 = teamUnits(save, "pit", undefined, "dime");
+  assert.equal(dime34.dl.length, 3);
+  assert.equal(dime34.lb.length, 2);
+  assert.equal(dime34.db.length, 6);
+  assert.equal(dime34.dl.length + dime34.lb.length + dime34.db.length, 11);
+});
+
 test("hurry-up snaps trap defensive personnel and pause rotation cadence", () => {
   assert.equal(nextDefensiveRotationSnap(3, true), 4, "a substitution window advances the relief cadence");
   assert.equal(nextDefensiveRotationSnap(3, false), 3, "hurry-up snaps do not consume a relief opportunity");
@@ -67,6 +96,9 @@ test("hurry-up snaps trap defensive personnel and pause rotation cadence", () =>
   assert.equal(canChangeDefensePersonnel(false, true, true), true, "an open substitution window allows nickel to enter");
   assert.equal(canChangeDefensePersonnel(true, false, true), true, "an open substitution window allows nickel to leave");
   assert.equal(canChangeDefensePersonnel(true, true, true), false, "unchanged personnel does not trigger a rebuild");
+  assert.equal(canChangeDefensePersonnel("nickel", "dime", false), false, "hurry-up holds nickel on the field");
+  assert.equal(canChangeDefensePersonnel("nickel", "dime", true), true, "the sixth DB enters at a legal substitution window");
+  assert.equal(canChangeDefensePersonnel("dime", "base", true), true, "dime leaves when the situation no longer calls for it");
 });
 test("defensive-line relief gives two snaps to alternating edge and interior units", () => {
   assert.equal(defensiveLineReliefPosition(0), undefined);
