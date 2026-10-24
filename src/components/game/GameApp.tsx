@@ -2179,7 +2179,7 @@ function WatchOffice({ event }: { event: boolean }) {
 }
 
 function PlayShell() {
-  const { save, tab, setTab, resign, exportJson } = useGameStore();
+  const { save, tab, setTab, setTv, resign, exportJson } = useGameStore();
   const tv = useGameStore((s) => s.tv);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const event = useMemo(() => {
@@ -2220,7 +2220,14 @@ function PlayShell() {
     <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-12 text-center text-sm text-muted" role="status" aria-live="polite">Loading game presentation…</div>}>
     {watch && tv ? (
       <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
-        <WatchTV />
+        <WatchTV
+          tabs={displayTabs}
+          active={tab}
+          onPick={(id) => {
+            setTab(id);
+            setTv(false);
+          }}
+        />
         <PlayerProfile />
         <TeamRosterModal />
         {save.realHistory && <HistoryBoxModal />}

@@ -140,15 +140,17 @@ export function MobileGameDock<T extends string>({
   tabs,
   active,
   onPick,
+  className = "",
 }: {
   tabs: { id: T; label: string }[];
   active: T;
   onPick: (id: T) => void;
+  className?: string;
 }) {
   const quickIds = ["primetime", "stats", "draft", "office"];
   const quickTabs = quickIds.map((id) => tabs.find((tab) => tab.id === id)).filter((tab): tab is { id: T; label: string } => !!tab);
   return (
-    <nav className="mobile-game-dock" aria-label="Quick game navigation">
+    <nav className={`mobile-game-dock ${className}`} aria-label="Quick game navigation">
       {quickTabs.map((tab) => (
         <button key={tab.id} type="button" aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
           <span aria-hidden>{tab.id === "primetime" ? "◉" : tab.id === "stats" ? "▤" : tab.id === "draft" ? "◆" : "⌂"}</span>

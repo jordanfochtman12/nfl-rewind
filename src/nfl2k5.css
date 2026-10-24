@@ -626,7 +626,7 @@ input[list] {
   transition: opacity .2s ease, transform .35s ease;
 }
 .next-title-actions .next-mode-franchise::after {
-  background-image: linear-gradient(90deg, #090d16fa 0%, #101521df 45%, #090d1670 100%), url("/art/title.jpg");
+  background-image: linear-gradient(90deg, #5b0615f0 0%, #1b111bd9 43%, #10152180 100%), url("/art/title.jpg");
 }
 .next-title-actions .next-mode-timeline::after {
   background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/stadium-arrival.webp");
@@ -3520,6 +3520,43 @@ table tbody tr:hover {
   .mobile-game-dock-button, .mobile-game-dock-more { font-size: 9px; }
   .mobile-game-dock-button { flex-direction: column; gap: 1px; }
   .mobile-game-dock-button > span { font-size: 16px; }
+}
+@media (max-width: 1099px) {
+  .mobile-game-dock-tv {
+    z-index: 80;
+    bottom: env(safe-area-inset-bottom);
+  }
+  .tv-content { padding-bottom: 154px !important; }
+  .tv-crawl { bottom: calc(70px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 600px) {
+  .next-title-actions .bx-btn {
+    min-height: 7.25rem;
+    padding: 0.8rem 1rem;
+    clip-path: polygon(0 0, 100% 0, calc(100% - .8rem) 100%, 0 100%);
+  }
+  .next-title-actions .bx-btn::after {
+    opacity: .96;
+    background-position: center 44%;
+  }
+  .next-title-actions .next-mode-franchise { min-height: 7.75rem; }
+  .next-title-actions .next-mode-title {
+    font-size: 1.04rem;
+    text-shadow: 0 2px 10px #000;
+  }
+  .next-title-actions .next-mode-detail {
+    max-width: 25rem;
+    color: #e1e9f4;
+    font-size: .72rem;
+    text-shadow: 0 1px 6px #000;
+  }
+  .next-title-actions .next-mode-franchise .next-mode-title { font-size: 1.1rem; }
+  .next-title-actions .next-mode-arrow {
+    width: 2.2rem;
+    height: 2.2rem;
+    border: 1px solid #ffffff7d;
+    background: #050a13a6;
+  }
 }
 
 /* ---------- franchise command center: a live matchup, readable signals ----------

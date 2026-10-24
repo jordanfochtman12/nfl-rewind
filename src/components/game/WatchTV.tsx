@@ -8,6 +8,8 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { settingsNow } from "@/lib/settings-store";
+import type { Tab } from "@/lib/game-store";
+import { MobileGameDock } from "./Broadcast";
 import {
   breakingNews,
   newsTag,
@@ -309,7 +311,15 @@ function useWakeLock() {
   }, []);
 }
 
-export function WatchTV() {
+export function WatchTV({
+  tabs,
+  active,
+  onPick,
+}: {
+  tabs: { id: Tab; label: string }[];
+  active: Tab;
+  onPick: (id: Tab) => void;
+}) {
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
   const setTv = useGameStore((s) => s.setTv);
@@ -438,7 +448,7 @@ export function WatchTV() {
           </div>
         </div>
       </header>
-      <div className="mx-auto max-w-6xl px-3 pb-24 pt-4 sm:px-4">
+      <div className="tv-content mx-auto max-w-6xl px-3 pb-24 pt-4 sm:px-4">
         {bulletin ? (
           <Bulletin key={bulletin.id} item={bulletin} save={save} say={say} paused={paused} onDone={() => setQueue((q) => q.slice(1))} />
         ) : stage.k === "preview" ? (
@@ -472,6 +482,7 @@ export function WatchTV() {
       )}
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
       {!settingsOpen && <Tour id="tv" steps={TV_TOUR} />}
+      <MobileGameDock className="mobile-game-dock-tv" tabs={tabs} active={active} onPick={onPick} />
     </div>
   );
 }
