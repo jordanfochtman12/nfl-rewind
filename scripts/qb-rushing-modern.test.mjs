@@ -8,7 +8,11 @@ test("modern quarterback rushing volume and efficiency track each historical sea
   setHistoryData(history);
   // 2025 is intentionally not a calibration year: its final archived stats include real
   // season-long injury absences that a new alternate-timeline season does not replay.
-  const years = [2020, 2021, 2022, 2023, 2024];
+  const requestedYears = process.env.QB_RUSHING_TEST_YEARS
+    ?.split(",")
+    .map(Number)
+    .filter(Number.isInteger);
+  const years = requestedYears?.length ? requestedYears : [2020, 2021, 2022, 2023, 2024];
   const seasons = years.map((year) => {
     const actual = history.stats(year).reduce((sum, row) => {
       const position = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;

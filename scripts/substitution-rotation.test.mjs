@@ -301,6 +301,25 @@ test("cumulative career rushing workload gradually shifts carries toward the dep
   assert.equal(careerRushWorkloadFactor(player, 2022), 0.62, "the taper continues through high career totals");
   assert.equal(careerRushWorkloadFactor(player, 2023), 0.62, "the minimum still preserves a role for an extreme career workload");
   assert.equal(careerRushWorkloadFactor(undefined, 2024), 1, "missing players do not change workload selection");
+
+  assert.ok(
+    Math.abs(careerRushWorkloadFactor({ career: [{ year: 1965, rushYds: 6_000 }, { year: 1965, rushYds: 4_000 }], stats: {} }, 1966) - 0.9428571429) < 0.0001,
+    "pre-dynasty, multi-team career rows combine to inform a veteran's first simulated season",
+  );
+
+  const postseasonVeteran = {
+    career: [{ year: 2019, rushYds: 7_000 }],
+    stats: { 2019: { rushYds: 7_000 }, 2024: { rushYds: 1_500 }, 2025: { rushYds: 9_000 } },
+    playoffStats: { 2019: { rushYds: 2_000 }, 2024: { rushYds: 1_000 }, 2025: { rushYds: 20_000 } },
+  };
+  assert.ok(
+    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024) - 0.9285714285714286) < 1e-9,
+    "prior postseason carries count, while current and future postseason stats stay unknown",
+  );
+  assert.ok(
+    Math.abs(careerRushWorkloadFactor(postseasonVeteran, 2024, true) - 0.9) < 1e-9,
+    "completed games in the current postseason inform the next playoff game's workload",
+  );
 });
 
 test("modern running-back yardage adjustments remain season-specific", () => {

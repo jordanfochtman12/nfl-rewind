@@ -227,12 +227,33 @@ export function staminaWorkloadFactor(stamina: number): number {
 }
 
 /** High career rushing volume gradually shifts work toward the depth chart, without forcing retirement. */
-export function careerRushWorkloadFactor(player: Player | undefined, year: number): number {
+export function careerRushWorkloadFactor(player: Player | undefined, year: number, includeCurrentPostseason = false): number {
   if (!player) return 1;
-  const careerRushYards = Object.entries(player.stats).reduce(
-    (total, [season, stats]) => (Number(season) <= year ? total + (stats.rushYds ?? 0) : total),
+  // `career` preserves real seasons before a dynasty starts, while `stats` is the live/dynasty
+  // ledger. Prefer the latter when both contain a year (completed dynasty seasons appear in both).
+  const regularSeasonYards = new Map<number, number>();
+  for (const season of player.career ?? []) {
+    if (season.year <= year) {
+      regularSeasonYards.set(season.year, (regularSeasonYards.get(season.year) ?? 0) + (season.rushYds ?? 0));
+    }
+  }
+  for (const [season, stats] of Object.entries(player.stats)) {
+    const seasonYear = Number(season);
+    if (seasonYear <= year) regularSeasonYards.set(seasonYear, stats.rushYds ?? 0);
+  }
+  // Postseason carries are still part of a player's career workload. Keep the regular-season
+  // and playoff ledgers separate for display, but use prior playoff seasons for substitution.
+  // Current-year playoffs are not known in the regular season and imports may include them.
+  const priorPostseasonYards = Object.entries(player.playoffStats ?? {}).reduce(
+    (total, [season, stats]) => {
+      const seasonYear = Number(season);
+      return seasonYear < year || (includeCurrentPostseason && seasonYear === year)
+        ? total + (stats.rushYds ?? 0)
+        : total;
+    },
     0,
   );
+  const careerRushYards = [...regularSeasonYards.values()].reduce((total, yards) => total + yards, 0) + priorPostseasonYards;
   // Start sharing the load before a star back reaches an extreme career total. The old 10,000-yard
   // onset let the 1966–2020 leader reach 22,954 yards even after lowering the floor; an 8,000-yard
   // onset keeps the response gradual and gives the depth chart more work without forcing retirement.
@@ -811,12 +832,13 @@ function pickRusher(
   call: Call,
   goal: boolean,
   carriesSoFar?: (id: string) => number,
+  inPlayoff = false,
 ): Player | undefined {
   const rb1 = eraRb1Share(year);
   // Keep the leader-pace response consistent across every depth-chart role. RB2/RB3 and
   // designed-QB carries used to bypass the season-long rushing taper applied to RB1.
   const rushPaceTaper = (player: Player | undefined) =>
-    taperOf(player, "rushYds", year, leaderPace(year).rush) * careerRushWorkloadFactor(player, year);
+    taperOf(player, "rushYds", year, leaderPace(year).rush) * careerRushWorkloadFactor(player, year, inPlayoff);
   // A back who's already carried a heavy load this game gets spelled more -
   // without this, a lead back's flat per-play weight can compound into an
   // unrealistic 50+ carry game over enough plays.
@@ -3211,8 +3233,15 @@ export function simGame(save: DynastySave, game: GameResult): void {
       continue;
     }
 
-    const rusher = pickRusher(save, off, down === 3 && togo >= 5, year, call, spot >= 95 || call === "sneak", (id) =>
-      boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
+    const rusher = pickRusher(
+      save,
+      off,
+      down === 3 && togo >= 5,
+      year,
+      call,
+      spot >= 95 || call === "sneak",
+      (id) => boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
+      playoff,
     );
     let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80 - vanilla * 0.9 + soft * 0.5;
     // Keep the measured correction on modern RBs so QB mobility and earlier-era run
