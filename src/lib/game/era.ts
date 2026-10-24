@@ -317,11 +317,14 @@ export function eraBigPlay(year: number): number {
 export function eraTargetWeights(year: number): { wr1: number; wr2: number; wr3: number; te: number; rb: number } {
   if (year <= 1969) return { wr1: 0.3, wr2: 0.28, wr3: 0.08, te: 0.15, rb: 0.19 };
   if (year <= 1977) return { wr1: 0.28, wr2: 0.26, wr3: 0.1, te: 0.17, rb: 0.19 };
-  if (year <= 1989) return { wr1: 0.27, wr2: 0.22, wr3: 0.12, te: 0.18, rb: 0.19 };
-  if (year <= 1999) return { wr1: 0.28, wr2: 0.22, wr3: 0.13, te: 0.095, rb: 0.18 };
-  if (year <= 2009) return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.21, rb: 0.16 };
-  if (year <= 2019) return { wr1: 0.28, wr2: 0.2, wr3: 0.16, te: 0.18, rb: 0.15 };
-  return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.22, rb: 0.15 };
+  // Real-roster full-season audits showed backs underused as receivers and tight ends too
+  // heavily targeted from 1980 forward. Shift the target mix to match the recorded positional
+  // catch shares instead of compensating with more total passes or completions.
+  if (year <= 1989) return { wr1: 0.22, wr2: 0.18, wr3: 0.1, te: 0.15, rb: 0.31 };
+  if (year <= 1999) return { wr1: 0.25, wr2: 0.2, wr3: 0.12, te: 0.095, rb: 0.235 };
+  if (year <= 2009) return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.18, rb: 0.19 };
+  if (year <= 2019) return { wr1: 0.28, wr2: 0.2, wr3: 0.16, te: 0.15, rb: 0.18 };
+  return { wr1: 0.28, wr2: 0.2, wr3: 0.15, te: 0.19, rb: 0.18 };
 }
 
 /** RB1 carry share. Workhorse era through the 90s, committees later. */

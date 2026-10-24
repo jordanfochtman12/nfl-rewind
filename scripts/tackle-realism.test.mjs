@@ -1,7 +1,7 @@
 /** Defensive tackle totals include helpers; keep the sim's totals and role mix close to history. */
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { createNewGame, loadHistoryData, simGame, simUntil } from "../src/lib/game/index.ts";
+import { createEraGame, loadHistoryData, setHistoryData, simGame, simUntil } from "../src/lib/game/index.ts";
 
 const DEFENSE = ["DE", "DT", "MLB", "OLB", "CB", "S"];
 const YEARS = [1999, 2009, 2019, 2024];
@@ -10,6 +10,7 @@ let simulated;
 
 before(async () => {
   const history = await loadHistoryData();
+  setHistoryData(history);
   historical = {};
   simulated = {};
   for (const year of YEARS) {
@@ -19,7 +20,7 @@ before(async () => {
       if (pos in historical[year]) historical[year][pos] += row.line.tackles ?? 0;
     }
 
-    let save = createNewGame({ userTeamId: "pit", startingYear: year, cpuOnly: true, seed: 9711 });
+    let save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed: 9711 });
     save = simUntil(save, (state) => state.year > year || state.phase === "complete");
     simulated[year] = Object.fromEntries(DEFENSE.map((pos) => [pos, 0]));
     for (const player of Object.values(save.players)) {
@@ -29,7 +30,7 @@ before(async () => {
 });
 
 test("assist attribution is deterministic and does not make outcome depend on run order", () => {
-  const make = () => createNewGame({ userTeamId: "pit", startingYear: 1999, cpuOnly: true, seed: 9711 });
+  const make = () => createEraGame({ userTeamId: "pit", startingYear: 1999, sandbox: true, seed: 9711 });
   const game = {
     id: "tackle-audit-pit-cle-1999",
     year: 1999,

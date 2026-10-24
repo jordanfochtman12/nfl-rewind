@@ -754,10 +754,15 @@ function pickRec(
     { p: off.te, wt: w.te * (off.te2 ? 0.65 : 1) * (deep ? 0.55 : 1.15) * (redZone ? 1.45 : 1) },
     { p: off.te2, wt: w.te * 0.35 * (deep ? 0.4 : 1.05) * (redZone ? 1.25 : 1) },
   ];
+  const fbTargetShare = !off.fb ? 0 : year <= 1989 ? 0 : year <= 2009 ? 0.12 : year <= 2019 ? 0.08 : 0.04;
   const backTargetWeight = w.rb * (deep ? 0.3 : 1.25) * (redZone ? 0.7 : 1);
   const backupShare = backupBackTargetShare(year, !!off.rb2);
-  slots.push({ p: off.rb, wt: backTargetWeight * (1 - backupShare) });
-  if (off.rb2 && backupShare > 0) slots.push({ p: off.rb2, wt: backTargetWeight * backupShare });
+  const halfbackTargetWeight = backTargetWeight * (1 - fbTargetShare);
+  slots.push({ p: off.rb, wt: halfbackTargetWeight * (1 - backupShare) });
+  if (off.rb2 && backupShare > 0) slots.push({ p: off.rb2, wt: halfbackTargetWeight * backupShare });
+  if (off.fb && fbTargetShare > 0) {
+    slots.push({ p: off.fb, wt: backTargetWeight * fbTargetShare * (deep ? 0.25 : 1.2) * (redZone ? 0.6 : 1) });
+  }
   if (off.wr4 && off.wr.length >= 3) {
     const wrTargets = off.wr.reduce((total, player) => total + targetsSoFar(player.id), 0);
     const share = fourthReceiverRotationShare(wrTargets, true, year);
