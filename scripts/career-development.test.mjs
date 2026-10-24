@@ -5,6 +5,7 @@ import { arcRetiresNow } from "../src/lib/game/careerArc.ts";
 import { shouldRetire } from "../src/lib/game/development.ts";
 import { deriveOvr, emptyRatings } from "../src/lib/game/ratings.ts";
 import { seasonArcs } from "../src/lib/game/storylines.ts";
+import { coachDevelopmentFactor, developmentCoordinator } from "../src/lib/game/coachDevelopment.ts";
 
 function palkoLikeSave() {
   const ratings = emptyRatings(65);
@@ -34,6 +35,27 @@ test("a real-life final season is not scripted into the dynasty calendar", () =>
   save.cpuOnly = true;
   seasonArcs(save, () => 0.5);
   assert.equal(p.finalSeason, undefined);
+});
+
+test("the head coach sets development while offense and defense coordinators affect their own units", () => {
+  const hc = { id: "hc", role: "HC", development: 82, abilities: [], traits: [] };
+  const oc = { id: "oc", role: "OC", development: 96, abilities: ["Developer"], traits: [] };
+  const dc = { id: "dc", role: "DC", development: 48, abilities: [], traits: [] };
+  const save = {
+    teams: { pit: { ocId: oc.id, dcId: dc.id } },
+    coaches: { [oc.id]: oc, [dc.id]: dc },
+  };
+  assert.equal(coachDevelopmentFactor(hc), coachDevelopmentFactor(hc, { ...oc, development: 70, abilities: [] }),
+    "a neutral coordinator leaves the existing head-coach baseline unchanged");
+  assert.ok(coachDevelopmentFactor(hc, oc) > coachDevelopmentFactor(hc), "a strong developer OC helps offensive players");
+  assert.ok(coachDevelopmentFactor(hc, dc) < coachDevelopmentFactor(hc), "a weak-development DC slows defensive-unit growth");
+  assert.equal(developmentCoordinator(save, "pit", { pos: "QB" }), oc);
+  assert.equal(developmentCoordinator(save, "pit", { pos: "WR" }), oc);
+  assert.equal(developmentCoordinator(save, "pit", { pos: "MLB" }), dc);
+  assert.equal(developmentCoordinator(save, "pit", { pos: "K" }), undefined,
+    "specialists without a represented coordinator use the head coach baseline");
+  assert.equal(coachDevelopmentFactor({ ...hc, development: 99, abilities: ["Developer"] }, { ...oc, development: 99 }).toFixed(2), "1.28",
+    "combined staff influence stays within the established development ceiling");
 });
 
 test("a standout veteran is not retired by the old generic age cliff", () => {

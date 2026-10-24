@@ -1,7 +1,8 @@
-import type { DynastySave, Player, Pos } from "./types.ts";
+import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { maybeReveal } from "./scout.ts";
 import { coachKitBoost } from "./coachKit.ts";
+import { coachDevelopmentFactor, developmentCoordinator } from "./coachDevelopment.ts";
 import { arcRetiresNow, moveToward } from "./careerArc.ts";
 import { ageBody } from "./body.ts";
 import { deriveOvr } from "./ratings.ts";
@@ -105,7 +106,8 @@ export function agePlayer(save: DynastySave, p: Player): void {
   const pot = p.potential ?? p.ovr;
   const team = p.teamId !== "fa" && p.teamId !== "retired" && p.teamId !== "hof" ? save.teams[p.teamId] : undefined;
   const hc = team?.coachId ? save.coaches[team.coachId] : undefined;
-  const devBump = hc ? coachKitBoost(hc, "dev") + ((hc.development ?? 70) - 70) / 180 : 0;
+  const coordinator = team ? developmentCoordinator(save, p.teamId as TeamId, p) : undefined;
+  const devBump = coachDevelopmentFactor(hc, coordinator) - 1;
   if (!p.arc) {
   // Players without a historical trajectory use the offseason age/potential development path.
   let delta = 0;

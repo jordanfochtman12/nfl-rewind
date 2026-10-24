@@ -3,11 +3,12 @@
  * script: age, workload, opportunity, coaching and the player's own results shape his path.
  * Real History mode deliberately never calls this module.
  */
-import type { DynastySave, Player, Pos, RatingKey, SeasonStats } from "./types.ts";
+import type { DynastySave, Player, Pos, RatingKey, SeasonStats, TeamId } from "./types.ts";
 import { RATING_KEYS } from "./types.ts";
 import { deriveOvr, primaryKeys } from "./ratings.ts";
 import { clamp } from "./rng.ts";
 import { activeTeamIds } from "./teams.ts";
+import { coachDevelopmentFactor, developmentCoordinator } from "./coachDevelopment.ts";
 
 type Line = Partial<Record<keyof SeasonStats, number>>;
 export type WeekSnapshot = Map<string, Line>;
@@ -161,7 +162,8 @@ export function developCareerWeek(save: DynastySave, before: WeekSnapshot, stage
       ? clamp(((raw - shape.middle) / shape.spread) * 0.55, -1.2, 1.2)
       : raw;
     const coach = club.coachId ? save.coaches[club.coachId] : undefined;
-    const coachFactor = clamp(1 + ((coach?.development ?? 70) - 70) / 180, 0.72, 1.28);
+    const coordinator = developmentCoordinator(save, p.teamId as TeamId, p);
+    const coachFactor = coachDevelopmentFactor(coach, coordinator);
     const opportunity = gp > 0 ? 1 : p.injuredWeeks > 0 || p.onIR ? 0.38 : 0.62;
     const ceilingRoom = clamp((p.potential - p.ovr + 8) / 18, 0.35, 1.25);
     const ageRoom = p.age <= GROWTH_LAST[p.pos] ? clamp(1.25 - Math.max(0, p.age - 21) * 0.105, 0.28, 1.25) : 0;
