@@ -15,18 +15,23 @@ import { winPct } from "./standings.ts";
 
 export type ClubWindow = "contend" | "middle" | "rebuild";
 
-/** Win% once there's a sample; before that, roster strength. */
+/** Roster strength is the prior; season results earn more influence as the sample grows. */
 function strength(save: DynastySave, teamId: TeamId): number {
   const t = save.teams[teamId];
   if (!t) return 0.5;
-  if (t.wins + t.losses + t.ties >= 4) return winPct(t);
   const top = rosterOf(save, teamId)
     .map((p) => p.ovr)
     .sort((a, b) => b - a)
     .slice(0, 24);
-  if (!top.length) return 0.5;
-  const avg = top.reduce((n, v) => n + v, 0) / top.length;
-  return Math.max(0, Math.min(1, (avg - 64) / 18));
+  const rosterStrength = top.length
+    ? Math.max(0, Math.min(1, (top.reduce((n, v) => n + v, 0) / top.length - 64) / 18))
+    : 0.5;
+  const games = t.wins + t.losses + t.ties;
+  if (!games) return rosterStrength;
+  // Treat an average roster as an eight-game prior: a four-game hot/cold streak matters,
+  // but cannot by itself turn an unproven club into a buyer or a proven roster into a seller.
+  const resultWeight = games / (games + 8);
+  return rosterStrength * (1 - resultWeight) + winPct(t) * resultWeight;
 }
 
 export function clubWindow(save: DynastySave, teamId: TeamId): ClubWindow {
