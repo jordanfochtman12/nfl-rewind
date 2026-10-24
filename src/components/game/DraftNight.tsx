@@ -205,10 +205,10 @@ export function DraftNight() {
       tickerLabel="THE PICKS"
     >
     <div className="space-y-4">
-      {!showOpening && <div className="dn-live-preview-rail">
-        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Draft preview · on demand</p><p className="mt-1 text-xs text-paper">Revisit the class, mock board and prospect storylines between picks.</p></div>
+      <div className="dn-live-preview-rail">
+        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Before the first pick · draft preview show</p><p className="mt-1 text-xs text-paper">Full mock draft, prospect profiles, position rankings and your war room.</p></div>
         <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch Draft Preview</Btn>
-      </div>}
+      </div>
       <TalksReminder />
       {announcer.controls}
       {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
@@ -218,7 +218,6 @@ export function DraftNight() {
       {showOpening && (
         <>
           <DraftOpening
-            onPreview={() => setShowingPreview(true)}
             onStart={() => {
               setOpening(false);
               setPaused(false);

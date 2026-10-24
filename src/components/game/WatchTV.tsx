@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { settingsNow } from "@/lib/settings-store";
 import type { Tab } from "@/lib/game-store";
-import { MobileGameDock } from "./Broadcast";
+import { MobileGameDock, MobileSectionPicker } from "./Broadcast";
 import {
   breakingNews,
   newsTag,
@@ -446,6 +446,7 @@ export function WatchTV({
               Exit TV
             </button>
           </div>
+          <MobileSectionPicker tabs={tabs} active={active} onPick={onPick} />
         </div>
       </header>
       <div className="tv-content mx-auto max-w-6xl px-3 pb-24 pt-4 sm:px-4">

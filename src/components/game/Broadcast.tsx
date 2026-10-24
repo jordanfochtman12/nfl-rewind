@@ -194,6 +194,28 @@ export function MobileGameDock<T extends string>({
   );
 }
 
+/** A second, always-visible phone route into every game section. The bottom dock is
+ * convenient for one-tap destinations; this header control remains available while
+ * reading long screens and inside the TV presentation. */
+export function MobileSectionPicker<T extends string>({
+  tabs,
+  active,
+  onPick,
+}: {
+  tabs: { id: T; label: string }[];
+  active: T;
+  onPick: (id: T) => void;
+}) {
+  return (
+    <label className="mobile-section-picker">
+      <span>SECTION</span>
+      <select aria-label="Jump to a game section" value={active} onChange={(event) => onPick(event.target.value as T)}>
+        {tabs.map((tab) => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
+      </select>
+    </label>
+  );
+}
+
 function scoreLine(g: GameResult): string {
   const a = teamAbbr(g.awayId as TeamId);
   const h = teamAbbr(g.homeId as TeamId);

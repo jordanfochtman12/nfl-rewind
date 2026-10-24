@@ -74,7 +74,7 @@ import { HotNames } from "./HotNames";
 import { HISTORY_LAST, leagueHistoryHtml, seasonLeaders, seasonRecordBook, superBowlSite } from "@/lib/game";
 import { OwnersBox, RelocationOffer } from "./OwnersBox";
 import { CrunchCall } from "./CrunchCall";
-import { BottomLine, ClubPlate, MobileGameDock, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
+import { BottomLine, ClubPlate, MobileGameDock, MobileSectionPicker, NetworkBug, WatchPlate, TabStrip } from "./Broadcast";
 import { MatchupNotes, SeasonPlanCard, TrophyCase } from "./Storylines";
 import { TimelineSection } from "./Timeline";
 import { LegacySection } from "./Legacy";
@@ -2277,6 +2277,7 @@ function PlayShell() {
             </Btn>
           </div>
         </div>
+        <MobileSectionPicker tabs={displayTabs} active={tab} onPick={navigateToSection} />
       </header>
       <div className="pc-game-layout">
         <aside className="pc-game-sidebar" data-tour="tabs">

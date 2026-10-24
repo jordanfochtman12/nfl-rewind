@@ -862,7 +862,9 @@ table tbody tr:hover {
 
 /* The top of the show: a light streak runs along the header's red line. */
 .broadcast-header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 .broadcast-header::after {
   content: "";
@@ -3471,17 +3473,45 @@ table tbody tr:hover {
 
 /* Phone-first section rail: core destinations stay reachable while the page scrolls. */
 .mobile-game-dock { display: none; }
+.mobile-section-picker { display: none; }
 @media (max-width: 1099px) {
   /* Keep the touch dock at the screen edge and move the ticker above it as a separate broadcast band. */
   .tour-card { bottom: calc(62px + 62px + env(safe-area-inset-bottom) + 10px) !important; }
+  .mobile-section-picker {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px max(12px, env(safe-area-inset-left)) 7px max(12px, env(safe-area-inset-right));
+    border-top: 1px solid #c7dcf020;
+    color: #8fa5c0;
+    background: linear-gradient(180deg, #0d1521f2, #080c13f8);
+    font: 800 10px/1 var(--font-display);
+    letter-spacing: .2em;
+  }
+  .mobile-section-picker select {
+    min-width: 0;
+    min-height: 40px;
+    flex: 1;
+    padding: 0 12px;
+    border: 1px solid #c7dcf035;
+    border-left: 3px solid var(--color-club, #62e8ff);
+    border-radius: 3px;
+    color: #fff;
+    background: linear-gradient(100deg, #142238, #090e17);
+    font: 800 13px/1 var(--font-display);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .mobile-section-picker select:focus-visible { outline: 2px solid #62e8ff; outline-offset: 2px; }
   .mobile-game-dock {
     position: fixed;
     z-index: 60;
-    inset: auto 0 env(safe-area-inset-bottom) 0;
+    inset: auto 0 0 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(70px, .86fr);
     gap: 4px;
-    padding: 7px max(8px, env(safe-area-inset-left)) 7px max(8px, env(safe-area-inset-right));
+    padding: 7px max(8px, env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
     border-top: 1px solid #c7dcf03b;
     border-bottom: 1px solid #ffffff10;
     background: linear-gradient(180deg, #111b2aF5, #060a11F8);
@@ -3561,7 +3591,6 @@ table tbody tr:hover {
 @media (max-width: 1099px) {
   .mobile-game-dock-tv {
     z-index: 80;
-    bottom: env(safe-area-inset-bottom);
   }
   .tv-content { padding-bottom: 154px !important; }
   .tv-crawl { bottom: calc(70px + env(safe-area-inset-bottom)); }
