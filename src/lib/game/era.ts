@@ -335,9 +335,11 @@ export function eraRb1Share(year: number): number {
   if (year <= 1989) return 0.57;
   if (year <= 1999) return 0.62;
   if (year <= 2014) return 0.6;
-  // The 2024 record's lead back carries 61% of a team's RB attempts on average.
-  // Calibrate the selection weight against that lead share and the recorded top-two workload.
-  if (year >= 2020) return 0.71;
+  // The league shifted from 2020–21 committees to more concentrated lead-back work in
+  // 2022–24. A single modern weight overused RB1 in the 2020/21 historical workload splits.
+  if (year >= 2024) return 0.71;
+  if (year >= 2022) return 0.69;
+  if (year >= 2020) return 0.67;
   return 0.54;
 }
 

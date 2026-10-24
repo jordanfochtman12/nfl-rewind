@@ -1,6 +1,7 @@
 /** Depth-chart backs receive a realistic workload split as the game wears on. */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { eraRb1Share } from "../src/lib/game/era.ts";
 import {
   createNewGame,
   simGame,
@@ -174,10 +175,18 @@ test("defensive coordinator rating governs recognition of repeated run/pass tend
 });
 test("a fourth back enters only as modern late-game relief from the saved depth chart", () => {
   assert.equal(fourthBackRotationShare(30, true, 2019), 0, "historical backfields keep their existing rotation");
+  assert.equal(fourthBackRotationShare(18, true, 2020), 0.18, "committee-era fourth backs enter earlier and have a modestly larger ceiling");
   assert.equal(fourthBackRotationShare(30, false, 2024), 0, "no healthy fourth back means no invented relief");
   assert.equal(fourthBackRotationShare(11, true, 2024), 0, "the top two keep opening work");
   assert.equal(fourthBackRotationShare(30, true, 2024), 0.16, "a fourth back earns a meaningful modern relief share");
   assert.equal(fourthBackRotationShare(50, true, 2024), 0.16, "the fourth-back share stays capped");
+  assert.equal(thirdBackRotationShare(20, true, 2020), 0.36, "2020–22 committee seasons bring RB3 in earlier");
+  assert.equal(thirdBackRotationShare(20, true, 2023), 0.24, "the 2023–24 rotation curve stays calibrated separately");
+  assert.equal(eraRb1Share(2020), 0.67, "2020–21 RB1 selection reflects the historical committee split");
+  assert.equal(eraRb1Share(2021), 0.67);
+  assert.equal(eraRb1Share(2022), 0.69);
+  assert.equal(eraRb1Share(2023), 0.69);
+  assert.equal(eraRb1Share(2024), 0.71, "2024's measured lead-back weight is unchanged");
 
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 812 });
   const team = save.teams.pit;

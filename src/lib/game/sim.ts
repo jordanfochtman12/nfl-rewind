@@ -175,6 +175,9 @@ export function unitFatigueMultiplier(
 export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: boolean, year = 2027): number {
   if (!hasThirdBack) return 0;
   const workload = Math.max(0, topTwoCarries);
+  // 2020–22 recorded team splits had materially more RB3 volume than 2023–24. The
+  // later-season curve was too conservative for those committee-heavy backfields.
+  if (year >= 2020 && year <= 2022) return clamp((workload - 8) * 0.03, 0, 0.42);
   // Modern teams spread the backfield farther down the chart. Keep older seasons on their
   // established workload curve; the 2024 season audit showed RB3 usage lagging real splits.
   return year >= 2020
@@ -185,6 +188,7 @@ export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: bool
 /** A fourth halfback earns a small late-game relief role in modern backfields. */
 export function fourthBackRotationShare(topTwoCarries: number, hasFourthBack: boolean, year: number): number {
   if (!hasFourthBack || year < 2020) return 0;
+  if (year <= 2022) return clamp((Math.max(0, topTwoCarries) - 8) * 0.018, 0, 0.18);
   return clamp((Math.max(0, topTwoCarries) - 12) * 0.012, 0, 0.16);
 }
 

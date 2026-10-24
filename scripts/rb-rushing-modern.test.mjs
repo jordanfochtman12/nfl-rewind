@@ -3,91 +3,22 @@ import assert from "node:assert/strict";
 import { createEraGame, loadHistoryData, setHistoryData, simUntil } from "../src/lib/game/index.ts";
 import { isFriend } from "../src/lib/game/data/friends.ts";
 
-test("2024 regular-season RB carry volume and efficiency track historical league output", async (t) => {
-  const year = 2024;
-  const history = await loadHistoryData();
-  setHistoryData(history);
-  const actual = history.stats(year).reduce(
-    (sum, row) => {
-      const pos = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;
-      if (pos === "RB") {
-        sum.attempts += row.line.rushAtt ?? 0;
-        sum.yards += row.line.rushYds ?? 0;
-      }
-      return sum;
-    },
-    { attempts: 0, yards: 0 },
-  );
-  const actualByTeam = new Map();
-  for (const row of history.stats(year)) {
-    const pos = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;
-    if (pos !== "RB" || !row.team) continue;
-    const backs = actualByTeam.get(row.team) ?? new Map();
-    backs.set(row.person, (backs.get(row.person) ?? 0) + (row.line.rushAtt ?? 0));
-    actualByTeam.set(row.team, backs);
-  }
-  const seeds = [20241031, 20241032, 20241033, 20241034];
-  const simulated = { attempts: 0, yards: 0 };
-  const simulatedByTeam = new Map();
-
-  for (const seed of seeds) {
-    let save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed });
-    // Stop as soon as the regular season ends so the sample matches the historical
-    // regular-season reference instead of mixing regular-season and playoff boxes.
-    save = simUntil(save, (state) => state.year === year && state.phase === "playoffs");
-    for (const game of save.schedule) {
-      if (game.year !== year || game.phase !== "regular") continue;
-      for (const [teamId, box] of [[game.homeId, game.boxHome ?? []], [game.awayId, game.boxAway ?? []]]) {
-        for (const row of box) {
-          if (save.players[row.playerId]?.pos !== "RB") continue;
-          simulated.attempts += row.rushAtt ?? 0;
-          simulated.yards += row.rushYds ?? 0;
-          // Each seed is a separate season sample. Combining four seasons under one team before
-          // counting 50-carry backs made those counts incomparable to the single real season.
-          const teamSample = `${seed}:${teamId}`;
-          const backs = simulatedByTeam.get(teamSample) ?? new Map();
-          backs.set(row.playerId, (backs.get(row.playerId) ?? 0) + (row.rushAtt ?? 0));
-          simulatedByTeam.set(teamSample, backs);
-        }
-      }
-    }
-  }
-
-  const attemptsPerSeason = simulated.attempts / seeds.length;
-  const yardsPerSeason = simulated.yards / seeds.length;
-  const attemptRatio = attemptsPerSeason / actual.attempts;
-  const actualYpc = actual.yards / actual.attempts;
-  const simulatedYpc = simulated.yards / simulated.attempts;
-  const workload = (byTeam) => {
-    const teams = [...byTeam.values()].map((backs) => [...backs.values()].sort((a, b) => b - a)).filter((carries) => carries.length);
-    return {
-      leadShare: teams.reduce((sum, carries) => sum + carries[0] / carries.reduce((a, b) => a + b, 0), 0) / teams.length,
-      topTwoShare: teams.reduce((sum, carries) => sum + carries.slice(0, 2).reduce((a, b) => a + b, 0) / carries.reduce((a, b) => a + b, 0), 0) / teams.length,
-      backs50: teams.reduce((sum, carries) => sum + carries.filter((attempts) => attempts >= 50).length, 0) / teams.length,
-      rankShares: [0, 1, 2, 3].map((rank) => teams.reduce((sum, carries) => sum + (carries[rank] ?? 0) / carries.reduce((a, b) => a + b, 0), 0) / teams.length),
-      rank50: [0, 1, 2, 3].map((rank) => teams.filter((carries) => (carries[rank] ?? 0) >= 50).length / teams.length),
-    };
+function seasonWorkload(byTeam) {
+  const teams = [...byTeam.values()]
+    .map((backs) => [...backs.values()].sort((a, b) => b - a))
+    .filter((carries) => carries.length);
+  return {
+    leadShare: teams.reduce((sum, carries) => sum + carries[0] / carries.reduce((a, b) => a + b, 0), 0) / teams.length,
+    topTwoShare: teams.reduce((sum, carries) => sum + carries.slice(0, 2).reduce((a, b) => a + b, 0) / carries.reduce((a, b) => a + b, 0), 0) / teams.length,
+    backs50: teams.reduce((sum, carries) => sum + carries.filter((attempts) => attempts >= 50).length, 0) / teams.length,
+    rankShares: [0, 1, 2, 3].map((rank) => teams.reduce((sum, carries) => sum + (carries[rank] ?? 0) / carries.reduce((a, b) => a + b, 0), 0) / teams.length),
+    rank50: [0, 1, 2, 3].map((rank) => teams.filter((carries) => (carries[rank] ?? 0) >= 50).length / teams.length),
   };
-  const actualWorkload = workload(actualByTeam);
-  const simulatedWorkload = workload(simulatedByTeam);
-  const byRank = (workload) => workload.rankShares.map((share) => share.toFixed(3)).join("/");
-  const fiftyByRank = (workload) => workload.rank50.map((count) => count.toFixed(2)).join("/");
-  const report = `four-seed 2024 regular-season sim averages ${attemptsPerSeason.toFixed(0)} RB carries (${attemptRatio.toFixed(2)}x actual) and ${yardsPerSeason.toFixed(0)} yards at ${simulatedYpc.toFixed(2)} YPC vs historical ${actual.attempts} carries and ${actual.yards} yards at ${actualYpc.toFixed(2)} YPC; lead share ${simulatedWorkload.leadShare.toFixed(3)} vs ${actualWorkload.leadShare.toFixed(3)}, top-two share ${simulatedWorkload.topTwoShare.toFixed(3)} vs ${actualWorkload.topTwoShare.toFixed(3)}, 50+ carry backs/team ${simulatedWorkload.backs50.toFixed(2)} vs ${actualWorkload.backs50.toFixed(2)}; ranked carry shares RB1/RB2/RB3/RB4+ ${byRank(simulatedWorkload)} vs ${byRank(actualWorkload)}, ranked 50+ counts ${fiftyByRank(simulatedWorkload)} vs ${fiftyByRank(actualWorkload)}`;
+}
 
-  t.diagnostic(report);
-  assert.ok(attemptRatio >= 0.85 && attemptRatio <= 1.15, report);
-  assert.ok(Math.abs(simulatedYpc - actualYpc) <= 0.28, report);
-  assert.ok(Math.abs(simulatedWorkload.leadShare - actualWorkload.leadShare) <= 0.04, report);
-  assert.ok(Math.abs(simulatedWorkload.topTwoShare - actualWorkload.topTwoShare) <= 0.1, report);
-  assert.ok(Math.abs(simulatedWorkload.backs50 - actualWorkload.backs50) <= 0.75, report);
-  assert.ok(simulatedWorkload.rankShares.every((share, rank) => Math.abs(share - actualWorkload.rankShares[rank]) <= 0.05), report);
-});
-
-test("2023 regular-season RB efficiency tracks historical output across four alternate timelines", async (t) => {
-  const year = 2023;
-  const history = await loadHistoryData();
-  setHistoryData(history);
-  const actual = history.stats(year).reduce((sum, row) => {
+function seasonLines(history, year) {
+  const rows = history.stats(year);
+  const actual = rows.reduce((sum, row) => {
     const pos = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;
     if (pos === "RB") {
       sum.attempts += row.line.rushAtt ?? 0;
@@ -95,35 +26,69 @@ test("2023 regular-season RB efficiency tracks historical output across four alt
     }
     return sum;
   }, { attempts: 0, yards: 0 });
-  const seeds = [20230331, 20230332, 20230333, 20230334];
-  const simulated = { attempts: 0, yards: 0 };
+  const actualByTeam = new Map();
+  for (const row of rows) {
+    const pos = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;
+    if (pos !== "RB" || !row.team) continue;
+    const backs = actualByTeam.get(row.team) ?? new Map();
+    backs.set(row.person, (backs.get(row.person) ?? 0) + (row.line.rushAtt ?? 0));
+    actualByTeam.set(row.team, backs);
+  }
+  return { actual, actualWorkload: seasonWorkload(actualByTeam), simulated: { attempts: 0, yards: 0 }, simulatedByTeam: new Map() };
+}
 
-  for (const seed of seeds) {
-    let save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed });
-    save = simUntil(save, (state) => state.year === year && state.phase === "playoffs");
-    for (const game of save.schedule) {
-      if (game.year !== year || game.phase !== "regular") continue;
-      for (const box of [game.boxHome ?? [], game.boxAway ?? []]) {
-        for (const row of box) {
-          const player = save.players[row.playerId];
-          if (player?.pos !== "RB" || isFriend(player)) continue;
-          simulated.attempts += row.rushAtt ?? 0;
-          simulated.yards += row.rushYds ?? 0;
+test("modern RB volume, efficiency, and substitutions track 2020-2024 league seasons", async (t) => {
+  const history = await loadHistoryData();
+  setHistoryData(history);
+  // Use two alternate timelines for 2020-2022 and four for 2023-2024, where rank-level
+  // distribution changes were specifically tuned. This matches complete season samples.
+  const seasons = [2020, 2021, 2022, 2023, 2024].map((year) => ({
+    year,
+    seeds: year === 2020 || year >= 2023
+      ? [year * 100 + 31, year * 100 + 32, year * 100 + 33, year * 100 + 34]
+      : [year * 100 + 31, year * 100 + 32],
+    ...seasonLines(history, year),
+  }));
+
+  for (const season of seasons) {
+    for (const seed of season.seeds) {
+      let save = createEraGame({ userTeamId: "pit", startingYear: season.year, sandbox: true, seed });
+      save = simUntil(save, (state) => state.year === season.year && state.phase === "playoffs");
+      for (const game of save.schedule) {
+        if (game.year !== season.year || game.phase !== "regular") continue;
+        for (const [teamId, box] of [[game.homeId, game.boxHome ?? []], [game.awayId, game.boxAway ?? []]]) {
+          for (const row of box) {
+            const player = save.players[row.playerId];
+            if (player?.pos !== "RB" || isFriend(player)) continue;
+            season.simulated.attempts += row.rushAtt ?? 0;
+            season.simulated.yards += row.rushYds ?? 0;
+            const teamSample = `${seed}:${teamId}`;
+            const backs = season.simulatedByTeam.get(teamSample) ?? new Map();
+            backs.set(row.playerId, (backs.get(row.playerId) ?? 0) + (row.rushAtt ?? 0));
+            season.simulatedByTeam.set(teamSample, backs);
+          }
         }
       }
     }
+
+    const simulatedWorkload = seasonWorkload(season.simulatedByTeam);
+    const attemptsPerSeason = season.simulated.attempts / season.seeds.length;
+    const yardsPerSeason = season.simulated.yards / season.seeds.length;
+    const attemptRatio = attemptsPerSeason / season.actual.attempts;
+    const yardRatio = yardsPerSeason / season.actual.yards;
+    const actualYpc = season.actual.yards / season.actual.attempts;
+    const simulatedYpc = season.simulated.yards / season.simulated.attempts;
+    const rankShares = (shape) => shape.rankShares.map((share) => share.toFixed(3)).join("/");
+    const rankFifties = (shape) => shape.rank50.map((share) => share.toFixed(2)).join("/");
+    const report = `${season.year}: ${season.seeds.length}-seed sim ${attemptsPerSeason.toFixed(0)} carries (${attemptRatio.toFixed(2)}x actual), ${yardsPerSeason.toFixed(0)} yards (${yardRatio.toFixed(2)}x actual), ${simulatedYpc.toFixed(2)} YPC vs ${actualYpc.toFixed(2)}; lead share ${simulatedWorkload.leadShare.toFixed(3)}/${season.actualWorkload.leadShare.toFixed(3)}, top-two ${simulatedWorkload.topTwoShare.toFixed(3)}/${season.actualWorkload.topTwoShare.toFixed(3)}, 50+ backs/team ${simulatedWorkload.backs50.toFixed(2)}/${season.actualWorkload.backs50.toFixed(2)}; rank RB1/RB2/RB3/RB4+ ${rankShares(simulatedWorkload)}/${rankShares(season.actualWorkload)}, 50+ rank counts ${rankFifties(simulatedWorkload)}/${rankFifties(season.actualWorkload)}`;
+
+    t.diagnostic(report);
+    assert.ok(attemptRatio >= 0.85 && attemptRatio <= 1.15, report);
+    assert.ok(yardRatio >= 0.85 && yardRatio <= 1.15, report);
+    assert.ok(Math.abs(simulatedYpc - actualYpc) <= 0.25, report);
+    assert.ok(Math.abs(simulatedWorkload.leadShare - season.actualWorkload.leadShare) <= 0.04, report);
+    assert.ok(Math.abs(simulatedWorkload.topTwoShare - season.actualWorkload.topTwoShare) <= 0.1, report);
+    assert.ok(Math.abs(simulatedWorkload.backs50 - season.actualWorkload.backs50) <= 0.75, report);
+    assert.ok(simulatedWorkload.rankShares.every((share, rank) => Math.abs(share - season.actualWorkload.rankShares[rank]) <= 0.05), report);
   }
-
-  const attemptsPerSeason = simulated.attempts / seeds.length;
-  const yardsPerSeason = simulated.yards / seeds.length;
-  const attemptRatio = attemptsPerSeason / actual.attempts;
-  const yardRatio = yardsPerSeason / actual.yards;
-  const actualYpc = actual.yards / actual.attempts;
-  const simulatedYpc = simulated.yards / simulated.attempts;
-  const report = `four-seed 2023 sim averages ${attemptsPerSeason.toFixed(0)} RB carries (${attemptRatio.toFixed(2)}x actual) and ${yardsPerSeason.toFixed(0)} yards (${yardRatio.toFixed(2)}x actual) at ${simulatedYpc.toFixed(2)} YPC vs historical ${actual.attempts} carries and ${actual.yards} yards at ${actualYpc.toFixed(2)} YPC`;
-
-  t.diagnostic(report);
-  assert.ok(attemptRatio >= 0.85 && attemptRatio <= 1.15, report);
-  assert.ok(yardRatio >= 0.85 && yardRatio <= 1.15, report);
-  assert.ok(Math.abs(simulatedYpc - actualYpc) <= 0.25, report);
 });
