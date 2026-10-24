@@ -45,15 +45,15 @@
   position: absolute;
   z-index: -2;
   inset: 0;
-  background: url("/art/rewind-stadium-night.webp") 62% center / cover no-repeat;
+  background: url("/art/title-stadium-cinematic.webp") 58% center / cover no-repeat;
 }
 .next-title-scene::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, #030710e8 0%, #030710ad 30%, #03071012 72%),
-    linear-gradient(0deg, #050810 0%, #050810d9 12%, transparent 65%, #050810a6);
+    linear-gradient(90deg, #030710bd 0%, #03071072 30%, #03071012 72%),
+    linear-gradient(0deg, #050810 0%, #050810b8 12%, transparent 58%, #05081055);
 }
 .next-title-header,
 .next-title-layout,
@@ -714,14 +714,11 @@
     letter-spacing: 0.13em;
     gap: 1rem;
   }
-  .next-title-scene {
-    background-position: 60% top;
-    background-size: auto 55rem;
-  }
+  .next-title-scene { background-position: 54% top; background-size: auto 55rem; }
   .next-title-scene::after {
     background:
-      linear-gradient(90deg, #030710db, #03071044),
-      linear-gradient(0deg, #050810 25%, #05081080 60%, #05081011);
+      linear-gradient(90deg, #030710a8, #03071022),
+      linear-gradient(0deg, #050810 24%, #05081065 55%, #05081008);
   }
   .next-section-context {
     font-size: 0.5rem;

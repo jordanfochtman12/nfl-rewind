@@ -151,6 +151,12 @@ export function MobileGameDock<T extends string>({
   const [moreOpen, setMoreOpen] = useState(false);
   const quickIds = ["primetime", "stats", "draft", "office"];
   const quickIcons = { primetime: TvMinimalPlay, stats: ChartNoAxesCombined, draft: ClipboardList, office: Building2 } as const;
+  const sectionGroups = [
+    { label: "Game day", ids: ["office", "primetime"] },
+    { label: "Front office", ids: ["roster", "depth", "staff", "market", "moves"] },
+    { label: "League", ids: ["standings", "league", "schedule", "stats"] },
+    { label: "History", ids: ["draft", "history", "superbowl", "team", "hof"] },
+  ].map((group) => ({ ...group, tabs: tabs.filter((tab) => group.ids.includes(tab.id)) })).filter((group) => group.tabs.length);
   const quickTabs = quickIds.map((id) => tabs.find((tab) => tab.id === id)).filter((tab): tab is { id: T; label: string } => !!tab);
   return (
     <nav
@@ -178,20 +184,29 @@ export function MobileGameDock<T extends string>({
         <Ellipsis aria-hidden="true" /><span>Sections</span>
       </button>
       {moreOpen && (
-        <div className="mobile-game-dock-menu" id="mobile-game-section-menu" aria-label="All game sections">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              aria-current={tab.id === active ? "page" : undefined}
-              className={tab.id === active ? "is-active" : ""}
-              onClick={() => {
-                setMoreOpen(false);
-                onPick(tab.id);
-              }}
-            >
-              <span>{tab.label}</span><span aria-hidden>{tab.id === active ? "●" : "›"}</span>
-            </button>
+        <div className="mobile-game-dock-menu" id="mobile-game-section-menu" aria-label="All game sections" role="dialog">
+          <div className="mobile-game-dock-menu-head">
+            <span>GAME SECTIONS</span>
+            <button type="button" aria-label="Close game sections" onClick={() => setMoreOpen(false)}>CLOSE <b aria-hidden="true">×</b></button>
+          </div>
+          {sectionGroups.map((group) => (
+            <div className="mobile-game-dock-menu-group" key={group.label}>
+              <p>{group.label}</p>
+              {group.tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  aria-current={tab.id === active ? "page" : undefined}
+                  className={tab.id === active ? "is-active" : ""}
+                  onClick={() => {
+                    setMoreOpen(false);
+                    onPick(tab.id);
+                  }}
+                >
+                  <span>{tab.label}</span><span aria-hidden>{tab.id === active ? "●" : "›"}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>
       )}

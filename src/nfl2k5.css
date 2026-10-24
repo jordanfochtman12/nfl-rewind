@@ -3007,12 +3007,11 @@ table tbody tr:hover {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.3;
+  opacity: 0.34;
   background:
-    linear-gradient(90deg, transparent 49.92%, #8adfff16 50%, transparent 50.08%),
-    repeating-linear-gradient(0deg, transparent 0 11.8rem, #b8ddff0a 11.9rem 12rem),
-    linear-gradient(90deg, #050912 0%, transparent 32%, transparent 76%, #050912b3 100%);
-  mask-image: linear-gradient(90deg, #000 0%, #0008 45%, transparent 88%);
+    radial-gradient(ellipse at 70% 25%, #a6dcff1c 0%, transparent 38%),
+    linear-gradient(116deg, transparent 18%, #d9efff0c 46%, transparent 70%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 45%, #0008 82%, transparent 100%);
 }
 .next-title-header {
   border-bottom-color: #a8d9ff36;
@@ -3550,8 +3549,7 @@ table tbody tr:hover {
     right: max(8px, env(safe-area-inset-right));
     bottom: calc(100% + 8px);
     z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: block;
     width: min(28rem, calc(100vw - 16px));
     max-height: min(65dvh, 34rem);
     overflow-y: auto;
@@ -3577,6 +3575,43 @@ table tbody tr:hover {
     background: transparent;
     font: 700 11px var(--font-display);
     text-align: left;
+    text-transform: uppercase;
+  }
+  .mobile-game-dock-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 5px 10px;
+    border-bottom: 1px solid #ffffff1c;
+    color: #80e4ff;
+    font: 900 11px/1 "Barlow Condensed", sans-serif;
+    letter-spacing: .2em;
+  }
+  .mobile-game-dock-menu-head button {
+    width: auto;
+    min-height: 34px;
+    justify-content: center;
+    gap: 6px;
+    border-color: #ffffff22;
+    padding: 5px 9px;
+    color: #c8d4e4;
+    font-size: 9px;
+    letter-spacing: .1em;
+  }
+  .mobile-game-dock-menu-head button b { font-size: 17px; line-height: .7; }
+  .mobile-game-dock-menu-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+    padding-top: 9px;
+  }
+  .mobile-game-dock-menu-group > p {
+    grid-column: 1 / -1;
+    padding: 4px 8px 2px;
+    color: #8fa5c0;
+    font: 800 9px/1 "Barlow Condensed", sans-serif;
+    letter-spacing: .18em;
     text-transform: uppercase;
   }
   .mobile-game-dock-menu button.is-active { border-color: #ffd06b66; color: #ffd06b; background: #ffd06b12; }
