@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createEraGame, loadHistoryData, setHistoryData, simUntil } from "../src/lib/game/index.ts";
+import { isFriend } from "../src/lib/game/data/friends.ts";
 
 test("2024 regular-season RB carry volume and efficiency track historical league output", async (t) => {
   const year = 2024;
@@ -80,4 +81,49 @@ test("2024 regular-season RB carry volume and efficiency track historical league
   assert.ok(Math.abs(simulatedWorkload.topTwoShare - actualWorkload.topTwoShare) <= 0.1, report);
   assert.ok(Math.abs(simulatedWorkload.backs50 - actualWorkload.backs50) <= 0.75, report);
   assert.ok(simulatedWorkload.rankShares.every((share, rank) => Math.abs(share - actualWorkload.rankShares[rank]) <= 0.05), report);
+});
+
+test("2023 regular-season RB efficiency tracks historical output across four alternate timelines", async (t) => {
+  const year = 2023;
+  const history = await loadHistoryData();
+  setHistoryData(history);
+  const actual = history.stats(year).reduce((sum, row) => {
+    const pos = history.seasonPos(year).get(row.person) ?? history.people[row.person]?.pos;
+    if (pos === "RB") {
+      sum.attempts += row.line.rushAtt ?? 0;
+      sum.yards += row.line.rushYds ?? 0;
+    }
+    return sum;
+  }, { attempts: 0, yards: 0 });
+  const seeds = [20230331, 20230332, 20230333, 20230334];
+  const simulated = { attempts: 0, yards: 0 };
+
+  for (const seed of seeds) {
+    let save = createEraGame({ userTeamId: "pit", startingYear: year, sandbox: true, seed });
+    save = simUntil(save, (state) => state.year === year && state.phase === "playoffs");
+    for (const game of save.schedule) {
+      if (game.year !== year || game.phase !== "regular") continue;
+      for (const box of [game.boxHome ?? [], game.boxAway ?? []]) {
+        for (const row of box) {
+          const player = save.players[row.playerId];
+          if (player?.pos !== "RB" || isFriend(player)) continue;
+          simulated.attempts += row.rushAtt ?? 0;
+          simulated.yards += row.rushYds ?? 0;
+        }
+      }
+    }
+  }
+
+  const attemptsPerSeason = simulated.attempts / seeds.length;
+  const yardsPerSeason = simulated.yards / seeds.length;
+  const attemptRatio = attemptsPerSeason / actual.attempts;
+  const yardRatio = yardsPerSeason / actual.yards;
+  const actualYpc = actual.yards / actual.attempts;
+  const simulatedYpc = simulated.yards / simulated.attempts;
+  const report = `four-seed 2023 sim averages ${attemptsPerSeason.toFixed(0)} RB carries (${attemptRatio.toFixed(2)}x actual) and ${yardsPerSeason.toFixed(0)} yards (${yardRatio.toFixed(2)}x actual) at ${simulatedYpc.toFixed(2)} YPC vs historical ${actual.attempts} carries and ${actual.yards} yards at ${actualYpc.toFixed(2)} YPC`;
+
+  t.diagnostic(report);
+  assert.ok(attemptRatio >= 0.85 && attemptRatio <= 1.15, report);
+  assert.ok(yardRatio >= 0.85 && yardRatio <= 1.15, report);
+  assert.ok(Math.abs(simulatedYpc - actualYpc) <= 0.25, report);
 });

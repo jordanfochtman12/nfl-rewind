@@ -1,5 +1,6 @@
 import { DraftAnnouncerProvider } from "./DraftAnnouncer";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { FranchiseHQ, OpponentPreview } from './FranchiseHQ';
 import {
   activateFromIR,
@@ -1392,6 +1393,7 @@ function Stats() {
   const sortBy = useSettings((s) => s.statBoardSort);
   const [posFilter, setPosFilter] = useState<Pos | "ALL" | "OL" | "DL" | "LB" | "DB">("ALL");
   const [teamFilter, setTeamFilter] = useState<TeamId | "ALL" | "mine">("ALL");
+  const [boardFilter, setBoardFilter] = useState<"ALL" | "Passing" | "Rushing" | "Receiving" | "Defense" | "Kicking" | "Punting">("ALL");
   const [scope, setScope] = useState<"regular" | "career" | "dynastyCareer" | "playoffs" | "poCareer">("regular");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "retired">("all");
@@ -1526,6 +1528,9 @@ function Stats() {
             rows: sortRows(allRows, statGroup(allRows[0]?.p.pos ?? samplePos(posFilter)), String(posFilter), allRows[0]?.p.pos ?? samplePos(posFilter)),
           },
         ];
+  const visibleBoards = posFilter !== "ALL" || boardFilter === "ALL"
+    ? boards
+    : boards.filter((board) => board.title === boardFilter);
 
   const scopeLabel = scope === "regular"
     ? `${save.year} regular season`
@@ -1606,40 +1611,39 @@ function Stats() {
           </button>
         ))}
       </div>
-      <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>button]:shrink-0">
-        <button
-          type="button"
-          onClick={() => setTeamFilter("ALL")}
-          className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-            teamFilter === "ALL" ? "bx-chip bx-chip-on" : "bx-chip"
-          }`}
-        >
-          League
-        </button>
-        {!save.sandbox && <button
-          type="button"
-          onClick={() => setTeamFilter("mine")}
-          className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-            teamFilter === "mine" ? "bx-chip bx-chip-on" : "bx-chip"
-          }`}
-        >
-          My club
-        </button>}
-        {teams.map((id) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setTeamFilter(id)}
-            className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              teamFilter === id ? "bx-chip bx-chip-on" : "bx-chip"
-            }`}
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="min-w-56 flex-1 text-xs text-muted">
+          Team filter
+          <select
+            aria-label="Filter statistics by team"
+            value={teamFilter}
+            onChange={(event) => setTeamFilter(event.target.value as typeof teamFilter)}
+            className="mt-1 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-sm text-fg"
           >
-            {locationOf(save.year, id)}
-          </button>
-        ))}
+            <option value="ALL">All teams</option>
+            {!save.sandbox && <option value="mine">My club</option>}
+            {teams.map((id) => <option key={id} value={id}>{displayName(save.year, id)}</option>)}
+          </select>
+        </label>
+        {posFilter === "ALL" && (
+          <label className="min-w-48 flex-1 text-xs text-muted">
+            Stat category
+            <select
+              aria-label="Focus statistics category"
+              value={boardFilter}
+              onChange={(event) => setBoardFilter(event.target.value as typeof boardFilter)}
+              className="mt-1 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-sm text-fg"
+            >
+              <option value="ALL">All categories</option>
+              {(["Passing", "Rushing", "Receiving", "Defense", "Kicking", "Punting"] as const).map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
       <p className="text-xs text-muted">Tap or click any stat heading to sort that board. Select it again to reverse the order; each category keeps its own sort.</p>
-      {boards.map((board, boardIndex) => {
+      {visibleBoards.map((board, boardIndex) => {
         const cols = statCols(board.pos);
         const leader = board.rows[0];
         const sortSelection = sortBy[board.title];
@@ -2311,8 +2315,19 @@ function PlayShell() {
 
 export function GameApp() {
   const screen = useGameStore((s) => s.screen);
+  const setScreen = useGameStore((s) => s.setScreen);
+  const location = useLocation();
+  const initialRouteSync = useRef(false);
   const uiScale = useSettings((s) => s.uiScale);
   const highContrast = useSettings((s) => s.highContrast);
+  useEffect(() => {
+    if (location.pathname !== "/league" || initialRouteSync.current) return;
+    initialRouteSync.current = true;
+    // The title lives in its own route to keep simulation data out of first paint.
+    // Reassert the requested selection screen when a runtime starts each route with
+    // an independent in-memory store (for example after a direct /league load).
+    if (screen === "title") setScreen("select");
+  }, [location.pathname, screen, setScreen]);
   // The voices are the device's own now: the old studio-voice download is cleared off the device.
   useEffect(() => clearOldVoiceModel(), []);
   useEffect(() => {

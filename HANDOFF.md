@@ -165,7 +165,7 @@ Expansion is applied in `finishOffseason` **after** `year += 1` and **before** `
 
 ## Next work (priority order)
 
-1. Reconstruct year-specific historical RFA tender schedules; imported careers still lack active/pay-status ledgers.
+1. Extend the historical RFA tender table before 2020; older imported careers still lack complete active/pay-status ledgers.
 2. Keep `tsc` + `qa-season` green after every change. `qa-expansions` when a new auto phase is added.
 3. Optional: tighten `ram-2020.svg`. More winter copy. Don't rewrite the drive engine.
 
@@ -483,3 +483,11 @@ Validation: `scripts/chunk-recovery.test.mjs` covers browser failure strings, un
 After base and nickel packages were corrected to 11 defenders, `pickTackler()` still identified nickel by requiring four corners. The actual nickel package now fields three, so its historical tackle-share adjustments had stopped applying. A shared `hasNickelPersonnel()` check now recognizes the three-corner grouping and is used by tackle attribution; the substitution test asserts the base and nickel packages classify correctly under both 4-3 and 3-4 fronts.
 
 Validation: the pre-fix four-era tackle audit passed, showing this was a missed calibration path rather than an out-of-range total; after the fix, `scripts/substitution-rotation.test.mjs`, `scripts/tackle-realism.test.mjs`, TypeScript, targeted ESLint, `qa-season`, production build, and `git diff --check` pass. No save or historical data changes.
+
+## Update (2023 running-back efficiency and stat-center navigation)
+
+A four-seed 2023 regular-season audit found RB carry volume near the record but yards per carry high: 4.44 versus 4.15. The 2023-only expected-gain adjustment is now 0.48 yards; the established 0.18 adjustment for 2020–2022 and 2024+ is unchanged. The four-seed rerun averaged 12,005 carries (1.02× actual), 49,184 yards (1.01× actual), and 4.10 YPC versus 4.15. The regression excludes fictional Friends players from the NFL comparison. The QB and pre-2020 rushing models, Record replay, save schema, and historical datasets remain unchanged.
+
+The Stat Center now has a team selector and an optional single-category focus while preserving its all-category view and independent per-board sorting. Browser QA created a temporary 1966 franchise in an isolated context, checked team/category filtering on desktop and mobile, confirmed the focused view renders one board, and found no browser errors or page-wide horizontal overflow. The local `/` → `/league` transition also now syncs the initial mode screen if the two routes begin with separate in-memory stores; verified that a fresh local browser reaches club selection and starts the temporary franchise.
+
+Validation: the 2023 and 2024 RB season tests, all substitution/rotation tests, the 2016 and 2020–2024 QB calibration tests, 1966–69 rushing controls, History-mode isolation, `qa-season`, `qa-expansions`, TypeScript, focused ESLint, `git diff --check`, and production build pass. The 2023 calibration is measured for four seeds only; 2025+ season-specific efficiency and player-level distribution remain unmeasured.

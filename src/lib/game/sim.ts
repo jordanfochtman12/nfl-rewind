@@ -235,6 +235,12 @@ export function careerRushWorkloadFactor(player: Player | undefined, year: numbe
   return clamp(1 - Math.max(0, careerRushYards - 8_000) / 35_000, 0.62, 1);
 }
 
+/** Calibrated adjustment to modern halfback gain, measured against same-year NFL seasons. */
+export function runningBackYardsAdjustment(year: number): number {
+  if (year === 2023) return 0.48;
+  return year >= 2020 ? 0.18 : 0;
+}
+
 /**
  * Opponent recoveries per forced fumble fell across the modern data window: 0.724 (1999–07),
  * 0.685 (2008–15), and 0.665 (2016–24) in the archived regular-season player tables. The old
@@ -3205,11 +3211,10 @@ export function simGame(save: DynastySave, game: GameResult): void {
       boxOf(poss).find((b) => b.playerId === id)?.rushAtt ?? 0,
     );
     let mu = era.ypc + edge / 28 + ((rusher?.ratings.btk ?? 60) + (rusher?.ratings.elu ?? 60) - rbAnchor(save)) / 80 - vanilla * 0.9 + soft * 0.5;
-    // Phase-matched 2024 regular-season boxes showed modern halfback efficiency
-    // running about 0.18 yards per carry above the historical league rate. Keep
-    // the correction on modern RBs so QB mobility and earlier-era run profiles
-    // retain their independently calibrated curves.
-    if (rusher?.pos === "RB" && year >= 2020) mu -= 0.18;
+    // Keep the measured correction on modern RBs so QB mobility and earlier-era run
+    // profiles retain their independently calibrated curves. 2023's four-seed audit
+    // needed a larger correction than the adjacent seasons (which remain at 0.18).
+    if (rusher?.pos === "RB") mu -= runningBackYardsAdjustment(year);
     if (rusher?.pos === "QB" && call !== "sneak") {
       // Modern quarterbacks have both a higher scramble rate and much better open-field
       // rushing than the generic halfback formula; calibrate the rating impact to their

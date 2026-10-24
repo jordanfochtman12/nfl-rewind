@@ -12,6 +12,7 @@ import {
   backupBackTargetShare,
   staminaWorkloadFactor,
   careerRushWorkloadFactor,
+  runningBackYardsAdjustment,
   defensiveLineReliefPosition,
   defensiveLineReliefStarterIndex,
   nextDefensiveRotationSnap,
@@ -291,6 +292,16 @@ test("cumulative career rushing workload gradually shifts carries toward the dep
   assert.equal(careerRushWorkloadFactor(player, 2022), 0.62, "the taper continues through high career totals");
   assert.equal(careerRushWorkloadFactor(player, 2023), 0.62, "the minimum still preserves a role for an extreme career workload");
   assert.equal(careerRushWorkloadFactor(undefined, 2024), 1, "missing players do not change workload selection");
+});
+
+test("modern running-back yardage adjustments remain season-specific", () => {
+  assert.equal(runningBackYardsAdjustment(2019), 0, "pre-modern run curves remain unchanged");
+  assert.equal(runningBackYardsAdjustment(2020), 0.18);
+  assert.equal(runningBackYardsAdjustment(2021), 0.18);
+  assert.equal(runningBackYardsAdjustment(2022), 0.18);
+  assert.equal(runningBackYardsAdjustment(2023), 0.48, "the four-seed 2023 audit gets its measured correction");
+  assert.equal(runningBackYardsAdjustment(2024), 0.18, "the established 2024 calibration is preserved");
+  assert.equal(runningBackYardsAdjustment(2027), 0.18, "future simulation stays on the modern default");
 });
 
 test("depth-chart wideout and backup-back substitutions enter the target pool in a game sample", () => {
