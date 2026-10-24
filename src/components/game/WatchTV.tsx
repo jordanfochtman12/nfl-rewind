@@ -50,6 +50,7 @@ import { GameRow } from "./Sandbox";
 import { watchLabel } from "./watchLabel";
 import { AwardLadders, PlayoffPicture, RecordChases, StoryBoard } from "./WatchStories";
 import { cancelSpeech, isSpeaking, speakLine, useTalking } from "@/lib/voice/speech";
+import { shouldHoldForNarration } from "@/lib/game/tvCountdown.ts";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -506,11 +507,14 @@ function useCountdown(seconds: number, paused: boolean, onGo: () => void) {
       let waited = 0;
       const fire = () => {
         if (fired.current) return;
-        if (isSpeaking() && waited < 45_000) {
+        if (isSpeaking() && shouldHoldForNarration(waited)) {
           waited += 300;
           t = setTimeout(fire, 300);
           return;
         }
+        // Speech synthesis can fail to deliver onend on mobile Safari. Never let a voice
+        // session hold the whole historical broadcast after its card countdown has finished.
+        if (isSpeaking()) cancelSpeech();
         fired.current = true;
         go.current();
       };

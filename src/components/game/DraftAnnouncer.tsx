@@ -275,6 +275,17 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   }, [save.phase, busy, stopMusic]);
 
   useEffect(() => {
+    if (save.phase === "draft" || !busy) return;
+    // Finish the commissioner's closing read, but don't leave a stale draft-audio overlay
+    // over the next TV segment if iOS suspends speech synthesis without firing onend.
+    const timer = setTimeout(() => {
+      stop();
+      stopMusic();
+    }, 8_000);
+    return () => clearTimeout(timer);
+  }, [save.phase, busy, stop, stopMusic]);
+
+  useEffect(() => {
     if (!("speechSynthesis" in window)) return;
     const refresh = () =>
       setVoices(window.speechSynthesis.getVoices().filter((v) => v.lang.startsWith("en")));

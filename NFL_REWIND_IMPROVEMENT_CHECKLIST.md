@@ -57,6 +57,7 @@ This is the acceptance tracker for Jordan's NFL Rewind notes. A box is checked o
 - Player development now uses the head coach as the program baseline and gives the matching OC or DC a bounded unit-specific effect during weekly growth and offseason progression; neutral coordinators preserve the old baseline. `scripts/career-development.test.mjs` verifies role routing, direction, neutrality, and the ceiling. The broader coach-rating/scheme simulation audit remains open.
 - Pro Bowl cards now show every selection with a portrait, number, position, and current club; the existing full roster is scrollable on mobile and desktop.
 - Draft night now suppresses the generic timed show-open overlay that dimmed and blocked its controls. The full-screen draft opener remains in the room, the pre-draft show is explicitly reachable from the phone dock after the draft starts, and the phone dock retains a route to the other game sections. The general screen-by-screen overlay audit remains open.
+- Record-mode TV countdowns now give mobile speech synthesis a bounded grace period and then hand off instead of waiting indefinitely at “Starting in 0s”; the draft-announcer closing overlay also cleans itself up if iOS fails to fire speech completion. This is a targeted recovery for the reported 1966 preseason transition, not a complete phone UI audit.
 
 ## Update (mobile draft access and draft-room legibility)
 
