@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildHistoryPrimetime, createNewGame, setBoxSeason } from "../src/lib/game/index.ts";
+import { advance, buildHistoryPrimetime, createHistoryGame, createNewGame, displayName, loadHistoryData, setBoxSeason, setHistoryData } from "../src/lib/game/index.ts";
 
 const game = (id, awayId, homeId, awayScore, homeScore) => ({
   id, year: 1966, week: 1, phase: "regular", awayId, homeId, awayScore, homeScore, played: true,
@@ -76,4 +76,28 @@ test("Record standings identify the best win percentage, even with uneven games 
   assert.ok(standings);
   assert.ok(standings.lines.some((line) => /Pittsburgh.*1-0 after Week 3/.test(line.text)));
   assert.ok(!standings.lines.some((line) => /Green Bay.*set the pace/.test(line.text)));
+});
+
+test("the Record regular-season finale previews the exact playoff field without future scores", async () => {
+  const history = await loadHistoryData();
+  setHistoryData(history);
+  let save = createHistoryGame();
+  for (let step = 0; step < 32 && save.phase !== "playoffs"; step++) save = advance(save);
+
+  assert.equal(save.phase, "playoffs", "the historical replay has completed the regular season");
+  const episode = save.primetime?.episode;
+  assert.equal(episode?.edition, "seasonFinale");
+  const field = episode?.chapters.find((item) => item.id === "postseason-field");
+  assert.ok(field, "the season finale includes its postseason preview");
+  assert.equal(field.teamIds.length, 4, "the 1966 AFL and NFL fields each contain their two real qualifiers");
+  const lines = field.lines.map((line) => line.text).join(" ");
+  for (const id of field.teamIds) {
+    const team = save.teams[id];
+    const tieLine = team.ties ? `-${team.ties}` : "";
+    assert.ok(lines.includes(`${displayName(save.year, id)} (${team.wins}-${team.losses}${tieLine})`), `${id} is shown with its completed regular-season record`);
+  }
+  assert.match(lines, /AFL field:/);
+  assert.match(lines, /NFL field:/);
+  assert.match(lines, /No future score is revealed/);
+  assert.doesNotMatch(lines, /31-7|34-27|35-10/, "the preview does not disclose recorded postseason scores");
 });

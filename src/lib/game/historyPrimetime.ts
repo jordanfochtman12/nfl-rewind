@@ -1,9 +1,10 @@
 /** Primetime for The Record: every line is derived from the real replay or sourced box scores. */
 import type { DynastySave, GameResult, Player, PrimetimeShow, TeamId } from "./types.ts";
 import { boxFor, boxPlayerId, type BoxGame, type BoxLine } from "./historyExtras.ts";
-import { displayName, nicknameOf, activeTeamIds } from "./teams.ts";
+import { displayName, nicknameOf, activeTeamIds, conferenceOf, confLabel } from "./teams.ts";
 import { playerName } from "./players.ts";
 import { winPct } from "./standings.ts";
+import { hasHistoryData, historyData } from "./historyMode.ts";
 
 type Kind = NonNullable<PrimetimeShow["kind"]>;
 type Episode = NonNullable<PrimetimeShow["episode"]>;
@@ -77,6 +78,39 @@ function weeklyStories(save: DynastySave, games: GameResult[]): NonNullable<Prim
   return out;
 }
 
+function postseasonFieldChapter(save: DynastySave): Chapter | undefined {
+  if (!hasHistoryData()) return undefined;
+  const field = [...new Set(historyData().playoffs(save.year)
+    .filter((g) => g.round !== "Super Bowl")
+    .flatMap((g) => [g.away, g.home]))] as TeamId[];
+  if (!field.length) return undefined;
+
+  const conferences = save.year < 1970 ? ["AFL", "NFL"] : ["AFC", "NFC"];
+  const lines: Chapter["lines"] = [{
+    speaker: "HOST",
+    text: `The regular season is complete. ${field.length} clubs have reached the real ${save.year < 1970 ? "postseason" : "playoff"} field.`,
+  }];
+  for (const conference of conferences) {
+    const clubs = field
+      .filter((id) => confLabel(save.year, conferenceOf(save.year, id)) === conference)
+      .sort((a, b) => {
+        const ta = save.teams[a];
+        const tb = save.teams[b];
+        return winPct(tb) - winPct(ta) || tb.wins - ta.wins || ta.losses - tb.losses || a.localeCompare(b);
+      });
+    if (!clubs.length) continue;
+    lines.push({
+      speaker: "ANALYST",
+      text: `${conference} field: ${clubs.map((id) => `${teamName(save.year, id)} (${record(save.teams[id]!)})`).join("; ")}.`,
+    });
+  }
+  lines.push({
+    speaker: "REPORTER",
+    text: "The clubs and records come from the completed regular season; the postseason matchups and results will enter the replay in their actual order. No future score is revealed here.",
+  });
+  return chapter("postseason-field", `${save.year} · THE PLAYOFF PICTURE`, "The field is set", field, lines);
+}
+
 function gameChapters(save: DynastySave, games: GameResult[], edition: Episode["edition"]): Chapter[] {
   const year = save.year;
   const sorted = games.slice().sort((a, b) => marginOf(a) - marginOf(b) || (b.homeScore + b.awayScore) - (a.homeScore + a.awayScore));
@@ -103,6 +137,10 @@ function gameChapters(save: DynastySave, games: GameResult[], edition: Episode["
     if (notes.length) chapters.push(chapter("week-context", `WEEK ${save.week} · THE WIDER PICTURE`, "What the scores mean", [...new Set(weeklyStories(save, games).slice(1, 4).flatMap((s) => s.teamIds))], notes));
     const news = save.news.filter((n) => n.year === save.year && n.week === save.week && ["award", "transaction", "injury", "expansion"].includes(n.kind)).slice(0, 4);
     if (news.length) chapters.push(chapter("record-book", `WEEK ${save.week} · OUTSIDE THE SCOREBOARD`, "History kept moving", [...new Set(news.flatMap((n) => n.teamIds))], news.map((n) => ({ speaker: "REPORTER" as const, text: `${n.headline}. ${n.body}` }))));
+    if (edition === "seasonFinale") {
+      const field = postseasonFieldChapter(save);
+      if (field) chapters.push(field);
+    }
   }
   if (edition === "superBowl" && first) {
     const champion = winnerOf(first);
