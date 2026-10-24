@@ -307,14 +307,9 @@ export const useGameStore = create<GameStore>()(
       tv: false,
       setTv: (tv) => set({ tv }),
       setScreen: (screen) => {
-        if (screen === "select") {
-          set({ screen, engineLoading: !loadedGameEngine });
-          void loadGameEngine().then(
-            () => set({ engineLoading: false }),
-            () => set({ engineLoading: false }),
-          );
-          return;
-        }
+        // Moving to the team-selection screen must stay immediate on mobile. Loading every
+        // historical roster and simulation table here can block the browser before the
+        // selection screen appears; newGame loads the engine after the user picks a club.
         set({ screen });
       },
       setTab: (tab) => set({ tab }),

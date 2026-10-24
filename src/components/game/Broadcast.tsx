@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { Building2, ChartNoAxesCombined, ClipboardList, Ellipsis, TvMinimalPlay } from "lucide-react";
 import { clubInk, locationOf, nicknameOf, teamAbbr } from "@/lib/game/teams.ts";
 import type { DynastySave, GameResult, TeamId } from "@/lib/game/types.ts";
 import { Logo } from "./chrome";
@@ -149,6 +150,7 @@ export function MobileGameDock<T extends string>({
 }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const quickIds = ["primetime", "stats", "draft", "office"];
+  const quickIcons = { primetime: TvMinimalPlay, stats: ChartNoAxesCombined, draft: ClipboardList, office: Building2 } as const;
   const quickTabs = quickIds.map((id) => tabs.find((tab) => tab.id === id)).filter((tab): tab is { id: T; label: string } => !!tab);
   return (
     <nav
@@ -158,19 +160,22 @@ export function MobileGameDock<T extends string>({
         if (event.key === "Escape") setMoreOpen(false);
       }}
     >
-      {quickTabs.map((tab) => (
-        <button key={tab.id} type="button" aria-label={tab.id === "draft" && tab.label === "Draft Preview" ? "Open the draft preview" : `Open ${tab.label}`} aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
-          {tab.label}
-        </button>
-      ))}
+      {quickTabs.map((tab) => {
+        const Icon = quickIcons[tab.id as keyof typeof quickIcons];
+        const label = tab.id === "primetime" ? "Primetime" : tab.id === "stats" ? "Stats" : tab.id === "draft" ? "Draft" : "Office";
+        return <button key={tab.id} type="button" aria-label={`Open ${tab.label}`} title={tab.label} aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
+          <Icon aria-hidden="true" /><span>{label}</span>
+        </button>;
+      })}
       <button
         className={`mobile-game-dock-more ${moreOpen ? "is-open" : ""}`}
         type="button"
         aria-expanded={moreOpen}
         aria-controls="mobile-game-section-menu"
+        aria-label={moreOpen ? "Close all game sections" : "Browse all game sections"}
         onClick={() => setMoreOpen((open) => !open)}
       >
-        More
+        <Ellipsis aria-hidden="true" /><span>Sections</span>
       </button>
       {moreOpen && (
         <div className="mobile-game-dock-menu" id="mobile-game-section-menu" aria-label="All game sections">

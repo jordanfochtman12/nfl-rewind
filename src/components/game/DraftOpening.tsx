@@ -7,7 +7,7 @@ import { PlayerPortrait } from "./Portrait";
 import { NightOpening } from "./NightOpening";
 
 /** Draft night's cold open: the welcome, who's up first, the top of the board, and the start. */
-export function DraftOpening({ onStart }: { onStart: () => void }) {
+export function DraftOpening({ onStart, onPreview }: { onStart: () => void; onPreview: () => void }) {
   const save = useGameStore((s) => s.save)!;
   const league = sessionOf(save) === "afl" ? "AFL" : "NFL";
   const first = onTheClock(save);
@@ -40,6 +40,14 @@ export function DraftOpening({ onStart }: { onStart: () => void }) {
       startLabel="START THE DRAFT"
       onStart={onStart}
     >
+        <button type="button" className="dn-open-preview" onClick={onPreview} aria-label={`Watch the ${save.year} draft preview show before the first pick`}>
+          <span className="dn-open-preview-copy">
+            <small className="dn-open-preview-kicker">LIVE SPECIAL · BEFORE PICK ONE</small>
+            <strong>Watch the Draft Preview</strong>
+            <span>Meet the class, hear the debates, and see the full mock draft and team needs.</span>
+          </span>
+          <span className="dn-open-preview-action"><span>ENTER THE SHOW</span><b aria-hidden="true">↗</b></span>
+        </button>
         <div className="dn-open-grid">
           {first && (
             <div className="dn-open-tile">

@@ -218,6 +218,7 @@ export function DraftNight() {
       {showOpening && (
         <>
           <DraftOpening
+            onPreview={() => setShowingPreview(true)}
             onStart={() => {
               setOpening(false);
               setPaused(false);
