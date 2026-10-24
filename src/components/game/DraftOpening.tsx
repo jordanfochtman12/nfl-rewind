@@ -4,10 +4,10 @@ import { commissionerFor } from "@/lib/game/broadcastCrew";
 import { useGameStore } from "@/lib/game-store";
 import { Logo } from "./chrome";
 import { PlayerPortrait } from "./Portrait";
-import { NightOpening, StageArt } from "./NightOpening";
+import { NightOpening } from "./NightOpening";
 
 /** Draft night's cold open: the welcome, who's up first, the top of the board, and the start. */
-export function DraftOpening({ onStart }: { onStart: () => void }) {
+export function DraftOpening({ onStart, onPreview }: { onStart: () => void; onPreview: () => void }) {
   const save = useGameStore((s) => s.save)!;
   const league = sessionOf(save) === "afl" ? "AFL" : "NFL";
   const first = onTheClock(save);
@@ -28,7 +28,7 @@ export function DraftOpening({ onStart }: { onStart: () => void }) {
   return (
     <NightOpening
       label={`Welcome to the ${save.year} ${league} draft`}
-      art={<StageArt wall={`${league} DRAFT ${save.year}`} plate={String(save.year)} />}
+      art={<div className="dn-open-photo dn-open-photo-draft" aria-hidden="true" />}
       kicker={`${draftVenue(save.year).toUpperCase()} · COMMISSIONER ${commissionerFor(save.year).name.toUpperCase()}`}
       welcome="WELCOME TO THE"
       title={
@@ -76,6 +76,10 @@ export function DraftOpening({ onStart }: { onStart: () => void }) {
             </div>
           )}
         </div>
+        <button type="button" className="dn-open-preview" onClick={onPreview}>
+          <span><strong>Draft Preview Show</strong><small>See the full class, mock draft, board and storylines before the first pick.</small></span>
+          <span className="dn-open-preview-arrow" aria-hidden="true">↗</span>
+        </button>
     </NightOpening>
   );
 }

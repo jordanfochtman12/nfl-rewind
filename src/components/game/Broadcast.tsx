@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { clubInk, locationOf, nicknameOf, teamAbbr } from "@/lib/game/teams.ts";
 import type { DynastySave, GameResult, TeamId } from "@/lib/game/types.ts";
 import { Logo } from "./chrome";
@@ -147,22 +147,50 @@ export function MobileGameDock<T extends string>({
   onPick: (id: T) => void;
   className?: string;
 }) {
+  const [moreOpen, setMoreOpen] = useState(false);
   const quickIds = ["primetime", "stats", "draft", "office"];
   const quickTabs = quickIds.map((id) => tabs.find((tab) => tab.id === id)).filter((tab): tab is { id: T; label: string } => !!tab);
   return (
-    <nav className={`mobile-game-dock ${className}`} aria-label="Quick game navigation">
+    <nav
+      className={`mobile-game-dock ${className}`}
+      aria-label="Game navigation"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setMoreOpen(false);
+      }}
+    >
       {quickTabs.map((tab) => (
         <button key={tab.id} type="button" aria-current={tab.id === active ? "page" : undefined} onClick={() => onPick(tab.id)} className={`mobile-game-dock-button ${tab.id === active ? "is-active" : ""}`}>
           <span aria-hidden>{tab.id === "primetime" ? "◉" : tab.id === "stats" ? "▤" : tab.id === "draft" ? "◆" : "⌂"}</span>
           {tab.label}
         </button>
       ))}
-      <label className="mobile-game-dock-more">
-        <span>More</span>
-        <select aria-label="More game sections" value={active} onChange={(event) => onPick(event.target.value as T)}>
-          {tabs.map((tab) => <option key={tab.id} value={tab.id}>{tab.label}</option>)}
-        </select>
-      </label>
+      <button
+        className={`mobile-game-dock-more ${moreOpen ? "is-open" : ""}`}
+        type="button"
+        aria-expanded={moreOpen}
+        aria-controls="mobile-game-section-menu"
+        onClick={() => setMoreOpen((open) => !open)}
+      >
+        <span aria-hidden>☷</span> More
+      </button>
+      {moreOpen && (
+        <div className="mobile-game-dock-menu" id="mobile-game-section-menu" aria-label="All game sections">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              aria-current={tab.id === active ? "page" : undefined}
+              className={tab.id === active ? "is-active" : ""}
+              onClick={() => {
+                setMoreOpen(false);
+                onPick(tab.id);
+              }}
+            >
+              <span>{tab.label}</span><span aria-hidden>{tab.id === active ? "●" : "›"}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }

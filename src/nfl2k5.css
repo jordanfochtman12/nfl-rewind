@@ -626,19 +626,19 @@ input[list] {
   transition: opacity .2s ease, transform .35s ease;
 }
 .next-title-actions .next-mode-franchise::after {
-  background-image: linear-gradient(90deg, #5b0615f0 0%, #1b111bd9 43%, #10152180 100%), url("/art/title.jpg");
+  background-image: linear-gradient(90deg, #5b0615f0 0%, #1b111bd9 43%, #10152180 100%), url("/art/rewind-stadium-night.webp");
 }
 .next-title-actions .next-mode-timeline::after {
   background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/stadium-arrival.webp");
 }
 .next-title-actions .next-mode-record::after {
-  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/draft.jpg");
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/draft-theater.webp");
 }
 .next-title-actions .next-mode-architect::after {
-  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/office.jpg");
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/primetime-studio.webp");
 }
 .next-title-actions .next-mode-continue::after {
-  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/helmet.jpg");
+  background-image: linear-gradient(90deg, #080d16fa 0%, #101521df 45%, #080d1666 100%), url("/art/rewind-stadium-night.webp");
 }
 .next-title-actions .bx-btn:not(:disabled):hover::after,
 .next-title-actions .bx-btn:focus-visible::after { opacity: 1; transform: scale(1.035); }
@@ -3509,16 +3509,52 @@ table tbody tr:hover {
     background: linear-gradient(145deg, color-mix(in srgb, var(--color-club) 24%, #162338), #09111e);
     box-shadow: inset 0 2px var(--color-club-2), 0 0 18px -12px var(--color-club-2);
   }
-  .mobile-game-dock-more { position: relative; flex-direction: column; gap: 1px; border-left-color: #ffffff18; color: #d1dced; }
-  .mobile-game-dock-more::after { content: "⌄"; position: absolute; right: 4px; bottom: 10px; color: var(--color-club-2); pointer-events: none; }
-  .mobile-game-dock-more select { width: 100%; min-height: 24px; padding: 0 14px 0 4px; border: 0; appearance: none; color: #fff; background: transparent; font: 800 10px var(--font-display); text-align: center; text-transform: uppercase; }
-  .mobile-game-dock-more option { color: #fff; background: #101722; }
+  .mobile-game-dock-more { flex-direction: column; gap: 1px; border-left-color: #ffffff18; color: #d1dced; }
+  .mobile-game-dock-more > span { color: #90a8c4; font-size: 15px; }
+  .mobile-game-dock-more.is-open, .mobile-game-dock-more:focus-visible { color: #fff; background: #ffffff12; }
+  .mobile-game-dock-menu {
+    position: absolute;
+    right: max(8px, env(safe-area-inset-right));
+    bottom: calc(100% + 8px);
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(28rem, calc(100vw - 16px));
+    max-height: min(65dvh, 34rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid #a7c8e34d;
+    border-radius: 12px;
+    padding: 8px;
+    background: linear-gradient(145deg, #111c2af7, #070b12f7);
+    box-shadow: 0 18px 50px #000c, inset 0 1px #ffffff12;
+    backdrop-filter: blur(18px);
+  }
+  .mobile-game-dock-menu button {
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 8px 10px;
+    color: #dce7f5;
+    background: transparent;
+    font: 700 11px var(--font-display);
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .mobile-game-dock-menu button.is-active { border-color: #ffd06b66; color: #ffd06b; background: #ffd06b12; }
+  .mobile-game-dock-menu button:focus-visible { outline: 2px solid #62e8ff; outline-offset: -2px; }
   .pc-broadcast-content { padding-bottom: 154px; }
 }
 @media (max-width: 420px) {
   .mobile-game-dock { gap: 2px; }
   .mobile-game-dock-button, .mobile-game-dock-more { font-size: 9px; }
   .mobile-game-dock-button { flex-direction: column; gap: 1px; }
+  .mobile-game-dock-more { flex-direction: column; }
   .mobile-game-dock-button > span { font-size: 16px; }
 }
 @media (max-width: 1099px) {

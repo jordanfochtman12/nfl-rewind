@@ -209,6 +209,7 @@ export function DraftNight() {
       {showOpening && (
         <>
           <DraftOpening
+            onPreview={() => setTab("primetime")}
             onStart={() => {
               setOpening(false);
               setPaused(false);
