@@ -178,7 +178,7 @@ export function thirdBackRotationShare(topTwoCarries: number, hasThirdBack: bool
   // Modern teams spread the backfield farther down the chart. Keep older seasons on their
   // established workload curve; the 2024 season audit showed RB3 usage lagging real splits.
   return year >= 2020
-    ? clamp((workload - 10) * 0.02, 0, 0.34)
+    ? clamp((workload - 10) * 0.024, 0, 0.34)
     : clamp((workload - 16) * 0.02, 0, 0.34);
 }
 

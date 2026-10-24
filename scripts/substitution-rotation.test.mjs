@@ -152,8 +152,8 @@ test("a healthy third back joins the rotation only after the top two carry a hea
 
   assert.equal(thirdBackRotationShare(0, true), 0);
   assert.equal(thirdBackRotationShare(10, true), 0, "the top two keep the opening workload");
-  assert.equal(thirdBackRotationShare(16, true), 0.12, "modern RB3 can spell the starters before late-game overuse");
-  assert.equal(thirdBackRotationShare(26, true), 0.32, "modern RB3 earns more of the workload as the top two backs tire");
+  assert.ok(Math.abs(thirdBackRotationShare(16, true) - 0.144) < 1e-9, "modern RB3 gets a modest relief share before late-game overuse");
+  assert.equal(thirdBackRotationShare(26, true), 0.34, "modern RB3 earns more of the workload as the top two backs tire");
   assert.equal(thirdBackRotationShare(100, true), 0.34, "modern third-back share remains capped");
   assert.equal(thirdBackRotationShare(16, true, 2019), 0, "pre-2020 rotation waits for the established workload threshold");
   assert.equal(thirdBackRotationShare(26, true, 2019), 0.2, "pre-2020 backfield rotation stays on the historical curve");
