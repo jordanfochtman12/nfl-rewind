@@ -105,6 +105,7 @@ import { useSettings } from "@/lib/settings-store";
 import { Tour } from "./Tour";
 import { WATCH_TOUR } from "./tours";
 import { Btn, ClubDesk, ClubHash, ClubRibbon, Logo } from "./chrome";
+import { ModeMark } from "./ModeMark";
 
 // Presentation screens are split from the initial game shell and fetched when first opened.
 // This keeps the desktop/mobile startup path lean without changing their saved state.
@@ -173,7 +174,7 @@ function TitleScreen() {
       <div className="next-mode-heading"><span>CHOOSE YOUR BROADCAST</span><i /> <span>FOUR GAME MODES · RESUME YOUR SEASON</span></div>
       <div className="next-title-actions">
         <Btn kind="primary" className="next-mode-franchise" onClick={() => setScreen("select")}>
-          <span className="next-mode-title">Franchise Dynasty</span><span className="next-mode-detail">Run one club. Rewrite history.</span><span className="next-mode-arrow" aria-hidden>↗</span>
+          <span className="next-mode-title">Franchise Dynasty</span><span className="next-mode-detail">Run one club. Rewrite history.</span><ModeMark kind="franchise" />
         </Btn>
         <Btn
           className="next-mode-timeline"
@@ -186,7 +187,7 @@ function TitleScreen() {
           }}
           disabled={eraBuilding || engineLoading}
         >
-          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`}</span><span className="next-mode-detail">Let the league write a new history.</span><span className="next-mode-arrow" aria-hidden>▸</span>
+          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && watchReady ? "Replace save and open Alternate Timeline" : startYear === 1966 ? "Alternate Timeline" : `Alternate Timeline · ${startYear}`}</span><span className="next-mode-detail">Let the league write a new history.</span><ModeMark kind="timeline" />
         </Btn>
         <Btn
           className="next-mode-record"
@@ -200,7 +201,7 @@ function TitleScreen() {
             newHistory().catch(() => setHistoryError("History mode's record couldn't be loaded. Check your connection and try again."));
           }}
         >
-          <span className="next-mode-title">{historyLoading ? "Loading the record…" : save && historyReady ? "Replace save and open The Record" : "The Record"}</span><span className="next-mode-detail">Relive the NFL, season by season.</span><span className="next-mode-arrow" aria-hidden>⏮</span>
+          <span className="next-mode-title">{historyLoading ? "Loading the record…" : save && historyReady ? "Replace save and open The Record" : "The Record"}</span><span className="next-mode-detail">Relive the NFL, season by season.</span><ModeMark kind="record" />
         </Btn>
         <Btn
           className="next-mode-architect"
@@ -213,10 +214,10 @@ function TitleScreen() {
           }}
           disabled={eraBuilding || engineLoading}
         >
-          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && leagueReady ? "Replace save and open League Architect" : "League Architect"}</span><span className="next-mode-detail">Run every team. Shape every decision.</span><span className="next-mode-arrow" aria-hidden>◇</span>
+          <span className="next-mode-title">{eraBuilding ? `Building the ${startYear} league…` : engineLoading ? "Loading simulation…" : save && leagueReady ? "Replace save and open League Architect" : "League Architect"}</span><span className="next-mode-detail">Run every team. Shape every decision.</span><ModeMark kind="architect" />
         </Btn>
         <Btn className="next-mode-continue" onClick={continueGame} disabled={!save}>
-          <span className="next-mode-title">Continue Franchise</span><span className="next-mode-detail">Pick up where your season left off.</span><span className="next-mode-arrow" aria-hidden>↗</span>
+          <span className="next-mode-title">Continue Franchise</span><span className="next-mode-detail">Pick up where your season left off.</span><ModeMark kind="continue" />
         </Btn>
       </div>
       {watchReady && save && (
@@ -2209,9 +2210,15 @@ function PlayShell() {
   const navigateToSection = (id: Tab) => {
     setTab(id);
     setTv(false);
-    // A new section must always begin at its header on phones; otherwise the browser
-    // preserves the previous screen's deep scroll position and makes navigation look broken.
-    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+    // Reset after the section commit and again after native mobile selectors finish closing;
+    // otherwise Safari can restore the old deep scroll position over the first request.
+    const resetScroll = () => {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    };
+    window.requestAnimationFrame(resetScroll);
+    window.setTimeout(resetScroll, 0);
   };
   const tabs = real ? HISTORY_TABS : watch ? WATCH_TABS : TABS;
   const displayTabs = save.phase === "preDraft"
@@ -2224,17 +2231,26 @@ function PlayShell() {
   const showDeadline = save.phase === "deadline" && !event;
   return (
     <DraftAnnouncerProvider>
-    <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-12 text-center text-sm text-muted" role="status" aria-live="polite">Loading game presentation…</div>}>
     {watch && tv ? (
       <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
-        <WatchTV
-          tabs={displayTabs}
-          active={tab}
-          onPick={navigateToSection}
-        />
-        <PlayerProfile />
-        <TeamRosterModal />
-        {save.realHistory && <HistoryBoxModal />}
+        <Suspense fallback={
+          <>
+            <div className="pc-game-layout">
+              <aside className="pc-game-sidebar"><TabStrip tabs={displayTabs} active={tab} onPick={navigateToSection} /></aside>
+              <main className="broadcast-content pc-broadcast-content" role="status" aria-live="polite">Loading TV presentation…</main>
+            </div>
+            <MobileGameDock className="mobile-game-dock-tv" tabs={displayTabs} active={tab} onPick={navigateToSection} />
+          </>
+        }>
+          <WatchTV
+            tabs={displayTabs}
+            active={tab}
+            onPick={navigateToSection}
+          />
+          <PlayerProfile />
+          <TeamRosterModal />
+          {save.realHistory && <HistoryBoxModal />}
+        </Suspense>
       </ClubDesk>
     ) : (
     <ClubDesk id={deskId} year={save.year} className="broadcast-shell min-h-dvh bg-bg">
@@ -2265,7 +2281,7 @@ function PlayShell() {
       </header>
       <div className="pc-game-layout">
         <aside className="pc-game-sidebar" data-tour="tabs">
-          <TabStrip tabs={displayTabs} active={tab} onPick={setTab} />
+          <TabStrip tabs={displayTabs} active={tab} onPick={navigateToSection} />
           <div className="pc-sidebar-identity">
             <span>{watch ? "LEAGUE DESK" : "FRANCHISE DESK"}</span>
             <strong>{save.year} <i>SEASON</i></strong>
@@ -2281,6 +2297,7 @@ function PlayShell() {
           <div key={`wipe-${tab}`} className="wipe" aria-hidden />
           <main id="franchise-content" data-tab={tab} data-phase={save.phase} tabIndex={-1} key={event ? `event-${save.phase}` : tab} className="broadcast-content pc-broadcast-content rise-in">
         <ScreenOpen kicker={watch ? "LEAGUE" : "FRANCHISE"} title={displayTabs.find((t) => t.id === tab)?.label ?? ""} year={save.year} week={save.weekLabel} club={deskId} />
+        <Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-12 text-center text-sm text-muted" role="status" aria-live="polite">Loading this section…</div>}>
         {real && event && tab === "office" && save.phase !== "preseason" ? <EventPane /> : null}
         {real && tab === "office" ? <HistoryDesk /> : null}
         {watch && !real && tab === "office" ? <WatchOffice event={event} /> : null}
@@ -2314,6 +2331,7 @@ function PlayShell() {
         <TeamRosterModal />
         {save.realHistory && <HistoryBoxModal />}
         <CrunchCall />
+        </Suspense>
           </main>
         </section>
       </div>
@@ -2323,7 +2341,6 @@ function PlayShell() {
       <MobileGameDock tabs={displayTabs} active={tab} onPick={navigateToSection} />
     </ClubDesk>
     )}
-    </Suspense>
     </DraftAnnouncerProvider>
   );
 }
