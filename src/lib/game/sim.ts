@@ -420,6 +420,11 @@ function pickHappy(p: Player | undefined, year: number): boolean {
   return rate >= norm * 1.7 || (st.passInt >= 20 && rate >= norm * 1.35);
 }
 
+/** Pull a struggling passer once a capable backup is available, rather than waiting for a season-level trend. */
+function shouldPullAfterGameTurnovers(qb: Player | undefined, backup: Player | undefined, interceptions: number): boolean {
+  return !!qb && !!backup && interceptions >= 3 && backup.ovr >= qb.ovr - 15;
+}
+
 export function teamUnits(
   save: DynastySave,
   teamId: TeamId,
@@ -1766,7 +1771,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   const lineRelief = new Map<TeamId, string>();
   const offensivePlayHistory: Record<string, ("run" | "pass")[]> = { [homeId]: [], [awayId]: [] };
   const defensivePersonnel = new Map<TeamId, DefensivePersonnel>();
-  /** Clubs whose starter came out of a blowout. */
+  /** Clubs whose starter has already been pulled for turnovers or a fourth-quarter blowout. */
   const pulled = new Set<TeamId>();
   const planNow = (id: TeamId, trail: number, qq: number, ck: number): Gameplan => {
     const auto = planNowAuto(id, trail, qq, ck);
@@ -2475,6 +2480,20 @@ export function simGame(save: DynastySave, game: GameResult): void {
         continue;
       }
       break;
+    }
+
+    // Three interceptions in a game can cost a QB his job when a capable backup is available.
+    // Make the change at the next offensive series, not mid-play, and only once per club.
+    if (!pulled.has(poss) && drivePlays === 0) {
+      const qb = live(poss).qb;
+      const interceptions = qb ? boxOf(poss).find((row) => row.playerId === qb.id)?.passInt ?? 0 : 0;
+      const backup = qb ? starters(save, poss, "QB", 2, benched).find((player) => player.id !== qb.id) : undefined;
+      if (shouldPullAfterGameTurnovers(qb, backup, interceptions)) {
+        pulled.add(poss);
+        benched.add(qb!.id);
+        rebuild(poss);
+        note(`${playerName(qb!)} has thrown three interceptions. ${playerName(live(poss).qb!)} takes over at quarterback.`);
+      }
     }
 
     // Up three scores in the fourth with ten minutes left, the starter sits and the backup

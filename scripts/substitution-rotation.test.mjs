@@ -371,6 +371,43 @@ test("depth-chart wideout and backup-back substitutions enter the target pool in
   assert.ok(backupBackTargets > 0, `the depth-chart RB2 receives a pass target over the sample (got ${backupBackTargets})`);
 });
 
+test("a capable QB2 replaces a starter after three game interceptions at the next series", () => {
+  let observedChange = false;
+
+  for (let seed = 1; seed <= 64 && !observedChange; seed += 1) {
+    const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: false, seed: 9200 + seed });
+    const startingUnits = teamUnits(save, "pit");
+    const starter = startingUnits.qb;
+    const backup = startingUnits.qb2;
+    assert.ok(starter && backup, "the sample team has a starter and backup quarterback");
+    starter.ratings.throwAwr = 20;
+    backup.ovr = starter.ovr - 5;
+    backup.revealed = true;
+
+    const game = {
+      id: `qb-turnover-pull-${seed}`,
+      year: 2024,
+      week: 1,
+      phase: "regular",
+      homeId: "pit",
+      awayId: "cle",
+      homeScore: 0,
+      awayScore: 0,
+      played: false,
+    };
+    simGame(save, game);
+
+    const starterLine = [...(game.boxHome ?? []), ...(game.boxAway ?? [])].find((row) => row.playerId === starter.id);
+    const log = game.log?.map((play) => play.text).join(" ") ?? "";
+    if ((starterLine?.passInt ?? 0) >= 3 && log.includes(`${starter.firstName} ${starter.lastName} has thrown three interceptions`)) {
+      observedChange = log.includes(`${backup.firstName} ${backup.lastName} takes over at quarterback`);
+      assert.ok(observedChange, "the coach changes to a qualified QB2 after the starter's third pick");
+    }
+  }
+
+  assert.ok(observedChange, "at least one deterministic sample produced three interceptions and a next-series substitution");
+});
+
 test("offensive scheme selects the intended receiver personnel and uses both tight ends", () => {
   const save = createNewGame({ userTeamId: "pit", startingYear: 2024, cpuOnly: true, seed: 624 });
   const team = save.teams.pit;
