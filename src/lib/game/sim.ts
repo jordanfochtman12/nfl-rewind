@@ -229,7 +229,24 @@ export function careerRushWorkloadFactor(player: Player | undefined, year: numbe
     (total, [season, stats]) => (Number(season) <= year ? total + (stats.rushYds ?? 0) : total),
     0,
   );
-  return clamp(1 - Math.max(0, careerRushYards - 10_000) / 35_000, 0.68, 1);
+  // Start sharing the load before a star back reaches an extreme career total. The old 10,000-yard
+  // onset let the 1966–2020 leader reach 22,954 yards even after lowering the floor; an 8,000-yard
+  // onset keeps the response gradual and gives the depth chart more work without forcing retirement.
+  return clamp(1 - Math.max(0, careerRushYards - 8_000) / 35_000, 0.62, 1);
+}
+
+/**
+ * Opponent recoveries per forced fumble fell across the modern data window: 0.724 (1999–07),
+ * 0.685 (2008–15), and 0.665 (2016–24) in the archived regular-season player tables. The old
+ * flat 48–52% recovery roll left the defense with too few fumble recoveries, especially in the
+ * early 2000s. Keep pre-1999 behavior at its prior value because comparable league totals are
+ * not consistently recorded for those seasons.
+ */
+export function opponentFumbleRecoveryChance(year: number, pre1999Baseline = 0.48): number {
+  if (year >= 2016) return 0.665;
+  if (year >= 2008) return 0.685;
+  if (year >= 1999) return 0.724;
+  return pre1999Baseline;
 }
 
 /** Rotate a fresh defensive lineman in for a two-snap relief window, alternating units. */
@@ -2846,7 +2863,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const fumP = Math.max(0.02, 0.05 + (off.qb ? kitBoost(off.qb, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.03 : 0));
         if (rand(save) < fumP) {
           if (rusher) bumpBox(boxOf(defId), rusher.id, { ff: 1 });
-          const lost = rand(save) < 0.52;
+          const lost = rand(save) < opponentFumbleRecoveryChance(year, 0.52);
           if (lost) {
             if (rusher) bumpBox(boxOf(defId), rusher.id, { fr: 1 });
             markTo(poss);
@@ -3149,7 +3166,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
       const fumP = Math.max(0.002, 0.009 + (rec ? kitBoost(rec, "fum") : 0) + (wx === "rain" || wx === "snow" ? 0.01 : 0) - focusOf(poss, "ballSecurity") * 0.001);
       if (rand(save) < fumP) {
         if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
-        const lost = rand(save) < 0.5;
+        const lost = rand(save) < opponentFumbleRecoveryChance(year, 0.5);
         if (lost && maybeOverturn(save, year)) {
           note("Replay. He was down.");
         } else if (lost) {
@@ -3288,7 +3305,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
     );
     if (rand(save) < fumP) {
       if (t) bumpBox(boxOf(defId), t.id, { ff: 1 });
-      const lost = rand(save) < 0.48;
+      const lost = rand(save) < opponentFumbleRecoveryChance(year);
       if (rusher) note(`${playerName(rusher)} coughs it up.`);
       if (lost && maybeOverturn(save, year)) {
         note("The replay booth says down by contact.");

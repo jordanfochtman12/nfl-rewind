@@ -50,7 +50,10 @@ function offPerf(p: Player, year: number): number {
 function defPerf(p: Player, year: number): number {
   const s = p.stats[year];
   if (!s) return 0;
-  return s.sacks * 4 + s.ints * 4.5 + s.ff * 3 + (s.fr ?? 0) * 2 + (s.tfl ?? 0) * 0.8 + (s.pd ?? 0) * 0.5 + s.tackles * 0.05;
+  // A recovery is valuable, but the forced takeaway and the play that created it carry more
+  // award weight than falling on a loose ball. This also keeps more realistic recovery totals
+  // from over-rewarding off-ball defenders relative to the pass rush.
+  return s.sacks * 4 + s.ints * 4.5 + s.ff * 3 + (s.fr ?? 0) * 1.5 + (s.tfl ?? 0) * 0.8 + (s.pd ?? 0) * 0.5 + s.tackles * 0.05;
 }
 
 /** Old name kept for the All-Pro and Pro Bowl helpers below. */
