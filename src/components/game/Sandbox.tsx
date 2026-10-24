@@ -109,13 +109,11 @@ export function WatchBar({ slim = false }: { slim?: boolean } = {}) {
           {real ? historyLabel(save) : watchLabel(save)} <span aria-hidden>▸</span>
         </Btn>
         </span>
-        {!real && (
         <span data-tour="watch-tv" className="contents">
         <Btn kind="gold" className="min-h-12 px-4" disabled={done || !!busy} onClick={() => { setAuto(false); startTv(save.year); }}>
           📺 TV mode
         </Btn>
         </span>
-        )}
         <span data-tour="watch-auto" className="contents">
         <Btn
           className="min-h-12 px-4"
