@@ -1,4 +1,5 @@
-import { clubInk, logoSrc, teamColors, type TeamId } from "@/lib/game";
+import { clubInk, logoSrc, teamColors } from "@/lib/game/teams.ts";
+import type { TeamId } from "@/lib/game/types.ts";
 import { useGameStore } from "@/lib/game-store";
 
 export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?: number }) {

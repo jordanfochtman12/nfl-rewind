@@ -3,8 +3,8 @@
  * the key the game always used, so an existing dynasty is slot 1 with no migration), and a
  * small index in localStorage remembers what's in each slot for the title screen.
  */
-import type { DynastySave } from "@/lib/game/index.ts";
-import { displayName } from "@/lib/game/index.ts";
+import type { DynastySave } from "@/lib/game/types.ts";
+import { displayName } from "@/lib/game/teams.ts";
 
 export const SLOT_COUNT = 5;
 const ACTIVE_KEY = "nfl-rewind-active-slot";

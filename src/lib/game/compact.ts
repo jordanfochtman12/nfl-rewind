@@ -1,6 +1,7 @@
 /** Strip film we don't need so a 60-year file still loads. */
 import type { DynastySave, GameResult, Player, SeasonStats } from "./types.ts";
 import { archiveTransactions, liveTransactions } from "./transactions.ts";
+export { formatBytes } from "./saveFormat.ts";
 
 const FILM_PHASES = new Set(["regular", "deadline", "playoffs", "superBowl", "proBowl"]);
 
@@ -270,10 +271,4 @@ export function saveByteLength(save: DynastySave): number {
   } catch {
     return JSON.stringify(save).length;
   }
-}
-
-export function formatBytes(n: number): string {
-  if (n < 1024) return `${n} B`;
-  if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`;
-  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
 }

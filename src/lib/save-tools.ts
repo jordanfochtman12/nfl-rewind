@@ -5,7 +5,8 @@
  */
 import { dynastyStorage } from "@/lib/save-idb.ts";
 import { copySlotMeta, restoreSlotMeta, slotIndex, slotKey, SLOT_COUNT } from "@/lib/save-slots.ts";
-import { displayName, type TeamId } from "@/lib/game/index.ts";
+import { displayName } from "@/lib/game/teams.ts";
+import type { TeamId } from "@/lib/game/types.ts";
 
 const SAVE_NAME = "nfl-rewind-dynasty";
 const PACKED = (name: string) => `${name}:packed`;

@@ -2,7 +2,6 @@
 import type { DynastyGrade, DynastySave, Player, TeamId } from "./types.ts";
 import { END_YEAR } from "./types.ts";
 import { displayName } from "./teams.ts";
-import { playerName, rosterOf } from "./players.ts";
 
 function completedSeasons(save: DynastySave): number {
   const inSeason = ["regular", "deadline", "playoffs", "superBowl", "awards", "proBowl", "retirement", "hof", "complete"].includes(
@@ -79,9 +78,12 @@ export function gradeDynasty(save: DynastySave): DynastyGrade {
   add("Team of Honor", String(honor), honor * 2);
   add("Stars you drafted", String(draftedStars), draftedStars * 3);
 
-  const now = rosterOf(save, teamId);
+  // Mirror rosterOf without pulling player-generation data into the title-screen bundle.
+  const now = (t?.roster ?? [])
+    .map((id) => save.players[id])
+    .filter((p): p is Player => !!p && p.teamId === teamId);
   const peakNow = now.slice().sort((a, b) => b.ovr - a.ovr)[0];
-  if (peakNow && peakNow.ovr >= 90) add(`Present star · ${playerName(peakNow)}`, `${peakNow.ovr} ovr`, 2);
+  if (peakNow && peakNow.ovr >= 90) add(`Present star · ${peakNow.firstName} ${peakNow.lastName}`, `${peakNow.ovr} ovr`, 2);
 
   const score = lines.reduce((n, l) => n + l.pts, 0);
   const per = seasons > 0 ? score / seasons : 0;

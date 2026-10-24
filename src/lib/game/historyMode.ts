@@ -8,6 +8,8 @@
  */
 import type { AwardsResult, Coach, DynastySave, GameResult, Player, SeasonStats, TeamId } from "./types.ts";
 import type { HistoryData } from "./historyData.ts";
+import { HISTORY_FIRST, HISTORY_LAST, ROSTERS_LAST } from "./historyYears.ts";
+export { HISTORY_FIRST, HISTORY_LAST, ROSTERS_LAST };
 import { createNewGame } from "./createGame.ts";
 import { activeTeamIds, displayName, gamesInSeason, roman, superBowlNumber } from "./teams.ts";
 import { emptyStats, makePlayer, playerName } from "./players.ts";
@@ -22,10 +24,6 @@ import { rulesTakingEffect } from "./rulebook.ts";
 import { boxFor, boxPlayerId, boxSeason, gradeCall, ledgerGame, recordBookNow, recordNews, seedLedgers, type RecordHolder } from "./historyExtras.ts";
 import { posLabel } from "./posLabel.ts";
 
-export const HISTORY_FIRST = 1966;
-export const HISTORY_LAST = 2025;
-/** The last season the record has real rosters for (one past History mode, whose season is still being played). */
-export const ROSTERS_LAST = 2026;
 
 let DATA: HistoryData | undefined;
 

@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
-import { clubInk, locationOf, nicknameOf, teamAbbr, type DynastySave, type GameResult, type TeamId } from "@/lib/game";
+import { clubInk, locationOf, nicknameOf, teamAbbr } from "@/lib/game/teams.ts";
+import type { DynastySave, GameResult, TeamId } from "@/lib/game/types.ts";
 import { Logo } from "./chrome";
 import { useGameStore } from "@/lib/game-store";
 
