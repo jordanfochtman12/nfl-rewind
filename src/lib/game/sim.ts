@@ -978,7 +978,7 @@ function fgRange(k: Player | undefined, year: number, altitude: number): number 
 
 /** Coaching attempt threshold, calibrated separately from how well the kicker makes one. */
 function fgDecisionRange(k: Player | undefined, year: number, altitude: number): number {
-  const eraAdjustment = year <= 1969 ? 3 : year >= 2020 ? 1 : year >= 2000 ? 0 : year >= 1978 ? 3 : 0;
+  const eraAdjustment = year <= 1969 ? 3 : year >= 2020 ? 1 : year >= 2000 ? 0 : year >= 1980 && year <= 1989 ? 5 : year >= 1978 ? 3 : 0;
   return fgRange(k, year, altitude) + eraAdjustment;
 }
 
@@ -991,7 +991,10 @@ function fgMakeP(k: Player | undefined, distYds: number, wx: Wx, year: number, c
   p += hashFgMod(year);
   if (altitude >= 4000) p += 0.04;
   if (distYds > 48) p -= (distYds - 48) * (year >= 2000 ? 0.016 : year >= 1990 ? 0.022 : 0.03);
-  if (distYds > fgRange(k, year, altitude) + 2) p -= 0.25;
+  // The 1980s decision curve allows tries up to nine yards beyond the base leg range;
+  // don't turn those extra, historically common attempts into near-automatic misses.
+  const makeRangeMargin = year >= 1980 && year <= 1989 ? 8 : 2;
+  if (distYds > fgRange(k, year, altitude) + makeRangeMargin) p -= 0.25;
   if (pow < 72 && distYds >= 45) p -= 0.12;
   if (wx === "wind" || wx === "snow") p -= 0.12;
   if (wx === "cold") p -= 0.05;

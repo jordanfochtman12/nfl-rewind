@@ -207,9 +207,11 @@ export function fgEraMod(year: number): number {
   // From the 80s on, real kickers try (and make) the longer ones the range gives them.
   if (year <= 1981) return 0.86;
   if (year <= 1985) return 1.08;
+  if (year <= 1989) return 1.06;
   if (year <= 1993) return 0.98;
   if (year <= 1999) return 1.03;
   if (year <= 2009) return 1.08;
+  if (year >= 2020) return 1.2;
   return 1.14;
 }
 

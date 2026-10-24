@@ -3,7 +3,7 @@ import { before, test } from "node:test";
 import assert from "node:assert/strict";
 import { createEraGame, loadHistoryData, setHistoryData, simUntil } from "../src/lib/game/index.ts";
 
-const YEARS = [1966, 1985, 2009, 2019, 2024];
+const YEARS = [1966, 1983, 1985, 1987, 1989, 2009, 2019, 2024];
 let measured;
 
 before(async () => {
@@ -28,7 +28,7 @@ before(async () => {
   }
 });
 
-test("field-goal volume and accuracy stay close to five historical eras", () => {
+test("field-goal volume and accuracy stay close across historical eras", (t) => {
   const misses = [];
   for (const year of YEARS) {
     const { actual, simulated } = measured[year];
@@ -37,6 +37,7 @@ test("field-goal volume and accuracy stay close to five historical eras", () => 
     const simulatedPct = simulated.made / simulated.attempts;
     const report = `${year}: ${simulated.attempts}/${simulated.made} vs ${actual.attempts}/${actual.made}; ` +
       `attempt ratio ${attemptRatio.toFixed(2)}, make rate ${(100 * simulatedPct).toFixed(1)}% vs ${(100 * actualPct).toFixed(1)}%`;
+    t.diagnostic(report);
     assert.ok(actual.attempts > 0 && simulated.attempts > 0, `${year} has field-goal samples; ${report}`);
     if (Math.abs(attemptRatio - 1) > 0.15 || Math.abs(simulatedPct - actualPct) > 0.1) misses.push(report);
   }
