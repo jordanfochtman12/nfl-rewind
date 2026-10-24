@@ -68,7 +68,7 @@ import { ownerAfterGame, ownerCrowd, ownerNoise } from "./owner.ts";
 import { recordMeeting } from "./h2h.ts";
 import { defaultPlan, playCallers, staffPlan } from "./gameplans.ts";
 import { cpuHandles } from "./teamControl.ts";
-import { isScramblePassCall, scrambleSituationMultiplier, scrambleSituationVolumeNormalizer, scrambleYardsAdjustment } from "./qbRushing.ts";
+import { designedQbRunYardsAdjustment, isScramblePassCall, scrambleSituationMultiplier, scrambleSituationVolumeNormalizer, scrambleYardsAdjustment } from "./qbRushing.ts";
 
 function avg(ns: number[]): number {
   if (!ns.length) return 50;
@@ -3252,11 +3252,20 @@ export function simGame(save: DynastySave, game: GameResult): void {
     if (spot >= 80) mu *= 0.72 * (1 - redZoneSqueeze(year) * 2);
     if (spot >= 80 && plan.redZone === "power") mu += 0.25;
     if (was3rd && togo >= 5) mu -= year <= 1977 ? 0.3 : 0.7;
+    const designedQbRunAdjustment =
+      rusher?.pos === "QB" && call !== "sneak" ? designedQbRunYardsAdjustment(year) : 0;
     // A run is mostly a few yards, with a real share of 10-to-15-yard pops (about one carry in
     // nine goes for 10+); the mean comes down a touch so yards per carry holds.
     // The rating and matchup terms lift the realized mean above the historical era baseline.
     // Hold the typical carry near league history; explosive runs below remain skill-weighted.
-    let yds = sampleYds(save, call === "sneak" ? mu : mu - 0.55, call === "sneak" ? 1.2 : 3.6, call === "sneak" ? -1 : -4, call === "sneak" ? 4 : 17);
+    // Apply the QB-specific mean before sampleYds rounds, preserving whole-yard box-score stats.
+    let yds = sampleYds(
+      save,
+      call === "sneak" ? mu : mu - 0.55 + designedQbRunAdjustment,
+      call === "sneak" ? 1.2 : 3.6,
+      call === "sneak" ? -1 : -4,
+      call === "sneak" ? 4 : 17,
+    );
     // The era big-play curve is a passing-game story; long runs didn't get longer or more
     // common the way deep balls did, so ground breakaways stop scaling at the late-70s level.
     const runBig = Math.min(big, 0.72);

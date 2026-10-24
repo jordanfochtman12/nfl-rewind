@@ -4,6 +4,10 @@ export type ScramblePassCall = "short" | "screen" | "med" | "deep" | "pa";
 // 1.10x; 2020–21 overproduced at that setting. Excluding the fictional Friends class brings
 // 2022+ near baseline again, so later unmeasured years retain the 2024 modern setting.
 export function scrambleSituationVolumeNormalizer(year: number): number {
+  // Real-roster audits show a QB carry-volume gap from 2017–19. Restrict this adjustment to
+  // broken pass plays, keeping designed runs and other seasons on their separately measured curves.
+  if (year === 2017) return 1.1;
+  if (year === 2018 || year === 2019) return 1.25;
   if (year < 2020) return 1;
   if (year <= 2021) return 1;
   return 1.1;
@@ -11,9 +15,20 @@ export function scrambleSituationVolumeNormalizer(year: number): number {
 
 /** Season-level correction for non-sack scramble gains, calibrated to recorded QB YPC. */
 export function scrambleYardsAdjustment(year: number): number {
+  if (year === 2017) return 0.55;
+  if (year === 2018) return 0.45;
+  if (year === 2019) return 0.25;
   if (year === 2020 || year === 2021) return -0.25;
   if (year === 2022) return -0.4;
   if (year === 2023) return -0.55;
+  return 0;
+}
+
+/** Season-specific gain for designed QB runs, separate from halfback and sneak formulas. */
+export function designedQbRunYardsAdjustment(year: number): number {
+  if (year === 2017) return 0.55;
+  if (year === 2018) return 0.45;
+  if (year === 2019) return 0.25;
   return 0;
 }
 

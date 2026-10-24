@@ -20,6 +20,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "qa": "node scripts/qa-season.mjs && node scripts/qa-expansions.mjs",
+    "qa:qb-rushing": "node --experimental-strip-types scripts/qa-qb-rushing-2017-19.mjs",
     "qa:season": "node scripts/qa-season.mjs",
     "qa:expansions": "node scripts/qa-expansions.mjs"
   },
