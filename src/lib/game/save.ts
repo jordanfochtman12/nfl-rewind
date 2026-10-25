@@ -334,7 +334,8 @@ export function hydrateSave(raw: unknown): DynastySave {
   // they're still young enough to be coaching.
   for (const seed of MORE_COACHES) {
     if (out.coaches[seed.id]) continue;
-    if (seed.born && out.year - seed.born > 68) continue;
+    const estimatedBirthYear = seed.born ?? seed.yearAvail - ((seed.role ?? "HC") === "HC" ? 45 : 38);
+    if (out.year - estimatedBirthYear > 68) continue;
     out.coaches[seed.id] = makeCoachFromSeed(seed, out.year, { teamId: null, role: seed.role ?? "HC" });
   }
   // Clubs used to store one neutral call sheet each, so nobody ran his coach's game. Keep only

@@ -67,6 +67,11 @@ function urlOf(key: string): string {
 /** His portrait's address, sized for a card, or undefined (not loaded yet, or no photo). `year` is the season on screen. */
 export function headshotUrl(p: Player, year: number): string | undefined {
   if (!byId || !byName || !p.historical) return undefined;
+  // Owner-supplied portrait for the custom 2019 class player. Keep this exact-name
+  // override ahead of external historical photo matching so no namesake can inherit it.
+  if (norm(p.firstName + p.lastName) === "jordanfochtman") return "/headshots/jordan-fochtman.jpg";
+  if (norm(p.firstName + p.lastName) === "austinwidner") return "/headshots/austin-widner.jpg";
+  if (norm(p.firstName + p.lastName) === "tommydearmitt") return "/headshots/tommy-dearmitt.jpg";
   let key = p.id.startsWith("r-") ? byId.get(p.id.slice(2)) : undefined;
   if (!key && !p.id.startsWith("r-")) {
     const born = year - p.age;

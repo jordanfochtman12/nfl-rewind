@@ -63,22 +63,20 @@ export const EXPANSION_COACHES: CoachSeed[] = [
 
 export const COORDINATORS_1966: CoachSeed[] = [
   { id: "bengtson-dc", name: "Phil Bengtson", teamId: "gnb", yearAvail: 1959, offense: 70, defense: 90, born: 1913, defScheme: "4-3", leadership: 78, development: 80, evaluation: 78 },
-  { id: "dooley-oc", name: "Jim Dooley", teamId: "chi", yearAvail: 1966, offense: 78, defense: 68, born: 1930, offScheme: "smashmouth", leadership: 72, development: 74, evaluation: 72 },
-  { id: "allen-dc-dal", name: "Ermal Allen", teamId: "dal", yearAvail: 1962, offense: 72, defense: 86, born: 1920, defScheme: "4-3", leadership: 74, development: 72, evaluation: 76 },
+  { id: "dooley-dc", name: "Jim Dooley", teamId: "chi", yearAvail: 1966, offense: 78, defense: 82, born: 1930, defScheme: "4-3", leadership: 78, development: 78, evaluation: 76 },
+  { id: "nolan-dc-dal", name: "Dick Nolan", teamId: "dal", yearAvail: 1962, offense: 72, defense: 86, born: 1932, defScheme: "4-3", leadership: 78, development: 80, evaluation: 80, role: "DC" },
   { id: "mccafferty-oc", name: "Don McCafferty", teamId: "clt", yearAvail: 1963, offense: 82, defense: 70, born: 1921, offScheme: "multiple", leadership: 76, development: 78, evaluation: 74 },
   { id: "madro-oc", name: "Joe Madro", teamId: "sdg", yearAvail: 1960, offense: 86, defense: 70, born: 1913, offScheme: "vertical", leadership: 74, development: 80, evaluation: 74 },
   { id: "bettis-dc", name: "Tom Bettis", teamId: "kan", yearAvail: 1966, offense: 68, defense: 82, born: 1933, defScheme: "4-3", leadership: 72, development: 72, evaluation: 74 },
   { id: "rush-oc", name: "Clive Rush", teamId: "nyj", yearAvail: 1963, offense: 80, defense: 70, born: 1931, offScheme: "vertical", leadership: 70, development: 74, evaluation: 72 },
   { id: "patera-dc", name: "Jack Patera", teamId: "ram", yearAvail: 1966, offense: 66, defense: 84, born: 1933, defScheme: "4-3", leadership: 72, development: 74, evaluation: 74 },
   { id: "skorich-oc", name: "Nick Skorich", teamId: "cle", yearAvail: 1964, offense: 80, defense: 70, born: 1921, offScheme: "multiple", leadership: 74, development: 76, evaluation: 72 },
-  { id: "gillman-dc", name: "Chuck Noll", teamId: "sdg", yearAvail: 1966, offense: 70, defense: 88, born: 1932, defScheme: "4-3", leadership: 86, development: 90, evaluation: 88 },
-  { id: "stram-oc", name: "Bill Walsh", teamId: "kan", yearAvail: 1966, offense: 84, defense: 66, born: 1931, offScheme: "westcoast", leadership: 82, development: 92, evaluation: 86 },
+  { id: "bass-dc-sdg", name: "Tom Bass", teamId: "sdg", yearAvail: 1964, offense: 68, defense: 78, born: 1935, defScheme: "4-3", leadership: 76, development: 78, evaluation: 76, role: "DC" },
+  { id: "walsh-oc-rai", name: "Bill Walsh", teamId: "rai", yearAvail: 1966, offense: 84, defense: 66, born: 1931, offScheme: "multiple", leadership: 82, development: 92, evaluation: 86, role: "OC" },
   { id: "lombardi-oc", name: "Bob Schnelker", teamId: "gnb", yearAvail: 1964, offense: 82, defense: 64, born: 1928, offScheme: "smashmouth", leadership: 74, development: 76, evaluation: 74 },
-  { id: "halas-dc", name: "George Allen", teamId: "chi", yearAvail: 1962, offense: 68, defense: 90, born: 1918, defScheme: "cover-2", leadership: 82, development: 70, evaluation: 90 },
-  { id: "landry-oc", name: "Ermal Allen", teamId: "dal", yearAvail: 1962, offense: 80, defense: 74, born: 1920, offScheme: "multiple", leadership: 74, development: 74, evaluation: 74 },
-  { id: "shula-dc", name: "Bill Arnsparger", teamId: "clt", yearAvail: 1964, offense: 66, defense: 88, born: 1926, defScheme: "4-3", leadership: 80, development: 84, evaluation: 82 },
-  { id: "rauch-oc", name: "John Madden", teamId: "rai", yearAvail: 1967, offense: 82, defense: 74, born: 1936, offScheme: "vertical", leadership: 90, development: 80, evaluation: 78 },
-  { id: "austin-dc", name: "Bud Carson", teamId: "pit", yearAvail: 1966, offense: 64, defense: 80, born: 1931, defScheme: "cover-2", leadership: 74, development: 76, evaluation: 78 },
+  { id: "landry-oc", name: "Ermal Allen", teamId: "dal", yearAvail: 1962, offense: 80, defense: 74, born: 1918, offScheme: "multiple", leadership: 74, development: 74, evaluation: 74, role: "OC" },
+  { id: "noll-dc-clt", name: "Chuck Noll", teamId: "clt", yearAvail: 1966, offense: 70, defense: 90, born: 1932, defScheme: "4-3", leadership: 86, development: 90, evaluation: 88, role: "DC" },
+  { id: "torgeson-dc-pit", name: "LaVern Torgeson", teamId: "pit", yearAvail: 1962, offense: 64, defense: 88, born: 1929, defScheme: "4-3", leadership: 78, development: 82, evaluation: 80, role: "DC" },
 ];
 
 export const LATER_COACHES: CoachSeed[] = [

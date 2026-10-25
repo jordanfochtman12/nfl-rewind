@@ -109,7 +109,9 @@ export function makeCoachFromSeed(seed: CoachSeed, year: number, extra?: Partial
     careerBowls: extra?.careerBowls ?? 0,
     yearsCoaching: extra?.yearsCoaching ?? seed.yearsOnJob ?? 3,
     age: 0,
-    born: seed.born,
+    // Older coach catalogs omit a few birth years. Anchor their fallback age to
+    // their first NFL job, never to the dynasty's start year (which made them age 0).
+    born: seed.born ?? seed.yearAvail - ((extra?.role ?? seed.role ?? "HC") === "HC" ? 45 : 38),
     potential: Math.min(99, Math.max(seed.offense, seed.defense) + 3),
     peakOffense: seed.offense,
     peakDefense: seed.defense,
@@ -196,7 +198,10 @@ export function realCoordinator(save: DynastySave, name: string, role: "OC" | "D
 export function seedStaff(save: DynastySave): void {
   for (const c of Object.values(save.coaches)) fillCoachFields(c, save.year);
   for (const seed of COORDINATORS_1966) {
-    const role: CoachRole = seed.id.includes("-oc") ? "OC" : "DC";
+    // Old staff catalogs also contain coaches who first joined a club later. Do not
+    // install those future assistants in an earlier starting season.
+    if (seed.yearAvail > save.year) continue;
+    const role: CoachRole = seed.role ?? (seed.id.includes("-oc") ? "OC" : "DC");
     const coach = bump(seed, role, save.year, {
       offScheme: playbookFor(seed.id, save.year)?.off ?? seed.offScheme ?? TEAM_OFF[seed.teamId ?? "gnb"] ?? "multiple",
       defScheme: playbookFor(seed.id, save.year)?.def ?? seed.defScheme ?? TEAM_DEF[seed.teamId ?? "gnb"] ?? "4-3",

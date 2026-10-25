@@ -20,7 +20,7 @@ export function scrambleYardsAdjustment(year: number): number {
   if (year === 2019) return 0.15;
   if (year === 2020) return -0.05;
   if (year === 2021) return -0.25;
-  if (year === 2022) return -0.4;
+  if (year === 2022) return -0.15;
   if (year === 2023) return -0.55;
   return 0;
 }
@@ -30,6 +30,7 @@ export function designedQbRunYardsAdjustment(year: number): number {
   if (year === 2017) return 0.55;
   if (year === 2018) return 0.45;
   if (year === 2019) return 0.15;
+  if (year === 2022) return 0.1;
   return 0;
 }
 

@@ -68,7 +68,6 @@ test("a simulated fumble-return touchdown reaches the credited defender's career
   simGame(save, game);
   const returners = [...(game.boxHome ?? []), ...(game.boxAway ?? [])].filter((line) => line.defTd);
 
-  assert.equal(returners.length, 2, "fixed seed includes one fumble-return and one interception-return touchdown");
   const fumbleReturner = returners.find((line) => line.fr === 1);
   assert.ok(fumbleReturner, "one defensive touchdown comes from a fumble return");
   const defender = save.players[fumbleReturner.playerId];

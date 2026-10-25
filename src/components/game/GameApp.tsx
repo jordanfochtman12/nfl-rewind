@@ -1094,6 +1094,12 @@ function Staff() {
                 Runs the {role === "DC" ? playbookOf(c, save.year)!.defense : role === "OC" ? playbookOf(c, save.year)!.offense : `${playbookOf(c, save.year)!.offense} · ${playbookOf(c, save.year)!.defense}`}
               </p>
             )}
+            {playbookOf(c, save.year)?.philosophy && (
+              <p className="border-l-2 border-brass/50 pl-3 text-sm text-muted">
+                <span className="font-display tracking-wide text-brass">COACHING PHILOSOPHY</span><br />
+                {playbookOf(c, save.year)!.philosophy}
+              </p>
+            )}
             <p className="text-sm">
               <span className="text-muted">
                 {c.offScheme} / {c.defScheme} · year {c.yearsOnJob} on the job ·{" "}

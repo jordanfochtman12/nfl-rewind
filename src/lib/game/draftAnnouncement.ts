@@ -15,6 +15,12 @@ export interface DraftSelection {
   round: number;
   session: DraftSession;
 }
+
+/** The live draft podium belongs to dynasty and watch simulations, never to the real record. */
+export function draftAudioAllowed(realHistory: boolean, tab: string): boolean {
+  return !realHistory && (tab === "draft" || tab === "office");
+}
+
 export interface DraftAudioSnapshot {
   year: number;
   session: DraftSession;

@@ -61,7 +61,7 @@ type Stage =
   | { k: "live"; key: string; game: GameResult }
   | { k: "studio"; key: string; episode: Episode }
   | { k: "draft"; key: string }
-  | { k: "card"; key: string; title: string; kicker: string; say: string; items: string[]; opts: AdvanceOpts; seconds: number; /** An info card: airing it marks this key instead of moving the calendar. */ mark?: string }
+  | { k: "card"; key: string; title: string; kicker: string; say: string; items: string[]; opts: AdvanceOpts; seconds: number; /** A watched card, optionally paired with one real calendar step. */ mark?: string; advanceAfterMark?: boolean; actionLabel?: string }
   | { k: "end"; key: string };
 
 const STUDIO_EDITIONS: Record<string, Episode["edition"][]> = {
@@ -97,16 +97,16 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
   // The weekly recap can be switched off in settings; the big nights always air.
   const wantStudio = settingsNow().tvStudio || !["weekly", "playoffs"].includes(ep?.edition ?? "");
   const studio = ep && wantStudio && save.primetime!.year === y && STUDIO_EDITIONS[save.phase]?.includes(ep.edition) && !seen.has(ep.id) ? ep : undefined;
-  const card = (key: string, title: string, kicker: string, say: string, items: string[], opts: AdvanceOpts = {}, seconds = 10): Stage => ({
+  const card = (key: string, title: string, kicker: string, say: string, items: string[], opts: AdvanceOpts = {}, seconds = 10, actionLabel?: string): Stage => ({
     // Unique per calendar state, so each card gets its own countdown.
-    k: "card", key: `${key}-${y}-${save.phase}-${save.week}-${save.draftPickIndex}`, title, kicker, say, items, opts, seconds,
+    k: "card", key: `${key}-${y}-${save.phase}-${save.week}-${save.draftPickIndex}`, title, kicker, say, items, opts, seconds, actionLabel,
   });
   if (save.realHistory) {
     // History episodes are made from the official record and must air before the next slate.
     const historicalEpisode = ep && save.primetime?.year === y && !save.primetime?.predictions && !save.primetime?.power && !save.primetime?.outlook;
     if (historicalEpisode && !seen.has(ep.id)) return { k: "studio", key: ep.id, episode: ep };
-    const markCard = (key: string, title: string, kicker: string, say: string, items: string[], seconds = 18): Stage =>
-      ({ ...(card(key, title, kicker, say, items, {}, seconds) as Extract<Stage, { k: "card" }>), mark: tvMarkKey(key, y) });
+    const markCard = (key: string, title: string, kicker: string, say: string, items: string[], seconds = 18, advanceAfterMark = false, actionLabel?: string): Stage =>
+      ({ ...(card(key, title, kicker, say, items, {}, seconds, actionLabel) as Extract<Stage, { k: "card" }>), mark: tvMarkKey(key, y), advanceAfterMark });
     if (save.phase === "draft") {
       const key = "record-draft";
       if (!seen.has(tvMarkKey(key, y))) {
@@ -127,9 +127,9 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
           items.push(`${picks.length} recorded selections across ${new Set(picks.map((p) => p.round)).size} rounds.`);
         }
         const dualDraft = y === 1966;
-        return markCard("record-draft", dualDraft ? `The ${y} NFL and AFL drafts` : `The ${y} draft`, dualDraft ? "TWO LEAGUES · TWO BOARDS" : "THE REAL DRAFT BOARD", "Before the season begins, the original draft class enters the record. These are the selections as recorded, not a re-simulated draft.", items);
+        return markCard("record-draft", dualDraft ? `The ${y} NFL and AFL drafts` : `The ${y} draft`, dualDraft ? "TWO LEAGUES · TWO BOARDS" : "THE REAL DRAFT BOARD", "Before the season begins, the original draft class enters the record. These are the selections as recorded, not a re-simulated draft.", items, 18, true, "Continue to the season preview");
       }
-      return card("record-open-season", `Open the ${y} season`, "NEXT IN THE RECORD", `Continue into the real ${y} season. The league will be rebuilt from that year's historical rosters and schedule.`, [], {}, 5);
+      return card("record-open-season", `Open the ${y} season`, "NEXT IN THE RECORD", `Continue into the real ${y} season. The league will be rebuilt from that year's historical rosters and schedule.`, [], {}, 5, "Open the season");
     }
     if (save.phase === "preseason") {
       const key = "record-season";
@@ -142,17 +142,17 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
           ...rules.map((r) => `Rulebook, ${y}: ${r.title} — ${r.effect}`),
         ];
         const era = y < 1970 ? "AFL and NFL" : "AFC and NFC";
-        return markCard("record-season", `${y}: the season ahead`, "A YEAR IN REAL FOOTBALL HISTORY", `The ${y} record is ready. ${activeTeamIds(y).length} clubs across the ${era}, with the actual rosters and results waiting week by week.`, items);
+        return markCard("record-season", `${y}: the season ahead`, "A YEAR IN REAL FOOTBALL HISTORY", `The ${y} record is ready. ${activeTeamIds(y).length} clubs across the ${era}, with the actual rosters and results waiting week by week.`, items, 18, true, "Start Week 1");
       }
-      return card("record-kickoff", `The ${y} season opens`, "NEXT · WEEK ONE", "The historical schedule is about to begin. Each Sunday will be followed by its own real-results Primetime report.", [], {}, 5);
+      return card("record-kickoff", `The ${y} season opens`, "NEXT · WEEK ONE", "The historical schedule is about to begin. Each Sunday will be followed by its own real-results Primetime report.", [], {}, 5, "Start Week 1");
     }
     if (save.phase === "regular") {
       const slate = nextSlate(save);
       const items = slate.slice(0, 9).map((g) => `${displayName(y, g.awayId as TeamId)} (${save.teams[g.awayId as TeamId] ? `${save.teams[g.awayId as TeamId]!.wins}-${save.teams[g.awayId as TeamId]!.losses}` : "—"}) at ${displayName(y, g.homeId as TeamId)} (${save.teams[g.homeId as TeamId] ? `${save.teams[g.homeId as TeamId]!.wins}-${save.teams[g.homeId as TeamId]!.losses}` : "—"}).`);
       if (slate.length > 9) items.push(`${slate.length - 9} more games on this week's real schedule.`);
       const key = `record-week-${y}-${save.week}`;
-      if (!seen.has(`${key}-${y}`)) return markCard(key, `Week ${save.week}: the real schedule`, `${y} · BEFORE KICKOFF`, `Here is the actual Week ${save.week} slate. Records shown are from the replay at this point in the season; no result has been projected.`, items, 16);
-      return card("record-advance-week", `Week ${save.week} is next`, `${y} · THE HISTORICAL CALENDAR`, "Continue to place this week's actual results in the record. Primetime will return with the full Sunday recap before the next week begins.", [], {}, 5);
+      if (!seen.has(`${key}-${y}`)) return markCard(key, `Week ${save.week}: the real schedule`, `${y} · BEFORE KICKOFF`, `Here is the actual Week ${save.week} slate. Records shown are from the replay at this point in the season; no result has been projected.`, items, 16, true, `Play Week ${save.week}`);
+      return card("record-advance-week", `Week ${save.week} is next`, `${y} · THE HISTORICAL CALENDAR`, "Continue to place this week's actual results in the record. Primetime will return with the full Sunday recap before the next week begins.", [], {}, 5, `Play Week ${save.week}`);
     }
     if (save.phase === "playoffs") {
       const slate = nextSlate(save);
@@ -160,23 +160,23 @@ function direct(save: DynastySave, seen: Set<string>, preview: () => Episode): S
       if (!seen.has(`${key}-${y}`)) {
         const items = slate.slice(0, 8).map((g) => `${g.round ?? "Playoffs"}: ${displayName(y, g.awayId as TeamId)} at ${displayName(y, g.homeId as TeamId)}.`);
         if (!items.length) items.push("The next postseason round is taken directly from the historical bracket.");
-        return markCard(key, slate[0]?.round ?? "The playoffs", `${y} · THE ROAD TO THE TITLE`, "The postseason bracket and matchups follow the historical record exactly.", items, 16);
+        return markCard(key, slate[0]?.round ?? "The playoffs", `${y} · THE ROAD TO THE TITLE`, "The postseason bracket and matchups follow the historical record exactly.", items, 16, true, `Play ${slate[0]?.round ?? "the next round"}`);
       }
-      return card("record-advance-playoffs", `${slate[0]?.round ?? "The next round"} is next`, `${y} · ELIMINATION FOOTBALL`, "Continue to the actual postseason results. The studio recap will cover the round before the bracket moves on.", [], {}, 5);
+      return card("record-advance-playoffs", `${slate[0]?.round ?? "The next round"} is next`, `${y} · ELIMINATION FOOTBALL`, "Continue to the actual postseason results. The studio recap will cover the round before the bracket moves on.", [], {}, 5, `Play ${slate[0]?.round ?? "the next round"}`);
     }
     if (save.phase === "superBowl") {
       const g = save.superBowl;
       const winner = g?.played ? (g.homeScore > g.awayScore ? g.homeId : g.awayId) : undefined;
       const mvp = g?.mvpPlayerId ? save.players[g.mvpPlayerId] : undefined;
       const items = g?.played ? [`${displayName(y, g.awayId as TeamId)} ${g.awayScore}, ${displayName(y, g.homeId as TeamId)} ${g.homeScore}.`, ...(winner ? [`${displayName(y, winner as TeamId)} are the recorded champions.`] : []), ...(mvp ? [`Super Bowl Most Valuable Player: ${playerName(mvp)}.`] : [])] : [];
-      return card("record-sb-transition", `The ${y} championship is in the record`, `SUPER BOWL ${y}`, "The result and award are preserved from the historical game. Next, the season's real awards are presented.", items, {}, 10);
+      return card("record-sb-transition", `The ${y} championship is in the record`, `SUPER BOWL ${y}`, "The result and award are preserved from the historical game. Next, the season's real awards are presented.", items, {}, 10, "Continue to awards");
     }
-    if (save.phase === "awards") return card("record-awards-transition", `${y} honors are recorded`, "NEXT · CANTON", "Continue to the Hall of Fame class that was actually inducted after this season.", [], {}, 6);
+    if (save.phase === "awards") return card("record-awards-transition", `${y} honors are recorded`, "NEXT · CANTON", "Continue to the Hall of Fame class that was actually inducted after this season.", [], {}, 6, "Continue to Canton");
     if (save.phase === "hof") {
       const classYear = y + 1;
       const members = save.history.hof.filter((m) => m.year === classYear);
       const items = members.map((m) => `${m.name ?? (m.playerId && save.players[m.playerId] ? playerName(save.players[m.playerId]!) : m.coachId ? save.coaches[m.coachId]?.name : "Recorded inductee")}${m.teamId ? ` · ${displayName(classYear, m.teamId)}` : ""}${m.kind ? ` · ${m.kind}` : ""}.`);
-      return card("record-hof", `The Hall of Fame · Class of ${classYear}`, "CANTON · THE REAL CLASS", members.length ? `${members.length} recorded inductee${members.length === 1 ? "" : "s"} entered the Hall in ${classYear}.` : `The record has no listed inductees for the Class of ${classYear}.`, items, {}, 14);
+      return card("record-hof", `The Hall of Fame · Class of ${classYear}`, "CANTON · THE REAL CLASS", members.length ? `${members.length} recorded inductee${members.length === 1 ? "" : "s"} entered the Hall in ${classYear}.` : `The record has no listed inductees for the Class of ${classYear}.`, items, {}, 14, "Continue the record");
     }
     if (save.phase === "complete") return { k: "end", key: "end" };
     return card(`record-${save.phase}`, save.weekLabel, `${y} · THE RECORD`, `Continue through the historical calendar: ${save.weekLabel}.`, [], {}, 5);
@@ -394,7 +394,10 @@ export function WatchTV({
         advance({});
         return;
       case "card":
-        if (stage.mark) mark(stage.mark);
+        if (stage.mark) {
+          mark(stage.mark);
+          if (stage.advanceAfterMark) advance({});
+        }
         else advance(stage.opts);
         return;
       case "draft":
@@ -485,7 +488,7 @@ export function WatchTV({
         </div>
       )}
       {settingsOpen && <SettingsSheet onClose={() => setSettingsOpen(false)} />}
-      {!settingsOpen && <Tour id="tv" steps={TV_TOUR} />}
+      {!settingsOpen && <Tour id="tv" steps={TV_TOUR} className="tv-tour-card" />}
       <MobileGameDock className="mobile-game-dock-tv" tabs={tabs} active={active} onPick={onPick} onDraftPreview={onDraftPreview} />
     </div>
   );
@@ -546,7 +549,7 @@ function useCountdown(seconds: number, paused: boolean, onGo: () => void) {
 
 function Countdown({ left, label, onGo }: { left: number; label: string; onGo: () => void }) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="tv-countdown-dock flex flex-wrap items-center gap-3">
       <Btn kind="primary" className="min-h-12 px-6" onClick={onGo}>
         {label} <span aria-hidden>▸</span>
       </Btn>
@@ -640,7 +643,7 @@ function Card({ stage, save, say, paused, onGo }: { stage: Extract<Stage, { k: "
             ))}
           </ul>
         )}
-        <Countdown left={left} label={stage.mark ? "Continue" : watchLabel(save)} onGo={goNow} />
+        <Countdown left={left} label={stage.actionLabel ?? (stage.mark ? "Continue" : watchLabel(save))} onGo={goNow} />
       </div>
     </section>
   );
@@ -672,9 +675,9 @@ function Bulletin({ item, save, say, paused, onDone }: { item: NewsItem; save: D
         <div>
           <h2 className="font-display text-3xl sm:text-4xl">{item.headline}</h2>
           {item.body && <p className="mt-2 max-w-2xl text-paper">{item.body}</p>}
-          <Btn className="mt-4" onClick={goNow}>
-            Back to the broadcast
-          </Btn>
+          <div className="tv-countdown-dock mt-4">
+            <Btn onClick={goNow}>Back to the broadcast</Btn>
+          </div>
         </div>
       </div>
     </section>

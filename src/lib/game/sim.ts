@@ -1709,6 +1709,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
   // the score when it was last checked, so every era's rule is judged in one place.
   let otPossNo = 0;
   let otOff: TeamId | null = null;
+  const otTeamsWithPossession = new Set<TeamId>();
   let otPts: [number, number] = [0, 0];
   const otRule = otRules(year, game.phase);
   // Game week. The one-on-ones that decide games are looked up for every game so the league
@@ -2393,18 +2394,19 @@ export function simGame(save: DynastySave, game: GameResult): void {
           (otRule.kind === "both" || (otRule.kind === "modified" && Math.max(homeGain, awayGain) === 3));
         if (homeScore !== awayScore && !answerable) break;
       }
-      if (poss !== otOff) {
-        // A possession just ended. Past the guaranteed ones, whoever leads has won.
-        if (otPossNo >= 2 && homeScore !== awayScore) break;
-        otPossNo += 1;
-        otOff = poss;
-      }
+      otPossNo = otTeamsWithPossession.size;
       otPts = [homeScore, awayScore];
     }
     if (logOn) {
       flushPlay();
       while (orderAt < orders.length && orders[orderAt]!.at <= log.length) applyOrder(orders[orderAt++]!);
       cur = { q, clock, poss, down, togo, spot, bumps: [], notes: [] };
+    }
+    if (ot) {
+      // Count a team's guaranteed overtime possession when it actually runs a snap. Kickoffs
+      // alone do not count, and a team remains counted if it punts and later gets the ball back.
+      otTeamsWithPossession.add(poss);
+      otPossNo = otTeamsWithPossession.size;
     }
     plays += 1;
     if (plays === 1 && logOn && bigStage) {
@@ -2464,6 +2466,7 @@ export function simGame(save: DynastySave, game: GameResult): void {
         const otReceiver = rand(save) < 0.5 ? homeId : awayId;
         otPossNo = 1;
         otOff = otReceiver;
+        otTeamsWithPossession.clear();
         otPts = [homeScore, awayScore];
         if (logOn) {
           note(otCall(otRule.kind, year));
@@ -2473,7 +2476,11 @@ export function simGame(save: DynastySave, game: GameResult): void {
         continue;
       }
       if (q >= 5) {
-        if (homeScore !== awayScore) break;
+        // In playoff overtime, the first side may score late in a period and leave no
+        // time for the opponent to answer. Carry the opponent into the next period before
+        // deciding the game; the answer can come after the clock resets. Sudden death has
+        // already ended at the scoring play above, and after both possessions a lead wins.
+        if (homeScore !== awayScore && (game.phase === "regular" || game.phase === "preseason" || otPossNo >= 2)) break;
         if (game.phase === "regular" || game.phase === "preseason") break;
         q += 1;
         clock = 900;

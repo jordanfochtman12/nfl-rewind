@@ -1,10 +1,22 @@
 import { clubInk, logoSrc, teamColors } from "@/lib/game/teams.ts";
 import type { TeamId } from "@/lib/game/types.ts";
+import { LOGO_ERAS } from "@/lib/game/data/logos.ts";
 import { useGameStore } from "@/lib/game-store";
 
 export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?: number }) {
   const saveYear = useGameStore((s) => s.save?.year ?? 1966);
   const y = year ?? saveYear;
+  if (!LOGO_ERAS[id]) {
+    return (
+      <span
+        className="inline-flex shrink-0 items-center justify-center rounded border border-white/20 bg-surface font-display text-xs font-bold text-paper"
+        style={{ width: size, height: size }}
+        aria-label="Club mark unavailable"
+      >
+        NFL
+      </span>
+    );
+  }
   return (
     <img
       // A new club is a new image: never show the last club's mark while this one loads.

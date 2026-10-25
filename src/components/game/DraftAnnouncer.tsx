@@ -11,6 +11,7 @@ import {
 import { useGameStore } from "@/lib/game-store";
 import {
   draftAnnouncementParts,
+  draftAudioAllowed,
   draftAudioSnapshot,
   draftCrowdReaction,
   draftOnClock,
@@ -42,7 +43,7 @@ function crowdFor(b: PickBreakdown): DraftReaction {
 export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const save = useGameStore((s) => s.save)!;
   const tab = useGameStore((s) => s.tab);
-  const inRoom = tab === "draft" || tab === "office";
+  const inRoom = draftAudioAllowed(save.realHistory === true, tab);
   const previous = useRef<DraftAudioSnapshot | null>(null);
   const saveRef = useRef(save);
   saveRef.current = save;
@@ -50,7 +51,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const recentDesk = useRef<string[]>([]);
   const opened = useRef(new Set<string>());
   const snapshot = useMemo(
-    () => (save.phase === "draft" || previous.current?.drafting ? draftAudioSnapshot(save) : null),
+    () => (!save.realHistory && (save.phase === "draft" || previous.current?.drafting) ? draftAudioSnapshot(save) : null),
     [save],
   );
   // On by default, like the booth on game day (Settings → booth voices turns it off).

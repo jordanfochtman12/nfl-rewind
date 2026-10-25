@@ -3629,8 +3629,29 @@ table tbody tr:hover {
   .mobile-game-dock-tv {
     z-index: 80;
   }
-  .tv-content { padding-bottom: 154px !important; }
-  .tv-crawl { bottom: calc(70px + env(safe-area-inset-bottom)); }
+  .tv-content { padding-bottom: 220px !important; }
+  .tv-countdown-dock {
+    position: fixed;
+    z-index: 90;
+    left: 50%;
+    bottom: calc(108px + env(safe-area-inset-bottom));
+    display: flex;
+    width: min(560px, calc(100vw - 24px));
+    min-height: 60px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transform: translateX(-50%);
+    border: 1px solid #d8b45d70;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: linear-gradient(145deg, #101722f5, #05080ef5);
+    box-shadow: 0 -8px 28px #000b, inset 0 1px #ffffff18;
+    backdrop-filter: blur(18px);
+  }
+  .tv-countdown-dock > .bx-btn { flex: 1 1 auto; min-height: 46px; }
+  .tv-tour-card { bottom: calc(184px + env(safe-area-inset-bottom)) !important; }
+  .tv-crawl { bottom: calc(74px + env(safe-area-inset-bottom)); padding-bottom: 0; }
 }
 @media (max-width: 600px) {
   .next-title-actions .bx-btn {

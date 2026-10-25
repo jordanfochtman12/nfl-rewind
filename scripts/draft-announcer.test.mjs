@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { draftAudioAllowed } from "../src/lib/game/draftAnnouncement.ts";
 import { createNewGame } from "../src/lib/game/createGame.ts";
 import { advance } from "../src/lib/game/season.ts";
 import { makeDraftPick, draftQueue, transferPick } from "../src/lib/game/draft.ts";
@@ -189,4 +190,11 @@ test("round one keeps the commissioner's formula; later rounds and the desk don'
   assert.equal(new Set(takes).size, takes.length);
   const clocks = Array.from({ length: 5 }, (_, i) => draftOnClock(snapshot({ onClock: "ram", nextPick: 30 + i })).replace(/\d+/g, "#"));
   assert.equal(new Set(clocks).size, 5);
+});
+test("real-history mode never starts fictional draft-podium audio", () => {
+  assert.equal(draftAudioAllowed(true, "office"), false);
+  assert.equal(draftAudioAllowed(true, "draft"), false);
+  assert.equal(draftAudioAllowed(false, "office"), true);
+  assert.equal(draftAudioAllowed(false, "draft"), true);
+  assert.equal(draftAudioAllowed(false, "stats"), false);
 });

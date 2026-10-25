@@ -1,12 +1,18 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createTVAdvance, shouldHoldForNarration, TV_NARRATION_GRACE_MS, tvMarkKey } from "../src/lib/game/tvCountdown.ts";
+import { createTVAdvance, shouldHoldForNarration, TV_NARRATION_GRACE_MS, tvMarkKey, tvSpeechWatchdogMs } from "../src/lib/game/tvCountdown.ts";
 
 test("TV calendar only gives narration a short grace period before advancing", () => {
   assert.equal(shouldHoldForNarration(0), true);
   assert.equal(shouldHoldForNarration(TV_NARRATION_GRACE_MS - 1), true);
   assert.equal(shouldHoldForNarration(TV_NARRATION_GRACE_MS), false);
   assert.equal(shouldHoldForNarration(TV_NARRATION_GRACE_MS + 300), false);
+});
+
+test("TV studio speech fallback is finite and scales with line length", () => {
+  assert.equal(tvSpeechWatchdogMs(" "), 9_000);
+  assert.ok(tvSpeechWatchdogMs("A line long enough to need a larger bounded mobile speech timeout") > 9_000);
+  assert.equal(tvSpeechWatchdogMs("word ".repeat(200)), 30_000);
 });
 
 test("manual Continue cancels the pending timer and timer/tap races advance only once", () => {

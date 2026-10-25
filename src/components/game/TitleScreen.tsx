@@ -34,6 +34,7 @@ export function TitleScreen() {
   const [historyError, setHistoryError] = useState("");
   const watching = !!save?.sandbox && !save?.leagueSandbox;
   const realHistory = !!save?.realHistory;
+  const userTeam = save?.teams?.[save.userTeamId];
   const [importError, setImportError] = useState("");
   const download = () => {
     const json = exportJson();
@@ -44,7 +45,12 @@ export function TitleScreen() {
     a.download = `nfl-rewind-${save?.leagueSandbox ? "league-architect" : save?.sandbox ? "watch" : (save?.userTeamId ?? "dynasty")}-${save?.year ?? 1966}.json`;
     a.click();
   };
-  const grade = save ? gradeDynasty(save) : null;
+  // Record and sandbox saves are not franchise grade inputs. Besides being unused
+  // in these modes, historical saves can omit dynasty-only state such as `teams`.
+  const grade =
+    save && userTeam && save.history?.superBowls && save.players && !watching && !realHistory && !save.leagueSandbox
+      ? gradeDynasty(save)
+      : null;
   const bytes = save ? displaySaveByteLength(save) : 0;
   return (
     <main className="next-title">
@@ -314,7 +320,9 @@ export function TitleScreen() {
                   <strong>
                     {save.leagueSandbox
                       ? displayName(save.year, save.userTeamId)
-                      : `${save.teams[save.userTeamId].wins}–${save.teams[save.userTeamId].losses}${save.teams[save.userTeamId].ties ? `–${save.teams[save.userTeamId].ties}` : ""}`}
+                      : userTeam
+                        ? `${userTeam.wins}–${userTeam.losses}${userTeam.ties ? `–${userTeam.ties}` : ""}`
+                        : "—"}
                   </strong>
                 </div>
                 <div>

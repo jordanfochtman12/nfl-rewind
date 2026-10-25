@@ -120,6 +120,12 @@ export const LOGO_ERAS: Record<TeamId, LogoEra[]> = {
 
 export function logoSrc(year: number, id: TeamId): string {
   const eras = LOGO_ERAS[id];
+  // A stale or mid-hydration save can briefly ask for an unknown club mark. Keep
+  // shared chrome renderable while the save is repaired/replayed by the store.
+  if (!Array.isArray(eras)) {
+    const badge = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="10" fill="#101a27"/><path d="M32 7 52 15v16c0 12-8 21-20 27C20 52 12 43 12 31V15z" fill="none" stroke="#d6b45b" stroke-width="3"/><text x="32" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#f5f4ed">NFL</text></svg>';
+    return `data:image/svg+xml,${encodeURIComponent(badge)}`;
+  }
   let file = `${id}.svg`;
   for (const e of eras) {
     if (year >= e.from) file = e.file;

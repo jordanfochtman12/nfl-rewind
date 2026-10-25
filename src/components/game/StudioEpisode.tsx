@@ -9,6 +9,7 @@ import { stadiumAudio } from "./stadiumAudio";
 import { castVoices, PHONE_VOICE, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
 import { crewFor, crewGender } from "@/lib/game/previewVoice";
 import { cancelSpeech, speakLine, useTalking } from "@/lib/voice/speech";
+import { tvSpeechWatchdogMs } from "@/lib/game/tvCountdown";
 
 type Episode = NonNullable<PrimetimeShow["episode"]>;
 
@@ -49,6 +50,7 @@ export function StudioEpisode({
     [save, episode.id],
   );
   const [opening, setOpening] = useState(false);
+  const doneCalled = useRef(false);
   const chapter = episode.chapters[index]!;
   const graphic = useMemo(() => (save ? showGraphic(save, year, episode, chapter, show) : undefined), [save, year, episode, chapter, show]);
   const ticker = useMemo(() => (save ? showTicker(save, year, show?.week) : []), [save, year, show?.week]);
@@ -56,14 +58,20 @@ export function StudioEpisode({
   const finale = episode.edition === "superBowl";
   const preview = episode.edition === "seasonPreview";
   const end = index === episode.chapters.length - 1 && line === chapter.lines.length - 1;
+  const finishBroadcast = () => {
+    if (doneCalled.current) return;
+    doneCalled.current = true;
+    setPlaying(false);
+    if (autoPlay && "speechSynthesis" in window) cancelSpeech();
+    done.current?.();
+  };
   const advance = () => {
     if (line < chapter.lines.length - 1) setLine(line + 1);
     else if (index < episode.chapters.length - 1) {
       setIndex(index + 1);
       setLine(0);
     } else {
-      setPlaying(false);
-      done.current?.();
+      finishBroadcast();
     }
   };  // The narration effect calls the latest advance without restarting on every render.
   const advanceRef = useRef(advance);
@@ -138,9 +146,25 @@ export function StudioEpisode({
       if (c?.voice) speech.voice = c.voice;
       speech.pitch = c?.pitch ?? 1;
       speech.rate = c?.rate ?? 1;
+      let settled = false;
+      const settle = () => {
+        if (!active || settled) return;
+        settled = true;
+        window.clearTimeout(watchdog);
+        next();
+      };
+      // iOS can suspend speechSynthesis without sending onend or onerror. A bounded fallback
+      // keeps TV moving, while the permanent Continue control below lets viewers skip now.
+      const watchdog = window.setTimeout(() => {
+        if (active && autoPlay) {
+          setError("Phone narration paused; continuing the historical broadcast.");
+          cancelSpeech();
+          settle();
+        }
+      }, tvSpeechWatchdogMs(current.text));
       speech.onend = () => {
         misses.current = 0;
-        next();
+        settle();
       };
       // A line the voice couldn't read is skipped, not the show: phones drop one now and then.
       // Only when nothing will read does the show stop.
@@ -149,14 +173,16 @@ export function StudioEpisode({
         misses.current += 1;
         if (misses.current >= 3) {
           setError("Narration stopped. You can continue with the transcript or switch voices.");
-          setPlaying(false);
+          if (autoPlay) settle();
+          else setPlaying(false);
           return;
         }
-        window.setTimeout(next, 600);
+        if (autoPlay) window.setTimeout(settle, 600);
       };
       speakLine(speech);
       return () => {
         active = false;
+        window.clearTimeout(watchdog);
         cancelSpeech();
       };
     }
@@ -169,7 +195,7 @@ export function StudioEpisode({
       window.clearTimeout(timer);
     };
     // The voice list is read from a ref: the phone reloading it mid-line must not restart the read.
-  }, [playing, index, line, narration, voice, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters]);
+  }, [playing, index, line, narration, voice, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters, autoPlay]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);
@@ -201,6 +227,11 @@ export function StudioEpisode({
         >
           {playing ? "Pause show" : end ? "Replay show" : "Watch show"}
         </button>
+        {autoPlay && (
+          <button className="bx-chip min-h-11 px-3" onClick={finishBroadcast}>
+            Continue broadcast ▸
+          </button>
+        )}
         <button
           className="bx-chip min-h-11 px-3"
           aria-pressed={narration}

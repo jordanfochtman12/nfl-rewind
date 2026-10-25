@@ -385,6 +385,7 @@ function coachCard(c: Coach, mine: boolean, year: number) {
         {c.careerTitles ? ` · ${c.careerTitles} titles` : ""} ·{" "}
         {playbookOf(c, year) ? `${playbookOf(c, year)!.offense} / ${playbookOf(c, year)!.defense}` : `${c.offScheme}/${c.defScheme}`}
       </p>
+      {playbookOf(c, year)?.philosophy && <p className="mt-1 text-sm text-muted">{playbookOf(c, year)!.philosophy}</p>}
       <div className="mt-2">
         <CoachChips coach={c} compact />
       </div>

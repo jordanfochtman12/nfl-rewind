@@ -16,7 +16,7 @@ function targetOf(id?: string): HTMLElement | null {
 }
 
 /** Shows `steps` once per device under `id`, unless already seen. */
-export function Tour({ id, steps, delay = 600 }: { id: string; steps: TourStep[]; delay?: number }) {
+export function Tour({ id, steps, delay = 600, className = "" }: { id: string; steps: TourStep[]; delay?: number; className?: string }) {
   const seen = useSettings((s) => s.toursSeen.includes(id));
   const markTour = useSettings((s) => s.markTour);
   const [i, setI] = useState(-1);
@@ -46,7 +46,7 @@ export function Tour({ id, steps, delay = 600 }: { id: string; steps: TourStep[]
   };
   const last = i === steps.length - 1;
   return (
-    <div className="tour-card fixed inset-x-3 bottom-3 z-[80] mx-auto max-w-md rounded-xl border border-brass/60 bg-[#0b0e15f2] p-4 shadow-2xl backdrop-blur" role="dialog" aria-label="Tour" aria-live="polite">
+    <div className={`tour-card fixed inset-x-3 bottom-3 z-[80] mx-auto max-w-md rounded-xl border border-brass/60 bg-[#0b0e15f2] p-4 shadow-2xl backdrop-blur ${className}`} role="dialog" aria-label="Tour" aria-live="polite">
       <p className="text-[10px] tracking-[0.3em] text-brass">
         TOUR · {i + 1} / {steps.length}
       </p>
