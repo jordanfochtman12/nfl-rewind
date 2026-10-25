@@ -1,0 +1,123 @@
+// Builds src/lib/game/data/realSpots.ts: the spot each real player mostly started at, from the
+// record's starts (Pro Football Archives to 2000, depth charts after), where it's another spot in
+// his own unit than the one he's listed at. Draft listings and the record's career position keep
+// positions in broad strokes ("LB", "DB", an end who played tackle); the starts say where he lined up.
+//
+//   node --experimental-strip-types scripts/real-spots.mjs
+import { writeFileSync } from "node:fs";
+
+const G = new URL("../src/lib/game/", import.meta.url).href;
+const g = await import(G + "index.ts");
+const { historyData } = await import(G + "historyMode.ts");
+g.setHistoryData(await g.loadHistoryData());
+const { draftSeedsFor } = await import(G + "data/draftClasses.ts");
+const H = historyData();
+
+// A move stays inside a unit: a lineman's side, the line's two jobs, the linebackers, the
+// secondary, and the edge (an end stood up as a 3-4 outside linebacker). A back listed as a
+// fullback in a split backfield was a runner, so backs aren't moved, nor anyone across units.
+const UNIT = { LT: "OL", LG: "OL", C: "OL", RG: "OL", RT: "OL", DE: "DL", DT: "DL", OLB: "LB", MLB: "LB", CB: "DB", S: "DB", K: "SPEC", P: "SPEC" };
+const sameUnit = (a, b) => (UNIT[a] && UNIT[a] === UNIT[b]) || (a === "DE" && b === "OLB") || (a === "OLB" && b === "DE");
+// Most of his starts at one spot, over at least a season and a half of them.
+const SHARE = 0.6;
+const SEASONS = 1.5;
+
+const starts = new Map();
+for (let y = 1966; y <= 2026; y++) {
+  const weeks = Math.max(1, H.chartWeeks(y));
+  for (const [person, r] of H.starters(y)) {
+    if (!r.spot || !r.starts) continue;
+    const m = starts.get(person) ?? starts.set(person, {}).get(person);
+    m[r.spot] = (m[r.spot] ?? 0) + r.starts / weeks;
+  }
+}
+// Kickers and punters: what he did, field goals and extra points against punts.
+const kicking = new Map();
+for (let y = 1966; y <= 2026; y++) {
+  for (const { person, line } of H.stats(y)) {
+    const k = Math.max(0, line.fgAtt ?? 0) + Math.max(0, line.xpAtt ?? 0) / 3;
+    const pu = Math.max(0, line.punts ?? 0);
+    if (!k && !pu) continue;
+    const t = kicking.get(person) ?? kicking.set(person, { k: 0, p: 0 }).get(person);
+    t.k += k;
+    t.p += pu;
+  }
+}
+const specialist = (person) => {
+  const t = kicking.get(person);
+  if (!t) return undefined;
+  if (t.k >= 20 && t.k > 2 * t.p) return "K";
+  if (t.p >= 30 && t.p > 2 * t.k) return "P";
+  return undefined;
+};
+const spotOf = (person) => {
+  const listed = H.people[person]?.pos;
+  if (listed === "K" || listed === "P") return specialist(person);
+  const m = starts.get(person);
+  if (!m) return undefined;
+  const total = Object.values(m).reduce((a, b) => a + b, 0);
+  const [spot, n] = Object.entries(m).sort((a, b) => b[1] - a[1])[0];
+  return total >= SEASONS && n / total >= SHARE ? spot : undefined;
+};
+
+// By person, against the record's career position (era starts place men without a spot that season).
+const career = {};
+for (const person of new Set([...starts.keys(), ...kicking.keys()])) {
+  const spot = spotOf(person);
+  const listed = H.people[person]?.pos;
+  if (spot && listed && spot !== listed && sameUnit(listed, spot)) career[person.toString(36)] = spot;
+}
+
+// By draft listing, against the class's own position (the draft and every league's classes).
+const norm = (s) => s.toLowerCase().replace(/[^a-z]/g, "");
+const byName = new Map();
+H.people.forEach((p, i) => {
+  const k = norm(p.first + p.last);
+  (byName.get(k) ?? byName.set(k, []).get(k)).push(i);
+});
+const draft = {};
+for (let y = 1966; y <= 2026; y++) {
+  const drafted = H.drafts(y);
+  const picks = new Map(drafted.map((d) => [norm(H.people[d.person].first + H.people[d.person].last), d.person]));
+  for (const s of draftSeedsFor(y)) {
+    const k = norm(s.f + s.l);
+    let person = picks.get(k);
+    if (person === undefined && s.r) {
+      // A nickname ("Ike" Taylor is Ivan in the record): the one pick that round with his last name.
+      const c = drafted.filter((d) => d.round === s.r && norm(H.people[d.person].last) === norm(s.l));
+      if (c.length === 1) person = c[0].person;
+    }
+    if (person === undefined) {
+      // Undrafted: the one person of that name whose career starts that year or the next.
+      const c = (byName.get(k) ?? []).filter((i) => {
+        const f = H.firstSeason(i);
+        return f === y || f === y + 1;
+      });
+      if (c.length === 1) person = c[0];
+    }
+    if (person === undefined) continue;
+    const spot = spotOf(person);
+    if (spot && spot !== s.p && sameUnit(s.p, spot)) draft[`${y}|${s.f}|${s.l}`] = spot;
+  }
+}
+
+const body = (o) => Object.entries(o).sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true })).map(([k, v]) => `  ${JSON.stringify(k)}: "${v}",`).join("\n");
+writeFileSync(
+  new URL("../src/lib/game/data/realSpots.ts", import.meta.url),
+  `// Generated by scripts/real-spots.mjs from the record's starts. Do not edit by hand.
+import type { Pos } from "../types.ts";
+
+/** A draft class's real player at the spot he mostly started, where his listing has another in his unit: "year|first|last". */
+export const DRAFT_SPOT: Record<string, Pos> = {
+${body(draft)}
+};
+
+/** A person (base 36) at the spot he mostly started, where his career position is another in his unit. */
+export const CAREER_SPOT: Record<string, Pos> = {
+${body(career)}
+};
+`,
+);
+const count = (o) => Object.values(o).reduce((m, v) => ((m[v] = (m[v] ?? 0) + 1), m), {});
+console.log("draft listings moved:", Object.keys(draft).length, JSON.stringify(count(draft)));
+console.log("career positions moved:", Object.keys(career).length, JSON.stringify(count(career)));

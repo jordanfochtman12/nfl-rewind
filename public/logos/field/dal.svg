@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Dallas Cowboys">
+<defs>
+<radialGradient id="f" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#2c4260"/><stop offset="1" stop-color="#03142b"/></radialGradient>
+<filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000" flood-opacity="0.45"/></filter>
+</defs>
+
+
+<g filter="url(#s)"><path d="M256.0 66.0 L303.0 201.3 L446.2 204.2 L332.1 290.7 L373.6 427.8 L256.0 346.0 L138.4 427.8 L179.9 290.7 L65.8 204.2 L209.0 201.3 Z" fill="#ffffff" stroke="#003594" stroke-width="16" stroke-linejoin="round"/><path d="M256.0 102.0 L294.8 212.6 L412.0 215.3 L318.8 286.4 L352.4 398.7 L256.0 332.0 L159.6 398.7 L193.2 286.4 L100.0 215.3 L217.2 212.6 Z" fill="#003594"/></g>
+<path d="M84 18 H428 A68 68 0 0 1 494 84 V150 C360 118 152 118 18 150 V84 A68 68 0 0 1 84 18Z" fill="#fff" opacity="0.06"/>
+</svg>

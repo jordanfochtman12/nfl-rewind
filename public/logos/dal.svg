@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
-<rect width="64" height="64" rx="8" fill="#041e42"/>
-<path d="M32 8 L38.2 25.2 H56 L41.8 36.2 L47.6 54 L32 43.2 L16.4 54 L22.2 36.2 L8 25.2 H25.8 Z" fill="#869397"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Dallas Cowboys">
+<defs>
+<radialGradient id="f" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#2c4260"/><stop offset="1" stop-color="#03142b"/></radialGradient>
+<filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000" flood-opacity="0.45"/></filter>
+</defs>
+<rect width="512" height="512" rx="84" fill="url(#f)"/>
+<rect x="18" y="18" width="476" height="476" rx="68" fill="none" stroke="#869397" stroke-width="12"/>
+<rect x="36" y="36" width="440" height="440" rx="54" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.8"/>
+<g filter="url(#s)"><path d="M256.0 66.0 L303.0 201.3 L446.2 204.2 L332.1 290.7 L373.6 427.8 L256.0 346.0 L138.4 427.8 L179.9 290.7 L65.8 204.2 L209.0 201.3 Z" fill="#ffffff" stroke="#003594" stroke-width="16" stroke-linejoin="round"/><path d="M256.0 102.0 L294.8 212.6 L412.0 215.3 L318.8 286.4 L352.4 398.7 L256.0 332.0 L159.6 398.7 L193.2 286.4 L100.0 215.3 L217.2 212.6 Z" fill="#003594"/></g>
+<path d="M84 18 H428 A68 68 0 0 1 494 84 V150 C360 118 152 118 18 150 V84 A68 68 0 0 1 84 18Z" fill="#fff" opacity="0.06"/>
 </svg>

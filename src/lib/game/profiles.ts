@@ -2,6 +2,7 @@ import type { Player, Pos, RatingKey, Ratings } from "./types.ts";
 import { RATING_KEYS } from "./types.ts";
 import { clamp } from "./rng.ts";
 import { deriveOvr, emptyRatings, POS_BASE, primaryKeys } from "./ratings.ts";
+import { isBody } from "./body.ts";
 import { STAR_PROFILES } from "./data/starProfiles.ts";
 
 /** How a player is built. Secondaries stay low — overall is derived, not copied onto every attribute. */
@@ -97,7 +98,7 @@ export const ARCH_DELTA: Record<Arch, Partial<Ratings>> = {
   ice: { kickAcc: 14, kickPow: 2, awareness: 6 },
 };
 
-const ARCH_POOL: Record<Pos, Arch[]> = {
+export const ARCH_POOL: Record<Pos, Arch[]> = {
   QB: ["deadeye", "cannon", "scrambler", "manager", "dual"],
   RB: ["elusive", "power-back", "home-run", "receiving-back"],
   FB: ["power-back", "receiving-back"],
@@ -182,6 +183,8 @@ export function ratingsFromProfile(
   arch: Arch | undefined,
   extra: Partial<Ratings> | undefined,
   jitterFn: (n: number) => number,
+  /** Ratings his real career set (scripts/rating-audit.mjs): the rest of the kit carries his level. */
+  pinned?: ReadonlySet<RatingKey>,
 ): Ratings {
   const r = emptyRatings(36);
   const base = POS_BASE[pos];
@@ -211,23 +214,37 @@ export function ratingsFromProfile(
       r[k] = clamp(r[k] + Math.round(diff * 0.32), 25, 99);
     }
   }
+  // A star profile can lock nearly every key rating, leaving nothing above to move: Manning's
+  // locks alone came out a 91 against his 96 seed. The locks are his shape, the seed is his
+  // level, so the whole profile shifts together until he lands on it.
+  for (let i = 0; i < 8; i++) {
+    const diff = ovr - deriveOvr(pos, r);
+    if (Math.abs(diff) <= 1) break;
+    const step = Math.sign(diff) * Math.max(1, Math.round(Math.abs(diff) * 0.5));
+    let moved = false;
+    for (const k of primaries) {
+      if (pinned?.has(k)) continue;
+      const v = clamp(r[k] + step, 25, 99);
+      if (v !== r[k]) moved = true;
+      r[k] = v;
+    }
+    if (!moved) break;
+  }
   return r;
 }
 
+/**
+ * A move in how well he plays: his skills, never his body. Speed, burst, agility, strength,
+ * stamina and durability age on their own clock (body.ts), so a star climbing to his peak or
+ * eased down to a draft grade keeps the legs he has.
+ */
 export function applyAgeDelta(p: Player, delta: number): void {
   if (!delta) return;
-  const primaries = primaryKeys(p.pos);
-  for (const k of primaries) {
+  const skills = primaryKeys(p.pos).filter((k) => !isBody(k));
+  for (const k of skills) {
     p.ratings[k] = clamp(p.ratings[k] + delta, 25, 99);
   }
-  if (delta < 0) {
-    p.ratings.speed = clamp(p.ratings.speed + delta, 25, 99);
-    p.ratings.accel = clamp(p.ratings.accel + delta, 25, 99);
-    p.ratings.agi = clamp(p.ratings.agi + Math.min(-1, delta), 25, 99);
-    p.ratings.inj = clamp(p.ratings.inj + Math.min(-1, delta), 25, 99);
-  } else {
-    p.ratings.awareness = clamp(p.ratings.awareness + 1, 25, 99);
-  }
+  if (delta > 0) p.ratings.awareness = clamp(p.ratings.awareness + 1, 25, 99);
   p.ovr = deriveOvr(p.pos, p.ratings);
 }
 

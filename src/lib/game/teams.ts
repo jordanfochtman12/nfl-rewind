@@ -1,4 +1,4 @@
-import { ACTIVE_1966, TEAM_IDS, type TeamId } from "./types.ts";
+import { ACTIVE_1966, TEAM_IDS, type HomeOverride, type TeamId } from "./types.ts";
 
 export interface TeamMeta {
   id: TeamId;
@@ -71,7 +71,28 @@ export function confLabel(year: number, conference: string): string {
   return conference;
 }
 
+/**
+ * The owner can rewrite the map: keep a club home when history moved it, or take it
+ * somewhere new. One save is live at a time, so the override lives here and every name and
+ * venue lookup honours it without threading the save through eighty call sites.
+ */
+let homeOverride: HomeOverride | undefined;
+
+export function setHomeOverride(o: HomeOverride | undefined): void {
+  homeOverride = o;
+}
+
+export function homeOverrideFor(year: number, id: TeamId): HomeOverride | undefined {
+  return homeOverride && homeOverride.teamId === id && year >= homeOverride.from ? homeOverride : undefined;
+}
+
 export function locationOf(year: number, id: TeamId): string {
+  const o = homeOverrideFor(year, id);
+  if (o) return o.city;
+  return historicLocationOf(year, id);
+}
+
+export function historicLocationOf(year: number, id: TeamId): string {
   switch (id) {
     case "nwe":
       return year <= 1970 ? "Boston" : "New England";
@@ -150,6 +171,8 @@ export function locationOf(year: number, id: TeamId): string {
 }
 
 export function nicknameOf(year: number, id: TeamId): string {
+  const o = homeOverrideFor(year, id);
+  if (o?.nickname) return o.nickname;
   switch (id) {
     case "atl":
       return "Falcons";
@@ -343,9 +366,75 @@ export function teamAbbr(id: TeamId): string {
   return TEAM_META[id].abbr;
 }
 
-export function teamColors(id: TeamId): { primary: string; secondary: string } {
+export function teamColors(id: TeamId, year?: number): { primary: string; secondary: string } {
   const m = TEAM_META[id];
+  const y = year ?? 2027;
+  if (id === "sdg") {
+    const navy = (y >= 1988 && y <= 2006) || (y >= 2017 && y <= 2019);
+    return navy
+      ? { primary: "#002244", secondary: "#ffc20e" }
+      : { primary: "#0080c6", secondary: "#ffc20e" };
+  }
+  if (id === "tam") {
+    return y >= 1997
+      ? { primary: "#34302b", secondary: "#d50a0a" }
+      : { primary: "#d50a0a", secondary: "#ff7f00" };
+  }
+  if (id === "oti") {
+    return y < 1999
+      ? { primary: "#0072ce", secondary: "#c8102e" }
+      : { primary: "#0c2340", secondary: "#4b92db" };
+  }
+  if (id === "nwe" && y < 1993) {
+    return { primary: "#c60c30", secondary: "#ffffff" };
+  }
+  if (id === "sea" && y < 2002) {
+    return { primary: "#002244", secondary: "#a5acaf" };
+  }
+  if (id === "cin" && y >= 2004) {
+    return { primary: "#fb4f14", secondary: "#000000" };
+  }
+  if (id === "ram" && y >= 2000 && y <= 2019) {
+    return { primary: "#002244", secondary: "#c4aa76" };
+  }
   return { primary: m.primary, secondary: m.secondary };
+}
+
+/** Relative luminance 0–1 for a #rrggbb (or #rgb) hex. */
+export function hexLum(hex: string): number {
+  const h = hex.replace("#", "").trim();
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = Number.parseInt(full, 16);
+  if (!Number.isFinite(n)) return 0;
+  const chan = (v: number) => {
+    const s = v / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  const r = chan((n >> 16) & 255);
+  const g = chan((n >> 8) & 255);
+  const b = chan(n & 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** Ink that sits on a club fill — cream on dark, field ink on gold/white. */
+export function onClubColor(hex: string): string {
+  return hexLum(hex) > 0.45 ? "#090a08" : "#f0e8d6";
+}
+
+export interface ClubInk {
+  primary: string;
+  secondary: string;
+  onPrimary: string;
+  onSecondary: string;
+}
+
+export function clubInk(id: TeamId, year?: number): ClubInk {
+  const c = teamColors(id, year);
+  return {
+    ...c,
+    onPrimary: onClubColor(c.primary),
+    onSecondary: onClubColor(c.secondary),
+  };
 }
 
 export function superBowlNumber(seasonYear: number): number {
@@ -380,12 +469,4 @@ export function roman(n: number): string {
   return out;
 }
 
-/** Period-accurate mark. Defaults to the 1966 identity. */
-export function logoSrc(year: number, id: TeamId): string {
-  if (id === "oti" && year >= 1999) return "/logos/oti-titans.svg";
-  if (id === "nwe" && year >= 1993) return "/logos/nwe-modern.svg";
-  if (id === "den" && year >= 1997) return "/logos/den-modern.svg";
-  if (id === "was" && year >= 2022) return "/logos/was-cmd.svg";
-  if (id === "was" && year >= 2020) return "/logos/was-wft.svg";
-  return `/logos/${id}.svg`;
-}
+export { logoSrc } from "./data/logos.ts";

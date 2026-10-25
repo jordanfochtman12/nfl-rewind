@@ -1,6 +1,7 @@
 import type { DynastySave, Player, SeasonStats } from "./types.ts";
 import { playerName } from "./players.ts";
 import { displayName } from "./teams.ts";
+import { hasCompleteScoringPoints, individualScoringPoints } from "./statRules.ts";
 
 export interface LeaderRow {
   playerId: string;
@@ -16,11 +17,12 @@ function rows(
   pick: (s: SeasonStats, p: Player) => number,
   label: string,
   n = 8,
+  pool: Player[] = Object.values(save.players),
 ): LeaderRow[] {
-  return Object.values(save.players)
+  return pool
     .map((p) => {
       const s = p.stats[save.year];
-      return { p, v: s ? pick(s, p) : 0 };
+      return { p, s, v: s ? pick(s, p) : 0 };
     })
     .filter((x) => x.v > 0)
     .sort((a, b) => b.v - a.v)
@@ -28,27 +30,50 @@ function rows(
     .map((x) => ({
       playerId: x.p.id,
       name: playerName(x.p),
-      team: x.p.teamId === "fa" || x.p.teamId === "retired" || x.p.teamId === "hof" ? "—" : displayName(save.year, x.p.teamId),
+      team: !x.s ? "—" : x.s.teamId === "two" ? "2 teams" : displayName(x.s.year, x.s.teamId),
       pos: x.p.pos,
       value: x.v,
       label,
     }));
 }
 
+/** This season's leaders. Late in a dynasty there are tens of thousands of players on file,
+ * so only the ones with a line this year are walked. */
 export function seasonLeaders(save: DynastySave) {
+  const pool = Object.values(save.players).filter((p) => p.stats[save.year]);
+  const r = (pick: (s: SeasonStats, p: Player) => number, label: string) => rows(save, pick, label, 8, pool);
   return {
-    passYds: rows(save, (s) => s.passYds, "Pass yds"),
-    passTd: rows(save, (s) => s.passTd, "Pass TD"),
-    rushYds: rows(save, (s) => s.rushYds, "Rush yds"),
-    rec: rows(save, (s) => s.rec, "Receptions"),
-    recYds: rows(save, (s) => s.recYds, "Rec yds"),
-    sacks: rows(save, (s) => s.sacks, "Sacks"),
-    ints: rows(save, (s) => s.ints, "INT"),
-    scoring: rows(save, (s) => s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade, "Pts"),
+    passYds: r((s) => s.passYds, "Pass yds"),
+    passTd: r((s) => s.passTd, "Pass TD"),
+    rushYds: r((s) => s.rushYds, "Rush yds"),
+    rec: r((s) => s.rec, "Receptions"),
+    recYds: r((s) => s.recYds, "Rec yds"),
+    sacks: r((s) => s.sacks, "Sacks"),
+    ints: r((s) => s.ints, "INT"),
+    tfl: r((s) => s.tfl ?? 0, "TFL"),
+    pd: r((s) => s.pd ?? 0, "PD"),
+    defTd: r((s) => s.unknown?.includes("defTd") ? 0 : s.defTd ?? 0, "Def TD"),
+    scoring: r((s) => hasCompleteScoringPoints(s) ? individualScoringPoints(s) : 0, "Pts"),
   };
 }
 
-export function careerTotals(p: Player): SeasonStats {
+export function careerTotals(p: Player, range?: { fromYear?: number; throughYear?: number }): SeasonStats {
+  // A completed/live dynasty row supersedes its archival career copy for the same year.
+  // Deduplicate before summing so stale `unknown` markers cannot survive from the copy.
+  const byYear = new Map<number, SeasonStats>();
+  for (const line of p.career ?? []) byYear.set(line.year, line);
+  for (const line of Object.values(p.stats)) byYear.set(line.year, line);
+  const from = range?.fromYear ?? 0;
+  const through = range?.throughYear ?? Infinity;
+  return sumStats(p, [...byYear.values()].filter((s) => s.year >= from && s.year <= through));
+}
+
+/** Career postseason totals. */
+export function playoffTotals(p: Player): SeasonStats {
+  return sumStats(p, Object.values(p.playoffStats ?? {}));
+}
+
+function sumStats(p: Player, lines: SeasonStats[]): SeasonStats {
   const acc = {
     year: 0,
     teamId: p.teamId === "fa" || p.teamId === "retired" || p.teamId === "hof" ? "two" : p.teamId,
@@ -73,20 +98,29 @@ export function careerTotals(p: Player): SeasonStats {
     fgMade: 0,
     xpAtt: 0,
     xpMade: 0,
+    twoPtMade: 0,
+    safeties: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,
     prYds: 0,
+    targets: 0,
+    tfl: 0,
+    pd: 0,
+    qbHits: 0,
+    fr: 0,
+    defTd: 0,
+    krTd: 0,
+    prTd: 0,
   } as SeasonStats;
-  const years = Object.values(p.stats);
-  const extra = p.career ?? [];
   const seen = new Set<number>();
-  for (const s of [...years, ...extra]) {
+  for (const s of lines) {
     if (seen.has(s.year)) continue;
     seen.add(s.year);
     acc.gp += s.gp;
     acc.passAtt += s.passAtt;
-    acc.passCmp += s.passCmp;
+    // An unknown completion count is in the record as -1: it adds nothing to the total.
+    acc.passCmp += Math.max(0, s.passCmp);
     acc.passYds += s.passYds;
     acc.passTd += s.passTd;
     acc.passInt += s.passInt;
@@ -105,11 +139,26 @@ export function careerTotals(p: Player): SeasonStats {
     acc.fgMade += s.fgMade;
     acc.xpAtt += s.xpAtt ?? 0;
     acc.xpMade += s.xpMade;
+    acc.twoPtMade += s.twoPtMade ?? 0;
+    acc.safeties += s.safeties ?? 0;
     acc.punts += s.punts ?? 0;
     acc.puntYds += s.puntYds ?? 0;
     acc.krYds += s.krYds ?? 0;
     acc.prYds += s.prYds ?? 0;
+    acc.targets += s.targets ?? 0;
+    acc.tfl += s.tfl ?? 0;
+    acc.pd += s.pd ?? 0;
+    acc.qbHits += s.qbHits ?? 0;
+    acc.fr += s.fr ?? 0;
+    acc.defTd += s.defTd ?? 0;
+    acc.krTd += s.krTd ?? 0;
+    acc.prTd += s.prTd ?? 0;
 
   }
+  // History mode marks a season whose source kept no completions as -1; a career that
+  // includes one has no known completion total either.
+  if (lines.some((s) => s.passCmp < 0)) acc.passCmp = -1;
+  const unknown = [...new Set(lines.flatMap((s) => s.unknown ?? []))];
+  if (unknown.length) acc.unknown = unknown;
   return acc;
 }

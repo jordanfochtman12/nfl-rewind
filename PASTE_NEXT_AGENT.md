@@ -20,9 +20,11 @@ Single-player historical NFL **dynasty GM** sim. Pitch: **Start in 1966. Draft t
 
 ## Current truth
 
-The previous agent **wrote** the engine, catalogs, UI shell, and QA scripts, then ran out of context **before verifying** `tsc` / `qa-season` / `qa-expansions` / logos / git / preview. Treat the code as a first implementation, not a green build.
+Playable GM sim. SAVE_VERSION **13**. Drive engine is era-shaped and QA-green. Winter nights, franchise book, FA week, camp, Sunday film that stays, trade deadline, desk holes, expansion night, IndexedDB + compact, letter grade through 2027.
 
-Your job: **make it playable and make the QA scripts pass**, then polish. Do not rewrite the architecture.
+`npx tsc --noEmit`, `node scripts/qa-season.mjs`, `node scripts/qa-expansions.mjs` must stay green. Do not rewrite the drive engine. Auth/db stay OFF.
+
+Your job: play the product, polish, and only then add new systems. Do not rewrite the architecture.
 
 ## First commands
 

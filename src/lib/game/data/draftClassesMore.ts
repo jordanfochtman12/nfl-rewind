@@ -45,9 +45,7 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Vernon", l: "Dean", p: "CB", c: "San Diego State", o: 74, r: 2 },
     { f: "Perry", l: "Harrington", p: "RB", c: "Jackson State", o: 72, r: 2 },
     { f: "Glen", l: "Young", p: "WR", c: "Mississippi State", o: 70, r: 3 },
-    { f: "Jim", l: "Jeffcoat", p: "DE", c: "Arizona State", o: 82, r: 1 },
     { f: "Eugene", l: "Marve", p: "MLB", c: "Saginaw Valley", o: 76, r: 3 },
-    { f: "Joey", l: "Browner", p: "S", c: "USC", o: 72, r: 1 },
   ],
   1983: [
     { f: "Roger", l: "Craig", p: "RB", c: "Nebraska", o: 86, r: 2 },
@@ -64,7 +62,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Roy", l: "Green", p: "WR", c: "Henderson State", o: 82, r: 4 },
     { f: "Mark", l: "Bavaro", p: "TE", c: "Notre Dame", o: 72, r: 4 },
     { f: "Reggie", l: "White", p: "DE", c: "Tennessee", o: 88, r: 1 },
-    { f: "Steve", l: "Young", p: "QB", c: "BYU", o: 84, r: 1 },
   ],
   1984: [
     { f: "Keith", l: "Byars", p: "RB", c: "Ohio State", o: 74, r: 1 },
@@ -247,7 +244,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Rodney", l: "Harrison", p: "S", c: "Western Illinois", o: 86, r: 5 },
     { f: "Adam", l: "Vinatieri", p: "K", c: "South Dakota State", o: 86, r: 0 },
     { f: "Wane", l: "McGarity", p: "WR", c: "Texas", o: 70, r: 4 },
-    { f: "Bret", l: "Favre", p: "QB", c: "Southern Miss", o: 70, r: 2 },
   ],
   1995: [
     { f: "J.J.", l: "Stokes", p: "WR", c: "UCLA", o: 76, r: 1 },
@@ -264,7 +260,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Kordell", l: "Stewart", p: "QB", c: "Colorado", o: 78, r: 2 },
     { f: "Chris", l: "Slade", p: "OLB", c: "Virginia", o: 80, r: 2 },
     { f: "Luther", l: "Elliss", p: "DT", c: "Utah", o: 80, r: 1 },
-    { f: "Brian", l: "Dawkins", p: "S", c: "Clemson", o: 86, r: 2 },
   ],
   1996: [
     { f: "Willie", l: "Anderson", p: "RT", c: "Auburn", o: 88, r: 1 },
@@ -398,8 +393,6 @@ export const DRAFT_MORE: Record<number, DraftSeed[]> = {
     { f: "Asante", l: "Samuel", p: "CB", c: "UCF", o: 86, r: 4 },
     { f: "Lance", l: "Briggs", p: "OLB", c: "Arizona", o: 86, r: 3 },
     { f: "Charles", l: "Tillman", p: "CB", c: "Louisiana-Lafayette", o: 84, r: 2 },
-    { f: "Tony", l: "Romig", p: "QB", c: "Eastern Illinois", o: 74, r: 0 },
-    { f: "Tony", l: "Romig", p: "QB", c: "Eastern Illinois", o: 74, r: 0 },
     { f: "Tony", l: "Romo", p: "QB", c: "Eastern Illinois", o: 86, r: 0 },
     { f: "Shaun", l: "Cody", p: "DT", c: "USC", o: 74, r: 2 },
   ],

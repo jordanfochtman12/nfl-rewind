@@ -7,10 +7,10 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 // @ts-expect-error JS plugin alongside the TS vite config
-import { grokPwaPlugin } from "./scripts/grok-pwa-plugin.mjs";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
+import { offlineManifest } from "./scripts/offline-manifest.mjs";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -19,6 +19,38 @@ function hasGlobbedMigrations(root: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Lists client files as /offline-manifest.json. Static app-shell dependencies are installed
+ * first; lazy screens and catalogs are cached in the background so they do not delay startup.
+ */
+function offlineManifestPlugin(): Plugin {
+  return {
+    name: "nfl-rewind:offline-manifest",
+    apply: "build",
+    generateBundle(_opts, bundle) {
+      if (this.environment?.name !== "client") return;
+      const manifest = offlineManifest(bundle);
+      const files = manifest.files.map((f) => `/${f}`);
+      const precache = manifest.precache.map((f) => `/${f}`);
+      const sizes = Object.fromEntries(Object.entries(manifest.sizes).map(([file, bytes]) => [`/${file}`, bytes]));
+      let h = 0;
+      for (const ch of files.join("|")) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
+      this.emitFile({
+        type: "asset",
+        fileName: "offline-manifest.json",
+        source: JSON.stringify({
+          version: (h >>> 0).toString(36),
+          files,
+          precache,
+          sizes,
+          totalBytes: manifest.totalBytes,
+          precacheBytes: manifest.precacheBytes,
+        }),
+      });
+    },
+  };
 }
 
 /**
@@ -163,18 +195,16 @@ export default defineConfig(({ command, isPreview }) => ({
     authPopupPlugin(),
     // Dev-only /__app-env, read by scripts/check-auth-invariant.mjs.
     appEnvPlugin(),
-    // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
-    grokPwaPlugin(),
+    offlineManifestPlugin(),
     tailwindcss(),
     tanstackStart(),
     ...(command === "build" || isPreview
       ? [
           nitro({
             preset: "vercel",
-            // Auto-registers server/middleware/* (the PWA install page +
-            // manifest + head-tag middleware). Nitro v3 defaults serverDir to
-            // false, so removing this silently unwires /?install=1 on deploys.
-            serverDir: "./server",
+            config: process.env.NFL_REWIND_BUILD_OUTPUT
+              ? { output: { dir: process.env.NFL_REWIND_BUILD_OUTPUT } }
+              : undefined,
           }),
         ]
       : []),

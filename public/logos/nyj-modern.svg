@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="New York Jets">
+<defs>
+<radialGradient id="f" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#38725f"/><stop offset="1" stop-color="#0c392a"/></radialGradient>
+<filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000" flood-opacity="0.45"/></filter>
+</defs>
+<rect width="512" height="512" rx="84" fill="url(#f)"/>
+<rect x="18" y="18" width="476" height="476" rx="68" fill="none" stroke="#ffffff" stroke-width="12"/>
+<rect x="36" y="36" width="440" height="440" rx="54" fill="none" stroke="#000000" stroke-width="4" opacity="0.8"/>
+<g filter="url(#s)"><ellipse cx="256" cy="262" rx="206" ry="130" fill="#ffffff" stroke="#000000" stroke-width="10"/><g fill="#125740"><path transform="translate(144.1 335.0)" d="M38.5 0L11.2 0L11.2-170L57.7-170L69.5-115.9L81.9-24.1L91.3-24.1L86.5-100.9L84.4-170L111.8-170L111.8 0L63.1 0L51.1-57.3L41.4-146.1L31.8-146.1L36.2-64.7L38.5 0ZM182.6 0L155.3 0L155.3-54.7L151.5-54.7L125.3-170L153.1-170L161.7-126.8L166.0-77.1L172.0-77.1L176.2-126.8L184.8-170L212.7-170L186.1-54.7L182.6-54.7L182.6 0Z"/></g></g>
+<path d="M84 18 H428 A68 68 0 0 1 494 84 V150 C360 118 152 118 18 150 V84 A68 68 0 0 1 84 18Z" fill="#fff" opacity="0.06"/>
+</svg>

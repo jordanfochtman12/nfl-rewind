@@ -1,28 +1,40 @@
 import { useMemo, useState } from "react";
+import { ContractTalks } from "./ContractTalks";
 import {
   claimWaiver,
   cutPlayer,
   displayName,
+  clubWindow,
+  evaluateTrade,
   executeTrade,
   formatMoney,
+  whatWouldItTake,
   freeAgents,
   playerName,
   rosterOf,
+  bidEligible,
+  placeBid,
   signPlayer,
+  faAsk,
+  tradeWindowOpen,
   visibleOvr,
   type Player,
   type TeamId,
   type TradePiece,
+  posLabel,
+  pendingRfaOfferSheets,
+  resolveRfaOfferSheet,
 } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
+import { gradeTone } from "./tone";
 import { PlayerLink } from "./PlayerProfile";
 import { KitChips } from "./KitChips";
 
 function Grade({ p }: { p: Player }) {
   const o = visibleOvr(p);
   return (
-    <span className="tabular">
+    <span className={`stat-glow tabular ${gradeTone(o)}`}>
       {p.revealed ? `${o}` : `sc ${o}`}
       {!p.revealed && <span className="ml-1 text-[10px] tracking-widest text-muted">HIDDEN</span>}
     </span>
@@ -37,6 +49,9 @@ export function MarketDesk() {
   const [other, setOther] = useState<TeamId | "">("");
   const [give, setGive] = useState<string[]>([]);
   const [get, setGet] = useState<string[]>([]);
+  const [askNote, setAskNote] = useState<string>("");
+  const rfaOffers = (save.rfaOfferSheets ?? []).filter((offer) => offer.year === save.year && offer.originalTeam === save.userTeamId);
+  const pendingRfaOffers = pendingRfaOfferSheets(save).filter((offer) => offer.originalTeam === save.userTeamId);
   const mine = rosterOf(save, save.userTeamId);
   const fa = useMemo(
     () =>
@@ -47,6 +62,7 @@ export function MarketDesk() {
     [save],
   );
   const clubs = Object.values(save.teams).filter((t) => t.active && t.id !== save.userTeamId);
+  const windowOpen = tradeWindowOpen(save);
   const theirPlayers = other ? rosterOf(save, other as TeamId) : [];
   const myPicks = (save.teams[save.userTeamId].picks ?? []).filter((p) => !p.used && p.year <= save.year + 2);
   const theirPicks = other
@@ -69,22 +85,66 @@ export function MarketDesk() {
 
   return (
     <div className="space-y-8">
+      <ContractTalks />
       {save.phase === "freeAgency" && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brass/40 bg-surface p-4">
           <div>
             <p className="text-xs tracking-[0.25em] text-brass">OPEN MARKET</p>
             <p className="text-sm text-muted">
-              {save.year < 1994
+              {pendingRfaOffers.length
+                ? `${pendingRfaOffers.length} restricted free-agent offer sheet${pendingRfaOffers.length === 1 ? "" : "s"} need a match-or-decline decision before the market closes.`
+                : save.year < 1994
                 ? "Rozelle-rule era. Stars rarely move. Sign camp help, then close the market."
-                : "Unrestricted free agency. Watch the cap."}
+                : "The open market is running. Unrestricted and tendered restricted free agents follow their contract rights; watch the cap."}
             </p>
           </div>
-          <Btn kind="primary" onClick={() => step({ closeFa: true })}>
+          <Btn kind="primary" disabled={pendingRfaOffers.length > 0} onClick={() => step({ closeFa: true })}>
             Close free agency
           </Btn>
         </div>
       )}
       {lastDeskNote && <p className="text-sm text-brick">{lastDeskNote}</p>}
+
+      {save.phase === "freeAgency" && rfaOffers.length > 0 && (
+        <section className="space-y-3 rounded-xl border border-brass/40 bg-surface p-4">
+          <div>
+            <p className="font-display text-xs font-bold uppercase italic tracking-[0.25em] text-brass">Restricted free-agent offer sheets</p>
+            <h3 className="text-xl text-white">Right of first refusal</h3>
+            <p className="text-sm text-muted">Match the principal contract terms to retain the player. If you decline, the signing club gets him and your team receives the pick required by his tender.</p>
+          </div>
+          <ul className="space-y-2">
+            {rfaOffers.map((offer) => {
+              const p = save.players[offer.playerId];
+              if (!p) return null;
+              const compensation = offer.compensationRound
+                ? `Their ${offer.compensationRound}${offer.compensationRound === 1 ? "st" : offer.compensationRound === 2 ? "nd" : offer.compensationRound === 3 ? "rd" : "th"}-round pick in ${save.year + 1}`
+                : "No draft compensation";
+              return (
+                <li key={offer.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-black/30 p-3">
+                  <div className="min-w-0">
+                    <p className="font-display text-lg font-bold uppercase italic text-white">
+                      <PlayerLink player={p} className="inline min-h-0" />
+                      <span className="ml-2 text-xs font-normal not-italic text-muted">{displayName(save.year, offer.offerTeam)}</span>
+                    </p>
+                    <p className="text-sm text-paper">
+                      {offer.years} years · {formatMoney(offer.salary, save.year)} per year · {compensation}
+                    </p>
+                    {offer.result && <p className="mt-1 text-xs text-brass">{offer.result}</p>}
+                  </div>
+                  {offer.status === "pending" ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Btn kind="primary" onClick={() => desk((s) => resolveRfaOfferSheet(s, offer.id, true))}>Match offer</Btn>
+                      <Btn onClick={() => desk((s) => resolveRfaOfferSheet(s, offer.id, false))}>Decline · take pick</Btn>
+                    </div>
+                  ) : (
+                    <span className="font-display text-xs font-bold uppercase tracking-wider text-muted">{offer.status === "matched" ? "Matched" : "Signed elsewhere"}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Waivers</h3>
@@ -100,7 +160,7 @@ export function MarketDesk() {
                   <span>
                     <PlayerLink player={p} className="inline min-h-0" />{" "}
                     <span className="text-muted">
-                      {p.pos} · from {displayName(save.year, w.from)}
+                      {posLabel(p)} · from {displayName(save.year, w.from)}
                     </span>
                   </span>
                   <Btn
@@ -123,49 +183,63 @@ export function MarketDesk() {
       <section>
         <h3 className="mb-2 text-sm tracking-[0.2em] text-muted">Free agents</h3>
         <div className="overflow-x-auto rounded-xl border border-line">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="bg-surface-2 text-xs tracking-wider text-muted">
+          <table className="w-full min-w-[720px] text-left text-sm">
+            <thead className="text-xs tracking-wider text-muted">
               <tr>
-                {["Player", "Pos", "Grade", "Age", "College", ""].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium">
+                <th className="sticky left-0 z-10 bg-surface-2 px-3 py-2 font-medium">Player</th>
+                {["", "Asking", "Pos", "Grade", "Age", "College"].map((h) => (
+                  <th key={h} className="bg-surface-2 px-3 py-2 font-medium">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {fa.map((p) => (
-                <tr key={p.id} className="border-t border-line">
-                  <td className="px-3 py-2">
+              {fa.map((p, i) => (
+                <tr key={p.id} className={`border-t border-line ${i === 0 ? "lead-row" : ""}`}>
+                  <td className="sticky left-0 z-10 bg-surface px-3 py-2">
                     <PlayerLink player={p} />
+                    {i === 0 ? <span className="ml-2 text-[10px] tracking-widest text-brass">TOP FA</span> : null}
                     <span className="mt-0.5 block">
                       <KitChips player={p} compact />
                     </span>
                   </td>
-                  <td className="px-3 py-2">{p.pos}</td>
-                  <td className="px-3 py-2">
-                    <Grade p={p} />
-                  </td>
-                  <td className="tabular px-3 py-2">{p.age}</td>
-                  <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                   <td className="px-3 py-2">
                     <Btn
                       kind="primary"
                       onClick={() =>
                         desk((s) => {
-                          const r = signPlayer(s, s.userTeamId, p.id);
+                          if (bidEligible(s, s.players[p.id]!)) return placeBid(s, p.id, 0);
+                          const r = signPlayer(s, s.userTeamId, p.id, faAsk(s, s.players[p.id]!).years);
                           return r.ok ? `Signed ${playerName(p)}.` : r.reason;
                         })
                       }
                     >
-                      Sign
+                      {bidEligible(save, p) ? "Make offer" : "Sign"}
                     </Btn>
                   </td>
+                  <td className="tabular whitespace-nowrap px-3 py-2">
+                    {(() => {
+                      const ask = faAsk(save, p);
+                      return (
+                        <>
+                          {formatMoney(ask.salary, save.year)}
+                          <span className="text-muted"> · {ask.years} yr</span>
+                        </>
+                      );
+                    })()}
+                  </td>
+                  <td className="px-3 py-2">{posLabel(p)}</td>
+                  <td className="px-3 py-2">
+                    <Grade p={p} />
+                  </td>
+                  <td className="tabular px-3 py-2">{p.age}</td>
+                  <td className="px-3 py-2 text-muted">{p.college ?? "—"}</td>
                 </tr>
               ))}
               {!fa.length && (
                 <tr>
-                  <td className="px-3 py-4 text-muted" colSpan={6}>
+                  <td className="px-3 py-4 text-muted" colSpan={7}>
                     No one left on the street.
                   </td>
                 </tr>
@@ -177,7 +251,12 @@ export function MarketDesk() {
 
       <section className="space-y-3">
         <h3 className="text-sm tracking-[0.2em] text-muted">Trade desk</h3>
-        <div className="flex flex-wrap gap-2">
+        {!windowOpen && (
+          <p className="rounded-lg border border-brick/40 bg-brick/10 p-3 text-sm text-brick">
+            The trade deadline has passed. No deals league-wide until next league year.
+          </p>
+        )}
+        <div className={`flex flex-wrap gap-2 ${windowOpen ? "" : "pointer-events-none opacity-40"}`}>
           {clubs.map((t) => (
             <button
               key={t.id}
@@ -187,7 +266,7 @@ export function MarketDesk() {
                 setGet([]);
               }}
               className={`inline-flex min-h-11 items-center gap-2 rounded-md border px-3 text-xs tracking-widest ${
-                other === t.id ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+                other === t.id ? "bx-chip bx-chip-on" : "bx-chip"
               }`}
             >
               <Logo id={t.id} size={18} year={save.year} />
@@ -195,7 +274,7 @@ export function MarketDesk() {
             </button>
           ))}
         </div>
-        {other && (
+        {other && windowOpen && (
           <div className="grid gap-4 lg:grid-cols-2">
             <article className="rounded-xl border border-line bg-surface p-3">
               <p className="text-xs tracking-[0.2em] text-muted">You send</p>
@@ -209,7 +288,10 @@ export function MarketDesk() {
                         onChange={() => toggle(give, p.id, setGive)}
                       />
                       <span>
-                        {playerName(p)} · {p.pos} · <Grade p={p} />
+                        <span onClick={(e) => e.preventDefault()}>
+                          <PlayerLink player={p} className="inline min-h-0" />
+                        </span>{" "}
+                        · {posLabel(p)} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -242,7 +324,10 @@ export function MarketDesk() {
                         onChange={() => toggle(get, p.id, setGet)}
                       />
                       <span>
-                        {playerName(p)} · {p.pos} · <Grade p={p} />
+                        <span onClick={(e) => e.preventDefault()}>
+                          <PlayerLink player={p} className="inline min-h-0" />
+                        </span>{" "}
+                        · {posLabel(p)} · <Grade p={p} />
                       </span>
                     </label>
                   </li>
@@ -265,7 +350,21 @@ export function MarketDesk() {
             </article>
           </div>
         )}
-        {other && (
+        {other && windowOpen && (
+          <TradeRead
+            save={save}
+            other={other as TeamId}
+            give={pieces(give, true)}
+            get={pieces(get, false)}
+            onAsk={() => {
+              const r = whatWouldItTake(save, other as TeamId, pieces(get, false));
+              setAskNote(r.reason);
+              if (r.pieces) setGive(r.pieces.map((x) => x.playerId ?? x.pickId!));
+            }}
+            note={askNote}
+          />
+        )}
+        {other && windowOpen && (
           <Btn
             kind="primary"
             onClick={() =>
@@ -299,7 +398,7 @@ export function MarketDesk() {
             .map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm">
                 <span>
-                  <PlayerLink player={p} className="inline min-h-0" /> {p.pos} · <Grade p={p} />
+                  <PlayerLink player={p} className="inline min-h-0" /> {posLabel(p)} · <Grade p={p} />
                 </span>
                 <Btn
                   kind="brick"
@@ -316,6 +415,42 @@ export function MarketDesk() {
             ))}
         </ul>
       </section>
+    </div>
+  );
+}
+
+const WINDOW_LABEL = { contend: "Contending", middle: "In the middle", rebuild: "Rebuilding" } as const;
+
+/** The other club's read on the deal as it stands, and the "what would it take" ask. */
+function TradeRead({
+  save,
+  other,
+  give,
+  get,
+  onAsk,
+  note,
+}: {
+  save: Parameters<typeof evaluateTrade>[0];
+  other: TeamId;
+  give: TradePiece[];
+  get: TradePiece[];
+  onAsk: () => void;
+  note: string;
+}) {
+  const w = clubWindow(save, other);
+  const verdict = give.length && get.length ? evaluateTrade(save, other, give, get) : null;
+  return (
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+      <span className="text-xs tracking-[0.2em] text-muted">{displayName(save.year, other).toUpperCase()} · {WINDOW_LABEL[w].toUpperCase()}</span>
+      {verdict ? (
+        <span className={verdict.accept ? "text-good" : "text-brass"}>{verdict.reason}</span>
+      ) : (
+        <span className="text-muted">Pick what you want from them, then ask what it would take.</span>
+      )}
+      <Btn className="ml-auto min-h-10 px-3 text-xs" disabled={!get.length} onClick={onAsk}>
+        What would it take?
+      </Btn>
+      {note && <p className="w-full text-xs text-muted">{note}</p>}
     </div>
   );
 }

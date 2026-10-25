@@ -45,7 +45,8 @@ export function applyScout(save: Pick<DynastySave, "year" | "rng">, p: Player): 
   p.morale = p.morale || 68 + Math.floor(rand(save) * 16);
   p.snaps = p.snaps ?? 0;
   if (prospect) {
-    const round = p.draftRound ?? 7;
+    // Round 0 is an undrafted name: graded like the leftovers after the last round, not a first-rounder.
+    const round = p.draftRound || 8;
     p.scoutOvr = scoutOvrFromRound(round, p.ovr, rand(save) * 2 - 1);
   } else {
     p.scoutOvr = clamp(p.ovr + Math.floor(rand(save) * 5) - 2, 40, 99);

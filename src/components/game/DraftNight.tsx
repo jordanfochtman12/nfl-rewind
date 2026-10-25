@@ -1,12 +1,16 @@
+import { useDraftAnnouncer } from "./draftAudio";
+import { TalksReminder } from "./ContractTalks";
 import { useEffect, useMemo, useState } from "react";
 import {
   ARCH_LABEL,
   currentDraftTeam,
+  originalLeague,
+  sessionOf,
   displayName,
   draftOrder,
+  draftQueue,
   formatHt,
   playerName,
-  rosterOf,
   SCOUT_KEYS,
   sessionLabel,
   visibleOvr,
@@ -15,17 +19,38 @@ import {
   type Player,
   type Pos,
   type TeamId,
+  executePickDeal,
+  tradeDownOffers,
+  tradeUpPackage,
+  type PickDeal,
+  BUDGETS,
+  COMBINE_FROM,
+  ownerGrade,
+  proDayVisit,
+  scoutState,
+  setScoutBudget,
+  visitsLeft,
+  draftTicker,
+  draftVenue,
+  posLabel,
 } from "@/lib/game";
+import { counterOffer, gradeRange, positionalNeeds, schemeFit } from "@/lib/game/draftFit";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
 import { FilmStill } from "./Art";
 import { KitChips } from "./KitChips";
 import { PlayerLink } from "./PlayerProfile";
+import { NightShow } from "./ShowKit";
+import { DraftMasthead, OnTheClockPlate, PickReveal, RoundRecapCard } from "./DraftStage";
+import { DraftOpening } from "./DraftOpening";
+import { DraftRecapView } from "./DraftRecap";
+import { DraftPreviewShow } from "./DraftPreview";
 
 const POS_FILTERS: (Pos | "ALL")[] = [
   "ALL",
   "QB",
   "RB",
+  "FB",
   "WR",
   "TE",
   "LT",
@@ -58,16 +83,6 @@ function Meter({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Clock({ seconds }: { seconds: number }) {
-  const m = Math.floor(Math.max(0, seconds) / 60);
-  const s = Math.max(0, seconds) % 60;
-  return (
-    <div className="tabular font-display text-4xl text-brass">
-      {m}:{String(s).padStart(2, "0")}
-    </div>
-  );
-}
-
 function archLabel(p: Player): string {
   const a = p.arch as keyof typeof ARCH_LABEL | undefined;
   return a && ARCH_LABEL[a] ? ARCH_LABEL[a] : "Prospect";
@@ -84,27 +99,38 @@ function measLine(p: Player): string {
   return [ht, wt, fy].filter(Boolean).join(" · ");
 }
 
-export function DraftNight() {
+export function DraftNight({ forcePreview = false, onPreviewClose }: { forcePreview?: boolean; onPreviewClose?: () => void } = {}) {
+  const announcer = useDraftAnnouncer();
   const save = useGameStore((s) => s.save)!;
   const step = useGameStore((s) => s.step);
   const openProfile = useGameStore((s) => s.openProfile);
-  const [paused, setPaused] = useState(false);
+  const desk = useGameStore((s) => s.desk);
+  // The room opens on hold: the draft starts when the owner says so, not the moment it loads.
+  const [paused, setPaused] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
+  // Before the first pick the room opens on the welcome; the owner starts the draft from it.
+  const [opening, setOpening] = useState(() => save.phase === "draft" && save.draftPickIndex === 0);
+  const [showingPreview, setShowingPreview] = useState(false);
+  const showOpening = opening && save.phase === "draft" && save.draftPickIndex === 0;
   const [hold, setHold] = useState(8);
   const [scoutId, setScoutId] = useState<string | null>(null);
   const [posFilter, setPosFilter] = useState<Pos | "ALL">("ALL");
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState(40);
+  const [shortlist, setShortlist] = useState<string[]>([]);
+  const [shortlistedOnly, setShortlistedOnly] = useState(false);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const compared = compareIds.map(id => save.players[id]).filter((p): p is Player => !!p);
 
-  const order = useMemo(() => draftOrder(save), [save.year, save.draftPickIndex, save.phase]);
+  // Keyed on the whole save: a draft-day trade changes who owns a pick without moving the index.
+  const order = useMemo(() => draftOrder(save), [save]);
   const teamsN = order.length || 24;
   const onClock = currentDraftTeam(save);
   const rnd = Math.floor(save.draftPickIndex / teamsN) + 1;
   const pickInRound = (save.draftPickIndex % teamsN) + 1;
   const overall = save.draftPickIndex + 1;
+  const totalPicks = useMemo(() => draftQueue(save).length, [save]);
   const openAll = save.draftBoard.filter((p) => !p.taken);
   const taken = save.draftBoard.filter((p) => p.taken);
-  const last = taken[taken.length - 1];
-  const lastPlayer = last ? save.players[last.playerId] : undefined;
   const namedLeft = openAll.filter((pr) => save.players[pr.playerId]?.historical).length;
 
   const board = useMemo(() => {
@@ -114,24 +140,25 @@ export function DraftNight() {
       if (!p) return false;
       if (posFilter !== "ALL" && p.pos !== posFilter) return false;
       if (q && !playerName(p).toLowerCase().includes(q) && !(p.college ?? "").toLowerCase().includes(q)) return false;
-      return true;
+      return !shortlistedOnly || shortlist.includes(p.id);
     });
-  }, [openAll, posFilter, query, save.players]);
+  }, [openAll, posFilter, query, save.players, shortlist, shortlistedOnly]);
 
   const scout = scoutId
     ? save.players[scoutId]
     : board[0]
       ? save.players[board[0].playerId]
       : undefined;
-  const isUser = save.phase === "draft" && onClock === save.userTeamId;
-  const cpuUp = save.phase === "draft" && !!onClock && onClock !== save.userTeamId;
+  // In a sandbox every club is on autopilot; the room just watches the board.
+  const isUser = !save.sandbox && save.phase === "draft" && onClock === save.userTeamId;
+  const myPicksLeft = !save.sandbox && draftQueue(save).slice(save.draftPickIndex).some((p) => p.owner === save.userTeamId);
+  const cpuUp = save.phase === "draft" && !!onClock && (save.sandbox || onClock !== save.userTeamId);
   const done = save.phase !== "draft" || !onClock;
-  const needs = onClock
-    ? [...new Set(rosterOf(save, onClock).sort((a, b) => a.ovr - b.ovr).slice(0, 5).map((p) => p.pos))].join(" · ")
-    : "";
+  // The owner's own needs are measured against the league's starters, not just his weakest men.
+  const myNeeds = useMemo(() => (isUser && onClock ? positionalNeeds(save, onClock, 4).map((n) => n.pos) : undefined), [save, isUser, onClock]);
 
   useEffect(() => {
-    if (!cpuUp || paused) return;
+    if (!cpuUp || paused || showingPreview || announcer.busy || announcer.hidden) return;
     setHold(8);
     const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
     const fire = setTimeout(() => step({}), 1800);
@@ -139,13 +166,24 @@ export function DraftNight() {
       clearInterval(tick);
       clearTimeout(fire);
     };
-  }, [cpuUp, paused, save.draftPickIndex, step]);
+  }, [cpuUp, paused, showingPreview, save.draftPickIndex, step, announcer.busy, announcer.hidden]);
 
+  // Your own clock runs too. It is television: the pick is yours whenever you make it.
   useEffect(() => {
-    if (!isUser) return;
+    if (!isUser || showingPreview) return;
     setHold(75);
-  }, [isUser, save.draftPickIndex]);
+    const tick = setInterval(() => setHold((h) => Math.max(0, h - 1)), 1000);
+    return () => clearInterval(tick);
+  }, [isUser, showingPreview, save.draftPickIndex]);
+  const ticker = useMemo(() => draftTicker(save, 20), [save]);
+  // After the last pick the room becomes the morning-after review, until next year's board.
+  const hasRecap = save.draftBoard.some((pr) => pr.taken && save.players[pr.playerId]?.draftYear === save.year);
 
+  if (showingPreview || forcePreview) {
+    return <DraftPreviewShow onReturn={() => { setShowingPreview(false); onPreviewClose?.(); }} />;
+  }
+
+  if (save.phase !== "draft" && hasRecap) return <DraftRecapView />;
   if (save.phase !== "draft") {
     return (
       <section className="relative overflow-hidden rounded-xl border border-line bg-surface p-6">
@@ -157,60 +195,71 @@ export function DraftNight() {
   }
 
   return (
+    <NightShow
+      id={`draft-${save.year}-${sessionOf(save)}`}
+      show={sessionOf(save) === "afl" ? "AFL DRAFT" : "NFL DRAFT"}
+      title={`The ${save.year} Draft`}
+      sub={draftVenue(save.year)}
+      year={save.year}
+      ticker={ticker}
+      tickerLabel="THE PICKS"
+      showOpen={false}
+    >
     <div className="space-y-4">
-      <section className="relative overflow-hidden rounded-xl border border-brass/30 bg-studio">
+      <div className="dn-live-preview-rail">
+        <div><p className="font-display text-xs font-extrabold uppercase tracking-[0.2em] text-brass">Before the first pick · draft preview show</p><p className="mt-1 text-xs text-paper">Full mock draft, prospect profiles, position rankings and your war room.</p></div>
+        <Btn kind="gold" onClick={() => setShowingPreview(true)}>Watch Draft Preview</Btn>
+      </div>
+      {showOpening ? <DraftOpening
+        onStart={() => {
+          setOpening(false);
+          setPaused(false);
+        }}
+      /> : <>
+      <TalksReminder />
+      {announcer.controls}
+      {!save.sandbox && <section className="hq-panel p-4" aria-label="Prospect comparison">
+        <ScoutDesk /><div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-xl">Your draft room</h3><p className="mt-1 text-xs text-muted">Compare up to three prospects. Grades are your scouts' read, not the truth.</p></div>{compared.length > 0 && <Btn onClick={() => setCompareIds([])}>Clear comparison</Btn>}</div>
+        {compared.length === 0 ? <p className="mt-3 text-sm text-muted">Use Compare on any prospect to build your decision board.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">{compared.map(p => <article className="rounded-lg border border-line bg-surface-2 p-4" key={p.id}><div className="flex items-start justify-between gap-2"><div><p className="text-xs text-brass">{posLabel(p)} · {p.age} years old</p><h4 className="mt-1 text-xl">{playerName(p)}</h4></div><button className="min-h-9 min-w-9 text-muted" aria-label={`Remove ${playerName(p)} from comparison`} onClick={() => setCompareIds(ids => ids.filter(id => id !== p.id))}>×</button></div><p className="mt-2 text-sm text-muted">{p.college ?? 'Campus'} · {archLabel(p)}</p><p className="mt-2 font-display text-3xl text-brass">{ownerGrade(save, p)} <span className="text-sm text-muted">{p.revealed ? 'Overall' : 'Your grade'}</span></p><div className="mt-3 space-y-3">{scoutKeys(p).slice(0, 5).map(k => <Meter key={k.key} label={k.label} value={visibleRatings(p)[k.key]}/>)}</div><p className="mt-3 text-xs text-muted">{openAll.some(pr => pr.playerId === p.id) ? 'Available on the board' : 'Already selected'}</p></article>)}</div>}
+      </section>}
+      </>}
+      <section className={`relative overflow-hidden rounded-xl border border-brass/30 bg-studio ${showOpening ? "hidden" : ""}`}>
         <FilmStill still="draft" veil="full" />
         <div className="relative space-y-4 px-5 py-5">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-display text-xs tracking-[0.4em] text-brass">{save.year} {sessionLabel(save).toUpperCase()}</p>
-              <h2 className="font-display text-4xl sm:text-5xl">
-                Round {rnd}
-                <span className="ml-3 text-brass">Pick {pickInRound}</span>
-              </h2>
-              <p className="text-sm text-muted">
-                Overall {Math.min(overall, save.draftBoard.length)} of {save.draftBoard.length} · {namedLeft} named
-                still on the board
-              </p>
-            </div>
-            {onClock && (
-              <div className="flex items-center gap-4 rounded-lg border border-brass/40 bg-black/65 px-4 py-3">
-                <Logo id={onClock} size={64} year={save.year} />
-                <div>
-                  <p className="text-[11px] tracking-[0.35em] text-brass">
-                    {isUser ? "YOUR WAR ROOM" : "ON THE CLOCK"}
-                  </p>
-                  <p className="font-display text-2xl">{displayName(save.year, onClock)}</p>
-                  <p className="text-xs text-muted">Needs {needs || "best available"}</p>
-                </div>
-                <Clock seconds={hold} />
-              </div>
-            )}
-          </div>
+          <DraftMasthead round={rnd} pickInRound={pickInRound} overall={overall} total={totalPicks} />
+          <p className="text-xs text-muted">
+            {sessionLabel(save)} · {namedLeft} named prospects still on the board
+          </p>
+          <RoundRecapCard />
+          <PickReveal />
+          {onClock && <OnTheClockPlate seconds={hold} limit={isUser ? 75 : 8} isUser={isUser} needs={myNeeds} />}
 
-          {last && lastPlayer && !isUser && (
-            <div className="rounded-lg border border-brass/25 bg-black/55 px-4 py-4">
-              <p className="text-[11px] tracking-[0.4em] text-brass">THE PICK IS IN</p>
-              <p className="mt-1 font-display text-lg text-paper">
-                With the {last.slot} selection, the {last.takenBy ? displayName(save.year, last.takenBy) : "club"} select
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                {last.takenBy && <Logo id={last.takenBy} size={48} year={save.year} />}
-                <div>
-                  <p className="font-display text-3xl">
-                    <PlayerLink player={lastPlayer} className="inline min-h-0 font-display text-3xl" />
-                  </p>
-                  <p className="text-sm text-muted">
-                    {lastPlayer.pos} · {archLabel(lastPlayer)} · {lastPlayer.college} · {measLine(lastPlayer)} ·{" "}
-                    {lastPlayer.revealed ? `${lastPlayer.ovr} OVR` : `Scout ${visibleOvr(lastPlayer)}`}
-                  </p>
-                  <div className="mt-1">
-                    <KitChips player={lastPlayer} compact />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="-mx-1 overflow-x-auto pb-1">
+            <p className="mb-2 text-[11px] tracking-[0.35em] text-brass">ROUND {rnd} · THE BOARD</p>
+            <ol className="flex gap-2">
+              {order.map((id, i) => {
+                const overallPickNo = (rnd - 1) * teamsN + i + 1;
+                const takenPick = taken.find((pr) => save.players[pr.playerId]?.draftPick === overallPickNo);
+                const takenPlayer = takenPick ? save.players[takenPick.playerId] : undefined;
+                const mine = !save.sandbox && id === save.userTeamId;
+                const onNow = i === pickInRound - 1 && !done;
+                return (
+                  <li
+                    key={`${id}-${i}`}
+                    className={`flex w-20 shrink-0 flex-col items-center gap-1 rounded-md border p-2 text-center ${
+                      onNow ? "border-brass bg-brass/15" : takenPlayer ? "border-line bg-surface-2" : "border-line bg-surface"
+                    } ${mine ? "ring-1 ring-accent" : ""}`}
+                  >
+                    <Logo id={id as TeamId} size={28} year={save.year} />
+                    <span className="text-[10px] text-muted">#{i + 1}</span>
+                    <span className="w-full truncate text-[10px] text-fg">
+                      {takenPlayer ? playerName(takenPlayer).split(" ").slice(-1)[0] : onNow ? "on the clock" : "—"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
 
           {isUser && (
             <div className="rounded-lg border border-accent/40 bg-accent/15 px-4 py-4">
@@ -219,13 +268,20 @@ export function DraftNight() {
             </div>
           )}
 
+          {cpuUp && !myPicksLeft && !save.sandbox && (
+            <p className="rounded-md border border-brass/40 bg-brass/10 px-4 py-3 text-sm">
+              {sessionOf(save) === "nfl" && originalLeague(save.userTeamId) === "AFL"
+                ? "This is the NFL's draft, so your club doesn't pick here. In 1966 the leagues still drafted separately, and the AFL draft starts right after this one. Jump to my pick takes you straight to your first selection."
+                : "You have no picks left in this draft. They were used or traded away. Let the board finish, or auto the rest."}
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             {cpuUp && (
               <>
                 <Btn kind="primary" onClick={() => step({})}>
                   Watch this pick
                 </Btn>
-                <Btn onClick={() => step({ simToUser: true })}>Jump to my pick</Btn>
+                {!save.sandbox && <Btn onClick={() => step({ simToUser: true })}>Jump to my pick</Btn>}
                 <Btn onClick={() => setPaused((p) => !p)}>{paused ? "Resume clock" : "Hold clock"}</Btn>
               </>
             )}
@@ -243,14 +299,21 @@ export function DraftNight() {
         </div>
       </section>
 
+      {!save.sandbox && (isUser || myPicksLeft) && <DraftDeals onClock={isUser} paused={() => setPaused(true)} />}
+
+      <section className="rounded-xl border border-line bg-surface p-3" aria-label="Draft board filters">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs uppercase tracking-widest text-muted"><strong className="text-fg">{board.length}</strong> prospects shown · {openAll.length} available</p>
+        <button type="button" aria-pressed={shortlistedOnly} onClick={() => { setShortlistedOnly(v => !v); setShown(40); }} className={`min-h-10 rounded-md border px-3 text-xs ${shortlistedOnly ? "bx-chip bx-chip-on" : "bx-chip"}`}>★ Shortlist {shortlist.length}{shortlistedOnly ? " · On" : ""}</button>
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         {POS_FILTERS.map((pos) => (
           <button
             key={pos}
             type="button"
-            onClick={() => setPosFilter(pos)}
+            onClick={() => { setPosFilter(pos); setShown(40); }}
             className={`min-h-11 rounded-md border px-3 text-xs tracking-widest ${
-              posFilter === pos ? "border-brass bg-brass/20 text-brass" : "border-line bg-surface text-muted"
+              posFilter === pos ? "bx-chip bx-chip-on" : "bx-chip"
             }`}
           >
             {pos}
@@ -258,11 +321,12 @@ export function DraftNight() {
         ))}
         <input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => { setQuery(e.target.value); setShown(40); }}
           placeholder="Search name or school"
           className="min-h-11 min-w-[12rem] flex-1 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-subtle"
         />
       </div>
+      </section>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ol className="space-y-2 lg:col-span-2">
@@ -285,9 +349,10 @@ export function DraftNight() {
                     </span>
                   </p>
                   <p className="text-sm text-muted">
-                    {p.pos} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${visibleOvr(p)} · ${scoutLetter(visibleOvr(p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
+                    {p.collegeNo != null ? `#${p.collegeNo} · ` : ""}{posLabel(p)} · {archLabel(p)} · {p.college ?? "campus"} · {p.revealed ? `${p.ovr} OVR` : `Scout ${ownerGrade(save, p)} · ${scoutLetter(ownerGrade(save, p))}`} · Rd {p.draftRound ?? "—"} ·{" "}
                     {measLine(p)}
                   </p>
+                  {!save.sandbox && <FitLine p={p} />}
                   <div className="mt-1.5">
                     <KitChips player={p} compact />
                   </div>
@@ -298,6 +363,8 @@ export function DraftNight() {
                   </div>
                 </button>
                 <div className="flex shrink-0 flex-col gap-2">
+                  <Btn kind={shortlist.includes(p.id) ? "primary" : "ghost"} aria-pressed={shortlist.includes(p.id)} onClick={() => setShortlist(ids => ids.includes(p.id) ? ids.filter(id => id !== p.id) : [...ids, p.id])}>{shortlist.includes(p.id) ? "★ Saved" : "☆ Shortlist"}</Btn>
+                  <Btn disabled={!compareIds.includes(p.id) && compareIds.length >= 3} onClick={() => setCompareIds(ids => ids.includes(p.id) ? ids.filter(id => id !== p.id) : [...ids, p.id])}>{compareIds.includes(p.id) ? 'Remove' : 'Compare'}</Btn>
                   <Btn onClick={() => openProfile(p.id)}>Profile</Btn>
                   {isUser && (
                     <Btn kind={i === 0 ? "primary" : "ghost"} onClick={() => step({ userPickPlayerId: p.id })}>
@@ -329,13 +396,20 @@ export function DraftNight() {
                 <PlayerLink player={scout} className="inline min-h-0 font-display text-2xl" />
               </p>
               <p className="text-sm text-muted">
-                {scout.pos} · {archLabel(scout)} · {scout.college ?? "campus"}
+                {posLabel(scout)} · {archLabel(scout)} · {scout.college ?? "campus"}
               </p>
-              <p className="mt-1 font-display text-3xl tabular text-brass">{visibleOvr(scout)}</p>
+              <p className="mt-1 font-display text-3xl tabular text-brass">{ownerGrade(save, scout)}</p>
               <p className="text-xs tracking-widest text-muted">
-                {scout.revealed ? "OVERALL — derived from the kit" : `SCOUT GRADE · ${scoutLetter(visibleOvr(scout))} — true kit sealed`}
+                {scout.revealed
+                  ? "OVERALL — derived from the kit"
+                  : `${save.sandbox ? "SCOUT GRADE" : "YOUR GRADE"} · ${scoutLetter(ownerGrade(save, scout))} — true kit sealed`}
               </p>
+              {!scout.revealed && !save.sandbox && ownerGrade(save, scout) !== visibleOvr(scout) && (
+                <p className="text-xs text-muted">League consensus: {visibleOvr(scout)}</p>
+              )}
+              {!save.sandbox && <ScoutRange p={scout} />}
               <p className="mt-2 text-sm text-muted">{measLine(scout)}</p>
+              <CombineLine p={scout} />
               <div className="mt-3">
                 <KitChips player={scout} showDesc />
               </div>
@@ -346,6 +420,15 @@ export function DraftNight() {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Btn onClick={() => openProfile(scout.id)}>Full profile</Btn>
+                {!save.sandbox && !scout.revealed && !scoutState(save).visits.includes(scout.id) && (
+                  <Btn
+                    disabled={!visitsLeft(save)}
+                    onClick={() => desk((s) => proDayVisit(s, scout.id))}
+                    title={visitsLeft(save) ? "Send your scouts to his pro day" : "No visits left on this budget"}
+                  >
+                    Pro day ({visitsLeft(save)} left)
+                  </Btn>
+                )}
                 {isUser && (
                   <Btn kind="primary" onClick={() => step({ userPickPlayerId: scout.id })}>
                     Draft
@@ -357,7 +440,11 @@ export function DraftNight() {
           <div className="rounded-xl border border-line bg-surface p-4">
             <p className="mb-3 text-xs tracking-[0.25em] text-muted">Cards turned</p>
             <ul className="space-y-2">
-              {taken.slice(-12).reverse().map((pr) => {
+              {taken
+                .slice()
+                .sort((a, b) => (save.players[b.playerId]?.draftPick ?? -1) - (save.players[a.playerId]?.draftPick ?? -1))
+                .slice(0, 12)
+                .map((pr) => {
                 const p = save.players[pr.playerId];
                 return (
                   <li key={pr.playerId} className="flex items-center gap-2 text-sm">
@@ -378,30 +465,214 @@ export function DraftNight() {
               {!taken.length && <li className="text-muted">Waiting on the first card.</li>}
             </ul>
           </div>
-          <div className="rounded-xl border border-line bg-surface p-4">
-            <p className="mb-2 text-xs tracking-[0.25em] text-muted">This round</p>
-            <ol className="grid grid-cols-4 gap-2">
-              {order.map((id, i) => {
-                const overallPick = (rnd - 1) * teamsN + i;
-                const card = save.draftBoard[overallPick];
-                const takenNow = card?.taken;
-                const mine = id === save.userTeamId;
-                return (
-                  <li
-                    key={`${id}-${i}`}
-                    className={`flex flex-col items-center gap-1 rounded-md border p-1.5 ${
-                      i === pickInRound - 1 && !done ? "border-brass bg-brass/15" : "border-line"
-                    } ${mine ? "ring-1 ring-accent" : ""}`}
-                  >
-                    <Logo id={id as TeamId} size={28} year={save.year} />
-                    <span className="text-[10px] text-muted">{takenNow ? "in" : i + 1}</span>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
         </aside>
       </div>
+    </div>
+    </NightShow>
+  );
+}
+
+/** Draft-day trades: the phone while you're on the clock, and moving up to a club's pick. */
+function DraftDeals({ onClock, paused }: { onClock: boolean; paused: () => void }) {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const note = useGameStore((s) => s.lastDeskNote);
+  const [target, setTarget] = useState<string>("");
+  const offered = useMemo(() => (onClock ? tradeDownOffers(save) : []), [save, onClock]);
+  // One counter per call: ask for more and they either sweeten it or hold firm.
+  const [asked, setAsked] = useState<string[]>([]);
+  const [countered, setCountered] = useState<Record<string, PickDeal>>({});
+  const [reply, setReply] = useState("");
+  useEffect(() => {
+    setAsked([]);
+    setCountered({});
+    setReply("");
+  }, [save.draftPickIndex]);
+  const calls = offered.map((c) => countered[c.partner] ?? c);
+  const upcoming = useMemo(() => {
+    const q = draftQueue(save);
+    return q.slice(save.draftPickIndex + (onClock ? 1 : 0), save.draftPickIndex + 13).map((p, i) => ({ p, slot: save.draftPickIndex + (onClock ? 2 : 1) + i }));
+  }, [save, onClock]);
+  const deal = target ? tradeUpPackage(save, target) : undefined;
+  const run = (d: PickDeal) =>
+    desk((s) => {
+      const r = executePickDeal(s, { partner: d.partner, give: d.give.map((p) => p.id), get: d.get.map((p) => p.id) });
+      return r.ok ? "Deal done. The picks have moved." : r.reason;
+    });
+  return (
+    <section className="hq-panel space-y-3 p-4" aria-label="Draft-day trades">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-xl">Draft-day trades</h3>
+        <p className="text-xs text-muted">Picks priced on the trade chart. Moving up costs a premium.</p>
+      </div>
+      {onClock && (
+        <div className="space-y-2">
+          <p className="text-xs tracking-[0.25em] text-brass">THE PHONE · TRADE DOWN</p>
+          {calls.length ? (
+            <ul className="space-y-2">
+              {calls.map((c) => (
+                <li key={c.partner} className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+                  <Logo id={c.partner} size={28} year={save.year} />
+                  <span className="min-w-0 flex-1 basis-[14rem] text-paper">{c.pitch}</span>
+                  <span className="tabular text-xs text-muted">
+                    chart {Math.round(c.getValue)} for {Math.round(c.giveValue)}
+                  </span>
+                  {!asked.includes(c.partner) && (
+                    <Btn
+                      className="min-h-10 px-3 text-xs"
+                      onClick={() => {
+                        const r = counterOffer(save, countered[c.partner] ?? c);
+                        setAsked((a) => [...a, c.partner]);
+                        setReply(r.reply);
+                        if (r.deal) setCountered((m) => ({ ...m, [c.partner]: r.deal! }));
+                      }}
+                    >
+                      Ask for more
+                    </Btn>
+                  )}
+                  <Btn kind="primary" className="min-h-10 px-3 text-xs" onClick={() => run(countered[c.partner] ?? c)}>
+                    Take it
+                  </Btn>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted">Nobody behind you is calling. They think their man will be there.</p>
+          )}
+          {reply && <p className="text-xs text-brass">{reply}</p>}
+        </div>
+      )}
+      <div className="space-y-2">
+        <p className="text-xs tracking-[0.25em] text-brass">MOVE UP</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            aria-label="Pick to trade up to"
+            className="min-h-11 min-w-0 flex-1 rounded-md border border-line bg-surface-2 px-2 text-sm"
+            value={target}
+            onChange={(e) => {
+              setTarget(e.target.value);
+              if (e.target.value) paused();
+            }}
+          >
+            <option value="">Choose a pick to move up to</option>
+            {upcoming
+              .filter(({ p }) => p.owner !== save.userTeamId)
+              .map(({ p, slot }) => (
+                <option key={p.id} value={p.id}>
+                  No. {slot} · {displayName(save.year, p.owner)}
+                </option>
+              ))}
+          </select>
+        </div>
+        {deal && "error" in deal && <p className="text-sm text-brass">{deal.error}</p>}
+        {deal && !("error" in deal) && (
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface p-3 text-sm">
+            <Logo id={deal.partner} size={28} year={save.year} />
+            <span className="min-w-0 flex-1 text-paper">{deal.pitch}</span>
+            <span className="tabular text-xs text-muted">
+              chart {Math.round(deal.giveValue)} for {Math.round(deal.getValue)}
+            </span>
+            <Btn
+              kind="primary"
+              className="min-h-10 px-3 text-xs"
+              onClick={() => {
+                run(deal);
+                setTarget("");
+              }}
+            >
+              Make the trade
+            </Btn>
+          </div>
+        )}
+      </div>
+      {note && <p className="text-xs text-muted">{note}</p>}
+    </section>
+  );
+}
+
+/** Combine (or pro-day) numbers for a prospect, era permitting. */
+function CombineLine({ p }: { p: Player }) {
+  const c = p.combine;
+  if (!c) return null;
+  if (c.satOut && !c.proDay) return <p className="text-xs text-muted">Sat out the combine drills.</p>;
+  const bits = [
+    c.forty ? `40: ${c.forty.toFixed(2)}` : "",
+    c.bench ? `Bench: ${c.bench}` : "",
+    c.vertical ? `Vert: ${c.vertical}"` : "",
+    c.cone ? `3-cone: ${c.cone.toFixed(2)}` : "",
+  ].filter(Boolean);
+  return (
+    <p className="text-xs text-paper">
+      <span className="text-muted">{c.proDay ? "Pro day" : "Combine"} · </span>
+      {bits.join(" · ")}
+    </p>
+  );
+}
+
+/** The owner's scouting budget and pro-day visits for this draft. */
+function ScoutDesk() {
+  const save = useGameStore((s) => s.save)!;
+  const desk = useGameStore((s) => s.desk);
+  const st = scoutState(save);
+  return (
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface-2 p-3 text-sm">
+      <span className="text-xs tracking-[0.25em] text-brass">SCOUTING</span>
+      <label className="flex items-center gap-2 text-xs text-muted">
+        Budget
+        <select
+          aria-label="Scouting budget"
+          className="min-h-10 rounded-md border border-line bg-surface px-2 text-sm text-fg"
+          value={st.budget}
+          onChange={(e) => desk((s) => setScoutBudget(s, e.target.value as keyof typeof BUDGETS))}
+        >
+          {(Object.keys(BUDGETS) as (keyof typeof BUDGETS)[]).map((k) => (
+            <option key={k} value={k}>
+              {BUDGETS[k].label} · {BUDGETS[k].visits} pro days
+            </option>
+          ))}
+        </select>
+      </label>
+      <span className="text-xs text-muted">{BUDGETS[st.budget].blurb}</span>
+      <span className="text-xs text-muted">
+        {visitsLeft(save)} pro-day visit{visitsLeft(save) === 1 ? "" : "s"} left
+        {save.year < COMBINE_FROM ? " · no combine yet (it starts in 1982)" : ""}
+      </span>
+    </div>
+  );
+}
+
+/** Scheme fit for the owner's club, on one line. */
+function FitLine({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const fit = schemeFit(save, save.userTeamId, p);
+  const tone = fit.label === "Ideal fit" ? "text-good" : fit.label === "Good fit" ? "text-paper" : fit.label === "Poor fit" ? "text-brick" : "text-muted";
+  return (
+    <p className="mt-0.5 text-xs">
+      <span className={`font-semibold ${tone}`}>{fit.label}</span> <span className="text-subtle">· {fit.why}</span>
+    </p>
+  );
+}
+
+/** The scouts' grade as a range, with how sure they are. */
+function ScoutRange({ p }: { p: Player }) {
+  const save = useGameStore((s) => s.save)!;
+  const r = gradeRange(save, p);
+  const fit = schemeFit(save, save.userTeamId, p);
+  return (
+    <div className="mt-2 space-y-1 text-xs">
+      {r.lo !== r.hi && (
+        <p>
+          <span className="text-muted">Scouts&apos; range </span>
+          <span className="tabular text-white">
+            {r.lo}–{r.hi}
+          </span>{" "}
+          <span className={r.confidence === "High" ? "text-good" : r.confidence === "Low" ? "text-brick" : "text-paper"}>· {r.confidence} confidence</span>
+        </p>
+      )}
+      <p>
+        <span className="text-muted">Scheme fit </span>
+        <span className="text-white">{fit.label}</span> <span className="text-subtle">· {fit.why}</span>
+      </p>
     </div>
   );
 }

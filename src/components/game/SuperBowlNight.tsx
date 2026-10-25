@@ -1,128 +1,339 @@
-import { displayName, roman, superBowlNumber, superBowlSite, type TeamId } from "@/lib/game";
+import type { CSSProperties } from "react";
+import { clubInk, displayName, nicknameOf, playerName, roman, rosterOf, superBowlNumber, superBowlSite, type DynastySave, type Player, type TeamId, posLabel } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
 import { Btn, Logo } from "./chrome";
-import { FilmStill } from "./Art";
 import { PlayerLink } from "./PlayerProfile";
+import { LiveBroadcast } from "./LiveBroadcast";
+import { wasWatched } from "./liveWatch";
+import { SuperBowlHistory } from "./SuperBowlHistory";
+import { RoadHere } from "./BigNight";
+import { PlayerPortrait } from "./Portrait";
+import { clockLabel, finalLine, halftimeAct, reelFrom, trophyName } from "./bigNightText";
+import { useRef, useState } from "react";
+import { NightOpening, StadiumArt } from "./NightOpening";
+import { markOpeningSeen, openingSeen } from "./openingSeen";
 
+/**
+ * Super Bowl night. Before kickoff: the open, the two clubs and their roads here, the
+ * halftime bill. After: the live telecast the first time, then the trophy presentation in
+ * the champion's colors, the MVP, the box and the reel, and the roll of champions.
+ */
 export function SuperBowlNight() {
   const save = useGameStore((s) => s.save)!;
   const { step } = useGameStore();
   const g = save.superBowl;
+  // The owner's Super Bowl airs live the first time it's shown after kickoff.
+  const seenAtKickoff = useRef<boolean | null>(null);
+  const [dismissed, setDismissed] = useState(false);
+  const openKey = `sb-${save.year}`;
+  const [opening, setOpening] = useState(() => !openingSeen(openKey));
+  const rewindId = useGameStore((s) => s.rewind?.gameId);
+  if (g?.played && seenAtKickoff.current === null) seenAtKickoff.current = wasWatched(g.id);
   if (!g) return null;
-  const site = superBowlSite(save.year);
+  if (g.played && g.log?.length && save.liveOn !== false && !seenAtKickoff.current && !dismissed) {
+    return (
+      <LiveBroadcast
+        key={`${g.id}-${(save.liveOrders ?? []).filter((o) => o.gameId === g.id).length}`}
+        game={g}
+        log={g.log}
+        startAt={save.liveResume?.gameId === g.id ? save.liveResume.index : 0}
+        onDone={() => setDismissed(true)}
+        canCall={rewindId === g.id}
+      />
+    );
+  }
+  if (!g.played && opening)
+    return (
+      <SuperBowlOpening
+        onStart={() => {
+          markOpeningSeen(openKey);
+          setOpening(false);
+        }}
+      />
+    );
+  const year = save.year;
+  const site = superBowlSite(year);
   const home = g.homeId as TeamId;
   const away = g.awayId as TeamId;
   const mvp = g.mvpPlayerId ? save.players[g.mvpPlayerId] : undefined;
-  const n = superBowlNumber(save.year);
+  const n = superBowlNumber(year);
   const winner = g.played ? (g.homeScore >= g.awayScore ? home : away) : undefined;
+  const awayInk = clubInk(away, year);
+  const homeInk = clubInk(home, year);
+  const champ = winner ? clubInk(winner, year) : undefined;
+  const mine = !save.sandbox && (home === save.userTeamId || away === save.userTeamId);
+  const reel = g.played ? reelFrom(g) : [];
+  const city = (id: TeamId) => displayName(year, id).replace(nicknameOf(year, id), "").trim();
   return (
-    <article className="relative overflow-hidden rounded-xl border border-brass/40 bg-studio">
-      <FilmStill still="superbowl" veil="bottom" />
-      <div className="relative border-b border-brass/25 px-6 py-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(196,165,116,0.14),transparent_60%)]" />
-        <div className="relative">
-          <p className="font-display text-xs tracking-[0.5em] text-brass">WORLD CHAMPIONSHIP GAME</p>
-          <h1 className="mt-2 font-display text-5xl tracking-wide text-paper sm:text-7xl">SUPER BOWL {roman(n)}</h1>
-          <p className="mt-3 text-lg text-muted">
-            {site.site} · {site.city}
-          </p>
-          <p className="mt-1 max-w-2xl text-sm text-subtle">{site.flavor}</p>
-          {g.attendance ? (
-            <p className="mt-3 text-xs tracking-[0.35em] text-brass">{g.attendance.toLocaleString()} IN THE HOUSE</p>
-          ) : null}
-        </div>
-      </div>
+    <article
+      className={`k5-sb ${g.played ? "is-final" : ""}`}
+      style={{ "--away": awayInk.primary, "--home": homeInk.primary, "--champ": champ?.primary ?? "#ffc629", "--champ2": champ?.secondary ?? "#ffffff" } as CSSProperties}
+    >
+      <header className="k5-sb-open">
+        <div className="k5-sb-bg" aria-hidden />
+        <p className="k5-sb-kicker">
+          <span>{g.played ? "FINAL" : "TONIGHT"}</span> THE WORLD CHAMPIONSHIP GAME
+        </p>
+        <h1 className="k5-sb-title">
+          SUPER BOWL <b>{roman(n)}</b>
+        </h1>
+        <p className="k5-sb-site">
+          {site.site.toUpperCase()} · {site.city.toUpperCase()}
+          {g.attendance ? ` · ${g.attendance.toLocaleString()} IN THE HOUSE` : ""}
+        </p>
+      </header>
 
-      <div className="grid gap-6 px-6 py-10 sm:grid-cols-3 sm:items-center">
-        <div className="text-center">
-          <Logo id={away} size={96} />
-          <p className="mt-3 font-display text-2xl">{displayName(save.year, away)}</p>
-          {g.played && <p className="tabular font-display text-7xl">{g.awayScore}</p>}
-        </div>
-        <div className="text-center">
-          <p className="font-display tracking-[0.5em] text-brass">VS</p>
-          {!g.played && <p className="mt-3 text-sm text-muted">Coin toss on the hashmark. Marching band waiting in the tunnel.</p>}
-          {g.played && g.homeQ && g.awayQ && (
-            <table className="mx-auto mt-4 text-sm">
-              <thead className="text-xs tracking-widest text-muted">
-                <tr>
-                  {["", "1", "2", "3", "4", "F"].map((h) => (
-                    <th key={h} className="px-2 py-1">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-2 text-left">{String(away).toUpperCase()}</td>
-                  {g.awayQ.map((q, i) => (
-                    <td key={i} className="tabular px-2">
-                      {q}
-                    </td>
-                  ))}
-                  <td className="tabular px-2 font-display">{g.awayScore}</td>
-                </tr>
-                <tr>
-                  <td className="px-2 text-left">{String(home).toUpperCase()}</td>
-                  {g.homeQ.map((q, i) => (
-                    <td key={i} className="tabular px-2">
-                      {q}
-                    </td>
-                  ))}
-                  <td className="tabular px-2 font-display">{g.homeScore}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
-        </div>
-        <div className="text-center">
-          <Logo id={home} size={96} />
-          <p className="mt-3 font-display text-2xl">{displayName(save.year, home)}</p>
-          {g.played && <p className="tabular font-display text-7xl">{g.homeScore}</p>}
-        </div>
-      </div>
+      <section className="k5-sb-match" aria-label="The matchup">
+        {[away, home].map((id) => {
+          const score = id === home ? g.homeScore : g.awayScore;
+          return (
+            <div key={id} className={`k5-sb-side ${winner === id ? "is-win" : winner ? "is-loss" : ""}`} style={{ "--club": clubInk(id, year).primary } as CSSProperties}>
+              <Logo id={id} year={year} size={96} />
+              {city(id) && <p className="k5-sb-city">{city(id).toUpperCase()}</p>}
+              <p className="k5-sb-nick">{nicknameOf(year, id).toUpperCase()}</p>
+              {g.played && <p className="k5-sb-score tabular">{score}</p>}
+            </div>
+          );
+        })}
+        <span className="k5-sb-vs" aria-hidden>
+          {g.played ? "FINAL" : "VS"}
+        </span>
+      </section>
 
-      <div className="space-y-4 border-t border-brass/20 px-6 py-6">
-        {g.played && winner && (
-          <p className="font-display text-2xl text-brass">
-            World champions — {displayName(save.year, winner)}
-          </p>
-        )}
-        {g.played && mvp && (
-          <div>
-            <p className="text-[11px] tracking-[0.35em] text-brass">VINCE LOMBARDI TROPHY · MOST VALUABLE PLAYER</p>
-            <p className="mt-1 font-display text-3xl text-paper">
-              {mvp ? (
-                <>
-                  <PlayerLink player={mvp} className="inline min-h-0 font-display text-3xl text-paper" /> · {mvp.pos} · #
-                  {mvp.jersey}
-                </>
-              ) : (
-                "MVP"
-              )}
+      {!g.played && (
+        <>
+          <section className="k5-sb-roads" aria-label="The road here">
+            <RoadHere teamId={away} year={year} />
+            <RoadHere teamId={home} year={year} />
+          </section>
+          <section className="k5-sb-bill">
+            <p>
+              <span>PREGAME</span> {site.flavor}
             </p>
+            <p>
+              <span>HALFTIME</span> {halftimeAct(year)}
+            </p>
+            <p>
+              <span>ON THE LINE</span> {trophyName(year)}
+            </p>
+            {g.weather && g.weather !== "clear" ? (
+              <p>
+                <span>WEATHER</span> {g.weather}
+              </p>
+            ) : null}
+          </section>
+          <div className="k5-sb-go">
+            <Btn kind="primary" className="min-h-12 px-6" onClick={() => step({})}>
+              {mine ? "Kick off the Super Bowl ▸" : "Play the Super Bowl ▸"}
+            </Btn>
           </div>
-        )}
-        {g.played && g.highlights?.length ? (
-          <ul className="space-y-1.5 text-sm text-muted">
-            {g.highlights.map((h) => (
-              <li key={h}>— {h}</li>
-            ))}
-          </ul>
-        ) : null}
-        {!g.played && (
-          <p className="text-muted">
-            Halftime is a college band and a cold night. Kick this thing off. History starts when the ball is in the air.
-          </p>
-        )}
-        {g.weather && g.weather !== "clear" ? (
-          <p className="text-xs tracking-widest text-brass">WEATHER · {g.weather.toUpperCase()}</p>
-        ) : null}
-        <Btn kind="primary" onClick={() => step({})}>
-          {g.played ? "Continue to awards" : "Play Super Bowl"}
-        </Btn>
-      </div>
+        </>
+      )}
+
+      {g.played && winner && (
+        <>
+          <section className="k5-sb-trophy" aria-label="The trophy presentation">
+            <div className="k5-sb-confetti" aria-hidden>
+              {Array.from({ length: 28 }, (_, i) => (
+                <i
+                  key={i}
+                  style={{
+                    left: `${(i * 37) % 100}%`,
+                    animationDelay: `-${((i * 0.41) % 6).toFixed(2)}s`,
+                    animationDuration: `${4.5 + (i % 5) * 0.6}s`,
+                  }}
+                />
+              ))}
+            </div>
+            <svg className="k5-sb-cup" viewBox="0 0 100 180" aria-hidden>
+              <defs>
+                <linearGradient id="sb-cup" x1="0" x2="1">
+                  <stop stopColor="#f4f7fb" />
+                  <stop offset=".45" stopColor="#9aa6b8" />
+                  <stop offset=".55" stopColor="#ffffff" />
+                  <stop offset="1" stopColor="#b9c4d6" />
+                </linearGradient>
+              </defs>
+              <path d="M34 68 24 146h52L65 68ZM20 148h60v18H20z" fill="url(#sb-cup)" />
+              <ellipse cx="50" cy="40" rx="25" ry="39" transform="rotate(30 50 40)" fill="url(#sb-cup)" />
+              <path d="m35 58 30-40M41 49l12 8M46 41l12 8M51 33l12 8" stroke="#56627a" strokeWidth="2" />
+            </svg>
+            <p className="k5-sb-label">{trophyName(year).toUpperCase()}</p>
+            <div className="k5-sb-champ">
+              <Logo id={winner} year={year} size={112} />
+              <div className="min-w-0">
+                <p className="k5-sb-champ-small">
+                  {year} WORLD CHAMPIONS{mine && winner === save.userTeamId ? " · YOUR CLUB" : ""}
+                </p>
+                <h2 className="k5-sb-champ-name">{displayName(year, winner).toUpperCase()}</h2>
+                <p className="k5-sb-champ-line">{finalLine(g, year)}</p>
+              </div>
+            </div>
+          </section>
+
+          {mvp && (
+            <section className="k5-sb-mvp">
+              <p className="k5-sb-label">SUPER BOWL {roman(n)} MOST VALUABLE PLAYER</p>
+              <PlayerPortrait p={mvp} year={year} size="lg" club={winner} className="mx-auto mt-2" />
+              <p className="k5-sb-mvp-name">
+                <PlayerLink player={mvp} className="inline min-h-0" />
+              </p>
+              <p className="k5-sb-mvp-meta">
+                {posLabel(mvp)} · #{mvp.jersey}
+              </p>
+            </section>
+          )}
+
+          {g.homeQ && g.awayQ && (
+            <section className="k5-sb-box" aria-label="Score by quarter">
+              <table>
+                <thead>
+                  <tr>
+                    <th />
+                    {g.homeQ.map((_, i) => (
+                      <th key={i}>{i < 4 ? i + 1 : "OT"}</th>
+                    ))}
+                    <th>F</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[away, home].map((id) => (
+                    <tr key={id} className={winner === id ? "is-win" : ""}>
+                      <td>
+                        <span>
+                          <Logo id={id} year={year} size={22} /> {nicknameOf(year, id).toUpperCase()}
+                        </span>
+                      </td>
+                      {(id === home ? g.homeQ! : g.awayQ!).map((q, i) => (
+                        <td key={i} className="tabular">
+                          {q}
+                        </td>
+                      ))}
+                      <td className="tabular">{id === home ? g.homeScore : g.awayScore}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
+
+          {reel.length ? (
+            <section className="k5-sb-reel" aria-label="The reel">
+              <p className="k5-sb-label">THE REEL · EVERY SCORE AND TAKEAWAY</p>
+              <ol>
+                {reel.map((r, i) => (
+                  <li key={i} className={`is-${r.tag}`}>
+                    <span className="k5-sb-reel-when">
+                      <b>{r.tag === "to" ? "TAKEAWAY" : r.tag === "fg" ? "FIELD GOAL" : r.tag === "safety" ? "SAFETY" : "TOUCHDOWN"}</b>
+                      <small>
+                        {r.q > 4 ? "OT" : `Q${r.q}`} {clockLabel(r.clock)}
+                      </small>
+                    </span>
+                    <Logo id={r.teamId} year={year} size={26} />
+                    <span className="min-w-0">
+                      {r.text}
+                      {r.tag !== "to" && (
+                        <small className="k5-sb-reel-score">
+                          {nicknameOf(year, away)} {r.as}, {nicknameOf(year, home)} {r.hs}
+                        </small>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ) : g.highlights?.length ? (
+            <section className="k5-sb-reel" aria-label="The highlights">
+              <p className="k5-sb-label">THE REEL</p>
+              <ol>
+                {g.highlights.map((h) => (
+                  <li key={h}>
+                    <span className="min-w-0">{h}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ) : null}
+
+          <div className="k5-sb-go">
+            <Btn kind="primary" className="min-h-12 px-6" onClick={() => step({})}>
+              Continue to awards ▸
+            </Btn>
+          </div>
+        </>
+      )}
+
+      {save.history.superBowls.length > 0 && (
+        <section className="k5-sb-roll">
+          <p className="k5-sb-label">THE ROLL OF CHAMPIONS</p>
+          <SuperBowlHistory compact />
+        </section>
+      )}
     </article>
+  );
+}
+
+/** The face of a club on the poster: its quarterback when he's a good one, else its best man. */
+function faceOf(save: DynastySave, id: TeamId): Player | undefined {
+  // Linemen and kickers don't sell a poster.
+  const roster = rosterOf(save, id).filter((p) => p.injuredWeeks <= 0 && !["LT", "LG", "C", "RG", "RT", "K", "P"].includes(p.pos));
+  const qb = roster.filter((p) => p.pos === "QB").sort((a, b) => b.ovr - a.ovr)[0];
+  const best = roster.slice().sort((a, b) => b.ovr - a.ovr)[0];
+  return qb && best && qb.ovr >= best.ovr - 6 ? qb : best;
+}
+
+/** Super Bowl night's cold open: the stadium under the lights, the two clubs, their stars. */
+function SuperBowlOpening({ onStart }: { onStart: () => void }) {
+  const save = useGameStore((s) => s.save)!;
+  const g = save.superBowl!;
+  const year = save.year;
+  const site = superBowlSite(year);
+  const n = roman(superBowlNumber(year));
+  const home = g.homeId as TeamId;
+  const away = g.awayId as TeamId;
+  const mine = !save.sandbox && (home === save.userTeamId || away === save.userTeamId);
+  return (
+    <NightOpening
+      label={`Super Bowl ${n}`}
+      art={<StadiumArt wall={`SUPER BOWL ${n}`} home={clubInk(home, year).primary} away={clubInk(away, year).primary} />}
+      kicker={`${site.site.toUpperCase()} · ${site.city.toUpperCase()}`}
+      welcome="THE WORLD CHAMPIONSHIP GAME"
+      title={
+        <>
+          SUPER BOWL <span>{n}</span>
+        </>
+      }
+      sub={mine ? "Your club, one game from the trophy." : `${displayName(year, away)} against ${displayName(year, home)}.`}
+      compact
+      startLabel="START THE BROADCAST"
+      onStart={onStart}
+    >
+      <div className="dn-open-grid dn-open-pair">
+        {[away, home].map((id) => {
+          const t = save.teams[id];
+          const star = faceOf(save, id);
+          return (
+            <div key={id} className="dn-open-tile">
+              <p className="dn-open-label">{id === home ? "HOME" : "AWAY"} · {t ? `${t.wins}-${t.losses}${t.ties ? `-${t.ties}` : ""}` : ""}</p>
+              <div className="dn-open-club">
+                <Logo id={id} size={56} year={year} />
+                <span>{displayName(year, id)}</span>
+              </div>
+              {star && (
+                <div className="dn-open-star">
+                  <PlayerPortrait p={star} year={year} size="sm" club={id} />
+                  <div className="min-w-0">
+                    <b>{playerName(star)}</b>
+                    <small>
+                      {posLabel(star)} · #{star.jersey}
+                    </small>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </NightOpening>
   );
 }

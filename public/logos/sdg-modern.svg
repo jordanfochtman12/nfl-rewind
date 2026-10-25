@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Chargers">
+<defs>
+<radialGradient id="f" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#294c78"/><stop offset="1" stop-color="#001b3d"/></radialGradient>
+<filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000" flood-opacity="0.45"/></filter>
+</defs>
+<rect width="512" height="512" rx="84" fill="url(#f)"/>
+<rect x="18" y="18" width="476" height="476" rx="68" fill="none" stroke="#ffc20e" stroke-width="12"/>
+<rect x="36" y="36" width="440" height="440" rx="54" fill="none" stroke="#0080c6" stroke-width="4" opacity="0.8"/>
+<g filter="url(#s)"><g transform="translate(76.80000000000001 76.80000000000001) scale(0.7) "><g fill="#ffffff" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"><path  d="M29.805 29.777L242.14 209.55H118.712l112.54 86.784H95.995l225.656 174.012l-81.537-116.05l66.487.143l179.185 138.175l-171.96-244.746h84.568L248.082 29.776z"/></g><g fill="#ffc20e"><path  d="M29.805 29.777L242.14 209.55H118.712l112.54 86.784H95.995l225.656 174.012l-81.537-116.05l66.487.143l179.185 138.175l-171.96-244.746h84.568L248.082 29.776z"/></g></g></g>
+<path d="M84 18 H428 A68 68 0 0 1 494 84 V150 C360 118 152 118 18 150 V84 A68 68 0 0 1 84 18Z" fill="#fff" opacity="0.06"/>
+</svg>

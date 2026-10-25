@@ -1,0 +1,569 @@
+{{Short description|American football award given by the Associated Press}}
+{{Use mdy dates|date=December 2024}}
+{{for|similar awards by other publications|List of NFL Coach of the Year awards}}
+{{Infobox sports award
+| name        = AP NFL Coach of the Year
+| image       = Mike Vrabel 2023.png
+| image_size  =
+| alt         =
+| caption     = [[Mike Vrabel]], 2025 recipient
+| givenfor    = Coach of the year in the [[National Football League]]
+| presenter   = [[Associated Press]]
+| first       = 1957
+| mostwins    = [[Don Shula]] (4)
+| mostrecent  = [[Mike Vrabel]] (2)
+| url         = <!-- {{URL|example.com}} -->
+}}
+
+The '''AP NFL Coach of the Year (COTY)''' is an annual award presented by the [[Associated Press]] (AP) to the [[National Football League]] (NFL) coach adjudged to have had the most outstanding season. It has been awarded since the 1957 season. Since 2011, the winner has been announced at the annual [[NFL Honors]] ceremony.
+
+[[Don Shula]] has won the most AP NFL Coach of the Year awards, receiving four during his 33-year head coaching career: three with the [[Baltimore Colts]] and one with the [[Miami Dolphins]], all of which were in a nine season span. [[Chuck Knox]] and [[Bill Belichick]] have each been awarded three times.
+
+Three coaches have won the award in back to back years: [[Allie Sherman]] (1961–1962), Shula (1967–1968), and [[Joe Gibbs]] (1982–1983).
+
+==Winners==
+[[File:Don-Shula USO-Tour-USS-Reagan-Address July-13-2009 (cropped).jpg|thumb|[[Don Shula]] was named Coach of the Year four times, the most of any coach.]]
+
+{| class="wikitable mw-collapsible mw-collapsed"
+|-
+! colspan="2"| Legend
+|-
+! scope="row" style="text-align:center; background:#FFFF99;" | {{dagger}}
+| Inducted into the [[Pro Football Hall of Fame]]
+|-
+! scope="row" style="text-align:center; background:#cfecec;" | ^
+| Currently active as a [[head coach]] in the NFL
+|-
+! scope="row" style="text-align:center; background:#fbceb1;" | *
+| Team won [[NFL Championship Game|NFL championship]] (1957–1965) or [[Super Bowl]] (1966–present) the same year the recipient won the award
+|-
+! scope="row" style="text-align:center;" | ~
+| Won award following their first season as head coach of the team
+|-
+! scope="row" style="text-align:center;" | (#)
+| Denotes the number of times a coach appears in this list
+|}
+
+{|class="wikitable sortable"
+|+ List of AP NFL Coach of the Year winners
+!Season !! Coach !! Team !! Record !! class="unsortable"|{{Ref.}}
+|-
+! scope="row" | {{NFL year|1957}}
+| {{sortname|George|Wilson|George Wilson (American football coach)}}~
+| style="background:#fbceb1;" | [[1957 Detroit Lions season|Detroit Lions]]* 
+| 8–4 
+| <ref name="AP COY PFR">{{cite web |title=AP Coach of the Year Winners |url=https://www.pro-football-reference.com/awards/ap-coach-of-the-year.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 3, 2022 |archive-url=https://web.archive.org/web/20220103180612/https://www.pro-football-reference.com/awards/ap-coach-of-the-year.htm |url-status=live }}</ref><ref>{{cite web |title=George Wilson Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/WilsGe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=November 24, 2010 |archive-url=https://web.archive.org/web/20101124113633/http://www.pro-football-reference.com/coaches/WilsGe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1958}} 
+| style="background:#FFFF99;" | {{sortname|Weeb|Ewbank}}{{dagger}} 
+| style="background:#fbceb1;" | [[1958 Baltimore Colts season|Baltimore Colts]]* 
+| 9–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Weeb Ewbank Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/EwbaWe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 18, 2013 |archive-url=https://web.archive.org/web/20130818122249/http://www.pro-football-reference.com/coaches/EwbaWe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1959}} 
+| style="background:#FFFF99;" | {{sortname|Vince|Lombardi}}~{{dagger}} 
+| [[1959 Green Bay Packers season|Green Bay Packers]] 
+| 7–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Vince Lombardi Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/LombVi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=June 29, 2012 |archive-url=https://web.archive.org/web/20120629003238/http://www.pro-football-reference.com/coaches/LombVi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1960}}
+| {{sortname|Buck|Shaw}}
+| style="background:#fbceb1;" | [[1960 Philadelphia Eagles season|Philadelphia Eagles]]* 
+| 10–2 
+| <ref name="AP COY PFR" />
+|-
+! scope="row" | {{NFL year|1961}}
+| {{sortname|Allie|Sherman}}
+| [[1961 New York Giants season|New York Giants]] 
+| 10–3–1 
+| <ref name="AP COY PFR" /><ref name="Sherman PFR">{{cite web |title=Allie Sherman Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/SherAl0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=February 7, 2011 |archive-url=https://web.archive.org/web/20110207042245/http://www.pro-football-reference.com/coaches/SherAl0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1962}}
+| {{sortname|Allie|Sherman}} (2)
+| [[1962 New York Giants season|New York Giants]] 
+| 12–2 
+| <ref name="AP COY PFR" /><ref name="Sherman PFR" />
+|-
+! scope="row" | {{NFL year|1963}} 
+| style="background:#FFFF99;" | {{sortname|George|Halas}}{{dagger}} 
+| style="background:#fbceb1;" | [[1963 Chicago Bears season|Chicago Bears]]* 
+| 11–1–2 
+| <ref name="AP COY PFR" /><ref name="Halas PFR">{{cite web |title=George Halas Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/HalaGe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=March 21, 2021 |archive-url=https://web.archive.org/web/20210321111217/https://www.pro-football-reference.com/coaches/HalaGe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1964}} 
+| style="background:#FFFF99;" | {{sortname|Don|Shula}}{{dagger}} 
+| [[1964 Baltimore Colts season|Baltimore Colts]] 
+| 12–2 
+| <ref name="AP COY PFR" /><ref name="Shula PFR">{{cite web |title=Don Shula Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/ShulDo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=May 15, 2024 |archive-url=https://web.archive.org/web/20240515131101/https://www.pro-football-reference.com/coaches/ShulDo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1965}} 
+| style="background:#FFFF99;" | {{sortname|George|Halas}}{{dagger}} (2) 
+| [[1965 Chicago Bears season|Chicago Bears]] 
+| 9–5 
+| <ref name="AP COY PFR" /><ref name="Halas PFR" />
+|-
+! scope="row" | {{NFL year|1966}} 
+| style="background:#FFFF99;" | {{sortname|Tom|Landry}}{{dagger}} 
+| [[1966 Dallas Cowboys season|Dallas Cowboys]] 
+| 10–3–1 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Tom Landry Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/LandTo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=May 30, 2024 |archive-url=https://web.archive.org/web/20240530194631/https://www.pro-football-reference.com/coaches/LandTo0.htm |url-status=live }}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{NFL year|1967}} 
+| style="background:#FFFF99;" | {{sortname|George|Allen|George Allen (American football coach)}}{{dagger}}
+| [[1967 Los Angeles Rams season|Los Angeles Rams]]
+| 11–1–2
+| <ref name="AP COY PFR" /><ref name="Allen PFR">{{cite web |title=George Allen Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/AlleGe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=May 13, 2011 |archive-url=https://web.archive.org/web/20110513234232/http://www.pro-football-reference.com/coaches/AlleGe0.htm |url-status=live }}</ref>
+|-
+| style="background:#FFFF99;" | {{sortname|Don|Shula}}{{dagger}} (2) 
+| [[1967 Baltimore Colts season|Baltimore Colts]] 
+| 11–1–2
+| <ref name="AP COY PFR" /><ref name="Shula PFR" />
+|-
+! scope="row" | {{NFL year|1968}} 
+| style="background:#FFFF99;" | {{sortname|Don|Shula}}{{dagger}} (3) 
+| [[1968 Baltimore Colts season|Baltimore Colts]] 
+| 13–1 
+| <ref name="AP COY PFR" /><ref name="Shula PFR" />
+|-
+! scope="row" | {{NFL year|1969}} 
+| style="background:#FFFF99;" | {{sortname|Bud|Grant}}{{dagger}} 
+| [[1969 Minnesota Vikings season|Minnesota Vikings]] 
+| 12–2 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Bud Grant Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/GranBu0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=May 14, 2011 |archive-url=https://web.archive.org/web/20110514000456/http://www.pro-football-reference.com/coaches/GranBu0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1970}} 
+| style="background:#FFFF99;" | {{sortname|Paul|Brown}} 
+| [[1970 Cincinnati Bengals season|Cincinnati Bengals]] 
+| 8–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Paul Brown Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/BrowPa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=October 27, 2013 |archive-url=https://web.archive.org/web/20131027035059/http://www.pro-football-reference.com/coaches/BrowPa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1971}} 
+| style="background:#FFFF99;" | {{sortname|George|Allen|George Allen (American football coach)}}~{{dagger}} (2) 
+| [[1971 Washington Redskins season|Washington Redskins]] 
+| 9–4–1 
+| <ref name="AP COY PFR" /><ref name="Allen PFR" />
+|-
+! scope="row" | {{NFL year|1972}} 
+| style="background:#FFFF99;" | {{sortname|Don|Shula}}{{dagger}} (4) 
+| style="background:#fbceb1;" | [[1972 Miami Dolphins season|Miami Dolphins]]* 
+| 14–0 
+| <ref name="AP COY PFR" /><ref name="Shula PFR" />
+|-
+! scope="row" | {{NFL year|1973}}
+| {{sortname|Chuck|Knox}}
+| [[1973 Los Angeles Rams season|Los Angeles Rams]] 
+| 12–2 
+| <ref name="AP COY PFR" /><ref name="Knox PFR">{{cite web |title=Chuck Knox Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/KnoxCh0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 1, 2009 |archive-url=https://web.archive.org/web/20090101145053/http://www.pro-football-reference.com/coaches/KnoxCh0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1974}} 
+| style="background:#FFFF99;" | {{sortname|Don|Coryell}}{{dagger}} 
+| [[1974 St. Louis Cardinals season|St. Louis Cardinals]] 
+| 10–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Don Coryell Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/CoryDo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=July 8, 2008 |archive-url=https://web.archive.org/web/20080708184359/http://www.pro-football-reference.com/coaches/CoryDo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1975}}
+| {{sortname|Ted|Marchibroda}}~
+| [[1975 Baltimore Colts season|Baltimore Colts]] 
+| 10–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Ted Marchibroda Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/MarcTe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=April 18, 2008 |archive-url=https://web.archive.org/web/20080418122008/http://www.pro-football-reference.com/coaches/MarcTe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1976}} 
+| style="background:#FFFF99;" | {{sortname|Forrest|Gregg}}{{dagger}}{{efn|name=fn1|[[Mike Ditka]] and [[Forrest Gregg]] were inducted into the [[Pro Football Hall of Fame]] primarily in recognition of their playing careers.}} 
+| [[1976 Cleveland Browns season|Cleveland Browns]] 
+| 9–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Forrest Gregg Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/GregFo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 18, 2011 |archive-url=https://web.archive.org/web/20110118033821/http://www.pro-football-reference.com/coaches/GregFo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1977}}
+| {{sortname|Red|Miller}}~
+| [[1977 Denver Broncos season|Denver Broncos]] 
+| 12–2 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Red Miller Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/MillRe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 15, 2011 |archive-url=https://web.archive.org/web/20110815024439/http://www.pro-football-reference.com/coaches/MillRe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1978}}
+| {{sortname|Jack|Patera}}
+| [[1978 Seattle Seahawks season|Seattle Seahawks]] 
+| 9–7 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jack Patera Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/PateJa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=November 21, 2008 |archive-url=https://web.archive.org/web/20081121002523/http://www.pro-football-reference.com/coaches/PateJa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1979}}
+| {{sortname|Jack|Pardee}}
+| [[1979 Washington Redskins season|Washington Redskins]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jack Pardee Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/PardJa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 12, 2023 |archive-url=https://web.archive.org/web/20230112185443/https://www.pro-football-reference.com/coaches/PardJa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1980}}
+| {{sortname|Chuck|Knox}} (2)
+| [[1980 Buffalo Bills season|Buffalo Bills]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref name="Knox PFR" />
+|-
+! scope="row" | {{NFL year|1981}} 
+| style="background:#FFFF99;" | {{sortname|Bill|Walsh|Bill Walsh (American football coach)}}{{dagger}} 
+| style="background:#fbceb1;" | [[1981 San Francisco 49ers season|San Francisco 49ers]]* 
+| 13–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Bill Walsh Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/WalsBi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=March 21, 2021 |archive-url=https://web.archive.org/web/20210321111212/https://www.pro-football-reference.com/coaches/WalsBi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1982}} 
+| style="background:#FFFF99;" | {{sortname|Joe|Gibbs}}{{dagger}} 
+| style="background:#fbceb1;" | [[1982 Washington Redskins season|Washington Redskins]]* 
+| 8–1 
+| <ref name="AP COY PFR" /><ref name="Gibbs PFR">{{cite web |title=Joe Gibbs Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/GibbJo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=March 21, 2021 |archive-url=https://web.archive.org/web/20210321111153/https://www.pro-football-reference.com/coaches/GibbJo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1983}} 
+| style="background:#FFFF99;" | {{sortname|Joe|Gibbs}}{{dagger}} (2) 
+| [[1983 Washington Redskins season|Washington Redskins]] 
+| 14–2 
+| <ref name="AP COY PFR" /><ref name="Gibbs PFR" />
+|-
+! scope="row" | {{NFL year|1984}}
+| {{sortname|Chuck|Knox}} (3)
+| [[1984 Seattle Seahawks season|Seattle Seahawks]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref name="Knox PFR" />
+|-
+! scope="row" | {{NFL year|1985}} 
+| style="background:#FFFF99;" | {{sortname|Mike|Ditka}}{{dagger}}{{efn|name=fn1}} 
+| style="background:#fbceb1;" | [[1985 Chicago Bears season|Chicago Bears]]* 
+| 15–1 
+| <ref name="AP COY PFR" /><ref name="Ditka PFR">{{cite web |title=Mike Ditka Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/DitkMi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=November 11, 2010 |archive-url=https://web.archive.org/web/20101111021606/http://www.pro-football-reference.com/coaches/DitkMi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1986}} 
+| style="background:#FFFF99;" | {{sortname|Bill|Parcells}}{{dagger}} 
+| style="background:#fbceb1;" | [[1986 New York Giants season|New York Giants]]* 
+| 14–2 
+| <ref name="AP COY PFR" /><ref name="Parcells PFR">{{cite web |title=Bill Parcells Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/ParcBi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=June 4, 2011 |archive-url=https://web.archive.org/web/20110604163540/http://www.pro-football-reference.com/coaches/ParcBi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1987}}
+| {{sortname|Jim|Mora|Jim E. Mora}}
+| [[1987 New Orleans Saints season|New Orleans Saints]] 
+| 12–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jim Mora Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/MoraJi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=June 4, 2011 |archive-url=https://web.archive.org/web/20110604091413/http://www.pro-football-reference.com/coaches/MoraJi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1988}} 
+| style="background:#FFFF99;" | {{sortname|Mike|Ditka}}{{dagger}} (2) 
+| [[1988 Chicago Bears season|Chicago Bears]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref name="Ditka PFR" />
+|-
+! scope="row" | {{NFL year|1989}}
+| {{sortname|Lindy|Infante}}
+| [[1989 Green Bay Packers season|Green Bay Packers]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Lindy Infante Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/InfaLi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 28, 2011 |archive-url=https://web.archive.org/web/20110128120429/http://www.pro-football-reference.com/coaches/InfaLi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1990}} 
+| style="background:#FFFF99;" | {{sortname|Jimmy|Johnson|Jimmy Johnson (American football coach)}}{{dagger}}
+| [[1990 Dallas Cowboys season|Dallas Cowboys]] 
+| 7–9 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jimmy Johnson Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/JohnJi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=December 16, 2010 |archive-url=https://web.archive.org/web/20101216020733/http://www.pro-football-reference.com/coaches/JohnJi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1991}}
+| {{sortname|Wayne|Fontes}}
+| [[1991 Detroit Lions season|Detroit Lions]]
+| 12–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Wayne Fontes Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/FontWa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=December 9, 2010 |archive-url=https://web.archive.org/web/20101209133852/http://www.pro-football-reference.com/coaches/FontWa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1992}} 
+| style="background:#FFFF99;" | {{sortname|Bill|Cowher}}~{{dagger}}
+| [[1992 Pittsburgh Steelers season|Pittsburgh Steelers]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Bill Cowher Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/CowhBi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=December 16, 2017 |archive-url=https://web.archive.org/web/20171216091053/https://www.pro-football-reference.com/coaches/CowhBi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1993}}
+| {{sortname|Dan|Reeves}}~
+| [[1993 New York Giants season|New York Giants]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref name="Reeves PFR">{{cite web |title=Dan Reeves Record, Statistics, and Category Ranks |url=https://pro-football-reference.com/coaches/ReevDa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=October 7, 2024 |archive-url=https://web.archive.org/web/20241007110034/https://www.pro-football-reference.com/coaches/ReevDa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1994}} 
+| style="background:#FFFF99;" | {{sortname|Bill|Parcells}}{{dagger}} (2) 
+| [[1994 New England Patriots season|New England Patriots]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref name="Parcells PFR" />
+|-
+! scope="row" | {{NFL year|1995}}
+| {{sortname|Ray|Rhodes}}~
+| [[1995 Philadelphia Eagles season|Philadelphia Eagles]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Ray Rhodes Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/RhodRa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=October 15, 2013 |archive-url=https://web.archive.org/web/20131015012243/http://www.pro-football-reference.com/coaches/RhodRa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1996}}
+| {{sortname|Dom|Capers}}
+| [[1996 Carolina Panthers season|Carolina Panthers]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Dom Capers Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/CapeDo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 28, 2016 |archive-url=https://web.archive.org/web/20160128192508/http://www.pro-football-reference.com/coaches/CapeDo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1997}}
+| {{sortname|Jim|Fassel}}~
+| [[1997 New York Giants season|New York Giants]] 
+| 10–5–1 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jim Fassel Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/FassJi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=March 29, 2008 |archive-url=https://web.archive.org/web/20080329143120/http://www.pro-football-reference.com/coaches/FassJi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|1998}}
+| {{sortname|Dan|Reeves}} (2)
+| [[1998 Atlanta Falcons season|Atlanta Falcons]] 
+| 14–2 
+| <ref name="AP COY PFR" /><ref name="Reeves PFR" />
+|-
+! scope="row" | {{NFL year|1999}}
+| style="background:#FFFF99;" | {{sortname|Dick|Vermeil}}{{dagger}}
+| style="background:#fbceb1;" | [[1999 St. Louis Rams season|St. Louis Rams]]* 
+| 13–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Dick Vermeil Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/VermDi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=June 4, 2011 |archive-url=https://web.archive.org/web/20110604153213/http://www.pro-football-reference.com/coaches/VermDi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2000}}
+| {{sortname|Jim|Haslett}}~
+| [[2000 New Orleans Saints season|New Orleans Saints]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jim Haslett Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/HaslJi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 29, 2010 |archive-url=https://web.archive.org/web/20100829123758/http://www.pro-football-reference.com/coaches/HaslJi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2001}}
+| {{sortname|Dick|Jauron}}
+| [[2001 Chicago Bears season|Chicago Bears]] 
+| 13–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Dick Jauron Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/JaurDi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=September 4, 2011 |archive-url=https://web.archive.org/web/20110904082935/http://www.pro-football-reference.com/coaches/JaurDi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2002}} 
+| style="background:#cfecec;" | {{sortname|Andy|Reid}}
+| [[2002 Philadelphia Eagles season|Philadelphia Eagles]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Andy Reid Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/ReidAn0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=September 18, 2010 |archive-url=https://web.archive.org/web/20100918113035/http://www.pro-football-reference.com/coaches/ReidAn0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2003}}
+| {{sortname|Bill|Belichick}}
+| style="background:#fbceb1;" | [[2003 New England Patriots season|New England Patriots]]* 
+| 14–2 
+| <ref name="AP COY PFR" /><ref name="Belichick PFR">{{cite web |title=Bill Belichick Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/BeliBi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=February 10, 2010 |archive-url=https://web.archive.org/web/20100210013820/http://www.pro-football-reference.com/coaches/BeliBi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2004}}
+| {{sortname|Marty|Schottenheimer}}
+| [[2004 San Diego Chargers season|San Diego Chargers]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Marty Schottenheimer Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/SchoMa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=July 9, 2008 |archive-url=https://web.archive.org/web/20080709084423/http://www.pro-football-reference.com/coaches/SchoMa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2005}}
+| {{sortname|Lovie|Smith}}
+| [[2005 Chicago Bears season|Chicago Bears]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Lovie Smith Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/SmitLo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 22, 2023 |archive-url=https://web.archive.org/web/20230122044924/https://www.pro-football-reference.com/coaches/SmitLo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2006}} 
+| style="background:#cfecec;" | {{sortname|Sean|Payton}}
+| [[2006 New Orleans Saints season|New Orleans Saints]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Sean Payton Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/PaytSe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 30, 2023 |archive-url=https://web.archive.org/web/20230830182501/https://www.pro-football-reference.com/coaches/PaytSe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2007}}
+| {{sortname|Bill|Belichick}} (2)
+| [[2007 New England Patriots season|New England Patriots]] 
+| 16–0 
+| <ref name="AP COY PFR" /><ref name="Belichick PFR" />
+|-
+! scope="row" | {{NFL year|2008}}
+| {{sortname|Mike|Smith|Mike Smith (American football coach)}}~
+| [[2008 Atlanta Falcons season|Atlanta Falcons]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Mike Smith Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/SmitMi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=September 19, 2010 |archive-url=https://web.archive.org/web/20100919150359/http://www.pro-football-reference.com/coaches/SmitMi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2009}}
+| {{sortname|Marvin|Lewis}}
+| [[2009 Cincinnati Bengals season|Cincinnati Bengals]] 
+| 10–6 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Marvin Lewis Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/LewiMa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=February 3, 2019 |archive-url=https://web.archive.org/web/20190203043457/https://www.pro-football-reference.com/coaches/LewiMa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2010}}
+| {{sortname|Bill|Belichick}} (3)
+| [[2010 New England Patriots season|New England Patriots]] 
+| 14–2 
+| <ref name="AP COY PFR" /><ref name="Belichick PFR" />
+|-
+! scope="row" | {{NFL year|2011}} 
+| style="background:#cfecec;" | {{sortname|Jim|Harbaugh}}~ 
+| [[2011 San Francisco 49ers season|San Francisco 49ers]] 
+| 13–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jim Harbaugh Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/HarbJi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 18, 2012 |archive-url=https://web.archive.org/web/20120118061247/http://www.pro-football-reference.com/coaches/HarbJi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2012}}
+| {{sortname|Bruce|Arians}}~
+| [[2012 Indianapolis Colts season|Indianapolis Colts]] 
+| 9–3{{efn|[[Bruce Arians]] served as interim head coach for team's final 12 games in place of [[Chuck Pagano]].<ref>{{cite web |title=Arians: Browns opening only job I'd consider |url=https://www.espn.com/nfl/story/_/id/25187301/bruce-arians-cleveland-browns-opening-only-job-consider |website=[[ESPN]] |access-date=10 January 2025 |language=en |date=5 November 2018 |archive-date=November 8, 2020 |archive-url=https://web.archive.org/web/20201108111311/https://www.espn.com/nfl/story/_/id/25187301/bruce-arians-cleveland-browns-opening-only-job-consider |url-status=live }}</ref>}} 
+| <ref name="AP COY PFR" /><ref name="Arians PFR">{{cite web |title=Bruce Arians Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/AriaBr0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=October 23, 2013 |archive-url=https://web.archive.org/web/20131023025351/http://www.pro-football-reference.com/coaches/AriaBr0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2013}}
+| {{sortname|Ron|Rivera}}
+| [[2013 Carolina Panthers season|Carolina Panthers]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref name="Rivera PFR">{{cite web |title=Ron Rivera Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/RiveRo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 29, 2016 |archive-url=https://web.archive.org/web/20160129224527/http://www.pro-football-reference.com/coaches/RiveRo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2014}}
+| {{sortname|Bruce|Arians}} (2)
+| [[2014 Arizona Cardinals season|Arizona Cardinals]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref name="Arians PFR" />
+|-
+! scope="row" | {{NFL year|2015}}
+| {{sortname|Ron|Rivera}} (2)
+| [[2015 Carolina Panthers season|Carolina Panthers]] 
+| 15–1 
+| <ref name="AP COY PFR" /><ref name="Rivera PFR" />
+|-
+! scope="row" | {{NFL year|2016}}
+| {{sortname|Jason|Garrett}}
+| [[2016 Dallas Cowboys season|Dallas Cowboys]] 
+| 13–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Jason Garrett Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/GarrJa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=February 15, 2020 |archive-url=https://web.archive.org/web/20200215000521/https://www.pro-football-reference.com/coaches/GarrJa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2017}} 
+| style="background:#cfecec;" | {{sortname|Sean|McVay}}~
+| [[2017 Los Angeles Rams season|Los Angeles Rams]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Sean McVay Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/McVaSe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=February 12, 2023 |archive-url=https://web.archive.org/web/20230212010541/https://www.pro-football-reference.com/coaches/McVaSe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2018}}
+| {{sortname|Matt|Nagy}}~
+| [[2018 Chicago Bears season|Chicago Bears]] 
+| 12–4 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Matt Nagy Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/NagyMa0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=March 2, 2022 |archive-url=https://web.archive.org/web/20220302195132/https://www.pro-football-reference.com/coaches/NagyMa0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2019}} 
+| style="background:#cfecec;" | {{sortname|John|Harbaugh}}
+| [[2019 Baltimore Ravens season|Baltimore Ravens]] 
+| 14–2 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=John Harbaugh Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/HarbJo0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=December 2, 2008 |archive-url=https://web.archive.org/web/20081202015656/http://www.pro-football-reference.com/coaches/HarbJo0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2020}} 
+| style="background:#cfecec;" | {{sortname|Kevin|Stefanski}}~
+| [[2020 Cleveland Browns season|Cleveland Browns]] 
+| 11–5 
+| <ref name="AP COY PFR" /><ref name="Stefanski PFR">{{cite web |title=Kevin Stefanski Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/StefKe0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 30, 2023 |archive-url=https://web.archive.org/web/20230830182610/https://www.pro-football-reference.com/coaches/StefKe0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2021}}
+| style="background:#cfecec;" | {{sortname|Mike|Vrabel}}
+| [[2021 Tennessee Titans season|Tennessee Titans]]
+| 12–5
+| <ref name="AP COY PFR" /><ref name="Vrabel PFR">{{cite web |title=Mike Vrabel Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/VrabMi0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=August 30, 2023 |archive-url=https://web.archive.org/web/20230830183007/https://www.pro-football-reference.com/coaches/VrabMi0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2022}} 
+| {{sortname|Brian|Daboll}}~
+| [[2022 New York Giants season|New York Giants]]
+| 9–7–1
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Brian Daboll Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/DaboBr0.htm |website=[[Pro Football Reference]] |access-date=December 2, 2024 |language=en |archive-date=January 30, 2023 |archive-url=https://web.archive.org/web/20230130171029/https://www.pro-football-reference.com/coaches/DaboBr0.htm |url-status=live }}</ref>
+|-
+! scope="row" | {{NFL year|2023}}
+| style="background:#cfecec;" | {{sortname|Kevin|Stefanski}} (2) 
+| [[2023 Cleveland Browns season|Cleveland Browns]]
+| 11–6 
+| <ref name="AP COY PFR" /><ref name="Stefanski PFR" />
+|-
+! scope="row" | {{NFL year|2024}}
+| style="background:#cfecec;" | {{sortname|Kevin|O'Connell|dab=American football}}
+| [[2024 Minnesota Vikings season|Minnesota Vikings]]
+| 14–3 
+| <ref name="AP COY PFR" /><ref>{{cite web |title=Kevin O'Connell Record, Statistics, and Category Ranks |url=https://www.pro-football-reference.com/coaches/OConKe0.htm |website=[[Pro Football Reference]] |access-date=7 February 2025 |language=en}}</ref>
+|-
+! scope="row" | {{NFL year|2025}}
+| style="background:#cfecec;" | {{sortname|Mike|Vrabel}}~ (2)
+| [[2025 New England Patriots season|New England Patriots]]
+| 14–3
+| <ref name="AP COY PFR" /><ref name="Vrabel PFR" />
+|}
+
+==Multiple-time winners==
+{| class="wikitable sortable"
+|+ List of multiple-time winners
+! scope="col" | Count
+! scope="col" | Coach
+! scope="col" class= "unsortable" | Seasons
+! scope="col" class= "unsortable" | Team(s)
+! scope="col" class= "unsortable" | {{Ref.}}
+|-
+! scope="row" | 4
+| {{sortname|Don|Shula}}
+| {{NFL year|1964}}, {{NFL year|1967}}, {{NFL year|1968}}, {{NFL year|1972}}
+| [[Baltimore Colts]] (3), [[Miami Dolphins]]
+| <ref name="AP COY PFR" /><ref name="Shula PFR" />
+|-
+! rowspan="2" scope="row" | 3
+| {{sortname|Bill|Belichick}}
+| {{NFL year|2003}}, {{NFL year|2007}}, {{NFL year|2010}}
+| [[New England Patriots]] (3)
+| <ref name="AP COY PFR" /><ref name="Belichick PFR" />
+|-
+| {{sortname|Chuck|Knox}}
+| {{NFL year|1973}}, {{NFL year|1980}}, {{NFL year|1984}}
+| [[Los Angeles Rams]], [[Buffalo Bills]], [[Seattle Seahawks]]
+| <ref name="AP COY PFR" /><ref name="Knox PFR" />
+|-
+! rowspan="11" scope="row" | 2
+| {{sortname|George|Allen|George Allen (American football coach)}}
+| {{NFL year|1967}}, {{NFL year|1971}}
+| [[Los Angeles Rams]], [[Washington Redskins]]
+| <ref name="AP COY PFR" /><ref name="Allen PFR" />
+|-
+| {{sortname|Bruce|Arians}}
+| {{NFL year|2012}}, {{NFL year|2014}}
+| [[Indianapolis Colts]], [[Arizona Cardinals]]
+| <ref name="AP COY PFR" /><ref name="Arians PFR" />
+|-
+| {{sortname|Mike|Ditka}}
+| {{NFL year|1985}}, {{NFL year|1988}}
+| [[Chicago Bears]] (2)
+| <ref name="AP COY PFR" /><ref name="Ditka PFR" />
+|-
+| {{sortname|Joe|Gibbs}}
+| {{NFL year|1982}}, {{NFL year|1983}}
+| [[Washington Redskins]] (2)
+| <ref name="AP COY PFR" /><ref name="Gibbs PFR" />
+|-
+| {{sortname|George|Halas}}
+| {{NFL year|1963}}, {{NFL year|1965}}
+| [[Chicago Bears]] (2)
+| <ref name="AP COY PFR" /><ref name="Halas PFR" />
+|-
+| {{sortname|Bill|Parcells}}
+| {{NFL year|1986}}, {{NFL year|1994}}
+| [[New York Giants]], [[New England Patriots]]
+| <ref name="AP COY PFR" /><ref name="Parcells PFR" />
+|-
+| {{sortname|Dan|Reeves}}
+| {{NFL year|1993}}, {{NFL year|1998}}
+| [[New York Giants]], [[Atlanta Falcons]]
+| <ref name="AP COY PFR" /><ref name="Reeves PFR" />
+|-
+| {{sortname|Ron|Rivera}}
+| {{NFL year|2013}}, {{NFL year|2015}}
+| [[Carolina Panthers]] (2)
+| <ref name="AP COY PFR" /><ref name="Rivera PFR" />
+|-
+| {{sortname|Allie|Sherman}}
+| {{NFL year|1961}}, {{NFL year|1962}}
+| [[New York Giants]] (2)
+| <ref name="AP COY PFR" /><ref name="Sherman PFR" />
+|-
+| {{sortname|Kevin|Stefanski}}
+| {{NFL year|2020}}, {{NFL year|2023}}
+| [[Cleveland Browns]] (2)
+| <ref name="AP COY PFR" /><ref name="Stefanski PFR" />
+|-
+| {{sortname|Mike|Vrabel}}
+| {{NFL year|2021}}, {{NFL year|2025}}
+| [[Tennessee Titans]], [[New England Patriots]] 
+| <ref name="AP COY PFR" /><ref name="Vrabel PFR" />
+|}
+
+==See also==
+* [[List of NFL Coach of the Year awards]]
+
+==Notes==
+{{notelist}}
+
+==References==
+{{reflist}}
+
+{{AP NFL Coaches of the Year}}
+{{NFL Honors}}
+
+[[Category:NFL trophies and awards]]
+[[Category:NFL coaches]]
+[[Category:Coaching awards]]
+[[Category:Associated Press awards]]

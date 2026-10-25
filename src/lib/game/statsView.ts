@@ -1,9 +1,36 @@
 import type { Player, Pos, SeasonStats, TeamId } from "./types.ts";
 import { careerTotals } from "./leaders.ts";
 import { teamAbbr } from "./teams.ts";
+import { hasCompleteScoringPoints, individualScoringPoints } from "./statRules.ts";
 
 export type StatCol = { key: string; label: string; of?: (s: SeasonStats) => string | number };
 export type StatFamily = "pass" | "rush" | "rec" | "ol" | "def" | "k" | "p" | "ret";
+export type StatPositionFilter = Pos | "ALL" | "OL" | "DL" | "LB" | "DB";
+
+export interface StatPlayerFilters {
+  query: string;
+  position: StatPositionFilter;
+  team: TeamId | "ALL" | "mine";
+  userTeamId: TeamId;
+  careerScope: boolean;
+  status: "all" | "active" | "retired";
+}
+
+/** Apply cheap identity and roster filters before folding season lines into career totals. */
+export function matchesStatPlayerFilters(p: Player, filters: StatPlayerFilters): boolean {
+  if (filters.query && `${p.firstName} ${p.lastName}`.toLowerCase().indexOf(filters.query) < 0) return false;
+  const retired = p.teamId === "retired" || p.teamId === "hof";
+  if (filters.careerScope && ((filters.status === "active" && retired) || (filters.status === "retired" && !retired))) return false;
+  const position = filters.position;
+  if (position === "OL" && !["LT", "LG", "C", "RG", "RT"].includes(p.pos)) return false;
+  if (position === "DL" && p.pos !== "DE" && p.pos !== "DT") return false;
+  if (position === "LB" && p.pos !== "OLB" && p.pos !== "MLB") return false;
+  if (position === "DB" && p.pos !== "CB" && p.pos !== "S") return false;
+  if (position !== "ALL" && !["OL", "DL", "LB", "DB"].includes(position) && p.pos !== position) return false;
+  if (filters.team === "mine") return p.teamId === filters.userTeamId;
+  if (filters.team !== "ALL") return p.teamId === filters.team;
+  return true;
+}
 
 export function pct(n: number, d: number): string {
   if (!d) return "—";
@@ -17,7 +44,8 @@ export function avg(n: number, d: number, digits = 1): string {
 
 export function passerRating(s: SeasonStats): string {
   const att = s.passAtt;
-  if (!att) return "—";
+  // History mode: some seasons' sources kept no completions (passCmp -1), so no rating either.
+  if (!att || s.passCmp < 0) return "—";
   const a = Math.max(0, Math.min(2.375, ((s.passCmp / att) - 0.3) * 5));
   const b = Math.max(0, Math.min(2.375, ((s.passYds / att) - 3) * 0.25));
   const c = Math.max(0, Math.min(2.375, (s.passTd / att) * 20));
@@ -26,17 +54,21 @@ export function passerRating(s: SeasonStats): string {
 }
 
 export function scoring(s: SeasonStats): number {
-  return s.passTd * 6 + s.rushTd * 6 + s.recTd * 6 + s.fgMade * 3 + s.xpMade;
+  return individualScoringPoints(s);
 }
 
 function num(n: number): string | number {
-  return n || "—";
+  return n;
 }
+
+/** A stat the record didn't keep that season (History mode) reads —, not 0. */
+const kept = (s: SeasonStats, k: keyof SeasonStats, v: string | number): string | number => (s.unknown?.includes(k) ? "—" : v);
+const scoringDisplay = (s: SeasonStats): string | number => hasCompleteScoringPoints(s) ? scoring(s) || "—" : "—";
 
 const PASS_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "cmpatt", label: "Cmp/Att", of: (s) => (s.passAtt ? `${s.passCmp}/${s.passAtt}` : "—") },
-  { key: "pct", label: "Pct", of: (s) => pct(s.passCmp, s.passAtt) },
+  { key: "cmpatt", label: "Cmp/Att", of: (s) => (s.passAtt ? `${s.passCmp < 0 ? "—" : s.passCmp}/${s.passAtt}` : "—") },
+  { key: "pct", label: "Pct", of: (s) => (s.passCmp < 0 ? "—" : pct(s.passCmp, s.passAtt)) },
   { key: "passYds", label: "Yds", of: (s) => s.passYds },
   { key: "ypa", label: "Y/A", of: (s) => avg(s.passYds, s.passAtt) },
   { key: "passTd", label: "TD", of: (s) => s.passTd },
@@ -46,6 +78,8 @@ const PASS_COLS: StatCol[] = [
   { key: "rushAtt", label: "Ru att", of: (s) => num(s.rushAtt) },
   { key: "rushYds", label: "Ru yds", of: (s) => num(s.rushYds) },
   { key: "rushTd", label: "Ru TD", of: (s) => num(s.rushTd) },
+  { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const RUSH_COLS: StatCol[] = [
@@ -58,13 +92,17 @@ const RUSH_COLS: StatCol[] = [
   { key: "recYds", label: "Rec yds", of: (s) => num(s.recYds) },
   { key: "recTd", label: "Rec TD", of: (s) => num(s.recTd) },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
+  { key: "krTd", label: "KR TD", of: (s) => num(s.krTd ?? 0) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
-  { key: "pts", label: "Pts", of: (s) => scoring(s) || "—" },
+  { key: "prTd", label: "PR TD", of: (s) => num(s.prTd ?? 0) },
+  { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const REC_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
   { key: "rec", label: "Rec", of: (s) => s.rec },
+  { key: "tgt", label: "Tgt", of: (s) => num(s.targets ?? 0) },
   { key: "recYds", label: "Yds", of: (s) => s.recYds },
   { key: "ypr", label: "Avg", of: (s) => avg(s.recYds, s.rec) },
   { key: "recTd", label: "TD", of: (s) => s.recTd },
@@ -72,22 +110,33 @@ const REC_COLS: StatCol[] = [
   { key: "rushYds", label: "Ru yds", of: (s) => num(s.rushYds) },
   { key: "rushTd", label: "Ru TD", of: (s) => num(s.rushTd) },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
+  { key: "krTd", label: "KR TD", of: (s) => num(s.krTd ?? 0) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
+  { key: "prTd", label: "PR TD", of: (s) => num(s.prTd ?? 0) },
+  { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const DEF_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "tackles", label: "Tkl", of: (s) => s.tackles },
-  { key: "sacks", label: "Sk", of: (s) => s.sacks },
+  { key: "tackles", label: "Tkl", of: (s) => kept(s, "tackles", s.tackles) },
+  { key: "tfl", label: "TFL", of: (s) => kept(s, "tfl", num(s.tfl ?? 0)) },
+  { key: "sacks", label: "Sk", of: (s) => kept(s, "sacks", s.sacks) },
   { key: "ints", label: "INT", of: (s) => s.ints },
-  { key: "ff", label: "FF", of: (s) => s.ff },
+  { key: "pd", label: "PD", of: (s) => kept(s, "pd", num(s.pd ?? 0)) },
+  { key: "ff", label: "FF", of: (s) => kept(s, "ff", s.ff) },
+  { key: "fr", label: "FR", of: (s) => num(s.fr ?? 0) },
+  { key: "defTd", label: "Def TD", of: (s) => kept(s, "defTd", num(s.defTd ?? 0)) },
+  { key: "safeties", label: "Saf", of: (s) => kept(s, "safeties", num(s.safeties ?? 0)) },
+  { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
 ];
 
 const OL_COLS: StatCol[] = [
   { key: "gp", label: "G", of: (s) => s.gp },
-  { key: "tackles", label: "Tkl", of: (s) => num(s.tackles) },
+  { key: "tackles", label: "Tkl", of: (s) => kept(s, "tackles", num(s.tackles)) },
 ];
 
 const K_COLS: StatCol[] = [
@@ -96,7 +145,7 @@ const K_COLS: StatCol[] = [
   { key: "fgpct", label: "FG%", of: (s) => pct(s.fgMade, s.fgAtt) },
   { key: "xp", label: "XP", of: (s) => (s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—") },
   { key: "xppct", label: "XP%", of: (s) => pct(s.xpMade, s.xpAtt) },
-  { key: "pts", label: "Pts", of: (s) => (s.fgMade || s.xpMade ? s.fgMade * 3 + s.xpMade : "—") },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 const P_COLS: StatCol[] = [
@@ -111,6 +160,10 @@ const RET_COLS: StatCol[] = [
   { key: "kr", label: "KR yds", of: (s) => num(s.krYds) },
   { key: "pr", label: "PR yds", of: (s) => num(s.prYds) },
   { key: "ret", label: "Ret yds", of: (s) => (s.krYds || s.prYds ? s.krYds + s.prYds : "—") },
+  { key: "krTd", label: "KR TD", of: (s) => num(s.krTd ?? 0) },
+  { key: "prTd", label: "PR TD", of: (s) => num(s.prTd ?? 0) },
+  { key: "twoPtMade", label: "2PC", of: (s) => kept(s, "twoPtMade", num(s.twoPtMade ?? 0)) },
+  { key: "pts", label: "Pts", of: scoringDisplay },
 ];
 
 export const FAMILY_LABEL: Record<StatFamily, string> = {
@@ -155,14 +208,14 @@ export function statGroup(pos: Pos): "pass" | "rush" | "rec" | "ol" | "def" | "k
 }
 
 function familyHasWork(family: StatFamily, s: SeasonStats): boolean {
-  if (family === "pass") return s.passAtt > 0;
-  if (family === "rush") return s.rushAtt > 0 || s.rushYds > 0;
-  if (family === "rec") return s.rec > 0 || s.recYds > 0;
-  if (family === "def") return s.tackles + s.sacks + s.ints + s.ff > 0;
+  if (family === "pass") return s.passAtt > 0 || (s.twoPtMade ?? 0) > 0;
+  if (family === "rush") return s.rushAtt > 0 || s.rushYds > 0 || (s.twoPtMade ?? 0) > 0;
+  if (family === "rec") return s.rec > 0 || s.recYds > 0 || (s.twoPtMade ?? 0) > 0;
+  if (family === "def") return s.tackles + s.sacks + s.ints + (s.ff ?? 0) + (s.fr ?? 0) + (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + (s.twoPtMade ?? 0) + (s.safeties ?? 0) > 0;
   if (family === "ol") return s.gp > 0;
   if (family === "k") return s.fgAtt + s.xpAtt + s.fgMade + s.xpMade > 0;
   if (family === "p") return s.punts > 0;
-  return s.krYds + s.prYds > 0;
+  return s.krYds + s.prYds + (s.krTd ?? 0) + (s.prTd ?? 0) + (s.twoPtMade ?? 0) > 0;
 }
 
 /** Primary family plus any other buckets this card actually produced. */
@@ -194,7 +247,10 @@ export function hasSeasonWork(s: SeasonStats | undefined): boolean {
   if (!s) return false;
   return (
     s.gp > 0 ||
-    s.passAtt + s.rushAtt + s.rec + s.tackles + s.sacks + s.ints + s.fgAtt + s.punts + s.krYds + s.prYds > 0
+    s.passAtt + s.passCmp + s.passYds + s.passTd + s.passInt + s.rushAtt + s.rushYds + s.rushTd +
+      s.rec + s.recYds + s.recTd + s.tackles + s.sacks + s.ints + (s.ff ?? 0) + (s.fr ?? 0) +
+      (s.tfl ?? 0) + (s.pd ?? 0) + (s.qbHits ?? 0) + (s.defTd ?? 0) + (s.safeties ?? 0) + s.fgAtt + s.fgMade +
+      s.xpAtt + s.xpMade + (s.twoPtMade ?? 0) + s.punts + s.puntYds + s.krYds + s.prYds + (s.krTd ?? 0) + (s.prTd ?? 0) > 0
   );
 }
 
@@ -220,9 +276,8 @@ export function draftLine(p: Player): string {
   if (p.draftYear && (p.draftRound === 0 || p.draftRound === undefined) && p.historical && p.yearsPro === 0) {
     return `${p.draftYear} UDFA`;
   }
-  if (p.draftYear && p.draftRound && p.draftRound > 0) {
-    const pick = p.draftPick ? ` · pick ${p.draftPick}` : "";
-    return `${p.draftYear} · Round ${p.draftRound}${pick}`;
+  if (p.draftYear && p.draftRound && p.draftRound > 0 && p.draftPick != null) {
+    return `${p.draftYear} · Round ${p.draftRound} · pick ${p.draftPick}`;
   }
   if (p.draftYear) return `${p.draftYear} class`;
   if (p.historical) return "Veteran";
@@ -246,16 +301,16 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   const yrs = { label: "Seasons", value: seasons ? String(seasons) : "—" };
   const f = familyOfPos(p.pos);
   if (f === "pass") {
-    return [games, { label: "Pass yds", value: comma(s.passYds) }, { label: "TD / INT", value: `${s.passTd} / ${s.passInt}` }, { label: "Rate", value: passerRating(s) }];
+    return [games, { label: "Pass yds", value: comma(s.passYds) }, { label: "TD / INT", value: `${s.passTd} / ${s.passInt}` }, { label: "Rate", value: passerRating(s) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "rush") {
-    return [games, { label: "Rush yds", value: comma(s.rushYds) }, { label: "Avg", value: avg(s.rushYds, s.rushAtt) }, { label: "TD", value: String(s.rushTd + s.recTd) }];
+    return [games, { label: "Rush yds", value: comma(s.rushYds) }, { label: "Avg", value: avg(s.rushYds, s.rushAtt) }, { label: "TD", value: String(s.rushTd + s.recTd) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "rec") {
-    return [games, { label: "Rec", value: comma(s.rec) }, { label: "Yds", value: comma(s.recYds) }, { label: "TD", value: String(s.recTd) }];
+    return [games, { label: "Rec", value: comma(s.rec) }, { label: "Yds", value: comma(s.recYds) }, { label: "TD", value: String(s.recTd) }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "k") {
-    return [games, { label: "FG", value: s.fgAtt ? `${s.fgMade}/${s.fgAtt}` : "—" }, { label: "XP", value: s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—" }, { label: "Pts", value: comma(s.fgMade * 3 + s.xpMade) }];
+    return [games, { label: "FG", value: s.fgAtt ? `${s.fgMade}/${s.fgAtt}` : "—" }, { label: "XP", value: s.xpAtt ? `${s.xpMade}/${s.xpAtt}` : "—" }, { label: "Pts", value: String(scoringDisplay(s)) }];
   }
   if (f === "p") {
     return [games, { label: "Punts", value: comma(s.punts) }, { label: "Yds", value: comma(s.puntYds) }, { label: "Avg", value: avg(s.puntYds, s.punts) }];
@@ -263,5 +318,5 @@ export function careerHeadlines(p: Player): { label: string; value: string }[] {
   if (f === "ol") {
     return [games, yrs, { label: "Age", value: String(p.age) }, { label: "Exp", value: `${p.yearsPro} yr` }];
   }
-  return [games, { label: "Tackles", value: comma(s.tackles) }, { label: "Sacks", value: comma(s.sacks) }, { label: "INT", value: comma(s.ints) }];
+  return [games, { label: "Tackles", value: String(kept(s, "tackles", comma(s.tackles))) }, { label: "Sacks", value: String(kept(s, "sacks", comma(s.sacks))) }, { label: "INT", value: comma(s.ints) }, { label: "Def TD", value: String(kept(s, "defTd", comma(s.defTd ?? 0))) }, { label: "Safeties", value: String(kept(s, "safeties", comma(s.safeties ?? 0))) }, { label: "Pts", value: String(scoringDisplay(s)) }];
 }

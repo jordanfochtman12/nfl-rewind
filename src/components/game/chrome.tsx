@@ -1,17 +1,81 @@
-import { logoSrc, teamColors, type TeamId } from "@/lib/game";
+import { clubInk, logoSrc, teamColors } from "@/lib/game/teams.ts";
+import type { TeamId } from "@/lib/game/types.ts";
+import { LOGO_ERAS } from "@/lib/game/data/logos.ts";
+import { useGameStore } from "@/lib/game-store";
 
-export function Logo({ id, size = 36, year = 1966 }: { id: TeamId; size?: number; year?: number }) {
-  const c = teamColors(id);
+export function Logo({ id, size = 36, year }: { id: TeamId; size?: number; year?: number }) {
+  const saveYear = useGameStore((s) => s.save?.year ?? 1966);
+  const y = year ?? saveYear;
+  if (!LOGO_ERAS[id]) {
+    return (
+      <span
+        className="inline-flex shrink-0 items-center justify-center rounded border border-white/20 bg-surface font-display text-xs font-bold text-paper"
+        style={{ width: size, height: size }}
+        aria-label="Club mark unavailable"
+      >
+        NFL
+      </span>
+    );
+  }
   return (
     <img
-      src={logoSrc(year, id)}
+      // A new club is a new image: never show the last club's mark while this one loads.
+      key={`${y}-${id}`}
+      src={logoSrc(y, id)}
       alt=""
       width={size}
       height={size}
-      className="shrink-0 rounded-sm"
-      style={{ width: size, height: size, background: c.primary }}
+      className="shrink-0"
+      style={{ width: size, height: size, borderRadius: "16%" }}
     />
   );
+}
+
+/** Paints the year’s club ink onto CSS tokens so the desk, tabs, and ribbon follow the mark. */
+export function ClubDesk({
+  id,
+  year,
+  children,
+  className = "",
+}: {
+  id: TeamId;
+  year: number;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ink = clubInk(id, year);
+  return (
+    <div
+      className={className}
+      style={
+        {
+          "--color-club": ink.primary,
+          "--color-club-2": ink.secondary,
+          "--color-club-fg": ink.onPrimary,
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
+export function ClubRibbon() {
+  return <div className="chrome-bar w-full" aria-hidden />;
+}
+
+export function ClubHash({
+  id,
+  year,
+  className = "w-1 self-stretch rounded-full",
+}: {
+  id: TeamId;
+  year?: number;
+  className?: string;
+}) {
+  const saveYear = useGameStore((s) => s.save?.year ?? 1966);
+  const c = teamColors(id, year ?? saveYear);
+  return <span className={`inline-block shrink-0 ${className}`} style={{ background: c.primary }} aria-hidden />;
 }
 
 export function Btn({
@@ -20,23 +84,20 @@ export function Btn({
   kind = "ghost",
   disabled,
   className = "",
+  title,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
-  kind?: "primary" | "ghost" | "brick";
+  kind?: "primary" | "ghost" | "brick" | "gold";
   disabled?: boolean;
   className?: string;
+  title?: string;
 }) {
-  const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium tracking-wide transition-colors disabled:opacity-40";
-  const map = {
-    primary: "bg-accent text-accent-fg hover:bg-accent/90",
-    ghost: "border border-line bg-surface text-fg hover:bg-surface-2",
-    brick: "bg-brick text-fg hover:bg-brick/90",
-  };
+  // Skewed glossy chip; the inner span counter-skews so the label stays upright.
+  const base = "bx-btn inline-flex min-h-11 items-center justify-center rounded-sm px-5 text-[15px]";
   return (
-    <button type="button" disabled={disabled} onClick={onClick} className={`${base} ${map[kind]} ${className}`}>
-      {children}
+    <button type="button" title={title} disabled={disabled} onClick={onClick} className={`${base} bx-${kind} ${className}`}>
+      <span className="bx-in">{children}</span>
     </button>
   );
 }

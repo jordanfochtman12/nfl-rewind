@@ -2,6 +2,7 @@ import { nameKey } from "../profiles.ts";
 
 /** Historical colleges keyed by profiles.nameKey (first|last, punctuation stripped). */
 export const PLAYER_COLLEGES: Record<string, string> = {
+  "ernie|mcmillan": "Illinois",
   "bart|starr": "Alabama",
   "zeke|bratkowski": "Georgia",
   "elijah|pitts": "Philander Smith",

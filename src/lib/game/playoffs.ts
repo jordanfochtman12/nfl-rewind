@@ -1,10 +1,12 @@
 import type { DynastySave, GameResult, TeamId } from "./types.ts";
 import { playoffTeamCount } from "./era.ts";
-import { conferenceOf, displayName, roman, superBowlNumber, type Conference } from "./teams.ts";
+import { displayName, roman, superBowlNumber, type Conference } from "./teams.ts";
 import { superBowlSite } from "./data/bowlSites.ts";
 import { simGame } from "./sim.ts";
-import { compareTeams, conferenceTeams, divisionWinner } from "./standings.ts";
+import { compareTeams, conferenceTeams, divisionWinner, playoffField } from "./standings.ts";
 import { addNews } from "./news.ts";
+import { pickFeaturedGame } from "./sandbox.ts";
+import { developCareerWeek, snapshotCareerWeek } from "./careerDevelopment.ts";
 
 function gid(save: DynastySave, round: string, a: string, b: string): string {
   return `${save.year}-${round}-${a}-${b}`;
@@ -70,7 +72,7 @@ export function seedPlayoffs(save: DynastySave): void {
   }
   const n = playoffTeamCount(year).perConf;
   for (const conf of ["AFC", "NFC"] as Conference[]) {
-    const field = conferenceTeams(save, conf).slice(0, n).map((t) => t.id);
+    const field = playoffField(save, conf, n).map((t) => t.id);
     if (field.length < 2) continue;
     // Byes for the top seeds. 4: two divisional games. 5: one WC. 6+: WC pairings.
     if (n <= 4) {
@@ -91,13 +93,6 @@ export function seedPlayoffs(save: DynastySave): void {
 
 function unfinished(save: DynastySave): GameResult[] {
   return save.playoffGames.filter((g) => !g.played);
-}
-
-function currentRoundName(save: DynastySave): string {
-  const u = unfinished(save);
-  if (u.length) return u[0]!.round ?? "Playoffs";
-  const last = save.playoffGames[save.playoffGames.length - 1];
-  return last?.round ?? "Playoffs";
 }
 
 function maybeAdvanceBracket(save: DynastySave): void {
@@ -126,10 +121,9 @@ function maybeAdvanceBracket(save: DynastySave): void {
   }
   const latestWeek = save.playoffGames.reduce((m, g) => Math.max(m, g.week), 0);
   for (const conf of ["AFC", "NFC"] as Conference[]) {
-    const field = conferenceTeams(save, conf).slice(0, n).map((t) => t.id);
+    const field = playoffField(save, conf, n).map((t) => t.id);
     const alive = field.filter((id) => !lost.has(id));
     if (alive.length <= 1) continue;
-    const hasChamp = save.playoffGames.some((g) => g.round === `${conf} Championship`);
     const hasDiv = save.playoffGames.some((g) => g.round === `${conf} Divisional`);
     let round: string;
     if (alive.length === 2) round = `${conf} Championship`;
@@ -196,6 +190,8 @@ export function createSuperBowl(save: DynastySave): void {
     homeScore: 0,
     awayScore: 0,
     played: false,
+    stadium: site.site,
+    neutral: true,
   };
   addNews(save, {
     kind: "headline",
@@ -214,12 +210,18 @@ export function simPlayoffWeek(save: DynastySave): void {
     return;
   }
   const w = Math.min(...un.map((g) => g.week));
+  pickFeaturedGame(save, un.filter((g) => g.week === w));
+  const careerBefore = snapshotCareerWeek(save, true);
   for (const g of un.filter((g) => g.week === w)) simGame(save, g);
+  developCareerWeek(save, careerBefore, "playoffs");
   maybeAdvanceBracket(save);
 }
 
 export function playoffWeekLabel(save: DynastySave): string {
   const u = unfinished(save);
+  // The NFL and AFL title games of 1966-69 share a weekend: name both, not whichever is first.
+  const titles = [...new Set(u.map((g) => g.round).filter((r): r is string => !!r && /^(NFL|AFL) Championship$/.test(r)))];
+  if (titles.length === 2) return "NFL & AFL Championships";
   if (u[0]?.round) return u[0].round;
   const last = save.playoffGames[save.playoffGames.length - 1];
   return last?.round ?? "Playoffs";

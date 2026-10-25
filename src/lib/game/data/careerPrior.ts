@@ -1,11 +1,13 @@
 import type { Player, Pos, SeasonStats, TeamId } from "../types.ts";
 import { nameKey, nameSalt } from "../profiles.ts";
 import { CAREER_SEASONS, type CareerSeasonRow } from "./careerSeasons.ts";
+import { twoPointOk } from "../era.ts";
 
 function blank(year: number, teamId: TeamId | "two"): SeasonStats {
   return {
     year,
     teamId,
+    unknown: ["safeties", ...((twoPointOk(year, teamId as TeamId) || (year <= 1969 && teamId === "two")) ? ["twoPtMade"] : [])],
     gp: 0,
     passAtt: 0,
     passCmp: 0,
@@ -27,10 +29,20 @@ function blank(year: number, teamId: TeamId | "two"): SeasonStats {
     fgMade: 0,
     xpAtt: 0,
     xpMade: 0,
+    twoPtMade: 0,
+    safeties: 0,
     punts: 0,
     puntYds: 0,
     krYds: 0,
     prYds: 0,
+    targets: 0,
+    tfl: 0,
+    pd: 0,
+    qbHits: 0,
+    fr: 0,
+    defTd: 0,
+    krTd: 0,
+    prTd: 0,
   };
 }
 
@@ -56,10 +68,20 @@ const ROW_KEYS: (keyof Omit<SeasonStats, "year" | "teamId">)[] = [
   "fgMade",
   "xpAtt",
   "xpMade",
+  "twoPtMade",
+  "safeties",
   "punts",
   "puntYds",
   "krYds",
   "prYds",
+  "targets",
+  "tfl",
+  "pd",
+  "qbHits",
+  "fr",
+  "defTd",
+  "krTd",
+  "prTd",
 ];
 
 function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
@@ -90,6 +112,20 @@ function fromSeasonRow(row: CareerSeasonRow): SeasonStats {
   s.puntYds = row.puntYds ?? 0;
   s.krYds = row.krYds ?? 0;
   s.prYds = row.prYds ?? 0;
+  s.targets = 0;
+  s.tfl = 0;
+  s.pd = 0;
+  s.qbHits = 0;
+  s.fr = 0;
+  s.krTd = 0;
+  s.prTd = 0;
+  s.twoPtMade = 0;
+  s.safeties = 0;
+  s.unknown = [...new Set([
+    ...(s.unknown ?? []),
+    "defTd", "krTd", "prTd", "pts", "safeties",
+    ...(twoPointOk(row.y, row.t as TeamId) || (row.y <= 1969 && row.t === "two") ? ["twoPtMade"] : []),
+  ])];
   return s;
 }
 
@@ -105,7 +141,7 @@ function realSeasons(first: string, last: string, throughYear: number): SeasonSt
 }
 
 
-type Totals = Partial<Omit<SeasonStats, "year" | "teamId">> & { from: number };
+type Totals = Partial<Omit<SeasonStats, "year" | "teamId" | "unknown" | "live">> & { from: number };
 
 /** Approximate NFL/AFL production through the season before the dynasty starts. */
 const STAR_PRIOR: Record<string, Totals> = {

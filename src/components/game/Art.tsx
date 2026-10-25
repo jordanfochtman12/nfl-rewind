@@ -1,50 +1,45 @@
+import type { CSSProperties } from "react";
+
 type Still = "title" | "primetime" | "superbowl" | "draft" | "office" | "helmet";
 
-const SRC: Record<Still, string> = {
-  title: "/art/title.jpg",
-  primetime: "/art/primetime.jpg",
-  superbowl: "/art/superbowl.jpg",
-  draft: "/art/draft.jpg",
-  office: "/art/office.jpg",
-  helmet: "/art/helmet.jpg",
+const STILL_IMAGE: Record<Still, string> = {
+  title: "/art/rewind-stadium-night.webp",
+  superbowl: "/art/rewind-stadium-night.webp",
+  helmet: "/art/rewind-stadium-night.webp",
+  primetime: "/art/primetime-studio.webp",
+  office: "/art/primetime-studio.webp",
+  draft: "/art/draft-preview-stage.png",
 };
 
+/** Photo-real broadcast stills replace the former block-and-grid vector backdrops. */
 export function FilmStill({
   still,
-  video,
   className = "",
   veil = "left",
 }: {
   still: Still;
+  /** Kept for compatibility with older callers. */
   video?: string;
   className?: string;
   veil?: "left" | "bottom" | "full" | "none";
 }) {
-  const veilClass =
+  const image = STILL_IMAGE[still];
+  const veilStyle: CSSProperties =
     veil === "left"
-      ? "bg-gradient-to-r from-bg via-bg/85 to-bg/25"
+      ? { background: "linear-gradient(90deg, rgba(4,7,13,.94) 0%, rgba(4,7,13,.72) 48%, rgba(4,7,13,.08) 100%)" }
       : veil === "bottom"
-        ? "bg-gradient-to-t from-bg via-bg/70 to-bg/20"
+        ? { background: "linear-gradient(0deg, rgba(4,7,13,.95) 0%, rgba(4,7,13,.5) 48%, rgba(4,7,13,.04) 100%)" }
         : veil === "full"
-          ? "bg-bg/70"
-          : "";
+          ? { background: "linear-gradient(135deg, rgba(4,7,13,.56), rgba(4,7,13,.72))" }
+          : {};
+
   return (
-    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
-      {video ? (
-        <video
-          className="h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={SRC[still]}
-        >
-          <source src={video} type="video/mp4" />
-        </video>
-      ) : (
-        <img src={SRC[still]} alt="" className="h-full w-full object-cover" />
-      )}
-      <div className={`absolute inset-0 ${veilClass}`} />
+    <div
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+      aria-hidden="true"
+      style={{ backgroundImage: `url("${image}")`, backgroundSize: "cover", backgroundPosition: "center" }}
+    >
+      <div className="absolute inset-0" style={veilStyle} />
       <div className="film-grain" />
     </div>
   );

@@ -23,3 +23,10 @@ attachments
 .node_modules.lock
 __pycache__/
 *.pyc
+data/history/pfa_html/
+data/history/pfa_box/
+
+# Re-fetched by scripts/ingest-opening.py and scripts/fetch-honors.py; too big or not ours to keep.
+data/history/weekly/
+data/honors/
+data/history/depth/

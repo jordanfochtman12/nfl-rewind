@@ -1,0 +1,47 @@
+name: Game validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  game-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint -- --max-warnings 0
+      - run: node --experimental-strip-types --test scripts/football-speech.test.mjs
+      - run: node --experimental-strip-types --test scripts/draft-announcer.test.mjs
+      - run: node --experimental-strip-types --test scripts/franchise-briefing.test.mjs
+      - run: node --experimental-strip-types --test scripts/sunday-broadcast.test.mjs
+      - run: node --experimental-strip-types --test scripts/primetime-studio.test.mjs
+      - run: node --experimental-strip-types --test scripts/fatigue.test.mjs
+      - run: node --experimental-strip-types --test scripts/stat-ledger.test.mjs
+      - run: node --experimental-strip-types --test scripts/individual-scoring.test.mjs
+      - run: node --experimental-strip-types --test scripts/net-yards.test.mjs
+      - run: node --experimental-strip-types --test scripts/tackle-attribution.test.mjs
+      - run: node --test scripts/offline-manifest.test.mjs
+      - run: node --test scripts/offline-service-worker.test.mjs
+      - run: node --experimental-strip-types --test scripts/realism.test.mjs
+      - run: node --experimental-strip-types --test scripts/history.test.mjs
+      - run: node --experimental-strip-types --test scripts/front-office.test.mjs
+      - run: node --experimental-strip-types --test scripts/gameday.test.mjs
+      - run: node --experimental-strip-types --test scripts/season-depth.test.mjs
+      - run: node --experimental-strip-types --test scripts/player-audit.test.mjs
+      - run: node --experimental-strip-types --test scripts/field-look.test.mjs
+      - run: node --experimental-strip-types --test scripts/recaps.test.mjs
+      - run: node --experimental-strip-types --test scripts/shows.test.mjs
+      - run: node --experimental-strip-types --test scripts/voices.test.mjs
+      - run: node --experimental-strip-types --test scripts/broadcast-desk.test.mjs
+      - run: node --experimental-strip-types --test scripts/draft-night.test.mjs
+      - run: node --experimental-strip-types --test scripts/pitt-and-numbers.test.mjs
+      - run: node --experimental-strip-types --test scripts/era-start.test.mjs
+      - run: node --experimental-strip-types --test src/lib/game/identity.test.ts src/lib/voiceCast.test.ts src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts
+      - run: npm run qa
+      - run: npm run build

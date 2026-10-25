@@ -1,0 +1,2665 @@
+{
+ "_": "The owner's calls on borderline players from the ratings audit (the Rating Calls page). apply = the suggested value, keep = as built, custom = the owner's own value.",
+ "calls": {
+  "age|1968|Nate|James": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1969|Jim|Marsalis": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1970|Pat|Toomay": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1971|Phil|Croyle": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|1972|Glenn|Doughty": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1973|Boobie|Clark": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|1973|John|Andrews": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1974|Artimus|Parker": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|1974|Bob|Thomas": {
+   "call": "apply",
+   "value": 26
+  },
+  "age|1976|Mike|McCoy": {
+   "call": "apply",
+   "value": 28
+  },
+  "age|1976|Randy|Johnson": {
+   "call": "apply",
+   "value": 32
+  },
+  "age|1977|Gene|Washington": {
+   "call": "apply",
+   "value": 30
+  },
+  "age|1978|Don|Bass": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|1978|Jim|Krahl": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1979|Phil|Simms": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1980|Tim|Foley": {
+   "call": "apply",
+   "value": 32
+  },
+  "age|1981|James|Hunter": {
+   "call": "apply",
+   "value": 27
+  },
+  "age|1981|Robert|Jackson": {
+   "call": "apply",
+   "value": 27
+  },
+  "age|1981|Ron|Johnson": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1981|Tyrone|Keys": {
+   "call": "apply",
+   "value": 22
+  },
+  "age|1982|Bob|Nelson": {
+   "call": "apply",
+   "value": 29
+  },
+  "age|1983|Pat|Dunsmore": {
+   "call": "apply",
+   "value": 26
+  },
+  "age|1984|Doug|Smith": {
+   "call": "apply",
+   "value": 28
+  },
+  "age|1984|Randy|Clark": {
+   "call": "apply",
+   "value": 27
+  },
+  "age|1985|Donnie|Elder": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|1986|Cap|Boso": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|1986|Doug|Williams": {
+   "call": "apply",
+   "value": 31
+  },
+  "age|1986|John|Williams": {
+   "call": "apply",
+   "value": 26
+  },
+  "age|1986|Mike|Black": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1986|Ron|Brown": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1987|Bruce|Holmes": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|1987|Ray|Brown": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1988|Kevin|Harmon": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|1988|Rickey|Dixon": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|1990|Craig|Veasey": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1991|Mike|Jones": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|1997|Jamie|Nails": {
+   "call": "apply",
+   "value": 20
+  },
+  "age|1998|Bobby|Shaw": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|2001|Kendrell|Bell": {
+   "call": "apply",
+   "value": 21
+  },
+  "age|2003|Davern|Williams": {
+   "call": "apply",
+   "value": 20
+  },
+  "age|2005|Jimmy|Verdon": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2005|Marcus|Johnson": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2006|Dusty|Dvoracek": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|2007|Aundrae|Allison": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|2013|Arthur|Brown": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|2016|Adolphus|Washington": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2018|Duke|Dawson": {
+   "call": "apply",
+   "value": 23
+  },
+  "age|2021|Aaron|Robinson": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2022|Jonathan|Ford": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2023|Chris|Rodriguez": {
+   "call": "apply",
+   "value": 24
+  },
+  "age|2024|Tyrice|Knight": {
+   "call": "apply",
+   "value": 25
+  },
+  "age|2025|Chris|Paul": {
+   "call": "apply",
+   "value": 27
+  },
+  "age|2025|Jonas|Sanker": {
+   "call": "apply",
+   "value": 24
+  },
+  "archetype|1967|Al|Dodd": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1967|Don|Horn": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1967|Steve|Spurrier": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1969|Charlie|Joiner": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1970|Steve|Ramsey": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1971|Bobby|Scott": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1971|Ron|Jessie": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1971|Steve|Davis": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1972|Glenn|Doughty": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1972|John|Reaves": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1972|Mike|Siani": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1973|Don|Strock": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1973|Jim|Lash": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1973|Tony|Adams": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1974|Benny|Malone": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1974|Eric|Torkelson": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1974|Freddie|Scott": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1974|Morris|Bradshaw": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1976|Henry|Marshall": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1976|Jim|Jodat": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1976|Lawrence|Gaines": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1976|Steve|Largent": {
+   "call": "keep",
+   "value": "possession"
+  },
+  "archetype|1977|Johnny|Perkins": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1977|Rick|Kane": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1977|Vince|Ferragamo": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1978|Matt|Cavanaugh": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1979|Jeff|Rutledge": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1979|Mike|Moroski": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1979|Steve|Dils": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1980|Ed|Luther": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1980|Gary|Hogeboom": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1980|Scott|Brunner": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1981|Charlie|Brown": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1981|Cris|Collinsworth": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1981|Mark|Herrmann": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1982|Barry|Redden": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1983|Gregg|Garrity": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1984|Kenny|Jackson": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1985|Steve|Bono": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1985|Thomas|Sanders": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1986|Chuck|Long": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1986|Mark|Jackson": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1986|Napoleon|McCallum": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1987|Jamie|Mueller": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1988|Jamie|Morris": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1988|Lars|Tate": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1991|Craig|Erickson": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1991|Jon|Vaughn": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1991|Yancey|Thigpen": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|1992|Craig|Erickson": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1992|Derrick|Moore": {
+   "call": "keep",
+   "value": "receiving-back"
+  },
+  "archetype|1992|Ty|Detmer": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|1993|Ronald|Moore": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1994|Donnell|Bennett": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1994|Greg|Hill": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|1995|Aaron|Hayden": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2000|Chris|Redman": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|2001|A.J.|Feeley": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|2002|T.J.|Duckett": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2004|Greg|Jones": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2005|Dan|Orlovsky": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|2005|Derek|Anderson": {
+   "call": "apply",
+   "value": "manager"
+  },
+  "archetype|2007|Robert|Meachem": {
+   "call": "keep",
+   "value": "possession"
+  },
+  "archetype|2012|Bernard|Pierce": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2013|Knile|Davis": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2013|Marquise|Goodwin": {
+   "call": "apply",
+   "value": "burner"
+  },
+  "archetype|2014|Andre|Williams": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "archetype|2017|Kenny|Golladay": {
+   "call": "keep",
+   "value": "possession"
+  },
+  "archetype|2019|Benny|Snell": {
+   "call": "apply",
+   "value": "elusive"
+  },
+  "durability|1967|Joe|Taylor": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1968|Al|Beauchamp": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1968|Jim|Cheyunski": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1970|Bob|Tucker": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1970|Jake|Scott": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1970|John|Ebersole": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1970|Pat|Hughes": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1972|Stan|White": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1973|Drew|Pearson": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1977|Derrel|Gofourth": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1978|Doug|Betters": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1978|Reggie|Doss": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1978|Tom|Pridemore": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1979|Manu|Tuiasosopo": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1985|Maurice|Carthon": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1988|Mark|Carrier": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1992|Mark|McMillian": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|1995|Chad|Cota": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2002|Bart|Scott": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2004|Wes|Welker": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2011|Doug|Baldwin": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2012|Justin|Tucker": {
+   "call": "custom",
+   "value": 71
+  },
+  "durability|2015|Damien|Wilson": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2016|Ted|Karras": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2018|B.J.|Hill": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2018|Bradley|Bozeman": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2018|Derrick|Nnadi": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2018|Foyesade|Oluokun": {
+   "call": "apply",
+   "value": 82
+  },
+  "durability|2018|Zaire|Franklin": {
+   "call": "apply",
+   "value": 82
+  },
+  "peak|1966|Austin|Denney": {
+   "call": "apply",
+   "value": 69
+  },
+  "peak|1966|Don|Davis": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1967|Charlie|Stukes": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1967|Cornelius|Johnson": {
+   "call": "keep",
+   "value": 70
+  },
+  "peak|1967|Dave|Lewis": {
+   "call": "custom",
+   "value": 79
+  },
+  "peak|1967|Jim|Copeland": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1967|Mike|Bass": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1967|Travis|Williams": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1968|Carlton|Dabney": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1968|Dean|Halverson": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1968|Dennis|Partee": {
+   "call": "apply",
+   "value": 69
+  },
+  "peak|1968|Ed|Mooney": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1968|Essex|Johnson": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1968|John|Pergine": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1968|Ronnie|Lee South": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1969|Bob|Stein": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1969|Bruce|Coslet": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1969|Clarence|Williams": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1969|Jim|Smith": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1970|Bill|Nelson": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1970|Cedrick|Hardman": {
+   "call": "apply",
+   "value": 87
+  },
+  "peak|1970|Dave|Smith": {
+   "call": "apply",
+   "value": 61
+  },
+  "peak|1970|James|Harris": {
+   "call": "apply",
+   "value": 80
+  },
+  "peak|1970|John|Ward": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1970|Rusty|Tillman": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1970|Tony|Cline": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1971|Doug|Mooers": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1971|Ken|Duncan": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1971|Mel|Gray": {
+   "call": "custom",
+   "value": 77
+  },
+  "peak|1971|Norm|Thompson": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1971|Rick|Kingrea": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1971|Tony|McGee": {
+   "call": "apply",
+   "value": 81
+  },
+  "peak|1972|Bill|Line": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1972|Larry|Ball": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1972|Martin|Imhof": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1972|Ted|Fritsch": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1973|Carl|Barisich": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1973|Doug|Dumler": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1973|Lenvil|Elliott": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|1974|Bill|Simpson": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1974|Deac|Sanders": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1974|Don|Calhoun": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1974|Ed|Jones": {
+   "call": "keep",
+   "value": 87
+  },
+  "peak|1974|Fred|Cook": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1974|Jimmy|Allen": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1974|Joe|Barnes": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1974|Matt|Herkenhoff": {
+   "call": "apply",
+   "value": 84
+  },
+  "peak|1974|Mike|Seifert": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1975|Charlie|Ane": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1975|Dallas|Hickman": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1975|George|Martin": {
+   "call": "apply",
+   "value": 81
+  },
+  "peak|1975|John|Roman": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1975|Neal|Colzie": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|1975|Roland|Hooks": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1976|Albert|Burton": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1976|Gary|Davis": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1976|Jay|Saldi": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1976|Paul|Hofer": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1977|Andy|Frederick": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1977|Ed|Beckman": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1977|Gary|Jeter": {
+   "call": "apply",
+   "value": 76
+  },
+  "peak|1978|Billy|Campfield": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1978|Dennis|Thurman": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1979|Jesse|Baker": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1979|Steve|Kreider": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1979|Tony|Nathan": {
+   "call": "custom",
+   "value": 80
+  },
+  "peak|1980|Curtis|Greer": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1980|David|Woodley": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1980|Joe|Rose": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1981|Bobby|Duckworth": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1981|Bubba|Green": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1981|Larry|Lee": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1981|Rich|Campbell": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1981|Stump|Mitchell": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1982|Case|deBruijn": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1983|Jimbo|Covert": {
+   "call": "keep",
+   "value": 89
+  },
+  "peak|1983|Kelvin|Bryant": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1983|Paul|Skansi": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1983|Tony|Eason": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1984|Ed|West": {
+   "call": "apply",
+   "value": 82
+  },
+  "peak|1984|Jumpy|Geathers": {
+   "call": "apply",
+   "value": 76
+  },
+  "peak|1984|Shawn|Miller": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1984|Stanford|Jennings": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1985|Barry|Wilburn": {
+   "call": "custom",
+   "value": 79
+  },
+  "peak|1985|Emile|Harry": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1985|Jeff|Smith": {
+   "call": "apply",
+   "value": 61
+  },
+  "peak|1985|Mark|Kelso": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1985|Ron|Brown": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1985|Ron|Davenport": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1985|Steve|Sewell": {
+   "call": "custom",
+   "value": 69
+  },
+  "peak|1985|Terry|Orr": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1986|Clyde|Simmons": {
+   "call": "custom",
+   "value": 90
+  },
+  "peak|1986|Mike|Ruether": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1986|Stan|Gelbaugh": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1986|Tim|Harris": {
+   "call": "custom",
+   "value": 85
+  },
+  "peak|1987|Jeff|Faulkner": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1987|John|Bruno": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1987|Ken|Rose": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1987|Sam|Anno": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1987|Troy|Stradford": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1988|Brent|Novoselsky": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1988|Danny|Stubbs": {
+   "call": "apply",
+   "value": 76
+  },
+  "peak|1988|Odie|Harris": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1989|Britt|Hager": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1989|Todd|McNair": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1989|Walter|Reeves": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1990|Anthony|Smith": {
+   "call": "custom",
+   "value": 75
+  },
+  "peak|1990|Erik|Norgard": {
+   "call": "keep",
+   "value": 70
+  },
+  "peak|1990|John|Nies": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|1990|Tony|Bennett": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1990|Travis|Davis": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1991|Chuck|Klingbeil": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|1991|Craig|Patterson": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1991|Duane|Young": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1991|Eric|Bieniemy": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1991|Mike A.|Jones": {
+   "call": "apply",
+   "value": 76
+  },
+  "peak|1991|Mike|Dumas": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1992|Amp|Lee": {
+   "call": "custom",
+   "value": 69
+  },
+  "peak|1992|Chuck|Smith": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1992|Darren|Mickell": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1992|Kevin|Smith": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1993|Jeff|Robinson": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|1993|Kevin|Williams": {
+   "call": "apply",
+   "value": 61
+  },
+  "peak|1993|Ryan|Wetnight": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|1994|Brian|Kozlowski": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|1994|Keith|Lyle": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|1995|Napoleon|Kaufman": {
+   "call": "custom",
+   "value": 74
+  },
+  "peak|1995|Terrell|Fletcher": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|1996|John|Mobley": {
+   "call": "custom",
+   "value": 78
+  },
+  "peak|1996|Karl|Williams": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1996|Larry|Izzo": {
+   "call": "apply",
+   "value": 73
+  },
+  "peak|1996|O.J.|Brigance": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|1997|Derrick|Mason": {
+   "call": "keep",
+   "value": 89
+  },
+  "peak|1998|Doug|Brown": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|1999|Amos|Zereoue": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|1999|Jim|Finn": {
+   "call": "apply",
+   "value": 68
+  },
+  "peak|2000|Cory|Withrow": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2000|Derek|Rackley": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|2000|J.P.|Darche": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2000|Mao|Tosi": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2000|Mike|Anderson": {
+   "call": "custom",
+   "value": 77
+  },
+  "peak|2000|Mike|Leach": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|2001|Anthony|Henry": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|2001|Moran|Norris": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2002|Brandon|Moore": {
+   "call": "apply",
+   "value": 78
+  },
+  "peak|2002|Clinton|Portis": {
+   "call": "keep",
+   "value": 87
+  },
+  "peak|2002|Craig|Jarrett": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|2002|Najeh|Davenport": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2002|Nathan|Hodel": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2002|Travis|Dorsch": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|2003|Antonio|Garay": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|2003|Bryan|Pittman": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2003|Jeremi|Johnson": {
+   "call": "apply",
+   "value": 68
+  },
+  "peak|2003|Ken|Amato": {
+   "call": "keep",
+   "value": 70
+  },
+  "peak|2003|Vinny|Ciurciu": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2004|Benny|Sapp": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2004|Derrick|Ward": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|2004|Joselio|Hanson": {
+   "call": "keep",
+   "value": 70
+  },
+  "peak|2004|Mike|Karney": {
+   "call": "apply",
+   "value": 68
+  },
+  "peak|2004|Terrance|Copper": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2005|Billy|Bajema": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2005|Brandon|Jacobs": {
+   "call": "custom",
+   "value": 77
+  },
+  "peak|2005|Chris|Henry": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2005|Corey|McIntyre": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|2005|Heath|Farwell": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2005|Madison|Hedgecock": {
+   "call": "apply",
+   "value": 68
+  },
+  "peak|2005|Ryan|Grant": {
+   "call": "keep",
+   "value": 77
+  },
+  "peak|2005|Shaun|Hill": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|2006|Andrew|Economos": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2006|Domenik|Hixon": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2006|Jarrett|Bush": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2006|Jerious|Norwood": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2006|Laurence|Maroney": {
+   "call": "custom",
+   "value": 74
+  },
+  "peak|2007|Ahmad|Bradshaw": {
+   "call": "custom",
+   "value": 73
+  },
+  "peak|2007|Jason|Snelling": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|2007|Matt|Spaeth": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2007|Pierre|Thomas": {
+   "call": "keep",
+   "value": 77
+  },
+  "peak|2008|Durant|Brooks": {
+   "call": "apply",
+   "value": 60
+  },
+  "peak|2008|Thomas|Gafford": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2009|Austin|Collie": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2009|Darius|Butler": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2009|Kevin|Ellison": {
+   "call": "apply",
+   "value": 63
+  },
+  "peak|2009|Leger|Douzable": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2010|Brian|Price": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2010|James|Starks": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|2010|Justin|Drescher": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2010|Mike|Windt": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2010|Tanner|Purdum": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2010|Toby|Gerhart": {
+   "call": "custom",
+   "value": 75
+  },
+  "peak|2011|Jacquizz|Rodgers": {
+   "call": "custom",
+   "value": 71
+  },
+  "peak|2011|Nick|Bellore": {
+   "call": "apply",
+   "value": 75
+  },
+  "peak|2012|James|Hanna": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2012|Johnson|Bademosi": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2012|Josh|Gordon": {
+   "call": "custom",
+   "value": 80
+  },
+  "peak|2012|Mark|Barron": {
+   "call": "custom",
+   "value": 76
+  },
+  "peak|2012|Robert|Turbin": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2013|Chris|Thompson": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|2013|Daren|Bates": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2013|LaRoy|Reynolds": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2014|James|White": {
+   "call": "custom",
+   "value": 75
+  },
+  "peak|2014|Jimmy|Garoppolo": {
+   "call": "keep",
+   "value": 78
+  },
+  "peak|2015|Bobby|Richardson": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2015|Dante|Fowler": {
+   "call": "custom",
+   "value": 80
+  },
+  "peak|2015|Duke|Johnson": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|2015|Marcus|Mariota": {
+   "call": "custom",
+   "value": 79
+  },
+  "peak|2015|Markus|Golden": {
+   "call": "apply",
+   "value": 76
+  },
+  "peak|2015|Michael|Burton": {
+   "call": "apply",
+   "value": 68
+  },
+  "peak|2015|Phillip|Dorsett": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2016|Artie|Burns": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|2016|Devontae|Booker": {
+   "call": "apply",
+   "value": 66
+  },
+  "peak|2016|Laquon|Treadwell": {
+   "call": "apply",
+   "value": 75
+  },
+  "peak|2016|Shaq|Lawson": {
+   "call": "custom",
+   "value": 76
+  },
+  "peak|2017|Adoree'|Jackson": {
+   "call": "custom",
+   "value": 78
+  },
+  "peak|2017|Avery|Moss": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2017|Charles|Harris": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|2017|Dawuane|Smoot": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2017|Derek|Barnett": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|2017|Desmond|King": {
+   "call": "apply",
+   "value": 77
+  },
+  "peak|2017|Gerald|Everett": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|2017|Kevin|King": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|2017|Reid|Ferguson": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2017|Ryan|Ramczyk": {
+   "call": "keep",
+   "value": 81
+  },
+  "peak|2017|Solomon|Thomas": {
+   "call": "custom",
+   "value": 79
+  },
+  "peak|2017|Takkarist|McKinley": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|2017|Taybor|Pepper": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2017|Thomas|Hennessy": {
+   "call": "custom",
+   "value": 71
+  },
+  "peak|2017|Zach|Wood": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|Anthony|Miller": {
+   "call": "custom",
+   "value": 69
+  },
+  "peak|2018|Braxton|Berrios": {
+   "call": "custom",
+   "value": 73
+  },
+  "peak|2018|Chris|Board": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|Dante|Pettis": {
+   "call": "custom",
+   "value": 71
+  },
+  "peak|2018|Dennis|Gardeck": {
+   "call": "keep",
+   "value": 70
+  },
+  "peak|2018|Hayden|Hurst": {
+   "call": "apply",
+   "value": 70
+  },
+  "peak|2018|Isaiah|Wynn": {
+   "call": "apply",
+   "value": 71
+  },
+  "peak|2018|John|Atkins": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|Joseph|Noteboom": {
+   "call": "keep",
+   "value": 71
+  },
+  "peak|2018|KhaDarel|Hodge": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|M.J.|Stewart": {
+   "call": "custom",
+   "value": 70
+  },
+  "peak|2018|Marcus|Davenport": {
+   "call": "apply",
+   "value": 72
+  },
+  "peak|2018|Mike|Gesicki": {
+   "call": "keep",
+   "value": 75
+  },
+  "peak|2018|Mike|Hughes": {
+   "call": "custom",
+   "value": 73
+  },
+  "peak|2018|Mike|McGlinchey": {
+   "call": "custom",
+   "value": 79
+  },
+  "peak|2018|Nyheim|Hines": {
+   "call": "custom",
+   "value": 71
+  },
+  "peak|2018|Russell|Gage": {
+   "call": "keep",
+   "value": 69
+  },
+  "peak|2018|Trent|Sherfield": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|Trent|Sieg": {
+   "call": "apply",
+   "value": 65
+  },
+  "peak|2018|Tyquan|Lewis": {
+   "call": "keep",
+   "value": 71
+  },
+  "position|1967|Bill|Brown": {
+   "call": "apply",
+   "value": "RB"
+  },
+  "position|1967|Paul|Krause": {
+   "call": "apply",
+   "value": "S"
+  },
+  "position|1973|Paul|Krause": {
+   "call": "apply",
+   "value": "S"
+  },
+  "position|1974|Jon|Keyworth": {
+   "call": "apply",
+   "value": "RB"
+  },
+  "position|1976|Randy|Johnson": {
+   "call": "apply",
+   "value": "QB"
+  },
+  "position|1986|Doug|Williams": {
+   "call": "apply",
+   "value": "QB"
+  },
+  "position|1987|Rod|Bernstine": {
+   "call": "apply",
+   "value": "RB"
+  },
+  "position|1988|Tom|Tupa": {
+   "call": "keep",
+   "value": "P"
+  },
+  "position|1989|Jeff|Graham": {
+   "call": "apply",
+   "value": "WR"
+  },
+  "position|1997|Chris|Miller": {
+   "call": "apply",
+   "value": "QB"
+  },
+  "position|2002|Kevin|Curtis": {
+   "call": "apply",
+   "value": "WR"
+  },
+  "position|2008|Josh|Johnson": {
+   "call": "apply",
+   "value": "QB"
+  },
+  "speed1987|1967|George|Webster": {
+   "call": "keep",
+   "value": 94
+  },
+  "speed1987|1968|Paul|Robinson": {
+   "call": "custom",
+   "value": 90
+  },
+  "speed1987|1969|Calvin|Hill": {
+   "call": "custom",
+   "value": 94
+  },
+  "speed1987|1969|Ted|Kwalick": {
+   "call": "custom",
+   "value": 77
+  },
+  "speed1987|1970|Norm|Bulaich": {
+   "call": "apply",
+   "value": 90
+  },
+  "speed1987|1971|Wilbur|Young": {
+   "call": "apply",
+   "value": 46
+  },
+  "speed1987|1973|Barney|Chavous": {
+   "call": "custom",
+   "value": 75
+  },
+  "speed1987|1973|Lenvil|Elliott": {
+   "call": "apply",
+   "value": 83
+  },
+  "speed1987|1978|Mike|Renfro": {
+   "call": "apply",
+   "value": 80
+  },
+  "speed1987|1979|George|Andrews": {
+   "call": "custom",
+   "value": 70
+  },
+  "speed1987|1979|Ron|Springs": {
+   "call": "apply",
+   "value": 84
+  },
+  "speed1987|1980|Kenny|Hill": {
+   "call": "apply",
+   "value": 68
+  },
+  "speed1987|1981|Bobby|Butler": {
+   "call": "custom",
+   "value": 87
+  },
+  "speed1987|1982|Butch|Woolfolk": {
+   "call": "apply",
+   "value": 81
+  },
+  "speed1987|1982|Phil|Epps": {
+   "call": "apply",
+   "value": 77
+  },
+  "speed1987|1983|Darrell|Green": {
+   "call": "custom",
+   "value": 97
+  },
+  "speed1987|1983|Mike|Wilcher": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed1987|1985|Herschel|Walker": {
+   "call": "apply",
+   "value": 98
+  },
+  "speed|1987|Danny|Noonan": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|1987|Henry|Thomas": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|1987|Jerome|Brown": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|1987|Jerry|Ball": {
+   "call": "apply",
+   "value": 46
+  },
+  "speed|1987|Mike|Shula": {
+   "call": "custom",
+   "value": 43
+  },
+  "speed|1987|Rich|Gannon": {
+   "call": "custom",
+   "value": 70
+  },
+  "speed|1987|Skip|McClendon": {
+   "call": "apply",
+   "value": 38
+  },
+  "speed|1987|Stephen|Baker": {
+   "call": "custom",
+   "value": 75
+  },
+  "speed|1987|Vinny|Testaverde": {
+   "call": "apply",
+   "value": 70
+  },
+  "speed|1988|Don|McPherson": {
+   "call": "custom",
+   "value": 79
+  },
+  "speed|1988|George|Cooper": {
+   "call": "custom",
+   "value": 61
+  },
+  "speed|1988|George|Hinkle": {
+   "call": "apply",
+   "value": 33
+  },
+  "speed|1988|Marc|Zeno": {
+   "call": "keep",
+   "value": 63
+  },
+  "speed|1988|Reuben|Davis": {
+   "call": "apply",
+   "value": 38
+  },
+  "speed|1989|Billy|Joe Tolliver": {
+   "call": "custom",
+   "value": 51
+  },
+  "speed|1989|Brent|Snyder": {
+   "call": "custom",
+   "value": 56
+  },
+  "speed|1989|Jeff|Carlson": {
+   "call": "custom",
+   "value": 56
+  },
+  "speed|1989|Jeff|Graham": {
+   "call": "custom",
+   "value": 44
+  },
+  "speed|1989|Joe|Mott": {
+   "call": "apply",
+   "value": 46
+  },
+  "speed|1989|Mike|Elkins": {
+   "call": "custom",
+   "value": 41
+  },
+  "speed|1989|Terrence|Jones": {
+   "call": "custom",
+   "value": 72
+  },
+  "speed|1989|Wayne|Martin": {
+   "call": "apply",
+   "value": 52
+  },
+  "speed|1990|Andy|Murray": {
+   "call": "custom",
+   "value": 61
+  },
+  "speed|1990|Cortez|Kennedy": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|1990|Marion|Hobby": {
+   "call": "apply",
+   "value": 26
+  },
+  "speed|1990|Mike|Farr": {
+   "call": "apply",
+   "value": 50
+  },
+  "speed|1990|Mike|Fox": {
+   "call": "apply",
+   "value": 43
+  },
+  "speed|1990|Rob|Burnett": {
+   "call": "apply",
+   "value": 58
+  },
+  "speed|1990|Tim|Ryan": {
+   "call": "apply",
+   "value": 29
+  },
+  "speed|1991|Bill|Musgrave": {
+   "call": "custom",
+   "value": 55
+  },
+  "speed|1991|Keith|Traylor": {
+   "call": "apply",
+   "value": 67
+  },
+  "speed|1991|Linzy|Collins": {
+   "call": "keep",
+   "value": 60
+  },
+  "speed|1991|Mike|Jones": {
+   "call": "apply",
+   "value": 37
+  },
+  "speed|1991|Paul|Justin": {
+   "call": "custom",
+   "value": 50
+  },
+  "speed|1991|Scott|Zolak": {
+   "call": "custom",
+   "value": 41
+  },
+  "speed|1992|Chester|McGlockton": {
+   "call": "apply",
+   "value": 47
+  },
+  "speed|1992|Eric|Boles": {
+   "call": "custom",
+   "value": 66
+  },
+  "speed|1992|Keithen|McCant": {
+   "call": "custom",
+   "value": 64
+  },
+  "speed|1992|Marco|Coleman": {
+   "call": "apply",
+   "value": 42
+  },
+  "speed|1992|Robert|Harris": {
+   "call": "apply",
+   "value": 59
+  },
+  "speed|1992|Robert|Porcher": {
+   "call": "apply",
+   "value": 40
+  },
+  "speed|1992|Roy|Barker": {
+   "call": "apply",
+   "value": 36
+  },
+  "speed|1992|Tim|Roberts": {
+   "call": "apply",
+   "value": 25
+  },
+  "speed|1993|Billy|Joe Hobert": {
+   "call": "custom",
+   "value": 60
+  },
+  "speed|1993|Chad|Brown": {
+   "call": "apply",
+   "value": 71
+  },
+  "speed|1993|Dana|Stubblefield": {
+   "call": "apply",
+   "value": 57
+  },
+  "speed|1993|Kevin|Henry": {
+   "call": "apply",
+   "value": 37
+  },
+  "speed|1993|Mark|Brunell": {
+   "call": "apply",
+   "value": 75
+  },
+  "speed|1993|Michael|Strahan": {
+   "call": "apply",
+   "value": 66
+  },
+  "speed|1994|Bryant|Young": {
+   "call": "apply",
+   "value": 62
+  },
+  "speed|1994|Dwayne|Carswell": {
+   "call": "custom",
+   "value": 58
+  },
+  "speed|1994|Joe|Johnson": {
+   "call": "apply",
+   "value": 45
+  },
+  "speed|1994|Walter|Rasby": {
+   "call": "apply",
+   "value": 50
+  },
+  "speed|1995|Hugh|Douglas": {
+   "call": "apply",
+   "value": 75
+  },
+  "speed|1995|Steve|Stenstrom": {
+   "call": "apply",
+   "value": 34
+  },
+  "speed|1996|Kyle|Wachholtz": {
+   "call": "custom",
+   "value": 44
+  },
+  "speed|1996|Shane|Burton": {
+   "call": "apply",
+   "value": 32
+  },
+  "speed|1996|Terrell|Owens": {
+   "call": "custom",
+   "value": 91
+  },
+  "speed|1997|Bryan|Robinson": {
+   "call": "apply",
+   "value": 48
+  },
+  "speed|1997|Chris|Miller": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|1997|Koy|Detmer": {
+   "call": "custom",
+   "value": 48
+  },
+  "speed|1997|Pat|Williams": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|1997|Trevor|Pryce": {
+   "call": "apply",
+   "value": 57
+  },
+  "speed|1998|Brandon|Whiting": {
+   "call": "apply",
+   "value": 37
+  },
+  "speed|1998|Casey|Dailey": {
+   "call": "keep",
+   "value": 60
+  },
+  "speed|1998|Greg|Ellis": {
+   "call": "apply",
+   "value": 66
+  },
+  "speed|1998|John|Dutton": {
+   "call": "custom",
+   "value": 69
+  },
+  "speed|1999|Aaron|Smith": {
+   "call": "custom",
+   "value": 63
+  },
+  "speed|1999|Anthony|McFarland": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|1999|Brian|Waters": {
+   "call": "apply",
+   "value": 56
+  },
+  "speed|1999|Brock|Huard": {
+   "call": "custom",
+   "value": 40
+  },
+  "speed|2000|Chris|Redman": {
+   "call": "keep",
+   "value": 68
+  },
+  "speed|2000|Corey|Simon": {
+   "call": "apply",
+   "value": 66
+  },
+  "speed|2000|Cornelius|Griffin": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|2000|Darren|Howard": {
+   "call": "custom",
+   "value": 60
+  },
+  "speed|2000|Darwin|Walker": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|2000|Deon|Dyer": {
+   "call": "keep",
+   "value": 71
+  },
+  "speed|2000|Giovanni|Carmazzi": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|2000|Michael|Boireau": {
+   "call": "custom",
+   "value": 49
+  },
+  "speed|2000|Shaun|Ellis": {
+   "call": "apply",
+   "value": 68
+  },
+  "speed|2000|Terrelle|Smith": {
+   "call": "keep",
+   "value": 58
+  },
+  "speed|2001|Andre|Carter": {
+   "call": "apply",
+   "value": 69
+  },
+  "speed|2001|Chad|Johnson": {
+   "call": "keep",
+   "value": 93
+  },
+  "speed|2001|Char-ron|Dorsey": {
+   "call": "keep",
+   "value": 50
+  },
+  "speed|2001|Drew|Brees": {
+   "call": "apply",
+   "value": 62
+  },
+  "speed|2001|Fred|Wakefield": {
+   "call": "apply",
+   "value": 39
+  },
+  "speed|2001|Mike|McMahon": {
+   "call": "custom",
+   "value": 74
+  },
+  "speed|2001|Reggie|Wayne": {
+   "call": "apply",
+   "value": 86
+  },
+  "speed|2001|Richard|Seymour": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|2001|Rick|Crowell": {
+   "call": "custom",
+   "value": 61
+  },
+  "speed|2001|Ron|Edwards": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|2002|Brandon|Moore": {
+   "call": "apply",
+   "value": 25
+  },
+  "speed|2002|Jamar|Martin": {
+   "call": "keep",
+   "value": 71
+  },
+  "speed|2002|Joey|Harrington": {
+   "call": "custom",
+   "value": 53
+  },
+  "speed|2002|John|Henderson": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|2003|Carson|Palmer": {
+   "call": "custom",
+   "value": 62
+  },
+  "speed|2003|Cecil|Sapp": {
+   "call": "custom",
+   "value": 73
+  },
+  "speed|2003|Jason|Witten": {
+   "call": "apply",
+   "value": 78
+  },
+  "speed|2003|Kevin|Williams": {
+   "call": "custom",
+   "value": 67
+  },
+  "speed|2003|Seneca|Wallace": {
+   "call": "custom",
+   "value": 80
+  },
+  "speed|2003|Spencer|Nead": {
+   "call": "custom",
+   "value": 67
+  },
+  "speed|2003|Ty|Warren": {
+   "call": "custom",
+   "value": 55
+  },
+  "speed|2004|Ben|Roethlisberger": {
+   "call": "apply",
+   "value": 70
+  },
+  "speed|2004|Eli|Manning": {
+   "call": "custom",
+   "value": 51
+  },
+  "speed|2004|Jared|Allen": {
+   "call": "apply",
+   "value": 80
+  },
+  "speed|2004|Jason|Peters": {
+   "call": "apply",
+   "value": 56
+  },
+  "speed|2004|Lousaka|Polite": {
+   "call": "custom",
+   "value": 69
+  },
+  "speed|2004|Mike|Karney": {
+   "call": "keep",
+   "value": 58
+  },
+  "speed|2004|Sean|McHugh": {
+   "call": "keep",
+   "value": 71
+  },
+  "speed|2004|Tank|Johnson": {
+   "call": "apply",
+   "value": 69
+  },
+  "speed|2004|Tommie|Harris": {
+   "call": "apply",
+   "value": 71
+  },
+  "speed|2004|Tommy|Kelly": {
+   "call": "apply",
+   "value": 62
+  },
+  "speed|2004|Vince|Wilfork": {
+   "call": "apply",
+   "value": 51
+  },
+  "speed|2005|Adrian|McPherson": {
+   "call": "custom",
+   "value": 69
+  },
+  "speed|2005|Dan|Orlovsky": {
+   "call": "custom",
+   "value": 60
+  },
+  "speed|2005|Derek|Anderson": {
+   "call": "apply",
+   "value": 42
+  },
+  "speed|2005|Jerome|Mathis": {
+   "call": "custom",
+   "value": 97
+  },
+  "speed|2005|Madison|Hedgecock": {
+   "call": "keep",
+   "value": 70
+  },
+  "speed|2005|Marcus|Spears": {
+   "call": "custom",
+   "value": 55
+  },
+  "speed|2006|D.J.|Shockley": {
+   "call": "custom",
+   "value": 82
+  },
+  "speed|2006|Haloti|Ngata": {
+   "call": "apply",
+   "value": 49
+  },
+  "speed|2006|Kevin|Simon": {
+   "call": "custom",
+   "value": 68
+  },
+  "speed|2006|Matt|Leinart": {
+   "call": "custom",
+   "value": 57
+  },
+  "speed|2006|Maurice|Jones-Drew": {
+   "call": "custom",
+   "value": 90
+  },
+  "speed|2006|Michael|Robinson": {
+   "call": "apply",
+   "value": 82
+  },
+  "speed|2006|Tamba|Hali": {
+   "call": "apply",
+   "value": 78
+  },
+  "speed|2007|Antwan|Barnes": {
+   "call": "apply",
+   "value": 71
+  },
+  "speed|2007|Jeff|Rowe": {
+   "call": "custom",
+   "value": 63
+  },
+  "speed|2007|Marshawn|Lynch": {
+   "call": "custom",
+   "value": 88
+  },
+  "speed|2007|Patrick|Willis": {
+   "call": "custom",
+   "value": 90
+  },
+  "speed|2007|Zak|DeOssie": {
+   "call": "custom",
+   "value": 71
+  },
+  "speed|2008|Alex|Brink": {
+   "call": "custom",
+   "value": 51
+  },
+  "speed|2008|Calais|Campbell": {
+   "call": "custom",
+   "value": 69
+  },
+  "speed|2008|Erik|Ainge": {
+   "call": "custom",
+   "value": 41
+  },
+  "speed|2008|Josh|Johnson": {
+   "call": "custom",
+   "value": 75
+  },
+  "speed|2008|Tyler|Schmitt": {
+   "call": "keep",
+   "value": 67
+  },
+  "speed|2009|Michael|Bennett": {
+   "call": "apply",
+   "value": 67
+  },
+  "speed|2009|Mike|Thomas": {
+   "call": "custom",
+   "value": 91
+  },
+  "speed|2009|Pat|White": {
+   "call": "custom",
+   "value": 92
+  },
+  "speed|2009|Ziggy|Hood": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|2010|Andre|Roberts": {
+   "call": "apply",
+   "value": 87
+  },
+  "speed|2010|Dan|LeFevour": {
+   "call": "custom",
+   "value": 73
+  },
+  "speed|2010|Dorin|Dickerson": {
+   "call": "custom",
+   "value": 89
+  },
+  "speed|2010|Earl|Mitchell": {
+   "call": "apply",
+   "value": 66
+  },
+  "speed|2010|Geno|Atkins": {
+   "call": "custom",
+   "value": 69
+  },
+  "speed|2010|Gerald|McCoy": {
+   "call": "apply",
+   "value": 54
+  },
+  "speed|2010|Ndamukong|Suh": {
+   "call": "apply",
+   "value": 55
+  },
+  "speed|2010|Trent|Williams": {
+   "call": "apply",
+   "value": 58
+  },
+  "speed|2010|Tyson|Alualu": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|2011|Cameron|Heyward": {
+   "call": "custom",
+   "value": 71
+  },
+  "speed|2011|Cameron|Jordan": {
+   "call": "apply",
+   "value": 79
+  },
+  "speed|2011|J.J.|Watt": {
+   "call": "custom",
+   "value": 75
+  },
+  "speed|2011|Justin|Houston": {
+   "call": "keep",
+   "value": 83
+  },
+  "speed|2011|Nick|Fairley": {
+   "call": "apply",
+   "value": 60
+  },
+  "speed|2011|T.J.|Yates": {
+   "call": "custom",
+   "value": 51
+  },
+  "speed|2011|Tyrod|Taylor": {
+   "call": "apply",
+   "value": 89
+  },
+  "speed|2011|Tyron|Smith": {
+   "call": "apply",
+   "value": 56
+  },
+  "speed|2012|B.J.|Coleman": {
+   "call": "custom",
+   "value": 60
+  },
+  "speed|2012|Chandler|Jones": {
+   "call": "apply",
+   "value": 73
+  },
+  "speed|2012|Demario|Davis": {
+   "call": "keep",
+   "value": 87
+  },
+  "speed|2012|Dontari|Poe": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|2012|Fletcher|Cox": {
+   "call": "custom",
+   "value": 66
+  },
+  "speed|2012|James|Hanna": {
+   "call": "custom",
+   "value": 83
+  },
+  "speed|2012|Jaye|Howard": {
+   "call": "apply",
+   "value": 62
+  },
+  "speed|2012|Kendall|Reyes": {
+   "call": "apply",
+   "value": 61
+  },
+  "speed|2012|Lavonte|David": {
+   "call": "custom",
+   "value": 88
+  },
+  "speed|2012|Malik|Jackson": {
+   "call": "apply",
+   "value": 64
+  },
+  "speed|2012|Mike|Daniels": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|2012|Ryan|Tannehill": {
+   "call": "apply",
+   "value": 75
+  },
+  "speed|2013|Keenan|Allen": {
+   "call": "apply",
+   "value": 78
+  },
+  "speed|2013|Lane|Johnson": {
+   "call": "apply",
+   "value": 57
+  },
+  "speed|2013|Quinton|Dial": {
+   "call": "apply",
+   "value": 28
+  },
+  "speed|2013|Ryan|Nassib": {
+   "call": "custom",
+   "value": 45
+  },
+  "speed|2013|Terron|Armstead": {
+   "call": "custom",
+   "value": 68
+  },
+  "speed|2013|Travis|Frederick": {
+   "call": "apply",
+   "value": 36
+  },
+  "speed|2013|Tyler|Wilson": {
+   "call": "custom",
+   "value": 55
+  },
+  "speed|2014|Aaron|Donald": {
+   "call": "apply",
+   "value": 83
+  },
+  "speed|2014|Derek|Carr": {
+   "call": "apply",
+   "value": 75
+  },
+  "speed|2014|Josh|Mauro": {
+   "call": "apply",
+   "value": 31
+  },
+  "speed|2014|Keith|Wenning": {
+   "call": "custom",
+   "value": 51
+  },
+  "speed|2014|Trey|Millard": {
+   "call": "custom",
+   "value": 63
+  },
+  "speed|2015|Arik|Armstead": {
+   "call": "custom",
+   "value": 61
+  },
+  "speed|2015|Bobby|Richardson": {
+   "call": "custom",
+   "value": 45
+  },
+  "speed|2015|Brandon|Scherff": {
+   "call": "apply",
+   "value": 54
+  },
+  "speed|2015|Brett|Hundley": {
+   "call": "custom",
+   "value": 73
+  },
+  "speed|2015|Jalston|Fowler": {
+   "call": "keep",
+   "value": 71
+  },
+  "speed|2015|Jameis|Winston": {
+   "call": "keep",
+   "value": 57
+  },
+  "speed|2015|Kevin|White": {
+   "call": "keep",
+   "value": 75
+  },
+  "speed|2016|Carson|Wentz": {
+   "call": "custom",
+   "value": 72
+  },
+  "speed|2016|Charles|Tapper": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|2016|Chris|Jones": {
+   "call": "apply",
+   "value": 56
+  },
+  "speed|2016|Dak|Prescott": {
+   "call": "custom",
+   "value": 78
+  },
+  "speed|2016|DeForest|Buckner": {
+   "call": "apply",
+   "value": 52
+  },
+  "speed|2016|Jared|Goff": {
+   "call": "apply",
+   "value": 60
+  },
+  "speed|2016|Jihad|Ward": {
+   "call": "apply",
+   "value": 42
+  },
+  "speed|2016|Joey|Bosa": {
+   "call": "custom",
+   "value": 75
+  },
+  "speed|2017|Curtis|Samuel": {
+   "call": "custom",
+   "value": 95
+  },
+  "speed|2017|Joshua|Dobbs": {
+   "call": "custom",
+   "value": 72
+  },
+  "speed|2017|Mitchell|Trubisky": {
+   "call": "apply",
+   "value": 74
+  },
+  "speed|2017|Patrick|Mahomes": {
+   "call": "custom",
+   "value": 79
+  },
+  "speed|2018|Josh|Allen": {
+   "call": "keep",
+   "value": 84
+  },
+  "speed|2018|Rasheem|Green": {
+   "call": "apply",
+   "value": 66
+  },
+  "speed|2018|Tanner|Lee": {
+   "call": "custom",
+   "value": 49
+  },
+  "speed|2019|Drew|Lock": {
+   "call": "apply",
+   "value": 69
+  },
+  "speed|2019|L.J.|Collier": {
+   "call": "apply",
+   "value": 60
+  },
+  "speed|2019|Parris|Campbell": {
+   "call": "custom",
+   "value": 95
+  },
+  "speed|2019|Quinnen|Williams": {
+   "call": "apply",
+   "value": 69
+  },
+  "speed|2019|Trace|McSorley": {
+   "call": "custom",
+   "value": 81
+  },
+  "speed|2019|Ty|Summers": {
+   "call": "apply",
+   "value": 68
+  },
+  "speed|2019|Zach|Allen": {
+   "call": "apply",
+   "value": 53
+  },
+  "speed|2020|Devin|Duvernay": {
+   "call": "apply",
+   "value": 88
+  },
+  "speed|2020|Jordan|Love": {
+   "call": "custom",
+   "value": 70
+  },
+  "speed|2020|Marlon|Davidson": {
+   "call": "custom",
+   "value": 52
+  },
+  "speed|2020|Neville|Gallimore": {
+   "call": "apply",
+   "value": 62
+  },
+  "speed|2020|Tanner|Muse": {
+   "call": "apply",
+   "value": 80
+  },
+  "speed|2021|Amon-Ra|St. Brown": {
+   "call": "apply",
+   "value": 82
+  },
+  "speed|2021|Gregory|Rousseau": {
+   "call": "apply",
+   "value": 73
+  },
+  "speed|2021|Jaylen|Twyman": {
+   "call": "keep",
+   "value": 50
+  },
+  "speed|2021|Mac|Jones": {
+   "call": "apply",
+   "value": 70
+  },
+  "speed|2021|Nick|Niemann": {
+   "call": "apply",
+   "value": 71
+  },
+  "speed|2021|Rondale|Moore": {
+   "call": "custom",
+   "value": 96
+  },
+  "speed|2021|Shaka|Toney": {
+   "call": "apply",
+   "value": 73
+  },
+  "speed|2022|Aidan|Hutchinson": {
+   "call": "custom",
+   "value": 79
+  },
+  "speed|2022|Desmond|Ridder": {
+   "call": "apply",
+   "value": 78
+  },
+  "speed|2022|Devonte|Wyatt": {
+   "call": "apply",
+   "value": 67
+  },
+  "speed|2022|Kenny|Pickett": {
+   "call": "apply",
+   "value": 70
+  },
+  "speed|2023|Bryan|Bresee": {
+   "call": "apply",
+   "value": 63
+  },
+  "speed|2023|Calijah|Kancey": {
+   "call": "apply",
+   "value": 76
+  },
+  "speed|2023|Dorian|Thompson-Robinson": {
+   "call": "custom",
+   "value": 70
+  },
+  "speed|2023|Isaiah|Foskey": {
+   "call": "apply",
+   "value": 77
+  },
+  "speed|2023|Marvin|Mims": {
+   "call": "custom",
+   "value": 88
+  },
+  "speed|2023|Sam|LaPorta": {
+   "call": "apply",
+   "value": 76
+  },
+  "speed|2023|Stetson|Bennett": {
+   "call": "apply",
+   "value": 68
+  },
+  "speed|2024|Braden|Fiske": {
+   "call": "apply",
+   "value": 65
+  },
+  "speed|2024|McKinnley|Jackson": {
+   "call": "apply",
+   "value": 30
+  },
+  "speed|2024|T'Vondre|Sweat": {
+   "call": "apply",
+   "value": 32
+  },
+  "speed|2025|Tyler|Shough": {
+   "call": "apply",
+   "value": 72
+  }
+ }
+}

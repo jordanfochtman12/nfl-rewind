@@ -3,11 +3,11 @@ import { ROSTER_TARGET } from "./types.ts";
 import { activeTeamIds, conferenceOf, displayName } from "./teams.ts";
 import { EXPANSION_COACHES, type CoachSeed } from "./data/coaches.ts";
 import { expansionForYear, type ExpansionSpec } from "./data/expansions.ts";
-import { addToRoster, fillRoster, generatePlayer, movePlayer, playerName, rosterOf } from "./players.ts";
+import { fillRoster, generatePlayer, movePlayer, playerName, rosterOf, DEPTH_CHART } from "./players.ts";
 import { emptyTeam, resetSeasonRecord } from "./save.ts";
 import { rebuildSchedule } from "./schedule.ts";
 import { addNews, addTx } from "./news.ts";
-import { DEPTH_CHART } from "./players.ts";
+import { makeCoachFromSeed, fillCoachFields } from "./staff.ts";
 
 function poolTeams(save: DynastySave, spec: ExpansionSpec, clubPool: "NFL" | "AFL" | "all"): TeamId[] {
   const year = save.year;
@@ -30,31 +30,17 @@ function exposeLists(save: DynastySave, sources: TeamId[], n: number): Record<Te
 }
 
 function ensureCoach(save: DynastySave, seed: CoachSeed, teamId: TeamId): void {
-  const existing = save.coaches[seed.id] ?? {
-    id: seed.id,
-    name: seed.name,
-    teamId,
-    yearAvail: seed.yearAvail,
-    offense: seed.offense,
-    defense: seed.defense,
-    historical: true,
-    role: "HC",
-    offScheme: "multiple",
-    defScheme: "4-3",
-    yearsOnJob: 1,
-    careerWins: 0,
-    careerLosses: 0,
-  };
-  existing.role = existing.role ?? "HC";
-  existing.offScheme = existing.offScheme ?? "multiple";
-  existing.defScheme = existing.defScheme ?? "4-3";
-  existing.yearsOnJob = existing.yearsOnJob ?? 1;
-  existing.careerWins = existing.careerWins ?? 0;
-  existing.careerLosses = existing.careerLosses ?? 0;
+  const existing = save.coaches[seed.id] ?? makeCoachFromSeed(seed, save.year, { teamId, role: "HC" });
+  fillCoachFields(existing, save.year);
   existing.teamId = teamId;
+  existing.role = "HC";
+  existing.yearsOnJob = existing.yearsOnJob || 1;
   save.coaches[seed.id] = existing;
   save.teams[teamId].coachId = seed.id;
+  save.teams[teamId].offScheme = existing.offScheme;
+  save.teams[teamId].defScheme = existing.defScheme;
 }
+
 
 function activateClub(save: DynastySave, id: TeamId): void {
   if (!save.teams[id]) save.teams[id] = emptyTeam(id, true);
@@ -98,59 +84,83 @@ function relocateBrownsToRavens(save: DynastySave): void {
   });
 }
 
-function runAllocation(save: DynastySave, spec: ExpansionSpec): void {
-  for (const club of spec.clubs) {
-    activateClub(save, club.id);
-    const seed = EXPANSION_COACHES.find((c) => c.id === club.coachId) ?? {
-      id: club.coachId,
-      name: club.coachName,
-      teamId: club.id,
-      yearAvail: spec.year,
-      offense: 74,
-      defense: 74,
-    };
-    ensureCoach(save, seed, club.id);
-  }
-  const sources = poolTeams(save, spec, spec.clubs[0]?.pool ?? "all");
-  const exposed = exposeLists(save, sources, spec.exposedPerClub);
-  const remaining = new Set(Object.values(exposed).flat());
-  const picksMade: string[] = [];
-  const cap = spec.picksPerClub;
-  let guard = 0;
-  while (picksMade.length < cap * spec.clubs.length && remaining.size && guard++ < 2000) {
-    const club = spec.clubs[picksMade.length % spec.clubs.length]!;
-    const pick = pickNeed(save, club.id, [...remaining]);
-    if (!pick) break;
-    remaining.delete(pick);
-    movePlayer(save, pick, club.id);
-    picksMade.push(pick);
-    const p = save.players[pick];
-    if (p) addTx(save, "expansion", pick, String(p.teamId), club.id, spec.title);
-  }
-  for (const club of spec.clubs) {
-    while (rosterOf(save, club.id).length < ROSTER_TARGET) {
-      const leftover = save.draftBoard.filter((d) => !d.taken)[0];
-      if (leftover) {
-        leftover.taken = true;
-        leftover.takenBy = club.id;
-        addToRoster(save, club.id, leftover.playerId);
-      } else {
-        const pos = DEPTH_CHART[rosterOf(save, club.id).length % DEPTH_CHART.length]![0];
-        generatePlayer(save, pos, club.id, 58 + (rosterOf(save, club.id).length % 12));
-      }
+export function remainingExposed(save: DynastySave): string[] {
+  const exp = save.expansion;
+  if (!exp) return [];
+  const taken = new Set(exp.picksMade);
+  const newbie = new Set(exp.newTeamIds);
+  const out: string[] = [];
+  for (const ids of Object.values(exp.exposed)) {
+    for (const id of ids) {
+      if (taken.has(id)) continue;
+      const p = save.players[id];
+      if (!p) continue;
+      if (newbie.has(p.teamId as TeamId)) continue;
+      out.push(id);
     }
-    fillRoster(save, club.id);
   }
-  save.expansion = {
-    specId: spec.id,
-    newTeamIds: spec.clubs.map((c) => c.id),
-    exposed,
-    picksMade,
-    pickCap: cap,
-    pickingIndex: picksMade.length,
-    done: true,
-  };
+  return out;
+}
+
+export function expansionOnClock(save: DynastySave): TeamId | undefined {
+  const exp = save.expansion;
+  if (!exp || exp.done) return undefined;
+  const total = exp.pickCap * Math.max(1, exp.newTeamIds.length);
+  if (exp.picksMade.length >= total) return undefined;
+  if (!exp.newTeamIds.length) return undefined;
+  return exp.newTeamIds[exp.picksMade.length % exp.newTeamIds.length];
+}
+
+function takeExpansionPick(save: DynastySave, clubId: TeamId, playerId: string, title: string): void {
+  const exp = save.expansion;
+  if (!exp) return;
+  const p = save.players[playerId];
+  const from = p ? String(p.teamId) : "";
+  movePlayer(save, playerId, clubId);
+  exp.picksMade.push(playerId);
+  exp.pickingIndex = exp.picksMade.length;
+  if (p) {
+    p.contractYears = Math.max(p.contractYears ?? 1, 2);
+    addTx(save, "expansion", playerId, from, clubId, title);
+  }
+}
+
+function fillExpansionClub(save: DynastySave, clubId: TeamId): void {
+  while (rosterOf(save, clubId).length < ROSTER_TARGET) {
+    // Leftover prospects who have since retired stay retired.
+    const leftover = save.draftBoard.filter((d) => {
+      const lp = save.players[d.playerId];
+      return !d.taken && !(lp && (lp.teamId === "retired" || lp.teamId === "hof"));
+    })[0];
+    if (leftover) {
+      leftover.taken = true;
+      leftover.takenBy = clubId;
+      const lp = save.players[leftover.playerId];
+      if (lp) {
+        lp.contractYears = Math.max(lp.contractYears ?? 1, 2);
+        movePlayer(save, leftover.playerId, clubId);
+      } else {
+        const pos = DEPTH_CHART[rosterOf(save, clubId).length % DEPTH_CHART.length]![0];
+        const g = generatePlayer(save, pos, clubId, 58 + (rosterOf(save, clubId).length % 12));
+        g.contractYears = 2;
+      }
+    } else {
+      const pos = DEPTH_CHART[rosterOf(save, clubId).length % DEPTH_CHART.length]![0];
+      const g = generatePlayer(save, pos, clubId, 58 + (rosterOf(save, clubId).length % 12));
+      g.contractYears = 2;
+    }
+  }
+  fillRoster(save, clubId);
+}
+
+export function finishExpansionRosters(save: DynastySave): void {
+  const exp = save.expansion;
+  if (!exp) return;
+  const spec = expansionForYear(save.year);
+  for (const id of exp.newTeamIds) fillExpansionClub(save, id);
+  exp.done = true;
   rebuildSchedule(save);
+  if (!spec) return;
   for (const club of spec.clubs) {
     const named = rosterOf(save, club.id)
       .filter((p) => p.historical)
@@ -169,11 +179,81 @@ function runAllocation(save: DynastySave, spec: ExpansionSpec): void {
   }
 }
 
+export function autoExpansionPicks(save: DynastySave, force = false): void {
+  const exp = save.expansion;
+  if (!exp || exp.done) return;
+  const spec = expansionForYear(save.year);
+  const title = spec?.title ?? `${save.year} Expansion`;
+  const total = exp.pickCap * Math.max(1, exp.newTeamIds.length);
+  let guard = 0;
+  while (exp.picksMade.length < total && guard++ < 2000) {
+    const club = expansionOnClock(save);
+    if (!club) break;
+    if (!force && club === save.userTeamId && !save.cpuOnly) return;
+    const pick = pickNeed(save, club, remainingExposed(save));
+    if (!pick) break;
+    takeExpansionPick(save, club, pick, title);
+  }
+  const pickingDone = exp.picksMade.length >= total || remainingExposed(save).length === 0;
+  if (pickingDone && (force || save.cpuOnly || !exp.newTeamIds.includes(save.userTeamId))) {
+    finishExpansionRosters(save);
+  }
+}
+
+export function closeExpansion(save: DynastySave): void {
+  if (!save.expansion) return;
+  if (!save.expansion.done) {
+    autoExpansionPicks(save, true);
+    if (!save.expansion.done) finishExpansionRosters(save);
+  }
+}
+
+function runAllocation(save: DynastySave, spec: ExpansionSpec): void {
+  for (const club of spec.clubs) {
+    activateClub(save, club.id);
+    const seed = EXPANSION_COACHES.find((c) => c.id === club.coachId) ?? {
+      id: club.coachId,
+      name: club.coachName,
+      teamId: club.id,
+      yearAvail: spec.year,
+      offense: 74,
+      defense: 74,
+    };
+    ensureCoach(save, seed, club.id);
+  }
+  const sources = poolTeams(save, spec, spec.clubs[0]?.pool ?? "all");
+  const exposed = exposeLists(save, sources, spec.exposedPerClub);
+  save.expansion = {
+    specId: spec.id,
+    newTeamIds: spec.clubs.map((c) => c.id),
+    exposed,
+    picksMade: [],
+    pickCap: spec.picksPerClub,
+    pickingIndex: 0,
+    done: false,
+  };
+  addNews(save, {
+    kind: "expansion",
+    headline: spec.title,
+    body: `${spec.clubs.map((c) => `${displayName(save.year, c.id)} · ${c.coachName}`).join(". ")}. Exposed lists are on the table. The new club takes veterans off existing rosters.`,
+    teamIds: spec.clubs.map((c) => c.id),
+    playerIds: [],
+  });
+  const userIsNew = spec.clubs.some((c) => c.id === save.userTeamId);
+  autoExpansionPicks(save, save.cpuOnly || !userIsNew);
+  if (!save.expansion.done && (save.cpuOnly || !userIsNew)) finishExpansionRosters(save);
+  rebuildSchedule(save);
+}
+
 export function applyYearExpansion(save: DynastySave): boolean {
   const spec = expansionForYear(save.year);
   if (!spec) {
     save.expansion = undefined;
     return false;
+  }
+  if (save.expansion?.specId === spec.id) {
+    if (!save.expansion.done) autoExpansionPicks(save, save.cpuOnly);
+    return true;
   }
   if (spec.kind === "relocate") {
     relocateBrownsToRavens(save);
@@ -196,12 +276,15 @@ export function applyYearExpansion(save: DynastySave): boolean {
 export function userExpansionPick(save: DynastySave, playerId: string): void {
   const exp = save.expansion;
   if (!exp || exp.done) return;
-  const userNew = exp.newTeamIds.includes(save.userTeamId);
-  if (!userNew) return;
-  const exposed = Object.values(exp.exposed).flat();
-  if (!exposed.includes(playerId)) return;
-  if (exp.picksMade.includes(playerId)) return;
-  movePlayer(save, playerId, save.userTeamId);
-  exp.picksMade.push(playerId);
-  if (exp.picksMade.length >= exp.pickCap) exp.done = true;
+  if (!exp.newTeamIds.includes(save.userTeamId)) return;
+  const club = expansionOnClock(save);
+  if (club !== save.userTeamId) return;
+  if (!remainingExposed(save).includes(playerId)) return;
+  const spec = expansionForYear(save.year);
+  takeExpansionPick(save, save.userTeamId, playerId, spec?.title ?? "Expansion");
+  autoExpansionPicks(save, false);
+  const total = exp.pickCap * Math.max(1, exp.newTeamIds.length);
+  if ((exp.picksMade.length >= total || remainingExposed(save).length === 0) && !exp.done) {
+    finishExpansionRosters(save);
+  }
 }
