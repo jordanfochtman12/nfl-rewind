@@ -127,6 +127,29 @@ export function FreeAgencyRecap({ year, compact = false }: { year?: number; comp
           </div>
         )}
 
+        {(r.releases?.length ?? 0) > 0 && (
+          <details className="rounded-lg border border-line bg-studio p-3">
+            <summary className="min-h-10 cursor-pointer font-display text-sm tracking-[0.2em] text-paper">
+              EXPIRING CONTRACTS &amp; RELEASES · {r.releases!.length}
+            </summary>
+            <p className="mb-2 mt-1 text-xs text-muted">
+              These players entered the open market after their deals expired or their clubs released them. Camp cuts are tracked separately later in the offseason.
+            </p>
+            <ul className="grid gap-2 sm:grid-cols-2">
+              {r.releases!.slice(0, compact ? 12 : 40).map((x) => (
+                <li key={`${x.playerId}-${x.from}`} className="flex min-w-0 items-center gap-2 rounded-md border border-line px-2 py-1.5 text-sm">
+                  <Logo id={x.from} year={r.year} size={22} />
+                  <span className="min-w-0 flex-1 truncate">
+                    {save.players[x.playerId] ? <PlayerLink player={save.players[x.playerId]!} className="inline min-h-0" /> : x.name}
+                    <span className="ml-1 text-muted">· {posLabel(x)} · {x.ovr}</span>
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-subtle">{x.detail.startsWith("Contract expired") ? "Expired" : "Released"}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+
         {(winners.length > 0 || losers.length > 0) && <div className="grid gap-3 sm:grid-cols-2">
           {([["WINNERS", winners], ["LOSERS", losers]] as const).filter(([, list]) => list.length > 0).map(([label, list]) => (
             <div key={label} className="min-w-0 rounded-lg border border-line p-3">

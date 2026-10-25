@@ -1,6 +1,6 @@
 /** NFL Rewind engine types. No React. */
 
-export const SAVE_VERSION = 26;
+export const SAVE_VERSION = 28;
 export const STARTING_YEAR = 1966;
 export const END_YEAR = 2040;
 export const ROSTER_TARGET = 45;
@@ -926,7 +926,7 @@ export interface TradeOffer {
   status: "open" | "accepted" | "declined";
 }
 
-export type RfaTenderLevel = "first" | "second" | "original" | "rofr";
+export type RfaTenderLevel = "firstAndThird" | "first" | "second" | "original" | "rofr";
 
 /** A qualifying offer and the draft compensation it secures if the club declines to match. */
 export interface RfaTender {
@@ -936,6 +936,8 @@ export interface RfaTender {
   level: RfaTenderLevel;
   salary: number;
   compensationRound?: number;
+  /** Multi-round compensation was added in v27; old saves keep using compensationRound. */
+  compensationRounds?: number[];
 }
 
 /** Exclusive-rights minimum-salary offer that retains a player with fewer than three accrued seasons. */
@@ -958,6 +960,9 @@ export interface RfaOfferSheet {
   years: number;
   compensationRound?: number;
   compensationPickId?: string;
+  /** Multi-round compensation was added in v27; old saves keep using the singular fields. */
+  compensationRounds?: number[];
+  compensationPickIds?: string[];
   status: "pending" | "matched" | "signed";
   result?: string;
 }
@@ -1174,6 +1179,8 @@ export interface DynastySave {
   waiverOrder: TeamId[];
   waivers: WaiverWire[];
   faOpened: boolean;
+  /** New offseason markets open before the draft; absent legacy saves retain their current order. */
+  marketBeforeDraft?: boolean;
   /** Regular / playoff week just simmed; stay on the film until Continue. */
   weekFilm?: boolean;
   camp?: CampReport;
@@ -1546,7 +1553,7 @@ export interface AdvanceOpts {
   userPickPlayerId?: string;
   /** CPU picks until the user is on the clock (or the draft ends). */
   simToUser?: boolean;
-  /** Close the FA market and kick off the season. */
+  /** Close the free-agent market and advance to the pre-draft show or camp. */
   closeFa?: boolean;
 }
 

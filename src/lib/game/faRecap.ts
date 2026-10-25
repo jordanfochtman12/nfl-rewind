@@ -41,6 +41,8 @@ export interface FaTeamLine {
 export interface FaRecap {
   year: number;
   signings: FaSigning[];
+  /** Players whose deals expired or who were released into the market this winter. */
+  releases?: { playerId: string; name: string; pos: Pos; from: TeamId; ovr: number; detail: string }[];
   teams: FaTeamLine[];
   /** The best players nobody signed. */
   unsigned: { playerId: string; name: string; pos: Pos; age: number; ovr: number }[];
@@ -84,6 +86,13 @@ export function faRecap(save: DynastySave, year = save.year): FaRecap | undefine
   if (filed) return filed;
   if (year !== save.year) return undefined;
   const signings = signingsOf(save, year);
+  const releases = save.transactions
+    .filter((t) => t.year === year && t.week === 0 && (t.kind === "cut" || t.kind === "waive") && t.to === "fa")
+    .map((t) => {
+      const p = save.players[t.playerId];
+      return p ? { playerId: p.id, name: playerName(p), pos: p.pos, from: t.from as TeamId, ovr: p.ovr, detail: t.detail } : undefined;
+    })
+    .filter((row): row is NonNullable<typeof row> => !!row);
   const ids = activeTeamIds(year);
   const lines = new Map<TeamId, FaTeamLine>(ids.map((id) => [id, { teamId: id, added: 0, lost: 0, addValue: 0, lostValue: 0, spent: 0, score: 0, grade: "C" }]));
   for (const s of signings) {
@@ -127,7 +136,7 @@ export function faRecap(save: DynastySave, year = save.year): FaRecap | undefine
     .sort((a, b) => b.ovr - a.ovr)
     .slice(0, 6)
     .map((p) => ({ playerId: p.id, name: playerName(p), pos: p.pos, age: p.age, ovr: p.ovr }));
-  return { year, signings: signings.slice(0, 40), teams: ranked, unsigned, final: save.phase !== "freeAgency" };
+  return { year, signings: signings.slice(0, 40), releases: releases.slice(0, 60), teams: ranked, unsigned, final: save.phase !== "freeAgency" };
 }
 
 /** File the winter when the market closes; keep the last dozen. */

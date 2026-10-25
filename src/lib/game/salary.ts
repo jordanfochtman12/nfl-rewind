@@ -2,6 +2,7 @@ import type { DynastySave, Player, Pos, TeamId } from "./types.ts";
 import { clamp, rand, randInt } from "./rng.ts";
 import { cpuTenderErfa, cpuTenderRfa, isExclusiveRightsFreeAgent, isRestrictedFreeAgent, startTalks } from "./contracts.ts";
 import { cpuHandles } from "./teamControl.ts";
+import { addTx } from "./news.ts";
 
 /** Era star-scale annual salary in then-year dollars. */
 export function starScale(year: number): number {
@@ -162,6 +163,7 @@ export function expireContract(save: DynastySave, p: Player): void {
     }
   }
   p.teamId = "fa";
+  addTx(save, "cut", p.id, from, "fa", "Contract expired; entered the free-agent market");
 }
 
 export function refreshContracts(save: DynastySave, opts?: { init?: boolean }): void {

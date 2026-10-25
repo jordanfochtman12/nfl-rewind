@@ -18,6 +18,8 @@ export interface Settings {
   music: boolean;
   /** A preferred device voice for the lead voice ("" = best available). */
   voiceName: string;
+  /** Per-person device voices for supporting studio broadcasters. */
+  supportVoiceNames: Partial<Record<string, string>>;
   /** Watch mode auto-play pace. */
   autoSpeed: AutoSpeed;
   /** Auto-play pauses for the draft, the Super Bowl, awards night and the Hall of Fame. */
@@ -45,6 +47,7 @@ export const DEFAULT_SETTINGS: Settings = {
   boothVoices: true,
   music: true,
   voiceName: "",
+  supportVoiceNames: {},
   autoSpeed: "normal",
   stopForBigNights: true,
   tvStudio: true,
@@ -113,6 +116,7 @@ export const useSettings = create<SettingsStore>()(
         return {
           ...s,
           statBoardSort: s.statBoardSort ?? {},
+          supportVoiceNames: s.supportVoiceNames ?? {},
           ...(from < 2 ? { narration: true, boothVoices: true, music: true, tvStudio: true } : {}),
           uiScale: s.uiScale ?? 100,
           highContrast: s.highContrast ?? false,

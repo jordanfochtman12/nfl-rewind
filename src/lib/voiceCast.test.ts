@@ -31,3 +31,18 @@ test("the phone's-voice choice leaves the lead voice unset so the phone picks it
   assert.equal(cast.get("pbp")?.voice, undefined);
   assert.ok(cast.get("color")?.voice);
 });
+
+test("supporting broadcasters can each be assigned a saved device voice", () => {
+  const cast = castVoices(ios, [
+    { key: "HOST", gender: "m" },
+    { key: "ANALYST", gender: "m" },
+    { key: "REPORTER", gender: "f" },
+  ], {
+    HOST: "com.apple.voice.enhanced.en-US.Tom",
+    ANALYST: "com.apple.voice.compact.en-GB.Daniel",
+    REPORTER: "com.apple.voice.premium.en-US.Zoe",
+  });
+  assert.equal(cast.get("HOST")?.voice?.voiceURI, "com.apple.voice.enhanced.en-US.Tom");
+  assert.equal(cast.get("ANALYST")?.voice?.voiceURI, "com.apple.voice.compact.en-GB.Daniel");
+  assert.equal(cast.get("REPORTER")?.voice?.voiceURI, "com.apple.voice.premium.en-US.Zoe");
+});

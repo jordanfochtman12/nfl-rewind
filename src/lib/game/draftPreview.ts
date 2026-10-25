@@ -261,7 +261,7 @@ export function collegeLine(save: DynastySave, p: Player): CollegeLine {
   // arrival) still put up modern numbers at the top.
   const q = Math.max(0, Math.min(1, pct)) ** 1.6;
   const r = (salt: string) => 0.8 + draw(p.id, salt) * 0.4;
-  const honor = pct >= 0.985 ? "All-American" : pct >= 0.93 ? "All-Conference" : undefined;
+  const honor = pct >= 0.985 ? "All-American projection" : pct >= 0.93 ? "All-Conference projection" : undefined;
   const n = (v: number) => Math.max(0, Math.round(v)).toLocaleString("en-US");
   switch (groupOf(p.pos)) {
     case "QB": {
@@ -271,49 +271,49 @@ export function collegeLine(save: DynastySave, p: Player): CollegeLine {
       const yds = att * (y < 1980 ? 5.4 + q * 2.4 : 6.2 + q * 3.2) * r("ypa");
       const td = yds / (y < 1980 ? 150 : 120) * r("td");
       const int = att * (0.045 - q * 0.02) * r("int");
-      return { label: `${y} · ${games} games`, line: `${n(att * pct)}/${n(att)} · ${n(yds)} yds · ${n(td)} TD · ${n(int)} INT`, honor };
+      return { label: `Scout estimate · ${y} · ${games} games`, line: `${n(att * pct)}/${n(att)} · ${n(yds)} yds · ${n(td)} TD · ${n(int)} INT`, honor };
     }
     case "RB": {
       const att = ((p.pos === "FB" ? 80 : y < 1970 ? 120 : 150) + (y < 1970 ? 110 : 140) * q) * r("att");
       const ypc = 3.9 + q * (y < 1970 ? 1.6 : 2.2) * r("ypc");
       const td = att * ypc / (p.pos === "FB" ? 120 : 95) * r("td");
-      return { label: `${y} · ${games} games`, line: `${n(att)} car · ${n(att * ypc)} yds · ${(ypc).toFixed(1)} ypc · ${n(td)} TD · ${n(10 + 25 * q * passEra * r("rec"))} rec`, honor };
+      return { label: `Scout estimate · ${y} · ${games} games`, line: `${n(att)} car · ${n(att * ypc)} yds · ${(ypc).toFixed(1)} ypc · ${n(td)} TD · ${n(10 + 25 * q * passEra * r("rec"))} rec`, honor };
     }
     case "WR":
     case "TE": {
       const rec = (p.pos === "TE" ? 18 : 28) + (p.pos === "TE" ? 34 : 58) * q * passEra * r("rec");
       const avg = (p.pos === "TE" ? 11 : 14) + q * 4 * r("avg");
-      return { label: `${y} · ${games} games`, line: `${n(rec)} rec · ${n(rec * avg)} yds · ${avg.toFixed(1)} avg · ${n(rec * avg / 105 * r("td"))} TD`, honor };
+      return { label: `Scout estimate · ${y} · ${games} games`, line: `${n(rec)} rec · ${n(rec * avg)} yds · ${avg.toFixed(1)} avg · ${n(rec * avg / 105 * r("td"))} TD`, honor };
     }
     case "OT":
     case "IOL":
       return {
-        label: `${y} · ${games} starts`,
+        label: `Scout estimate · ${y} · ${games} starts`,
         line: `${n(3.5 - 3 * q + draw(p.id, "sk") * 1.5)} sacks allowed · ${n(1 + 3 * q * r("pan"))} pancake games`,
         honor,
       };
     case "EDGE":
     case "DT": {
       const sacks = (p.pos === "DT" ? 2.5 : 4) + (p.pos === "DT" ? 5 : 9) * q * r("sk");
-      return { label: `${y} · ${games} games`, line: `${n(30 + 35 * q * r("tk"))} tkl · ${n(sacks * 1.8)} TFL · ${sacks.toFixed(1)} sacks`, honor };
+      return { label: `Scout estimate · ${y} · ${games} games`, line: `${n(30 + 35 * q * r("tk"))} tkl · ${n(sacks * 1.8)} TFL · ${sacks.toFixed(1)} sacks`, honor };
     }
     case "LB":
       return {
-        label: `${y} · ${games} games`,
+        label: `Scout estimate · ${y} · ${games} games`,
         line: `${n(60 + 70 * q * r("tk"))} tkl · ${n(5 + 9 * q * r("tfl"))} TFL · ${(1 + 5 * q * r("sk")).toFixed(1)} sacks · ${n(q * 3 * r("int"))} INT`,
         honor,
       };
     case "CB":
     case "S":
       return {
-        label: `${y} · ${games} games`,
+        label: `Scout estimate · ${y} · ${games} games`,
         line: `${n(28 + 40 * q * r("tk"))} tkl · ${n(1 + 6 * q * r("int"))} INT · ${n(4 + 12 * q * r("pd"))} PD`,
         honor,
       };
     default:
       return p.pos === "K"
-        ? { label: `${y} · ${games} games`, line: `${n(9 + 10 * q * r("fg"))}/${n(14 + 8 * q)} FG · long ${n(44 + 12 * q * r("lg"))}`, honor }
-        : { label: `${y} · ${games} games`, line: `${(38 + 7 * q * r("avg")).toFixed(1)} avg · ${n(10 + 12 * q)} inside the 20`, honor };
+        ? { label: `Scout estimate · ${y} · ${games} games`, line: `${n(9 + 10 * q * r("fg"))}/${n(14 + 8 * q)} FG · long ${n(44 + 12 * q * r("lg"))}`, honor }
+        : { label: `Scout estimate · ${y} · ${games} games`, line: `${(38 + 7 * q * r("avg")).toFixed(1)} avg · ${n(10 + 12 * q)} inside the 20`, honor };
   }
 }
 

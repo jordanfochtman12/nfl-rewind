@@ -1,5 +1,5 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
-import { settingsNow } from "@/lib/settings-store";
+import { settingsNow, useSettings } from "@/lib/settings-store";
 import { useEffect, useRef, useState } from "react";
 import { stadiumAudio } from "./stadiumAudio";
 import { castVoices, PHONE_VOICE, voiceChoices, voiceKey, voiceLabel } from "@/lib/voiceCast";
@@ -17,6 +17,8 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
   const [unavailable, setUnavailable] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceName, setVoiceName] = useState(() => settingsNow().voiceName);
+  const supportVoices = useSettings((s) => s.supportVoiceNames);
+  const setSettings = useSettings((s) => s.set);
   const engine = useRef<ReturnType<typeof stadiumAudio> | null>(null);
   const last = useRef(index);
   const callSeq = useRef(0);
@@ -27,7 +29,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
     const cast = castVoices(voices, [
       { key: "PBP", gender: booth.pbp.gender, rate: 1.02 },
       { key: "COLOR", gender: booth.color.gender, pitch: 0.94, rate: 0.97 },
-    ], voiceName);
+    ], { PBP: voiceName, COLOR: supportVoices.COLOR });
     const speech = new SpeechSynthesisUtterance(footballSpeech(line.text, year));
     const c = cast.get(line.speaker);
     if (c?.voice) speech.voice = c.voice;
@@ -232,6 +234,7 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
               value={voiceName}
               onChange={(e) => {
                 setVoiceName(e.target.value);
+                setSettings({ voiceName: e.target.value });
                 cancelSpeech();
               }}
             >
@@ -242,6 +245,16 @@ export function useBroadcastSound(active: boolean, cue: string, lines: BoothLine
                     {voiceLabel(v)}
                   </option>
                 ))}
+            </select>
+          </label>
+        )}
+        {announcer && (
+          <label className="flex flex-wrap items-center gap-2 text-xs text-muted">
+            Color analyst voice ({booth.color.name})
+            <select aria-label="Color analyst voice" className="min-h-9 max-w-full rounded border border-white/20 bg-studio px-2" value={supportVoices.COLOR ?? ""} onChange={(e) => { setSettings({ supportVoiceNames: { ...supportVoices, COLOR: e.target.value } }); cancelSpeech(); }}>
+              <option value="">Automatic cast</option>
+              <option value={PHONE_VOICE}>Phone&apos;s voice (Spoken Content)</option>
+              {voiceChoices(voices).map((v) => <option key={voiceKey(v)} value={voiceKey(v)}>{voiceLabel(v)}</option>)}
             </select>
           </label>
         )}

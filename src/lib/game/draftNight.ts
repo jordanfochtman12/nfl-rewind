@@ -154,7 +154,7 @@ export function pickBreakdown(save: DynastySave, playerId: string, made: Player[
   if (forty && forty <= 4.45 && !["LT", "LG", "C", "RG", "RT", "DT", "K", "P"].includes(p.pos)) facts.push(`He ran a ${forty.toFixed(2)} forty.`);
   if (p.heightIn && p.heightIn >= 77 && ["QB", "WR", "TE", "LT", "RT", "DE"].includes(p.pos)) facts.push(pick(`${p.id}-ht`, [`Six-${p.heightIn - 72}, and he moves like a smaller man.`, `He's six-${p.heightIn - 72}. You can't teach that.`, `Six-${p.heightIn - 72} and still growing into his frame.`]));
   const col = collegeLine(save, p);
-  if (col.honor && p.college && p.college !== "Campus") facts.push(`${col.honor} at ${p.college}.`);
+  if (col.honor && p.college && p.college !== "Campus") facts.push(`The scouting projection puts him at ${col.honor.toLowerCase()} level coming out of ${p.college}.`);
   if (from) facts.push(`The ${nick} got this pick from the ${nicknameOf(save.year, from)}.`);
   // Nothing on the board stands out: the desk still says who he is.
   if (!facts.length) facts.push(`${/^[aeiou]/.test(position) ? "An" : "A"} ${position}${p.college && p.college !== "Campus" ? ` out of ${p.college}` : ""}, and the ${nick} have their man.`);

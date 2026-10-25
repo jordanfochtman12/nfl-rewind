@@ -370,13 +370,32 @@ function openDraft(save: DynastySave): void {
   ensureSeasonPicks(save);
   buildDraftBoard(save);
   runCombine(save);
-  save.phase = "preDraft";
+  // In new offseason cycles, clubs build their rosters in free agency before the draft.
+  // Legacy saves already in an older phase keep their existing order; this entry point is
+  // reached only when a season's winter has just completed.
+  save.phase = "freeAgency";
   save.week = 0;
   save.draftPickIndex = 0;
-  save.faOpened = false;
+  save.marketBeforeDraft = true;
+  runCpuFreeAgency(save, true, false);
+  save.faOpened = true;
   save.waivers = [];
   draftRetrospective(save);
   regradeClasses(save);
+}
+
+/** Finish a draft in the correct position for either legacy or market-first save timelines. */
+function finishDraft(save: DynastySave, auto: boolean): void {
+  clearCombine(save);
+  if (save.marketBeforeDraft) {
+    save.phase = "preseason";
+    resolveCamp(save);
+    announceRuleChanges(save);
+    return;
+  }
+  save.phase = "freeAgency";
+  runCpuFreeAgency(save, true, auto);
+  save.faOpened = true;
 }
 
 function finishOffseason(save: DynastySave): void {
@@ -483,30 +502,21 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
     case "draft": {
       if (auto) {
         autoDraftRest(s);
-        s.phase = "freeAgency";
-        clearCombine(s);
-        runCpuFreeAgency(s, true, auto);
-        s.faOpened = true;
+        finishDraft(s, auto);
         break;
       }
       if (opts.simToUser) {
         simUntilUserPick(s);
         if (!currentDraftTeam(s)) {
           if (maybeStartAflDraft(s)) break;
-          s.phase = "freeAgency";
-        clearCombine(s);
-          runCpuFreeAgency(s, true, auto);
-          s.faOpened = true;
+          finishDraft(s, auto);
         }
         break;
       }
       const team = currentDraftTeam(s);
       if (!team) {
         if (maybeStartAflDraft(s)) break;
-        s.phase = "freeAgency";
-        clearCombine(s);
-        runCpuFreeAgency(s, true, auto);
-        s.faOpened = true;
+        finishDraft(s, auto);
         break;
       }
       const userPick = !cpuHandles(s, team, "draft");
@@ -520,10 +530,7 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
       }
       if (!currentDraftTeam(s)) {
         if (maybeStartAflDraft(s)) break;
-        s.phase = "freeAgency";
-        clearCombine(s);
-        runCpuFreeAgency(s, true, auto);
-        s.faOpened = true;
+        finishDraft(s, auto);
       }
       break;
     }
@@ -546,9 +553,12 @@ function advanceInPlace(s: DynastySave, opts: AdvanceOpts = {}): DynastySave {
         capAndRefill(s);
         if (!s.cpuOnly || s.sandbox) fileFaRecap(s);
         s.faOpened = false;
-        s.phase = "preseason";
-        resolveCamp(s);
-        announceRuleChanges(s);
+        if (s.marketBeforeDraft) s.phase = "preDraft";
+        else {
+          s.phase = "preseason";
+          resolveCamp(s);
+          announceRuleChanges(s);
+        }
       }
       break;
     case "expansion":

@@ -11,8 +11,9 @@ import {
   makeOffer,
   isRestrictedFreeAgent,
   isExclusiveRightsFreeAgent,
-  rfaCompensationRound,
+  rfaCompensationRounds,
   rfaTenderPrice,
+  rfaTenderLevelsForYear,
   tagPrice,
   tenderRfa,
   tenderErfa,
@@ -38,12 +39,13 @@ const STATUS: Record<Negotiation["status"], { label: string; tone: string }> = {
 };
 
 const OFFERS = [0.85, 0.92, 0.97, 1, 1.06] as const;
-const RFA_LEVELS: { level: RfaTenderLevel; label: string }[] = [
-  { level: "first", label: "First-round compensation" },
-  { level: "second", label: "Second-round compensation" },
-  { level: "original", label: "Original-round compensation" },
-  { level: "rofr", label: "Right of first refusal only" },
-];
+const RFA_LABELS: Record<RfaTenderLevel, string> = {
+  firstAndThird: "First- and third-round compensation",
+  first: "First-round compensation",
+  second: "Second-round compensation",
+  original: "Original-round compensation",
+  rofr: "Right of first refusal only",
+};
 
 function RfaTenderOptions({ p }: { p: Player }) {
   const save = useGameStore((s) => s.save)!;
@@ -52,12 +54,12 @@ function RfaTenderOptions({ p }: { p: Player }) {
     <div className="w-full rounded-lg border border-brass/25 bg-black/25 p-3">
       <p className="mb-2 text-xs text-muted">Tender level sets the one-year salary and what your club receives if it declines an offer sheet. Compensation is from next year’s draft in this game’s offseason order.</p>
       <div className="flex flex-wrap gap-2">
-        {RFA_LEVELS.map(({ level, label }) => {
-          const round = rfaCompensationRound(level, p);
+        {rfaTenderLevelsForYear(save.year).map((level) => {
+          const rounds = rfaCompensationRounds(level, p);
           return (
             <Btn key={level} kind="gold" className="min-h-10 px-3 text-xs" onClick={() => desk((s) => tenderRfa(s, p.id, level))}>
-              {label} · {formatMoney(rfaTenderPrice(save.year, level, p), save.year)}
-              {round ? ` · ${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"} pick` : " · no pick"}
+              {RFA_LABELS[level]} · {formatMoney(rfaTenderPrice(save.year, level, p), save.year)}
+              {rounds.length ? ` · ${rounds.map((round) => `${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"}`).join(" + ")} pick${rounds.length > 1 ? "s" : ""}` : " · no pick"}
             </Btn>
           );
         })}

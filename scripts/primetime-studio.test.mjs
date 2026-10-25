@@ -160,7 +160,7 @@ test("episode archive is bounded, deduplicated on rebuild, and migrates version 
   assert.equal(s.primetimeArchive.length, 26);
   const old = { ...s, version: 17, primetimeArchive: undefined };
   const loaded = hydrateSave(old);
-  assert.equal(loaded.version, 26);
+  assert.equal(loaded.version, 28);
   assert.deepEqual(loaded.primetimeArchive, []);
 });
 

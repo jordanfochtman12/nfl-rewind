@@ -245,7 +245,7 @@ export function DraftPreviewShow({ embedded = false, preDraft = false, onReturn 
                 <th className="px-2 py-2">Prospect</th>
                 <th className="px-2 py-2">School</th>
                 <th className="px-2 py-2">Ht · Wt · 40</th>
-                <th className="px-2 py-2">Final college season</th>
+                <th className="px-2 py-2">Scouting projection · final college season</th>
                 <th className="px-2 py-2">Grade</th>
                 <th className="px-2 py-2">Proj.</th>
                 <th className="px-2 py-2">Board</th>

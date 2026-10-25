@@ -169,11 +169,24 @@ export function speakLine(u: SpeechSynthesisUtterance): void {
   lines += 1;
   refreshTalking();
   const synth = window.speechSynthesis;
+  const pieces = u.text.length > 180 ? chunk(u.text) : [u.text];
+  // iOS is primed with a silent utterance on the first touch. If Safari leaves that
+  // utterance queued without an end event, the synthesis engine can stay busy while our
+  // line counter is idle; new narration would then sit behind something the viewer cannot
+  // hear. Clear only that untracked queue, then give Safari a beat before the audible line.
+  if (lines === 1 && (synth.speaking || synth.pending)) {
+    synth.cancel();
+    globalThis.setTimeout(() => {
+      if (mine !== gen) return;
+      if (synth.paused) synth.resume();
+      readPieces(u, pieces, mine);
+    }, 160);
+    return;
+  }
   // A stuck engine (iOS after an interruption) won't read anything until it's resumed.
   if (synth.paused) synth.resume();
   // Phone engines cut a long utterance off partway (Chrome at about 15 seconds): a long
   // line is read as its sentences, one utterance each, and ends when the last one does.
-  const pieces = u.text.length > 180 ? chunk(u.text) : [u.text];
   readPieces(u, pieces, mine);
 }
 

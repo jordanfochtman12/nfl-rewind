@@ -224,6 +224,8 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
   const wRush = sumBox(boxOf(winner), "rushYds");
   const wRushAtt = sumBox(boxOf(winner), "rushAtt");
   const lRush = sumBox(boxOf(loser), "rushYds");
+  const wPass = sumBox(boxOf(winner), "passYds");
+  const wPassTd = sumBox(boxOf(winner), "passTd");
   const wSacks = sumBox(boxOf(winner), "sacks");
   const takeaways = to(loser);
   const giveaways = to(winner);
@@ -232,13 +234,20 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
   const why: string[] = [];
   if (takeaways >= 2) why.push(`We took the ball away ${takeaways} times. Win the turnover battle, you usually win the game.`);
   if (wRushAtt >= 30 && wRush >= 140) why.push(`${wRushAtt} carries, ${wRush} yards. When we run it like that, that's who we are.`);
+  if (wPass >= 275 && wPassTd >= 2) why.push(`${wPass} through the air and ${wPassTd} passing scores. The protection gave us time and our quarterback took advantage.`);
+  if (wRushAtt >= 24 && wRush >= 100 && wPass >= 200) why.push(`We stayed balanced: ${wRush} rushing yards and ${wPass} passing yards. That's the identity we're building.`);
   if (wSacks >= 4) why.push(`${wSacks} sacks. Our front made life miserable for their quarterback.`);
   if (lRush <= 60) why.push(`We held them to ${lRush} yards on the ground. That's a statement by our defense.`);
   if (game.ot) why.push(`Overtime. I'm proud of how we answered when it got tight.`);
   if (margin <= 3 && !game.ot) why.push(`A ${margin === 0 ? "tie" : `${margin}-point`} game. Those are the ones that show you what a team is made of.`);
   if (margin >= 21) why.push(`Complete game, all three phases. We'll enjoy it tonight and get back to work.`);
   if (giveaways >= 3) why.push(`We won, but ${giveaways} turnovers won't beat good teams. We'll clean it up.`);
-  if (!why.length) why.push(`Good team win. Guys did their jobs and we made the plays when we needed them.`);
+  if (!why.length) why.push(pick(`${key}-coach-win-generic`, [
+    "Good team win. Guys did their jobs and we made the plays when we needed them.",
+    "We found a way to finish. The locker room earned this one, and now we turn the page.",
+    "It was a full-team effort: preparation during the week, execution when the game was on the line.",
+    "We handled the swings, stayed together and made enough winning plays. That's a good start to the week.",
+  ]));
   out.push({
     who: coachOf(winner),
     role: tie ? `${nicknameOf(game.year, winner)} head coach` : `Winning coach, ${nicknameOf(game.year, winner)}`,
@@ -281,7 +290,12 @@ export function postgameInterviews(save: DynastySave, game: GameResult): Intervi
     if (lRush <= 60) lose.push(`We couldn't run the ball. ${lRush} yards isn't good enough.`);
     if (margin <= 3) lose.push(`It came down to a play or two, and they made one more than we did.`);
     if (margin >= 21) lose.push(`That's on me. We weren't ready, and it showed from the start.`);
-    if (!lose.length) lose.push(`They outplayed us. We'll look at the film and get better.`);
+    if (!lose.length) lose.push(pick(`${key}-coach-loss-generic`, [
+      "They outplayed us. We'll look at the film and get better.",
+      "We had chances and didn't finish enough drives. That's where the work starts this week.",
+      "Give them credit. We have to be sharper in all three phases and respond when we get back together.",
+      "The details caught up with us today. We'll own the tape, correct it and move forward.",
+    ]));
     out.push({
       who: coachOf(loser),
       role: `Losing coach, ${nicknameOf(game.year, loser)}`,

@@ -581,7 +581,9 @@ function Office() {
         <section className="rounded-xl border border-brass/40 bg-surface p-4">
           <p className="text-xs tracking-[0.25em] text-brass">FREE AGENCY</p>
           <p className="mt-1 text-sm text-muted">
-            The market is open. Sign veterans on the Market tab, then close free agency from the office.
+            {save.marketBeforeDraft
+              ? "The offseason market opens before the draft. Expiring contracts are resolved, clubs make their first moves, and you can sign available players. The pre-draft show and draft follow when the market closes."
+              : "The draft is complete. Expiring contracts and the first club moves open the market; sign available players here. Teams finish camp roster cuts after free agency closes."}
           </p>
         </section>
       )}

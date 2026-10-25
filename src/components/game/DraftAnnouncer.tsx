@@ -25,7 +25,7 @@ import { stadiumAudio } from "./stadiumAudio";
 
 import { DraftAudioContext } from "./draftAudio";
 import { cancelSpeech, speakLine } from "@/lib/voice/speech";
-import { settingsNow } from "@/lib/settings-store";
+import { settingsNow, useSettings } from "@/lib/settings-store";
 
 
 function crowdFor(b: PickBreakdown): DraftReaction {
@@ -60,6 +60,8 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
   const [hidden, setHidden] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voice, setVoice] = useState("");
+  const supportVoices = useSettings((s) => s.supportVoiceNames);
+  const setSettings = useSettings((s) => s.set);
   const [volume, setVolume] = useState(0.85);
   const [line, setLine] = useState("");
   const [error, setError] = useState("");
@@ -173,7 +175,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
           { key: "DESK", gender: analyst.gender, rate: 1.04 },
           { key: official.key, gender: official.gender, rate: 1.02 },
         ],
-        voice,
+        { COMM: supportVoices.DRAFT_COMM ?? voice, DESK: supportVoices.DRAFT_DESK, [official.key]: supportVoices.DRAFT_OFFICIAL },
       );
       const readerKey = pickReaderFor(save.year, round).key;
       // Round one is read at the podium's pace; the later rounds move.
@@ -250,7 +252,7 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
         })();
       });
     },
-    [save.year, stop, voices, voice, volume, playReaction],
+    [save.year, stop, voices, voice, volume, playReaction, supportVoices.DRAFT_COMM, supportVoices.DRAFT_DESK, supportVoices.DRAFT_OFFICIAL],
   );
   useEffect(() => {
     speakRef.current = speak;
@@ -455,12 +457,12 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
               Replay announcement
             </button>
             <label className="text-xs text-muted">
-              Voice
+              Commissioner voice
               <select
                 aria-label="Draft announcer voice"
                 className="ml-2 min-h-11 max-w-full rounded border border-line bg-studio px-2"
-                value={voice}
-                onChange={(e) => setVoice(e.target.value)}
+                value={supportVoices.DRAFT_COMM ?? voice}
+                onChange={(e) => { setVoice(e.target.value); setSettings({ supportVoiceNames: { ...supportVoices, DRAFT_COMM: e.target.value } }); }}
               >
                 <option value="">Best available English voice</option>
                 <option value={PHONE_VOICE}>Phone's voice (Spoken Content)</option>
@@ -469,6 +471,22 @@ export function DraftAnnouncerProvider({ children }: { children: ReactNode }) {
                     {voiceLabel(v)}
                   </option>
                 ))}
+              </select>
+            </label>
+            <label className="text-xs text-muted">
+              Draft desk voice
+              <select aria-label="Draft desk analyst voice" className="ml-2 min-h-11 max-w-full rounded border border-line bg-studio px-2" value={supportVoices.DRAFT_DESK ?? ""} onChange={(e) => setSettings({ supportVoiceNames: { ...supportVoices, DRAFT_DESK: e.target.value } })}>
+                <option value="">Automatic cast</option>
+                <option value={PHONE_VOICE}>Phone&apos;s voice (Spoken Content)</option>
+                {voiceChoices(voices).map((v) => <option key={voiceKey(v)} value={voiceKey(v)}>{voiceLabel(v)}</option>)}
+              </select>
+            </label>
+            <label className="text-xs text-muted">
+              Later-round reader voice
+              <select aria-label="Later-round draft reader voice" className="ml-2 min-h-11 max-w-full rounded border border-line bg-studio px-2" value={supportVoices.DRAFT_OFFICIAL ?? ""} onChange={(e) => setSettings({ supportVoiceNames: { ...supportVoices, DRAFT_OFFICIAL: e.target.value } })}>
+                <option value="">Automatic cast</option>
+                <option value={PHONE_VOICE}>Phone&apos;s voice (Spoken Content)</option>
+                {voiceChoices(voices).map((v) => <option key={voiceKey(v)} value={voiceKey(v)}>{voiceLabel(v)}</option>)}
               </select>
             </label>
           </>

@@ -94,6 +94,9 @@ const counted = (n: string, forms: [string, string]) =>
 /** Speech-only expansion: keep compact scoreboards and the saved transcript untouched. */
 export function footballSpeech(text: string, year: number): string {
   let spoken = text;
+  // College abbreviations and records are read aloud as football people say them.
+  spoken = spoken.replace(/\bS\.T\.(?=\s|$|[,;:!?])/gi, "State");
+  spoken = spoken.replace(/\b(1)-(0)\b(?=\s+(?:record|start|after|to open)|[,.!?])/gi, "one and oh");
   // Resolve identity before positions, including single-letter positions only beside a team.
   for (const team of Object.values(TEAM_META)) {
     const city = locationOf(year, team.id);

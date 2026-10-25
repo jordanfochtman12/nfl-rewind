@@ -114,18 +114,19 @@ function quality(v: VoiceLike): number {
  * One voice per persona, in order (put the host first). A user's chosen voice, when given,
  * goes to the first persona.
  */
-export function castVoices<V extends VoiceLike>(all: V[], personas: Persona[], preferred?: string): Map<string, Casting<V>> {
+export function castVoices<V extends VoiceLike>(all: V[], personas: Persona[], preferred?: string | Partial<Record<string, string>>): Map<string, Casting<V>> {
   const english = all.filter((v) => /^en([-_]|$)/i.test(v.lang) && !NOVELTY.test(v.name));
   const ranked = english.slice().sort((a, b) => quality(b) - quality(a));
   const used = new Map<string, number>();
   const out = new Map<string, Casting<V>>();
   personas.forEach((p, i) => {
+    const selected = typeof preferred === "string" ? (i === 0 ? preferred : undefined) : preferred?.[p.key];
     let voice: V | undefined;
-    if (i === 0 && preferred === PHONE_VOICE) {
+    if (selected === PHONE_VOICE) {
       out.set(p.key, { pitch: p.pitch ?? 1, rate: p.rate ?? 1 });
       return;
     }
-    if (i === 0 && preferred) voice = findVoice(english, preferred);
+    if (selected) voice = findVoice(english, selected);
     const matches = ranked.filter((v) => voiceGender(v) === p.gender);
     const unknown = ranked.filter((v) => voiceGender(v) === undefined);
     voice ??=

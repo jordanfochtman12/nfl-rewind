@@ -30,8 +30,10 @@ Product contract: [`AGENTS.project.md`](AGENTS.project.md). Sandbox/platform con
 | Dynasty grade | **Done.** `grade.ts` letter A+–F. Career W-L on regular-season only. Locks at `END_YEAR` 2027 (`phase: complete`). |
 | Staff / careers | Coaches have attributes, abilities, age, progression, retirement, firing, and HOF. CPU staff + scheme draft + roster management. Player HOF is a production ballot. |
 | Contracts | Cap-era contracts, player talks, and franchise tags are live. ERFAs (<3 accrued seasons) can receive one-year league-minimum tenders with exclusive negotiating rights; RFAs receive one of four qualifying tenders and signed outside offers can be matched or declined for the corresponding draft pick. 2010 uses its 3–5-year RFA window. Dynasty and Watch modes now track regular-season full-pay game weeks per player; older/imported seasons still fall back to appearance totals. Historical tender amounts scale 2026 CBA values to the game's annual cap; exact year-specific tables remain future work. |
-| Saves | **SAVE_VERSION 24.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. |
-| QA scripts | **Green as of this handoff:** `qa-season` and `qa-expansions` exit 0. `tsc --noEmit` exit 0. |
+| Saves | **SAVE_VERSION 28.** IndexedDB `nfl-rewind` + compact (strip old film, trim news/tx). localStorage fallback. The market-before-draft sequence is opt-in per save; older saves keep their established timeline. |
+| QA scripts | `qa-season`, `qa-expansions`, TypeScript, ESLint, production build, and focused offseason/voice/Record suites pass. Full suite: 400 passed, 1 stale 2022 QB calibration expectation corrected and verified in isolation, 2 expected skips. |
+| Offseason and free agency | Later-year market opens before the pre-draft show and draft. Expiring-contract departures appear in the recap; camp cuts remain a separate event. First-year and legacy draft-first timelines are preserved. |
+| Broadcast and presentation | Persistent per-person voice selections cover studio supporting broadcasters, the live color analyst, and draft desk roles. Speech expands `S.T.` to “State” and a `1-0` record to “one and oh.” Draft college lines are explicitly marked as scouting estimates because real college box scores are not available in the game data. Record Primetime adds real-record weekly streak stories; postgame lines now vary with result context. |
 | UI (title, AFL/NFL team select, office desk, roster, standings, schedule, stats, draft, history, expansion night, grade card) | **Playable** in `src/components/game/` |
 | Team SVG logos `public/logos/{id}.svg` | **Emblems evolve by year.** `src/lib/game/data/logos.ts` `LOGO_ERAS` — last matching `from` year, including returns (Chargers powder, Jets football). Desk chrome follows `clubInk` / `teamColors(id, year)` (header ribbon, tabs, nameplate). Stadiums year-correct in `venues.ts`. |
 | Git | **Saved:** https://github.com/jordanfochtman12/nfl-rewind |
@@ -81,7 +83,7 @@ HANDOFF.md                this file
 docs/ERA.md               season length, divisions, playoff formats, stat caps, SB sites
 docs/EXPANSIONS.md        how each expansion MUST mutate rosters
 src/lib/game/             ENGINE (no React). Imports use `.ts` extensions for Node QA.
-  types.ts                SAVE_VERSION=24, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
+  types.ts                SAVE_VERSION=28, TeamId, DynastySave, Coach careers / HOF, CampReport, DeadlineSession, phase complete
   coachKit.ts             coach abilities / traits that feed the sim
   hof.ts                  player + coach Hall of Fame ballot
   staff.ts                seed / fire / hire / carousel / progression / retirement / CPU staff

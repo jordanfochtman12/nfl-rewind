@@ -100,11 +100,41 @@ export function isRestrictedFreeAgent(save: Pick<DynastySave, "year">, p: Player
 
 /** 2019 baselines from the 2020 NFL-NFLPA CBA, before its 2020 cap-growth adjustment. */
 const RFA_2019_TENDERS: Record<RfaTenderLevel, number> = {
+  firstAndThird: 0,
   first: 4_407_000,
   second: 3_095_000,
   original: 2_025_000,
   rofr: 2_025_000,
 };
+
+/** Published RFA tender amounts. 2006-10 values include the pre-2011 top first-and-third tier. */
+const HISTORICAL_RFA_TENDERS: Record<number, Partial<Record<RfaTenderLevel, number>>> = {
+  2006: { rofr: 721_600, original: 721_600, first: 1_573_000, firstAndThird: 2_096_600 },
+  2007: { rofr: 850_000, original: 850_000, second: 1_300_000, first: 1_850_000, firstAndThird: 2_350_000 },
+  2008: { rofr: 927_000, original: 927_000, second: 1_417_000, first: 2_017_000, firstAndThird: 2_562_000 },
+  2009: { rofr: 1_010_000, original: 1_010_000, second: 1_545_000, first: 2_198_000, firstAndThird: 2_792_000 },
+  2011: { rofr: 1_200_000, original: 1_200_000, second: 1_835_000, first: 2_611_000 },
+  2012: { rofr: 1_260_000, original: 1_260_000, second: 1_927_000, first: 2_742_000 },
+  2013: { rofr: 1_323_000, original: 1_323_000, second: 2_023_000, first: 2_879_000 },
+  2014: { rofr: 1_431_000, original: 1_431_000, second: 2_187_000, first: 3_113_000 },
+  2015: { rofr: 1_542_000, original: 1_542_000, second: 2_356_000, first: 3_352_000 },
+  2016: { rofr: 1_671_000, original: 1_671_000, second: 2_553_000, first: 3_635_000 },
+  2017: { rofr: 1_797_000, original: 1_797_000, second: 2_746_000, first: 3_910_000 },
+  2018: { rofr: 1_907_000, original: 1_907_000, second: 2_914_000, first: 4_149_000 },
+};
+
+const RFA_2010_TENDERS: Record<number, Partial<Record<RfaTenderLevel, number>>> = {
+  3: { rofr: 1_101_000, original: 1_101_000, second: 1_684_000, first: 2_396_000, firstAndThird: 3_043_000 },
+  4: { rofr: 1_176_000, original: 1_176_000, second: 1_759_000, first: 2_521_000, firstAndThird: 3_168_000 },
+  5: { rofr: 1_226_000, original: 1_226_000, second: 1_809_000, first: 2_621_000, firstAndThird: 3_268_000 },
+};
+
+export function rfaTenderLevelsForYear(year: number): RfaTenderLevel[] {
+  if (year < 1994) return [];
+  if (year >= 2011) return ["first", "second", "original", "rofr"];
+  if (year >= 2007) return ["firstAndThird", "first", "second", "original", "rofr"];
+  return ["firstAndThird", "first", "original", "rofr"];
+}
 
 /**
  * Apply Article 9, Section 2(b) of the 2020 NFL-NFLPA CBA to its stated 2020 tender baselines.
@@ -133,20 +163,30 @@ function rfaTenderSchedule(year: number): Record<RfaTenderLevel, number> {
   return schedule;
 }
 
+export function rfaCompensationRounds(level: RfaTenderLevel, p: Pick<Player, "draftRound">): number[] {
+  if (level === "firstAndThird") return [1, 3];
+  if (level === "first") return [1];
+  if (level === "second") return [2];
+  if (level === "original" && p.draftRound && p.draftRound >= 1 && p.draftRound <= 7) return [p.draftRound];
+  return [];
+}
+
+/** Backward-compatible single-round accessor for legacy save records and callers. */
 export function rfaCompensationRound(level: RfaTenderLevel, p: Pick<Player, "draftRound">): number | undefined {
-  if (level === "first") return 1;
-  if (level === "second") return 2;
-  if (level === "original" && p.draftRound && p.draftRound >= 1 && p.draftRound <= 7) return p.draftRound;
-  return undefined;
+  return rfaCompensationRounds(level, p)[0];
 }
 
 export function rfaTenderPrice(year: number, level: RfaTenderLevel = "rofr", p?: Player): number {
   const cap = salaryCapFor(year);
   const baseCap = salaryCapFor(2019);
   if (year < 1994 || cap == null || baseCap == null) return 0;
+  if (!rfaTenderLevelsForYear(year).includes(level)) return 0;
+  const published = year === 2010
+    ? RFA_2010_TENDERS[Math.min(5, Math.max(3, p ? accruedSeasonsFor(p) : 3))]?.[level]
+    : HISTORICAL_RFA_TENDERS[year]?.[level];
   const scaled = year >= 2020
-    ? rfaTenderSchedule(year)[level]
-    : (RFA_2019_TENDERS[level] * cap) / baseCap;
+    ? (level === "firstAndThird" ? 0 : rfaTenderSchedule(year)[level])
+    : published ?? ((RFA_2019_TENDERS[level] * cap) / baseCap);
   const priorSalaryFloor = level === "rofr" ? 0 : (p?.salary ?? 0) * 1.1;
   return Math.max(1_000, Math.round(Math.max(scaled, priorSalaryFloor) / 1_000) * 1_000);
 }
@@ -161,6 +201,7 @@ function applyRfaTender(save: DynastySave, p: Player, level: RfaTenderLevel, sal
     level,
     salary,
     compensationRound: rfaCompensationRound(level, p),
+    compensationRounds: rfaCompensationRounds(level, p),
   };
   save.rfaTenders = (save.rfaTenders ?? []).filter((x) => x.year !== save.year || x.playerId !== p.id).concat(tender);
   const team = save.teams[p.teamId as TeamId];
@@ -168,13 +209,15 @@ function applyRfaTender(save: DynastySave, p: Player, level: RfaTenderLevel, sal
   if (talk) {
     talk.status = "tendered";
     talk.rfaTender = { level, salary };
-    const comp = tender.compensationRound ? ` and a ${tender.compensationRound}${tender.compensationRound === 1 ? "st" : tender.compensationRound === 2 ? "nd" : tender.compensationRound === 3 ? "rd" : "th"}-round pick` : " with no draft compensation";
+    const comp = tender.compensationRounds?.length
+      ? ` and ${tender.compensationRounds.map((round) => `${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"}`).join("- and ")}-round draft compensation`
+      : " with no draft compensation";
     talk.result = `One-year qualifying offer at ${formatMoney(salary, save.year)}; right of first refusal${comp}.`;
   }
   addNews(save, {
     kind: "transaction",
     headline: `${displayName(save.year, p.teamId as TeamId)} tenders ${playerName(p)}`,
-    body: `One-year ${level === "rofr" ? "right-of-first-refusal" : `${level}-round qualifying`} tender: ${formatMoney(salary, save.year)}${tender.compensationRound ? ` with round ${tender.compensationRound} compensation` : " with no draft compensation"}.`,
+    body: `One-year ${level === "rofr" ? "right-of-first-refusal" : level === "firstAndThird" ? "first-and-third-round" : `${level}-round`} qualifying tender: ${formatMoney(salary, save.year)}${tender.compensationRounds?.length ? ` with ${tender.compensationRounds.map((round) => `${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"}`).join("- and ")}-round compensation` : " with no draft compensation"}.`,
     teamIds: [p.teamId as TeamId],
     playerIds: [p.id],
   });
@@ -197,7 +240,11 @@ export function tenderRfa(save: DynastySave, playerId: string, level: RfaTenderL
 /** CPU clubs use the qualifying offer when they decide a three-year veteran is worth retaining. */
 export function cpuTenderRfa(save: DynastySave, p: Player): boolean {
   if (!isRestrictedFreeAgent(save, p)) return false;
-  const level: RfaTenderLevel = p.ovr >= 84 ? "first" : p.ovr >= 77 ? "second" : p.draftRound ? "original" : "rofr";
+  const levels = rfaTenderLevelsForYear(save.year);
+  const level: RfaTenderLevel = save.year <= 2010 && p.ovr >= 90 ? "firstAndThird"
+    : p.ovr >= 84 ? "first"
+      : p.ovr >= 77 && levels.includes("second") ? "second"
+        : p.draftRound ? "original" : "rofr";
   const price = rfaTenderPrice(save.year, level, p);
   if (!price) return false;
   applyRfaTender(save, p, level, price);
@@ -272,26 +319,25 @@ export function openRfaOfferSheets(save: DynastySave, auto = false): RfaOfferShe
         const gap = p.ovr - best;
         const offerSalary = Math.max(roundPay(save.year, tender.salary * 1.12), roundPay(save.year, salaryFor(save.year, p.ovr, p.age, p.pos) * 1.1));
         const cap = save.salaryCap ?? salaryCapFor(save.year);
-        const pick = tender.compensationRound
-          ? allPicks(save).find((asset) => asset.owner === id && asset.year === save.year + 1 && asset.round === tender.compensationRound && !asset.used)
-          : undefined;
-        const hasCompensation = !tender.compensationRound || !!pick;
         const reserved = pendingRfaOfferSheets(save).filter((offer) => offer.offerTeam === id);
+        const requiredRounds = tender.compensationRounds ?? (tender.compensationRound ? [tender.compensationRound] : []);
+        const reservedPicks = new Set(reserved.flatMap((offer) => offer.compensationPickIds ?? (offer.compensationPickId ? [offer.compensationPickId] : [])));
+        const picks = requiredRounds.map((round) => allPicks(save).find((asset) => asset.owner === id && asset.year === save.year + 1 && asset.round === round && !asset.used && !reservedPicks.has(asset.id)));
+        const hasCompensation = requiredRounds.length === 0 || picks.every(Boolean);
         const reservedSalary = reserved.reduce((total, offer) => total + offer.salary, 0);
-        const reservedPicks = new Set(reserved.map((offer) => offer.compensationPickId).filter(Boolean));
         const canPay = cap == null || teamPayroll(save, id) + reservedSalary + offerSalary <= cap;
         const hasRoom = activeRosterOf(save, id).length + reserved.length < ROSTER_TARGET + 8;
-        const hasUnreservedPick = !tender.compensationRound || (!!pick && !reservedPicks.has(pick.id));
         // Outside clubs should need a clear starter-level upgrade before spending a pick and
         // cap room on a restricted free agent. A high-grade player can still draw interest at
         // a smaller gap, while the required compensation makes first-round challenges rarer.
-        const compensationCost = tender.compensationRound === 1 ? 0.035
-          : tender.compensationRound === 2 ? 0.02
-            : tender.compensationRound ? 0.012 : 0;
+        const compensationCost = requiredRounds.includes(1) && requiredRounds.includes(3) ? 0.05
+          : requiredRounds.includes(1) ? 0.035
+            : requiredRounds.includes(2) ? 0.02
+              : requiredRounds.length ? 0.012 : 0;
         const playerPremium = p.ovr >= 90 ? 0.03 : p.ovr >= 84 ? 0.015 : 0;
         const gapInterest = Math.min(20, Math.max(0, gap - 2)) * 0.006;
         const interest = Math.max(0, Math.min(0.16, 0.015 + gapInterest + playerPremium - compensationCost));
-        return { id, gap, offerSalary, pick, hasCompensation: hasCompensation && hasUnreservedPick, canPay, hasRoom, interest, score: gap + team.wins * 0.1 };
+        return { id, gap, offerSalary, picks: picks.filter((pick): pick is NonNullable<typeof pick> => !!pick), hasCompensation, canPay, hasRoom, interest, score: gap + team.wins * 0.1 };
       })
       .filter((item) => (item.gap >= 5 || (p.ovr >= 88 && item.gap >= 3)) && item.interest > 0 && item.hasCompensation && item.canPay && item.hasRoom)
       .sort((a, b) => b.score - a.score);
@@ -310,7 +356,9 @@ export function openRfaOfferSheets(save: DynastySave, auto = false): RfaOfferShe
       salary: rival.offerSalary,
       years: p.age <= 28 ? 3 : 2,
       compensationRound: tender.compensationRound,
-      compensationPickId: rival.pick?.id,
+      compensationPickId: rival.picks[0]?.id,
+      compensationRounds: tender.compensationRounds ?? (tender.compensationRound ? [tender.compensationRound] : []),
+      compensationPickIds: rival.picks.map((pick) => pick.id),
       status: "pending",
     };
     save.rfaOfferSheets.push(offer);
@@ -359,11 +407,14 @@ export function resolveRfaOfferSheet(save: DynastySave, offerId: string, match: 
   const cap = save.salaryCap ?? salaryCapFor(save.year);
   if (cap != null && teamPayroll(save, offer.offerTeam) + offer.salary > cap) return "The signing club no longer has cap room for the offer sheet.";
   let compLabel = "no draft-pick compensation";
-  if (offer.compensationRound) {
-    const pick = allPicks(save).find((asset) => asset.id === offer.compensationPickId && asset.owner === offer.offerTeam && !asset.used);
-    if (!pick || pick.year !== save.year + 1 || pick.round !== offer.compensationRound) return "The signing club no longer has the required compensation pick.";
-    if (!transferPick(save, pick.id, offer.originalTeam)) return "The compensation pick could not be transferred.";
-    compLabel = `the signing club's ${offer.compensationRound}${offer.compensationRound === 1 ? "st" : offer.compensationRound === 2 ? "nd" : offer.compensationRound === 3 ? "rd" : "th"}-round pick in the ${pick.year} draft`;
+  const requiredRounds = offer.compensationRounds ?? (offer.compensationRound ? [offer.compensationRound] : []);
+  const requiredPickIds = offer.compensationPickIds ?? (offer.compensationPickId ? [offer.compensationPickId] : []);
+  if (requiredRounds.length) {
+    const picks = requiredRounds.map((round, index) => allPicks(save).find((asset) => asset.id === requiredPickIds[index] && asset.owner === offer.offerTeam && !asset.used && asset.year === save.year + 1 && asset.round === round));
+    if (picks.some((pick) => !pick)) return "The signing club no longer has all of the required compensation picks.";
+    for (const pick of picks) if (!transferPick(save, pick!.id, offer.originalTeam)) return "The compensation pick could not be transferred.";
+    const roundsLabel = requiredRounds.map((round) => `${round}${round === 1 ? "st" : round === 2 ? "nd" : round === 3 ? "rd" : "th"}`).join("- and ");
+    compLabel = `the signing club's ${roundsLabel}-round picks in the ${save.year + 1} draft`;
   }
   const from = offer.originalTeam;
   p.salary = offer.salary;

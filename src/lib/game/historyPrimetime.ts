@@ -75,6 +75,16 @@ function weeklyStories(save: DynastySave, games: GameResult[]): NonNullable<Prim
   const leaderPct = leader ? winPct(leader.team) : undefined;
   const tied = leaderPct === undefined ? [] : standings.filter((x) => Math.abs(winPct(x.team) - leaderPct) < 0.0001);
   if (leader) add("The standings", tied.length > 1 ? `${tied.length} clubs share the league's best record` : `${teamName(year, leader.id)} set the pace`, `${tied.map((x) => teamName(year, x.id)).join(" and ")} ${tied.length > 1 ? "are" : "is"} ${record(leader.team)} after Week ${save.week}.`, tied.map((x) => x.id));
+  const hot = standings
+    .map((x) => ({ ...x, games: Number(x.team.streak.match(/^W(\d+)$/)?.[1] ?? 0) }))
+    .filter((x) => x.games >= 3)
+    .sort((a, b) => b.games - a.games || winPct(b.team) - winPct(a.team))[0];
+  if (hot) add("The streak", `${teamName(year, hot.id)} have won ${hot.games} straight`, `At ${record(hot.team)}, they have put together the longest active winning streak in the league and are carrying that form into Week ${save.week + 1}.`, [hot.id]);
+  const cold = standings
+    .map((x) => ({ ...x, games: Number(x.team.streak.match(/^L(\d+)$/)?.[1] ?? 0) }))
+    .filter((x) => x.games >= 3)
+    .sort((a, b) => b.games - a.games || winPct(a.team) - winPct(b.team))[0];
+  if (cold) add("The slide", `${teamName(year, cold.id)} are looking for a response`, `The ${record(cold.team)} club has dropped ${cold.games} straight. The next week is a chance to stop the slide.`, [cold.id]);
   return out;
 }
 
@@ -133,8 +143,9 @@ function gameChapters(save: DynastySave, games: GameResult[], edition: Episode["
     chapters.push(chapter("full-slate", "THE REST OF THE FINALS", "Around the league", [...new Set(remaining.flatMap((g) => [g.awayId as TeamId, g.homeId as TeamId]))], lines));
   }
   if (edition === "weekly" || edition === "seasonFinale") {
-    const notes = weeklyStories(save, games).slice(1, 4).map((s) => ({ speaker: "ANALYST" as const, text: `${s.headline}. ${s.body}` }));
-    if (notes.length) chapters.push(chapter("week-context", `WEEK ${save.week} · THE WIDER PICTURE`, "What the scores mean", [...new Set(weeklyStories(save, games).slice(1, 4).flatMap((s) => s.teamIds))], notes));
+    const context = weeklyStories(save, games).slice(1, 8);
+    const notes = context.map((s) => ({ speaker: "ANALYST" as const, text: `${s.headline}. ${s.body}` }));
+    if (notes.length) chapters.push(chapter("week-context", `WEEK ${save.week} · THE WIDER PICTURE`, "What the scores mean", [...new Set(context.flatMap((s) => s.teamIds))], notes));
     const news = save.news.filter((n) => n.year === save.year && n.week === save.week && ["award", "transaction", "injury", "expansion"].includes(n.kind)).slice(0, 4);
     if (news.length) chapters.push(chapter("record-book", `WEEK ${save.week} · OUTSIDE THE SCOREBOARD`, "History kept moving", [...new Set(news.flatMap((n) => n.teamIds))], news.map((n) => ({ speaker: "REPORTER" as const, text: `${n.headline}. ${n.body}` }))));
     if (edition === "seasonFinale") {

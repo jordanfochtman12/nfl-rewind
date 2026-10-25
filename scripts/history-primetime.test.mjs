@@ -78,6 +78,25 @@ test("Record standings identify the best win percentage, even with uneven games 
   assert.ok(!standings.lines.some((line) => /Green Bay.*set the pace/.test(line.text)));
 });
 
+test("Record Primetime follows live winning and losing streak storylines week to week", () => {
+  const save = createNewGame({ userTeamId: "pit", startingYear: 1966, seed: 9 });
+  save.realHistory = true;
+  save.week = 6;
+  save.teams.gnb.wins = 5;
+  save.teams.gnb.streak = "W3";
+  save.teams.nyg.losses = 5;
+  save.teams.nyg.streak = "L4";
+  save.schedule = [{ ...game("week-six", "pit", "chi", 17, 14), week: 6 }];
+
+  buildHistoryPrimetime(save, "regular");
+
+  const context = save.primetime.episode.chapters.find((item) => item.id === "week-context");
+  assert.ok(context);
+  const script = context.lines.map((line) => line.text).join(" ");
+  assert.match(script, /Green Bay.*won 3 straight/);
+  assert.match(script, /New York Giants.*dropped 4 straight/);
+});
+
 test("the Record regular-season finale previews the exact playoff field without future scores", async () => {
   const history = await loadHistoryData();
   setHistoryData(history);

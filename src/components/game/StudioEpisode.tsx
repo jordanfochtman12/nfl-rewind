@@ -1,5 +1,5 @@
 import { footballSpeech } from "@/lib/game/footballSpeech";
-import { settingsNow } from "@/lib/settings-store";
+import { settingsNow, useSettings } from "@/lib/settings-store";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { clubInk, logoSrc, showGraphic, showTicker, type PrimetimeShow } from "@/lib/game";
 import { useGameStore } from "@/lib/game-store";
@@ -38,6 +38,8 @@ export function StudioEpisode({
     [volume, setVolume] = useState(0.35);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]),
     [voice, setVoice] = useState(() => settingsNow().voiceName);
+  const supportVoices = useSettings((s) => s.supportVoiceNames);
+  const setSettings = useSettings((s) => s.set);
   const [error, setError] = useState("");
   const voicesRef = useRef(voices);
   voicesRef.current = voices;
@@ -141,7 +143,7 @@ export function StudioEpisode({
         { ...who("HOST"), rate: 1 },
         { ...who("ANALYST"), pitch: 0.96, rate: 0.97 },
         { ...who("REPORTER"), rate: 1.03 },
-      ], voice);
+      ], { HOST: voice, ...supportVoices });
       const c = cast.get(current.speaker);
       if (c?.voice) speech.voice = c.voice;
       speech.pitch = c?.pitch ?? 1;
@@ -195,7 +197,7 @@ export function StudioEpisode({
       window.clearTimeout(timer);
     };
     // The voice list is read from a ref: the phone reloading it mid-line must not restart the read.
-  }, [playing, index, line, narration, voice, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters, autoPlay]);
+  }, [playing, index, line, narration, voice, supportVoices, year, episode.cast, current.speaker, current.text, chapter.lines, episode.chapters, autoPlay]);
   const select = (n: number) => {
     setIndex(n);
     setLine(0);
@@ -259,22 +261,30 @@ export function StudioEpisode({
           <span>{Math.round(volume * 100)}%</span>
         </label>
         {narration && (
-          <label className="pt-voice">
-            Voice
-            <select
-              aria-label="Host voice"
-              value={voice}
-              onChange={(e) => setVoice(e.target.value)}
-            >
-              <option value="">Best available English voice</option>
-              <option value={PHONE_VOICE}>Phone's voice (Spoken Content)</option>
-              {voiceChoices(voices).map((v) => (
-                <option key={voiceKey(v)} value={voiceKey(v)}>
-                  {voiceLabel(v)}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="flex flex-wrap gap-2">
+            {(["HOST", "ANALYST", "REPORTER"] as const).map((speaker) => {
+              const selectedVoice = speaker === "HOST" ? voice : supportVoices[speaker];
+              return <label className="pt-voice" key={speaker}>
+                {speaker === "HOST" ? "Host" : speaker === "ANALYST" ? "Analyst" : "Reporter"}
+                <select
+                  aria-label={`${speaker === "HOST" ? "Host" : speaker === "ANALYST" ? "Analyst" : "Reporter"} voice`}
+                  value={selectedVoice ?? ""}
+                  onChange={(e) => {
+                    if (speaker === "HOST") {
+                      setVoice(e.target.value);
+                      setSettings({ voiceName: e.target.value });
+                    } else setSettings({ supportVoiceNames: { ...supportVoices, [speaker]: e.target.value } });
+                  }}
+                >
+                  <option value="">Automatic cast</option>
+                  <option value={PHONE_VOICE}>Phone's voice (Spoken Content)</option>
+                  {voiceChoices(voices).map((v) => (
+                    <option key={voiceKey(v)} value={voiceKey(v)}>{voiceLabel(v)}</option>
+                  ))}
+                </select>
+              </label>;
+            })}
+          </div>
         )}
       </div>
       {error && (
